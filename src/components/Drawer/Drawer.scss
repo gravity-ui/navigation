@@ -1,0 +1,70 @@
+.drawer {
+    &__item {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        height: 100%;
+        will-change: transform;
+        background-color: var(--yc-color-base-background);
+    }
+
+    &__item-transition-enter {
+        transform: translate(-100%, 0);
+    }
+
+    &__item-transition-enter-active {
+        transform: translate(0, 0);
+        transition: transform 300ms;
+    }
+
+    &__item-transition-enter-done {
+        // Хак, чтобы не размывался текст после анимации в некоторых браузерах
+        filter: blur(0px);
+        transform: translateZ(0);
+    }
+
+    &__item-transition-exit {
+        transform: translate(0, 0);
+    }
+
+    &__item-transition-exit-active {
+        transform: translate(-100%, 0);
+        transition: transform 300ms;
+    }
+
+    &__item-transition-exit-done {
+        visibility: hidden;
+    }
+
+    &__veil {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        background-color: var(--yc-color-sfx-veil);
+    }
+
+    &__veil-transition-enter {
+        opacity: 0;
+    }
+
+    &__veil-transition-enter-active {
+        opacity: 1;
+        transition: opacity 300ms;
+    }
+
+    &__veil-transition-exit {
+        opacity: 1;
+    }
+
+    &__veil-transition-exit-active {
+        opacity: 0;
+        transition: opacity 300ms;
+    }
+
+    &__veil-transition-exit-done {
+        visibility: hidden;
+    }
+}

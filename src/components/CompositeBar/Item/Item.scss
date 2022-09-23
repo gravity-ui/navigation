@@ -1,0 +1,184 @@
+@use '../../../../styles/variables';
+
+.composite-bar-item {
+    $class: &;
+
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    cursor: pointer;
+
+    &__icon {
+        color: var(--yc-color-text-misc);
+    }
+
+    &__icon-place {
+        flex-shrink: 0;
+        width: variables.$aside-header-min-width;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+
+    &__title {
+        display: flex;
+        overflow: hidden;
+    }
+
+    &__title-text {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    &__title-adornment {
+        margin: 0 10px;
+    }
+
+    &__collapse-item {
+        display: flex;
+        padding: 0 16px;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+
+        #{$class}__title-adornment {
+            margin-right: 0;
+        }
+    }
+
+    &__collapse-items-popup-content {
+        padding: 4px 0;
+    }
+
+    &__link {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+
+        &,
+        &:hover,
+        &:active,
+        &:visited,
+        &:focus {
+            text-decoration: none;
+            outline: none;
+            color: inherit;
+        }
+    }
+
+    &__btn-icon {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &_type_action {
+        justify-content: center;
+        height: variables.$composite-bar-item-action-size;
+        margin: 0 10px 8px;
+        background: var(--yc-color-base-float);
+        box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.03), 0px 5px 6px rgba(0, 0, 0, 0.12);
+        border-radius: variables.$composite-bar-item-action-size;
+        transition: transform 0.1s ease-out, background-color 0.15s linear;
+
+        &:focus {
+            box-shadow: 0 0 0 2px var(--yc-color-line-misc);
+        }
+
+        &:focus:not(:focus-visible) {
+            box-shadow: none;
+        }
+
+        &:hover {
+            background-color: var(--yc-color-base-float-hover);
+        }
+
+        &:active {
+            box-shadow: 0 1px 2px var(--yc-color-sfx-shadow);
+            transition: none;
+            transform: scale(0.96);
+        }
+
+        & #{$class}__icon-place {
+            width: variables.$composite-bar-item-action-size;
+        }
+
+        & #{$class}__title {
+            margin-right: 16px;
+        }
+    }
+
+    &:not(&_compact) {
+        &#{$class}_selected {
+            &#{$class}_type_regular {
+                background-color: var(--yc-color-base-selection);
+            }
+        }
+
+        // &.yc-list__item_active:not(.yc-list__item_selected) {
+        .composite-bar__root-menu-item.yc-list__item_active:not(.yc-list__item_selected) & {
+            &#{$class}_type_regular {
+                background-color: var(--yc-color-base-simple-hover);
+            }
+        }
+    }
+
+    &_compact {
+        @mixin item-bg {
+            position: relative;
+            background-color: transparent;
+
+            &::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                z-index: -1;
+                width: 38px;
+                height: 38px;
+                margin-top: -19px;
+                margin-left: -19px;
+                border-radius: 7px;
+            }
+        }
+
+        &#{$class}_type_action {
+            width: variables.$composite-bar-item-action-size;
+
+            & #{$class}__title {
+                margin: 0;
+            }
+        }
+
+        &#{$class}_selected {
+            &#{$class}_type_regular {
+                #{$class}__btn-icon {
+                    @include item-bg();
+
+                    &::before {
+                        background-color: var(--yc-color-base-selection);
+                    }
+                }
+            }
+        }
+
+        .composite-bar__root-menu-item.yc-list__item_active:not(.yc-list__item_selected) & {
+            &#{$class}_type_regular {
+                #{$class}__btn-icon {
+                    @include item-bg();
+
+                    &::before {
+                        background-color: var(--yc-color-base-simple-hover);
+                    }
+                }
+            }
+        }
+    }
+}

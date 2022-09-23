@@ -1,0 +1,93 @@
+{
+    "name": "navigation",
+    "version": "0.0.1",
+    "description": "Gravity UI Navigation components",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/gravity-ui/navigation"
+    },
+    "main": "build/cjs/index.js",
+    "module": "build/esm/index.js",
+    "types": "build/esm/types/index.d.ts",
+    "sideEffects": [
+      "*.css",
+      "*.scss"
+    ],
+    "files": [
+        "build"
+    ],
+    "scripts": {
+        "prepare": "husky install",
+        "typecheck": "tsc --noEmit",
+        "test": "jest --passWithNoTests",
+        "build": "rimraf build && rollup -c",
+        "lint:js": "eslint src --ext .js,.jsx,.ts,.tsx",
+        "lint:styles": "stylelint '{styles,src}/**/*.scss'",
+        "lint:prettier": "prettier --check '**/*.md'",
+        "lint": "run-p lint:*",
+        "build-storybook": "build-storybook",
+        "start": "TS_NODE_PROJECT=.storybook/tsconfig.json start-storybook"
+    },
+    "dependencies": {
+        "react-transition-group": "^4.4.1",
+        "tslib": "^2.4.0"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^17.0.0",
+        "@commitlint/config-conventional": "^17.0.0",
+        "@babel/core": "^7.18.10",
+        "@gravity-ui/eslint-config": "^1.0.0",
+        "@gravity-ui/prettier-config": "^1.0.0",
+        "@gravity-ui/stylelint-config": "^1.0.0",
+        "@gravity-ui/tsconfig": "^1.0.0",
+        "@gravity-ui/uikit": "^3.0.1",
+        "@rollup/plugin-commonjs": "^22.0.0",
+        "@rollup/plugin-node-resolve": "^13.3.0",
+        "@rollup/plugin-typescript": "^8.3.3",
+        "@storybook/addon-actions": "^6.5.10",
+        "@storybook/addon-essentials": "^6.5.10",
+        "@storybook/addon-interactions": "^6.5.10",
+        "@storybook/addon-links": "^6.5.10",
+        "@storybook/builder-webpack4": "^6.5.10",
+        "@storybook/manager-webpack4": "^6.5.10",
+        "@storybook/preset-scss": "^1.0.3",
+        "@storybook/react": "^6.5.10",
+        "@storybook/testing-library": "0.0.13",
+        "@types/react": "^16.14.28",
+        "@types/react-transition-group": "^4.4.1",
+        "@types/react-virtualized-auto-sizer": "^1.0.0",
+        "babel-loader": "^8.2.5",
+        "eslint": "^8.18.0",
+        "eslint-plugin-testing-library": "^5.5.1",
+        "husky": "^8.0.0",
+        "jest": "^28.0.0",
+        "nano-staged": "^0.6.0",
+        "npm-run-all": "^4.0.0",
+        "prettier": "^2.7.1",
+        "react": "^16.14.0",
+        "react-dom": "^16.14.0",
+        "rimraf": "^3.0.2",
+        "rollup": "^2.75.7",
+        "rollup-plugin-json": "^4.0.0",
+        "rollup-plugin-scss": "^3.0.0",
+        "sass": "^1.49.7",
+        "sass-loader": "^10.2.1",
+        "storybook-preset-inline-svg": "^1.0.1",
+        "stylelint": "^14.9.1",
+        "svg-inline-loader": "^0.8.2",
+        "typescript": "^4.5.5",
+        "ts-jest": "^28.0.0"
+    },
+    "nano-staged": {
+        "*.{scss}": [
+            "stylelint --fix --quiet"
+        ],
+        "*.{js,jsx,ts,tsx}": [
+            "eslint --fix --quiet"
+        ],
+        "*.md": [
+            "prettier --write"
+        ]
+    }
+}

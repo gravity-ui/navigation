@@ -1,0 +1,23 @@
+{
+  "extends": "@gravity-ui/tsconfig/tsconfig",
+  "compilerOptions": {
+    "jsx": "react",
+    "module": "esnext",
+    "baseUrl": ".",
+    "allowJs": true,
+    "outDir": "build",
+    "declaration": true,
+    "declarationDir": "types"
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "**/__tests__",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ]
+}

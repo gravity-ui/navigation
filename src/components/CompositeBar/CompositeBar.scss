@@ -1,0 +1,11 @@
+.composite-bar {
+    $class: &;
+
+    flex: 1 0 auto;
+    width: 100%;
+    min-height: 40px;
+
+    & &__root-menu-item[class] {
+        background-color: transparent;
+    }
+}

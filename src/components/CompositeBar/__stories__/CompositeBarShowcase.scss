@@ -1,0 +1,11 @@
+.composite-bar-showcase {
+    display: flex;
+    height: 200px;
+
+    &__tag {
+        color: var(--yc-color-text-positive);
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+    }
+}

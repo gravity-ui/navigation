@@ -1,0 +1,13 @@
+# Settings
+.idea
+.DS_Store
+.vscode
+
+# Libs
+node_modules
+
+# Generated content
+build
+
+
+

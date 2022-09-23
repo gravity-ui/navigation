@@ -1,0 +1,44 @@
+@use '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.aside-header-logo {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    height: 40px;
+
+    &__logo-btn-place {
+        flex-shrink: 0;
+        width: variables.$aside-header-min-width;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    // TODO ask design
+    &__btn-logo.yc-button_view_flat.yc-button_size_l {
+        --yc-button-height: 38px;
+    }
+
+    &__logo {
+        @include text-body-2;
+        vertical-align: middle;
+    }
+
+    &__logo-link {
+        &,
+        &:hover,
+        &:active,
+        &:visited,
+        &:focus {
+            text-decoration: none;
+            outline: none;
+            color: inherit;
+        }
+    }
+
+    // TODO ask design
+    .yc-root &__btn-logo.button2_theme_flat.button2_hovered_yes::before {
+        background-color: transparent;
+    }
+}
