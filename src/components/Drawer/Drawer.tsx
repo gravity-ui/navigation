@@ -1,6 +1,6 @@
 import React from 'react';
 import {CSSTransition, Transition} from 'react-transition-group';
-import block from 'bem-cn-lite';
+import {block} from '../utils/cn';
 
 import './Drawer.scss';
 
@@ -8,11 +8,13 @@ const b = block('drawer');
 const TIMEOUT = 300;
 
 export interface DrawerItemProps {
+    id: string;
+    content: React.ReactNode;
     visible: boolean;
     className?: string;
 }
 
-export const DrawerItem: React.FC<DrawerItemProps> = ({className, visible, children}) => {
+export const DrawerItem: React.FC<DrawerItemProps> = ({visible, content, className}) => {
     const itemRef = React.useRef<HTMLDivElement>(null);
     return (
         <CSSTransition
@@ -23,7 +25,7 @@ export const DrawerItem: React.FC<DrawerItemProps> = ({className, visible, child
             nodeRef={itemRef}
         >
             <div ref={itemRef} className={b('item', className)}>
-                {children}
+                {content}
             </div>
         </CSSTransition>
     );

@@ -1,7 +1,10 @@
-@use '../../../../styles/variables';
+@use '../../variables';
 
-.composite-bar-item {
+$block: '.#{variables.$ns}composite-bar-item';
+
+#{$block} {
     $class: &;
+    --composite-bar-item-action-size: 36px;
 
     display: flex;
     width: 100%;
@@ -15,7 +18,7 @@
 
     &__icon-place {
         flex-shrink: 0;
-        width: variables.$aside-header-min-width;
+        width: var(--aside-header-min-width);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -81,11 +84,11 @@
 
     &_type_action {
         justify-content: center;
-        height: variables.$composite-bar-item-action-size;
+        height: var(--composite-bar-item-action-size);
         margin: 0 10px 8px;
         background: var(--yc-color-base-float);
         box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.03), 0px 5px 6px rgba(0, 0, 0, 0.12);
-        border-radius: variables.$composite-bar-item-action-size;
+        border-radius: var(--composite-bar-item-action-size);
         transition: transform 0.1s ease-out, background-color 0.15s linear;
 
         &:focus {
@@ -107,7 +110,7 @@
         }
 
         & #{$class}__icon-place {
-            width: variables.$composite-bar-item-action-size;
+            width: var(--composite-bar-item-action-size);
         }
 
         & #{$class}__title {
@@ -116,14 +119,13 @@
     }
 
     &:not(&_compact) {
-        &#{$class}_selected {
+        &#{$class}_current {
             &#{$class}_type_regular {
                 background-color: var(--yc-color-base-selection);
             }
         }
 
-        // &.yc-list__item_active:not(.yc-list__item_selected) {
-        .composite-bar__root-menu-item.yc-list__item_active:not(.yc-list__item_selected) & {
+        &:not(#{$class}_current):hover {
             &#{$class}_type_regular {
                 background-color: var(--yc-color-base-simple-hover);
             }
@@ -150,14 +152,14 @@
         }
 
         &#{$class}_type_action {
-            width: variables.$composite-bar-item-action-size;
+            width: var(--composite-bar-item-action-size);
 
             & #{$class}__title {
                 margin: 0;
             }
         }
 
-        &#{$class}_selected {
+        &#{$class}_current {
             &#{$class}_type_regular {
                 #{$class}__btn-icon {
                     @include item-bg();
@@ -169,7 +171,7 @@
             }
         }
 
-        .composite-bar__root-menu-item.yc-list__item_active:not(.yc-list__item_selected) & {
+        &:not(#{$class}_current):hover {
             &#{$class}_type_regular {
                 #{$class}__btn-icon {
                     @include item-bg();

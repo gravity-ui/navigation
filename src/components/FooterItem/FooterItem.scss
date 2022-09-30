@@ -1,98 +1,10 @@
-@use '../../../styles/variables';
+@use '../variables';
 
-.footer-item {
+$block: '.#{variables.$ns}footer-item';
+
+#{$block} {
     $class: &;
+
     width: 100%;
     height: 40px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &_current {
-        background-color: var(--yc-color-base-selection);
-    }
-
-    &:hover {
-        cursor: pointer;
-    }
-
-    &:not(&_current):hover {
-        background-color: var(--yc-color-base-simple-hover);
-    }
-
-    &_compact {
-        position: relative;
-        background-color: transparent;
-
-        &::before {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            z-index: -1;
-            width: 38px;
-            height: 38px;
-            margin-top: -19px;
-            margin-left: -19px;
-            content: '';
-            border-radius: 7px;
-        }
-
-        &#{$class}_current {
-            background-color: transparent;
-
-            &::before {
-                background-color: var(--yc-color-base-selection);
-            }
-        }
-
-        &:not(#{$class}_current):hover {
-            background-color: transparent;
-
-            &::before {
-                background-color: var(--yc-color-base-simple-hover);
-            }
-        }
-    }
-
-    &__icon-place {
-        flex-shrink: 0;
-        width: variables.$aside-header-min-width;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    &__text {
-        width: 100%;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-    }
-
-    &__icon-wrap {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 38px;
-        height: 38px;
-    }
-
-    #{$class} &__icon {
-        color: var(--yc-color-text-primary);
-    }
-
-    &__btn-icon {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    //TODO ask design
-    @at-root .yc-list__item_active &:not(&_current) {
-        background-color: var(--yc-color-base-simple-hover);
-    }
 }

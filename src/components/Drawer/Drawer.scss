@@ -1,4 +1,8 @@
-.drawer {
+@use '../variables';
+
+$block: '.#{variables.$ns}drawer';
+
+#{$block} {
     &__item {
         position: absolute;
         left: 0;
@@ -19,7 +23,7 @@
     }
 
     &__item-transition-enter-done {
-        // Хак, чтобы не размывался текст после анимации в некоторых браузерах
+        // Hack for some browsers so text won't be blurred after animation
         filter: blur(0px);
         transform: translateZ(0);
     }

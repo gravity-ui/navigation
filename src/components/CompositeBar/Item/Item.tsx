@@ -1,7 +1,7 @@
 import React from 'react';
-import block from 'bem-cn-lite';
+import {block} from '../../utils/cn';
 
-import {List, Popup, Icon} from '@gravity-ui/uikit';
+import {List, Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
 
 import {ItemTooltip} from '../../ItemTooltip/ItemTooltip';
 import {MenuItem} from '../../types';
@@ -18,13 +18,26 @@ import './Item.scss';
 
 const b = block('composite-bar-item');
 
-interface ItemProps {
+interface ItemPopup {
+    popupVisible?: boolean;
+    popupAnchor?: React.RefObject<HTMLElement>;
+    popupPlacement?: PopupPlacement;
+    popupOffset?: PopupProps['offset'];
+    renderPopupContent?: () => React.ReactNode;
+    onClosePopup?: () => void;
+}
+
+export interface ItemProps extends ItemPopup {
     item: MenuItem;
+    enableTooltip?: boolean;
+}
+
+interface ItemInnerProps extends ItemProps {
     compact: boolean;
-    collapseItems: MenuItem[] | null;
+    className?: string;
+    collapseItems?: MenuItem[];
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
-    onClick?: () => void;
 }
 
 function renderItemTitle(item: MenuItem) {
@@ -42,17 +55,29 @@ function renderItemTitle(item: MenuItem) {
     return titleNode;
 }
 
-export const Item: React.FC<ItemProps> = ({
+export const defaultPopupPlacement: PopupPlacement = ['right-end'];
+export const defaultPopupOffset: NonNullable<PopupProps['offset']> = [-20, 8];
+
+export const Item: React.FC<ItemInnerProps> = ({
     item,
     compact,
+    className,
     collapseItems,
-    onClick,
     onMouseLeave,
     onMouseEnter,
+    enableTooltip = true,
+    popupVisible = false,
+    popupAnchor,
+    popupPlacement = defaultPopupPlacement,
+    popupOffset = defaultPopupOffset,
+    renderPopupContent,
+    onClosePopup,
 }) => {
     const [tooltipAnchor, setTooltipAnchor] = React.useState<HTMLDivElement | null>(null);
     const [open, toggleOpen] = React.useState<boolean>(false);
-    const popupAnchor = React.useRef<HTMLDivElement>(null);
+
+    const ref = React.useRef<HTMLDivElement>(null);
+    const anchorRef = popupAnchor || ref;
 
     const type = item.type || ITEM_TYPE_REGULAR;
     const current = item.current || false;
@@ -61,10 +86,24 @@ export const Item: React.FC<ItemProps> = ({
     const iconSize = item.iconSize || ICON_SIZE;
     const collapsedItem = item.id === COLLAPSE_ITEM_ID;
 
+    const onClose = React.useCallback(
+        (event: MouseEvent | KeyboardEvent) => {
+            if (
+                event instanceof MouseEvent &&
+                event.target &&
+                ref.current?.contains(event.target as Node)
+            ) {
+                return;
+            }
+            onClosePopup?.();
+        },
+        [onClosePopup],
+    );
+
     const node = (
         <div
-            className={b({type, selected: current, compact})}
-            ref={popupAnchor}
+            className={b({type, current, compact}, className)}
+            ref={ref}
             onClick={() => {
                 if (typeof item.onItemClick === 'function') {
                     item.onItemClick(item, false);
@@ -73,7 +112,6 @@ export const Item: React.FC<ItemProps> = ({
                     toggleOpen(!open);
                     setTooltipAnchor(null);
                 }
-                onClick?.();
             }}
             onMouseEnter={() => {
                 if (!compact) {
@@ -104,20 +142,24 @@ export const Item: React.FC<ItemProps> = ({
                         >
                             {icon && <Icon data={icon} size={iconSize} className={b('icon')} />}
                         </div>
-                        <ItemTooltip anchor={tooltipAnchor} text={tooltipText} />
+                        {enableTooltip && <ItemTooltip anchor={tooltipAnchor} text={tooltipText} />}
                     </React.Fragment>
                 ) : (
                     icon && <Icon data={icon} size={iconSize} className={b('icon')} />
                 )}
             </div>
-            <div className={b('title')} title={item.title}>
+            <div
+                className={b('title')}
+                title={typeof item.title === 'string' ? item.title : undefined}
+            >
                 {renderItemTitle(item)}
             </div>
-            {collapsedItem && Array.isArray(collapseItems) && Boolean(popupAnchor.current) && (
+
+            {collapsedItem && collapseItems?.length && Boolean(anchorRef?.current) && (
                 <Popup
                     placement={POPUP_PLACEMENT}
                     open={open}
-                    anchorRef={popupAnchor}
+                    anchorRef={ref}
                     onClose={() => toggleOpen(false)}
                 >
                     <div className={b('collapse-items-popup-content')}>
@@ -164,6 +206,18 @@ export const Item: React.FC<ItemProps> = ({
                     </div>
                 </Popup>
             )}
+            {renderPopupContent && Boolean(anchorRef?.current) && (
+                <Popup
+                    className={b('popup')}
+                    open={popupVisible}
+                    placement={popupPlacement}
+                    offset={popupOffset}
+                    anchorRef={anchorRef}
+                    onClose={onClose}
+                >
+                    {renderPopupContent()}
+                </Popup>
+            )}
         </div>
     );
 
@@ -179,4 +233,5 @@ export const Item: React.FC<ItemProps> = ({
         node
     );
 };
+
 Item.displayName = 'Item';

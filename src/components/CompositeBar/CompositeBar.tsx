@@ -1,10 +1,11 @@
 import React from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import block from 'bem-cn-lite';
+import {block} from '../utils/cn';
 
-import {MenuItem} from './../types';
+import {AsideHeaderDict, Dict, MenuItem} from './../types';
 import {getItemsHeight, getItemHeight, getSelectedItemIndex} from './utils';
 import {COLLAPSE_ITEM_ID, ITEM_HEIGHT} from './constants';
+import {defaultDict} from './../constants';
 
 import {List} from '@gravity-ui/uikit';
 
@@ -18,7 +19,9 @@ const b = block('composite-bar');
 export interface CompositeBarProps {
     items: MenuItem[];
     compact: boolean;
-    onClickItem?: (item: MenuItem) => void;
+    enableCollapsing: boolean;
+    dict?: AsideHeaderDict;
+    onItemClick?: (item: MenuItem) => void;
 }
 
 interface CompositeBarState {
@@ -32,40 +35,47 @@ export class CompositeBar extends React.Component<CompositeBarProps> {
     private listRef = React.createRef<List<MenuItem>>();
 
     render() {
-        const pinnedItems = this.props.items.filter((item) => item.pinned);
+        const {enableCollapsing, items} = this.props;
+        if (!enableCollapsing) {
+            return <div className={b()}>{this.renderMenu()}</div>;
+        }
+
+        const pinnedItems = items.filter((item) => item.pinned);
+        const afterMoreButtonItems = items.filter((item) => item.afterMoreButton);
         const minHeight =
             getItemsHeight(pinnedItems) +
-            (pinnedItems.length === this.props.items.length ? 0 : ITEM_HEIGHT);
+            getItemsHeight(afterMoreButtonItems) +
+            (pinnedItems.length === items.length ? 0 : ITEM_HEIGHT);
+
         return (
-            <React.Fragment>
-                <div className={b()} style={{minHeight}}>
-                    {this.props.items.length !== 0 && (
-                        <AutoSizer>
-                            {({width, height}) => {
-                                const style = {
-                                    width,
-                                    height,
-                                };
-                                return <div style={style}>{this.renderMenu(height)}</div>;
-                            }}
-                        </AutoSizer>
-                    )}
-                </div>
-            </React.Fragment>
+            <div className={b({autosizer: true})} style={{minHeight}}>
+                {items.length !== 0 && (
+                    <AutoSizer>
+                        {({width, height}) => {
+                            const style = {
+                                width,
+                                height,
+                            };
+                            return <div style={style}>{this.renderAutosizeMenu(height)}</div>;
+                        }}
+                    </AutoSizer>
+                )}
+            </div>
         );
     }
 
-    private renderMenu(height: number) {
-        const {items, compact, onClickItem} = this.props;
+    private renderAutosizeMenu(height: number) {
+        const {dict, items, compact, onItemClick} = this.props;
+
+        const afterMoreButtonItems = items.filter((item) => item.afterMoreButton);
+
         const extraItemHeight = items.reduce(
             (sum, item) => sum + (getItemHeight(item) - ITEM_HEIGHT),
-            0,
+            afterMoreButtonItems.length * ITEM_HEIGHT,
         );
         const capacity = Math.max(1, Math.floor((height - extraItemHeight) / ITEM_HEIGHT));
         let listItems: MenuItem[] | null;
-        let collapseItems: MenuItem[] | null = null;
-
-        const afterMoreButtonItems: MenuItem[] = items.filter((item) => item.afterMoreButton);
+        let collapseItems: MenuItem[] = [];
 
         const regularItems: MenuItem[] = items.filter((item) => !item.afterMoreButton);
 
@@ -97,10 +107,10 @@ export class CompositeBar extends React.Component<CompositeBarProps> {
             listItems = [...regularItems];
         }
 
-        if (collapseItems && collapseItems.length === 1) {
+        if (collapseItems?.length === 1) {
             listItems = listItems.concat(collapseItems);
-        } else if (collapseItems && collapseItems.length > 1) {
-            listItems.push(this.getMoreButtonItem());
+        } else if (collapseItems?.length > 1) {
+            listItems.push(this.getMoreButtonItem(dict));
         }
 
         if (afterMoreButtonItems.length) {
@@ -118,6 +128,7 @@ export class CompositeBar extends React.Component<CompositeBarProps> {
                 virtualized={false}
                 filterable={false}
                 sortable={false}
+                onItemClick={onItemClick}
                 renderItem={(item) => (
                     <Item
                         item={item}
@@ -128,17 +139,48 @@ export class CompositeBar extends React.Component<CompositeBarProps> {
                         }}
                         compact={compact}
                         collapseItems={collapseItems}
-                        onClick={() => onClickItem?.(item)}
                     />
                 )}
             />
         );
     }
 
-    private getMoreButtonItem(): MenuItem {
+    private renderMenu() {
+        const {items, onItemClick, compact} = this.props;
+
+        return (
+            <List<MenuItem>
+                ref={this.listRef}
+                items={items}
+                selectedItemIndex={getSelectedItemIndex(items)}
+                itemHeight={getItemHeight}
+                itemClassName={b('root-menu-item')}
+                itemsHeight={getItemsHeight}
+                virtualized={false}
+                filterable={false}
+                sortable={false}
+                onItemClick={onItemClick}
+                renderItem={(item) => (
+                    <Item
+                        item={item}
+                        onMouseLeave={() => {
+                            if (compact) {
+                                this.listRef.current?.activateItem(undefined as unknown as number);
+                            }
+                        }}
+                        compact={compact}
+                    />
+                )}
+            />
+        );
+    }
+
+    private getMoreButtonItem(dict: CompositeBarProps['dict']): MenuItem {
+        const title = dict?.[Dict.MoreButton] ?? defaultDict[Dict.MoreButton];
+
         return {
             id: COLLAPSE_ITEM_ID,
-            title: 'More', // TODO localize,
+            title,
             icon: dotsIcon,
             iconSize: 16,
         };

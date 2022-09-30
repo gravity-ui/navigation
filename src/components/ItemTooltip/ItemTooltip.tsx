@@ -1,5 +1,5 @@
 import React from 'react';
-import block from 'bem-cn-lite';
+import {block} from '../utils/cn';
 import {Popup, PopupPlacement} from '@gravity-ui/uikit';
 
 import './ItemTooltip.scss';
