@@ -1,7 +1,9 @@
-@use '../../../styles/variables';
+@use '../variables';
 @import '../../../styles/mixins';
 
-.aside-header-logo {
+$block: '.#{variables.$ns}logo';
+
+#{$block} {
     display: flex;
     align-items: center;
     flex-shrink: 0;

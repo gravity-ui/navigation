@@ -1,4 +1,6 @@
-@use '../../../styles/variables';
+@use '../variables';
+
+$block: '.#{variables.$ns}aside-header';
 
 .yc-root {
     --aside-header-background-color: var(--yc-color-base-info);
@@ -17,7 +19,7 @@
     --aside-header-header-divider-line-color: var(--yc-color-base-light-simple-hover);
 }
 
-.aside-header {
+#{$block} {
     $class: &;
     --aside-header-min-width: 56px;
 

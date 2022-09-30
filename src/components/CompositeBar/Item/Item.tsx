@@ -1,5 +1,5 @@
 import React from 'react';
-import block from 'bem-cn-lite';
+import {block} from '../../utils/cn';
 
 import {List, Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
 

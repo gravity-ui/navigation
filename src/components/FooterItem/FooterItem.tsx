@@ -1,5 +1,5 @@
 import React from 'react';
-import block from 'bem-cn-lite';
+import {block} from '../utils/cn';
 
 import {Item, ItemProps} from '../CompositeBar/Item/Item';
 import {ASIDE_HEADER_FOOTER_ICON_SIZE} from '../constants';

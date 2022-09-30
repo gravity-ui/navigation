@@ -1,4 +1,8 @@
-.item-tooltip {
+@use '../variables';
+
+$block: '.#{variables.$ns}item-tooltip';
+
+#{$block} {
     &.yc-popup {
         animation-name: none;
         box-shadow: none;

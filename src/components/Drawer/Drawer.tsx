@@ -1,6 +1,6 @@
 import React from 'react';
 import {CSSTransition, Transition} from 'react-transition-group';
-import block from 'bem-cn-lite';
+import {block} from '../utils/cn';
 
 import './Drawer.scss';
 

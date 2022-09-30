@@ -1,4 +1,8 @@
-.composite-bar {
+@use '../variables';
+
+$block: '.#{variables.$ns}composite-bar';
+
+#{$block} {
     $class: &;
 
     flex: 1 0 auto;

@@ -1,10 +1,10 @@
 import React from 'react';
-import block from 'bem-cn-lite';
+import {block} from '../utils/cn';
 import {Button, Icon, IconProps} from '@gravity-ui/uikit';
 
 import './Logo.scss';
 
-const b = block('aside-header-logo');
+const b = block('logo');
 
 export interface LogoProps {
     text: (() => React.ReactNode) | string;

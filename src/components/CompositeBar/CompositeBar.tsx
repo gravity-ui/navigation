@@ -1,6 +1,6 @@
 import React from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import block from 'bem-cn-lite';
+import {block} from '../utils/cn';
 
 import {AsideHeaderDict, Dict, MenuItem} from './../types';
 import {getItemsHeight, getItemHeight, getSelectedItemIndex} from './utils';

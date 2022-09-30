@@ -1,6 +1,8 @@
-@use '../../../../styles/variables';
+@use '../../variables';
 
-.composite-bar-item {
+$block: '.#{variables.$ns}composite-bar-item';
+
+#{$block} {
     $class: &;
     --composite-bar-item-action-size: 36px;
 

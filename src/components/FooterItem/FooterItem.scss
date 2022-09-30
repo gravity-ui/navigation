@@ -1,4 +1,8 @@
-.footer-item {
+@use '../variables';
+
+$block: '.#{variables.$ns}footer-item';
+
+#{$block} {
     $class: &;
 
     width: 100%;
