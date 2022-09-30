@@ -1,10 +1,9 @@
 .item-tooltip {
-    // TODO ask design
-    // &.yc-popup {
-    //     animation-name: none;
-    //     box-shadow: none;
-    //     border: none;
-    // }
+    &.yc-popup {
+        animation-name: none;
+        box-shadow: none;
+        border: none;
+    }
 
     &__text {
         padding: 6px 12px;

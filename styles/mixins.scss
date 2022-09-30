@@ -5,7 +5,6 @@
         background-color: var(--yc-color-base-selection);
     }
 
-    // TODO ask design
     .yc-root &_current.yc-button_view_flat:hover::before {
         background-color: var(--yc-color-base-selection-hover);
     }

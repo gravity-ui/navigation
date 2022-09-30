@@ -29,8 +29,8 @@ export function DrawerShowcase() {
                 </Button>
             </div>
             <Drawer className={b('drawer')} onVeilClick={hideAll} onEscape={hideAll}>
-                <DrawerItem visible={visible1} className={b('item-1')} />
-                <DrawerItem visible={visible2} className={b('item-2')} />
+                <DrawerItem visible={visible1} id="item-1" className={b('item-1')} content="" />
+                <DrawerItem visible={visible2} id="item-2" className={b('item-2')} content="" />
             </Drawer>
         </div>
     );

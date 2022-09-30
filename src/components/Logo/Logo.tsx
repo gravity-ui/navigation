@@ -8,7 +8,6 @@ const b = block('aside-header-logo');
 
 export interface LogoProps {
     text: (() => React.ReactNode) | string;
-    compact: boolean;
     icon?: IconProps['data'];
     iconSrc?: string;
     iconClassName?: string;
@@ -19,7 +18,11 @@ export interface LogoProps {
     onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 }
 
-export const Logo: React.FC<LogoProps> = ({
+interface LogoInnerProps extends LogoProps {
+    compact: boolean;
+}
+
+export const Logo: React.FC<LogoInnerProps> = ({
     text,
     compact,
     icon,

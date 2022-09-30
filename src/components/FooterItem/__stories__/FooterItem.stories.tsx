@@ -5,6 +5,10 @@ import {Story} from '@storybook/react';
 import {FooterItem, FooterItemProps} from '../FooterItem';
 import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../constants';
 
+import settingsIcon from '../../../../.storybook/assets/settings.svg';
+
+import './FooterItemShowcase.scss';
+
 export default {
     title: 'Components/AsideHeader/FooterItem',
     component: FooterItem,
@@ -16,7 +20,7 @@ export default {
             const width = compact ? ASIDE_HEADER_COMPACT_WIDTH : ASIDE_HEADER_EXPANDED_WIDTH;
 
             return (
-                <div style={{width}}>
+                <div style={{width}} className="footer-item-showcase">
                     <DecoratedStory />
                 </div>
             );
@@ -29,5 +33,9 @@ const Template: Story<FooterItemProps> = (args) => <FooterItem {...args} />;
 export const Default = Template.bind({});
 Default.args = {
     compact: false,
-    text: 'Settings',
+    item: {
+        id: 'settings',
+        title: 'Settings',
+        icon: settingsIcon,
+    },
 };

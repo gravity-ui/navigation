@@ -1,0 +1,79 @@
+@import '../../../../styles/mixins';
+
+body {
+    margin: 0;
+}
+
+.aside-header-showcase {
+    &__content {
+        @include text-body-3;
+        padding: 40px;
+    }
+
+    &__link {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+
+        &,
+        &:hover,
+        &:active,
+        &:visited,
+        &:focus {
+            text-decoration: none;
+            outline: none;
+            color: inherit;
+        }
+    }
+
+    &__settings-ul {
+        padding-right: 30px;
+    }
+
+    &__panel {
+        width: 300px;
+        height: 100%;
+        padding: 20px;
+    }
+
+    &__infra {
+        &-text {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        &-label {
+            flex-shrink: 1;
+            min-width: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        &-period {
+            flex-shrink: 1;
+            margin-left: 8px;
+            color: var(--yc-color-text-secondary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    &__item-accent {
+        @include text-accent;
+        width: 100%;
+        height: 100%;
+    }
+
+    &__settings-panel,
+    &__search-panel {
+        width: 300px;
+        height: 100%;
+        padding: 20px;
+    }
+}

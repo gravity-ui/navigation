@@ -9,13 +9,12 @@
 
     &__logo-btn-place {
         flex-shrink: 0;
-        width: variables.$aside-header-min-width;
+        width: var(--aside-header-min-width);
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
-    // TODO ask design
     &__btn-logo.yc-button_view_flat.yc-button_size_l {
         --yc-button-height: 38px;
     }
@@ -37,7 +36,6 @@
         }
     }
 
-    // TODO ask design
     .yc-root &__btn-logo.button2_theme_flat.button2_hovered_yes::before {
         background-color: transparent;
     }

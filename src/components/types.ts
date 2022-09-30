@@ -5,7 +5,7 @@ export type MenuItemType = 'regular' | 'action';
 
 export interface MenuItem {
     id: string;
-    title: string;
+    title: React.ReactNode;
     tooltipText?: string;
     icon?: IconProps['data'];
     iconSize?: number | string;
@@ -23,3 +23,11 @@ export interface MenuItem {
     type?: MenuItemType;
     afterMoreButton?: boolean;
 }
+
+export enum Dict {
+    ExpandButton = 'button_expand',
+    CollapseButton = 'button_collapse',
+    MoreButton = 'button_more',
+}
+
+export type AsideHeaderDict = Record<Dict, string>;
