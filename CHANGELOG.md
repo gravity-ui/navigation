@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.4](https://github.com/gravity-ui/navigation/compare/v0.0.3...v0.0.4) (2022-10-10)
+
+
+### Bug Fixes
+
+* fix typo in props name ([#8](https://github.com/gravity-ui/navigation/issues/8)) ([c1292e3](https://github.com/gravity-ui/navigation/commit/c1292e391fc9a01f324b0cb4192a331d1f116822))
+
 ## [0.0.3](https://github.com/gravity-ui/navigation/compare/v0.0.2...v0.0.3) (2022-09-30)
 
 
