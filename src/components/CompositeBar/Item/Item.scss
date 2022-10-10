@@ -53,6 +53,13 @@ $block: '.#{$ns}composite-bar-item';
         }
     }
 
+    &__menu-divider {
+        margin: 0 8px;
+        width: 100%;
+        border-top: 1px solid var(--yc-color-line-generic);
+        cursor: default;
+    }
+
     &__collapse-items-popup-content {
         padding: 4px 0;
     }

@@ -1,15 +1,14 @@
 import React from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import {block} from '../utils/cn';
-
-import {AsideHeaderDict, Dict, MenuItem} from './../types';
-import {getItemsHeight, getItemHeight, getSelectedItemIndex} from './utils';
-import {COLLAPSE_ITEM_ID, ITEM_HEIGHT} from './constants';
-import {defaultDict} from './../constants';
-
 import {List} from '@gravity-ui/uikit';
 
+import {block} from '../utils/cn';
+import {AsideHeaderDict, Dict, MenuItem} from './../types';
+import {getItemsHeight, getItemHeight, getSelectedItemIndex, getItemsMinHeight} from './utils';
+import {COLLAPSE_ITEM_ID} from './constants';
+import {defaultDict} from './../constants';
 import {Item} from './Item/Item';
+
 import dotsIcon from '../../../assets/icons/dots.svg';
 
 import './CompositeBar.scss';
@@ -40,12 +39,7 @@ export class CompositeBar extends React.Component<CompositeBarProps> {
             return <div className={b()}>{this.renderMenu()}</div>;
         }
 
-        const pinnedItems = items.filter((item) => item.pinned);
-        const afterMoreButtonItems = items.filter((item) => item.afterMoreButton);
-        const minHeight =
-            getItemsHeight(pinnedItems) +
-            getItemsHeight(afterMoreButtonItems) +
-            (pinnedItems.length === items.length ? 0 : ITEM_HEIGHT);
+        const minHeight = getItemsMinHeight(items);
 
         return (
             <div className={b({autosizer: true})} style={{minHeight}}>
@@ -65,57 +59,9 @@ export class CompositeBar extends React.Component<CompositeBarProps> {
     }
 
     private renderAutosizeMenu(height: number) {
-        const {dict, items, compact, onItemClick} = this.props;
+        const {compact, onItemClick} = this.props;
 
-        const afterMoreButtonItems = items.filter((item) => item.afterMoreButton);
-
-        const extraItemHeight = items.reduce(
-            (sum, item) => sum + (getItemHeight(item) - ITEM_HEIGHT),
-            afterMoreButtonItems.length * ITEM_HEIGHT,
-        );
-        const capacity = Math.max(1, Math.floor((height - extraItemHeight) / ITEM_HEIGHT));
-        let listItems: MenuItem[] | null;
-        let collapseItems: MenuItem[] = [];
-
-        const regularItems: MenuItem[] = items.filter((item) => !item.afterMoreButton);
-
-        if (capacity === 1) {
-            listItems = regularItems.filter((item) => item.pinned);
-            collapseItems = [...regularItems.filter((item) => !item.pinned)];
-        } else if (capacity < items.length) {
-            const extraCount = regularItems.filter(
-                (item, idx) => item.pinned && idx >= capacity - 1,
-            ).length;
-            const pinnedFlag = regularItems.reduceRight(
-                (acc, curr, idx) => {
-                    const useExtraCount = !curr.pinned && idx < capacity - 1 && acc.extraCount > 0;
-                    acc.flags.unshift(curr.pinned || useExtraCount);
-                    return {
-                        flags: acc.flags,
-                        extraCount: acc.extraCount - Number(useExtraCount),
-                    };
-                },
-                {flags: [] as boolean[], extraCount},
-            ).flags;
-            listItems = regularItems.filter(
-                (item, idx) => item.pinned || (idx < capacity - 1 && !pinnedFlag[idx]),
-            );
-            collapseItems = regularItems.filter(
-                (item, idx) => !item.pinned && (idx >= capacity - 1 || pinnedFlag[idx]),
-            );
-        } else {
-            listItems = [...regularItems];
-        }
-
-        if (collapseItems?.length === 1) {
-            listItems = listItems.concat(collapseItems);
-        } else if (collapseItems?.length > 1) {
-            listItems.push(this.getMoreButtonItem(dict));
-        }
-
-        if (afterMoreButtonItems.length) {
-            listItems = listItems.concat(afterMoreButtonItems);
-        }
+        const {listItems, collapseItems} = this.getAutosizeListItems(height);
 
         return (
             <List<MenuItem>
@@ -175,7 +121,8 @@ export class CompositeBar extends React.Component<CompositeBarProps> {
         );
     }
 
-    private getMoreButtonItem(dict: CompositeBarProps['dict']): MenuItem {
+    private getMoreButtonItem(): MenuItem {
+        const {dict} = this.props;
         const title = dict?.[Dict.MoreButton] ?? defaultDict[Dict.MoreButton];
 
         return {
@@ -184,5 +131,58 @@ export class CompositeBar extends React.Component<CompositeBarProps> {
             icon: dotsIcon,
             iconSize: 16,
         };
+    }
+
+    private getAutosizeListItems(height: number): {
+        listItems: MenuItem[];
+        collapseItems: MenuItem[];
+    } {
+        const {items} = this.props;
+
+        const afterMoreButtonItems = items.filter((item) => item.afterMoreButton);
+        const regularItems = items.filter((item) => !item.afterMoreButton);
+        const listItems = [...regularItems, ...afterMoreButtonItems];
+
+        const allItemsHeight = getItemsHeight(listItems);
+        if (allItemsHeight <= height) {
+            return {listItems, collapseItems: []};
+        }
+
+        const collapseItem = this.getMoreButtonItem();
+        const collapseItemHeight = getItemHeight(collapseItem);
+
+        listItems.splice(regularItems.length, 0, collapseItem);
+        const collapseItems: MenuItem[] = [];
+
+        let listHeight = allItemsHeight + collapseItemHeight;
+        let index = listItems.length;
+        while (listHeight > height) {
+            if (index === 0) {
+                break;
+            }
+            index--;
+
+            const item = listItems[index];
+            if (item.pinned || item.id === COLLAPSE_ITEM_ID || item.afterMoreButton) {
+                continue;
+            }
+            if (item.type === 'divider') {
+                if (index + 1 < listItems.length && listItems[index + 1].type === 'divider') {
+                    listHeight -= getItemHeight(item);
+                    listItems.splice(index, 1);
+                }
+                continue;
+            }
+            listHeight -= getItemHeight(item);
+            collapseItems.unshift(...listItems.splice(index, 1));
+        }
+        if (
+            listItems[index].type === 'divider' &&
+            (index === 0 || listItems[index - 1].type === 'divider')
+        ) {
+            listItems.splice(index, 1);
+        }
+
+        return {listItems, collapseItems};
     }
 }
