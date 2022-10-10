@@ -35,7 +35,7 @@ type DrawerChild = React.ReactElement<DrawerItemProps>;
 
 export interface DrawerProps {
     children: DrawerChild | DrawerChild[];
-    preventSrcollBody?: boolean;
+    preventScrollBody?: boolean;
     className?: string;
     style?: React.CSSProperties;
     onVeilClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
@@ -48,7 +48,7 @@ export const Drawer: React.FC<DrawerProps> = ({
     style,
     onVeilClick,
     onEscape,
-    preventSrcollBody = true,
+    preventScrollBody = true,
 }) => {
     let someItemVisible = false;
     React.Children.forEach(children, (child) => {
@@ -76,7 +76,7 @@ export const Drawer: React.FC<DrawerProps> = ({
     }, [onEscape, someItemVisible]);
 
     React.useEffect(() => {
-        const prevPreventSrcollBody = preventSrcollBody;
+        const prevPreventScrollBody = preventScrollBody;
         const cleanupPreventScrollBody = () => {
             document.body.style.paddingRight = '';
             document.body.style.paddingBottom = '';
@@ -89,7 +89,7 @@ export const Drawer: React.FC<DrawerProps> = ({
             document.body.style.paddingBottom = hw + 'px';
             document.body.style.overflow = 'hidden';
         };
-        if (prevPreventSrcollBody) {
+        if (prevPreventScrollBody) {
             if (someItemVisible) {
                 setPreventScrollBody();
             } else {
@@ -97,11 +97,11 @@ export const Drawer: React.FC<DrawerProps> = ({
             }
         }
         return () => {
-            if (prevPreventSrcollBody) {
+            if (prevPreventScrollBody) {
                 cleanupPreventScrollBody();
             }
         };
-    }, [someItemVisible, preventSrcollBody]);
+    }, [someItemVisible, preventScrollBody]);
 
     const containerRef = React.useRef<HTMLDivElement>(null);
     const veilRef = React.useRef<HTMLDivElement>(null);
