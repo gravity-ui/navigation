@@ -4,6 +4,7 @@ import typescript from '@rollup/plugin-typescript';
 import svgr from '@svgr/rollup';
 import scss from 'rollup-plugin-scss';
 import json from 'rollup-plugin-json';
+import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 
 const packageJson = require('./package.json');
 
@@ -23,6 +24,7 @@ export default [
             },
         ],
         plugins: [
+            peerDepsExternal(),
             json(),
             resolve(),
             commonjs(),

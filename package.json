@@ -72,6 +72,7 @@
         "rimraf": "^3.0.2",
         "rollup": "^2.75.7",
         "rollup-plugin-json": "^4.0.0",
+        "rollup-plugin-peer-deps-external": "^2.2.4",
         "rollup-plugin-scss": "^3.0.0",
         "sass": "^1.49.7",
         "sass-loader": "^10.2.1",
@@ -83,8 +84,8 @@
     },
     "peerDependencies": {
         "@gravity-ui/uikit": "^3.0.2",
-        "bem-cn-lite": "^4.0.0",
-        "react": "^16.0.0"
+        "react": "^16.0.0 || ^17.0.0",
+        "react-dom": "^16.0.0 || ^17.0.0"
     },
     "nano-staged": {
         "*.{scss}": [
