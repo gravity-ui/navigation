@@ -27,7 +27,8 @@
         "lint:prettier": "prettier --check '**/*.md'",
         "lint": "run-p lint:*",
         "build-storybook": "build-storybook",
-        "start": "TS_NODE_PROJECT=.storybook/tsconfig.json start-storybook"
+        "start": "TS_NODE_PROJECT=.storybook/tsconfig.json start-storybook",
+        "prepublishOnly": "npm run build"
     },
     "dependencies": {
         "react-transition-group": "^4.4.1",
