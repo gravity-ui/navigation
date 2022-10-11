@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.5](https://github.com/gravity-ui/navigation/compare/v0.0.4...v0.0.5) (2022-10-11)
+
+
+### Bug Fixes
+
+* add prepublishOnly script to package.json ([#12](https://github.com/gravity-ui/navigation/issues/12)) ([9dd3b74](https://github.com/gravity-ui/navigation/commit/9dd3b746de5339108da419b52479de16677e80f8))
+
 ## [0.0.4](https://github.com/gravity-ui/navigation/compare/v0.0.3...v0.0.4) (2022-10-10)
 
 
