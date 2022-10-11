@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.7](https://github.com/gravity-ui/navigation/compare/v0.0.6...v0.0.7) (2022-10-11)
+
+
+### Bug Fixes
+
+* package bundling ([#16](https://github.com/gravity-ui/navigation/issues/16)) ([9987afb](https://github.com/gravity-ui/navigation/commit/9987afb3c2a98ef79dc36d40f08070b4a96c6882))
+
 ## [0.0.6](https://github.com/gravity-ui/navigation/compare/v0.0.5...v0.0.6) (2022-10-11)
 
 
