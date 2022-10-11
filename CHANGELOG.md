@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.6](https://github.com/gravity-ui/navigation/compare/v0.0.5...v0.0.6) (2022-10-11)
+
+
+### Bug Fixes
+
+* import svg ([#14](https://github.com/gravity-ui/navigation/issues/14)) ([91ea13f](https://github.com/gravity-ui/navigation/commit/91ea13ff3b199bbbcc3ddd2472a6b91d2b76b453))
+
 ## [0.0.5](https://github.com/gravity-ui/navigation/compare/v0.0.4...v0.0.5) (2022-10-11)
 
 
