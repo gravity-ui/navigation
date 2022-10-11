@@ -1,6 +1,6 @@
-@use '../variables';
+@import '../variables';
 
-$block: '.#{variables.$ns}footer-item';
+$block: '.#{$ns}footer-item';
 
 #{$block} {
     $class: &;
