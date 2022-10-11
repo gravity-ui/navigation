@@ -1,6 +1,6 @@
-@use '../variables';
+@import '../variables';
 
-$block: '.#{variables.$ns}aside-header';
+$block: '.#{$ns}aside-header';
 
 .yc-root {
     --aside-header-background-color: var(--yc-color-base-info);

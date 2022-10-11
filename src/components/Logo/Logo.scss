@@ -1,7 +1,7 @@
-@use '../variables';
+@import '../variables';
 @import '../../../styles/mixins';
 
-$block: '.#{variables.$ns}logo';
+$block: '.#{$ns}logo';
 
 #{$block} {
     display: flex;
