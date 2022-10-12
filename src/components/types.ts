@@ -1,7 +1,7 @@
 import React from 'react';
 import {IconProps} from '@gravity-ui/uikit';
 
-export type MenuItemType = 'regular' | 'action';
+export type MenuItemType = 'regular' | 'action' | 'divider';
 
 export interface MenuItem {
     id: string;

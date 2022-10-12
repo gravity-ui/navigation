@@ -73,6 +73,10 @@ export const Item: React.FC<ItemInnerProps> = ({
     renderPopupContent,
     onClosePopup,
 }) => {
+    if (item.type === 'divider') {
+        return <div className={b('menu-divider')} />;
+    }
+
     const [tooltipAnchor, setTooltipAnchor] = React.useState<HTMLDivElement | null>(null);
     const [open, toggleOpen] = React.useState<boolean>(false);
 

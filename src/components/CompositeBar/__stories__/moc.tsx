@@ -20,7 +20,6 @@ export const menuItemsShowcase: MenuItem[] = [
         icon: settingsIcon,
         iconSize: 20,
         rightAdornment: renderTag('New'),
-        current: true,
     },
     {
         id: 'templates',
@@ -29,10 +28,9 @@ export const menuItemsShowcase: MenuItem[] = [
         iconSize: 20,
     },
     {
-        id: 'monitoring',
-        title: 'Monitoring',
-        icon: settingsIcon,
-        iconSize: 20,
+        id: 'divider',
+        title: '-',
+        type: 'divider',
     },
     {
         id: 'notifications',
