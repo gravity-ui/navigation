@@ -1,0 +1,15 @@
+@use '../../variables';
+@use '../mixins/list-item';
+@use '../mixins/pull';
+@use '../variables' as bar;
+
+$block: '.#{variables.$ns}action-bar-item';
+
+#{$block} {
+    @include list-item.reset;
+    @include pull.modifiers;
+
+    & + &_spacing {
+        margin-left: bar.$item-spacing;
+    }
+}

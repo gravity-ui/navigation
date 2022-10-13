@@ -1,6 +1,6 @@
-@import '../variables';
+@use '../variables';
 
-$block: '.#{$ns}item-tooltip';
+$block: '.#{variables.$ns}item-tooltip';
 
 #{$block} {
     &.yc-popup {

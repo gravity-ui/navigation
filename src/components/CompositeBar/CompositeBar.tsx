@@ -35,6 +35,11 @@ export class CompositeBar extends React.Component<CompositeBarProps> {
 
     render() {
         const {enableCollapsing, items} = this.props;
+
+        if (items.length === 0) {
+            return null;
+        }
+
         if (!enableCollapsing) {
             return <div className={b()}>{this.renderMenu()}</div>;
         }

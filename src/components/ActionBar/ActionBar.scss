@@ -1,0 +1,14 @@
+@use '../variables';
+@use './variables' as bar;
+
+$block: '.#{variables.$ns}action-bar';
+
+#{$block} {
+    box-sizing: border-box;
+    height: bar.$height;
+    border-bottom: solid 1px var(--yc-color-line-generic);
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+}

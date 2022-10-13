@@ -1,6 +1,6 @@
-@import '../variables';
+@use '../variables';
 
-$block: '.#{$ns}aside-header';
+$block: '.#{variables.$ns}aside-header';
 
 .yc-root {
     --aside-header-background-color: var(--yc-color-base-info);
@@ -201,6 +201,7 @@ $block: '.#{$ns}aside-header';
         width: 100%;
         height: 20px;
         border-top: 1px solid var(--aside-header-collapse-button-divider-line-color);
+        margin-top: auto;
 
         &:not(&_compact) {
             #{$class}__collapse-icon {

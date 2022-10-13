@@ -1,6 +1,6 @@
-@import '../variables';
+@use '../variables';
 
-$block: '.#{$ns}drawer';
+$block: '.#{variables.$ns}drawer';
 
 #{$block} {
     &__item {
