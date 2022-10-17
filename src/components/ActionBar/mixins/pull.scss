@@ -1,0 +1,34 @@
+@mixin left {
+    margin: {
+        left: 0;
+        right: auto;
+    }
+}
+
+@mixin right {
+    margin: {
+        left: auto;
+        right: 0;
+    }
+}
+
+@mixin center {
+    margin: {
+        left: auto;
+        right: auto;
+    }
+}
+
+@mixin modifiers {
+    &_pull_left {
+        @include left;
+    }
+
+    &_pull_right {
+        @include right;
+    }
+
+    &_pull_center {
+        @include center;
+    }
+}

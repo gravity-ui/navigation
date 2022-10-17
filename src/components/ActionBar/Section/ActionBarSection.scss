@@ -1,0 +1,30 @@
+@use '../../variables';
+@use '../variables' as bar;
+
+$block: '.#{variables.$ns}action-bar-section';
+
+#{$block} {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+
+    & + & {
+        border-left: solid 1px var(--yc-color-line-generic);
+    }
+
+    &_type_primary {
+        flex: 1 1 auto;
+        padding: {
+            left: bar.$horizontal-spacing;
+            right: bar.$horizontal-spacing;
+        }
+    }
+
+    &_type_secondary {
+        padding: {
+            left: bar.$horizontal-spacing-compact;
+            right: bar.$horizontal-spacing-compact;
+        }
+    }
+}

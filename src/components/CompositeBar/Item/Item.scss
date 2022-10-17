@@ -1,6 +1,6 @@
-@import '../../variables';
+@use '../../variables';
 
-$block: '.#{$ns}composite-bar-item';
+$block: '.#{variables.$ns}composite-bar-item';
 
 #{$block} {
     $class: &;

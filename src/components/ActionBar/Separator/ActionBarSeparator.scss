@@ -1,0 +1,17 @@
+@use '../../variables';
+@use '../mixins/list-item';
+@use '../mixins/pull';
+@use '../variables' as bar;
+
+$block: '.#{variables.$ns}action-bar-separator';
+
+#{$block} {
+    @include list-item.reset;
+
+    margin: {
+        left: bar.$separator-horizontal-spacing;
+        right: bar.$separator-horizontal-spacing;
+    }
+    border-right: solid 1px var(--yc-color-line-generic);
+    height: bar.$height;
+}
