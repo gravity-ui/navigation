@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.0](https://github.com/gravity-ui/navigation/compare/v0.0.7...v0.1.0) (2022-10-17)
+
+
+### Features
+
+* add ActionBar component ([#19](https://github.com/gravity-ui/navigation/issues/19)) ([595d418](https://github.com/gravity-ui/navigation/commit/595d4189f005615e4ba504cef4689d48fb6a798a))
+* **CompositeBar:** divider item type ([#11](https://github.com/gravity-ui/navigation/issues/11)) ([89f3b85](https://github.com/gravity-ui/navigation/commit/89f3b854ac9348837352809101502a876def8940))
+
 ## [0.0.7](https://github.com/gravity-ui/navigation/compare/v0.0.6...v0.0.7) (2022-10-11)
 
 
