@@ -20,7 +20,7 @@ export interface CompositeBarProps {
     compact: boolean;
     enableCollapsing: boolean;
     dict?: AsideHeaderDict;
-    onItemClick?: (item: MenuItem) => void;
+    onItemClick?: (item: MenuItem, collapsed: boolean) => void;
 }
 
 interface CompositeBarState {
@@ -79,7 +79,6 @@ export class CompositeBar extends React.Component<CompositeBarProps> {
                 virtualized={false}
                 filterable={false}
                 sortable={false}
-                onItemClick={onItemClick}
                 renderItem={(item) => (
                     <Item
                         item={item}
@@ -90,6 +89,7 @@ export class CompositeBar extends React.Component<CompositeBarProps> {
                         }}
                         compact={compact}
                         collapseItems={collapseItems}
+                        onItemClick={onItemClick}
                     />
                 )}
             />
@@ -110,7 +110,6 @@ export class CompositeBar extends React.Component<CompositeBarProps> {
                 virtualized={false}
                 filterable={false}
                 sortable={false}
-                onItemClick={onItemClick}
                 renderItem={(item) => (
                     <Item
                         item={item}
@@ -120,6 +119,7 @@ export class CompositeBar extends React.Component<CompositeBarProps> {
                             }
                         }}
                         compact={compact}
+                        onItemClick={onItemClick}
                     />
                 )}
             />

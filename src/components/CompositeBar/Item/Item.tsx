@@ -30,6 +30,7 @@ interface ItemPopup {
 export interface ItemProps extends ItemPopup {
     item: MenuItem;
     enableTooltip?: boolean;
+    onItemClick?: (item: MenuItem, collapsed: boolean) => void;
 }
 
 interface ItemInnerProps extends ItemProps {
@@ -72,6 +73,7 @@ export const Item: React.FC<ItemInnerProps> = ({
     popupOffset = defaultPopupOffset,
     renderPopupContent,
     onClosePopup,
+    onItemClick,
 }) => {
     if (item.type === 'divider') {
         return <div className={b('menu-divider')} />;
@@ -109,12 +111,16 @@ export const Item: React.FC<ItemInnerProps> = ({
             className={b({type, current, compact}, className)}
             ref={ref}
             onClick={() => {
-                if (typeof item.onItemClick === 'function') {
-                    item.onItemClick(item, false);
-                }
                 if (collapsedItem) {
+                    /**
+                     * If we call onItemClick for collapsedItem then:
+                     * - User get unexpected item in onItemClick callback
+                     * - onClosePanel calls twice for each popuped item, as result it will prevent opening of panelItems
+                     */
                     toggleOpen(!open);
                     setTooltipAnchor(null);
+                } else {
+                    onItemClick?.(item, false);
                 }
             }}
             onMouseEnter={() => {
@@ -181,9 +187,7 @@ export const Item: React.FC<ItemInnerProps> = ({
                                     <div
                                         className={b('collapse-item')}
                                         onClick={() => {
-                                            if (typeof collapseItem.onItemClick === 'function') {
-                                                collapseItem.onItemClick(collapseItem, true);
-                                            }
+                                            onItemClick?.(collapseItem, true);
                                         }}
                                     >
                                         {renderItemTitle(collapseItem)}

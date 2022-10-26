@@ -16,6 +16,7 @@ enum Panel {
     ProjectSettings = 'projectSettings',
     Search = 'search',
     UserSettings = 'userSettings',
+    Components = 'components',
 }
 
 export function AsideHeaderShowcase() {
@@ -35,7 +36,20 @@ export function AsideHeaderShowcase() {
                     href: '#',
                     onClick: () => alert('click on logo'),
                 }}
-                menuItems={menuItemsShowcase}
+                menuItems={[
+                    ...menuItemsShowcase,
+                    {
+                        id: 'components',
+                        title: 'Components',
+                        icon: menuItemIcon,
+                        current: visiblePanel === Panel.Components,
+                        iconSize: 20,
+                        onItemClick: () =>
+                            setVisiblePanel(
+                                visiblePanel === Panel.Components ? undefined : Panel.Components,
+                            ),
+                    },
+                ]}
                 subheaderItems={[
                     {
                         id: 'services',
@@ -154,6 +168,11 @@ export function AsideHeaderShowcase() {
                         id: 'user-settings',
                         content: <div className={b('settings-panel')}>User Settings</div>,
                         visible: visiblePanel === Panel.UserSettings,
+                    },
+                    {
+                        id: 'components',
+                        content: <div className={b('components-panel')}>Components</div>,
+                        visible: visiblePanel === Panel.Components,
                     },
                 ]}
                 onClosePanel={() => setVisiblePanel(undefined)}

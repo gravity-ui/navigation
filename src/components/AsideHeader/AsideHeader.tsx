@@ -86,7 +86,7 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
                             compact={compact}
                             enableCollapsing={true}
                             dict={dict}
-                            onItemClick={this.onCompositeBarClick}
+                            onItemClick={this.onItemClick}
                         />
                         {this.renderFooter(size)}
                         {this.renderCollapseButton()}
@@ -118,6 +118,7 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
                 items={this.props.subheaderItems}
                 compact={this.props.compact}
                 enableCollapsing={false}
+                onItemClick={this.onItemClick}
             />
 
             <Icon
@@ -189,7 +190,8 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
         this.props.onClosePanel?.();
     };
 
-    private onCompositeBarClick = () => {
+    private onItemClick = (item: MenuItem, collapsed: boolean) => {
         this.props.onClosePanel?.();
+        item.onItemClick?.(item, collapsed);
     };
 }
