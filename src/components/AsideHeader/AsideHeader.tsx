@@ -48,11 +48,7 @@ export interface AsideHeaderProps
 
 type AsideHeaderInnerProps = AsideHeaderGeneralProps & AsideHeaderDefaultProps;
 
-interface AsideHeaderState {
-    compact: boolean;
-}
-
-export class AsideHeader extends React.Component<AsideHeaderInnerProps, AsideHeaderState> {
+export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
     static defaultProps: AsideHeaderDefaultProps = {
         panelItems: [],
         subheaderItems: [],
@@ -61,23 +57,8 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps, AsideHea
 
     asideRef = React.createRef<HTMLDivElement>();
 
-    constructor(props: AsideHeaderInnerProps) {
-        super(props);
-
-        this.state = {
-            compact: Boolean(props.compact),
-        };
-    }
-
-    componentDidUpdate(prevProps: AsideHeaderInnerProps) {
-        if (prevProps.compact !== this.props.compact) {
-            this.setState({compact: Boolean(this.props.compact)});
-        }
-    }
-
     render() {
-        const {className} = this.props;
-        const {compact} = this.state;
+        const {className, compact} = this.props;
 
         const size = compact ? ASIDE_HEADER_COMPACT_WIDTH : ASIDE_HEADER_EXPANDED_WIDTH;
 
@@ -92,8 +73,7 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps, AsideHea
     }
 
     private renderFirstPane = (size: number) => {
-        const {dict, menuItems, panelItems} = this.props;
-        const {compact} = this.state;
+        const {dict, menuItems, panelItems, compact} = this.props;
 
         return (
             <div>
@@ -150,11 +130,11 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps, AsideHea
     );
 
     private renderFooter = (size: number) => {
-        const {compact} = this.state;
+        const {compact, renderFooter} = this.props;
 
         return (
             <div className={b('footer')}>
-                {this.props.renderFooter?.({
+                {renderFooter?.({
                     size,
                     compact,
                     asideRef: this.asideRef,
@@ -202,11 +182,7 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps, AsideHea
     };
 
     private onCollapseButtonClick = () => {
-        const newCompact = !this.state.compact;
-
-        this.setState({compact: newCompact});
-
-        this.props.onChangeCompact?.(newCompact);
+        this.props.onChangeCompact?.(!this.props.compact);
     };
 
     private onCloseDrawer = () => {
