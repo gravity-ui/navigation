@@ -1,0 +1,79 @@
+@use '../../variables';
+@import '../../../../styles/mixins';
+
+$block: '.#{variables.$ns}settings-menu';
+
+#{$block} {
+    &__group {
+        &-heading {
+            @include text-accent;
+            display: inline-block;
+            padding: 0 20px;
+            margin-bottom: 12px;
+            line-height: 18px;
+        }
+
+        & + & {
+            margin-top: 24px;
+        }
+    }
+
+    &__item {
+        $item: &;
+        display: flex;
+        align-items: center;
+        height: 40px;
+        padding: 0 20px;
+        cursor: pointer;
+
+        color: var(--yc-color-text-primary);
+
+        &-icon {
+            color: var(--yc-color-text-misc);
+            margin-right: 5px;
+        }
+
+        &:hover,
+        &_focused {
+            background: var(--yc-color-base-simple-hover);
+        }
+
+        &_selected {
+            background: var(--yc-color-base-selection);
+        }
+
+        &_selected:hover,
+        &_selected#{$item}_focused {
+            background: var(--yc-color-base-selection-hover);
+        }
+
+        &_disabled {
+            color: var(--yc-color-text-secondary);
+            cursor: auto;
+
+            &:hover {
+                background: none;
+            }
+
+            #{$item}-icon {
+                color: var(--yc-color-base-misc-heavy);
+            }
+        }
+
+        &_badge {
+            position: relative;
+
+            &::after {
+                content: '';
+                display: block;
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background-color: var(--yc-color-text-danger);
+                position: absolute;
+                right: 9px;
+                top: calc(50% - 3px);
+            }
+        }
+    }
+}

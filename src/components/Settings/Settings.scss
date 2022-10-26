@@ -1,0 +1,97 @@
+@use '../variables';
+@import '../../../styles/mixins';
+
+$block: '.#{variables.$ns}settings';
+
+#{$block} {
+    display: grid;
+    grid-template-columns: 216px 1fr;
+    width: 834px;
+    height: 100%;
+
+    &_loading {
+        grid-template-columns: auto;
+    }
+
+    &__loader {
+        align-self: center;
+        justify-self: center;
+    }
+
+    &__not-found {
+        display: grid;
+        align-items: center;
+        justify-items: center;
+        height: 100%;
+    }
+
+    &__menu {
+        border-right: 1px solid var(--yc-color-line-generic);
+    }
+
+    &__heading {
+        @include text-subheader-2;
+        margin: 20px 20px 0;
+    }
+
+    &__search {
+        margin: 12px 20px 16px;
+    }
+
+    &__page {
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    &__section {
+        &-heading {
+            @include text-subheader-2;
+            margin: 0;
+        }
+
+        &-item {
+            margin-top: 24px;
+        }
+
+        & + & {
+            margin-top: 32px;
+        }
+    }
+
+    &__item {
+        display: grid;
+        grid-template-columns: 216px 1fr;
+        justify-items: start;
+
+        &_align_top {
+            align-items: start;
+        }
+
+        &_align_center {
+            align-items: center;
+        }
+    }
+
+    &__item-heading {
+        &_badge {
+            position: relative;
+
+            &::after {
+                content: '';
+                display: block;
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background-color: var(--yc-color-text-danger);
+                position: absolute;
+                right: -8px;
+                top: 1px;
+            }
+        }
+    }
+
+    &__found {
+        @include text-accent;
+        background: var(--yc-color-base-selection);
+    }
+}
