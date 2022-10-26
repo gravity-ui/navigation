@@ -1,0 +1,11 @@
+.settings-demo {
+    height: 100%;
+
+    &__checkbox + &__checkbox {
+        margin-top: 10px;
+    }
+
+    &__appearance-header {
+        margin-top: 10px;
+    }
+}
