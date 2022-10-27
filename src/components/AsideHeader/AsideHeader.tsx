@@ -76,7 +76,7 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
         const {dict, menuItems, panelItems, compact} = this.props;
 
         return (
-            <div>
+            <React.Fragment>
                 <div className={b('aside')} style={{width: size}}>
                     <div className={b('aside-popup-anchor')} ref={this.asideRef} />
                     <div className={b('aside-content')}>
@@ -94,7 +94,7 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
                 </div>
 
                 {panelItems && this.renderPanels(size)}
-            </div>
+            </React.Fragment>
         );
     };
 
