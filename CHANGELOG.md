@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/gravity-ui/navigation/compare/v0.2.0...v0.2.1) (2022-10-31)
+
+
+### Bug Fixes
+
+* types declaration dir ([#27](https://github.com/gravity-ui/navigation/issues/27)) ([6840db8](https://github.com/gravity-ui/navigation/commit/6840db839a13ac77b13d11c06907b6fff52b4845))
+
 ## [0.2.0](https://github.com/gravity-ui/navigation/compare/v0.1.0...v0.2.0) (2022-10-31)
 
 
