@@ -6,8 +6,7 @@
     "baseUrl": ".",
     "allowJs": true,
     "outDir": "build",
-    "declaration": true,
-    "declarationDir": "types"
+    "declaration": true
   },
   "include": [
     "src/**/*.ts",
