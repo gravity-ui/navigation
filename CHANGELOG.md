@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.2.0](https://github.com/gravity-ui/navigation/compare/v0.1.0...v0.2.0) (2022-10-31)
+
+
+### Features
+
+* add Settings component ([b7ad550](https://github.com/gravity-ui/navigation/commit/b7ad550825d5cc0ac416b57d0c35f6ccd459793d))
+
+
+### Bug Fixes
+
+* component AsideHeader should be stateless ([e2cbd15](https://github.com/gravity-ui/navigation/commit/e2cbd15921d051aada9246f27f34c60ca8169ec9))
+* onClosePanel should be called before onItemClick ([8d0acb5](https://github.com/gravity-ui/navigation/commit/8d0acb5603129817aea929f881f85a264b074fe7))
+* package-lock.json ([#26](https://github.com/gravity-ui/navigation/issues/26)) ([14f012e](https://github.com/gravity-ui/navigation/commit/14f012eeda4f97bbd0e4e48e7b83bf195cb3c0ab))
+* set z-index for .ycn-aside-header__content ([b793bc6](https://github.com/gravity-ui/navigation/commit/b793bc63ca760f608a4f5f2961af1947b0972fc2))
+* sticky-element should not be restrict by an extra parent element ([5ecfac3](https://github.com/gravity-ui/navigation/commit/5ecfac3da2b390255485aef63718b6a2c4c4a8c0))
+
 ## [0.1.0](https://github.com/gravity-ui/navigation/compare/v0.0.7...v0.1.0) (2022-10-17)
 
 
