@@ -8,7 +8,7 @@ import './FooterItem.scss';
 
 const b = block('footer-item');
 
-export interface FooterItemProps extends ItemProps {
+export interface FooterItemProps extends Omit<ItemProps, 'onItemClick'> {
     compact: boolean;
 }
 
@@ -18,6 +18,7 @@ export const FooterItem: React.FC<FooterItemProps> = ({item, ...props}) => {
             {...props}
             item={{iconSize: ASIDE_HEADER_FOOTER_ICON_SIZE, ...item}}
             className={b({compact: props.compact})}
+            onItemClick={item.onItemClick}
         />
     );
 };
