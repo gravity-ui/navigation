@@ -3,6 +3,11 @@ import {IconProps} from '@gravity-ui/uikit';
 
 export type MenuItemType = 'regular' | 'action' | 'divider';
 
+export interface MakeItemParams {
+    icon?: React.ReactNode;
+    title: React.ReactNode;
+}
+
 export interface MenuItem {
     id: string;
     title: React.ReactNode;
@@ -14,10 +19,9 @@ export interface MenuItem {
     pinned?: boolean;
     onItemClick?: (item: MenuItem, collapsed: boolean) => void;
     itemWrapper?: (
-        node: React.ReactNode,
-        item: MenuItem,
-        collapsed: boolean,
-        compact: boolean,
+        p: MakeItemParams,
+        makeItem: (p: MakeItemParams) => React.ReactNode,
+        opts: {collapsed?: boolean; compact?: boolean; item: MenuItem},
     ) => React.ReactNode;
     rightAdornment?: React.ReactNode;
     type?: MenuItemType;

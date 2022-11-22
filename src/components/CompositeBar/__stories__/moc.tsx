@@ -62,13 +62,13 @@ export const menuItemsShowcase: MenuItem[] = [
         onItemClick({id, title, current}) {
             alert(JSON.stringify({id, title, current}));
         },
-        itemWrapper(...[node, , isCollapsed, isCompact]) {
-            return !isCollapsed && !isCompact ? (
+        itemWrapper(params, makeItem, {collapsed, compact}) {
+            return !collapsed && !compact ? (
                 <div className="composite-bar-showcase__item-accent aside-header-showcase__item-accent">
-                    {node}
+                    {makeItem(params)}
                 </div>
             ) : (
-                node
+                makeItem(params)
             );
         },
     },
