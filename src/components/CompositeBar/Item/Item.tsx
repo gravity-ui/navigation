@@ -4,7 +4,7 @@ import {block} from '../../utils/cn';
 import {List, Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
 
 import {ItemTooltip} from '../../ItemTooltip/ItemTooltip';
-import {MenuItem} from '../../types';
+import {MakeItemParams, MenuItem} from '../../types';
 import {getSelectedItemIndex} from '../utils';
 import {
     COLLAPSE_ITEM_ID,
@@ -59,22 +59,24 @@ function renderItemTitle(item: MenuItem) {
 export const defaultPopupPlacement: PopupPlacement = ['right-end'];
 export const defaultPopupOffset: NonNullable<PopupProps['offset']> = [-20, 8];
 
-export const Item: React.FC<ItemInnerProps> = ({
-    item,
-    compact,
-    className,
-    collapseItems,
-    onMouseLeave,
-    onMouseEnter,
-    enableTooltip = true,
-    popupVisible = false,
-    popupAnchor,
-    popupPlacement = defaultPopupPlacement,
-    popupOffset = defaultPopupOffset,
-    renderPopupContent,
-    onClosePopup,
-    onItemClick,
-}) => {
+export const Item: React.FC<ItemInnerProps> = (props) => {
+    const {
+        item,
+        compact,
+        className,
+        collapseItems,
+        onMouseLeave,
+        onMouseEnter,
+        enableTooltip = true,
+        popupVisible = false,
+        popupAnchor,
+        popupPlacement = defaultPopupPlacement,
+        popupOffset = defaultPopupOffset,
+        renderPopupContent,
+        onClosePopup,
+        onItemClick,
+    } = props;
+
     if (item.type === 'divider') {
         return <div className={b('menu-divider')} />;
     }
@@ -106,140 +108,173 @@ export const Item: React.FC<ItemInnerProps> = ({
         [onClosePopup],
     );
 
-    const node = (
-        <div
-            className={b({type, current, compact}, className)}
-            ref={ref}
-            onClick={() => {
-                if (collapsedItem) {
-                    /**
-                     * If we call onItemClick for collapsedItem then:
-                     * - User get unexpected item in onItemClick callback
-                     * - onClosePanel calls twice for each popuped item, as result it will prevent opening of panelItems
-                     */
-                    toggleOpen(!open);
-                    setTooltipAnchor(null);
-                } else {
-                    onItemClick?.(item, false);
-                }
-            }}
-            onMouseEnter={() => {
-                if (!compact) {
-                    onMouseEnter?.();
-                }
-            }}
-            onMouseLeave={() => {
-                if (!compact) {
-                    onMouseLeave?.();
-                }
-            }}
-        >
-            <div className={b('icon-place')}>
-                {compact ? (
-                    <React.Fragment>
-                        <div
-                            onMouseEnter={(event) => {
-                                if (!open) {
-                                    setTooltipAnchor(event.currentTarget);
-                                }
-                                onMouseEnter?.();
-                            }}
-                            onMouseLeave={() => {
-                                setTooltipAnchor(null);
-                                onMouseLeave?.();
-                            }}
-                            className={b('btn-icon')}
-                        >
-                            {icon && <Icon data={icon} size={iconSize} className={b('icon')} />}
-                        </div>
-                        {enableTooltip && <ItemTooltip anchor={tooltipAnchor} text={tooltipText} />}
-                    </React.Fragment>
-                ) : (
-                    icon && <Icon data={icon} size={iconSize} className={b('icon')} />
+    const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
+        const createdNode = (
+            <div
+                className={b({type, current, compact}, className)}
+                ref={ref}
+                onClick={() => {
+                    if (collapsedItem) {
+                        /**
+                         * If we call onItemClick for collapsedItem then:
+                         * - User get unexpected item in onItemClick callback
+                         * - onClosePanel calls twice for each popuped item, as result it will prevent opening of panelItems
+                         */
+                        toggleOpen(!open);
+                        setTooltipAnchor(null);
+                    } else {
+                        onItemClick?.(item, false);
+                    }
+                }}
+                onMouseEnter={() => {
+                    if (!compact) {
+                        onMouseEnter?.();
+                    }
+                }}
+                onMouseLeave={() => {
+                    if (!compact) {
+                        onMouseLeave?.();
+                    }
+                }}
+            >
+                <div className={b('icon-place')}>
+                    {compact ? (
+                        <React.Fragment>
+                            <div
+                                onMouseEnter={(event) => {
+                                    if (!open) {
+                                        setTooltipAnchor(event.currentTarget);
+                                    }
+                                    onMouseEnter?.();
+                                }}
+                                onMouseLeave={() => {
+                                    setTooltipAnchor(null);
+                                    onMouseLeave?.();
+                                }}
+                                className={b('btn-icon')}
+                            >
+                                {iconEl}
+                            </div>
+                            {enableTooltip && (
+                                <ItemTooltip anchor={tooltipAnchor} text={tooltipText} />
+                            )}
+                        </React.Fragment>
+                    ) : (
+                        iconEl
+                    )}
+                </div>
+                <div
+                    className={b('title')}
+                    title={typeof item.title === 'string' ? item.title : undefined}
+                >
+                    {titleEl}
+                </div>
+
+                {renderPopupContent && Boolean(anchorRef?.current) && (
+                    <Popup
+                        className={b('popup')}
+                        open={popupVisible}
+                        placement={popupPlacement}
+                        offset={popupOffset}
+                        anchorRef={anchorRef}
+                        onClose={onClose}
+                    >
+                        {renderPopupContent()}
+                    </Popup>
                 )}
             </div>
-            <div
-                className={b('title')}
-                title={typeof item.title === 'string' ? item.title : undefined}
-            >
-                {renderItemTitle(item)}
-            </div>
+        );
 
-            {collapsedItem && collapseItems?.length && Boolean(anchorRef?.current) && (
-                <Popup
-                    placement={POPUP_PLACEMENT}
-                    open={open}
-                    anchorRef={ref}
-                    onClose={() => toggleOpen(false)}
-                >
-                    <div className={b('collapse-items-popup-content')}>
-                        <List
-                            itemClassName={b('root-collapse-item')}
-                            items={collapseItems}
-                            selectedItemIndex={getSelectedItemIndex(collapseItems)}
-                            itemHeight={POPUP_ITEM_HEIGHT}
-                            itemsHeight={collapseItems.length * POPUP_ITEM_HEIGHT}
-                            virtualized={false}
-                            filterable={false}
-                            sortable={false}
-                            renderItem={(collapseItem) => {
-                                const collapseNode = (
-                                    <div
-                                        className={b('collapse-item')}
-                                        onClick={() => {
-                                            onItemClick?.(collapseItem, true);
-                                        }}
-                                    >
-                                        {renderItemTitle(collapseItem)}
-                                    </div>
-                                );
-                                if (typeof collapseItem.itemWrapper === 'function') {
-                                    return collapseItem.itemWrapper(
-                                        collapseNode,
-                                        collapseItem,
-                                        true,
-                                        compact,
-                                    );
-                                }
+        return item.link ? (
+            <a href={item.link} className={b('link')}>
+                {createdNode}
+            </a>
+        ) : (
+            createdNode
+        );
+    };
 
-                                return collapseItem.link ? (
-                                    <a href={collapseItem.link} className={b('link')}>
-                                        {collapseNode}
-                                    </a>
-                                ) : (
-                                    collapseNode
-                                );
-                            }}
-                        />
-                    </div>
-                </Popup>
-            )}
-            {renderPopupContent && Boolean(anchorRef?.current) && (
-                <Popup
-                    className={b('popup')}
-                    open={popupVisible}
-                    placement={popupPlacement}
-                    offset={popupOffset}
-                    anchorRef={anchorRef}
-                    onClose={onClose}
-                >
-                    {renderPopupContent()}
-                </Popup>
-            )}
-        </div>
-    );
+    const iconNode = icon ? <Icon data={icon} size={iconSize} className={b('icon')} /> : null;
+    const titleNode = renderItemTitle(item);
+    const params = {icon: iconNode, title: titleNode};
+    let node;
+
+    const opts = {compact, item};
 
     if (typeof item.itemWrapper === 'function') {
-        return item.itemWrapper(node, item, false, compact) as React.ReactElement;
+        node = item.itemWrapper(params, makeNode, opts) as React.ReactElement;
+    } else {
+        node = makeNode(params);
     }
 
-    return item.link ? (
-        <a href={item.link} className={b('link')}>
+    return (
+        <>
             {node}
-        </a>
-    ) : (
-        node
+            {open && collapsedItem && collapseItems?.length && Boolean(anchorRef?.current) && (
+                <CollapsedPopup {...props} anchorRef={ref} onClose={() => toggleOpen(false)} />
+            )}
+        </>
     );
 };
 
 Item.displayName = 'Item';
+
+interface CollapsedPopupProps {
+    anchorRef?: React.RefObject<HTMLElement>;
+    onClose: () => void;
+}
+
+function CollapsedPopup({
+    onItemClick,
+    collapseItems,
+    anchorRef,
+    onClose,
+}: ItemInnerProps & CollapsedPopupProps) {
+    return collapseItems?.length ? (
+        <Popup placement={POPUP_PLACEMENT} open={true} anchorRef={anchorRef} onClose={onClose}>
+            <div className={b('collapse-items-popup-content')}>
+                <List
+                    itemClassName={b('root-collapse-item')}
+                    items={collapseItems}
+                    selectedItemIndex={getSelectedItemIndex(collapseItems)}
+                    itemHeight={POPUP_ITEM_HEIGHT}
+                    itemsHeight={collapseItems.length * POPUP_ITEM_HEIGHT}
+                    virtualized={false}
+                    filterable={false}
+                    sortable={false}
+                    renderItem={(collapseItem) => {
+                        const makeCollapseNode = ({title: titleEl}: MakeItemParams) => {
+                            const res = (
+                                <div
+                                    className={b('collapse-item')}
+                                    onClick={() => {
+                                        onItemClick?.(collapseItem, true);
+                                    }}
+                                >
+                                    {titleEl}
+                                </div>
+                            );
+
+                            return collapseItem.link ? (
+                                <a href={collapseItem.link} className={b('link')}>
+                                    {res}
+                                </a>
+                            ) : (
+                                res
+                            );
+                        };
+
+                        const titleNode = renderItemTitle(collapseItem);
+                        const params = {title: titleNode};
+                        const opts = {collapsed: true, item: collapseItem};
+                        if (typeof collapseItem.itemWrapper === 'function') {
+                            return collapseItem.itemWrapper(params, makeCollapseNode, opts);
+                        } else {
+                            return makeCollapseNode(params);
+                        }
+                    }}
+                />
+            </div>
+        </Popup>
+    ) : null;
+}
