@@ -81,13 +81,17 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
                     <div className={b('aside-popup-anchor')} ref={this.asideRef} />
                     <div className={b('aside-content')}>
                         {this.renderHeader()}
-                        <CompositeBar
-                            items={menuItems}
-                            compact={compact}
-                            enableCollapsing={true}
-                            dict={dict}
-                            onItemClick={this.onItemClick}
-                        />
+                        {menuItems?.length ? (
+                            <CompositeBar
+                                items={menuItems}
+                                compact={compact}
+                                enableCollapsing={true}
+                                dict={dict}
+                                onItemClick={this.onItemClick}
+                            />
+                        ) : (
+                            <div className={b('menu-items')} />
+                        )}
                         {this.renderFooter(size)}
                         {this.renderCollapseButton()}
                     </div>
