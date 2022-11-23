@@ -158,6 +158,10 @@ $block: '.#{variables.$ns}aside-header';
         }
     }
 
+    &__menu-items {
+        flex-grow: 1;
+    }
+
     &__footer {
         flex-shrink: 0;
         width: 100%;
