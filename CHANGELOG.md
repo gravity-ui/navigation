@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.3.0](https://github.com/gravity-ui/navigation/compare/v0.2.1...v0.3.0) (2022-11-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* 
+
+### Features
+
+* better implementation of MenuItem.itemWrapper ([df865df](https://github.com/gravity-ui/navigation/commit/df865df329f6c1e62c09063cdbf1596e634e8145))
+
+
+### Bug Fixes
+
+* footer items should be in bottom even if menuItems is empty ([d55e55e](https://github.com/gravity-ui/navigation/commit/d55e55e267be989b2f94d552476f21c116af9489))
+
 ## [0.2.1](https://github.com/gravity-ui/navigation/compare/v0.2.0...v0.2.1) (2022-10-31)
 
 
