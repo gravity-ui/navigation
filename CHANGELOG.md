@@ -5,11 +5,7 @@
 
 ### ⚠ BREAKING CHANGES
 
-* 
-
-### Features
-
-* better implementation of MenuItem.itemWrapper ([df865df](https://github.com/gravity-ui/navigation/commit/df865df329f6c1e62c09063cdbf1596e634e8145))
+* Type of FooterItemProps.item.itemWrapper is changed ([df865df](https://github.com/gravity-ui/navigation/commit/df865df329f6c1e62c09063cdbf1596e634e8145))
 
 
 ### Bug Fixes
