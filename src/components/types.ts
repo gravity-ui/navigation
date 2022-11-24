@@ -21,7 +21,7 @@ export interface MenuItem {
     itemWrapper?: (
         p: MakeItemParams,
         makeItem: (p: MakeItemParams) => React.ReactNode,
-        opts: {collapsed?: boolean; compact?: boolean; item: MenuItem},
+        opts: {collapsed: boolean; compact: boolean; item: MenuItem},
     ) => React.ReactNode;
     rightAdornment?: React.ReactNode;
     type?: MenuItemType;
