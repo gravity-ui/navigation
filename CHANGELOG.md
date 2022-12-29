@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/gravity-ui/navigation/compare/v0.3.0...v0.3.1) (2022-12-29)
+
+
+### Bug Fixes
+
+* keep svg viewbox ([#33](https://github.com/gravity-ui/navigation/issues/33)) ([0205630](https://github.com/gravity-ui/navigation/commit/020563098e5e1d8187f2d2c62e7ef9af4d4085eb))
+
 ## [0.3.0](https://github.com/gravity-ui/navigation/compare/v0.2.1...v0.3.0) (2022-11-24)
 
 
