@@ -53,6 +53,11 @@ export const menuItemsShowcase: MenuItem[] = [
         },
     },
     {
+        id: 'divider2',
+        title: '-',
+        type: 'divider',
+    },
+    {
         id: 'id1',
         title: 'Objects',
         tooltipText: 'Custom tooltip text',
