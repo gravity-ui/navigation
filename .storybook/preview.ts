@@ -22,8 +22,10 @@ export const globalTypes = {
         defaultValue: 'light',
         toolbar: {
             items: [
-                {value: 'light', icon: 'circle', title: 'Light'},
-                {value: 'dark', icon: 'circlehollow', title: 'Dark'},
+                {value: 'light', right: '☼', title: 'Light'},
+                {value: 'dark', right: '☾', title: 'Dark'},
+                {value: 'light-hc', right: '☼', title: 'High Contrast Light'},
+                {value: 'dark-hc', right: '☾', title: 'High Contrast Dark'},
             ],
         },
     },

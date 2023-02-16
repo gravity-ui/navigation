@@ -9,14 +9,16 @@ $block: '.#{variables.$ns}aside-header';
     );
 }
 
-.yc-root_theme_light {
+.yc-root_theme_light,
+.yc-root_theme_light-hc {
     --aside-header-divider-line-color: transparent;
     --aside-header-header-divider-line-color: var(--yc-color-line-generic);
 }
 
-.yc-root_theme_dark {
-    --aside-header-divider-line-color: var(--yc-color-base-light-simple-hover);
-    --aside-header-header-divider-line-color: var(--yc-color-base-light-simple-hover);
+.yc-root_theme_dark,
+.yc-root_theme_dark-hc {
+    --aside-header-divider-line-color: var(--yc-color-line-solid);
+    --aside-header-header-divider-line-color: var(--yc-color-line-solid);
 }
 
 #{$block} {
