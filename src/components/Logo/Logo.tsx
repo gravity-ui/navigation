@@ -88,7 +88,7 @@ export const Logo: React.FC<LogoInnerProps> = ({
             </div>
             {!compact &&
                 (hasWrapper ? (
-                    wrapper(logo, compact)
+                    <div onClick={onClick}>{wrapper(logo, compact)}</div>
                 ) : (
                     <a {...linkProps} className={b('logo-link')} onClick={onClick}>
                         {logo}
