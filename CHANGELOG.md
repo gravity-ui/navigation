@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.2](https://github.com/gravity-ui/navigation/compare/v0.3.1...v0.3.2) (2023-02-17)
+
+
+### Bug Fixes
+
+* **AsideHeader:** panel border in High Contrast themes ([#37](https://github.com/gravity-ui/navigation/issues/37)) ([340f9bb](https://github.com/gravity-ui/navigation/commit/340f9bb5b728fe9757e9f9db26669f12e3770ae9))
+* **Logo:** close panels by logo click ([#39](https://github.com/gravity-ui/navigation/issues/39)) ([860e8b2](https://github.com/gravity-ui/navigation/commit/860e8b29408ed5eba0880f0ebc63e2e6551ded4d))
+
 ## [0.3.1](https://github.com/gravity-ui/navigation/compare/v0.3.0...v0.3.1) (2022-12-29)
 
 
