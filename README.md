@@ -1,6 +1,6 @@
 # @gravity-ui/navigation &middot; [![npm package](https://img.shields.io/npm/v/@gravity-ui/navigation)](https://www.npmjs.com/package/@gravity-ui/navigation) [![CI](https://img.shields.io/github/actions/workflow/status/gravity-ui/navigation/.github/workflows/ci.yml?branch=main&label=CI&logo=github)](https://github.com/gravity-ui/navigation/actions/workflows/ci.yml?query=branch:main) [![storybook](https://img.shields.io/badge/Storybook-deployed-ff4685)](https://preview.yandexcloud.dev/navigation/)
 
-### Aside Header Navigation &middot; [Preview →](preview.yandexcloud.dev/navigation/)
+### Aside Header Navigation &middot; [Preview →](https://preview.yandexcloud.dev/navigation/)
 
 ![](docs/images/showcase.png)
 
