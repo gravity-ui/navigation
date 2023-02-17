@@ -112,7 +112,9 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
         );
     };
 
-    private renderLogo = () => <Logo {...this.props.logo} compact={this.props.compact} />;
+    private renderLogo = () => (
+        <Logo {...this.props.logo} compact={this.props.compact} onClick={this.onLogoClick} />
+    );
 
     private renderHeader = () => (
         <div className={b('header')}>
@@ -197,5 +199,10 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
     private onItemClick = (item: MenuItem, collapsed: boolean) => {
         this.props.onClosePanel?.();
         item.onItemClick?.(item, collapsed);
+    };
+
+    private onLogoClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+        this.props.onClosePanel?.();
+        this.props.logo.onClick?.(event);
     };
 }
