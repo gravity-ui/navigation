@@ -1,9 +1,8 @@
 import React from 'react';
 import {block} from '../../utils/cn';
 
-import {List, Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
+import {List, Icon, Popup, PopupPlacement, PopupProps, Tooltip} from '@gravity-ui/uikit';
 
-import {ItemTooltip} from '../../ItemTooltip/ItemTooltip';
 import {MakeItemParams, MenuItem} from '../../types';
 import {getSelectedItemIndex} from '../utils';
 import {
@@ -81,7 +80,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         return <div className={b('menu-divider')} />;
     }
 
-    const [tooltipAnchor, setTooltipAnchor] = React.useState<HTMLDivElement | null>(null);
     const [open, toggleOpen] = React.useState<boolean>(false);
 
     const ref = React.useRef<HTMLDivElement>(null);
@@ -121,7 +119,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                          * - onClosePanel calls twice for each popuped item, as result it will prevent opening of panelItems
                          */
                         toggleOpen(!open);
-                        setTooltipAnchor(null);
                     } else {
                         onItemClick?.(item, false);
                     }
@@ -139,30 +136,24 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             >
                 <div className={b('icon-place')}>
                     {compact ? (
-                        <React.Fragment>
+                        <Tooltip
+                            content={tooltipText}
+                            disabled={!enableTooltip || (collapsedItem && open)}
+                            placement="right"
+                        >
                             <div
-                                onMouseEnter={(event) => {
-                                    if (!open) {
-                                        setTooltipAnchor(event.currentTarget);
-                                    }
-                                    onMouseEnter?.();
-                                }}
-                                onMouseLeave={() => {
-                                    setTooltipAnchor(null);
-                                    onMouseLeave?.();
-                                }}
+                                onMouseEnter={() => onMouseEnter?.()}
+                                onMouseLeave={() => onMouseLeave?.()}
                                 className={b('btn-icon')}
                             >
                                 {iconEl}
                             </div>
-                            {enableTooltip && (
-                                <ItemTooltip anchor={tooltipAnchor} text={tooltipText} />
-                            )}
-                        </React.Fragment>
+                        </Tooltip>
                     ) : (
                         iconEl
                     )}
                 </div>
+
                 <div
                     className={b('title')}
                     title={typeof item.title === 'string' ? item.title : undefined}
