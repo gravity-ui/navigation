@@ -140,6 +140,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                             content={tooltipText}
                             disabled={!enableTooltip || (collapsedItem && open)}
                             placement="right"
+                            className={b('icon-tooltip', {'item-type': type})}
                         >
                             <div
                                 onMouseEnter={() => onMouseEnter?.()}
