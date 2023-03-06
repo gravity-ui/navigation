@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://github.com/gravity-ui/navigation/compare/v0.3.2...v0.4.0) (2023-03-06)
+
+
+### Features
+
+* use uikit Tooltip ([#42](https://github.com/gravity-ui/navigation/issues/42)) ([2de0cac](https://github.com/gravity-ui/navigation/commit/2de0cac90c730f40ab41c49312bdd367c4f9cada))
+
+
+### Bug Fixes
+
+* updated README.md storybook link ([#40](https://github.com/gravity-ui/navigation/issues/40)) ([511abd9](https://github.com/gravity-ui/navigation/commit/511abd9f1051b361e5918d91eaaf3bb1af65f2d3))
+
 ## [0.3.2](https://github.com/gravity-ui/navigation/compare/v0.3.1...v0.3.2) (2023-02-17)
 
 
