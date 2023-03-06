@@ -125,6 +125,10 @@ $block: '.#{variables.$ns}composite-bar-item';
         }
     }
 
+    &__icon-tooltip_item-type_action {
+        margin-left: 10px;
+    }
+
     &:not(&_compact) {
         &#{$class}_current {
             &#{$class}_type_regular {
