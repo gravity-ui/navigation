@@ -10,7 +10,7 @@ import {Button, Icon} from '@gravity-ui/uikit';
 import {Drawer, DrawerItem, DrawerItemProps} from '../Drawer/Drawer';
 import {Logo, LogoProps as LogoComponentProps} from '../Logo/Logo';
 import {CompositeBar} from '../CompositeBar/CompositeBar';
-import {Content, RenderContentType} from './Content';
+import {Content, RenderContentType} from '../Content';
 
 import controlMenuButtonIcon from '../../../assets/icons/control-menu-button.svg';
 import headerDividerCollapsedIcon from '../../../assets/icons/divider-collapsed.svg';
