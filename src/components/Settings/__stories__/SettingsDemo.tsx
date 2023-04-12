@@ -46,7 +46,15 @@ const defaultSettings = {
 };
 
 export const SettingsComponent = React.memo(
-    ({initialPage, withBadge}: {initialPage?: string; withBadge?: boolean}) => {
+    ({
+        initialPage,
+        withBadge,
+        mode,
+    }: {
+        initialPage?: string;
+        withBadge?: boolean;
+        mode?: 'onepage';
+    }) => {
         const [settings, dispatch] = useReducer(reducer, defaultSettings);
         const handleChange = (name: string, value: any) => {
             dispatch(setSetting(name, value));
@@ -54,6 +62,7 @@ export const SettingsComponent = React.memo(
         return (
             <Settings
                 initialPage={initialPage}
+                mode={mode}
                 onPageChange={(page) => {
                     console.log({page});
                 }}
@@ -157,10 +166,16 @@ export const SettingsComponent = React.memo(
 SettingsComponent.displayName = 'SettingsComponent';
 
 export function SettingsDemo() {
+    const [onepageMode, setOnepageMode] = React.useState(false);
+
     return (
         <div className={b()}>
-            <h1>Settings</h1>
-            <SettingsComponent withBadge />
+            <div className={b('header')}>
+                <h1>Settings</h1>
+                One page mode: &nbsp;
+                <Switch checked={onepageMode} onUpdate={setOnepageMode} />
+            </div>
+            <SettingsComponent withBadge mode={onepageMode ? 'onepage' : undefined} />
         </div>
     );
 }

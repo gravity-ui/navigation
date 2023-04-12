@@ -9,6 +9,13 @@ $block: '.#{variables.$ns}settings';
     width: 834px;
     height: 100%;
 
+    // temporary styles
+    &_mode_onepage {
+        width: auto;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+    }
+
     &_loading {
         grid-template-columns: auto;
     }
