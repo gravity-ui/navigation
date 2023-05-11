@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/gravity-ui/navigation/compare/v0.4.0...v0.5.0) (2023-05-11)
+
+
+### Features
+
+* support React 18 in peerDeps ([#44](https://github.com/gravity-ui/navigation/issues/44)) ([400db16](https://github.com/gravity-ui/navigation/commit/400db1601773a1d35f785d4d3adfabea762307d6))
+
 ## [0.4.0](https://github.com/gravity-ui/navigation/compare/v0.3.2...v0.4.0) (2023-03-06)
 
 
