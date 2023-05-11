@@ -1,0 +1,15 @@
+@import '../../../../../styles/mixins';
+
+.burger-menu-showcase {
+    --aside-header-min-width: 56px;
+
+    width: 320px;
+
+    &__item-accent {
+        color: var(--yc-color-text-misc);
+    }
+
+    &__modal-item {
+        padding: 20px;
+    }
+}
