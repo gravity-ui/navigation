@@ -28,6 +28,24 @@ export interface MenuItem {
     afterMoreButton?: boolean;
 }
 
+export type MobileMenuItemType = 'regular' | 'divider';
+
+export interface MobileMenuItem
+    extends Omit<
+        MenuItem,
+        | 'tooltipText'
+        | 'pinned'
+        | 'rightAdornment'
+        | 'afterMoreButton'
+        | 'itemWrapper'
+        | 'onItemClick'
+    > {
+    type?: MobileMenuItemType;
+    closeMenuOnClick?: boolean;
+    onItemClick?: (item: MobileMenuItem) => void;
+    itemWrapper?: (node: React.ReactNode, item: MobileMenuItem) => React.ReactNode;
+}
+
 export enum Dict {
     ExpandButton = 'button_expand',
     CollapseButton = 'button_collapse',
@@ -35,3 +53,15 @@ export enum Dict {
 }
 
 export type AsideHeaderDict = Record<Dict, string>;
+
+export interface LogoProps {
+    text: (() => React.ReactNode) | string;
+    icon?: IconProps['data'];
+    iconSrc?: string;
+    iconClassName?: string;
+    iconSize?: number;
+    textSize?: number;
+    href?: string;
+    wrapper?: (node: React.ReactNode, compact: boolean) => React.ReactNode;
+    onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+}

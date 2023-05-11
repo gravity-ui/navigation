@@ -1,14 +1,14 @@
 import React from 'react';
 import {block} from '../utils/cn';
 
-import {MenuItem, AsideHeaderDict, Dict} from '../types';
+import {MenuItem, AsideHeaderDict, Dict, LogoProps as LogoComponentProps} from '../types';
 
 import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH, defaultDict} from '../constants';
 
 import {Button, Icon} from '@gravity-ui/uikit';
 
 import {Drawer, DrawerItem, DrawerItemProps} from '../Drawer/Drawer';
-import {Logo, LogoProps as LogoComponentProps} from '../Logo/Logo';
+import {Logo} from '../Logo/Logo';
 import {CompositeBar} from '../CompositeBar/CompositeBar';
 import {Content, RenderContentType} from '../Content';
 
