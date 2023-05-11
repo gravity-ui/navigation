@@ -28,24 +28,6 @@ export interface MenuItem {
     afterMoreButton?: boolean;
 }
 
-export type MobileMenuItemType = 'regular' | 'divider';
-
-export interface MobileMenuItem
-    extends Omit<
-        MenuItem,
-        | 'tooltipText'
-        | 'pinned'
-        | 'rightAdornment'
-        | 'afterMoreButton'
-        | 'itemWrapper'
-        | 'onItemClick'
-    > {
-    type?: MobileMenuItemType;
-    closeMenuOnClick?: boolean;
-    onItemClick?: (item: MobileMenuItem) => void;
-    itemWrapper?: (node: React.ReactNode, item: MobileMenuItem) => React.ReactNode;
-}
-
 export enum Dict {
     ExpandButton = 'button_expand',
     CollapseButton = 'button_collapse',

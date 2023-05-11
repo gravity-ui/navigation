@@ -29,7 +29,9 @@ const ShowcaseTemplate: Story<BurgerMenuProps> = () => {
             <BurgerMenu
                 items={mobileMenuItemsShowcase}
                 modalItem={{
-                    content: <div className="burger-menu-showcase__modal-item">Operations</div>,
+                    renderContent: () => (
+                        <div className="burger-menu-showcase__modal-item">Operations</div>
+                    ),
                     visible: modalVisible,
                     onClose: () => setModalVisible(false),
                 }}

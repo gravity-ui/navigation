@@ -1,0 +1,16 @@
+@use '../../variables';
+@import '~@gravity-ui/uikit/styles/mixins';
+
+$block: '.#{variables.$ns}mobile-header-footer-item';
+
+#{$block} {
+    $class: &;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 13px 10px;
+
+    & &__icon {
+        color: var(--yc-color-text-misc);
+    }
+}

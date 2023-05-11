@@ -2,22 +2,12 @@ import React from 'react';
 import {Sheet} from '@gravity-ui/uikit';
 import {block} from '../../utils/cn';
 
-import {MobileMenuItem} from '../../types';
+import {MobileMenuItem, ModalItem} from '../types';
 import {BurgerCompositeBar} from './BurgerCompositeBar/BurgerCompositeBar';
 
 import './BurgerMenu.scss';
 
 const b = block('mobile-header-burger-menu');
-
-export interface ModalItem {
-    content: React.ReactNode;
-    visible: boolean;
-    title?: string;
-    id?: string;
-    className?: string;
-    contentClassName?: string;
-    onClose?: () => void;
-}
 
 export interface BurgerMenuProps {
     items: MobileMenuItem[];
@@ -40,7 +30,7 @@ export const BurgerMenu = React.memo(
                         contentClassName={modalItem.contentClassName}
                         className={modalItem.className}
                     >
-                        {modalItem.content}
+                        {modalItem.renderContent?.()}
                     </Sheet>
                 )}
 
