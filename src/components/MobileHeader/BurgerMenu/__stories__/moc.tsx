@@ -1,6 +1,6 @@
 import React from 'react';
 import settingsIcon from '../../../../../.storybook/assets/settings.svg';
-import {MobileMenuItem} from 'src/components/types';
+import {MobileMenuItem} from '../../types';
 
 export const mobileMenuItemsShowcase: MobileMenuItem[] = [
     {
@@ -32,8 +32,8 @@ export const mobileMenuItemsShowcase: MobileMenuItem[] = [
         icon: settingsIcon,
         current: true,
         iconSize: 20,
-        onItemClick({id, title, current}) {
-            alert(JSON.stringify({id, title, current}));
+        onItemClick(item) {
+            alert(JSON.stringify(item));
         },
     },
     {
@@ -41,8 +41,8 @@ export const mobileMenuItemsShowcase: MobileMenuItem[] = [
         title: 'Dashboard',
         icon: settingsIcon,
         iconSize: 20,
-        onItemClick({id, title, current}) {
-            alert(JSON.stringify({id, title, current}));
+        onItemClick(item) {
+            alert(JSON.stringify(item));
         },
     },
     {
@@ -55,8 +55,8 @@ export const mobileMenuItemsShowcase: MobileMenuItem[] = [
         title: 'Objects',
         icon: settingsIcon,
         iconSize: 20,
-        onItemClick({id, title, current}) {
-            alert(JSON.stringify({id, title, current}));
+        onItemClick(item) {
+            alert(JSON.stringify(item));
         },
         itemWrapper(node) {
             return <div className="burger-menu-showcase__item-accent">{node}</div>;

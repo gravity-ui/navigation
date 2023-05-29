@@ -1,4 +1,4 @@
-import {MobileMenuItem} from '../types';
+import {MobileMenuItem} from './types';
 import {MOBILE_ITEM_HEIGHT} from './constants';
 
 export const getItemHeight = (item: MobileMenuItem) => {

@@ -1,7 +1,5 @@
 import {MenuItem} from '../types';
 
-export type MobileItemIconView = 'normal' | 'with-dot';
-
 export interface ModalItem {
     visible: boolean;
     title?: string;
@@ -30,3 +28,13 @@ export interface MobileMenuItem
     onItemClick?: (item: MobileMenuItem) => void;
     itemWrapper?: (node: React.ReactNode, item: MobileMenuItem) => React.ReactNode;
 }
+
+export type MobileHeaderEvent = 'MOBILE_PANEL_TOGGLE' | 'MOBILE_PANEL_CLOSE' | 'MOBILE_PANEL_OPEN';
+
+export type ItemEventsConfig = {
+    closeEvent: MobileHeaderEvent;
+    openEvent: MobileHeaderEvent;
+    toggleEvent?: MobileHeaderEvent;
+};
+
+export type MobileHeaderEventOptions = {panelName?: string};

@@ -1,7 +1,7 @@
 import React from 'react';
 import {block} from '../utils/cn';
 
-import {MenuItem, AsideHeaderDict, Dict, LogoProps as LogoComponentProps} from '../types';
+import {MenuItem, AsideHeaderDict, Dict, LogoProps} from '../types';
 
 import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH, defaultDict} from '../constants';
 
@@ -18,8 +18,6 @@ import headerDividerCollapsedIcon from '../../../assets/icons/divider-collapsed.
 import './AsideHeader.scss';
 
 const b = block('aside-header');
-
-type LogoProps = Omit<LogoComponentProps, 'compact'>;
 
 interface AsideHeaderGeneralProps {
     logo: LogoProps;

@@ -28,6 +28,11 @@ export interface MenuItem {
     afterMoreButton?: boolean;
 }
 
+export enum MobileHeaderDict {
+    CloseBurger = 'button_close-burger',
+    OpenBurger = 'button_open-burger',
+}
+
 export enum Dict {
     ExpandButton = 'button_expand',
     CollapseButton = 'button_collapse',

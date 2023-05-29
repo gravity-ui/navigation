@@ -2,7 +2,7 @@ import React from 'react';
 import {Meta} from '@storybook/react/types-6-0';
 import {Story} from '@storybook/react';
 
-import {BurgerMenu, BurgerMenuProps} from '../BurgerMenu';
+import {BurgerMenu, BurgerMenuInnerProps} from '../BurgerMenu';
 import {mobileMenuItemsShowcase} from './moc';
 
 import './BurgerMenuShowcase.scss';
@@ -21,7 +21,7 @@ export default {
     ],
 } as Meta;
 
-const ShowcaseTemplate: Story<BurgerMenuProps> = () => {
+const ShowcaseTemplate: Story<BurgerMenuInnerProps> = () => {
     const [modalVisible, setModalVisible] = React.useState(false);
 
     return (
@@ -35,7 +35,6 @@ const ShowcaseTemplate: Story<BurgerMenuProps> = () => {
                     visible: modalVisible,
                     onClose: () => setModalVisible(false),
                 }}
-                onClick={(item) => item.id === 'operations' && setModalVisible(true)}
             />
         </div>
     );

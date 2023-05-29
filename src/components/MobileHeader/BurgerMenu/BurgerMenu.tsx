@@ -9,16 +9,16 @@ import './BurgerMenu.scss';
 
 const b = block('mobile-header-burger-menu');
 
-export interface BurgerMenuProps {
+export interface BurgerMenuInnerProps {
     items: MobileMenuItem[];
     modalItem?: ModalItem;
-    onClick?: (item: MobileMenuItem) => void;
-    renderBurgerFooter?: () => React.ReactNode;
+    renderFooter?: () => React.ReactNode;
+    onItemClick?: (item: MobileMenuItem) => void;
     className?: string;
 }
 
 export const BurgerMenu = React.memo(
-    ({items, onClick, renderBurgerFooter, modalItem, className}: BurgerMenuProps) => {
+    ({items, renderFooter, modalItem, className}: BurgerMenuInnerProps) => {
         return (
             <div className={b(null, className)}>
                 {modalItem && (
@@ -34,9 +34,9 @@ export const BurgerMenu = React.memo(
                     </Sheet>
                 )}
 
-                <BurgerCompositeBar items={items} onItemClick={onClick} />
+                <BurgerCompositeBar items={items} />
 
-                {renderBurgerFooter && <div className={b('footer')}>{renderBurgerFooter?.()}</div>}
+                {renderFooter && <div className={b('footer')}>{renderFooter?.()}</div>}
             </div>
         );
     },

@@ -5,12 +5,32 @@ $block: '.#{variables.$ns}mobile-header-footer-item';
 
 #{$block} {
     $class: &;
+    flex-grow: 1;
+    position: relative;
+
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 13px 10px;
+    width: 100%;
+    box-sizing: border-box;
 
     & &__icon {
         color: var(--yc-color-text-misc);
+    }
+
+    & + & {
+        &::before {
+            content: '';
+            border-left: 1px solid var(--yc-color-base-generic);
+            position: absolute;
+            top: 8px;
+            bottom: 8px;
+            left: 0;
+        }
+    }
+
+    &:empty {
+        display: none;
     }
 }
