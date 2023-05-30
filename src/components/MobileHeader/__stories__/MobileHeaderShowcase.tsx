@@ -10,8 +10,6 @@ import {
 } from '../';
 import {text as placeholderText} from './moc';
 
-import {Showcase as SettingsShowcase} from '../../Settings/__stories__/Settings.stories';
-
 import logoIcon from '../../../../.storybook/assets/logo.svg';
 import menuItemIcon from '../../../../.storybook/assets/settings.svg';
 
@@ -162,7 +160,7 @@ export function MobileHeaderShowcase() {
                     panelItems={[
                         {
                             id: 'settings',
-                            content: <SettingsShowcase />,
+                            content: <div className={b('modal-footer')}>Form content here</div>,
                             direction: 'right',
                         },
                     ]}

@@ -204,7 +204,12 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                     style={{top: size}}
                 >
                     {[burgerPanelItem, ...panelItems].map((item) => (
-                        <DrawerItem {...item} key={item.id} visible={visiblePanel === item.id} />
+                        <DrawerItem
+                            {...item}
+                            key={item.id}
+                            visible={visiblePanel === item.id}
+                            className={b('panel-item', item.className)}
+                        />
                     ))}
                 </Drawer>
 

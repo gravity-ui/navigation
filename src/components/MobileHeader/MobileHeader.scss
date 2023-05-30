@@ -26,7 +26,7 @@ $block: '.#{variables.$ns}mobile-header';
     }
 
     &__burger-menu,
-    &__side-slot {
+    &__panel-item {
         background-color: var(--yc-color-base-background);
         width: 360px;
         max-width: 90vw;
