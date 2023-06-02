@@ -167,20 +167,25 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
 
         useEffect(() => {
             const node = targetRef?.current;
-            node?.addEventListener('MOBILE_BURGER_OPEN', onBurgerOpen);
-            node?.addEventListener('MOBILE_BURGER_CLOSE', onBurgerClose);
 
-            node?.addEventListener('MOBILE_PANEL_TOGGLE', onMobilePanelToggle);
-            node?.addEventListener('MOBILE_PANEL_OPEN', onMobilePanelOpen);
-            node?.addEventListener('MOBILE_PANEL_CLOSE', onMobilePanelClose);
+            if (node) {
+                node.addEventListener('MOBILE_BURGER_OPEN', onBurgerOpen);
+                node.addEventListener('MOBILE_BURGER_CLOSE', onBurgerClose);
+
+                node.addEventListener('MOBILE_PANEL_TOGGLE', onMobilePanelToggle);
+                node.addEventListener('MOBILE_PANEL_OPEN', onMobilePanelOpen);
+                node.addEventListener('MOBILE_PANEL_CLOSE', onMobilePanelClose);
+            }
 
             return () => {
-                node?.removeEventListener('MOBILE_BURGER_OPEN', onBurgerOpen);
-                node?.removeEventListener('MOBILE_BURGER_CLOSE', onBurgerClose);
+                if (node) {
+                    node.removeEventListener('MOBILE_BURGER_OPEN', onBurgerOpen);
+                    node.removeEventListener('MOBILE_BURGER_CLOSE', onBurgerClose);
 
-                node?.removeEventListener('MOBILE_PANEL_TOGGLE', onMobilePanelToggle);
-                node?.removeEventListener('MOBILE_PANEL_OPEN', onMobilePanelOpen);
-                node?.removeEventListener('MOBILE_PANEL_CLOSE', onMobilePanelClose);
+                    node.removeEventListener('MOBILE_PANEL_TOGGLE', onMobilePanelToggle);
+                    node.removeEventListener('MOBILE_PANEL_OPEN', onMobilePanelOpen);
+                    node.removeEventListener('MOBILE_PANEL_CLOSE', onMobilePanelClose);
+                }
             };
         }, [targetRef, onBurgerClose, onBurgerOpen]);
 
