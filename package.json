@@ -1,6 +1,6 @@
 {
     "name": "@gravity-ui/navigation",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "description": "Gravity UI Navigation components",
     "license": "MIT",
     "repository": {
@@ -84,8 +84,8 @@
     },
     "peerDependencies": {
         "@gravity-ui/uikit": "^4.1.0",
-        "react": "^16.0.0 || ^17.0.0",
-        "react-dom": "^16.0.0 || ^17.0.0"
+        "react": "^16.0.0 || ^17.0.0 || ^18.0.0",
+        "react-dom": "^16.0.0 || ^17.0.0 || ^18.0.0"
     },
     "nano-staged": {
         "*.{scss}": [
