@@ -157,16 +157,12 @@ export const SettingsComponent = React.memo(
 SettingsComponent.displayName = 'SettingsComponent';
 
 export function SettingsDemo() {
-    const [onepageMode, setOnepageMode] = React.useState(false);
-
     return (
         <div className={b()}>
             <div className={b('header')}>
                 <h1>Settings</h1>
-                One page mode: &nbsp;
-                <Switch checked={onepageMode} onUpdate={setOnepageMode} />
             </div>
-            <SettingsComponent withBadge mode={onepageMode ? 'onepage' : undefined} />
+            <SettingsComponent withBadge />
         </div>
     );
 }

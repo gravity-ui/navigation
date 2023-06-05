@@ -22,7 +22,6 @@ export interface SettingsPage {
     sections: SettingsPageSection[];
     hidden?: boolean;
     withBadge?: boolean;
-    showTitle?: boolean;
 }
 
 interface SettingsPageSection {
@@ -31,6 +30,7 @@ interface SettingsPageSection {
     items: SettingsItem[];
     hidden?: boolean;
     withBadge?: boolean;
+    showTitle?: boolean;
 }
 
 interface SettingsItem {
