@@ -11,20 +11,21 @@ export interface DrawerItemProps {
     id: string;
     content: React.ReactNode;
     visible: boolean;
+    direction?: 'right' | 'left';
     className?: string;
 }
 
-export const DrawerItem: React.FC<DrawerItemProps> = ({visible, content, className}) => {
+export const DrawerItem: React.FC<DrawerItemProps> = ({visible, content, direction, className}) => {
     const itemRef = React.useRef<HTMLDivElement>(null);
     return (
         <CSSTransition
             in={visible}
             timeout={TIMEOUT}
             unmountOnExit={true}
-            classNames={b('item-transition')}
+            classNames={b('item-transition', {direction})}
             nodeRef={itemRef}
         >
-            <div ref={itemRef} className={b('item', className)}>
+            <div ref={itemRef} className={b('item', {direction}, className)}>
                 {content}
             </div>
         </CSSTransition>

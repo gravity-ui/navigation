@@ -1,0 +1,53 @@
+@use '../variables';
+
+$block: '.#{variables.$ns}mobile-header';
+
+#{$block} {
+    $class: &;
+    --mobile-header-min-heigth: 50px;
+    --mobile-header-icon-size: 20px;
+
+    background-color: var(--yc-color-base-background);
+
+    &__header {
+        background-color: var(--yc-color-base-background);
+        border-bottom: 1px solid var(--yc-color-line-generic);
+        position: sticky;
+        top: 0;
+        padding: 0 10px;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__burger {
+        padding: 12px;
+    }
+
+    &__burger-menu,
+    &__panel-item {
+        background-color: var(--yc-color-base-background);
+        width: 360px;
+        max-width: 90vw;
+        max-height: 100%;
+    }
+
+    &__user-menu {
+        overflow-y: auto;
+    }
+
+    &__panels {
+        z-index: 98;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: var(--mobile-header-min-heigth);
+        overflow: hidden;
+    }
+
+    &__content {
+        overflow: auto;
+    }
+}

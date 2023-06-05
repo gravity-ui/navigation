@@ -1,0 +1,71 @@
+@use '../../../variables';
+@import '~@gravity-ui/uikit/styles/mixins';
+@import '../../../../../styles/mixins';
+
+$block: '.#{variables.$ns}burger-composite-bar';
+
+#{$block} {
+    $class: &;
+    overflow-y: auto;
+
+    &__item {
+        display: flex;
+        height: 100%;
+        align-items: center;
+        flex-grow: 1;
+        box-sizing: border-box;
+        padding: 4px 22px 4px 12px;
+        overflow: hidden;
+    }
+
+    &__item-icon-place {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 40px;
+        margin-right: 8px;
+    }
+
+    & &__item-icon {
+        color: var(--yc-color-text-misc);
+    }
+
+    &__item-title {
+        @include overflow-ellipsis();
+        @include text-body-2();
+    }
+
+    &__link {
+        display: flex;
+        flex-grow: 1;
+        height: 100%;
+        align-items: center;
+
+        &,
+        &:hover,
+        &:active,
+        &:visited,
+        &:focus {
+            text-decoration: none;
+            outline: none;
+            color: inherit;
+        }
+    }
+
+    &__menu-divider {
+        margin: 0;
+        flex-grow: 1;
+        border-top: 1px solid var(--yc-color-line-generic);
+    }
+
+    &__root-menu-item {
+        &.yc-list__item_selected {
+            background-color: var(--yc-color-base-selection);
+        }
+
+        &:not(.yc-list__item_selected).yc-list__item_active {
+            background: none;
+        }
+    }
+}

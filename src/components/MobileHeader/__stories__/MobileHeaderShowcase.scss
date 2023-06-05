@@ -1,0 +1,55 @@
+@import '../../../../styles/mixins';
+
+body {
+    margin: 0;
+}
+
+.mobile-header-demo {
+    &__content {
+        @include text-body-3;
+        padding: 40px;
+    }
+
+    &__button {
+        display: block;
+
+        & + & {
+            margin-top: 20px;
+        }
+    }
+
+    &__link {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+
+        &,
+        &:hover,
+        &:active,
+        &:visited,
+        &:focus {
+            text-decoration: none;
+            outline: none;
+            color: inherit;
+        }
+    }
+
+    &__modal-search {
+        padding-bottom: 30px;
+    }
+
+    &__item-accent {
+        @include text-accent;
+        width: 100%;
+        height: 100%;
+    }
+
+    &__modal-footer {
+        @include text-body-2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 250px;
+    }
+}

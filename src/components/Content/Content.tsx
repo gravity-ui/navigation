@@ -5,9 +5,10 @@ import React from 'react';
 export type RenderContentType = (data: {size: number}) => React.ReactNode;
 
 interface ContentProps {
-    renderContent?: RenderContentType;
-    className?: string;
     size: number;
+    className?: string;
+    cssSizeVariableName?: string;
+    renderContent?: RenderContentType;
 }
 
 interface RenderContentProps {
@@ -21,11 +22,16 @@ const RenderContent: React.FC<RenderContentProps> = React.memo(({renderContent, 
 
 RenderContent.displayName = 'RenderContent';
 
-export const Content: React.FC<ContentProps> = ({size, className, renderContent}) => {
+export const Content: React.FC<ContentProps> = ({
+    size,
+    className,
+    cssSizeVariableName = '--aside-header-size',
+    renderContent,
+}) => {
     return (
         <div
             className={className}
-            style={{...({'--aside-header-size': `${size}px`} as React.CSSProperties)}}
+            style={{...({[cssSizeVariableName]: `${size}px`} as React.CSSProperties)}}
         >
             {typeof renderContent === 'function' && (
                 <RenderContent size={size} renderContent={renderContent} />

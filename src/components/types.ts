@@ -28,6 +28,11 @@ export interface MenuItem {
     afterMoreButton?: boolean;
 }
 
+export enum MobileHeaderDict {
+    CloseBurger = 'button_close-burger',
+    OpenBurger = 'button_open-burger',
+}
+
 export enum Dict {
     ExpandButton = 'button_expand',
     CollapseButton = 'button_collapse',
@@ -35,3 +40,15 @@ export enum Dict {
 }
 
 export type AsideHeaderDict = Record<Dict, string>;
+
+export interface LogoProps {
+    text: (() => React.ReactNode) | string;
+    icon?: IconProps['data'];
+    iconSrc?: string;
+    iconClassName?: string;
+    iconSize?: number;
+    textSize?: number;
+    href?: string;
+    wrapper?: (node: React.ReactNode, compact: boolean) => React.ReactNode;
+    onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+}

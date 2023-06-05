@@ -19,7 +19,9 @@ npm install --dev @gravity-ui/uikit@^3.0.2 bem-cn-lite@4.0.0 react@^16.0.0
 ## Components
 
 - AsideHeader
+- MobileHeader
 - FooterItem
+- MobileHeaderFooterItem
 - Drawer
 - DrawerItem
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import block from 'bem-cn-lite';
-import {Button} from '@gravity-ui/uikit';
+import {Button, RadioButton} from '@gravity-ui/uikit';
 
-import {Drawer, DrawerItem} from '../Drawer';
+import {Drawer, DrawerItem, DrawerItemProps} from '../Drawer';
 
 import './DrawerShowcase.scss';
 
@@ -11,6 +11,8 @@ const b = block('drawer-showcase');
 export function DrawerShowcase() {
     const [visible1, setVisible1] = React.useState<boolean>(true);
     const [visible2, setVisible2] = React.useState<boolean>(false);
+
+    const [direction, setDirection] = React.useState<string>('left');
 
     const hideAll = React.useCallback(() => {
         setVisible1(false);
@@ -27,10 +29,27 @@ export function DrawerShowcase() {
                 <Button view="action" size="l" onClick={() => setVisible2(!visible2)}>
                     {visible2 ? 'Hide 2' : 'Show 2'}
                 </Button>
+                &nbsp;&nbsp; Direction: &nbsp;
+                <RadioButton value={direction} onUpdate={setDirection}>
+                    <RadioButton.Option value="left">left</RadioButton.Option>
+                    <RadioButton.Option value="right">right</RadioButton.Option>
+                </RadioButton>
             </div>
             <Drawer className={b('drawer')} onVeilClick={hideAll} onEscape={hideAll}>
-                <DrawerItem visible={visible1} id="item-1" className={b('item-1')} content="" />
-                <DrawerItem visible={visible2} id="item-2" className={b('item-2')} content="" />
+                <DrawerItem
+                    visible={visible1}
+                    id="item-1"
+                    className={b('item-1')}
+                    content=""
+                    direction={direction as DrawerItemProps['direction']}
+                />
+                <DrawerItem
+                    visible={visible2}
+                    id="item-2"
+                    className={b('item-2')}
+                    content=""
+                    direction={direction as DrawerItemProps['direction']}
+                />
             </Drawer>
         </div>
     );

@@ -1,0 +1,15 @@
+@use '../../variables';
+
+$block: '.#{variables.$ns}mobile-header-burger-menu';
+
+#{$block} {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    &__footer {
+        display: flex;
+        border-top: 1px solid var(--yc-color-base-generic);
+        margin-top: auto;
+    }
+}

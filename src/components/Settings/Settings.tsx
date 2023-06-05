@@ -21,6 +21,7 @@ interface SettingsProps {
     renderLoading?: () => React.ReactNode;
     loading?: boolean;
     dict?: SettingsDict;
+    mode?: 'onepage';
 }
 type SettingsDict = Record<SettingsDictKeys, string>;
 type SettingsDictKeys = 'heading_settings' | 'placeholder_search' | 'not_found';
@@ -59,10 +60,10 @@ interface SettingsItemProps {
     withBadge?: boolean;
 }
 
-export function Settings({loading, renderLoading, children, ...props}: SettingsProps) {
+export function Settings({loading, renderLoading, children, mode, ...props}: SettingsProps) {
     if (loading) {
         return (
-            <div className={b({loading: true})}>
+            <div className={b({loading: true, mode})}>
                 {typeof renderLoading === 'function' ? (
                     renderLoading()
                 ) : (
@@ -72,7 +73,11 @@ export function Settings({loading, renderLoading, children, ...props}: SettingsP
         );
     }
 
-    return <SettingsContent {...props}>{children}</SettingsContent>;
+    return (
+        <SettingsContent mode={mode} {...props}>
+            {children}
+        </SettingsContent>
+    );
 }
 
 Settings.defaultProps = {
@@ -86,6 +91,7 @@ function SettingsContent({
     children,
     renderNotFound,
     dict,
+    mode,
 }: SettingsContentProps) {
     const [search, setSearch] = React.useState('');
     const {menu, pages} = getSettingsFromChildren(children, search);
@@ -160,7 +166,7 @@ function SettingsContent({
     };
 
     return (
-        <div className={b()}>
+        <div className={b({mode})}>
             <div
                 className={b('menu')}
                 onClick={() => {

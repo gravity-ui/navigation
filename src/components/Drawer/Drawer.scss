@@ -11,33 +11,54 @@ $block: '.#{variables.$ns}drawer';
         height: 100%;
         will-change: transform;
         background-color: var(--yc-color-base-background);
+
+        &_direction_right {
+            left: auto;
+            right: 0;
+        }
     }
 
     &__item-transition-enter {
         transform: translate(-100%, 0);
     }
 
-    &__item-transition-enter-active {
+    &__item-transition_direction_right-enter {
+        transform: translate(100%, 0);
+    }
+
+    &__item-transition-enter-active,
+    &__item-transition_direction_right-enter-active {
         transform: translate(0, 0);
         transition: transform 300ms;
     }
 
-    &__item-transition-enter-done {
+    &__item-transition-enter-done,
+    &__item-transition_direction_right-enter-done {
         // Hack for some browsers so text won't be blurred after animation
         filter: blur(0px);
         transform: translateZ(0);
     }
 
-    &__item-transition-exit {
+    &__item-transition-exit,
+    &__item-transition_direction_right-exit {
         transform: translate(0, 0);
+    }
+
+    &__item-transition-exit-active,
+    &__item-transition_direction_right-exit-active {
+        transition: transform 300ms;
     }
 
     &__item-transition-exit-active {
         transform: translate(-100%, 0);
-        transition: transform 300ms;
     }
 
-    &__item-transition-exit-done {
+    &__item-transition_direction_right-exit-active {
+        transform: translate(100%, 0);
+    }
+
+    &__item-transition-exit-done,
+    &__item-transition_direction_right-exit-done {
         visibility: hidden;
     }
 

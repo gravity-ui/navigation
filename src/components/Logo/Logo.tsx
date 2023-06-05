@@ -1,22 +1,11 @@
 import React from 'react';
 import {block} from '../utils/cn';
-import {Button, Icon, IconProps} from '@gravity-ui/uikit';
+import {LogoProps} from '../types';
+import {Button, Icon} from '@gravity-ui/uikit';
 
 import './Logo.scss';
 
 const b = block('logo');
-
-export interface LogoProps {
-    text: (() => React.ReactNode) | string;
-    icon?: IconProps['data'];
-    iconSrc?: string;
-    iconClassName?: string;
-    iconSize?: number;
-    textSize?: number;
-    href?: string;
-    wrapper?: (node: React.ReactNode, compact: boolean) => React.ReactNode;
-    onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
-}
 
 interface LogoInnerProps extends LogoProps {
     compact: boolean;
