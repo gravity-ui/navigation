@@ -22,6 +22,7 @@ export interface SettingsPage {
     sections: SettingsPageSection[];
     hidden?: boolean;
     withBadge?: boolean;
+    showTitle?: boolean;
 }
 
 interface SettingsPageSection {
@@ -147,7 +148,7 @@ function getSettingsPageFromChildren(children: React.ReactNode, filterRe: RegExp
             page.withBadge = withBadge || page.withBadge;
             page.hidden = hidden && page.hidden;
         } else {
-            const {title, header, withBadge} = element.props;
+            const {title, header, withBadge, showTitle = true} = element.props;
             const {items, hidden} = getSettingsItemsFromChildren(element.props.children, filterRe);
             page.withBadge = withBadge || page.withBadge;
             page.hidden = hidden && page.hidden;
@@ -157,6 +158,7 @@ function getSettingsPageFromChildren(children: React.ReactNode, filterRe: RegExp
                 withBadge,
                 items,
                 hidden,
+                showTitle,
             });
         }
     });

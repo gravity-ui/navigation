@@ -1,35 +1,14 @@
 import React from 'react';
 
-import {Icon, IconProps} from '@gravity-ui/uikit';
+import {Icon} from '@gravity-ui/uikit';
 
 import {block} from '../../utils/cn';
 import {useCurrent, useStableCallback} from '../helpers';
+import {Item, SettingsMenuProps} from '../types';
 
 import './SettingsMenu.scss';
 
 const b = block('settings-menu');
-
-interface GroupItem {
-    groupTitle: string;
-    items: Item[];
-}
-
-interface Item {
-    id: string;
-    title: string;
-    icon?: IconProps;
-    disabled?: boolean;
-    withBadge?: boolean;
-}
-
-export type SettingsMenuItems = (GroupItem | Item)[];
-
-interface SettingsMenuProps {
-    items: SettingsMenuItems;
-    onChange: (id: string) => void;
-    activeItem?: string;
-    focusItem?: string;
-}
 
 export interface SettingsMenuInstance {
     handleKeyDown(event: React.KeyboardEvent): boolean;
@@ -38,11 +17,11 @@ export interface SettingsMenuInstance {
 
 export const SettingsMenu = React.forwardRef<SettingsMenuInstance, SettingsMenuProps>(
     // eslint-disable-next-line prefer-arrow-callback
-    function SettingsMenu({items, onChange, activeItem}, ref) {
-        const [focusItem, setFocus] = React.useState<string>();
+    function SettingsMenu({items, onChange, activeItemId}, ref) {
+        const [focusItemId, setFocus] = React.useState<string>();
         const containerRef = React.useRef<HTMLDivElement>(null);
         const handleChange = useStableCallback(onChange);
-        const getFocused = useCurrent(focusItem);
+        const getFocused = useCurrent(focusItemId);
 
         React.useImperativeHandle(
             ref,
@@ -81,12 +60,17 @@ export const SettingsMenu = React.forwardRef<SettingsMenuInstance, SettingsMenuP
                                     {firstLevelItem.groupTitle}
                                 </span>
                                 {firstLevelItem.items.map((item) => {
-                                    return renderMenuItem(item, onChange, activeItem, focusItem);
+                                    return renderMenuItem(
+                                        item,
+                                        onChange,
+                                        activeItemId,
+                                        focusItemId,
+                                    );
                                 })}
                             </div>
                         );
                     }
-                    return renderMenuItem(firstLevelItem, onChange, activeItem, focusItem);
+                    return renderMenuItem(firstLevelItem, onChange, activeItemId, focusItemId);
                 })}
             </div>
         );
@@ -96,16 +80,16 @@ export const SettingsMenu = React.forwardRef<SettingsMenuInstance, SettingsMenuP
 function renderMenuItem(
     item: Item,
     onChange: (id: string) => void,
-    activeItem: string | undefined,
-    focusItem: string | undefined,
+    activeItemId: string | undefined,
+    focusItemId: string | undefined,
 ) {
     return (
         <span
             key={item.title}
             className={b('item', {
-                selected: activeItem === item.id,
+                selected: activeItemId === item.id,
                 disabled: item.disabled,
-                focused: focusItem === item.id,
+                focused: focusItemId === item.id,
                 badge: item.withBadge,
             })}
             onClick={() => {

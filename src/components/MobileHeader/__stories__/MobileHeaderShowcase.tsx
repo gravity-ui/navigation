@@ -8,6 +8,7 @@ import {
     MobileHeaderFooterItem,
     MobileHeaderEventOptions,
 } from '../';
+import {SettingsMobileComponent} from '../../Settings/__stories__/SettingsMobileDemo';
 import {text as placeholderText} from './moc';
 
 import logoIcon from '../../../../.storybook/assets/logo.svg';
@@ -27,10 +28,15 @@ export function MobileHeaderShowcase() {
     const [searchModalVisible, setSearchModalVisible] = React.useState(false);
     const [favModalVisible, setFavModalVisible] = React.useState(false);
     const [fbModalVisible, setFbModalVisible] = React.useState(false);
+    const [settingsModalVisible, setSettingsModalVisible] = React.useState(false);
 
     const toggleSearchModal = React.useCallback(() => setSearchModalVisible((prev) => !prev), []);
     const closeSearchModal = React.useCallback(() => setSearchModalVisible(false), []);
 
+    const toggleSettingsModal = React.useCallback(
+        () => setSettingsModalVisible((prev) => !prev),
+        [],
+    );
     const toggleFavModal = React.useCallback(() => setFavModalVisible((prev) => !prev), []);
     const toggleFbModal = React.useCallback(() => setFbModalVisible((prev) => !prev), []);
 
@@ -122,6 +128,18 @@ export function MobileHeaderShowcase() {
                         },
                         renderFooter: () => (
                             <React.Fragment>
+                                <MobileHeaderFooterItem
+                                    icon={menuItemIcon}
+                                    modalItem={{
+                                        visible: settingsModalVisible,
+                                        title: 'Settings',
+                                        onClose: () => setSettingsModalVisible(false),
+                                        renderContent: () => {
+                                            return <SettingsMobileComponent />;
+                                        },
+                                    }}
+                                    onClick={toggleSettingsModal}
+                                />
                                 <MobileHeaderFooterItem
                                     icon={menuItemIcon}
                                     modalItem={{

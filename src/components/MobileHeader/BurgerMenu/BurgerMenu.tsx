@@ -10,7 +10,7 @@ import './BurgerMenu.scss';
 const b = block('mobile-header-burger-menu');
 
 export interface BurgerMenuInnerProps {
-    items: MobileMenuItem[];
+    items?: MobileMenuItem[];
     modalItem?: ModalItem;
     renderFooter?: () => React.ReactNode;
     onItemClick?: (item: MobileMenuItem) => void;
@@ -18,7 +18,7 @@ export interface BurgerMenuInnerProps {
 }
 
 export const BurgerMenu = React.memo(
-    ({items, renderFooter, modalItem, className}: BurgerMenuInnerProps) => {
+    ({items = [], renderFooter, modalItem, className}: BurgerMenuInnerProps) => {
         return (
             <div className={b(null, className)}>
                 {modalItem && (
