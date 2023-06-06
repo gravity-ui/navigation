@@ -39,8 +39,10 @@ export const FooterItem = ({
     );
 
     return (
-        <div className={b(null, className)} onClick={handleClick}>
-            <div>{icon ? <Icon data={icon} size={iconSize} className={b('icon')} /> : null}</div>
+        <div className={b(null, className)}>
+            <div onClick={handleClick}>
+                {icon ? <Icon data={icon} size={iconSize} className={b('icon')} /> : null}
+            </div>
 
             <Sheet
                 id={modalItem.id}
