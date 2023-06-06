@@ -38,6 +38,7 @@ interface AsideHeaderDefaultProps {
     panelItems: DrawerItemProps[];
     subheaderItems: MenuItem[];
     menuItems: MenuItem[];
+    headerDecoration: boolean;
 }
 
 export interface AsideHeaderProps
@@ -51,6 +52,7 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
         panelItems: [],
         subheaderItems: [],
         menuItems: [],
+        headerDecoration: true,
     };
 
     asideRef = React.createRef<HTMLDivElement>();
@@ -71,13 +73,13 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
     }
 
     private renderFirstPane = (size: number) => {
-        const {dict, menuItems, panelItems, compact} = this.props;
+        const {dict, menuItems, panelItems, compact, headerDecoration} = this.props;
 
         return (
             <React.Fragment>
                 <div className={b('aside')} style={{width: size}}>
                     <div className={b('aside-popup-anchor')} ref={this.asideRef} />
-                    <div className={b('aside-content')}>
+                    <div className={b('aside-content', {['with-decoration']: headerDecoration})}>
                         {this.renderHeader()}
                         {menuItems?.length ? (
                             <CompositeBar
@@ -115,7 +117,7 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
     );
 
     private renderHeader = () => (
-        <div className={b('header')}>
+        <div className={b('header', {['with-decoration']: this.props.headerDecoration})}>
             {this.renderLogo()}
 
             <CompositeBar

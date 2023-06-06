@@ -4,6 +4,7 @@ import block from 'bem-cn-lite';
 import {AsideHeader, FooterItem} from '../..';
 import {text as placeholderText} from './moc';
 import {menuItemsShowcase} from './../../CompositeBar/__stories__/moc';
+import {RadioButton, Radio} from '@gravity-ui/uikit';
 
 import logoIcon from '../../../../.storybook/assets/logo.svg';
 import menuItemIcon from '../../../../.storybook/assets/settings.svg';
@@ -11,6 +12,11 @@ import menuItemIcon from '../../../../.storybook/assets/settings.svg';
 import './AsideHeaderShowcase.scss';
 
 const b = block('aside-header-showcase');
+
+const BOOLEAN_OPTIONS = {
+    Yes: 'yes',
+    No: 'no',
+};
 
 enum Panel {
     ProjectSettings = 'projectSettings',
@@ -23,6 +29,7 @@ export function AsideHeaderShowcase() {
     const [popupVisible, setPopupVisible] = React.useState(false);
     const [visiblePanel, setVisiblePanel] = React.useState<Panel>();
     const [compact, setCompact] = React.useState(false);
+    const [headerDecoration, setHeaderDecoration] = React.useState<string>(BOOLEAN_OPTIONS.Yes);
 
     const navRef = React.useRef<AsideHeader>(null);
 
@@ -36,6 +43,7 @@ export function AsideHeaderShowcase() {
                     href: '#',
                     onClick: () => alert('click on logo'),
                 }}
+                headerDecoration={headerDecoration === BOOLEAN_OPTIONS.Yes}
                 menuItems={[
                     ...menuItemsShowcase,
                     {
@@ -150,6 +158,15 @@ export function AsideHeaderShowcase() {
                     return (
                         <div className={b('content')}>
                             <pre>{placeholderText}</pre>
+                            <RadioButton
+                                value={headerDecoration}
+                                onChange={(event) => {
+                                    setHeaderDecoration(event.target.value);
+                                }}
+                            >
+                                <Radio value={BOOLEAN_OPTIONS.No}>No</Radio>
+                                <Radio value={BOOLEAN_OPTIONS.Yes}>Yes</Radio>
+                            </RadioButton>
                         </div>
                     );
                 }}
