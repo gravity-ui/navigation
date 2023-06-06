@@ -10,13 +10,14 @@ The components provides layouting functionality of settings panel with the follo
 
 #### Settings
 
-| Property       | Type     | Required | Default | Description                                |
-| :------------- | :------- | :------: | :------ | :----------------------------------------- |
-| loading        | boolean  |          |         | Flag of loading status                     |
-| renderLoading  | Function |          |         | content for loading status                 |
-| renderNotFound | Function |          |         | Empty panel content                        |
-| initialPage    | string   |          |         | Inititial page in `/groupId/pageId` format |
-| onPageChange   | Function |          |         | Page change handler                        |
+| Property       | Type               | Required | Default  | Description                                |
+| :------------- | :----------------- | :------: | :------- | :----------------------------------------- |
+| loading        | boolean            |          |          | Flag of loading status                     |
+| renderLoading  | Function           |          |          | content for loading status                 |
+| renderNotFound | Function           |          |          | Empty panel content                        |
+| initialPage    | string             |          |          | Inititial page in `/groupId/pageId` format |
+| view           | 'normal', 'mobile' |          | 'normal' | Change view for Mobile                     |
+| onPageChange   | Function           |          |          | Page change handler                        |
 
 #### Settings.Group
 
@@ -35,23 +36,26 @@ The components provides layouting functionality of settings panel with the follo
 
 #### Settings.Section
 
-| Property  | Type      | Required | Default | Description                  |
-| :-------- | :-------- | :------: | :------ | :--------------------------- |
-| title     | string    |   true   |         | Title of section             |
-| header    | ReactNode |          |         | Header of section            |
-| withBadge | boolean   |          |         | Рисует бэйдж у секции и меню |
+| Property  | Type      | Required | Default | Description                                                                   |
+| :-------- | :-------- | :------: | :------ | :---------------------------------------------------------------------------- |
+| title     | string    |   true   |         | Title of section                                                              |
+| header    | ReactNode |          |         | Header of section                                                             |
+| withBadge | boolean   |          |         | Show badge on a section and menu                                              |
+| showTitle | boolean   |          |         | Show section title. Prop is needed to hide title in simple settings on Mobile |
 
 #### Settings.Item
 
-| Property             | Type            | Required | Default  | Description      |
-| :------------------- | :-------------- | :------: | :------- | :--------------- |
-| title                | string          |   true   |          | Title of item    |
-| renderTitleComponent | Function        |          |          | Cusomt header of |
-| align                | 'top', 'center' |          | 'center' | Item alignment   |
+| Property             | Type            | Required | Default  | Description                                                |
+| :------------------- | :-------------- | :------: | :------- | :--------------------------------------------------------- |
+| title                | string          |   true   |          | Title of item                                              |
+| renderTitleComponent | Function        |          |          | Cusomt header of                                           |
+| align                | 'top', 'center' |          | 'center' | Item alignment                                             |
+| mode                 | 'row'           |          |          | Layout for mobile. Title and control will be placed in row |
+| description          | string          |          |          | Description of item                                        |
 
 ### Usage
 
-See storybook example `src/components/Settings/__stories__/SettingsDemo`.
+See storybook example `src/components/Settings/__stories__/SettingsDemo` for desktop and `src/components/Settings/__stories__/SettingsMobileDemo` for mobile.
 
 ### Examples
 
@@ -65,6 +69,7 @@ One-level settings example:
 ```
 
 Two-level settings example:
+_Note:_ `Settings` with `view=mobile` groups `Settings.Group` are ignored.
 
 ```jsx
 <Settings>

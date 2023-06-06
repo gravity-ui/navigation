@@ -239,7 +239,7 @@ function renderGeneralSettings(
                         withBadge={withBadge}
                         align="top"
                         mode="row"
-                        description={'Alerts configured in Yandex Monitoring.'}
+                        description={'Alerts configured in Monitoring.'}
                     >
                         <Switch
                             size="l"
