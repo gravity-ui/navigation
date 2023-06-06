@@ -1,0 +1,36 @@
+@use '../../variables';
+@import '../../../../styles/mixins';
+
+$block: '.#{variables.$ns}settings-menu-mobile';
+
+#{$block} {
+    &.yc-tabs_direction_horizontal {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        overscroll-behavior-x: none;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    &__item {
+        &_badge {
+            position: relative;
+
+            &::after {
+                content: '';
+                display: block;
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background-color: var(--yc-color-text-danger);
+                position: absolute;
+                right: -8px;
+                top: 11px;
+            }
+        }
+    }
+}

@@ -19,6 +19,7 @@ $block: '.#{variables.$ns}mobile-header';
         display: flex;
         justify-content: space-between;
         align-items: center;
+        z-index: 100;
     }
 
     &__burger {
@@ -28,7 +29,7 @@ $block: '.#{variables.$ns}mobile-header';
     &__burger-menu,
     &__panel-item {
         background-color: var(--yc-color-base-background);
-        width: 360px;
+        width: 320px;
         max-width: 90vw;
         max-height: 100%;
     }

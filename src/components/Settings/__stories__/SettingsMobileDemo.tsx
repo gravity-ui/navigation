@@ -1,22 +1,36 @@
 import React, {useReducer} from 'react';
 import block from 'bem-cn-lite';
 
-import {Settings} from '../index';
-import {HelpPopover, Switch, Checkbox, RadioButton, Radio, Select} from '@gravity-ui/uikit';
+import {Settings} from '../../..';
+import {Switch, RadioButton, Button, Radio, Select} from '@gravity-ui/uikit';
+import './SettingsMobileDemo.scss';
 
 import featureIcon from '../../../../assets/icons/gear.svg';
 
-import './SettingsDemo.scss';
+const b = block('settings-mobile-demo');
 
-export interface DemoProps {
-    title: string;
-}
-
-export interface DemoRowProps {
-    title: string;
-}
-
-const b = block('settings-demo');
+const SELECT_1_ITEMS = [
+    {
+        value: 'light',
+        title: 'Light',
+        key: 'select_1_elem_1',
+    },
+    {
+        value: 'dark',
+        title: 'Dark',
+        key: 'select_1_elem_2',
+    },
+    {
+        value: 'special',
+        title: 'Special',
+        key: 'select_1_elem_3',
+    },
+    {
+        value: 'general',
+        title: 'Inherit from General',
+        key: 'select_1_elem_4',
+    },
+];
 
 function setSetting(name: string, value: any) {
     return {
@@ -45,36 +59,47 @@ const defaultSettings = {
     vcs: 'arc',
 };
 
-export const SettingsComponent = React.memo(
-    ({initialPage, withBadge}: {initialPage?: string; withBadge?: boolean}) => {
+export const SettingsMobileComponent = React.memo(
+    ({
+        initialPage,
+        withBadge,
+        closeSettings,
+    }: {
+        initialPage?: string;
+        withBadge?: boolean;
+        closeSettings?: () => void;
+    }) => {
         const [settings, dispatch] = useReducer(reducer, defaultSettings);
         const handleChange = (name: string, value: any) => {
             dispatch(setSetting(name, value));
         };
         return (
             <Settings
+                view="mobile"
                 initialPage={initialPage}
                 onPageChange={(page) => {
                     console.log({page});
                 }}
             >
                 <Settings.Group id="arcanum" groupTitle="Arcanum">
-                    <Settings.Page id="features" title="Features" icon={{data: featureIcon}}>
+                    <Settings.Page id="features" title="Features">
                         <Settings.Section title="Beta functionality">
-                            <Settings.Item title="YFM markdown in md. files">
+                            <Settings.Item title="YFM markdown in md. files" mode="row">
                                 <Switch
                                     checked={settings.yfmMarkdown}
                                     onChange={() => {
                                         handleChange('yfmMarkdown', !settings.yfmMarkdown);
                                     }}
+                                    size="l"
                                 />
                             </Settings.Item>
-                            <Settings.Item title="Lazy diff">
+                            <Settings.Item title="Lazy diff" mode="row">
                                 <Switch
                                     checked={settings.lazyDiff}
                                     onChange={() => {
                                         handleChange('lazyDiff', !settings.lazyDiff);
                                     }}
+                                    size="l"
                                 />
                             </Settings.Item>
                         </Settings.Section>
@@ -85,12 +110,17 @@ export const SettingsComponent = React.memo(
                                     onChange={(event) => {
                                         handleChange('vcs', event.target.value);
                                     }}
+                                    size="xl"
                                 >
                                     <Radio value="arc">{'Arc'}</Radio>
                                     <Radio value="svn">{'SVN'}</Radio>
                                 </RadioButton>
                             </Settings.Item>
-                            <Settings.Item title="Start from dashboard page" withBadge={withBadge}>
+                            <Settings.Item
+                                title="Start from dashboard page"
+                                withBadge={withBadge}
+                                mode="row"
+                            >
                                 <Switch
                                     checked={settings.startFromDashboardPage}
                                     onChange={() => {
@@ -99,51 +129,54 @@ export const SettingsComponent = React.memo(
                                             !settings.startFromDashboardPage,
                                         );
                                     }}
+                                    size="l"
                                 />
                             </Settings.Item>
+                            {closeSettings && (
+                                <Settings.Item title="Use triggerEvent method" mode="row">
+                                    <Button onClick={() => closeSettings?.()} size="xl">
+                                        Save and close
+                                    </Button>
+                                </Settings.Item>
+                            )}
                         </Settings.Section>
                     </Settings.Page>
-                    <Settings.Page id="appearance" title="Appearance" icon={{data: featureIcon}}>
+                    <Settings.Page id="appearance" title="Appearance">
                         <Settings.Section
                             title="Appearance"
-                            header={
-                                <div className={b('appearance-header')}>
-                                    These settings affect the appearance{' '}
-                                </div>
-                            }
+                            header={<div>These settings affect the appearance </div>}
+                            showTitle={false}
                         >
                             <Settings.Item
                                 title="Theme"
                                 renderTitleComponent={(highlightedTitle) => (
                                     <div>
                                         <span>{highlightedTitle || 'Theme'}</span>
-                                        <HelpPopover content="Change the look and feel of your application" />
                                     </div>
                                 )}
                             >
-                                <RadioButton
+                                <Select
                                     value={settings.arcanumTheme ?? 'light'}
-                                    onChange={(event) => {
-                                        handleChange('arcanumTheme', event.target.value);
+                                    size="l"
+                                    onUpdate={(value) => {
+                                        handleChange('arcanumTheme', value);
                                     }}
-                                >
-                                    <Radio value="light">{'Light'}</Radio>
-                                    <Radio value="dark">{'Dark'}</Radio>
-                                    <Radio value="special">{'Special'}</Radio>
-                                    <Radio value="general">{'Inherit from General'}</Radio>
-                                </RadioButton>
+                                    options={SELECT_1_ITEMS}
+                                    placeholder={'Select value...'}
+                                    className={b('select')}
+                                />
                             </Settings.Item>
                             <Settings.Item title="Code theme">
-                                <Select
-                                    value={settings.codeTheme ?? 'default'}
-                                    options={[{value: 'default', content: 'Default'}]}
-                                    onUpdate={(val) => {
-                                        handleChange(
-                                            'codeTheme',
-                                            Array.isArray(val) ? val[0] : val,
-                                        );
+                                <RadioButton
+                                    value={settings.codeTheme ?? 'light'}
+                                    onChange={(event) => {
+                                        handleChange('codeTheme', event.target.value);
                                     }}
-                                />
+                                    size="xl"
+                                >
+                                    <Radio value="default">{'Default'}</Radio>
+                                    <Radio value="exta">{'Extra'}</Radio>
+                                </RadioButton>
                             </Settings.Item>
                         </Settings.Section>
                     </Settings.Page>
@@ -154,15 +187,12 @@ export const SettingsComponent = React.memo(
     },
 );
 
-SettingsComponent.displayName = 'SettingsComponent';
+SettingsMobileComponent.displayName = 'SettingsMobileComponent';
 
-export function SettingsDemo() {
+export function SettingsMobileDemo() {
     return (
         <div className={b()}>
-            <div className={b('header')}>
-                <h1>Settings</h1>
-            </div>
-            <SettingsComponent withBadge />
+            <SettingsMobileComponent withBadge />
         </div>
     );
 }
@@ -174,14 +204,15 @@ function renderGeneralSettings(
 ) {
     return (
         <Settings.Group id="general" groupTitle="General">
-            <Settings.Page id="appearance" title="Appearance" icon={{data: featureIcon}}>
-                <Settings.Section title="Appearance">
+            <Settings.Page id="appearance" title="General Appearance" icon={{data: featureIcon}}>
+                <Settings.Section title="Appearance" showTitle={false}>
                     <Settings.Item title="Interface language">
                         <RadioButton
                             value={settings.lang ?? 'ru'}
                             onChange={(event) => {
                                 handleChange('lang', event.target.value);
                             }}
+                            size="xl"
                         >
                             <Radio value="ru">{'Русский'}</Radio>
                             <Radio value="en">{'English'}</Radio>
@@ -193,6 +224,7 @@ function renderGeneralSettings(
                             onChange={(event) => {
                                 handleChange('theme', event.target.value);
                             }}
+                            size="xl"
                         >
                             <Radio value="light">{'Light'}</Radio>
                             <Radio value="dark">{'Dark'}</Radio>
@@ -201,45 +233,41 @@ function renderGeneralSettings(
                 </Settings.Section>
             </Settings.Page>
             <Settings.Page id="communication" title="Communication" icon={{data: featureIcon}}>
-                <Settings.Section title="Phone settings" withBadge={withBadge}>
+                <Settings.Section title="Send notifications" withBadge={withBadge}>
                     <Settings.Item
-                        title="Send notifications"
-                        align="top"
+                        title="Monitoring"
                         withBadge={withBadge}
+                        align="top"
+                        mode="row"
                         description={'Alerts configured in Monitoring.'}
                     >
-                        <div className={b('checkbox')}>
-                            <Checkbox
-                                content="Monitoring"
-                                checked={settings.notificationMonitoring}
-                                onChange={() => {
-                                    handleChange(
-                                        'notificationMonitoring',
-                                        !settings.notificationMonitoring,
-                                    );
-                                }}
-                            />
-                            <div className={b('checkbox-description')}>
-                                {'Alerts configured in Monitoring.'}
-                            </div>
-                        </div>
-                        <div className={b('checkbox')}>
-                            <Checkbox
-                                content="Billing"
-                                checked={settings.notificationBilling}
-                                onChange={() => {
-                                    handleChange(
-                                        'notificationBilling',
-                                        !settings.notificationBilling,
-                                    );
-                                }}
-                            />
-                            <div className={b('checkbox-description')}>
-                                {
-                                    'Urgent notifications related to your account and cloud status. And urgent notifications related to your account and cloud status.'
-                                }
-                            </div>
-                        </div>
+                        <Switch
+                            size="l"
+                            checked={settings.notificationMonitoring}
+                            onChange={() => {
+                                handleChange(
+                                    'notificationMonitoring',
+                                    !settings.notificationMonitoring,
+                                );
+                            }}
+                        />
+                    </Settings.Item>
+                    <Settings.Item
+                        title="Billing"
+                        withBadge={withBadge}
+                        align="top"
+                        mode="row"
+                        description={
+                            'Urgent notifications related to your account and cloud status. And urgent notifications related to your account and cloud status.'
+                        }
+                    >
+                        <Switch
+                            size="l"
+                            checked={settings.notificationBilling}
+                            onChange={() => {
+                                handleChange('notificationBilling', !settings.notificationBilling);
+                            }}
+                        />
                     </Settings.Item>
                 </Settings.Section>
             </Settings.Page>

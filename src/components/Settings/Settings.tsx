@@ -5,6 +5,7 @@ import identity from 'lodash/identity';
 import {IconProps, Loader} from '@gravity-ui/uikit';
 import {SettingsSearch} from './SettingsSearch/SettingsSearch';
 import {SettingsMenu, SettingsMenuInstance} from './SettingsMenu/SettingsMenu';
+import {SettingsMenuMobile} from './SettingsMenuMobile/SettingsMenuMobile';
 
 import {getSettingsFromChildren} from './collect-settings';
 import {escapeStringForRegExp} from './helpers';
@@ -21,7 +22,7 @@ interface SettingsProps {
     renderLoading?: () => React.ReactNode;
     loading?: boolean;
     dict?: SettingsDict;
-    mode?: 'onepage';
+    view?: 'normal' | 'mobile';
 }
 type SettingsDict = Record<SettingsDictKeys, string>;
 type SettingsDictKeys = 'heading_settings' | 'placeholder_search' | 'not_found';
@@ -41,7 +42,7 @@ interface SettingsGroupProps {
 interface SettingsPageProps {
     id?: string;
     title: string;
-    icon: IconProps;
+    icon?: IconProps;
     children: React.ReactNode;
 }
 
@@ -50,6 +51,7 @@ interface SettingsSectionProps {
     header?: React.ReactNode;
     children: React.ReactNode;
     withBadge?: boolean;
+    showTitle?: boolean;
 }
 
 interface SettingsItemProps {
@@ -58,12 +60,20 @@ interface SettingsItemProps {
     align?: 'top' | 'center';
     children: React.ReactNode;
     withBadge?: boolean;
+    mode?: 'row';
+    description?: string;
 }
 
-export function Settings({loading, renderLoading, children, mode, ...props}: SettingsProps) {
+export function Settings({
+    loading,
+    renderLoading,
+    children,
+    view = 'normal',
+    ...props
+}: SettingsProps) {
     if (loading) {
         return (
-            <div className={b({loading: true, mode})}>
+            <div className={b({loading: true, view})}>
                 {typeof renderLoading === 'function' ? (
                     renderLoading()
                 ) : (
@@ -74,7 +84,7 @@ export function Settings({loading, renderLoading, children, mode, ...props}: Set
     }
 
     return (
-        <SettingsContent mode={mode} {...props}>
+        <SettingsContent view={view} {...props}>
             {children}
         </SettingsContent>
     );
@@ -91,7 +101,7 @@ function SettingsContent({
     children,
     renderNotFound,
     dict,
-    mode,
+    view,
 }: SettingsContentProps) {
     const [search, setSearch] = React.useState('');
     const {menu, pages} = getSettingsFromChildren(children, search);
@@ -101,6 +111,7 @@ function SettingsContent({
     );
     const searchInputRef = React.useRef<HTMLInputElement>(null);
     const menuRef = React.useRef<SettingsMenuInstance>(null);
+    const isMobile = view === 'mobile';
 
     React.useEffect(() => {
         menuRef.current?.clearFocus();
@@ -149,8 +160,18 @@ function SettingsContent({
             .filter((section) => !section.hidden)
             .map((section) => (
                 <div key={section.title} className={b('section')}>
-                    <h3 className={b('section-heading')}>{section.title}</h3>
-                    {section.header ? section.header : null}
+                    {section.showTitle ? (
+                        <h3 className={b('section-heading')}>{section.title}</h3>
+                    ) : null}
+
+                    {section.header ? (
+                        isMobile ? (
+                            <div className={b('section-subheader')}>{section.header}</div>
+                        ) : (
+                            section.header
+                        )
+                    ) : null}
+
                     {section.items.map(({hidden, title, element}) =>
                         hidden ? null : (
                             <div key={title} className={b('section-item')}>
@@ -166,36 +187,55 @@ function SettingsContent({
     };
 
     return (
-        <div className={b({mode})}>
-            <div
-                className={b('menu')}
-                onClick={() => {
-                    if (searchInputRef.current) {
-                        searchInputRef.current.focus();
-                    }
-                }}
-                onKeyDown={(event) => {
-                    if (menuRef.current) {
-                        if (menuRef.current.handleKeyDown(event)) {
-                            event.preventDefault();
+        <div className={b({view})}>
+            {isMobile ? (
+                <>
+                    <SettingsSearch
+                        inputRef={searchInputRef}
+                        className={b('search')}
+                        onChange={setSearch}
+                        autoFocus={false}
+                        inputSize={'l'}
+                    />
+                    <SettingsMenuMobile
+                        items={menu}
+                        onChange={handlePageChange}
+                        activeItemId={activePage}
+                        className={b('tabs')}
+                    />
+                </>
+            ) : (
+                <div
+                    className={b('menu')}
+                    onClick={() => {
+                        if (searchInputRef.current) {
+                            searchInputRef.current.focus();
                         }
-                    }
-                }}
-            >
-                <h2 className={b('heading')}>{dict?.heading_settings}</h2>
-                <SettingsSearch
-                    inputRef={searchInputRef}
-                    className={b('search')}
-                    onChange={setSearch}
-                    placeholder={dict?.placeholder_search}
-                />
-                <SettingsMenu
-                    ref={menuRef}
-                    items={menu}
-                    onChange={handlePageChange}
-                    activeItem={activePage}
-                />
-            </div>
+                    }}
+                    onKeyDown={(event) => {
+                        if (menuRef.current) {
+                            if (menuRef.current.handleKeyDown(event)) {
+                                event.preventDefault();
+                            }
+                        }
+                    }}
+                >
+                    <h2 className={b('heading')}>{dict?.heading_settings}</h2>
+                    <SettingsSearch
+                        inputRef={searchInputRef}
+                        className={b('search')}
+                        onChange={setSearch}
+                        placeholder={dict?.placeholder_search}
+                        autoFocus
+                    />
+                    <SettingsMenu
+                        ref={menuRef}
+                        items={menu}
+                        onChange={handlePageChange}
+                        activeItemId={activePage}
+                    />
+                </div>
+            )}
             <div className={b('page')}>{renderPageContent()}</div>
         </div>
     );
@@ -219,13 +259,18 @@ Settings.Item = function SettingsItem({
     align = 'center',
     withBadge,
     renderTitleComponent = identity,
+    mode,
+    description,
 }: SettingsItemProps) {
     return (
-        <div className={b('item', {align})}>
-            <label className={b('item-heading', {badge: withBadge})}>
-                {renderTitleComponent(title)}
+        <div className={b('item', {align, mode})}>
+            <label className={b('item-heading')}>
+                <span className={b('item-title', {badge: withBadge})}>
+                    {renderTitleComponent(title)}
+                </span>
+                {description ? <span className={b('item-description')}>{description}</span> : null}
             </label>
-            <div>{children}</div>
+            <div className={b('item-content')}>{children}</div>
         </div>
     );
 };
