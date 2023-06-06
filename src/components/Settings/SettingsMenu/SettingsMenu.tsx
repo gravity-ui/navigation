@@ -18,7 +18,7 @@ export interface SettingsMenuInstance {
 export const SettingsMenu = React.forwardRef<SettingsMenuInstance, SettingsMenuProps>(
     // eslint-disable-next-line prefer-arrow-callback
     function SettingsMenu({items, onChange, activeItemId}, ref) {
-        const [focusItemId, setFocus] = React.useState<string>();
+        const [focusItemId, setFocusId] = React.useState<string>();
         const containerRef = React.useRef<HTMLDivElement>(null);
         const handleChange = useStableCallback(onChange);
         const getFocused = useCurrent(focusItemId);
@@ -35,16 +35,16 @@ export const SettingsMenu = React.forwardRef<SettingsMenuInstance, SettingsMenuP
                         handleChange(focused);
                         return true;
                     } else if (event.key === 'ArrowDown') {
-                        setFocus(focusNext(containerRef.current, focused, 1));
+                        setFocusId(focusNext(containerRef.current, focused, 1));
                         return true;
                     } else if (event.key === 'ArrowUp') {
-                        setFocus(focusNext(containerRef.current, focused, -1));
+                        setFocusId(focusNext(containerRef.current, focused, -1));
                         return true;
                     }
                     return false;
                 },
                 clearFocus() {
-                    setFocus(undefined);
+                    setFocusId(undefined);
                 },
             }),
             [getFocused, handleChange],
