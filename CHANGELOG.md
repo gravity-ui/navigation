@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://github.com/gravity-ui/navigation/compare/v0.6.0...v0.6.1) (2023-06-07)
+
+
+### Bug Fixes
+
+* **FooterItem:** fix button area ([#50](https://github.com/gravity-ui/navigation/issues/50)) ([4e6904d](https://github.com/gravity-ui/navigation/commit/4e6904df4f650c80d5587edc6361b766fcd29e57))
+
 ## [0.6.0](https://github.com/gravity-ui/navigation/compare/v0.5.0...v0.6.0) (2023-06-07)
 
 
