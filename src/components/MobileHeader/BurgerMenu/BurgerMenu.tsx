@@ -18,7 +18,7 @@ export interface BurgerMenuInnerProps {
 }
 
 export const BurgerMenu = React.memo(
-    ({items = [], renderFooter, modalItem, className}: BurgerMenuInnerProps) => {
+    ({items = [], renderFooter, modalItem, className, onItemClick}: BurgerMenuInnerProps) => {
         return (
             <div className={b(null, className)}>
                 {modalItem && (
@@ -34,7 +34,7 @@ export const BurgerMenu = React.memo(
                     </Sheet>
                 )}
 
-                <BurgerCompositeBar items={items} />
+                <BurgerCompositeBar items={items} onItemClick={onItemClick} />
 
                 {renderFooter && <div className={b('footer')}>{renderFooter?.()}</div>}
             </div>

@@ -1,5 +1,8 @@
 import React from 'react';
 import {CSSTransition, Transition} from 'react-transition-group';
+
+import {useBodyScrollLock} from '@gravity-ui/uikit';
+
 import {block} from '../utils/cn';
 
 import './Drawer.scss';
@@ -76,33 +79,7 @@ export const Drawer: React.FC<DrawerProps> = ({
         };
     }, [onEscape, someItemVisible]);
 
-    React.useEffect(() => {
-        const prevPreventScrollBody = preventScrollBody;
-        const cleanupPreventScrollBody = () => {
-            document.body.style.paddingRight = '';
-            document.body.style.paddingBottom = '';
-            document.body.style.overflow = '';
-        };
-        const setPreventScrollBody = () => {
-            const vw = window.innerWidth - document.documentElement.clientWidth;
-            const hw = window.innerHeight - document.documentElement.clientHeight;
-            document.body.style.paddingRight = vw + 'px';
-            document.body.style.paddingBottom = hw + 'px';
-            document.body.style.overflow = 'hidden';
-        };
-        if (prevPreventScrollBody) {
-            if (someItemVisible) {
-                setPreventScrollBody();
-            } else {
-                cleanupPreventScrollBody();
-            }
-        }
-        return () => {
-            if (prevPreventScrollBody) {
-                cleanupPreventScrollBody();
-            }
-        };
-    }, [someItemVisible, preventScrollBody]);
+    useBodyScrollLock({enabled: preventScrollBody && someItemVisible});
 
     const containerRef = React.useRef<HTMLDivElement>(null);
     const veilRef = React.useRef<HTMLDivElement>(null);
