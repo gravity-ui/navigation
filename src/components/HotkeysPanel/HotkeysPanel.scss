@@ -9,7 +9,6 @@ $block: '.#{variables.$ns}hotkeys-panel';
     left: 0;
     right: 0;
     bottom: 0;
-    overflow: auto;
 
     --hotkeys-panel-width: 400px;
     --hotkeys-panel-vertical-padding: 18px;
@@ -18,6 +17,7 @@ $block: '.#{variables.$ns}hotkeys-panel';
     &__drawer-item {
         width: var(--hotkeys-panel-width);
         padding: var(--hotkeys-panel-vertical-padding) 0;
+        box-sizing: border-box;
         display: flex;
         flex-direction: column;
     }
