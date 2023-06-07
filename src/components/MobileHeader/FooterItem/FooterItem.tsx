@@ -15,7 +15,7 @@ export interface FooterItemProps {
     iconSize?: string | number;
     className?: string;
     modalItem: ModalItem;
-    onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+    onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 }
 
 export const FooterItem = ({
@@ -25,8 +25,8 @@ export const FooterItem = ({
     modalItem = {visible: false},
     onClick,
 }: FooterItemProps) => {
-    const handleClick = React.useCallback<React.MouseEventHandler<HTMLDivElement>>(
-        (event) => {
+    const handleClick = React.useCallback(
+        (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
             eventBroker.publish({
                 componentId: 'MobileHeaderFooterItem',
                 eventId: 'click',
@@ -39,10 +39,10 @@ export const FooterItem = ({
     );
 
     return (
-        <div className={b(null, className)}>
-            <div onClick={handleClick}>
+        <div className={b()}>
+            <button className={b('button', className)} onClick={handleClick}>
                 {icon ? <Icon data={icon} size={iconSize} className={b('icon')} /> : null}
-            </div>
+            </button>
 
             <Sheet
                 id={modalItem.id}
