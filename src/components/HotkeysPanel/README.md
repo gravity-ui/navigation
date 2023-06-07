@@ -16,6 +16,6 @@ A panel for hotkeys documentation
 
 And all the `List` PropTypes, but not `items` (you can find them [here](https://github.com/gravity-ui/uikit/blob/main/src/components/List/README.md))
 
-### Использование
+### Usage
 
-See demo `src/strories/demo/HotkeysPanelDemo`.
+See storybook example `src/components/HotkeysPanel/__stories__/HotkeysPanelShowcase`.
