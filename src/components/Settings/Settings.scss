@@ -11,10 +11,17 @@ $block: '.#{variables.$ns}settings';
 
     &_view_mobile {
         $content-padding: 20px;
+        $modal-header: 56px;
 
         display: block;
         width: auto;
-        height: calc(90vh - 56px);
+        height: calc(80vh - $modal-header);
+        overflow-x: hidden;
+
+        @supports (height: 90dvh) {
+            /* stylelint-disable-next-line */
+            height: calc(90dvh - $modal-header);
+        }
 
         &#{$block}_loading {
             text-align: center;
