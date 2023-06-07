@@ -74,11 +74,6 @@ $block: '.#{variables.$ns}aside-header';
             position: relative;
             z-index: 2;
             user-select: none;
-            background: linear-gradient(
-                180deg,
-                var(--aside-header-background-color) calc(var(--gradient-height) * 0.33),
-                transparent calc(var(--gradient-height) * 0.88)
-            );
 
             &::after {
                 position: absolute;
@@ -93,6 +88,14 @@ $block: '.#{variables.$ns}aside-header';
             & > #{$class}-logo {
                 margin: 8px 0;
             }
+        }
+
+        &-content_with-decoration {
+            background: linear-gradient(
+                180deg,
+                var(--aside-header-background-color) calc(var(--gradient-height) * 0.33),
+                transparent calc(var(--gradient-height) * 0.88)
+            );
         }
     }
 
@@ -122,7 +125,7 @@ $block: '.#{variables.$ns}aside-header';
             color: var(--aside-header-background-color);
         }
 
-        &::before {
+        &_with-decoration::before {
             position: absolute;
             top: 0;
             left: 0;
@@ -150,13 +153,15 @@ $block: '.#{variables.$ns}aside-header';
         &::before {
             display: block;
         }
+    }
+
+    &_compact &__header_with-decoration {
+        #{$class}__header-divider {
+            display: block;
+        }
 
         &::after {
             display: none;
-        }
-
-        #{$class}__header-divider {
-            display: block;
         }
     }
 
