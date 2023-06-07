@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.0](https://github.com/gravity-ui/navigation/compare/v0.5.0...v0.6.0) (2023-06-07)
+
+
+### Features
+
+* **AsideHeader:** add headerDecoration prop ([#49](https://github.com/gravity-ui/navigation/issues/49)) ([2e98c65](https://github.com/gravity-ui/navigation/commit/2e98c65033f221d7085af735d214fc8e6d22bc8a))
+* **SettingsMenuMobile:** add component ([#47](https://github.com/gravity-ui/navigation/issues/47)) ([092b6c4](https://github.com/gravity-ui/navigation/commit/092b6c4c995ff7f448623de435757d64fca948d4))
+
 ## [0.5.0](https://github.com/gravity-ui/navigation/compare/v0.4.0...v0.5.0) (2023-05-11)
 
 
