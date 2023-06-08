@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.7.0](https://github.com/gravity-ui/navigation/compare/v0.6.1...v0.7.0) (2023-06-08)
+
+
+### Features
+
+* **CompositeBar/Item:** add popupKeepMounted prop ([#55](https://github.com/gravity-ui/navigation/issues/55)) ([88140e8](https://github.com/gravity-ui/navigation/commit/88140e8bcfa9c86aeb0c6d45770eb545fb23a589))
+* **HotkeysPanel:** add component ([#53](https://github.com/gravity-ui/navigation/issues/53)) ([86c59bd](https://github.com/gravity-ui/navigation/commit/86c59bdb09bde48ba3588abfdb14e8219c9a902c))
+
+
+### Bug Fixes
+
+* **Logo:** disable hover animation on button ([#54](https://github.com/gravity-ui/navigation/issues/54)) ([99f2787](https://github.com/gravity-ui/navigation/commit/99f2787dfa39b04e160a0517e5555408f584971d))
+
 ## [0.6.1](https://github.com/gravity-ui/navigation/compare/v0.6.0...v0.6.1) (2023-06-07)
 
 
