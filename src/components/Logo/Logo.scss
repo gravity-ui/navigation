@@ -15,6 +15,11 @@ $block: '.#{variables.$ns}logo';
         display: flex;
         align-items: center;
         justify-content: center;
+        cursor: pointer;
+
+        & .yc-button::before {
+            background-color: transparent;
+        }
     }
 
     &__btn-logo.yc-button_view_flat.yc-button_size_l {
@@ -24,6 +29,7 @@ $block: '.#{variables.$ns}logo';
     &__logo {
         @include text-body-2;
         vertical-align: middle;
+        cursor: pointer;
     }
 
     &__logo-link {
