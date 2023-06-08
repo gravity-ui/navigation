@@ -22,6 +22,7 @@ interface ItemPopup {
     popupAnchor?: React.RefObject<HTMLElement>;
     popupPlacement?: PopupPlacement;
     popupOffset?: PopupProps['offset'];
+    popupKeepMounted?: boolean;
     renderPopupContent?: () => React.ReactNode;
     onClosePopup?: () => void;
 }
@@ -71,6 +72,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         popupAnchor,
         popupPlacement = defaultPopupPlacement,
         popupOffset = defaultPopupOffset,
+        popupKeepMounted,
         renderPopupContent,
         onClosePopup,
         onItemClick,
@@ -166,6 +168,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     <Popup
                         className={b('popup')}
                         open={popupVisible}
+                        keepMounted={popupKeepMounted}
                         placement={popupPlacement}
                         offset={popupOffset}
                         anchorRef={anchorRef}
