@@ -172,7 +172,7 @@ export class CompositeBar extends React.Component<CompositeBarProps> {
                 continue;
             }
             if (item.type === 'divider') {
-                if (index + 1 < listItems.length && listItems[index + 1].type === 'divider') {
+                if (index + 1 < listItems.length && listItems[index + 1]?.type === 'divider') {
                     listHeight -= getItemHeight(item);
                     listItems.splice(index, 1);
                 }
@@ -182,8 +182,8 @@ export class CompositeBar extends React.Component<CompositeBarProps> {
             collapseItems.unshift(...listItems.splice(index, 1));
         }
         if (
-            listItems[index].type === 'divider' &&
-            (index === 0 || listItems[index - 1].type === 'divider')
+            listItems[index]?.type === 'divider' &&
+            (index === 0 || listItems[index - 1]?.type === 'divider')
         ) {
             listItems.splice(index, 1);
         }
