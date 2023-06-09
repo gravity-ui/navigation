@@ -37,7 +37,6 @@ $block: '.#{variables.$ns}settings';
         }
 
         #{$block}__page {
-            padding: 20px #{$content-padding};
             overflow-y: visible;
         }
 
@@ -132,12 +131,15 @@ $block: '.#{variables.$ns}settings';
     }
 
     &__search {
-        margin: 12px 20px 16px;
+        margin: 0 20px 16px;
     }
 
     &__page {
-        padding: 20px;
         overflow-y: auto;
+    }
+
+    &__content {
+        padding: 20px;
     }
 
     &__section {

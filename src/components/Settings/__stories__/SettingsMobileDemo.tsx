@@ -63,11 +63,11 @@ export const SettingsMobileComponent = React.memo(
     ({
         initialPage,
         withBadge,
-        closeSettings,
+        onClose,
     }: {
         initialPage?: string;
         withBadge?: boolean;
-        closeSettings?: () => void;
+        onClose?: () => void;
     }) => {
         const [settings, dispatch] = useReducer(reducer, defaultSettings);
         const handleChange = (name: string, value: any) => {
@@ -80,6 +80,7 @@ export const SettingsMobileComponent = React.memo(
                 onPageChange={(page) => {
                     console.log({page});
                 }}
+                onClose={onClose}
             >
                 <Settings.Group id="arcanum" groupTitle="Arcanum">
                     <Settings.Page id="features" title="Features">
@@ -132,9 +133,9 @@ export const SettingsMobileComponent = React.memo(
                                     size="l"
                                 />
                             </Settings.Item>
-                            {closeSettings && (
+                            {onClose && (
                                 <Settings.Item title="Use triggerEvent method" mode="row">
-                                    <Button onClick={() => closeSettings?.()} size="xl">
+                                    <Button onClick={() => onClose?.()} size="xl">
                                         Save and close
                                     </Button>
                                 </Settings.Item>
@@ -192,7 +193,7 @@ SettingsMobileComponent.displayName = 'SettingsMobileComponent';
 export function SettingsMobileDemo() {
     return (
         <div className={b()}>
-            <SettingsMobileComponent withBadge />
+            <SettingsMobileComponent withBadge onClose={() => alert('Close settings')} />
         </div>
     );
 }

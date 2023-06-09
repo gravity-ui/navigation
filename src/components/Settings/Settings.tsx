@@ -6,7 +6,9 @@ import {IconProps, Loader} from '@gravity-ui/uikit';
 import {SettingsSearch} from './SettingsSearch/SettingsSearch';
 import {SettingsMenu, SettingsMenuInstance} from './SettingsMenu/SettingsMenu';
 import {SettingsMenuMobile} from './SettingsMenuMobile/SettingsMenuMobile';
+import {Title} from '../Title';
 
+import type {SettingsMenu as SettingsMenuType} from './collect-settings';
 import {getSettingsFromChildren} from './collect-settings';
 import {escapeStringForRegExp} from './helpers';
 
@@ -23,6 +25,7 @@ interface SettingsProps {
     loading?: boolean;
     dict?: SettingsDict;
     view?: 'normal' | 'mobile';
+    onClose?: () => void;
 }
 type SettingsDict = Record<SettingsDictKeys, string>;
 type SettingsDictKeys = 'heading_settings' | 'placeholder_search' | 'not_found';
@@ -90,6 +93,17 @@ export function Settings({
     );
 }
 
+const getPageTitleById = (menu: SettingsMenuType, activePage: string) => {
+    for (const firstLevel of menu) {
+        if ('groupTitle' in firstLevel) {
+            for (const secondLevel of firstLevel.items)
+                if (secondLevel.id === activePage) return secondLevel.title;
+        } else if (firstLevel.id === activePage) return firstLevel.title;
+    }
+
+    return '';
+};
+
 Settings.defaultProps = {
     dict: defaultDict,
 };
@@ -97,11 +111,12 @@ Settings.defaultProps = {
 type SettingsContentProps = Omit<SettingsProps, 'loading' | 'renderLoading'>;
 function SettingsContent({
     initialPage,
-    onPageChange,
     children,
     renderNotFound,
     dict,
     view,
+    onPageChange,
+    onClose,
 }: SettingsContentProps) {
     const [search, setSearch] = React.useState('');
     const {menu, pages} = getSettingsFromChildren(children, search);
@@ -156,34 +171,48 @@ function SettingsContent({
             );
         }
 
-        return pages[activePage].sections
-            .filter((section) => !section.hidden)
-            .map((section) => (
-                <div key={section.title} className={b('section')}>
-                    {section.showTitle ? (
-                        <h3 className={b('section-heading')}>{section.title}</h3>
-                    ) : null}
+        const filteredSections = pages[activePage].sections.filter((section) => !section.hidden);
 
-                    {section.header ? (
-                        isMobile ? (
-                            <div className={b('section-subheader')}>{section.header}</div>
-                        ) : (
-                            section.header
-                        )
-                    ) : null}
+        return (
+            <>
+                {!isMobile && (
+                    <Title hasSeparator onClose={onClose}>
+                        {getPageTitleById(menu, activePage)}
+                    </Title>
+                )}
 
-                    {section.items.map(({hidden, title, element}) =>
-                        hidden ? null : (
-                            <div key={title} className={b('section-item')}>
-                                {React.cloneElement(element, {
-                                    ...element.props,
-                                    title: search && title ? prepareTitle(title, search) : title,
-                                })}
-                            </div>
-                        ),
-                    )}
+                <div className={b('content')}>
+                    {filteredSections.map((section) => (
+                        <div key={section.title} className={b('section')}>
+                            {section.showTitle && (
+                                <h3 className={b('section-heading')}>{section.title}</h3>
+                            )}
+
+                            {section.header &&
+                                (isMobile ? (
+                                    <div className={b('section-subheader')}>{section.header}</div>
+                                ) : (
+                                    section.header
+                                ))}
+
+                            {section.items.map(({hidden, title, element}) =>
+                                hidden ? null : (
+                                    <div key={title} className={b('section-item')}>
+                                        {React.cloneElement(element, {
+                                            ...element.props,
+                                            title:
+                                                search && title
+                                                    ? prepareTitle(title, search)
+                                                    : title,
+                                        })}
+                                    </div>
+                                ),
+                            )}
+                        </div>
+                    ))}
                 </div>
-            ));
+            </>
+        );
     };
 
     return (
@@ -220,7 +249,7 @@ function SettingsContent({
                         }
                     }}
                 >
-                    <h2 className={b('heading')}>{dict?.heading_settings}</h2>
+                    <Title>{dict?.heading_settings}</Title>
                     <SettingsSearch
                         inputRef={searchInputRef}
                         className={b('search')}
