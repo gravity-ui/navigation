@@ -1,0 +1,22 @@
+@use '../variables';
+@import '../../../styles/mixins';
+
+$block: '.#{variables.$ns}title';
+
+#{$block} {
+    box-sizing: border-box;
+    padding: 14px 10px 14px 20px;
+    min-height: 64px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &_separator {
+        border-bottom: 1px solid var(--yc-color-line-generic);
+    }
+
+    &__text {
+        margin: 0;
+        margin-right: 20px;
+    }
+}

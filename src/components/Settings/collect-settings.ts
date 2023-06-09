@@ -2,7 +2,7 @@ import React from 'react';
 import {IconProps} from '@gravity-ui/uikit';
 import {escapeStringForRegExp, invariant} from './helpers';
 
-type SettingsMenu = (SettingsMenuGroup | SettingsMenuItem)[];
+export type SettingsMenu = (SettingsMenuGroup | SettingsMenuItem)[];
 
 interface SettingsMenuGroup {
     groupTitle: string;
