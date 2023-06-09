@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/gravity-ui/navigation/compare/v0.7.0...v0.8.0) (2023-06-09)
+
+
+### Features
+
+* **Title:** add component ([#58](https://github.com/gravity-ui/navigation/issues/58)) ([17cfa36](https://github.com/gravity-ui/navigation/commit/17cfa362c4394aa8e72c67f1e9abea92c5102fe8))
+
 ## [0.7.0](https://github.com/gravity-ui/navigation/compare/v0.6.1...v0.7.0) (2023-06-08)
 
 
