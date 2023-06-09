@@ -2,7 +2,7 @@ import React, {useReducer} from 'react';
 import block from 'bem-cn-lite';
 
 import {Settings} from '../index';
-import {HelpPopover, Switch, Checkbox, RadioButton, Radio, Select} from '@gravity-ui/uikit';
+import {Button, HelpPopover, Switch, Checkbox, RadioButton, Radio, Select} from '@gravity-ui/uikit';
 
 import featureIcon from '../../../../assets/icons/gear.svg';
 
@@ -46,7 +46,15 @@ const defaultSettings = {
 };
 
 export const SettingsComponent = React.memo(
-    ({initialPage, withBadge}: {initialPage?: string; withBadge?: boolean}) => {
+    ({
+        initialPage,
+        withBadge,
+        onClose,
+    }: {
+        initialPage?: string;
+        withBadge?: boolean;
+        onClose: () => void;
+    }) => {
         const [settings, dispatch] = useReducer(reducer, defaultSettings);
         const handleChange = (name: string, value: any) => {
             dispatch(setSetting(name, value));
@@ -57,6 +65,7 @@ export const SettingsComponent = React.memo(
                 onPageChange={(page) => {
                     console.log({page});
                 }}
+                onClose={onClose}
             >
                 <Settings.Group id="arcanum" groupTitle="Arcanum">
                     <Settings.Page id="features" title="Features" icon={{data: featureIcon}}>
@@ -145,6 +154,14 @@ export const SettingsComponent = React.memo(
                                     }}
                                 />
                             </Settings.Item>
+                            {onClose && (
+                                <Settings.Item
+                                    title="Use triggerEvent method"
+                                    withBadge={withBadge}
+                                >
+                                    <Button onClick={() => onClose?.()}>Save and close</Button>
+                                </Settings.Item>
+                            )}
                         </Settings.Section>
                     </Settings.Page>
                 </Settings.Group>
@@ -162,7 +179,7 @@ export function SettingsDemo() {
             <div className={b('header')}>
                 <h1>Settings</h1>
             </div>
-            <SettingsComponent withBadge />
+            <SettingsComponent withBadge onClose={() => alert('Close settings')} />
         </div>
     );
 }

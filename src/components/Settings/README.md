@@ -18,6 +18,7 @@ The components provides layouting functionality of settings panel with the follo
 | initialPage    | string             |          |          | Inititial page in `/groupId/pageId` format |
 | view           | 'normal', 'mobile' |          | 'normal' | Change view for Mobile                     |
 | onPageChange   | Function           |          |          | Page change handler                        |
+| onClose        | Function           |          |          | Settings close handler                     |
 
 #### Settings.Group
 
