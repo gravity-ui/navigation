@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.1](https://github.com/gravity-ui/navigation/compare/v0.8.0...v0.8.1) (2023-06-23)
+
+
+### Bug Fixes
+
+* **MobileHeader:** add export ([#61](https://github.com/gravity-ui/navigation/issues/61)) ([15523f5](https://github.com/gravity-ui/navigation/commit/15523f5e114cc5d2f9842775ce064a9f9b1daa86))
+
 ## [0.8.0](https://github.com/gravity-ui/navigation/compare/v0.7.0...v0.8.0) (2023-06-09)
 
 
