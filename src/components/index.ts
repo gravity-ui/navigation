@@ -5,4 +5,5 @@ export {FooterItem, FooterItemProps} from './FooterItem/FooterItem';
 export * from './Title';
 export * from './HotkeysPanel';
 export * from './Settings';
+export * from './MobileHeader';
 export * from './types';
