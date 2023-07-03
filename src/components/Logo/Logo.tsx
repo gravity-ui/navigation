@@ -7,7 +7,7 @@ import './Logo.scss';
 
 const b = block('logo');
 
-interface LogoInnerProps extends LogoProps {
+export interface LogoInnerProps extends LogoProps {
     compact: boolean;
 }
 
