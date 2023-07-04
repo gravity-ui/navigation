@@ -4,6 +4,7 @@ import {ComponentMeta, ComponentStory} from '@storybook/react';
 import {getAsideHeaderWrapper} from '../../AsideHeader/__stories__/getAsideHeaderWrapper';
 import {ActionBar} from '../ActionBar';
 import {ActionBarShowcase} from './ActionBarShowcase';
+import {ActionBarSingleSection} from './ActionBarSingleSection';
 
 export default {
     title: 'components/ActionBar',
@@ -16,3 +17,6 @@ export default {
 
 const ShowcaseTemplate: ComponentStory<typeof ActionBar> = () => <ActionBarShowcase />;
 export const Showcase = ShowcaseTemplate.bind({});
+
+const SingleSectionTemplate: ComponentStory<typeof ActionBar> = () => <ActionBarSingleSection />;
+export const SingleSection = SingleSectionTemplate.bind({});
