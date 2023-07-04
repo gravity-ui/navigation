@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.0](https://github.com/gravity-ui/navigation/compare/v0.8.1...v0.9.0) (2023-07-04)
+
+
+### Features
+
+* added new stories for ActionBar ([#64](https://github.com/gravity-ui/navigation/issues/64)) ([96dbcf3](https://github.com/gravity-ui/navigation/commit/96dbcf39863aea6ea781a224636b4abc6f5a64e5))
+* added type exports for ActionBar ([#66](https://github.com/gravity-ui/navigation/issues/66)) ([f911bd6](https://github.com/gravity-ui/navigation/commit/f911bd645aad36b453c7a9c49974f0bc790bea5d))
+
 ## [0.8.1](https://github.com/gravity-ui/navigation/compare/v0.8.0...v0.8.1) (2023-06-23)
 
 
