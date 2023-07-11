@@ -30,7 +30,11 @@ interface ItemPopup {
 export interface ItemProps extends ItemPopup {
     item: MenuItem;
     enableTooltip?: boolean;
-    onItemClick?: (item: MenuItem, collapsed: boolean) => void;
+    onItemClick?: (
+        item: MenuItem,
+        collapsed: boolean,
+        event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    ) => void;
 }
 
 interface ItemInnerProps extends ItemProps {
@@ -113,7 +117,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             <div
                 className={b({type, current, compact}, className)}
                 ref={ref}
-                onClick={() => {
+                onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
                     if (collapsedItem) {
                         /**
                          * If we call onItemClick for collapsedItem then:
@@ -122,7 +126,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                          */
                         toggleOpen(!open);
                     } else {
-                        onItemClick?.(item, false);
+                        onItemClick?.(item, false, event);
                     }
                 }}
                 onMouseEnter={() => {
@@ -243,8 +247,10 @@ function CollapsedPopup({
                             const res = (
                                 <div
                                     className={b('collapse-item')}
-                                    onClick={() => {
-                                        onItemClick?.(collapseItem, true);
+                                    onClick={(
+                                        event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+                                    ) => {
+                                        onItemClick?.(collapseItem, true, event);
                                     }}
                                 >
                                     {titleEl}
