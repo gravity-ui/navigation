@@ -22,6 +22,7 @@ const b = block('aside-header');
 interface AsideHeaderGeneralProps {
     logo: LogoProps;
     compact: boolean;
+    multipleTooltip?: boolean;
     dict?: AsideHeaderDict;
     className?: string;
     renderContent?: RenderContentType;
@@ -73,7 +74,8 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
     }
 
     private renderFirstPane = (size: number) => {
-        const {dict, menuItems, panelItems, compact, headerDecoration} = this.props;
+        const {dict, menuItems, panelItems, compact, headerDecoration, multipleTooltip} =
+            this.props;
 
         return (
             <React.Fragment>
@@ -88,6 +90,7 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
                                 enableCollapsing={true}
                                 dict={dict}
                                 onItemClick={this.onItemClick}
+                                multipleTooltip={multipleTooltip}
                             />
                         ) : (
                             <div className={b('menu-items')} />

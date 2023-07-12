@@ -9,5 +9,12 @@ export default {
     component: AsideHeader,
 } as Meta;
 
-const ShowcaseTemplate: Story = () => <AsideHeaderShowcase />;
+const ShowcaseTemplate: Story = (args) => <AsideHeaderShowcase {...args} />;
 export const Showcase = ShowcaseTemplate.bind({});
+
+const MultipleTooltipTemplate: Story = (args) => <AsideHeaderShowcase {...args} />;
+export const MultipleTooltip = MultipleTooltipTemplate.bind({});
+MultipleTooltip.args = {
+    multipleTooltip: true,
+    initialCompact: true,
+};
