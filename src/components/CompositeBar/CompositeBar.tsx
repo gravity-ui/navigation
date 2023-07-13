@@ -1,9 +1,4 @@
-import React, {
-    FC,
-    useCallback,
-    // useContext,
-    useRef,
-} from 'react';
+import React, {FC, ReactNode, useCallback, useContext, useRef} from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import {List} from '@gravity-ui/uikit';
 
@@ -16,14 +11,13 @@ import {
     getItemsMinHeight,
     getMoreButtonItem,
     getAutosizeListItems,
-    invokeCallbacks,
 } from './utils';
-import {Item} from './Item/Item';
+import {Item, ItemProps} from './Item/Item';
 
 import './CompositeBar.scss';
-import {useMultipleTooltipWrapper} from './MultipleTooltip/useMultipleTooltipWrapper';
-// import {MultipleTooltipContext} from './MultipleTooltip';
-// import {COLLAPSE_ITEM_ID} from './constants';
+import {MultipleTooltip, MultipleTooltipContext, MultipleTooltipProvider} from './MultipleTooltip';
+import {COLLAPSE_ITEM_ID} from './constants';
+import {ASIDE_HEADER_COMPACT_WIDTH} from '../constants';
 
 const b = block('composite-bar');
 
@@ -51,106 +45,128 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     multipleTooltip,
 }) => {
     const ref = useRef<List<MenuItem>>(null);
-    // const {
-    //     setValue: setMultipleTooltipContextValue,
-    //     active: multipleTooltipActive,
-    //     activeIndex,
-    //     lastClickedItemIndex,
-    // } = useContext(MultipleTooltipContext);
-    const deactivateItem = useCallback(
-        () => ref.current?.activateItem(undefined as unknown as number),
-        [ref],
+    const tooltipRef = useRef<HTMLDivElement>(null);
+    const {
+        setValue: setMultipleTooltipContextValue,
+        active: multipleTooltipActive,
+        activeIndex,
+        lastClickedItemIndex,
+    } = useContext(MultipleTooltipContext);
+
+    const onTooltipMouseEnter = useCallback((e) => {
+        if (
+            !multipleTooltipActive &&
+            activeIndex !== lastClickedItemIndex &&
+            e.clientX <= ASIDE_HEADER_COMPACT_WIDTH
+        ) {
+            setMultipleTooltipContextValue?.({
+                active: true,
+            });
+        }
+    }, []);
+
+    const onTooltipMouseLeave = useCallback(() => {
+        if (multipleTooltipActive) {
+            setMultipleTooltipContextValue?.({
+                active: false,
+                lastClickedItemIndex: undefined,
+            });
+        }
+    }, [multipleTooltipActive]);
+
+    const onMouseEnterByIndex = useCallback(
+        (itemIndex) => () => {
+            if (multipleTooltip) {
+                let multipleTooltipActiveValue = multipleTooltipActive;
+                if (!multipleTooltipActive && itemIndex !== lastClickedItemIndex) {
+                    multipleTooltipActiveValue = true;
+                }
+                if (
+                    activeIndex === itemIndex &&
+                    multipleTooltipActive === multipleTooltipActiveValue
+                ) {
+                    return;
+                }
+                setMultipleTooltipContextValue({
+                    activeIndex: itemIndex,
+                    active: multipleTooltipActiveValue,
+                });
+            }
+        },
+        [],
     );
-    const {MultipleTooltipWrapper, onListMouseEnterByIndex, onListMouseLeave, onListItemClick} =
-        useMultipleTooltipWrapper(multipleTooltip && compact);
+
+    const onMouseLeave = useCallback(() => {
+        if (compact) {
+            ref.current?.activateItem(undefined as unknown as number);
+            if (
+                multipleTooltip &&
+                (activeIndex !== undefined || lastClickedItemIndex !== undefined)
+            ) {
+                setMultipleTooltipContextValue({
+                    activeIndex: undefined,
+                    lastClickedItemIndex: undefined,
+                });
+            }
+        }
+    }, []);
 
     const onItemClickByIndex = useCallback(
-        (itemIndex: number) => invokeCallbacks(onItemClick, onListItemClick?.(itemIndex)),
-        [onItemClick, onListItemClick],
+        (itemIndex): ItemProps['onItemClick'] =>
+            (item, collapsed) => {
+                if (
+                    compact &&
+                    multipleTooltip &&
+                    itemIndex !== lastClickedItemIndex &&
+                    item.id !== COLLAPSE_ITEM_ID
+                ) {
+                    setMultipleTooltipContextValue({
+                        lastClickedItemIndex: itemIndex,
+                        active: false,
+                    });
+                }
+                onItemClick?.(item, collapsed);
+            },
+        [],
     );
 
-    const onMouseLeave = useCallback(invokeCallbacks(deactivateItem, onListMouseLeave), [
-        deactivateItem,
-        onListMouseLeave,
-    ]);
-
     return (
-        <MultipleTooltipWrapper items={items}>
-            <List<MenuItem>
-                ref={ref}
+        <>
+            <div
+                ref={tooltipRef}
+                onMouseEnter={onTooltipMouseEnter}
+                onMouseLeave={onTooltipMouseLeave}
+            >
+                <List<MenuItem>
+                    ref={ref}
+                    items={items}
+                    selectedItemIndex={getSelectedItemIndex(items)}
+                    itemHeight={getItemHeight}
+                    itemClassName={b('root-menu-item')}
+                    itemsHeight={getItemsHeight}
+                    virtualized={false}
+                    filterable={false}
+                    sortable={false}
+                    renderItem={(item, _isItemActive, itemIndex) => (
+                        <Item
+                            item={item}
+                            onMouseEnter={onMouseEnterByIndex(itemIndex)}
+                            onMouseLeave={onMouseLeave}
+                            onItemClick={onItemClickByIndex}
+                            compact={compact}
+                            collapseItems={collapseItems}
+                            enableTooltip={!multipleTooltip}
+                        />
+                    )}
+                />
+            </div>
+            <MultipleTooltip
+                open={compact && multipleTooltip && multipleTooltipActive}
+                anchorRef={tooltipRef}
+                placement={['right-start']}
                 items={items}
-                selectedItemIndex={getSelectedItemIndex(items)}
-                itemHeight={getItemHeight}
-                itemClassName={b('root-menu-item')}
-                itemsHeight={getItemsHeight}
-                virtualized={false}
-                filterable={false}
-                sortable={false}
-                renderItem={(item, _isItemActive, itemIndex) => (
-                    <Item
-                        item={item}
-                        // onMouseLeave={() => {
-                        //     if (compact) {
-                        //         ref.current?.activateItem(undefined as unknown as number);
-                        //     }
-                        // }}
-                        // onMouseEnter={() => {
-                        //     if (multipleTooltip) {
-                        //         let multipleTooltipActiveValue = multipleTooltipActive;
-                        //         if (!multipleTooltipActive && itemIndex !== lastClickedItemIndex) {
-                        //             multipleTooltipActiveValue = true;
-                        //         }
-                        //         if (
-                        //             activeIndex === itemIndex &&
-                        //             multipleTooltipActive === multipleTooltipActiveValue
-                        //         ) {
-                        //             return;
-                        //         }
-                        //         setMultipleTooltipContextValue({
-                        //             activeIndex: itemIndex,
-                        //             active: multipleTooltipActiveValue,
-                        //         });
-                        //     }
-                        // }}
-                        // onMouseLeave={() => {
-                        //     if (compact) {
-                        //         ref.current?.activateItem(undefined as unknown as number);
-                        //         if (
-                        //             multipleTooltip &&
-                        //             (activeIndex !== undefined ||
-                        //                 lastClickedItemIndex !== undefined)
-                        //         ) {
-                        //             setMultipleTooltipContextValue({
-                        //                 activeIndex: undefined,
-                        //                 lastClickedItemIndex: undefined,
-                        //             });
-                        //         }
-                        //     }
-                        // }}
-                        // onItemClick={(item, collapsed) => {
-                        //     if (
-                        //         compact &&
-                        //         multipleTooltip &&
-                        //         itemIndex !== lastClickedItemIndex &&
-                        //         item.id !== COLLAPSE_ITEM_ID
-                        //     ) {
-                        //         setMultipleTooltipContextValue({
-                        //             lastClickedItemIndex: itemIndex,
-                        //             active: false,
-                        //         });
-                        //     }
-                        //     onItemClick?.(item, collapsed);
-                        // }}
-                        onItemClick={onItemClickByIndex(itemIndex)}
-                        onMouseEnter={onListMouseEnterByIndex(itemIndex)}
-                        onMouseLeave={onMouseLeave}
-                        compact={compact}
-                        collapseItems={collapseItems}
-                        enableTooltip={!multipleTooltip}
-                    />
-                )}
             />
-        </MultipleTooltipWrapper>
+        </>
     );
 };
 
@@ -165,9 +181,39 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     if (items.length === 0) {
         return null;
     }
+    let node: ReactNode = null;
 
-    if (!enableCollapsing) {
-        return (
+    if (enableCollapsing) {
+        const minHeight = getItemsMinHeight(items);
+        const collapseItem = getMoreButtonItem(dict);
+        node = (
+            <div className={b({autosizer: true})} style={{minHeight}}>
+                {items.length !== 0 && (
+                    <AutoSizer>
+                        {({width, height}) => {
+                            const {listItems, collapseItems} = getAutosizeListItems(
+                                items,
+                                height,
+                                collapseItem,
+                            );
+                            return (
+                                <div style={{width, height}}>
+                                    <CompositeBarView
+                                        items={listItems}
+                                        compact={compact}
+                                        onItemClick={onItemClick}
+                                        collapseItems={collapseItems}
+                                        multipleTooltip={multipleTooltip}
+                                    />
+                                </div>
+                            );
+                        }}
+                    </AutoSizer>
+                )}
+            </div>
+        );
+    } else {
+        node = (
             <div className={b()}>
                 <CompositeBarView
                     items={items}
@@ -178,34 +224,5 @@ export const CompositeBar: FC<CompositeBarProps> = ({
             </div>
         );
     }
-
-    const minHeight = getItemsMinHeight(items);
-    const collapseItem = getMoreButtonItem(dict);
-
-    return (
-        <div className={b({autosizer: true})} style={{minHeight}}>
-            {items.length !== 0 && (
-                <AutoSizer>
-                    {({width, height}) => {
-                        const {listItems, collapseItems} = getAutosizeListItems(
-                            items,
-                            height,
-                            collapseItem,
-                        );
-                        return (
-                            <div style={{width, height}}>
-                                <CompositeBarView
-                                    items={listItems}
-                                    compact={compact}
-                                    onItemClick={onItemClick}
-                                    collapseItems={collapseItems}
-                                    multipleTooltip={multipleTooltip}
-                                />
-                            </div>
-                        );
-                    }}
-                </AutoSizer>
-            )}
-        </div>
-    );
+    return <MultipleTooltipProvider>{node}</MultipleTooltipProvider>;
 };
