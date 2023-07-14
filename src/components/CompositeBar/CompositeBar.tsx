@@ -53,17 +53,20 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
         lastClickedItemIndex,
     } = useContext(MultipleTooltipContext);
 
-    const onTooltipMouseEnter = useCallback((e) => {
-        if (
-            !multipleTooltipActive &&
-            activeIndex !== lastClickedItemIndex &&
-            e.clientX <= ASIDE_HEADER_COMPACT_WIDTH
-        ) {
-            setMultipleTooltipContextValue?.({
-                active: true,
-            });
-        }
-    }, []);
+    const onTooltipMouseEnter = useCallback(
+        (e) => {
+            if (
+                !multipleTooltipActive &&
+                activeIndex !== lastClickedItemIndex &&
+                e.clientX <= ASIDE_HEADER_COMPACT_WIDTH
+            ) {
+                setMultipleTooltipContextValue?.({
+                    active: true,
+                });
+            }
+        },
+        [multipleTooltipActive, activeIndex, lastClickedItemIndex, setMultipleTooltipContextValue],
+    );
 
     const onTooltipMouseLeave = useCallback(() => {
         if (multipleTooltipActive) {
@@ -72,7 +75,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                 lastClickedItemIndex: undefined,
             });
         }
-    }, [multipleTooltipActive]);
+    }, [multipleTooltipActive, setMultipleTooltipContextValue]);
 
     const onMouseEnterByIndex = useCallback(
         (itemIndex) => () => {
@@ -93,7 +96,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                 });
             }
         },
-        [],
+        [multipleTooltipActive, activeIndex, lastClickedItemIndex, setMultipleTooltipContextValue],
     );
 
     const onMouseLeave = useCallback(() => {
@@ -109,7 +112,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                 });
             }
         }
-    }, []);
+    }, [activeIndex, lastClickedItemIndex, setMultipleTooltipContextValue]);
 
     const onItemClickByIndex = useCallback(
         (itemIndex): ItemProps['onItemClick'] =>
@@ -127,7 +130,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                 }
                 onItemClick?.(item, collapsed);
             },
-        [],
+        [lastClickedItemIndex, setMultipleTooltipContextValue],
     );
 
     return (
