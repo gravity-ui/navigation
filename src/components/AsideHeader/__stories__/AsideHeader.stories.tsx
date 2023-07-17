@@ -12,15 +12,9 @@ export default {
 const ShowcaseTemplate: Story = (args) => <AsideHeaderShowcase {...args} />;
 export const Showcase = ShowcaseTemplate.bind({});
 
-const CompactTemplate: Story = (args) => <AsideHeaderShowcase {...args} />;
-export const Compact = CompactTemplate.bind({});
-Compact.args = {
-    initialCompact: true,
-};
-
-const SingleTooltipsTemplate: Story = (args) => <AsideHeaderShowcase {...args} />;
-export const SingleTooltips = SingleTooltipsTemplate.bind({});
-SingleTooltips.args = {
-    multipleTooltip: false,
+const MultipleTooltipTemplate: Story = (args) => <AsideHeaderShowcase {...args} />;
+export const MultipleTooltip = MultipleTooltipTemplate.bind({});
+MultipleTooltip.args = {
+    multipleTooltip: true,
     initialCompact: true,
 };
