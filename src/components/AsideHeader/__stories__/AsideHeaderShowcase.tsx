@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FC} from 'react';
 import block from 'bem-cn-lite';
 
 import {AsideHeader, FooterItem} from '../..';
@@ -25,10 +25,18 @@ enum Panel {
     Components = 'components',
 }
 
-export function AsideHeaderShowcase() {
+interface AsideHeaderShowcaseProps {
+    multipleTooltip?: boolean;
+    initialCompact?: boolean;
+}
+
+export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
+    multipleTooltip = false,
+    initialCompact = false,
+}) => {
     const [popupVisible, setPopupVisible] = React.useState(false);
     const [visiblePanel, setVisiblePanel] = React.useState<Panel>();
-    const [compact, setCompact] = React.useState(false);
+    const [compact, setCompact] = React.useState(initialCompact);
     const [headerDecoration, setHeaderDecoration] = React.useState<string>(BOOLEAN_OPTIONS.Yes);
 
     const navRef = React.useRef<AsideHeader>(null);
@@ -78,6 +86,7 @@ export function AsideHeaderShowcase() {
                     },
                 ]}
                 compact={compact}
+                multipleTooltip={multipleTooltip}
                 renderFooter={({compact}) => (
                     <React.Fragment>
                         <FooterItem
@@ -197,4 +206,4 @@ export function AsideHeaderShowcase() {
             />
         </div>
     );
-}
+};
