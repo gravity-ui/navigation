@@ -31,7 +31,7 @@ interface AsideHeaderShowcaseProps {
 }
 
 export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
-    multipleTooltip = false,
+    multipleTooltip = true,
     initialCompact = false,
 }) => {
     const [popupVisible, setPopupVisible] = React.useState(false);

@@ -18,9 +18,9 @@ Compact.args = {
     initialCompact: true,
 };
 
-const MultipleTooltipTemplate: Story = (args) => <AsideHeaderShowcase {...args} />;
-export const MultipleTooltip = MultipleTooltipTemplate.bind({});
-MultipleTooltip.args = {
-    multipleTooltip: true,
+const SingleTooltipsTemplate: Story = (args) => <AsideHeaderShowcase {...args} />;
+export const SingleTooltips = SingleTooltipsTemplate.bind({});
+SingleTooltips.args = {
+    multipleTooltip: false,
     initialCompact: true,
 };

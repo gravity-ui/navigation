@@ -42,7 +42,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     compact,
     onItemClick,
     collapseItems,
-    multipleTooltip,
+    multipleTooltip = true,
 }) => {
     const ref = useRef<List<MenuItem>>(null);
     const tooltipRef = useRef<HTMLDivElement>(null);
