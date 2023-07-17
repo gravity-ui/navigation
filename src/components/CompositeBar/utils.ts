@@ -113,18 +113,3 @@ export function getAutosizeListItems(
 
     return {listItems, collapseItems};
 }
-export type Callback<R, A extends unknown[] = []> = (...args: A) => R;
-
-export type SideEffect<A extends unknown[] = []> = Callback<void, A>;
-
-export function invokeCallbacks<A extends unknown[]>(
-    ...callbacks: Array<SideEffect<A> | undefined>
-) {
-    return (...args: A) => {
-        callbacks.forEach((callback) => callback?.(...args));
-    };
-}
-
-// export function callIf(condition: boolean | undefined, cb: (...args: unknown[]) => unknown) {
-//     return condition ? cb : () => undefined;
-// }
