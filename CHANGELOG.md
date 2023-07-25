@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.10.0](https://github.com/gravity-ui/navigation/compare/v0.9.0...v0.10.0) (2023-07-25)
+
+
+### Features
+
+* added MultipleTooltip ([#69](https://github.com/gravity-ui/navigation/issues/69)) ([ab35916](https://github.com/gravity-ui/navigation/commit/ab35916366457a1bc8cd81cd8c6d9811d3f2d82c))
+* **CompositeBar:** rewritten to FC ([#67](https://github.com/gravity-ui/navigation/issues/67)) ([78f43b0](https://github.com/gravity-ui/navigation/commit/78f43b04c8eaa155a44e6953130476a85d0a4b40))
+* **Item:** forward event to onItemClick ([#70](https://github.com/gravity-ui/navigation/issues/70)) ([ac571dc](https://github.com/gravity-ui/navigation/commit/ac571dca9cfec5fb3d919fee3a3cd4744c52a8e1))
+
 ## [0.9.0](https://github.com/gravity-ui/navigation/compare/v0.8.1...v0.9.0) (2023-07-04)
 
 
