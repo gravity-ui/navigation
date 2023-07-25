@@ -1,0 +1,84 @@
+@use '../../variables';
+
+$block: '.#{variables.$ns}multiple-tooltip';
+
+.yc-root_theme_dark #{$block},
+.yc-root_theme_dark-hc #{$block} {
+    --multiple-tooltip-item-bg-color: #424147; // TODO: color variable will appear in uikit 5
+    --multiple-tooltip-item-active-bg-color: var(--yc-color-base-float-heavy);
+    --multiple-tooltip-backdrop-background: linear-gradient(
+        90deg,
+        #313036 0%,
+        rgba(49, 48, 54, 0.3) 100%
+    );
+    --multiple-tooltip-backdrop-filter: blur(16px);
+}
+
+.yc-root_theme_light #{$block},
+.yc-root_theme_light-hc #{$block} {
+    --multiple-tooltip-item-bg-color: #7a7a7a; // TODO: color variable will appear in uikit 5
+    --multiple-tooltip-item-active-bg-color: var(--yc-color-base-float-heavy);
+    --multiple-tooltip-backdrop-background: linear-gradient(
+        90deg,
+        #ffffff 0%,
+        rgba(255, 255, 255, 0.3) 100%
+    );
+    --multiple-tooltip-backdrop-filter: blur(12px);
+}
+
+#{$block} {
+    background-color: transparent;
+    box-shadow: none;
+
+    &::before {
+        content: '';
+        box-shadow: none;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: var(--multiple-tooltip-backdrop-background);
+        filter: var(--multiple-tooltip-backdrop-filter);
+    }
+
+    &__items-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 32px 40px 32px 12px;
+    }
+
+    &__item {
+        display: flex;
+        box-sizing: border-box;
+        height: 30px;
+        padding: 8px 12px;
+        background-color: var(--multiple-tooltip-item-bg-color);
+        position: relative;
+        border-radius: 5px;
+        align-items: center;
+        color: var(--yc-color-text-light-primary);
+        margin-bottom: 5px;
+        transition: transform 100ms ease-in-out;
+
+        &:not(&_divider) + &:not(&_divider),
+        &:first-child {
+            margin-top: 5px;
+        }
+
+        &_divider + &:not(&_divider) {
+            margin-top: 4px;
+        }
+
+        &_active {
+            background-color: var(--multiple-tooltip-item-active-bg-color);
+            transform: translateX(-12px);
+        }
+
+        &_divider {
+            height: 15px;
+            visibility: hidden;
+            margin: 0;
+        }
+    }
+}
