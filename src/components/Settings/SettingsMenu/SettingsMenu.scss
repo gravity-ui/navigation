@@ -26,29 +26,29 @@ $block: '.#{variables.$ns}settings-menu';
         padding: 0 20px;
         cursor: pointer;
 
-        color: var(--yc-color-text-primary);
+        color: var(--g-color-text-primary);
 
         &-icon {
-            color: var(--yc-color-text-misc);
+            color: var(--g-color-text-misc);
             margin-right: 5px;
         }
 
         &:hover,
         &_focused {
-            background: var(--yc-color-base-simple-hover);
+            background: var(--g-color-base-simple-hover);
         }
 
         &_selected {
-            background: var(--yc-color-base-selection);
+            background: var(--g-color-base-selection);
         }
 
         &_selected:hover,
         &_selected#{$item}_focused {
-            background: var(--yc-color-base-selection-hover);
+            background: var(--g-color-base-selection-hover);
         }
 
         &_disabled {
-            color: var(--yc-color-text-secondary);
+            color: var(--g-color-text-secondary);
             cursor: auto;
 
             &:hover {
@@ -56,7 +56,7 @@ $block: '.#{variables.$ns}settings-menu';
             }
 
             #{$item}-icon {
-                color: var(--yc-color-base-misc-heavy);
+                color: var(--g-color-base-misc-heavy);
             }
         }
 
@@ -69,7 +69,7 @@ $block: '.#{variables.$ns}settings-menu';
                 width: 6px;
                 height: 6px;
                 border-radius: 50%;
-                background-color: var(--yc-color-text-danger);
+                background-color: var(--g-color-text-danger);
                 position: absolute;
                 right: 9px;
                 top: calc(50% - 3px);

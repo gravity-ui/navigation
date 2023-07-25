@@ -1,5 +1,5 @@
 import React from 'react';
-import {Meta, Story} from '@storybook/react/types-6-0';
+import type {Meta, StoryFn} from '@storybook/react';
 
 import {DrawerShowcase} from './DrawerShowcase';
 
@@ -8,5 +8,5 @@ export default {
     component: DrawerShowcase,
 } as Meta;
 
-const ShowcaseTemplate: Story = () => <DrawerShowcase />;
+const ShowcaseTemplate: StoryFn = () => <DrawerShowcase />;
 export const Showcase = ShowcaseTemplate.bind({});

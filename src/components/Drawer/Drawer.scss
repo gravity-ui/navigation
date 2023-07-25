@@ -10,7 +10,7 @@ $block: '.#{variables.$ns}drawer';
         bottom: 0;
         height: 100%;
         will-change: transform;
-        background-color: var(--yc-color-base-background);
+        background-color: var(--g-color-base-background);
 
         &_direction_right {
             left: auto;
@@ -68,7 +68,7 @@ $block: '.#{variables.$ns}drawer';
         right: 0;
         bottom: 0;
         top: 0;
-        background-color: var(--yc-color-sfx-veil);
+        background-color: var(--g-color-sfx-veil);
     }
 
     &__veil-transition-enter {

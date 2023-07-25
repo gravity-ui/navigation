@@ -3,10 +3,12 @@
   "compilerOptions": {
     "jsx": "react",
     "module": "esnext",
-    "baseUrl": ".",
     "allowJs": true,
     "outDir": "build",
-    "declaration": true
+    "declaration": true,
+    "paths": {
+      "~src/*": ["./src/*"]
+    }
   },
   "include": [
     "src/**/*.ts",

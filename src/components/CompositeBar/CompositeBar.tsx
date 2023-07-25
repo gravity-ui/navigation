@@ -1,9 +1,9 @@
 import React, {FC, ReactNode, useCallback, useContext, useRef} from 'react';
-import AutoSizer from 'react-virtualized-auto-sizer';
+import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
 import {List} from '@gravity-ui/uikit';
 
 import {block} from '../utils/cn';
-import {AsideHeaderDict, MenuItem} from './../types';
+import {AsideHeaderDict, MenuItem} from '../types';
 import {
     getItemsHeight,
     getItemHeight,
@@ -184,7 +184,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     if (items.length === 0) {
         return null;
     }
-    let node: ReactNode = null;
+    let node: ReactNode;
 
     if (enableCollapsing) {
         const minHeight = getItemsMinHeight(items);
@@ -193,7 +193,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
             <div className={b({autosizer: true})} style={{minHeight}}>
                 {items.length !== 0 && (
                     <AutoSizer>
-                        {({width, height}) => {
+                        {({width, height}: Size) => {
                             const {listItems, collapseItems} = getAutosizeListItems(
                                 items,
                                 height,

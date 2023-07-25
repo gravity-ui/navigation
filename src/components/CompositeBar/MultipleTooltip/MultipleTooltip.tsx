@@ -37,7 +37,7 @@ export const MultipleTooltip: React.FC<MultipleTooltipProps> = ({
             anchorRef={anchorRef}
             placement={placement}
             offset={POPUP_OFFSET}
-            className={b(null)}
+            contentClassName={b(null)}
             modifiers={POPUP_MODIFIERS}
         >
             <div className={b('items-container')}>

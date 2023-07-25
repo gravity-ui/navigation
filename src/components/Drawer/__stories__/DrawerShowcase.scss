@@ -6,7 +6,7 @@
     &__header {
         width: 100%;
         padding: 20px;
-        border-bottom: 1px solid var(--yc-color-line-generic);
+        border-bottom: 1px solid var(--g-color-line-generic);
     }
 
     &__drawer {
@@ -19,12 +19,12 @@
     &__item-1 {
         height: 100%;
         width: 120px;
-        background-color: var(--yc-color-infographics-info-heavy);
+        background-color: var(--g-color-base-info-heavy);
     }
 
     &__item-2 {
         height: 100%;
         width: 100px;
-        background-color: var(--yc-color-infographics-positive-heavy);
+        background-color: var(--g-color-base-positive-heavy);
     }
 }

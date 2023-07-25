@@ -1,5 +1,5 @@
 import React from 'react';
-import {Meta, Story} from '@storybook/react/types-6-0';
+import type {Meta, StoryFn} from '@storybook/react';
 
 import {Settings} from '..';
 import {SettingsDemo} from './SettingsDemo';
@@ -10,8 +10,8 @@ export default {
     component: Settings,
 } as Meta;
 
-const ShowcaseTemplate: Story = () => <SettingsDemo />;
+const ShowcaseTemplate: StoryFn = () => <SettingsDemo />;
 export const Showcase = ShowcaseTemplate.bind({});
 
-const ShowcaseMobileTemplate: Story = () => <SettingsMobileDemo />;
+const ShowcaseMobileTemplate: StoryFn = () => <SettingsMobileDemo />;
 export const ViewMobile = ShowcaseMobileTemplate.bind({});

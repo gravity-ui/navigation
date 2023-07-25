@@ -10,7 +10,7 @@ $block: '.#{variables.$ns}action-bar-section';
     align-items: stretch;
 
     & + & {
-        border-left: solid 1px var(--yc-color-line-generic);
+        border-left: solid 1px var(--g-color-line-generic);
     }
 
     &_type_primary {

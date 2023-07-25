@@ -21,13 +21,13 @@ $block: '.#{variables.$ns}mobile-header-footer-item';
     }
 
     & &__icon {
-        color: var(--yc-color-text-misc);
+        color: var(--g-color-text-misc);
     }
 
     & + & {
         &::before {
             content: '';
-            border-left: 1px solid var(--yc-color-base-generic);
+            border-left: 1px solid var(--g-color-base-generic);
             position: absolute;
             top: 8px;
             bottom: 8px;

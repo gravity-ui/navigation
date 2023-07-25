@@ -1,6 +1,6 @@
 import React from 'react';
-import {Meta} from '@storybook/react/types-6-0';
-import {Story} from '@storybook/react';
+
+import type {Meta, StoryFn} from '@storybook/react';
 
 import {CompositeBar, CompositeBarProps} from '../CompositeBar';
 import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../constants';
@@ -27,7 +27,7 @@ export default {
     ],
 } as Meta;
 
-const Template: Story<CompositeBarProps> = (args) => (
+const Template: StoryFn<CompositeBarProps> = (args) => (
     <div className="composite-bar-showcase">
         <CompositeBar {...args} />
     </div>

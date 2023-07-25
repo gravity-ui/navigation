@@ -28,7 +28,7 @@ $block: '.#{variables.$ns}burger-composite-bar';
     }
 
     & &__item-icon {
-        color: var(--yc-color-text-misc);
+        color: var(--g-color-text-misc);
     }
 
     &__item-title {
@@ -56,12 +56,12 @@ $block: '.#{variables.$ns}burger-composite-bar';
     &__menu-divider {
         margin: 0;
         flex-grow: 1;
-        border-top: 1px solid var(--yc-color-line-generic);
+        border-top: 1px solid var(--g-color-line-generic);
     }
 
     &__root-menu-item {
         &.yc-list__item_selected {
-            background-color: var(--yc-color-base-selection);
+            background-color: var(--g-color-base-selection);
         }
 
         &:not(.yc-list__item_selected).yc-list__item_active {

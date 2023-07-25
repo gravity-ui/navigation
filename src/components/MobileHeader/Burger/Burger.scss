@@ -55,7 +55,7 @@ $block: '.#{variables.$ns}mobile-header-burger';
         &:before,
         &:after,
         #{$class}__icon-dash {
-            background-color: var(--yc-color-text-primary);
+            background-color: var(--g-color-text-primary);
             border-radius: 1px;
             height: 2px;
             left: 0;

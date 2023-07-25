@@ -2,7 +2,8 @@ import React, {useReducer} from 'react';
 import block from 'bem-cn-lite';
 
 import {Settings} from '../index';
-import {Button, HelpPopover, Switch, Checkbox, RadioButton, Radio, Select} from '@gravity-ui/uikit';
+import {HelpPopover} from '@gravity-ui/components';
+import {Button, Switch, Checkbox, RadioButton, Radio, Select} from '@gravity-ui/uikit';
 
 import featureIcon from '../../../../assets/icons/gear.svg';
 

@@ -170,7 +170,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
                 {renderPopupContent && Boolean(anchorRef?.current) && (
                     <Popup
-                        className={b('popup')}
+                        contentClassName={b('popup')}
                         open={popupVisible}
                         keepMounted={popupKeepMounted}
                         placement={popupPlacement}
