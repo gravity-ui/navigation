@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.1](https://github.com/gravity-ui/navigation/compare/v0.10.0...v0.10.1) (2023-07-26)
+
+
+### Bug Fixes
+
+* **CompositeBar:** problem with not working onItemClick prop ([#72](https://github.com/gravity-ui/navigation/issues/72)) ([59d4c3d](https://github.com/gravity-ui/navigation/commit/59d4c3d72fd4a95f5f6b41b2b84444184b89d3a1))
+
 ## [0.10.0](https://github.com/gravity-ui/navigation/compare/v0.9.0...v0.10.0) (2023-07-25)
 
 
