@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.11.0](https://github.com/gravity-ui/navigation/compare/v0.10.1...v0.11.0) (2023-07-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* migration on uikit 5 ([#71](https://github.com/gravity-ui/navigation/issues/71))
+
+### Features
+
+* migration on uikit 5 ([#71](https://github.com/gravity-ui/navigation/issues/71)) ([a032d42](https://github.com/gravity-ui/navigation/commit/a032d4293a899a058487ea12205d8dff1342f6a3))
+
 ## [0.10.1](https://github.com/gravity-ui/navigation/compare/v0.10.0...v0.10.1) (2023-07-26)
 
 
