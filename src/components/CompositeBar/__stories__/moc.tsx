@@ -1,7 +1,7 @@
 import React from 'react';
 import settingsIcon from '../../../../.storybook/assets/settings.svg';
 import addIcon from '../../../../.storybook/assets/add.svg';
-import {MenuItem} from '~src/components/types';
+import {MenuItem} from 'src/components/types';
 
 function renderTag(tag: string) {
     return <div className="composite-bar-showcase__tag">{tag.toUpperCase()}</div>;
