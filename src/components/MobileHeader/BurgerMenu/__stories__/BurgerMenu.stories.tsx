@@ -1,6 +1,5 @@
 import React from 'react';
-import {Meta} from '@storybook/react/types-6-0';
-import {Story} from '@storybook/react';
+import type {Meta, StoryFn} from '@storybook/react';
 
 import {BurgerMenu, BurgerMenuInnerProps} from '../BurgerMenu';
 import {mobileMenuItemsShowcase} from './moc';
@@ -21,7 +20,7 @@ export default {
     ],
 } as Meta;
 
-const ShowcaseTemplate: Story<BurgerMenuInnerProps> = () => {
+const ShowcaseTemplate: StoryFn<BurgerMenuInnerProps> = () => {
     const [modalVisible, setModalVisible] = React.useState(false);
 
     return (

@@ -7,11 +7,11 @@ $block: '.#{variables.$ns}mobile-header';
     --mobile-header-min-heigth: 50px;
     --mobile-header-icon-size: 20px;
 
-    background-color: var(--yc-color-base-background);
+    background-color: var(--g-color-base-background);
 
     &__header {
-        background-color: var(--yc-color-base-background);
-        border-bottom: 1px solid var(--yc-color-line-generic);
+        background-color: var(--g-color-base-background);
+        border-bottom: 1px solid var(--g-color-line-generic);
         position: sticky;
         top: 0;
         padding: 0 10px;
@@ -28,7 +28,7 @@ $block: '.#{variables.$ns}mobile-header';
 
     &__burger-menu,
     &__panel-item {
-        background-color: var(--yc-color-base-background);
+        background-color: var(--g-color-base-background);
         width: 320px;
         max-width: 90vw;
         max-height: 100%;

@@ -53,19 +53,19 @@ $block: '.#{variables.$ns}hotkeys-panel';
 
         width: 100%;
 
-        font-size: var(--yc-text-body-1-font-size);
-        line-height: var(--yc-text-body-1-line-height);
+        font-size: var(--g-text-body-1-font-size);
+        line-height: var(--g-text-body-1-line-height);
 
-        color: var(--yc-color-text-primary);
+        color: var(--g-color-text-primary);
 
         &_group {
-            font-size: var(--yc-text-body-2-font-size);
+            font-size: var(--g-text-body-2-font-size);
             font-weight: 500;
-            line-height: var(--yc-text-body-2-line-height);
+            line-height: var(--g-text-body-2-line-height);
         }
     }
 
     &__hotkey {
-        color: var(--yc-color-text-complementary);
+        color: var(--g-color-text-complementary);
     }
 }

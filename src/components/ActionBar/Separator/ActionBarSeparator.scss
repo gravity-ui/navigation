@@ -12,6 +12,6 @@ $block: '.#{variables.$ns}action-bar-separator';
         left: bar.$separator-horizontal-spacing;
         right: bar.$separator-horizontal-spacing;
     }
-    border-right: solid 1px var(--yc-color-line-generic);
+    border-right: solid 1px var(--g-color-line-generic);
     height: bar.$height;
 }

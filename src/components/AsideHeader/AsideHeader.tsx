@@ -11,11 +11,15 @@ import {Drawer, DrawerItem, DrawerItemProps} from '../Drawer/Drawer';
 import {Logo} from '../Logo/Logo';
 import {CompositeBar} from '../CompositeBar/CompositeBar';
 import {Content, RenderContentType} from '../Content';
+import {fakeDisplayName} from '../helpers';
 
 import controlMenuButtonIcon from '../../../assets/icons/control-menu-button.svg';
 import headerDividerCollapsedIcon from '../../../assets/icons/divider-collapsed.svg';
 
 import './AsideHeader.scss';
+
+// TODO: remove temporary fix for expand button
+const NotIcon = fakeDisplayName('NotIcon', Icon);
 
 const b = block('aside-header');
 
@@ -181,7 +185,7 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
                 onClick={this.onCollapseButtonClick}
                 title={dict?.[typeButton] ?? defaultDict[typeButton]}
             >
-                <Icon
+                <NotIcon
                     data={controlMenuButtonIcon}
                     className={b('collapse-icon')}
                     width="16"

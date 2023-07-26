@@ -12,7 +12,7 @@ $block: '.#{variables.$ns}title';
     align-items: center;
 
     &_separator {
-        border-bottom: 1px solid var(--yc-color-line-generic);
+        border-bottom: 1px solid var(--g-color-line-generic);
     }
 
     &__text {

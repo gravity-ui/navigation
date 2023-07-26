@@ -1,5 +1,5 @@
 import React from 'react';
-import {Meta, Story} from '@storybook/react/types-6-0';
+import type {Meta, StoryFn} from '@storybook/react';
 
 import {MobileHeader} from '..';
 import {MobileHeaderShowcase} from './MobileHeaderShowcase';
@@ -9,5 +9,5 @@ export default {
     component: MobileHeader,
 } as Meta;
 
-const ShowcaseTemplate: Story = () => <MobileHeaderShowcase />;
+const ShowcaseTemplate: StoryFn = () => <MobileHeaderShowcase />;
 export const Showcase = ShowcaseTemplate.bind({});
