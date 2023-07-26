@@ -3,7 +3,7 @@
 $block: '.#{variables.$ns}aside-header';
 
 .yc-root {
-    --aside-header-background-color: var(--g-color-base-info-light);
+    --aside-header-background-color: var(--g-color-base-warning-light);
     --aside-header-collapse-button-divider-line-color: var(
         --aside-header-header-divider-line-color
     );
@@ -207,9 +207,7 @@ $block: '.#{variables.$ns}aside-header';
     &__collapse-button {
         --yc-button-background-color-hover: transparent;
 
-        //Хак для того, чтобы растянуть кнопку на всю ширину AsideHeader, но при этом иконка оставалась в центре
-        //При этом у иконки должен быть displayName не 'Icon'
-        //По дефолту Button, в который передали единственную иконку становится квадратного размера под иконку
+        // TODO: remove temporary fix for expand button
         & > .yc-button__text {
             display: flex;
             align-items: center;

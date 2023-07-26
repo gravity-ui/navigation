@@ -18,6 +18,7 @@ import headerDividerCollapsedIcon from '../../../assets/icons/divider-collapsed.
 
 import './AsideHeader.scss';
 
+// TODO: remove temporary fix for expand button
 const NotIcon = fakeDisplayName('NotIcon', Icon);
 
 const b = block('aside-header');
