@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.11.1](https://github.com/gravity-ui/navigation/compare/v0.11.0...v0.11.1) (2023-07-26)
+
+
+### Bug Fixes
+
+* fix build ([#77](https://github.com/gravity-ui/navigation/issues/77)) ([b8f8ef5](https://github.com/gravity-ui/navigation/commit/b8f8ef591998fae8ef51118aaaa1d1c1f73a1ea9))
+* workflow main-preview ([#75](https://github.com/gravity-ui/navigation/issues/75)) ([e148bdd](https://github.com/gravity-ui/navigation/commit/e148bddb056883b2bfba48094f907ae20e563c7f))
+
 ## [0.11.0](https://github.com/gravity-ui/navigation/compare/v0.10.1...v0.11.0) (2023-07-26)
 
 
