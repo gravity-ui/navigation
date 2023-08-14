@@ -7,6 +7,7 @@ import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../con
 import settingsIcon from '../../../../.storybook/assets/settings.svg';
 
 import './FooterItemShowcase.scss';
+import {AsideHeaderContext} from '../../AsideHeader/AsideHeader';
 
 export default {
     title: 'Components/AsideHeader/FooterItem',
@@ -20,7 +21,9 @@ export default {
 
             return (
                 <div style={{width}} className="footer-item-showcase">
-                    <DecoratedStory />
+                    <AsideHeaderContext.Provider value={{compact, size: width}}>
+                        <DecoratedStory />
+                    </AsideHeaderContext.Provider>
                 </div>
             );
         },
