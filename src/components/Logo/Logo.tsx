@@ -8,9 +8,7 @@ import {useAsideHeaderContext} from '../AsideHeader/AsideHeader';
 
 const b = block('logo');
 
-interface LogoInnerProps extends LogoProps {}
-
-export const Logo: React.FC<LogoInnerProps> = ({
+export const Logo: React.FC<LogoProps> = ({
     text,
     icon,
     iconSrc,
