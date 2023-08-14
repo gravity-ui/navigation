@@ -18,12 +18,12 @@ import './CompositeBar.scss';
 import {MultipleTooltip, MultipleTooltipContext, MultipleTooltipProvider} from './MultipleTooltip';
 import {COLLAPSE_ITEM_ID} from './constants';
 import {ASIDE_HEADER_COMPACT_WIDTH} from '../constants';
+import {useAsideHeaderContext} from '../AsideHeader/AsideHeader';
 
 const b = block('composite-bar');
 
 interface CompositeBarBaseProps {
     items: MenuItem[];
-    compact: boolean;
     onItemClick?: (item: MenuItem, collapsed: boolean) => void;
     multipleTooltip?: boolean;
 }
@@ -39,7 +39,6 @@ export interface CompositeBarProps extends CompositeBarBaseProps {
 
 const CompositeBarView: FC<CompositeBarViewProps> = ({
     items,
-    compact,
     onItemClick,
     collapseItems,
     multipleTooltip = true,
@@ -52,6 +51,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
         activeIndex,
         lastClickedItemIndex,
     } = useContext(MultipleTooltipContext);
+    const {compact} = useAsideHeaderContext();
 
     const onTooltipMouseEnter = useCallback(
         (e) => {
@@ -156,7 +156,6 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                             onMouseEnter={onMouseEnterByIndex(itemIndex)}
                             onMouseLeave={onMouseLeave}
                             onItemClick={onItemClickByIndex(itemIndex)}
-                            compact={compact}
                             collapseItems={collapseItems}
                             enableTooltip={!multipleTooltip}
                         />
@@ -175,7 +174,6 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
 
 export const CompositeBar: FC<CompositeBarProps> = ({
     items,
-    compact,
     enableCollapsing,
     dict,
     onItemClick,
@@ -203,7 +201,6 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                                 <div style={{width, height}}>
                                     <CompositeBarView
                                         items={listItems}
-                                        compact={compact}
                                         onItemClick={onItemClick}
                                         collapseItems={collapseItems}
                                         multipleTooltip={multipleTooltip}
@@ -220,7 +217,6 @@ export const CompositeBar: FC<CompositeBarProps> = ({
             <div className={b()}>
                 <CompositeBarView
                     items={items}
-                    compact={compact}
                     onItemClick={onItemClick}
                     multipleTooltip={multipleTooltip}
                 />

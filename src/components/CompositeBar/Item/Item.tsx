@@ -14,6 +14,7 @@ import {
 } from '../constants';
 
 import './Item.scss';
+import {useAsideHeaderContext} from '../../AsideHeader/AsideHeader';
 
 const b = block('composite-bar-item');
 
@@ -38,7 +39,6 @@ export interface ItemProps extends ItemPopup {
 }
 
 interface ItemInnerProps extends ItemProps {
-    compact: boolean;
     className?: string;
     collapseItems?: MenuItem[];
     onMouseEnter?: () => void;
@@ -66,7 +66,6 @@ export const defaultPopupOffset: NonNullable<PopupProps['offset']> = [-20, 8];
 export const Item: React.FC<ItemInnerProps> = (props) => {
     const {
         item,
-        compact,
         className,
         collapseItems,
         onMouseLeave,
@@ -81,6 +80,8 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         onClosePopup,
         onItemClick,
     } = props;
+
+    const {compact} = useAsideHeaderContext();
 
     if (item.type === 'divider') {
         return <div className={b('menu-divider')} />;
@@ -224,12 +225,12 @@ interface CollapsedPopupProps {
 }
 
 function CollapsedPopup({
-    compact,
     onItemClick,
     collapseItems,
     anchorRef,
     onClose,
 }: ItemInnerProps & CollapsedPopupProps) {
+    const {compact} = useAsideHeaderContext();
     return collapseItems?.length ? (
         <Popup placement={POPUP_PLACEMENT} open={true} anchorRef={anchorRef} onClose={onClose}>
             <div className={b('collapse-items-popup-content')}>
