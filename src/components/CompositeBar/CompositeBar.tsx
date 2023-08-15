@@ -18,7 +18,7 @@ import './CompositeBar.scss';
 import {MultipleTooltip, MultipleTooltipContext, MultipleTooltipProvider} from './MultipleTooltip';
 import {COLLAPSE_ITEM_ID} from './constants';
 import {ASIDE_HEADER_COMPACT_WIDTH} from '../constants';
-import {useAsideHeaderContext} from '../AsideHeader/AsideHeader';
+import {useAsideHeaderContext} from '../AsideHeader/AsideHeaderContext';
 
 const b = block('composite-bar');
 

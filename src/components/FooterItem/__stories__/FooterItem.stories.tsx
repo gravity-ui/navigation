@@ -7,7 +7,7 @@ import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../con
 import settingsIcon from '../../../../.storybook/assets/settings.svg';
 
 import './FooterItemShowcase.scss';
-import {AsideHeaderContextProvider} from '../../AsideHeader/AsideHeader';
+import {AsideHeaderContextProvider} from '../../AsideHeader/AsideHeaderContext';
 
 export default {
     title: 'Components/AsideHeader/FooterItem',

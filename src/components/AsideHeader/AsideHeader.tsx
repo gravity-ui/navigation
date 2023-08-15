@@ -17,6 +17,7 @@ import controlMenuButtonIcon from '../../../assets/icons/control-menu-button.svg
 import headerDividerCollapsedIcon from '../../../assets/icons/divider-collapsed.svg';
 
 import './AsideHeader.scss';
+import {AsideHeaderContextProvider} from './AsideHeaderContext';
 
 // TODO: remove temporary fix for expand button
 const NotIcon = fakeDisplayName('NotIcon', Icon);
@@ -52,20 +53,6 @@ export interface AsideHeaderProps
 
 type AsideHeaderInnerProps = AsideHeaderGeneralProps & AsideHeaderDefaultProps;
 
-interface AsideHeaderContextType {
-    compact: boolean;
-    size: number;
-}
-
-const AsideHeaderContext = React.createContext<AsideHeaderContextType>({
-    compact: false,
-    size: ASIDE_HEADER_COMPACT_WIDTH,
-});
-
-export const AsideHeaderContextProvider = AsideHeaderContext.Provider;
-
-export const useAsideHeaderContext = () => React.useContext(AsideHeaderContext);
-
 export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
     static defaultProps: AsideHeaderDefaultProps = {
         panelItems: [],
@@ -73,9 +60,6 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
         menuItems: [],
         headerDecoration: true,
     };
-
-    static contextType = AsideHeaderContext;
-    context!: React.ContextType<typeof AsideHeaderContext>;
 
     asideRef = React.createRef<HTMLDivElement>();
 

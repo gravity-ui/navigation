@@ -14,7 +14,7 @@ import {
 } from '../constants';
 
 import './Item.scss';
-import {useAsideHeaderContext} from '../../AsideHeader/AsideHeader';
+import {useAsideHeaderContext} from '../../AsideHeader/AsideHeaderContext';
 
 const b = block('composite-bar-item');
 
