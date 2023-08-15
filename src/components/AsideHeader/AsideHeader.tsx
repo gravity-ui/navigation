@@ -16,6 +16,8 @@ import {fakeDisplayName} from '../helpers';
 import controlMenuButtonIcon from '../../../assets/icons/control-menu-button.svg';
 import headerDividerCollapsedIcon from '../../../assets/icons/divider-collapsed.svg';
 
+import {AsideHeaderContextProvider} from './AsideHeaderContext';
+
 import './AsideHeader.scss';
 
 // TODO: remove temporary fix for expand button
@@ -68,18 +70,19 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
         const size = compact ? ASIDE_HEADER_COMPACT_WIDTH : ASIDE_HEADER_EXPANDED_WIDTH;
 
         return (
-            <div className={b({compact}, className)}>
-                <div className={b('pane-container')}>
-                    {this.renderFirstPane(size)}
-                    {this.renderSecondPane(size)}
+            <AsideHeaderContextProvider value={{compact, size}}>
+                <div className={b({compact}, className)}>
+                    <div className={b('pane-container')}>
+                        {this.renderFirstPane(size)}
+                        {this.renderSecondPane(size)}
+                    </div>
                 </div>
-            </div>
+            </AsideHeaderContextProvider>
         );
     }
 
     private renderFirstPane = (size: number) => {
-        const {dict, menuItems, panelItems, compact, headerDecoration, multipleTooltip} =
-            this.props;
+        const {dict, menuItems, panelItems, headerDecoration, multipleTooltip} = this.props;
 
         return (
             <React.Fragment>
@@ -90,7 +93,6 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
                         {menuItems?.length ? (
                             <CompositeBar
                                 items={menuItems}
-                                compact={compact}
                                 enableCollapsing={true}
                                 dict={dict}
                                 onItemClick={this.onItemClick}
@@ -119,9 +121,7 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
         );
     };
 
-    private renderLogo = () => (
-        <Logo {...this.props.logo} compact={this.props.compact} onClick={this.onLogoClick} />
-    );
+    private renderLogo = () => <Logo {...this.props.logo} onClick={this.onLogoClick} />;
 
     private renderHeader = () => (
         <div className={b('header', {['with-decoration']: this.props.headerDecoration})}>
@@ -129,7 +129,6 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
 
             <CompositeBar
                 items={this.props.subheaderItems}
-                compact={this.props.compact}
                 enableCollapsing={false}
                 onItemClick={this.onItemClick}
             />
@@ -144,7 +143,7 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
     );
 
     private renderFooter = (size: number) => {
-        const {compact, renderFooter} = this.props;
+        const {renderFooter, compact} = this.props;
 
         return (
             <div className={b('footer')}>
@@ -175,7 +174,7 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
     };
 
     private renderCollapseButton = () => {
-        const {compact, dict} = this.props;
+        const {dict, compact} = this.props;
         const typeButton = compact ? Dict.ExpandButton : Dict.CollapseButton;
 
         return (
