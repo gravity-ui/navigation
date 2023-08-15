@@ -25,7 +25,11 @@ const b = block('composite-bar');
 
 interface CompositeBarBaseProps {
     items: MenuItem[];
-    onItemClick?: (item: MenuItem, collapsed: boolean) => void;
+    onItemClick?: (
+        item: MenuItem,
+        collapsed: boolean,
+        event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    ) => void;
     multipleTooltip?: boolean;
 }
 
@@ -117,7 +121,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
 
     const onItemClickByIndex = useCallback(
         (itemIndex): ItemProps['onItemClick'] =>
-            (item, collapsed) => {
+            (item, collapsed, event) => {
                 if (
                     compact &&
                     multipleTooltip &&
@@ -129,7 +133,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                         active: false,
                     });
                 }
-                onItemClick?.(item, collapsed);
+                onItemClick?.(item, collapsed, event);
             },
         [lastClickedItemIndex, setMultipleTooltipContextValue],
     );

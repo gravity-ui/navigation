@@ -3,8 +3,9 @@ import {block} from '../utils/cn';
 import {LogoProps} from '../types';
 import {Button, Icon} from '@gravity-ui/uikit';
 
-import './Logo.scss';
 import {useAsideHeaderContext} from '../AsideHeader/AsideHeaderContext';
+
+import './Logo.scss';
 
 const b = block('logo');
 
