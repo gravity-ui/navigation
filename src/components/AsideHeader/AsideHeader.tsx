@@ -75,6 +75,7 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
     };
 
     static contextType = AsideHeaderContext;
+    context!: React.ContextType<typeof AsideHeaderContext>;
 
     asideRef = React.createRef<HTMLDivElement>();
 
@@ -82,7 +83,6 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
         const {className, compact} = this.props;
 
         const size = compact ? ASIDE_HEADER_COMPACT_WIDTH : ASIDE_HEADER_EXPANDED_WIDTH;
-        console.log('render', compact, size);
 
         return (
             <AsideHeaderContextProvider value={{compact, size}}>
