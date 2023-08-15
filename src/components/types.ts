@@ -17,7 +17,11 @@ export interface MenuItem {
     link?: string;
     current?: boolean;
     pinned?: boolean;
-    onItemClick?: (item: MenuItem, collapsed: boolean) => void;
+    onItemClick?: (
+        item: MenuItem,
+        collapsed: boolean,
+        event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    ) => void;
     itemWrapper?: (
         p: MakeItemParams,
         makeItem: (p: MakeItemParams) => React.ReactNode,

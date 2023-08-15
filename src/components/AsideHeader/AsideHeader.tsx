@@ -202,9 +202,13 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
         this.props.onClosePanel?.();
     };
 
-    private onItemClick = (item: MenuItem, collapsed: boolean) => {
+    private onItemClick = (
+        item: MenuItem,
+        collapsed: boolean,
+        event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    ) => {
         this.props.onClosePanel?.();
-        item.onItemClick?.(item, collapsed);
+        item.onItemClick?.(item, collapsed, event);
     };
 
     private onLogoClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
