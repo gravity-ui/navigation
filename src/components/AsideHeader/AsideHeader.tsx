@@ -57,10 +57,12 @@ interface AsideHeaderContextType {
     size: number;
 }
 
-export const AsideHeaderContext = React.createContext<AsideHeaderContextType>({
+const AsideHeaderContext = React.createContext<AsideHeaderContextType>({
     compact: false,
     size: ASIDE_HEADER_COMPACT_WIDTH,
 });
+
+export const AsideHeaderContextProvider = AsideHeaderContext.Provider;
 
 export const useAsideHeaderContext = () => React.useContext(AsideHeaderContext);
 
@@ -82,20 +84,20 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
         const size = compact ? ASIDE_HEADER_COMPACT_WIDTH : ASIDE_HEADER_EXPANDED_WIDTH;
 
         return (
-            <AsideHeaderContext.Provider value={{compact, size}}>
+            <AsideHeaderContextProvider value={{compact, size}}>
                 <div className={b({compact}, className)}>
                     <div className={b('pane-container')}>
                         {this.renderFirstPane()}
                         {this.renderSecondPane()}
                     </div>
                 </div>
-            </AsideHeaderContext.Provider>
+            </AsideHeaderContextProvider>
         );
     }
 
     private renderFirstPane = () => {
         const {dict, menuItems, panelItems, headerDecoration, multipleTooltip} = this.props;
-        const {size} = useAsideHeaderContext();
+        const {size} = this.context;
 
         return (
             <React.Fragment>
@@ -125,7 +127,7 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
     };
 
     private renderSecondPane = () => {
-        const {size} = useAsideHeaderContext();
+        const {size} = this.context;
         return (
             <Content
                 size={size}
@@ -158,7 +160,7 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
 
     private renderFooter = () => {
         const {renderFooter} = this.props;
-        const {size, compact} = useAsideHeaderContext();
+        const {compact, size} = this.context;
 
         return (
             <div className={b('footer')}>
@@ -173,7 +175,7 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
 
     private renderPanels = () => {
         const {panelItems} = this.props;
-        const {size} = useAsideHeaderContext();
+        const {size} = this.context;
 
         return (
             <Drawer
@@ -191,7 +193,7 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
 
     private renderCollapseButton = () => {
         const {dict} = this.props;
-        const {compact} = useAsideHeaderContext();
+        const {compact} = this.context;
         const typeButton = compact ? Dict.ExpandButton : Dict.CollapseButton;
 
         return (

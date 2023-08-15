@@ -7,7 +7,7 @@ import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../con
 import {menuItemsShowcase} from './moc';
 
 import './CompositeBarShowcase.scss';
-import {AsideHeaderContext} from '../../AsideHeader/AsideHeader';
+import {AsideHeaderContextProvider} from '../../AsideHeader/AsideHeader';
 
 export default {
     title: 'Components/AsideHeader/CompositeBar',
@@ -30,9 +30,9 @@ export default {
 
 const Template: StoryFn<CompositeBarProps> = (args) => (
     <div className="composite-bar-showcase">
-        <AsideHeaderContext.Provider value={{compact: false, size: ASIDE_HEADER_EXPANDED_WIDTH}}>
+        <AsideHeaderContextProvider value={{compact: false, size: ASIDE_HEADER_EXPANDED_WIDTH}}>
             <CompositeBar {...args} />
-        </AsideHeaderContext.Provider>
+        </AsideHeaderContextProvider>
     </div>
 );
 
