@@ -87,10 +87,10 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                 ]}
                 compact={compact}
                 multipleTooltip={multipleTooltip}
-                renderFooter={({compact: c}) => (
+                renderFooter={({compact}) => (
                     <React.Fragment>
                         <FooterItem
-                            compact={c}
+                            compact={compact}
                             item={{
                                 id: 'infra',
                                 icon: menuItemIcon,
@@ -141,7 +141,7 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                                     );
                                 },
                             }}
-                            compact={c}
+                            compact={compact}
                         />
                         <FooterItem
                             item={{
@@ -159,7 +159,7 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                                     );
                                 },
                             }}
-                            compact={c}
+                            compact={compact}
                         />
                     </React.Fragment>
                 )}
