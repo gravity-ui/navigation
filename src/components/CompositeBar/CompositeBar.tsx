@@ -14,11 +14,12 @@ import {
 } from './utils';
 import {Item, ItemProps} from './Item/Item';
 
-import './CompositeBar.scss';
 import {MultipleTooltip, MultipleTooltipContext, MultipleTooltipProvider} from './MultipleTooltip';
 import {COLLAPSE_ITEM_ID} from './constants';
 import {ASIDE_HEADER_COMPACT_WIDTH} from '../constants';
 import {useAsideHeaderContext} from '../AsideHeader/AsideHeaderContext';
+
+import './CompositeBar.scss';
 
 const b = block('composite-bar');
 

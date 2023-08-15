@@ -6,8 +6,9 @@ import {CompositeBar, CompositeBarProps} from '../CompositeBar';
 import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../constants';
 import {menuItemsShowcase} from './moc';
 
-import './CompositeBarShowcase.scss';
 import {AsideHeaderContextProvider} from '../../AsideHeader/AsideHeaderContext';
+
+import './CompositeBarShowcase.scss';
 
 export default {
     title: 'Components/AsideHeader/CompositeBar',

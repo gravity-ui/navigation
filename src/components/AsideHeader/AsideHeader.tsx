@@ -16,8 +16,9 @@ import {fakeDisplayName} from '../helpers';
 import controlMenuButtonIcon from '../../../assets/icons/control-menu-button.svg';
 import headerDividerCollapsedIcon from '../../../assets/icons/divider-collapsed.svg';
 
-import './AsideHeader.scss';
 import {AsideHeaderContextProvider} from './AsideHeaderContext';
+
+import './AsideHeader.scss';
 
 // TODO: remove temporary fix for expand button
 const NotIcon = fakeDisplayName('NotIcon', Icon);

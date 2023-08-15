@@ -13,8 +13,9 @@ import {
     ITEM_TYPE_REGULAR,
 } from '../constants';
 
-import './Item.scss';
 import {useAsideHeaderContext} from '../../AsideHeader/AsideHeaderContext';
+
+import './Item.scss';
 
 const b = block('composite-bar-item');
 
