@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.12.0](https://github.com/gravity-ui/navigation/compare/v0.11.1...v0.12.0) (2023-08-15)
+
+
+### Features
+
+* added AsideHeaderContext ([#79](https://github.com/gravity-ui/navigation/issues/79)) ([4bac263](https://github.com/gravity-ui/navigation/commit/4bac2630d6ee004880754bbdf7a86438b27e86d8))
+* supported events in onClick callbacks ([#81](https://github.com/gravity-ui/navigation/issues/81)) ([a861031](https://github.com/gravity-ui/navigation/commit/a861031e473aca03898d10de0c763cc1990a6664))
+
 ## [0.11.1](https://github.com/gravity-ui/navigation/compare/v0.11.0...v0.11.1) (2023-07-26)
 
 
