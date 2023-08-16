@@ -25,7 +25,7 @@ export interface MenuItem {
             collapsed: boolean;
             compact: boolean;
             item: MenuItem;
-            ref?: React.RefObject<HTMLElement>;
+            ref: React.RefObject<HTMLElement>;
         },
     ) => React.ReactNode;
     rightAdornment?: React.ReactNode;

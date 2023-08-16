@@ -219,7 +219,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 Item.displayName = 'Item';
 
 interface CollapsedPopupProps {
-    anchorRef?: React.RefObject<HTMLElement>;
+    anchorRef: React.RefObject<HTMLElement>;
     onClose: () => void;
 }
 
