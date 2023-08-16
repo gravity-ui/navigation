@@ -13,6 +13,8 @@ import {
     ITEM_TYPE_REGULAR,
 } from '../constants';
 
+import {useAsideHeaderContext} from '../../AsideHeader/AsideHeaderContext';
+
 import './Item.scss';
 
 const b = block('composite-bar-item');
@@ -35,10 +37,10 @@ export interface ItemProps extends ItemPopup {
         collapsed: boolean,
         event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     ) => void;
+    onItemClickCapture?: (event: React.SyntheticEvent) => void;
 }
 
 interface ItemInnerProps extends ItemProps {
-    compact: boolean;
     className?: string;
     collapseItems?: MenuItem[];
     onMouseEnter?: () => void;
@@ -66,7 +68,6 @@ export const defaultPopupOffset: NonNullable<PopupProps['offset']> = [-20, 8];
 export const Item: React.FC<ItemInnerProps> = (props) => {
     const {
         item,
-        compact,
         className,
         collapseItems,
         onMouseLeave,
@@ -80,7 +81,10 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         renderPopupContent,
         onClosePopup,
         onItemClick,
+        onItemClickCapture,
     } = props;
+
+    const {compact} = useAsideHeaderContext();
 
     if (item.type === 'divider') {
         return <div className={b('menu-divider')} />;
@@ -129,6 +133,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                         onItemClick?.(item, false, event);
                     }
                 }}
+                onClickCapture={onItemClickCapture}
                 onMouseEnter={() => {
                     if (!compact) {
                         onMouseEnter?.();
@@ -170,7 +175,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
                 {renderPopupContent && Boolean(anchorRef?.current) && (
                     <Popup
-                        className={b('popup')}
+                        contentClassName={b('popup')}
                         open={popupVisible}
                         keepMounted={popupKeepMounted}
                         placement={popupPlacement}
@@ -224,12 +229,12 @@ interface CollapsedPopupProps {
 }
 
 function CollapsedPopup({
-    compact,
     onItemClick,
     collapseItems,
     anchorRef,
     onClose,
 }: ItemInnerProps & CollapsedPopupProps) {
+    const {compact} = useAsideHeaderContext();
     return collapseItems?.length ? (
         <Popup placement={POPUP_PLACEMENT} open={true} anchorRef={anchorRef} onClose={onClose}>
             <div className={b('collapse-items-popup-content')}>

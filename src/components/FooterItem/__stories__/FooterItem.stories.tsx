@@ -1,11 +1,12 @@
 import React from 'react';
-import {Meta} from '@storybook/react/types-6-0';
-import {Story} from '@storybook/react';
+import type {Meta, StoryFn} from '@storybook/react';
 
 import {FooterItem, FooterItemProps} from '../FooterItem';
 import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../constants';
 
 import settingsIcon from '../../../../.storybook/assets/settings.svg';
+
+import {AsideHeaderContextProvider} from '../../AsideHeader/AsideHeaderContext';
 
 import './FooterItemShowcase.scss';
 
@@ -21,14 +22,16 @@ export default {
 
             return (
                 <div style={{width}} className="footer-item-showcase">
-                    <DecoratedStory />
+                    <AsideHeaderContextProvider value={{compact, size: width}}>
+                        <DecoratedStory />
+                    </AsideHeaderContextProvider>
                 </div>
             );
         },
     ],
 } as Meta;
 
-const Template: Story<FooterItemProps> = (args) => <FooterItem {...args} />;
+const Template: StoryFn<FooterItemProps> = (args) => <FooterItem {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

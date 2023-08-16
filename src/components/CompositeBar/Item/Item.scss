@@ -13,7 +13,7 @@ $block: '.#{variables.$ns}composite-bar-item';
     cursor: pointer;
 
     &__icon {
-        color: var(--yc-color-text-misc);
+        color: var(--g-color-text-misc);
     }
 
     &__icon-place {
@@ -56,7 +56,7 @@ $block: '.#{variables.$ns}composite-bar-item';
     &__menu-divider {
         margin: 0 8px;
         width: 100%;
-        border-top: 1px solid var(--yc-color-line-generic);
+        border-top: 1px solid var(--g-color-line-generic);
         cursor: default;
     }
 
@@ -93,13 +93,13 @@ $block: '.#{variables.$ns}composite-bar-item';
         justify-content: center;
         height: var(--composite-bar-item-action-size);
         margin: 0 10px 8px;
-        background: var(--yc-color-base-float);
+        background: var(--g-color-base-float);
         box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.03), 0px 5px 6px rgba(0, 0, 0, 0.12);
         border-radius: var(--composite-bar-item-action-size);
         transition: transform 0.1s ease-out, background-color 0.15s linear;
 
         &:focus {
-            box-shadow: 0 0 0 2px var(--yc-color-line-misc);
+            box-shadow: 0 0 0 2px var(--g-color-line-misc);
         }
 
         &:focus:not(:focus-visible) {
@@ -107,11 +107,11 @@ $block: '.#{variables.$ns}composite-bar-item';
         }
 
         &:hover {
-            background-color: var(--yc-color-base-float-hover);
+            background-color: var(--g-color-base-float-hover);
         }
 
         &:active {
-            box-shadow: 0 1px 2px var(--yc-color-sfx-shadow);
+            box-shadow: 0 1px 2px var(--g-color-sfx-shadow);
             transition: none;
             transform: scale(0.96);
         }
@@ -132,13 +132,13 @@ $block: '.#{variables.$ns}composite-bar-item';
     &:not(&_compact) {
         &#{$class}_current {
             &#{$class}_type_regular {
-                background-color: var(--yc-color-base-selection);
+                background-color: var(--g-color-base-selection);
             }
         }
 
         &:not(#{$class}_current):hover {
             &#{$class}_type_regular {
-                background-color: var(--yc-color-base-simple-hover);
+                background-color: var(--g-color-base-simple-hover);
             }
         }
     }
@@ -176,7 +176,7 @@ $block: '.#{variables.$ns}composite-bar-item';
                     @include item-bg();
 
                     &::before {
-                        background-color: var(--yc-color-base-selection);
+                        background-color: var(--g-color-base-selection);
                     }
                 }
             }
@@ -188,7 +188,7 @@ $block: '.#{variables.$ns}composite-bar-item';
                     @include item-bg();
 
                     &::before {
-                        background-color: var(--yc-color-base-simple-hover);
+                        background-color: var(--g-color-base-simple-hover);
                     }
                 }
             }

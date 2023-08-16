@@ -5,7 +5,7 @@ $block: '.#{variables.$ns}multiple-tooltip';
 .yc-root_theme_dark #{$block},
 .yc-root_theme_dark-hc #{$block} {
     --multiple-tooltip-item-bg-color: #424147; // TODO: color variable will appear in uikit 5
-    --multiple-tooltip-item-active-bg-color: var(--yc-color-base-float-heavy);
+    --multiple-tooltip-item-active-bg-color: var(--g-color-base-float-heavy);
     --multiple-tooltip-backdrop-background: linear-gradient(
         90deg,
         #313036 0%,
@@ -17,7 +17,7 @@ $block: '.#{variables.$ns}multiple-tooltip';
 .yc-root_theme_light #{$block},
 .yc-root_theme_light-hc #{$block} {
     --multiple-tooltip-item-bg-color: #7a7a7a; // TODO: color variable will appear in uikit 5
-    --multiple-tooltip-item-active-bg-color: var(--yc-color-base-float-heavy);
+    --multiple-tooltip-item-active-bg-color: var(--g-color-base-float-heavy);
     --multiple-tooltip-backdrop-background: linear-gradient(
         90deg,
         #ffffff 0%,
@@ -57,7 +57,7 @@ $block: '.#{variables.$ns}multiple-tooltip';
         position: relative;
         border-radius: 5px;
         align-items: center;
-        color: var(--yc-color-text-light-primary);
+        color: var(--g-color-text-light-primary);
         margin-bottom: 5px;
         transition: transform 100ms ease-in-out;
 

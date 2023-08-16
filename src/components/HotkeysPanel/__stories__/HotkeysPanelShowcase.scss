@@ -15,7 +15,7 @@
     &__header {
         width: 100%;
         padding: 20px;
-        border-bottom: 1px solid var(--yc-color-line-generic);
+        border-bottom: 1px solid var(--g-color-line-generic);
     }
 
     &__title {
@@ -27,15 +27,15 @@
     &__body {
         position: absolute;
         top: 77px;
-        background-color: var(--yc-color-base-generic);
+        background-color: var(--g-color-base-generic);
         height: 100vh;
         width: 100%;
     }
 
     &__empty {
         margin: 48px auto 0;
-        font-size: var(--yc-text-header-1-font-size);
-        line-height: var(--yc-text-header-1-line-height);
-        color: var(--yc-color-text-primary);
+        font-size: var(--g-text-header-1-font-size);
+        line-height: var(--g-text-header-1-line-height);
+        color: var(--g-color-text-primary);
     }
 }

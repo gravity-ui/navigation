@@ -1,5 +1,39 @@
 # Changelog
 
+## [0.12.0](https://github.com/gravity-ui/navigation/compare/v0.11.1...v0.12.0) (2023-08-15)
+
+
+### Features
+
+* added AsideHeaderContext ([#79](https://github.com/gravity-ui/navigation/issues/79)) ([4bac263](https://github.com/gravity-ui/navigation/commit/4bac2630d6ee004880754bbdf7a86438b27e86d8))
+* supported events in onClick callbacks ([#81](https://github.com/gravity-ui/navigation/issues/81)) ([a861031](https://github.com/gravity-ui/navigation/commit/a861031e473aca03898d10de0c763cc1990a6664))
+
+## [0.11.1](https://github.com/gravity-ui/navigation/compare/v0.11.0...v0.11.1) (2023-07-26)
+
+
+### Bug Fixes
+
+* fix build ([#77](https://github.com/gravity-ui/navigation/issues/77)) ([b8f8ef5](https://github.com/gravity-ui/navigation/commit/b8f8ef591998fae8ef51118aaaa1d1c1f73a1ea9))
+* workflow main-preview ([#75](https://github.com/gravity-ui/navigation/issues/75)) ([e148bdd](https://github.com/gravity-ui/navigation/commit/e148bddb056883b2bfba48094f907ae20e563c7f))
+
+## [0.11.0](https://github.com/gravity-ui/navigation/compare/v0.10.1...v0.11.0) (2023-07-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* migration on uikit 5 ([#71](https://github.com/gravity-ui/navigation/issues/71))
+
+### Features
+
+* migration on uikit 5 ([#71](https://github.com/gravity-ui/navigation/issues/71)) ([a032d42](https://github.com/gravity-ui/navigation/commit/a032d4293a899a058487ea12205d8dff1342f6a3))
+
+## [0.10.1](https://github.com/gravity-ui/navigation/compare/v0.10.0...v0.10.1) (2023-07-26)
+
+
+### Bug Fixes
+
+* **CompositeBar:** problem with not working onItemClick prop ([#72](https://github.com/gravity-ui/navigation/issues/72)) ([59d4c3d](https://github.com/gravity-ui/navigation/commit/59d4c3d72fd4a95f5f6b41b2b84444184b89d3a1))
+
 ## [0.10.0](https://github.com/gravity-ui/navigation/compare/v0.9.0...v0.10.0) (2023-07-25)
 
 

@@ -23,7 +23,7 @@ const RenderContent: React.FC<RenderContentProps> = React.memo(({renderContent, 
 RenderContent.displayName = 'RenderContent';
 
 export const Content: React.FC<ContentProps> = ({
-    size,
+    size, // TODO: move to context when MobileHeader will support it
     className,
     cssSizeVariableName = '--aside-header-size',
     renderContent,

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Meta, Story} from '@storybook/react/types-6-0';
+import type {Meta, StoryFn} from '@storybook/react';
 
 import {HotkeysPanel} from '..';
 import {HotkeysPanelShowcase} from './HotkeysPanelShowcase';
@@ -9,5 +9,5 @@ export default {
     component: HotkeysPanel,
 } as Meta;
 
-const ShowcaseTemplate: Story = () => <HotkeysPanelShowcase />;
+const ShowcaseTemplate: StoryFn = () => <HotkeysPanelShowcase />;
 export const Showcase = ShowcaseTemplate.bind({});
