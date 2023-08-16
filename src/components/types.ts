@@ -22,6 +22,7 @@ export interface MenuItem {
         collapsed: boolean,
         event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     ) => void;
+    onItemClickCapture?: (event: React.SyntheticEvent) => void;
     itemWrapper?: (
         p: MakeItemParams,
         makeItem: (p: MakeItemParams) => React.ReactNode,

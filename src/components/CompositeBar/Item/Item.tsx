@@ -37,6 +37,7 @@ export interface ItemProps extends ItemPopup {
         collapsed: boolean,
         event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     ) => void;
+    onItemClickCapture?: (event: React.SyntheticEvent) => void;
 }
 
 interface ItemInnerProps extends ItemProps {
@@ -80,6 +81,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         renderPopupContent,
         onClosePopup,
         onItemClick,
+        onItemClickCapture,
     } = props;
 
     const {compact} = useAsideHeaderContext();
@@ -131,6 +133,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                         onItemClick?.(item, false, event);
                     }
                 }}
+                onClickCapture={onItemClickCapture}
                 onMouseEnter={() => {
                     if (!compact) {
                         onMouseEnter?.();
