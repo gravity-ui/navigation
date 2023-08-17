@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.1](https://github.com/gravity-ui/navigation/compare/v0.13.0...v0.13.1) (2023-08-17)
+
+
+### Bug Fixes
+
+* **Logo:** revive href prop ([#85](https://github.com/gravity-ui/navigation/issues/85)) ([59b2d69](https://github.com/gravity-ui/navigation/commit/59b2d6962357f40d0b76d3e83e2eac868d574be8))
+
 ## [0.13.0](https://github.com/gravity-ui/navigation/compare/v0.12.0...v0.13.0) (2023-08-17)
 
 
