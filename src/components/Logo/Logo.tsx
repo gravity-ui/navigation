@@ -16,20 +16,12 @@ export const Logo: React.FC<LogoProps> = ({
     iconClassName,
     iconSize = 24,
     textSize = 15,
-    href = '/',
+    href,
     wrapper,
     onClick,
 }) => {
     const {compact} = useAsideHeaderContext();
-    const hasClickHandler = typeof onClick === 'function';
     const hasWrapper = typeof wrapper === 'function';
-
-    const linkProps = hasClickHandler
-        ? {}
-        : {
-              target: '_self',
-              href,
-          };
 
     let buttonIcon;
 
@@ -50,7 +42,8 @@ export const Logo: React.FC<LogoProps> = ({
             className={b('btn-logo')}
             component={hasWrapper ? 'span' : undefined}
             onClick={onClick}
-            {...linkProps}
+            target="_self"
+            href={href}
         >
             {buttonIcon}
         </Button>
@@ -77,7 +70,12 @@ export const Logo: React.FC<LogoProps> = ({
                 (hasWrapper ? (
                     <div onClick={onClick}>{wrapper(logo, compact)}</div>
                 ) : (
-                    <a {...linkProps} className={b('logo-link')} onClick={onClick}>
+                    <a
+                        href={href ?? '/'}
+                        target="_self"
+                        className={b('logo-link')}
+                        onClick={onClick}
+                    >
                         {logo}
                     </a>
                 ))}
