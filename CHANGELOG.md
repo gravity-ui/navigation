@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.13.0](https://github.com/gravity-ui/navigation/compare/v0.12.0...v0.13.0) (2023-08-17)
+
+
+### Features
+
+* **Item:** add ref to itemWrapper options ([#84](https://github.com/gravity-ui/navigation/issues/84)) ([1f3be59](https://github.com/gravity-ui/navigation/commit/1f3be59f0820f85c10d4d65db9ebabf1d6826033))
+* supported onClickCapture in Item and FooterItem ([#82](https://github.com/gravity-ui/navigation/issues/82)) ([4646563](https://github.com/gravity-ui/navigation/commit/4646563ebe9b7c64164c00518d724f115865ab8a))
+
 ## [0.12.0](https://github.com/gravity-ui/navigation/compare/v0.11.1...v0.12.0) (2023-08-15)
 
 
