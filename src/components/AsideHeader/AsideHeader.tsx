@@ -1,7 +1,7 @@
 import React from 'react';
 import {block} from '../utils/cn';
 
-import {MenuItem, AsideHeaderDict, Dict, LogoProps} from '../types';
+import {MenuItem, AsideHeaderDict, Dict, LogoProps, SubheaderMenuItem} from '../types';
 
 import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH, defaultDict} from '../constants';
 
@@ -43,7 +43,7 @@ interface AsideHeaderGeneralProps {
 
 interface AsideHeaderDefaultProps {
     panelItems: DrawerItemProps[];
-    subheaderItems: MenuItem[];
+    subheaderItems: SubheaderMenuItem[];
     menuItems: MenuItem[];
     headerDecoration: boolean;
 }
@@ -92,8 +92,8 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
                         {this.renderHeader()}
                         {menuItems?.length ? (
                             <CompositeBar
+                                type="menu"
                                 items={menuItems}
-                                enableCollapsing={true}
                                 dict={dict}
                                 onItemClick={this.onItemClick}
                                 multipleTooltip={multipleTooltip}
@@ -128,8 +128,8 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
             {this.renderLogo()}
 
             <CompositeBar
+                type="subheader"
                 items={this.props.subheaderItems}
-                enableCollapsing={false}
                 onItemClick={this.onItemClick}
             />
 

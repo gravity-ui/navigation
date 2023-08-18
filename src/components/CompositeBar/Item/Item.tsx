@@ -149,7 +149,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     {compact ? (
                         <Tooltip
                             content={tooltipText}
-                            disabled={!enableTooltip || (collapsedItem && open)}
+                            disabled={!enableTooltip || (collapsedItem && open) || popupVisible}
                             placement="right"
                             className={b('icon-tooltip', {'item-type': type})}
                         >

@@ -1,9 +1,13 @@
 import {Ellipsis} from '@gravity-ui/icons';
-import {AsideHeaderDict, Dict, MenuItem} from './../types';
+import {AsideHeaderDict, Dict, MenuItem, SubheaderMenuItem} from './../types';
 import {COLLAPSE_ITEM_ID, ITEM_HEIGHT} from './constants';
 import {defaultDict} from '../constants';
 
-export function getItemHeight(item: MenuItem) {
+export function getItemHeight(item: MenuItem | SubheaderMenuItem) {
+    if (!isMenuItem(item)) {
+        return ITEM_HEIGHT;
+    }
+
     switch (item.type) {
         case 'action':
             return 50;
@@ -15,7 +19,7 @@ export function getItemHeight(item: MenuItem) {
     }
 }
 
-export function getItemsHeight(items: MenuItem[]) {
+export function getItemsHeight<T extends MenuItem | SubheaderMenuItem>(items: T[]) {
     return items.reduce((sum, item) => sum + getItemHeight(item), 0);
 }
 
@@ -112,4 +116,8 @@ export function getAutosizeListItems(
     }
 
     return {listItems, collapseItems};
+}
+
+export function isMenuItem(item: MenuItem | SubheaderMenuItem): item is MenuItem {
+    return Boolean((item as MenuItem)?.id);
 }

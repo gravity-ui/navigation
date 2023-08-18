@@ -1,6 +1,8 @@
 import React from 'react';
 import {IconProps} from '@gravity-ui/uikit';
 
+import {ItemProps} from 'src/components/CompositeBar/Item/Item';
+
 export type MenuItemType = 'regular' | 'action' | 'divider';
 
 export interface MakeItemParams {
@@ -37,6 +39,8 @@ export interface MenuItem {
     type?: MenuItemType;
     afterMoreButton?: boolean;
 }
+
+export type SubheaderMenuItem = Omit<ItemProps, 'onItemClick' | 'onItemClickCapture'>;
 
 export enum MobileHeaderDict {
     CloseBurger = 'button_close-burger',
