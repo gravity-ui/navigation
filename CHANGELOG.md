@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.14.0](https://github.com/gravity-ui/navigation/compare/v0.13.1...v0.14.0) (2023-08-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* rename CSS namespace ([#87](https://github.com/gravity-ui/navigation/issues/87))
+
+### Features
+
+* rename CSS namespace ([#87](https://github.com/gravity-ui/navigation/issues/87)) ([0b3bcc9](https://github.com/gravity-ui/navigation/commit/0b3bcc9cc0b097bed4b0cd90d5da0bdbea00fda1))
+
+
+### Bug Fixes
+
+* remove reexport configure temporary ([#90](https://github.com/gravity-ui/navigation/issues/90)) ([e414e2a](https://github.com/gravity-ui/navigation/commit/e414e2a17d9cef17d368af2c9ebf2d2831870616))
+* **storybook:** after hide reexport configure ([#92](https://github.com/gravity-ui/navigation/issues/92)) ([727086e](https://github.com/gravity-ui/navigation/commit/727086e7c5a28e4094e4018e37263d38bc9703dd))
+
 ## [0.13.1](https://github.com/gravity-ui/navigation/compare/v0.13.0...v0.13.1) (2023-08-17)
 
 
