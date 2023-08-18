@@ -2,21 +2,21 @@
 
 $block: '.#{variables.$ns}aside-header';
 
-.yc-root {
+.g-root {
     --aside-header-background-color: var(--g-color-base-warning-light);
     --aside-header-collapse-button-divider-line-color: var(
         --aside-header-header-divider-line-color
     );
 }
 
-.yc-root_theme_light,
-.yc-root_theme_light-hc {
+.g-root_theme_light,
+.g-root_theme_light-hc {
     --aside-header-divider-line-color: transparent;
     --aside-header-header-divider-line-color: var(--g-color-line-generic);
 }
 
-.yc-root_theme_dark,
-.yc-root_theme_dark-hc {
+.g-root_theme_dark,
+.g-root_theme_dark-hc {
     --aside-header-divider-line-color: var(--g-color-line-generic-solid);
     --aside-header-header-divider-line-color: var(--g-color-line-generic-solid);
 }

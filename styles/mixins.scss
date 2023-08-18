@@ -5,7 +5,7 @@
         background-color: var(--g-color-base-selection);
     }
 
-    .yc-root &_current.yc-button_view_flat:hover::before {
+    .g-root &_current.yc-button_view_flat:hover::before {
         background-color: var(--g-color-base-selection-hover);
     }
 }

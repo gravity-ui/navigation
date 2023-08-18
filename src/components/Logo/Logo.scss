@@ -44,7 +44,7 @@ $block: '.#{variables.$ns}logo';
         }
     }
 
-    .yc-root &__btn-logo.button2_theme_flat.button2_hovered_yes::before {
+    .g-root &__btn-logo.button2_theme_flat.button2_hovered_yes::before {
         background-color: transparent;
     }
 }
