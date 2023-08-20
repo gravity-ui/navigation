@@ -1,12 +1,12 @@
 import React from 'react';
-import block from 'bem-cn-lite';
 import {Button, RadioButton} from '@gravity-ui/uikit';
 
+import {cn} from '../../utils/cn';
 import {Drawer, DrawerItem, DrawerItemProps} from '../Drawer';
 
 import './DrawerShowcase.scss';
 
-const b = block('drawer-showcase');
+const b = cn('drawer-showcase');
 
 export function DrawerShowcase() {
     const [visible1, setVisible1] = React.useState<boolean>(true);

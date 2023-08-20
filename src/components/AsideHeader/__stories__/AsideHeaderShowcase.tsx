@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
-import block from 'bem-cn-lite';
 
 import {AsideHeader, FooterItem} from '../..';
+import {cn} from '../../utils/cn';
 import {text as placeholderText} from './moc';
 import {menuItemsShowcase} from './../../CompositeBar/__stories__/moc';
 import {RadioButton, Radio} from '@gravity-ui/uikit';
@@ -11,7 +11,7 @@ import menuItemIcon from '../../../../.storybook/assets/settings.svg';
 
 import './AsideHeaderShowcase.scss';
 
-const b = block('aside-header-showcase');
+const b = cn('aside-header-showcase');
 
 const BOOLEAN_OPTIONS = {
     Yes: 'yes',

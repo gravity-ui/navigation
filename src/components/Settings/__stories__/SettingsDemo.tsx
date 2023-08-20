@@ -1,11 +1,11 @@
 import React, {useReducer} from 'react';
-import block from 'bem-cn-lite';
 
 import {Settings} from '../index';
 import {HelpPopover} from '@gravity-ui/components';
 import {Button, Switch, Checkbox, RadioButton, Radio, Select} from '@gravity-ui/uikit';
 
 import featureIcon from '../../../../assets/icons/gear.svg';
+import {cn} from '../../utils/cn';
 
 import './SettingsDemo.scss';
 
@@ -17,7 +17,7 @@ export interface DemoRowProps {
     title: string;
 }
 
-const b = block('settings-demo');
+const b = cn('settings-demo');
 
 function setSetting(name: string, value: any) {
     return {
