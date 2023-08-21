@@ -24,11 +24,13 @@ import './CompositeBar.scss';
 
 const b = block('composite-bar');
 
-type CompositeBarItem =
+export type CompositeBarItem = MenuItem | SubheaderMenuItem;
+
+type CompositeBarItems =
     | {type: 'menu'; items: MenuItem[]}
     | {type: 'subheader'; items: SubheaderMenuItem[]};
 
-export type CompositeBarProps = CompositeBarItem & {
+export type CompositeBarProps = CompositeBarItems & {
     onItemClick?: (
         item: MenuItem,
         collapsed: boolean,
@@ -49,7 +51,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     collapseItems,
     multipleTooltip = false,
 }) => {
-    const ref = useRef<List<MenuItem | SubheaderMenuItem>>(null);
+    const ref = useRef<List<CompositeBarItem>>(null);
     const tooltipRef = useRef<HTMLDivElement>(null);
     const {
         setValue: setMultipleTooltipContextValue,
@@ -146,7 +148,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                 onMouseEnter={onTooltipMouseEnter}
                 onMouseLeave={onTooltipMouseLeave}
             >
-                <List<MenuItem | SubheaderMenuItem>
+                <List<CompositeBarItem>
                     ref={ref}
                     items={items}
                     selectedItemIndex={type === 'menu' ? getSelectedItemIndex(items) : undefined}
@@ -158,8 +160,9 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                     sortable={false}
                     renderItem={(item, _isItemActive, itemIndex) => {
                         const itemExtraProps = isMenuItem(item) ? {item} : item;
-                        const enableTooltip =
-                            !multipleTooltip || Boolean(!isMenuItem(item) && item.enableTooltip);
+                        const enableTooltip = isMenuItem(item)
+                            ? !multipleTooltip
+                            : item.enableTooltip;
 
                         return (
                             <Item
