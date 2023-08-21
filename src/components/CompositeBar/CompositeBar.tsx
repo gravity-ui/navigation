@@ -3,7 +3,7 @@ import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
 import {List} from '@gravity-ui/uikit';
 
 import {block} from '../utils/cn';
-import {AsideHeaderDict, MenuItem} from '../types';
+import {AsideHeaderDict, MenuItem, SubheaderMenuItem} from '../types';
 import {
     getItemsHeight,
     getItemHeight,
@@ -11,6 +11,7 @@ import {
     getItemsMinHeight,
     getMoreButtonItem,
     getAutosizeListItems,
+    isMenuItem,
 } from './utils';
 import {Item, ItemProps} from './Item/Item';
 
@@ -23,32 +24,34 @@ import './CompositeBar.scss';
 
 const b = block('composite-bar');
 
-interface CompositeBarBaseProps {
-    items: MenuItem[];
+export type CompositeBarItem = MenuItem | SubheaderMenuItem;
+
+type CompositeBarItems =
+    | {type: 'menu'; items: MenuItem[]}
+    | {type: 'subheader'; items: SubheaderMenuItem[]};
+
+export type CompositeBarProps = CompositeBarItems & {
     onItemClick?: (
         item: MenuItem,
         collapsed: boolean,
         event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     ) => void;
     multipleTooltip?: boolean;
-}
-
-interface CompositeBarViewProps extends CompositeBarBaseProps {
-    collapseItems?: MenuItem[];
-}
-
-export interface CompositeBarProps extends CompositeBarBaseProps {
-    enableCollapsing: boolean;
     dict?: AsideHeaderDict;
-}
+};
+
+type CompositeBarViewProps = CompositeBarProps & {
+    collapseItems?: MenuItem[];
+};
 
 const CompositeBarView: FC<CompositeBarViewProps> = ({
+    type,
     items,
     onItemClick,
     collapseItems,
-    multipleTooltip = true,
+    multipleTooltip = false,
 }) => {
-    const ref = useRef<List<MenuItem>>(null);
+    const ref = useRef<List<CompositeBarItem>>(null);
     const tooltipRef = useRef<HTMLDivElement>(null);
     const {
         setValue: setMultipleTooltipContextValue,
@@ -139,47 +142,56 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     );
 
     return (
-        <>
+        <React.Fragment>
             <div
                 ref={tooltipRef}
                 onMouseEnter={onTooltipMouseEnter}
                 onMouseLeave={onTooltipMouseLeave}
             >
-                <List<MenuItem>
+                <List<CompositeBarItem>
                     ref={ref}
                     items={items}
-                    selectedItemIndex={getSelectedItemIndex(items)}
+                    selectedItemIndex={type === 'menu' ? getSelectedItemIndex(items) : undefined}
                     itemHeight={getItemHeight}
-                    itemClassName={b('root-menu-item')}
                     itemsHeight={getItemsHeight}
+                    itemClassName={b('root-menu-item')}
                     virtualized={false}
                     filterable={false}
                     sortable={false}
-                    renderItem={(item, _isItemActive, itemIndex) => (
-                        <Item
-                            item={item}
-                            onMouseEnter={onMouseEnterByIndex(itemIndex)}
-                            onMouseLeave={onMouseLeave}
-                            onItemClick={onItemClickByIndex(itemIndex)}
-                            collapseItems={collapseItems}
-                            enableTooltip={!multipleTooltip}
-                        />
-                    )}
+                    renderItem={(item, _isItemActive, itemIndex) => {
+                        const itemExtraProps = isMenuItem(item) ? {item} : item;
+                        const enableTooltip = isMenuItem(item)
+                            ? !multipleTooltip
+                            : item.enableTooltip;
+
+                        return (
+                            <Item
+                                {...itemExtraProps}
+                                enableTooltip={enableTooltip}
+                                onMouseEnter={onMouseEnterByIndex(itemIndex)}
+                                onMouseLeave={onMouseLeave}
+                                onItemClick={onItemClickByIndex(itemIndex)}
+                                collapseItems={collapseItems}
+                            />
+                        );
+                    }}
                 />
             </div>
-            <MultipleTooltip
-                open={compact && multipleTooltip && multipleTooltipActive}
-                anchorRef={tooltipRef}
-                placement={['right-start']}
-                items={items}
-            />
-        </>
+            {type === 'menu' && (
+                <MultipleTooltip
+                    open={compact && multipleTooltip && multipleTooltipActive}
+                    anchorRef={tooltipRef}
+                    placement={['right-start']}
+                    items={items}
+                />
+            )}
+        </React.Fragment>
     );
 };
 
 export const CompositeBar: FC<CompositeBarProps> = ({
+    type,
     items,
-    enableCollapsing,
     dict,
     onItemClick,
     multipleTooltip = false,
@@ -189,7 +201,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     }
     let node: ReactNode;
 
-    if (enableCollapsing) {
+    if (type === 'menu') {
         const minHeight = getItemsMinHeight(items);
         const collapseItem = getMoreButtonItem(dict);
         node = (
@@ -205,6 +217,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                             return (
                                 <div style={{width, height}}>
                                     <CompositeBarView
+                                        type="menu"
                                         items={listItems}
                                         onItemClick={onItemClick}
                                         collapseItems={collapseItems}
@@ -220,11 +233,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     } else {
         node = (
             <div className={b()}>
-                <CompositeBarView
-                    items={items}
-                    onItemClick={onItemClick}
-                    multipleTooltip={multipleTooltip}
-                />
+                <CompositeBarView type="subheader" items={items} onItemClick={onItemClick} />
             </div>
         );
     }
