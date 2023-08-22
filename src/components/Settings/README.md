@@ -10,15 +10,18 @@ The components provides layouting functionality of settings panel with the follo
 
 #### Settings
 
-| Property       | Type               | Required | Default  | Description                                |
-| :------------- | :----------------- | :------: | :------- | :----------------------------------------- |
-| loading        | boolean            |          |          | Flag of loading status                     |
-| renderLoading  | Function           |          |          | content for loading status                 |
-| renderNotFound | Function           |          |          | Empty panel content                        |
-| initialPage    | string             |          |          | Inititial page in `/groupId/pageId` format |
-| view           | 'normal', 'mobile' |          | 'normal' | Change view for Mobile                     |
-| onPageChange   | Function           |          |          | Page change handler                        |
-| onClose        | Function           |          |          | Settings close handler                     |
+| Property          | Type               | Required | Default            | Description                                |
+| :---------------- | :----------------- | :------: | :----------------- | :----------------------------------------- |
+| loading           | boolean            |          |                    | Flag of loading status                     |
+| renderLoading     | Function           |          |                    | content for loading status                 |
+| renderNotFound    | Function           |          |                    | Empty panel content                        |
+| initialPage       | string             |          |                    | Inititial page in `/groupId/pageId` format |
+| view              | 'normal', 'mobile' |          | 'normal'           | Change view for Mobile                     |
+| onPageChange      | Function           |          |                    | Page change handler                        |
+| onClose           | Function           |          |                    | Settings close handler                     |
+| title             | string             |          | 'Settings'         | Page title                                 |
+| filterPlaceholder | string             |          | 'Search settings'  | Filter placeholder text                    |
+| emptyPlaceholder  | string             |          | 'No results found' | Filter empty text                          |
 
 #### Settings.Group
 

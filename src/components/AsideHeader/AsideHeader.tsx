@@ -1,9 +1,9 @@
 import React from 'react';
 import {block} from '../utils/cn';
 
-import {MenuItem, AsideHeaderDict, Dict, LogoProps, SubheaderMenuItem} from '../types';
+import {MenuItem, LogoProps, SubheaderMenuItem} from '../types';
 
-import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH, defaultDict} from '../constants';
+import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../constants';
 
 import {Button, Icon} from '@gravity-ui/uikit';
 
@@ -12,6 +12,7 @@ import {Logo} from '../Logo/Logo';
 import {CompositeBar} from '../CompositeBar/CompositeBar';
 import {Content, RenderContentType} from '../Content';
 import {fakeDisplayName} from '../helpers';
+import i18n from './i18n';
 
 import controlMenuButtonIcon from '../../../assets/icons/control-menu-button.svg';
 import headerDividerCollapsedIcon from '../../../assets/icons/divider-collapsed.svg';
@@ -29,7 +30,6 @@ interface AsideHeaderGeneralProps {
     logo: LogoProps;
     compact: boolean;
     multipleTooltip?: boolean;
-    dict?: AsideHeaderDict;
     className?: string;
     renderContent?: RenderContentType;
     renderFooter?: (data: {
@@ -46,6 +46,9 @@ interface AsideHeaderDefaultProps {
     subheaderItems: SubheaderMenuItem[];
     menuItems: MenuItem[];
     headerDecoration: boolean;
+    collapseTitle: string;
+    expandTitle: string;
+    menuMoreTitle: string;
 }
 
 export interface AsideHeaderProps
@@ -60,6 +63,9 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
         subheaderItems: [],
         menuItems: [],
         headerDecoration: true,
+        collapseTitle: i18n('button_collapse'),
+        expandTitle: i18n('button_expand'),
+        menuMoreTitle: i18n('label_more'),
     };
 
     asideRef = React.createRef<HTMLDivElement>();
@@ -82,7 +88,8 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
     }
 
     private renderFirstPane = (size: number) => {
-        const {dict, menuItems, panelItems, headerDecoration, multipleTooltip} = this.props;
+        const {menuItems, panelItems, headerDecoration, multipleTooltip, menuMoreTitle} =
+            this.props;
 
         return (
             <React.Fragment>
@@ -94,7 +101,7 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
                             <CompositeBar
                                 type="menu"
                                 items={menuItems}
-                                dict={dict}
+                                menuMoreTitle={menuMoreTitle}
                                 onItemClick={this.onItemClick}
                                 multipleTooltip={multipleTooltip}
                             />
@@ -174,15 +181,15 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
     };
 
     private renderCollapseButton = () => {
-        const {dict, compact} = this.props;
-        const typeButton = compact ? Dict.ExpandButton : Dict.CollapseButton;
+        const {expandTitle, collapseTitle, compact} = this.props;
+        const buttonTitle = compact ? expandTitle : collapseTitle;
 
         return (
             <Button
                 className={b('collapse-button', {compact})}
                 view="flat"
                 onClick={this.onCollapseButtonClick}
-                title={dict?.[typeButton] ?? defaultDict[typeButton]}
+                title={buttonTitle}
             >
                 <NotIcon
                     data={controlMenuButtonIcon}

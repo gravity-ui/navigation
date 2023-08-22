@@ -7,6 +7,7 @@ import {SettingsSearch} from './SettingsSearch/SettingsSearch';
 import {SettingsMenu, SettingsMenuInstance} from './SettingsMenu/SettingsMenu';
 import {SettingsMenuMobile} from './SettingsMenuMobile/SettingsMenuMobile';
 import {Title} from '../Title';
+import i18n from './i18n';
 
 import type {SettingsMenu as SettingsMenuType} from './collect-settings';
 import {getSettingsFromChildren} from './collect-settings';
@@ -17,24 +18,18 @@ import './Settings.scss';
 const b = block('settings');
 
 interface SettingsProps {
+    children: React.ReactNode;
+    title?: string;
+    filterPlaceholder?: string;
+    emptyPlaceholder?: string;
     initialPage?: string;
     onPageChange?: (page: string | undefined) => void;
-    children: React.ReactNode;
     renderNotFound?: () => React.ReactNode;
     renderLoading?: () => React.ReactNode;
     loading?: boolean;
-    dict?: SettingsDict;
     view?: 'normal' | 'mobile';
     onClose?: () => void;
 }
-type SettingsDict = Record<SettingsDictKeys, string>;
-type SettingsDictKeys = 'heading_settings' | 'placeholder_search' | 'not_found';
-
-const defaultDict: SettingsDict = {
-    heading_settings: 'Settings',
-    placeholder_search: 'Search settings',
-    not_found: 'No results found',
-};
 
 interface SettingsGroupProps {
     id?: string;
@@ -104,16 +99,14 @@ const getPageTitleById = (menu: SettingsMenuType, activePage: string) => {
     return '';
 };
 
-Settings.defaultProps = {
-    dict: defaultDict,
-};
-
 type SettingsContentProps = Omit<SettingsProps, 'loading' | 'renderLoading'>;
 function SettingsContent({
     initialPage,
     children,
     renderNotFound,
-    dict,
+    title = i18n('label_title'),
+    filterPlaceholder = i18n('label_filter-placeholder'),
+    emptyPlaceholder = i18n('label_empty-placeholder'),
     view,
     onPageChange,
     onClose,
@@ -167,7 +160,7 @@ function SettingsContent({
             return typeof renderNotFound === 'function' ? (
                 renderNotFound()
             ) : (
-                <div className={b('not-found')}>{dict?.not_found}</div>
+                <div className={b('not-found')}>{emptyPlaceholder}</div>
             );
         }
 
@@ -249,12 +242,12 @@ function SettingsContent({
                         }
                     }}
                 >
-                    <Title>{dict?.heading_settings}</Title>
+                    <Title>{title}</Title>
                     <SettingsSearch
                         inputRef={searchInputRef}
                         className={b('search')}
                         onChange={setSearch}
-                        placeholder={dict?.placeholder_search}
+                        placeholder={filterPlaceholder}
                         autoFocus
                     />
                     <SettingsMenu
