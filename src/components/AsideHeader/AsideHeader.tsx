@@ -31,6 +31,9 @@ interface AsideHeaderGeneralProps {
     compact: boolean;
     multipleTooltip?: boolean;
     className?: string;
+    collapseTitle?: string;
+    expandTitle?: string;
+    menuMoreTitle?: string;
     renderContent?: RenderContentType;
     renderFooter?: (data: {
         size: number;
@@ -46,9 +49,6 @@ interface AsideHeaderDefaultProps {
     subheaderItems: SubheaderMenuItem[];
     menuItems: MenuItem[];
     headerDecoration: boolean;
-    collapseTitle: string;
-    expandTitle: string;
-    menuMoreTitle: string;
 }
 
 export interface AsideHeaderProps
@@ -63,9 +63,6 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
         subheaderItems: [],
         menuItems: [],
         headerDecoration: true,
-        collapseTitle: i18n('button_collapse'),
-        expandTitle: i18n('button_expand'),
-        menuMoreTitle: i18n('label_more'),
     };
 
     asideRef = React.createRef<HTMLDivElement>();
@@ -101,7 +98,7 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
                             <CompositeBar
                                 type="menu"
                                 items={menuItems}
-                                menuMoreTitle={menuMoreTitle}
+                                menuMoreTitle={menuMoreTitle ?? i18n('label_more')}
                                 onItemClick={this.onItemClick}
                                 multipleTooltip={multipleTooltip}
                             />
@@ -182,7 +179,9 @@ export class AsideHeader extends React.Component<AsideHeaderInnerProps> {
 
     private renderCollapseButton = () => {
         const {expandTitle, collapseTitle, compact} = this.props;
-        const buttonTitle = compact ? expandTitle : collapseTitle;
+        const buttonTitle = compact
+            ? expandTitle || i18n('button_expand')
+            : collapseTitle || i18n('button_collapse');
 
         return (
             <Button
