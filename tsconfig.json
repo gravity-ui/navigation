@@ -5,6 +5,7 @@
     "module": "esnext",
     "baseUrl": ".",
     "allowJs": true,
+    "resolveJsonModule": true,
     "outDir": "build",
     "declaration": true
   },
