@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.16.0](https://github.com/gravity-ui/navigation/compare/v0.15.0...v0.16.0) (2023-08-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* support configure ([#95](https://github.com/gravity-ui/navigation/issues/95))
+
+### Features
+
+* support configure ([#95](https://github.com/gravity-ui/navigation/issues/95)) ([c0140a7](https://github.com/gravity-ui/navigation/commit/c0140a730107ec28cb674637d15f0f07713a52e8))
+
 ## [0.15.0](https://github.com/gravity-ui/navigation/compare/v0.14.0...v0.15.0) (2023-08-21)
 
 
