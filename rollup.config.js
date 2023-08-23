@@ -29,7 +29,6 @@ export default [
             resolve(),
             commonjs(),
             typescript({
-                resolveJsonModule: true,
                 typescript: require('typescript'),
                 tsconfig: './tsconfig.publish.json',
             }),
