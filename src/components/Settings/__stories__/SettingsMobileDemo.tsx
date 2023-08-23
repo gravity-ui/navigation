@@ -1,13 +1,13 @@
 import React, {useReducer} from 'react';
-import block from 'bem-cn-lite';
 
 import {Settings} from '../../..';
 import {Switch, RadioButton, Button, Radio, Select} from '@gravity-ui/uikit';
 import './SettingsMobileDemo.scss';
+import {cn} from '../../utils/cn';
 
 import featureIcon from '../../../../assets/icons/gear.svg';
 
-const b = block('settings-mobile-demo');
+const b = cn('settings-mobile-demo');
 
 const SELECT_1_ITEMS = [
     {

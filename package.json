@@ -40,6 +40,7 @@
     "@babel/preset-env": "^7.22.9",
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.22.5",
+    "@bem-react/classname": "^1.6.0",
     "@commitlint/cli": "^17.0.0",
     "@commitlint/config-conventional": "^17.0.0",
     "@doc-tools/transform": "^3.1.0",
@@ -89,6 +90,7 @@
     "typescript": "^4.5.5"
   },
   "peerDependencies": {
+    "@bem-react/classname": "^1.6.0",
     "@gravity-ui/components": "^2.0.0",
     "@gravity-ui/icons": "^2.2.0",
     "@gravity-ui/uikit": "^5.1.0",

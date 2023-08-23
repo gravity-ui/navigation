@@ -1,5 +1,4 @@
 import React from 'react';
-import block from 'bem-cn-lite';
 import {Icon, Button, TextInput, MobileProvider} from '@gravity-ui/uikit';
 
 import {
@@ -8,6 +7,7 @@ import {
     MobileHeaderFooterItem,
     MobileHeaderEventOptions,
 } from '../';
+import {cn} from '../../utils/cn';
 import {SettingsMobileComponent} from '../../Settings/__stories__/SettingsMobileDemo';
 import {text as placeholderText} from './moc';
 
@@ -16,7 +16,7 @@ import menuItemIcon from '../../../../.storybook/assets/settings.svg';
 
 import './MobileHeaderShowcase.scss';
 
-const b = block('mobile-header-demo');
+const b = cn('mobile-header-demo');
 
 function getCustomEvent(eventName: string, detail?: MobileHeaderEventOptions) {
     return new CustomEvent<MobileHeaderEventOptions>(eventName, {detail});
