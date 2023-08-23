@@ -2,21 +2,15 @@ import React from 'react';
 import {Button, Icon, Text} from '@gravity-ui/uikit';
 import {Xmark} from '@gravity-ui/icons';
 import {block} from '../utils/cn';
+import i18n from './i18n';
 
 import './Title.scss';
 
 const b = block('title');
 
-type TitleDictKeys = 'close';
-type TitleDict = Record<TitleDictKeys, string>;
-
-const defaultDict: TitleDict = {
-    close: 'Close',
-};
-
 interface TitleProps {
     hasSeparator?: boolean;
-    dict?: TitleDict;
+    closeTitle?: string;
     closeIconSize?: number;
     onClose?: () => void;
 }
@@ -24,7 +18,7 @@ export const Title: React.FC<React.PropsWithChildren<TitleProps>> = ({
     children,
     closeIconSize = 23,
     hasSeparator,
-    dict = defaultDict,
+    closeTitle = i18n('button_close'),
     onClose,
 }) => {
     return (
@@ -38,7 +32,7 @@ export const Title: React.FC<React.PropsWithChildren<TitleProps>> = ({
                     view="flat"
                     size="l"
                     extraProps={{
-                        'aria-label': dict['close'],
+                        'aria-label': closeTitle,
                     }}
                 >
                     <Icon data={Xmark} size={closeIconSize} />

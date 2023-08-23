@@ -1,7 +1,6 @@
 import {Ellipsis} from '@gravity-ui/icons';
-import {AsideHeaderDict, Dict, MenuItem} from './../types';
+import {MenuItem} from './../types';
 import {COLLAPSE_ITEM_ID, ITEM_HEIGHT} from './constants';
-import {defaultDict} from '../constants';
 import {CompositeBarItem} from '../CompositeBar/CompositeBar';
 
 export function getItemHeight(item: CompositeBarItem) {
@@ -54,12 +53,10 @@ export function getItemsMinHeight(items: MenuItem[]) {
     );
 }
 
-export function getMoreButtonItem(dict?: AsideHeaderDict): MenuItem {
-    const title = dict?.[Dict.MoreButton] ?? defaultDict[Dict.MoreButton];
-
+export function getMoreButtonItem(menuMoreTitle?: string): MenuItem {
     return {
         id: COLLAPSE_ITEM_ID,
-        title,
+        title: menuMoreTitle,
         icon: Ellipsis,
         iconSize: 18,
     };

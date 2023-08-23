@@ -3,7 +3,7 @@ import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
 import {List} from '@gravity-ui/uikit';
 
 import {block} from '../utils/cn';
-import {AsideHeaderDict, MenuItem, SubheaderMenuItem} from '../types';
+import {MenuItem, SubheaderMenuItem} from '../types';
 import {
     getItemsHeight,
     getItemHeight,
@@ -37,7 +37,7 @@ export type CompositeBarProps = CompositeBarItems & {
         event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     ) => void;
     multipleTooltip?: boolean;
-    dict?: AsideHeaderDict;
+    menuMoreTitle?: string;
 };
 
 type CompositeBarViewProps = CompositeBarProps & {
@@ -192,7 +192,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
 export const CompositeBar: FC<CompositeBarProps> = ({
     type,
     items,
-    dict,
+    menuMoreTitle,
     onItemClick,
     multipleTooltip = false,
 }) => {
@@ -203,7 +203,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
 
     if (type === 'menu') {
         const minHeight = getItemsMinHeight(items);
-        const collapseItem = getMoreButtonItem(dict);
+        const collapseItem = getMoreButtonItem(menuMoreTitle);
         node = (
             <div className={b({autosizer: true})} style={{minHeight}}>
                 {items.length !== 0 && (

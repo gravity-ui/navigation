@@ -15,6 +15,7 @@ import {
     EVENT_NAMES,
     BURGER_PANEL_ITEM_ID,
 } from './constants';
+import i18n from './i18n';
 
 import './MobileHeader.scss';
 
@@ -31,6 +32,8 @@ interface PanelItem extends Omit<DrawerItemProps, 'visible'> {}
 export interface MobileHeaderProps {
     logo: LogoProps;
     burgerMenu: BurgerMenuProps;
+    burgerCloseTitle?: string;
+    burgerOpenTitle?: string;
     panelItems?: PanelItem[];
     renderContent?: RenderContentType;
     sideItemRenderContent?: RenderContentType;
@@ -44,6 +47,8 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
         {
             logo,
             burgerMenu,
+            burgerCloseTitle = i18n('burger_button_close'),
+            burgerOpenTitle = i18n('burger_button_open'),
             panelItems = [],
             renderContent,
             sideItemRenderContent,
@@ -196,6 +201,8 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                         opened={visiblePanel === burgerPanelItem.id}
                         onClick={() => onPanelToggle(BURGER_PANEL_ITEM_ID)}
                         className={b('burger')}
+                        closeTitle={burgerCloseTitle}
+                        openTitle={burgerOpenTitle}
                     />
                     <Logo {...logo} compact={compact} onClick={onLogoClick} />
 
