@@ -42,19 +42,6 @@ export interface MenuItem {
 
 export type SubheaderMenuItem = Omit<ItemProps, 'onItemClick' | 'onItemClickCapture'>;
 
-export enum MobileHeaderDict {
-    CloseBurger = 'button_close-burger',
-    OpenBurger = 'button_open-burger',
-}
-
-export enum Dict {
-    ExpandButton = 'button_expand',
-    CollapseButton = 'button_collapse',
-    MoreButton = 'button_more',
-}
-
-export type AsideHeaderDict = Record<Dict, string>;
-
 export interface LogoProps {
     text: (() => React.ReactNode) | string;
     icon?: IconProps['data'];
