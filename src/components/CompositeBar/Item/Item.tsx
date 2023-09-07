@@ -5,11 +5,11 @@ import {List, Icon, Popup, PopupPlacement, PopupProps, Tooltip} from '@gravity-u
 
 import {MakeItemParams, MenuItem} from '../../types';
 import {getSelectedItemIndex} from '../utils';
+import {ASIDE_HEADER_ICON_SIZE} from '../../constants';
 import {
     COLLAPSE_ITEM_ID,
     POPUP_ITEM_HEIGHT,
     POPUP_PLACEMENT,
-    ICON_SIZE,
     ITEM_TYPE_REGULAR,
 } from '../constants';
 
@@ -105,7 +105,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const current = item.current || false;
     const tooltipText = item.tooltipText || item.title;
     const icon = item.icon;
-    const iconSize = item.iconSize || ICON_SIZE;
+    const iconSize = item.iconSize || ASIDE_HEADER_ICON_SIZE;
     const collapsedItem = item.id === COLLAPSE_ITEM_ID;
 
     const onClose = React.useCallback(

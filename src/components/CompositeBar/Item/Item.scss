@@ -5,6 +5,7 @@ $block: '.#{variables.$ns}composite-bar-item';
 #{$block} {
     $class: &;
     --composite-bar-item-action-size: 36px;
+    --footer-item-icon-color: var(--g-color-text-primary);
 
     display: flex;
     width: 100%;
@@ -14,6 +15,11 @@ $block: '.#{variables.$ns}composite-bar-item';
 
     &__icon {
         color: var(--g-color-text-misc);
+
+        .#{variables.$ns}footer-item &,
+        .#{variables.$ns}composite-bar_subheader & {
+            color: var(--footer-item-icon-color);
+        }
     }
 
     &__icon-place {

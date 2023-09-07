@@ -1,6 +1,6 @@
 import React from 'react';
-import settingsIcon from '../../../../.storybook/assets/settings.svg';
-import addIcon from '../../../../.storybook/assets/add.svg';
+import {Gear, Plus} from '@gravity-ui/icons';
+
 import {MenuItem} from 'src/components/types';
 
 function renderTag(tag: string) {
@@ -11,21 +11,18 @@ export const menuItemsShowcase: MenuItem[] = [
     {
         id: 'overview',
         title: 'Overview',
-        icon: settingsIcon,
-        iconSize: 20,
+        icon: Gear,
     },
     {
         id: 'operations',
         title: 'Operations',
-        icon: settingsIcon,
-        iconSize: 20,
+        icon: Gear,
         rightAdornment: renderTag('New'),
     },
     {
         id: 'templates',
         title: 'Main notifications long menu title',
-        icon: settingsIcon,
-        iconSize: 20,
+        icon: Gear,
     },
     {
         id: 'divider',
@@ -35,9 +32,8 @@ export const menuItemsShowcase: MenuItem[] = [
     {
         id: 'notifications',
         title: 'Main notifications long long long long menu title',
-        icon: settingsIcon,
+        icon: Gear,
         current: true,
-        iconSize: 20,
         onItemClick({id, title, current}) {
             alert(JSON.stringify({id, title, current}));
         },
@@ -45,8 +41,7 @@ export const menuItemsShowcase: MenuItem[] = [
     {
         id: 'dashboard',
         title: 'Dashboard',
-        icon: settingsIcon,
-        iconSize: 20,
+        icon: Gear,
         rightAdornment: renderTag('New'),
         onItemClick({id, title, current}) {
             alert(JSON.stringify({id, title, current}));
@@ -61,8 +56,7 @@ export const menuItemsShowcase: MenuItem[] = [
         id: 'id1',
         title: 'Objects',
         tooltipText: 'Custom tooltip text',
-        icon: settingsIcon,
-        iconSize: 20,
+        icon: Gear,
         pinned: true,
         onItemClick({id, title, current}) {
             alert(JSON.stringify({id, title, current}));
@@ -81,8 +75,7 @@ export const menuItemsShowcase: MenuItem[] = [
         id: 'action2',
         title: 'Create smth',
         type: 'action',
-        icon: addIcon,
-        iconSize: 14,
+        icon: Plus,
         afterMoreButton: true,
         onItemClick({id, title, current}) {
             alert(JSON.stringify({id, title, current}));
