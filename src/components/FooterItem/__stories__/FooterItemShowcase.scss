@@ -1,7 +1,7 @@
 @import '../../../../styles/mixins';
 
 .footer-item-showcase {
-    --aside-header-min-width: 56px;
+    --gn-aside-header-min-width: 56px;
 
     &__content {
         @include text-body-3;

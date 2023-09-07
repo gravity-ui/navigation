@@ -4,8 +4,7 @@ $block: '.#{variables.$ns}composite-bar-item';
 
 #{$block} {
     $class: &;
-    --composite-bar-item-action-size: 36px;
-    --footer-item-icon-color: var(--g-color-text-primary);
+    --gn-composite-bar-item-action-size: 36px;
 
     display: flex;
     width: 100%;
@@ -17,14 +16,18 @@ $block: '.#{variables.$ns}composite-bar-item';
         color: var(--g-color-text-misc);
 
         .#{variables.$ns}footer-item &,
+        .#{variables.$ns}composite-bar-highlighted-item & {
+            color: var(--gn-aside-header-footer-item-icon-color);
+        }
+
         .#{variables.$ns}composite-bar_subheader & {
-            color: var(--footer-item-icon-color);
+            color: var(--gn-aside-header-subheader-item-icon-color);
         }
     }
 
     &__icon-place {
         flex-shrink: 0;
-        width: var(--aside-header-min-width);
+        width: var(--gn-aside-header-min-width);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -97,11 +100,11 @@ $block: '.#{variables.$ns}composite-bar-item';
 
     &_type_action {
         justify-content: center;
-        height: var(--composite-bar-item-action-size);
+        height: var(--gn-composite-bar-item-action-size);
         margin: 0 10px 8px;
         background: var(--g-color-base-float);
         box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.03), 0px 5px 6px rgba(0, 0, 0, 0.12);
-        border-radius: var(--composite-bar-item-action-size);
+        border-radius: var(--gn-composite-bar-item-action-size);
         transition: transform 0.1s ease-out, background-color 0.15s linear;
 
         &:focus {
@@ -123,7 +126,7 @@ $block: '.#{variables.$ns}composite-bar-item';
         }
 
         & #{$class}__icon-place {
-            width: var(--composite-bar-item-action-size);
+            width: var(--gn-composite-bar-item-action-size);
         }
 
         & #{$class}__title {
@@ -160,8 +163,8 @@ $block: '.#{variables.$ns}composite-bar-item';
                 top: 50%;
                 left: 50%;
                 z-index: -1;
-                width: 38px;
-                height: 38px;
+                width: var(--gn-aside-header-item-icon-background-size);
+                height: var(--gn-aside-header-item-icon-background-size);
                 margin-top: -19px;
                 margin-left: -19px;
                 border-radius: 7px;
@@ -169,7 +172,7 @@ $block: '.#{variables.$ns}composite-bar-item';
         }
 
         &#{$class}_type_action {
-            width: var(--composite-bar-item-action-size);
+            width: var(--gn-composite-bar-item-action-size);
 
             & #{$class}__title {
                 margin: 0;

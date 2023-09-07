@@ -11,7 +11,7 @@ $block: '.#{variables.$ns}logo';
 
     &__logo-btn-place {
         flex-shrink: 0;
-        width: var(--aside-header-min-width);
+        width: var(--gn-aside-header-min-width);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -23,7 +23,7 @@ $block: '.#{variables.$ns}logo';
     }
 
     &__btn-logo.yc-button_view_flat.yc-button_size_l {
-        --yc-button-height: 38px;
+        --yc-button-height: var(--gn-aside-header-item-icon-background-size);
     }
 
     &__logo {
