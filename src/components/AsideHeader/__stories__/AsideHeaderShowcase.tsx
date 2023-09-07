@@ -3,7 +3,8 @@ import React, {FC} from 'react';
 import {AsideHeader, FooterItem} from '../..';
 import {cn} from '../../utils/cn';
 import {menuItemsShowcase, text as placeholderText} from './moc';
-import {RadioButton, Radio} from '@gravity-ui/uikit';
+import {OpenModalSubscriber} from 'src/components/CompositeBar/HighlightedItem/HighlightedItem';
+import {RadioButton, Radio, Modal, Button, eventBroker, EventBrokerData} from '@gravity-ui/uikit';
 
 import logoIcon from '../../../../.storybook/assets/logo.svg';
 import menuItemIcon from '../../../../.storybook/assets/settings.svg';
@@ -29,6 +30,15 @@ interface AsideHeaderShowcaseProps {
     initialCompact?: boolean;
 }
 
+const openModalSubscriber = (callback: OpenModalSubscriber) => {
+    // @ts-ignore
+    eventBroker.subscribe((data: EventBrokerData<{layersCount: number}>) => {
+        if (data?.eventId === 'layerschange') {
+            callback(data?.meta?.layersCount !== 0);
+        }
+    });
+};
+
 export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
     multipleTooltip = false,
     initialCompact = false,
@@ -38,11 +48,17 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
     const [visiblePanel, setVisiblePanel] = React.useState<Panel>();
     const [compact, setCompact] = React.useState(initialCompact);
     const [headerDecoration, setHeaderDecoration] = React.useState<string>(BOOLEAN_OPTIONS.Yes);
+    const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
 
     const navRef = React.useRef<AsideHeader>(null);
 
     return (
         <div className={b()}>
+            <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                <div className={b('content')}>
+                    <pre>{placeholderText}</pre>
+                </div>
+            </Modal>
             <AsideHeader
                 ref={navRef}
                 logo={{
@@ -163,6 +179,8 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                                     );
                                 },
                             }}
+                            bringForward
+                            openModalSubscriber={openModalSubscriber}
                             compact={compact}
                         />
                         <FooterItem
@@ -198,6 +216,9 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                                 <Radio value={BOOLEAN_OPTIONS.No}>No</Radio>
                                 <Radio value={BOOLEAN_OPTIONS.Yes}>Yes</Radio>
                             </RadioButton>
+                            <br />
+                            <br />
+                            <Button onClick={() => setIsModalOpen(true)}>Open Modal</Button>
                         </div>
                     );
                 }}

@@ -13,6 +13,7 @@ import {
     ITEM_TYPE_REGULAR,
 } from '../constants';
 
+import {HighlightedItem, OpenModalSubscriber} from '../HighlightedItem/HighlightedItem';
 import {useAsideHeaderContext} from '../../AsideHeader/AsideHeaderContext';
 
 import './Item.scss';
@@ -27,6 +28,7 @@ interface ItemPopup {
     popupKeepMounted?: boolean;
     renderPopupContent?: () => React.ReactNode;
     onClosePopup?: () => void;
+    openModalSubscriber?: (subscriber: OpenModalSubscriber) => void;
 }
 
 export interface ItemProps extends ItemPopup {
@@ -38,6 +40,7 @@ export interface ItemProps extends ItemPopup {
         event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     ) => void;
     onItemClickCapture?: (event: React.SyntheticEvent) => void;
+    bringForward?: boolean;
 }
 
 interface ItemInnerProps extends ItemProps {
@@ -82,6 +85,8 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         onClosePopup,
         onItemClick,
         onItemClickCapture,
+        bringForward,
+        openModalSubscriber,
     } = props;
 
     const {compact} = useAsideHeaderContext();
@@ -94,6 +99,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const ref = React.useRef<HTMLDivElement>(null);
     const anchorRef = popupAnchor || ref;
+    const highlightedRef = React.useRef<HTMLDivElement>(null);
 
     const type = item.type || ITEM_TYPE_REGULAR;
     const current = item.current || false;
@@ -115,6 +121,27 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         },
         [onClosePopup],
     );
+
+    const makeIconNode = (iconEl: React.ReactNode): React.ReactNode => {
+        return compact ? (
+            <Tooltip
+                content={tooltipText}
+                disabled={!enableTooltip || (collapsedItem && open) || popupVisible}
+                placement="right"
+                className={b('icon-tooltip', {'item-type': type})}
+            >
+                <div
+                    onMouseEnter={() => onMouseEnter?.()}
+                    onMouseLeave={() => onMouseLeave?.()}
+                    className={b('btn-icon')}
+                >
+                    {iconEl}
+                </div>
+            </Tooltip>
+        ) : (
+            iconEl
+        );
+    };
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
         const createdNode = (
@@ -145,25 +172,8 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     }
                 }}
             >
-                <div className={b('icon-place')}>
-                    {compact ? (
-                        <Tooltip
-                            content={tooltipText}
-                            disabled={!enableTooltip || (collapsedItem && open) || popupVisible}
-                            placement="right"
-                            className={b('icon-tooltip', {'item-type': type})}
-                        >
-                            <div
-                                onMouseEnter={() => onMouseEnter?.()}
-                                onMouseLeave={() => onMouseLeave?.()}
-                                className={b('btn-icon')}
-                            >
-                                {iconEl}
-                            </div>
-                        </Tooltip>
-                    ) : (
-                        iconEl
-                    )}
+                <div className={b('icon-place')} ref={highlightedRef}>
+                    {makeIconNode(iconEl)}
                 </div>
 
                 <div
@@ -211,8 +221,21 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         node = makeNode(params);
     }
 
+    const highlightedNode = makeIconNode(iconNode);
+
     return (
         <>
+            {bringForward && (
+                <HighlightedItem
+                    iconNode={highlightedNode}
+                    iconRef={highlightedRef}
+                    onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
+                        onItemClick?.(item, false, event)
+                    }
+                    onClickCapture={onItemClickCapture}
+                    openModalSubscriber={openModalSubscriber}
+                />
+            )}
             {node}
             {open && collapsedItem && collapseItems?.length && Boolean(anchorRef?.current) && (
                 <CollapsedPopup {...props} anchorRef={ref} onClose={() => toggleOpen(false)} />
