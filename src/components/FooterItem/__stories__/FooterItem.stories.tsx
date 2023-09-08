@@ -1,10 +1,10 @@
 import React from 'react';
 import type {Meta, StoryFn} from '@storybook/react';
 
+import {Gear} from '@gravity-ui/icons';
+
 import {FooterItem, FooterItemProps} from '../FooterItem';
 import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../constants';
-
-import settingsIcon from '../../../../.storybook/assets/settings.svg';
 
 import {AsideHeaderContextProvider} from '../../AsideHeader/AsideHeaderContext';
 
@@ -39,6 +39,6 @@ Default.args = {
     item: {
         id: 'settings',
         title: 'Settings',
-        icon: settingsIcon,
+        icon: Gear,
     },
 };

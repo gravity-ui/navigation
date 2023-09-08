@@ -232,7 +232,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
         );
     } else {
         node = (
-            <div className={b()}>
+            <div className={b({subheader: true})}>
                 <CompositeBarView type="subheader" items={items} onItemClick={onItemClick} />
             </div>
         );

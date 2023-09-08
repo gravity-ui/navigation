@@ -1,24 +1,25 @@
 import React from 'react';
-import settingsIcon from '../../../../../.storybook/assets/settings.svg';
+import {Gear} from '@gravity-ui/icons';
+
 import {MobileMenuItem} from '../../types';
 
 export const mobileMenuItemsShowcase: MobileMenuItem[] = [
     {
         id: 'overview',
         title: 'Overview',
-        icon: settingsIcon,
+        icon: Gear,
         iconSize: 20,
     },
     {
         id: 'operations',
         title: 'Operations modal',
-        icon: settingsIcon,
+        icon: Gear,
         iconSize: 20,
     },
     {
         id: 'templates',
         title: 'Main notifications long menu title',
-        icon: settingsIcon,
+        icon: Gear,
         iconSize: 20,
     },
     {
@@ -29,7 +30,7 @@ export const mobileMenuItemsShowcase: MobileMenuItem[] = [
     {
         id: 'notifications',
         title: 'Main notifications long long long long menu title',
-        icon: settingsIcon,
+        icon: Gear,
         current: true,
         iconSize: 20,
         onItemClick(item) {
@@ -39,8 +40,8 @@ export const mobileMenuItemsShowcase: MobileMenuItem[] = [
     {
         id: 'dashboard',
         title: 'Dashboard',
-        icon: settingsIcon,
-        iconSize: 20,
+        icon: Gear,
+
         onItemClick(item) {
             alert(JSON.stringify(item));
         },
@@ -53,7 +54,7 @@ export const mobileMenuItemsShowcase: MobileMenuItem[] = [
     {
         id: 'id1',
         title: 'Objects',
-        icon: settingsIcon,
+        icon: Gear,
         iconSize: 20,
         onItemClick(item) {
             alert(JSON.stringify(item));

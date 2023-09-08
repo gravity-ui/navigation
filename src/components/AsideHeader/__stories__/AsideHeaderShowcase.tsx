@@ -1,13 +1,14 @@
 import React, {FC} from 'react';
 
+import {RadioButton, Radio, Modal, Button, eventBroker, EventBrokerData} from '@gravity-ui/uikit';
+import {Gear, Magnifier} from '@gravity-ui/icons';
+
 import {AsideHeader, FooterItem} from '../..';
 import {cn} from '../../utils/cn';
 import {menuItemsShowcase, text as placeholderText} from './moc';
 import {OpenModalSubscriber} from 'src/components/CompositeBar/HighlightedItem/HighlightedItem';
-import {RadioButton, Radio, Modal, Button, eventBroker, EventBrokerData} from '@gravity-ui/uikit';
 
 import logoIcon from '../../../../.storybook/assets/logo.svg';
-import menuItemIcon from '../../../../.storybook/assets/settings.svg';
 
 import './AsideHeaderShowcase.scss';
 
@@ -30,15 +31,6 @@ interface AsideHeaderShowcaseProps {
     initialCompact?: boolean;
 }
 
-const openModalSubscriber = (callback: OpenModalSubscriber) => {
-    // @ts-ignore
-    eventBroker.subscribe((data: EventBrokerData<{layersCount: number}>) => {
-        if (data?.eventId === 'layerschange') {
-            callback(data?.meta?.layersCount !== 0);
-        }
-    });
-};
-
 export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
     multipleTooltip = false,
     initialCompact = false,
@@ -51,6 +43,15 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
     const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
 
     const navRef = React.useRef<AsideHeader>(null);
+
+    const openModalSubscriber = (callback: OpenModalSubscriber) => {
+        // @ts-ignore
+        eventBroker.subscribe((data: EventBrokerData<{layersCount: number}>) => {
+            if (data?.eventId === 'layerschange') {
+                callback(data?.meta?.layersCount !== 0 && isModalOpen);
+            }
+        });
+    };
 
     return (
         <div className={b()}>
@@ -73,9 +74,8 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                     {
                         id: 'components',
                         title: 'Components',
-                        icon: menuItemIcon,
+                        icon: Gear,
                         current: visiblePanel === Panel.Components,
-                        iconSize: 20,
                         onItemClick: () =>
                             setVisiblePanel(
                                 visiblePanel === Panel.Components ? undefined : Panel.Components,
@@ -87,8 +87,7 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                         item: {
                             id: 'services',
                             title: 'Services',
-                            icon: menuItemIcon,
-                            iconSize: 20,
+                            icon: Gear,
                             onItemClick: () => {
                                 setVisiblePanel(undefined);
                                 setSubheaderPopupVisible(!subheaderPopupVisible);
@@ -113,9 +112,8 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                         item: {
                             id: 'search',
                             title: 'Search',
-                            icon: menuItemIcon,
+                            icon: Magnifier,
                             current: visiblePanel === Panel.Search,
-                            iconSize: 20,
                             onItemClick: () =>
                                 setVisiblePanel(
                                     visiblePanel === Panel.Search ? undefined : Panel.Search,
@@ -131,8 +129,7 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                             compact={compact}
                             item={{
                                 id: 'infra',
-                                icon: menuItemIcon,
-                                iconSize: 20,
+                                icon: Gear,
                                 current: popupVisible,
                                 title: (
                                     <div className={b('infra-text')}>
@@ -166,8 +163,7 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                         <FooterItem
                             item={{
                                 id: 'project-settings',
-                                icon: menuItemIcon,
-                                iconSize: 20,
+                                icon: Gear,
                                 title: 'Settings with panel',
                                 tooltipText: 'Settings with panel',
                                 current: visiblePanel === Panel.ProjectSettings,
@@ -186,8 +182,7 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                         <FooterItem
                             item={{
                                 id: 'user-settings',
-                                icon: menuItemIcon,
-                                iconSize: 20,
+                                icon: Gear,
                                 title: 'User Settings with panel',
                                 tooltipText: 'User Settings with panel',
                                 current: visiblePanel === Panel.UserSettings,

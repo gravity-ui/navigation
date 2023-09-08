@@ -25,7 +25,7 @@ RenderContent.displayName = 'RenderContent';
 export const Content: React.FC<ContentProps> = ({
     size, // TODO: move to context when MobileHeader will support it
     className,
-    cssSizeVariableName = '--aside-header-size',
+    cssSizeVariableName = '--gn-aside-header-size',
     renderContent,
 }) => {
     return (

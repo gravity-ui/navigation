@@ -1,5 +1,6 @@
 import React from 'react';
 import {Icon, Button, TextInput, MobileProvider} from '@gravity-ui/uikit';
+import {Gear} from '@gravity-ui/icons';
 
 import {
     MobileHeader,
@@ -12,7 +13,6 @@ import {SettingsMobileComponent} from '../../Settings/__stories__/SettingsMobile
 import {text as placeholderText} from './moc';
 
 import logoIcon from '../../../../.storybook/assets/logo.svg';
-import menuItemIcon from '../../../../.storybook/assets/settings.svg';
 
 import './MobileHeaderShowcase.scss';
 
@@ -44,7 +44,7 @@ export function MobileHeaderShowcase() {
         {
             id: 'all',
             title: 'All',
-            icon: menuItemIcon,
+            icon: Gear,
             onItemClick(item) {
                 alert(JSON.stringify(item));
             },
@@ -56,7 +56,7 @@ export function MobileHeaderShowcase() {
         {
             id: 'search',
             title: 'Search modal',
-            icon: menuItemIcon,
+            icon: Gear,
             closeMenuOnClick: false,
             onItemClick() {
                 toggleSearchModal();
@@ -70,7 +70,7 @@ export function MobileHeaderShowcase() {
         {
             id: 'id3',
             title: 'Favorite',
-            icon: menuItemIcon,
+            icon: Gear,
             onItemClick(item) {
                 alert(JSON.stringify(item));
             },
@@ -78,7 +78,7 @@ export function MobileHeaderShowcase() {
         {
             id: 'id4',
             title: 'Item with wrapper',
-            icon: menuItemIcon,
+            icon: Gear,
             itemWrapper(node, item) {
                 return (
                     <a href={`https://ya.ru?a=${item.id}`} className={b('link')}>
@@ -98,7 +98,7 @@ export function MobileHeaderShowcase() {
                 );
             }}
         >
-            <Icon data={menuItemIcon} size={20} />
+            <Icon data={Gear} size={20} />
         </div>
     );
 
@@ -129,7 +129,7 @@ export function MobileHeaderShowcase() {
                         renderFooter: () => (
                             <React.Fragment>
                                 <MobileHeaderFooterItem
-                                    icon={menuItemIcon}
+                                    icon={Gear}
                                     modalItem={{
                                         visible: settingsModalVisible,
                                         title: 'Settings',
@@ -141,7 +141,7 @@ export function MobileHeaderShowcase() {
                                     onClick={toggleSettingsModal}
                                 />
                                 <MobileHeaderFooterItem
-                                    icon={menuItemIcon}
+                                    icon={Gear}
                                     modalItem={{
                                         visible: favModalVisible,
                                         title: 'Favorites',
@@ -157,7 +157,7 @@ export function MobileHeaderShowcase() {
                                     onClick={toggleFavModal}
                                 />
                                 <MobileHeaderFooterItem
-                                    icon={menuItemIcon}
+                                    icon={Gear}
                                     modalItem={{
                                         visible: fbModalVisible,
                                         title: 'Feedback',
