@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.17.0](https://github.com/gravity-ui/navigation/compare/v0.16.0...v0.17.0) (2023-09-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* change defaults, add prefix to css vars ([#99](https://github.com/gravity-ui/navigation/issues/99))
+
+### Features
+
+* **AsideHeader:** support highlighted item ([#97](https://github.com/gravity-ui/navigation/issues/97)) ([f8c06a1](https://github.com/gravity-ui/navigation/commit/f8c06a176ab7e48369931b5bf6e0f0fef69ce227))
+* change defaults, add prefix to css vars ([#99](https://github.com/gravity-ui/navigation/issues/99)) ([08a812a](https://github.com/gravity-ui/navigation/commit/08a812a216c12385505c492cbfdcb4c3078498a2))
+
+
+### Bug Fixes
+
+* **CompositeBar:** fix multipleTooltip sticking ([#100](https://github.com/gravity-ui/navigation/issues/100)) ([420bd6e](https://github.com/gravity-ui/navigation/commit/420bd6ee24a7a23091322e8d43e7d9cc4a4ad7b8))
+
 ## [0.16.0](https://github.com/gravity-ui/navigation/compare/v0.15.0...v0.16.0) (2023-08-23)
 
 
