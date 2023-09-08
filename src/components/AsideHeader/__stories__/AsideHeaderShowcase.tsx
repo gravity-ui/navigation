@@ -180,7 +180,7 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                                 },
                             }}
                             bringForward
-                            openModalSubscriber={openModalSubscriber}
+                            openModalSubscriber={isModalOpen ? openModalSubscriber : undefined}
                             compact={compact}
                         />
                         <FooterItem
