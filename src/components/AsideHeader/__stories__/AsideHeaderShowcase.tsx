@@ -48,7 +48,7 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
         // @ts-ignore
         eventBroker.subscribe((data: EventBrokerData<{layersCount: number}>) => {
             if (data?.eventId === 'layerschange') {
-                callback(data?.meta?.layersCount !== 0 && isModalOpen);
+                callback(isModalOpen && data?.meta?.layersCount !== 0);
             }
         });
     };

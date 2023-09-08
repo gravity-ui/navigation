@@ -53,6 +53,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
 }) => {
     const ref = useRef<List<CompositeBarItem>>(null);
     const tooltipRef = useRef<HTMLDivElement>(null);
+
     const {
         setValue: setMultipleTooltipContextValue,
         active: multipleTooltipActive,
@@ -61,10 +62,27 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     } = useContext(MultipleTooltipContext);
     const {compact} = useAsideHeaderContext();
 
+    React.useEffect(() => {
+        function handleBlurWindow() {
+            if (multipleTooltip && multipleTooltipActive) {
+                setMultipleTooltipContextValue({active: false});
+            }
+        }
+
+        window.addEventListener('blur', handleBlurWindow);
+
+        return () => {
+            window.removeEventListener('blur', handleBlurWindow);
+        };
+    }, [multipleTooltip, multipleTooltipActive, setMultipleTooltipContextValue]);
+
     const onTooltipMouseEnter = useCallback(
         (e) => {
             if (
+                multipleTooltip &&
+                compact &&
                 !multipleTooltipActive &&
+                document.hasFocus() &&
                 activeIndex !== lastClickedItemIndex &&
                 e.clientX <= ASIDE_HEADER_COMPACT_WIDTH
             ) {
@@ -73,11 +91,18 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                 });
             }
         },
-        [multipleTooltipActive, activeIndex, lastClickedItemIndex, setMultipleTooltipContextValue],
+        [
+            multipleTooltip,
+            compact,
+            multipleTooltipActive,
+            activeIndex,
+            lastClickedItemIndex,
+            setMultipleTooltipContextValue,
+        ],
     );
 
     const onTooltipMouseLeave = useCallback(() => {
-        if (multipleTooltipActive) {
+        if (multipleTooltip && multipleTooltipActive && document.hasFocus()) {
             setMultipleTooltipContextValue?.({
                 active: false,
                 lastClickedItemIndex: undefined,
