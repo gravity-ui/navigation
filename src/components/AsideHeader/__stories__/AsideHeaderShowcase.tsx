@@ -31,15 +31,6 @@ interface AsideHeaderShowcaseProps {
     initialCompact?: boolean;
 }
 
-const openModalSubscriber = (callback: OpenModalSubscriber) => {
-    // @ts-ignore
-    eventBroker.subscribe((data: EventBrokerData<{layersCount: number}>) => {
-        if (data?.eventId === 'layerschange') {
-            callback(data?.meta?.layersCount !== 0);
-        }
-    });
-};
-
 export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
     multipleTooltip = false,
     initialCompact = false,
@@ -52,6 +43,15 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
     const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
 
     const navRef = React.useRef<AsideHeader>(null);
+
+    const openModalSubscriber = (callback: OpenModalSubscriber) => {
+        // @ts-ignore
+        eventBroker.subscribe((data: EventBrokerData<{layersCount: number}>) => {
+            if (data?.eventId === 'layerschange') {
+                callback(data?.meta?.layersCount !== 0 && isModalOpen);
+            }
+        });
+    };
 
     return (
         <div className={b()}>
@@ -176,7 +176,7 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                                 },
                             }}
                             bringForward
-                            openModalSubscriber={isModalOpen ? openModalSubscriber : undefined}
+                            openModalSubscriber={openModalSubscriber}
                             compact={compact}
                         />
                         <FooterItem
