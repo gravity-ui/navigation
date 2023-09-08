@@ -1,4 +1,4 @@
-    # Changelog
+# Changelog
 
 ## [0.17.0](https://github.com/gravity-ui/navigation/compare/v0.16.0...v0.17.0) (2023-09-08)
 
