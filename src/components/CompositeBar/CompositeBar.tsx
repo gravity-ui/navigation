@@ -64,10 +64,8 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
 
     React.useEffect(() => {
         function handleBlurWindow() {
-            if (multipleTooltip) {
-                if (multipleTooltipActive) {
-                    setMultipleTooltipContextValue({active: false});
-                }
+            if (multipleTooltip && multipleTooltipActive) {
+                setMultipleTooltipContextValue({active: false});
             }
         }
 
