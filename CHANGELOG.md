@@ -5,7 +5,16 @@
 
 ### ⚠ BREAKING CHANGES
 
-* change defaults, add prefix to css vars ([#99](https://github.com/gravity-ui/navigation/issues/99))
+* Change defaults for `AsideHeader` ([#99](https://github.com/gravity-ui/navigation/issues/99))
+  * ASIDE_HEADER_ICON_SIZE = 18px
+  * Change subheader and footer icons color. `--g-color-text-misc` -> `--g-color-text-primary`
+* Add prefix to css vars ([#99](https://github.com/gravity-ui/navigation/issues/99))
+  * `--aside-header-background-color` -> `--gn-aside-header-background-color`
+  * `--aside-header-collapse-button-divider-line-color` -> `--gn-aside-header-collapse-button-divider-line-color`
+  * `--aside-header-divider-line-color` -> `--gn-aside-header-divider-line-color`
+  * `--aside-header-header-divider-line-color` -> `--gn-aside-header-subheader-divider-line-color`
+  
+Read more about [themization](https://github.com/gravity-ui/navigation#css-variables)
 
 ### Features
 
