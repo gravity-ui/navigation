@@ -8,7 +8,7 @@ import {b} from '../asideHeaderUtils';
 export const Panels = () => {
     const {panelItems, onClosePanel, size} = useAsideHeaderContext();
 
-    return (
+    return panelItems ? (
         <Drawer
             className={b('panels')}
             onVeilClick={onClosePanel}
@@ -19,5 +19,5 @@ export const Panels = () => {
                 <DrawerItem key={item.id} {...item} />
             ))}
         </Drawer>
-    );
+    ) : null;
 };

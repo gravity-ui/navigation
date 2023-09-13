@@ -42,7 +42,7 @@ export const FirstPanel = () => {
                     <div className={b('footer')}>
                         {renderFooter?.({
                             size,
-                            compact,
+                            compact: Boolean(compact),
                             asideRef,
                         })}
                     </div>

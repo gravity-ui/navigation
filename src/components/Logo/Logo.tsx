@@ -64,11 +64,11 @@ export const Logo: React.FC<LogoProps> = ({
     return (
         <div className={b()}>
             <div className={b('logo-btn-place')}>
-                {hasWrapper ? wrapper(button, compact) : button}
+                {hasWrapper ? wrapper(button, Boolean(compact)) : button}
             </div>
             {!compact &&
                 (hasWrapper ? (
-                    <div onClick={onClick}>{wrapper(logo, compact)}</div>
+                    <div onClick={onClick}>{wrapper(logo, Boolean(compact))}</div>
                 ) : (
                     <a
                         href={href ?? '/'}

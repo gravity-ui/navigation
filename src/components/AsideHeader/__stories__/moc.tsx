@@ -1,11 +1,19 @@
 import React from 'react';
 import {Gear, Plus} from '@gravity-ui/icons';
 
-import {MenuItem} from 'src/components/types';
+import {MenuItem} from '../../types';
+import {ASIDE_HEADER_EXPANDED_WIDTH} from '../../constants';
+import {AsideHeaderContextType} from '../AsideHeaderContext';
 
 function renderTag(tag: string) {
     return <div className="composite-bar-showcase__tag">{tag.toUpperCase()}</div>;
 }
+
+export const EMPTY_CONTEXT_VALUE: AsideHeaderContextType = {
+    onItemClick: () => {},
+    logo: {text: () => null},
+    size: ASIDE_HEADER_EXPANDED_WIDTH,
+};
 
 export const menuItemsShowcase: MenuItem[] = [
     {

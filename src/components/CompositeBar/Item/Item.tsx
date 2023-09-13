@@ -213,7 +213,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const params = {icon: iconNode, title: titleNode};
     let node;
 
-    const opts = {compact, collapsed: false, item, ref};
+    const opts = {compact: Boolean(compact), collapsed: false, item, ref};
 
     if (typeof item.itemWrapper === 'function') {
         node = item.itemWrapper(params, makeNode, opts) as React.ReactElement;
@@ -296,7 +296,12 @@ function CollapsedPopup({
 
                         const titleNode = renderItemTitle(collapseItem);
                         const params = {title: titleNode};
-                        const opts = {compact, collapsed: true, item: collapseItem, ref: anchorRef};
+                        const opts = {
+                            compact: Boolean(compact),
+                            collapsed: true,
+                            item: collapseItem,
+                            ref: anchorRef,
+                        };
                         if (typeof collapseItem.itemWrapper === 'function') {
                             return collapseItem.itemWrapper(params, makeCollapseNode, opts);
                         } else {

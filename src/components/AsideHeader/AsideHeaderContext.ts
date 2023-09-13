@@ -2,7 +2,7 @@ import React from 'react';
 import {MenuItem} from '../types';
 import {AsideHeaderInnerProps} from './asideHeaderTypes';
 
-interface AsideHeaderContextType extends AsideHeaderInnerProps {
+export interface AsideHeaderContextType extends AsideHeaderInnerProps {
     size: number;
     onItemClick: (
         item: MenuItem,

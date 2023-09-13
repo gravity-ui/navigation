@@ -17,7 +17,7 @@ export const CollapseButton = () => {
 
     const onCollapseButtonClick = useCallback(() => {
         onChangeCompact?.(!compact);
-    }, []);
+    }, [compact]);
 
     const buttonTitle = compact
         ? expandTitle || i18n('button_expand')

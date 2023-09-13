@@ -4,7 +4,7 @@ import {LogoProps, MenuItem, SubheaderMenuItem} from '../types';
 
 export interface AsideHeaderGeneralProps {
     logo: LogoProps;
-    compact: boolean;
+    compact?: boolean;
     multipleTooltip?: boolean;
     className?: string;
     collapseTitle?: string;
@@ -21,10 +21,10 @@ export interface AsideHeaderGeneralProps {
 }
 
 export interface AsideHeaderDefaultProps {
-    panelItems: DrawerItemProps[];
-    subheaderItems: SubheaderMenuItem[];
-    menuItems: MenuItem[];
-    headerDecoration: boolean;
+    panelItems?: DrawerItemProps[];
+    subheaderItems?: SubheaderMenuItem[];
+    menuItems?: MenuItem[];
+    headerDecoration?: boolean;
 }
 
 export type AsideHeaderInnerProps = AsideHeaderGeneralProps & AsideHeaderDefaultProps;
