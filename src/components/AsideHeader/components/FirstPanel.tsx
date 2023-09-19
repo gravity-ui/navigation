@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import {CompositeBar} from '../../CompositeBar/CompositeBar';
-import {useAsideHeaderContext} from '../AsideHeaderContext';
+import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {b} from '../asideHeaderUtils';
 
 import i18n from '../i18n';
@@ -18,7 +18,7 @@ export const FirstPanel = () => {
         menuMoreTitle,
         renderFooter,
         compact,
-    } = useAsideHeaderContext();
+    } = useAsideHeaderInnerContext();
 
     const asideRef = useRef<HTMLDivElement>(null);
 

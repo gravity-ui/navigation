@@ -2,11 +2,11 @@ import React from 'react';
 
 import {Drawer, DrawerItem} from '../../Drawer/Drawer';
 
-import {useAsideHeaderContext} from '../AsideHeaderContext';
+import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {b} from '../asideHeaderUtils';
 
 export const Panels = () => {
-    const {panelItems, onClosePanel, size} = useAsideHeaderContext();
+    const {panelItems, onClosePanel, size} = useAsideHeaderInnerContext();
 
     return panelItems ? (
         <Drawer

@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {MenuItem} from '../types';
 
@@ -6,7 +6,7 @@ import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../consta
 
 import {Content} from '../Content';
 
-import {AsideHeaderContextProvider} from './AsideHeaderContext';
+import {AsideHeaderContextProvider, AsideHeaderInnerContextProvider} from './AsideHeaderContext';
 import {
     AsideHeaderGeneralProps,
     AsideHeaderDefaultProps,
@@ -38,20 +38,24 @@ export const AsideHeader = (props: AsideHeaderInnerProps) => {
         [onClosePanel],
     );
 
+    const asideHeaderContextValue = useMemo(() => ({size, compact: Boolean(compact)}), []);
+
     return (
-        <AsideHeaderContextProvider value={{...props, size, onItemClick}}>
-            <div className={b({compact}, className)}>
-                <div className={b('pane-container')}>
-                    {/* First Panel */}
-                    <FirstPanel />
-                    {/* Second Panel */}
-                    <Content
-                        size={size}
-                        renderContent={props.renderContent}
-                        className={b('content')}
-                    />
+        <AsideHeaderContextProvider value={asideHeaderContextValue}>
+            <AsideHeaderInnerContextProvider value={{...props, size, onItemClick}}>
+                <div className={b({compact}, className)}>
+                    <div className={b('pane-container')}>
+                        {/* First Panel */}
+                        <FirstPanel />
+                        {/* Second Panel */}
+                        <Content
+                            size={size}
+                            renderContent={props.renderContent}
+                            className={b('content')}
+                        />
+                    </div>
                 </div>
-            </div>
+            </AsideHeaderInnerContextProvider>
         </AsideHeaderContextProvider>
     );
 };

@@ -5,7 +5,7 @@ import {fakeDisplayName} from '../../helpers';
 import i18n from '../i18n';
 
 import {b} from '../asideHeaderUtils';
-import {useAsideHeaderContext} from '../AsideHeaderContext';
+import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 
 import controlMenuButtonIcon from '../../../../assets/icons/control-menu-button.svg';
 
@@ -13,7 +13,7 @@ import controlMenuButtonIcon from '../../../../assets/icons/control-menu-button.
 const NotIcon = fakeDisplayName('NotIcon', Icon);
 
 export const CollapseButton = () => {
-    const {onChangeCompact, compact, expandTitle, collapseTitle} = useAsideHeaderContext();
+    const {onChangeCompact, compact, expandTitle, collapseTitle} = useAsideHeaderInnerContext();
 
     const onCollapseButtonClick = useCallback(() => {
         onChangeCompact?.(!compact);

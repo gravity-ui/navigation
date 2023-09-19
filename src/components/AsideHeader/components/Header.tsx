@@ -9,14 +9,14 @@ import {CompositeBar} from '../../CompositeBar/CompositeBar';
 
 import headerDividerCollapsedIcon from '../../../../assets/icons/divider-collapsed.svg';
 
-import {useAsideHeaderContext} from '../AsideHeaderContext';
+import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {b} from '../asideHeaderUtils';
 
 const DEFAULT_SUBHEADER_ITEMS: SubheaderMenuItem[] = [];
 
 export const Header = () => {
     const {logo, onItemClick, onClosePanel, headerDecoration, subheaderItems} =
-        useAsideHeaderContext();
+        useAsideHeaderInnerContext();
 
     const onLogoClick = useCallback(
         (event: React.MouseEvent<HTMLElement, MouseEvent>) => {

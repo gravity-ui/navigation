@@ -10,8 +10,6 @@ function renderTag(tag: string) {
 }
 
 export const EMPTY_CONTEXT_VALUE: AsideHeaderContextType = {
-    onItemClick: () => {},
-    logo: {text: () => null},
     size: ASIDE_HEADER_EXPANDED_WIDTH,
 };
 
