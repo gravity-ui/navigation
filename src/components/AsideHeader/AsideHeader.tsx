@@ -7,15 +7,11 @@ import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../consta
 import {Content} from '../Content';
 
 import {AsideHeaderContextProvider, AsideHeaderInnerContextProvider} from './AsideHeaderContext';
-import {
-    AsideHeaderGeneralProps,
-    AsideHeaderDefaultProps,
-    AsideHeaderInnerProps,
-} from './asideHeaderTypes';
+import {AsideHeaderGeneralProps, AsideHeaderDefaultProps, AsideHeaderInnerProps} from './types';
 
 import './AsideHeader.scss';
 import {FirstPanel} from './components';
-import {b} from './asideHeaderUtils';
+import {b} from './utils';
 
 export interface AsideHeaderProps
     extends AsideHeaderGeneralProps,

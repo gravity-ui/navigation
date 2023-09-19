@@ -4,7 +4,7 @@ import {Button, Icon} from '@gravity-ui/uikit';
 import {fakeDisplayName} from '../../helpers';
 import i18n from '../i18n';
 
-import {b} from '../asideHeaderUtils';
+import {b} from '../utils';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 
 import controlMenuButtonIcon from '../../../../assets/icons/control-menu-button.svg';

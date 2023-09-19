@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
 import {CompositeBar} from '../../CompositeBar/CompositeBar';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
-import {b} from '../asideHeaderUtils';
+import {b} from '../utils';
 
 import i18n from '../i18n';
 import {Header} from './Header';

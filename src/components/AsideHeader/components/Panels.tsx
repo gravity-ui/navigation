@@ -3,7 +3,7 @@ import React from 'react';
 import {Drawer, DrawerItem} from '../../Drawer/Drawer';
 
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
-import {b} from '../asideHeaderUtils';
+import {b} from '../utils';
 
 export const Panels = () => {
     const {panelItems, onClosePanel, size} = useAsideHeaderInnerContext();

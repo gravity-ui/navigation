@@ -10,7 +10,7 @@ import {CompositeBar} from '../../CompositeBar/CompositeBar';
 import headerDividerCollapsedIcon from '../../../../assets/icons/divider-collapsed.svg';
 
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
-import {b} from '../asideHeaderUtils';
+import {b} from '../utils';
 
 const DEFAULT_SUBHEADER_ITEMS: SubheaderMenuItem[] = [];
 
