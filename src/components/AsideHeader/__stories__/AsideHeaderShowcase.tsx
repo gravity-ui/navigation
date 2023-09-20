@@ -42,8 +42,6 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
     const [headerDecoration, setHeaderDecoration] = React.useState<string>(BOOLEAN_OPTIONS.Yes);
     const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
 
-    const navRef = React.useRef<AsideHeader>(null);
-
     const openModalSubscriber = (callback: OpenModalSubscriber) => {
         // @ts-ignore
         eventBroker.subscribe((data: EventBrokerData<{layersCount: number}>) => {
@@ -61,7 +59,6 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                 </div>
             </Modal>
             <AsideHeader
-                ref={navRef}
                 logo={{
                     text: 'Service',
                     icon: logoIcon,
@@ -240,7 +237,9 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                     },
                 ]}
                 onClosePanel={() => setVisiblePanel(undefined)}
-                onChangeCompact={setCompact}
+                onChangeCompact={(v) => {
+                    setCompact(v);
+                }}
             />
         </div>
     );

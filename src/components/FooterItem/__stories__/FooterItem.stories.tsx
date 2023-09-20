@@ -7,6 +7,7 @@ import {FooterItem, FooterItemProps} from '../FooterItem';
 import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../constants';
 
 import {AsideHeaderContextProvider} from '../../AsideHeader/AsideHeaderContext';
+import {EMPTY_CONTEXT_VALUE} from '../../AsideHeader/__stories__/moc';
 
 import './FooterItemShowcase.scss';
 
@@ -22,7 +23,9 @@ export default {
 
             return (
                 <div style={{width}} className="footer-item-showcase">
-                    <AsideHeaderContextProvider value={{compact, size: width}}>
+                    <AsideHeaderContextProvider
+                        value={{...EMPTY_CONTEXT_VALUE, compact, size: width}}
+                    >
                         <DecoratedStory />
                     </AsideHeaderContextProvider>
                 </div>
