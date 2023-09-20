@@ -4,7 +4,7 @@ import {LogoProps, MenuItem, SubheaderMenuItem} from '../types';
 
 export interface AsideHeaderGeneralProps {
     logo: LogoProps;
-    compact?: boolean;
+    compact: boolean;
     multipleTooltip?: boolean;
     className?: string;
     collapseTitle?: string;

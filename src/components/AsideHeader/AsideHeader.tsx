@@ -9,9 +9,10 @@ import {Content} from '../Content';
 import {AsideHeaderContextProvider, AsideHeaderInnerContextProvider} from './AsideHeaderContext';
 import {AsideHeaderGeneralProps, AsideHeaderDefaultProps, AsideHeaderInnerProps} from './types';
 
-import './AsideHeader.scss';
 import {FirstPanel} from './components';
 import {b} from './utils';
+
+import './AsideHeader.scss';
 
 export interface AsideHeaderProps
     extends AsideHeaderGeneralProps,
@@ -34,7 +35,7 @@ export const AsideHeader = (props: AsideHeaderInnerProps) => {
         [onClosePanel],
     );
 
-    const asideHeaderContextValue = useMemo(() => ({size, compact: Boolean(compact)}), []);
+    const asideHeaderContextValue = useMemo(() => ({size, compact}), [compact, size]);
 
     return (
         <AsideHeaderContextProvider value={asideHeaderContextValue}>
