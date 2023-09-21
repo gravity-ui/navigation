@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.0](https://github.com/gravity-ui/navigation/compare/v0.17.0...v0.18.0) (2023-09-21)
+
+
+### Features
+
+* **AsideHeader:** move openModalSubscriber prop to AsideHeader ([#103](https://github.com/gravity-ui/navigation/issues/103)) ([69ad527](https://github.com/gravity-ui/navigation/commit/69ad5278321e16c06331e3f166f47fbe8176049b))
+
 ## [0.17.0](https://github.com/gravity-ui/navigation/compare/v0.16.0...v0.17.0) (2023-09-08)
 
 
