@@ -6,7 +6,7 @@ import {Gear, Magnifier} from '@gravity-ui/icons';
 import {AsideHeader, FooterItem} from '../..';
 import {cn} from '../../utils/cn';
 import {menuItemsShowcase, text as placeholderText} from './moc';
-import {OpenModalSubscriber} from 'src/components/CompositeBar/HighlightedItem/HighlightedItem';
+import {OpenModalSubscriber} from '../../types';
 
 import logoIcon from '../../../../.storybook/assets/logo.svg';
 
@@ -44,9 +44,12 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
 
     const openModalSubscriber = (callback: OpenModalSubscriber) => {
         // @ts-ignore
-        eventBroker.subscribe((data: EventBrokerData<{layersCount: number}>) => {
+        eventBroker.subscribe((data: EventBrokerData<{layers: {type: string}[]}>) => {
             if (data?.eventId === 'layerschange') {
-                callback(isModalOpen && data?.meta?.layersCount !== 0);
+                const openModalCount = data?.meta?.layers?.filter(
+                    ({type}) => type === 'modal',
+                ).length;
+                callback(openModalCount !== 0);
             }
         });
     };
@@ -120,6 +123,7 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                 ]}
                 compact={compact}
                 multipleTooltip={multipleTooltip}
+                openModalSubscriber={openModalSubscriber}
                 renderFooter={({compact}) => (
                     <React.Fragment>
                         <FooterItem
@@ -173,7 +177,6 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                                 },
                             }}
                             bringForward
-                            openModalSubscriber={openModalSubscriber}
                             compact={compact}
                         />
                         <FooterItem
