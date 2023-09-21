@@ -5,6 +5,8 @@ import {ItemProps} from 'src/components/CompositeBar/Item/Item';
 
 export type MenuItemType = 'regular' | 'action' | 'divider';
 
+export type OpenModalSubscriber = (open: boolean) => void;
+
 export interface MakeItemParams {
     icon?: React.ReactNode;
     title: React.ReactNode;

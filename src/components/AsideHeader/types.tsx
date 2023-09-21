@@ -1,6 +1,6 @@
 import {RenderContentType} from '../Content';
 import {DrawerItemProps} from '../Drawer/Drawer';
-import {LogoProps, MenuItem, SubheaderMenuItem} from '../types';
+import {LogoProps, MenuItem, SubheaderMenuItem, OpenModalSubscriber} from '../types';
 
 export interface AsideHeaderGeneralProps {
     logo: LogoProps;
@@ -18,6 +18,7 @@ export interface AsideHeaderGeneralProps {
     }) => React.ReactNode;
     onClosePanel?: () => void;
     onChangeCompact?: (compact: boolean) => void;
+    openModalSubscriber?: (subscriber: OpenModalSubscriber) => void;
 }
 
 export interface AsideHeaderDefaultProps {
