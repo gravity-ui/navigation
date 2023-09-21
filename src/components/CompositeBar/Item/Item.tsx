@@ -13,7 +13,7 @@ import {
     ITEM_TYPE_REGULAR,
 } from '../constants';
 
-import {HighlightedItem, OpenModalSubscriber} from '../HighlightedItem/HighlightedItem';
+import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {useAsideHeaderContext} from '../../AsideHeader/AsideHeaderContext';
 
 import './Item.scss';
@@ -28,7 +28,6 @@ interface ItemPopup {
     popupKeepMounted?: boolean;
     renderPopupContent?: () => React.ReactNode;
     onClosePopup?: () => void;
-    openModalSubscriber?: (subscriber: OpenModalSubscriber) => void;
 }
 
 export interface ItemProps extends ItemPopup {
@@ -86,7 +85,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         onItemClick,
         onItemClickCapture,
         bringForward,
-        openModalSubscriber,
     } = props;
 
     const {compact} = useAsideHeaderContext();
@@ -233,7 +231,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                         onItemClick?.(item, false, event)
                     }
                     onClickCapture={onItemClickCapture}
-                    openModalSubscriber={openModalSubscriber}
                 />
             )}
             {node}

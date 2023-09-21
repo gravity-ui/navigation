@@ -1,21 +1,20 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {block} from '../../utils/cn';
 import debounceFn from 'lodash/debounce';
 
 import {Portal} from '@gravity-ui/uikit';
 
+import {useAsideHeaderInnerContext} from '../../AsideHeader/AsideHeaderContext';
+import {block} from '../../utils/cn';
+
 import './HighlightedItem.scss';
 
 const b = block('composite-bar-highlighted-item');
-
-export type OpenModalSubscriber = (open: boolean) => void;
 
 interface ItemInnerProps {
     iconRef: React.RefObject<HTMLDivElement>;
     iconNode: React.ReactNode;
     onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
     onClickCapture?: (event: React.SyntheticEvent) => void;
-    openModalSubscriber?: (subscriber: OpenModalSubscriber) => void;
 }
 
 const DEBOUNCE_TIME = 200;
@@ -25,8 +24,8 @@ export const HighlightedItem: React.FC<ItemInnerProps> = ({
     iconNode,
     onClick,
     onClickCapture,
-    openModalSubscriber,
 }: ItemInnerProps) => {
+    const {openModalSubscriber} = useAsideHeaderInnerContext();
     const [{top, left, width, height}, setPosition] = useState({
         top: 0,
         left: 0,
