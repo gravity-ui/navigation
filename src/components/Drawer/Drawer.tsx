@@ -20,15 +20,17 @@ export interface DrawerItemProps {
 
 export const DrawerItem: React.FC<DrawerItemProps> = ({visible, content, direction, className}) => {
     const itemRef = React.useRef<HTMLDivElement>(null);
+    const cssDirection = direction === 'left' ? undefined : direction;
+
     return (
         <CSSTransition
             in={visible}
             timeout={TIMEOUT}
             unmountOnExit={true}
-            classNames={b('item-transition', {direction})}
+            classNames={b('item-transition', {direction: cssDirection})}
             nodeRef={itemRef}
         >
-            <div ref={itemRef} className={b('item', {direction}, className)}>
+            <div ref={itemRef} className={b('item', {direction: cssDirection}, className)}>
                 {content}
             </div>
         </CSSTransition>
