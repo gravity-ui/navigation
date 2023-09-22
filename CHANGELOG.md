@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.1](https://github.com/gravity-ui/navigation/compare/v0.18.0...v0.18.1) (2023-09-22)
+
+
+### Bug Fixes
+
+* **Drawer:** fix animation ([#105](https://github.com/gravity-ui/navigation/issues/105)) ([45d57c2](https://github.com/gravity-ui/navigation/commit/45d57c2ddf3a76a06987849fdcae9fcadc693543))
+
 ## [0.18.0](https://github.com/gravity-ui/navigation/compare/v0.17.0...v0.18.0) (2023-09-21)
 
 
