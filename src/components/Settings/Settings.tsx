@@ -17,7 +17,7 @@ import './Settings.scss';
 
 const b = block('settings');
 
-interface SettingsProps {
+export interface SettingsProps {
     children: React.ReactNode;
     title?: string;
     filterPlaceholder?: string;
@@ -31,20 +31,20 @@ interface SettingsProps {
     onClose?: () => void;
 }
 
-interface SettingsGroupProps {
+export interface SettingsGroupProps {
     id?: string;
     groupTitle: string;
     children: React.ReactNode;
 }
 
-interface SettingsPageProps {
+export interface SettingsPageProps {
     id?: string;
     title: string;
     icon?: IconProps;
     children: React.ReactNode;
 }
 
-interface SettingsSectionProps {
+export interface SettingsSectionProps {
     title: string;
     header?: React.ReactNode;
     children: React.ReactNode;
@@ -52,7 +52,7 @@ interface SettingsSectionProps {
     showTitle?: boolean;
 }
 
-interface SettingsItemProps {
+export interface SettingsItemProps {
     title: string;
     renderTitleComponent?: (highlightedTitle: React.ReactNode | null) => React.ReactNode;
     align?: 'top' | 'center';
