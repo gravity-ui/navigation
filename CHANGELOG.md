@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.19.0](https://github.com/gravity-ui/navigation/compare/v0.18.1...v0.19.0) (2023-09-26)
+
+
+### Features
+
+* added exports for settings props ([#107](https://github.com/gravity-ui/navigation/issues/107)) ([a3fc62f](https://github.com/gravity-ui/navigation/commit/a3fc62f80fae51e3bc52103857706a583b5f8e6a))
+
 ## [0.18.1](https://github.com/gravity-ui/navigation/compare/v0.18.0...v0.18.1) (2023-09-22)
 
 
