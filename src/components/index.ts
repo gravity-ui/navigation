@@ -1,4 +1,4 @@
-export {AsideHeader, AsideHeaderProps} from './AsideHeader/AsideHeader';
+export {AsideHeader} from './AsideHeader/AsideHeader';
 export {AsideHeaderContextProvider, useAsideHeaderContext} from './AsideHeader/AsideHeaderContext';
 export {Drawer, DrawerProps, DrawerItemProps, DrawerItem} from './Drawer/Drawer';
 export {FooterItem, FooterItemProps} from './FooterItem/FooterItem';

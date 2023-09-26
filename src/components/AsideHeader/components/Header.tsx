@@ -17,13 +17,13 @@ const DEFAULT_SUBHEADER_ITEMS: SubheaderMenuItem[] = [];
 export const Header = () => {
     const {logo, onItemClick, onClosePanel, headerDecoration, subheaderItems} =
         useAsideHeaderInnerContext();
-
+    const {onClick: onLogoClickProp} = logo;
     const onLogoClick = useCallback(
         (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
             onClosePanel?.();
-            logo.onClick?.(event);
+            onLogoClickProp?.(event);
         },
-        [onClosePanel, logo.onClick],
+        [onClosePanel, onLogoClickProp],
     );
 
     return (

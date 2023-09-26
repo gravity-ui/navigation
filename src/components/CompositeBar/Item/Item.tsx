@@ -89,10 +89,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const {compact} = useAsideHeaderContext();
 
-    if (item.type === 'divider') {
-        return <div className={b('menu-divider')} />;
-    }
-
     const [open, toggleOpen] = React.useState<boolean>(false);
 
     const ref = React.useRef<HTMLDivElement>(null);
@@ -119,6 +115,10 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         },
         [onClosePopup],
     );
+
+    if (item.type === 'divider') {
+        return <div className={b('menu-divider')} />;
+    }
 
     const makeIconNode = (iconEl: React.ReactNode): React.ReactNode => {
         return compact ? (

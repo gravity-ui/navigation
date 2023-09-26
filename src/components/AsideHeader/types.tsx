@@ -25,7 +25,15 @@ export interface AsideHeaderDefaultProps {
     panelItems?: DrawerItemProps[];
     subheaderItems?: SubheaderMenuItem[];
     menuItems?: MenuItem[];
+    onMenuItemsChanged?: (items: MenuItem[]) => void;
     headerDecoration?: boolean;
 }
 
 export type AsideHeaderInnerProps = AsideHeaderGeneralProps & AsideHeaderDefaultProps;
+export interface AsideHeaderProps
+    extends AsideHeaderGeneralProps,
+        Partial<AsideHeaderDefaultProps> {}
+
+export enum InnerPanels {
+    AllPages = 'all-pages',
+}

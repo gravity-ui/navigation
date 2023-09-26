@@ -77,7 +77,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                     return panelOpen ? null : name;
                 });
             },
-            [visiblePanel, onEvent],
+            [onEvent],
         );
 
         const onMobilePanelToggle = useCallback(
@@ -86,7 +86,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                     onPanelToggle(detail?.panelName);
                 }
             },
-            [onEvent],
+            [onPanelToggle],
         );
 
         const onMobilePanelOpen = useCallback(
@@ -143,7 +143,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                     size,
                     isCompact: compact,
                 }),
-            [burgerMenu.renderFooter, size, compact],
+            [burgerMenu, size, compact],
         );
 
         const onLogoClick = useCallback(
@@ -151,7 +151,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                 onClosePanel?.();
                 logo.onClick?.(event);
             },
-            [logo.onClick, onClosePanel],
+            [logo, onClosePanel],
         );
 
         const burgerPanelItem: PanelItem = useMemo(
@@ -167,7 +167,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                     />
                 ),
             }),
-            [burgerMenu],
+            [burgerMenu.items, burgerMenu.modalItem, onBurgerMenuItemClick, renderBurgerMenuFooter],
         );
 
         useEffect(() => {
@@ -192,7 +192,14 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                     node.removeEventListener('MOBILE_PANEL_CLOSE', onMobilePanelClose);
                 }
             };
-        }, [targetRef, onBurgerClose, onBurgerOpen]);
+        }, [
+            targetRef,
+            onBurgerClose,
+            onBurgerOpen,
+            onMobilePanelToggle,
+            onMobilePanelOpen,
+            onMobilePanelClose,
+        ]);
 
         return (
             <div className={b({compact}, className)} ref={targetRef}>

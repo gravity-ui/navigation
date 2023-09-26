@@ -1,0 +1,23 @@
+@use '../variables';
+
+.#{variables.$ns}all-pages-panel {
+    min-width: 300px;
+    height: 100%;
+    padding: var(--g-spacing-4) var(--g-spacing-6);
+    box-sizing: border-box;
+
+    &__content {
+        overflow: auto;
+        flex: 1;
+
+        margin: 0 calc(var(--g-spacing-6) * -1);
+    }
+
+    &__category {
+        padding: 0 var(--g-spacing-6);
+    }
+
+    &__discoverable-feature-wrapper {
+        display: flex;
+    }
+}

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import debounceFn from 'lodash/debounce';
 
 import {Portal} from '@gravity-ui/uikit';
@@ -34,28 +34,31 @@ export const HighlightedItem: React.FC<ItemInnerProps> = ({
     });
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-    const handleResize = useCallback(
-        debounceFn(
-            () => {
-                const {
-                    top = 0,
-                    left = 0,
-                    width = 0,
-                    height = 0,
-                } = iconRef?.current?.getBoundingClientRect() || {};
+    const handleResizeDebounced = useMemo(
+        () =>
+            debounceFn(
+                () => {
+                    const {
+                        top = 0,
+                        left = 0,
+                        width = 0,
+                        height = 0,
+                    } = iconRef?.current?.getBoundingClientRect() || {};
 
-                setPosition({
-                    top: top + window.scrollY,
-                    left: left + window.scrollX,
-                    width,
-                    height,
-                });
-            },
-            DEBOUNCE_TIME,
-            {leading: true},
-        ),
-        [],
+                    setPosition({
+                        top: top + window.scrollY,
+                        left: left + window.scrollX,
+                        width,
+                        height,
+                    });
+                },
+                DEBOUNCE_TIME,
+                {leading: true},
+            ),
+        [iconRef],
     );
+
+    const handleResize = useCallback(() => handleResizeDebounced(), [handleResizeDebounced]);
 
     useEffect(() => {
         if (!isModalOpen) {

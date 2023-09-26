@@ -1,6 +1,20 @@
 import React, {FC} from 'react';
 import logoIcon from '../../../../.storybook/assets/logo.svg';
-import {AsideHeader, AsideHeaderProps} from '../AsideHeader';
+import {AsideHeader} from '../AsideHeader';
+import {AsideHeaderProps} from '../types';
+
+const AsideHeaderWrapper = ({Story, ...props}: AsideHeaderProps & {Story: FC}) => {
+    const [compact, setCompact] = React.useState(props.compact);
+
+    return (
+        <AsideHeader
+            {...props}
+            compact={compact}
+            onChangeCompact={setCompact}
+            renderContent={() => <Story />}
+        />
+    );
+};
 
 export function getAsideHeaderWrapper(
     props: AsideHeaderProps = {
@@ -13,15 +27,6 @@ export function getAsideHeaderWrapper(
     },
 ) {
     return function withAsideHeaderWrapper(Story: FC) {
-        const [compact, setCompact] = React.useState(props.compact);
-
-        return (
-            <AsideHeader
-                {...props}
-                compact={compact}
-                onChangeCompact={setCompact}
-                renderContent={() => <Story />}
-            />
-        );
+        return <AsideHeaderWrapper Story={Story} {...props} />;
     };
 }
