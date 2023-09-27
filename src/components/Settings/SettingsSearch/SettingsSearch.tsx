@@ -10,6 +10,7 @@ const b = block('settings-search');
 
 interface SettingsSearchProps {
     className?: string;
+    initialValue?: string;
     onChange: (search: string) => void;
     debounce?: number;
     inputRef?: React.Ref<HTMLInputElement>;
@@ -20,6 +21,7 @@ interface SettingsSearchProps {
 
 export function SettingsSearch({
     className,
+    initialValue,
     onChange,
     debounce = 200,
     inputRef,
@@ -27,11 +29,18 @@ export function SettingsSearch({
     placeholder,
     autoFocus = true,
 }: SettingsSearchProps) {
-    const onChangeStable = useStableCallback(onChange);
-    const handleUpdate = React.useCallback(debounceFn(onChangeStable, debounce), [debounce]);
+    const [value, setValue] = React.useState(initialValue ?? '');
+
+    const onChangeDebounced = useStableCallback(debounceFn(onChange, debounce));
+    const handleUpdate = useStableCallback((updated: string) => {
+        setValue(updated);
+        onChangeDebounced(updated);
+    });
+
     return (
         <div className={b(null, className)}>
             <TextInput
+                value={value}
                 controlRef={inputRef}
                 hasClear
                 autoFocus={autoFocus}

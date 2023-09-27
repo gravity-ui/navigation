@@ -23,6 +23,7 @@ export interface SettingsProps {
     filterPlaceholder?: string;
     emptyPlaceholder?: string;
     initialPage?: string;
+    initialSearch?: string;
     onPageChange?: (page: string | undefined) => void;
     renderNotFound?: () => React.ReactNode;
     renderLoading?: () => React.ReactNode;
@@ -56,6 +57,7 @@ export interface SettingsSectionProps {
 
 export interface SettingsItemProps {
     title: string;
+    highlightedTitle?: React.ReactNode | null;
     renderTitleComponent?: (highlightedTitle: React.ReactNode | null) => React.ReactNode;
     align?: 'top' | 'center';
     children: React.ReactNode;
@@ -115,6 +117,7 @@ const getPageTitleById = (menu: SettingsMenuType, activePage: string) => {
 type SettingsContentProps = Omit<SettingsProps, 'loading' | 'renderLoading'>;
 function SettingsContent({
     initialPage,
+    initialSearch,
     children,
     renderNotFound,
     title = i18n('label_title'),
@@ -124,7 +127,7 @@ function SettingsContent({
     onPageChange,
     onClose,
 }: SettingsContentProps) {
-    const [search, setSearch] = React.useState('');
+    const [search, setSearch] = React.useState(initialSearch ?? '');
     const {menu, pages} = getSettingsFromChildren(children, search);
     const pageKeys = Object.keys(pages);
     const [selectedPage, setCurrentPage] = React.useState<string | undefined>(
@@ -206,7 +209,7 @@ function SettingsContent({
                                     <div key={title} className={b('section-item')}>
                                         {React.cloneElement(element, {
                                             ...element.props,
-                                            title:
+                                            highlightedTitle:
                                                 search && title
                                                     ? prepareTitle(title, search)
                                                     : title,
@@ -228,6 +231,7 @@ function SettingsContent({
                     <SettingsSearch
                         inputRef={searchInputRef}
                         className={b('search')}
+                        initialValue={initialSearch}
                         onChange={setSearch}
                         autoFocus={false}
                         inputSize={'l'}
@@ -259,6 +263,7 @@ function SettingsContent({
                     <SettingsSearch
                         inputRef={searchInputRef}
                         className={b('search')}
+                        initialValue={initialSearch}
                         onChange={setSearch}
                         placeholder={filterPlaceholder}
                         autoFocus
@@ -290,6 +295,7 @@ Settings.Section = function SettingsSection({children}: SettingsSectionProps) {
 
 Settings.Item = function SettingsItem({
     title,
+    highlightedTitle,
     children,
     align = 'center',
     withBadge,
@@ -299,7 +305,9 @@ Settings.Item = function SettingsItem({
 }: SettingsItemProps) {
     const {renderRightAdornment, showRightAdornmentOnHover} = useSettingsContext();
     const titleNode = (
-        <span className={b('item-title', {badge: withBadge})}>{renderTitleComponent(title)}</span>
+        <span className={b('item-title', {badge: withBadge})}>
+            {renderTitleComponent(highlightedTitle)}
+        </span>
     );
     return (
         <div className={b('item', {align, mode})}>
