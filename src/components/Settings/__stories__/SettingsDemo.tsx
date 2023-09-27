@@ -67,6 +67,10 @@ export const SettingsComponent = React.memo(
                     console.log({page});
                 }}
                 onClose={onClose}
+                renderRightAdornment={({title}) => (
+                    <HelpPopover content={`Some text for ${title}`} />
+                )}
+                showRightAdornmentOnHover={true} // true by default
             >
                 <Settings.Group id="arcanum" groupTitle="Arcanum">
                     <Settings.Page id="features" title="Features" icon={{data: featureIcon}}>
