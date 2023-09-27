@@ -195,6 +195,14 @@ $block: '.#{variables.$ns}settings';
             padding-right: 20px;
             color: var(--g-color-text-secondary);
         }
+
+        &-right-adornment_hidden {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        &:hover &-right-adornment_hidden {
+            opacity: 1;
+        }
     }
 
     &__found {

@@ -2,7 +2,7 @@ import React from 'react';
 import {block} from '../utils/cn';
 import identity from 'lodash/identity';
 
-import {IconProps, Loader} from '@gravity-ui/uikit';
+import {Flex, IconProps, Loader} from '@gravity-ui/uikit';
 import {SettingsSearch} from './SettingsSearch/SettingsSearch';
 import {SettingsMenu, SettingsMenuInstance} from './SettingsMenu/SettingsMenu';
 import {SettingsMenuMobile} from './SettingsMenuMobile/SettingsMenuMobile';
@@ -29,6 +29,8 @@ export interface SettingsProps {
     loading?: boolean;
     view?: 'normal' | 'mobile';
     onClose?: () => void;
+    renderRightAdornment?: (item: Pick<SettingsItemProps, 'title'>) => React.ReactNode;
+    showRightAdornmentOnHover?: boolean;
 }
 
 export interface SettingsGroupProps {
@@ -62,11 +64,20 @@ export interface SettingsItemProps {
     description?: string;
 }
 
+export interface SettingsContextType
+    extends Pick<SettingsProps, 'renderRightAdornment' | 'showRightAdornmentOnHover'> {}
+
+const SettingsContext = React.createContext<SettingsContextType>({});
+
+export const useSettingsContext = () => React.useContext(SettingsContext);
+
 export function Settings({
     loading,
     renderLoading,
     children,
     view = 'normal',
+    renderRightAdornment,
+    showRightAdornmentOnHover = true,
     ...props
 }: SettingsProps) {
     if (loading) {
@@ -82,9 +93,11 @@ export function Settings({
     }
 
     return (
-        <SettingsContent view={view} {...props}>
-            {children}
-        </SettingsContent>
+        <SettingsContext.Provider value={{renderRightAdornment, showRightAdornmentOnHover}}>
+            <SettingsContent view={view} {...props}>
+                {children}
+            </SettingsContent>
+        </SettingsContext.Provider>
     );
 }
 
@@ -284,12 +297,27 @@ Settings.Item = function SettingsItem({
     mode,
     description,
 }: SettingsItemProps) {
+    const {renderRightAdornment, showRightAdornmentOnHover} = useSettingsContext();
+    const titleNode = (
+        <span className={b('item-title', {badge: withBadge})}>{renderTitleComponent(title)}</span>
+    );
     return (
         <div className={b('item', {align, mode})}>
             <label className={b('item-heading')}>
-                <span className={b('item-title', {badge: withBadge})}>
-                    {renderTitleComponent(title)}
-                </span>
+                {renderRightAdornment ? (
+                    <Flex className={b('item-title-wrapper')} gap={3}>
+                        {titleNode}
+                        <div
+                            className={b('item-right-adornment', {
+                                hidden: showRightAdornmentOnHover,
+                            })}
+                        >
+                            {renderRightAdornment({title})}
+                        </div>
+                    </Flex>
+                ) : (
+                    titleNode
+                )}
                 {description ? <span className={b('item-description')}>{description}</span> : null}
             </label>
             <div className={b('item-content')}>{children}</div>
