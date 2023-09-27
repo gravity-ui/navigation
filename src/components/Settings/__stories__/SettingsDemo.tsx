@@ -149,7 +149,7 @@ export const SettingsComponent = React.memo(
                             </Settings.Item>
                             <Settings.Item title="Code theme">
                                 <Select
-                                    value={settings.codeTheme ?? 'default'}
+                                    value={settings.codeTheme ?? ['default']}
                                     options={[{value: 'default', content: 'Default'}]}
                                     onUpdate={(val) => {
                                         handleChange(
