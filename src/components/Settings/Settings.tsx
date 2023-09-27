@@ -305,9 +305,15 @@ Settings.Item = function SettingsItem({
                     <span className={b('item-title', {badge: withBadge})}>
                         {renderTitleComponent(title)}
                     </span>
-                    <div className={b('item-right-adornment', {hidden: showRightAdornmentOnHover})}>
-                        {renderRightAdornment?.({title})}
-                    </div>
+                    {renderRightAdornment && (
+                        <div
+                            className={b('item-right-adornment', {
+                                hidden: showRightAdornmentOnHover,
+                            })}
+                        >
+                            {renderRightAdornment({title})}
+                        </div>
+                    )}
                 </Flex>
                 {description ? <span className={b('item-description')}>{description}</span> : null}
             </label>
