@@ -298,14 +298,15 @@ Settings.Item = function SettingsItem({
     description,
 }: SettingsItemProps) {
     const {renderRightAdornment, showRightAdornmentOnHover} = useSettingsContext();
+    const titleNode = (
+        <span className={b('item-title', {badge: withBadge})}>{renderTitleComponent(title)}</span>
+    );
     return (
         <div className={b('item', {align, mode})}>
             <label className={b('item-heading')}>
-                <Flex className={b('item-title-wrapper')} gap={3}>
-                    <span className={b('item-title', {badge: withBadge})}>
-                        {renderTitleComponent(title)}
-                    </span>
-                    {renderRightAdornment && (
+                {renderRightAdornment ? (
+                    <Flex className={b('item-title-wrapper')} gap={3}>
+                        {titleNode}
                         <div
                             className={b('item-right-adornment', {
                                 hidden: showRightAdornmentOnHover,
@@ -313,8 +314,10 @@ Settings.Item = function SettingsItem({
                         >
                             {renderRightAdornment({title})}
                         </div>
-                    )}
-                </Flex>
+                    </Flex>
+                ) : (
+                    titleNode
+                )}
                 {description ? <span className={b('item-description')}>{description}</span> : null}
             </label>
             <div className={b('item-content')}>{children}</div>
