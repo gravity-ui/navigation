@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.21.0](https://github.com/gravity-ui/navigation/compare/v0.20.0...v0.21.0) (2023-09-27)
+
+
+### Features
+
+* supported initial search in settings ([#112](https://github.com/gravity-ui/navigation/issues/112)) ([b858783](https://github.com/gravity-ui/navigation/commit/b858783fcced5df0339f279f4bb05a687270b5a1))
+
 ## [0.20.0](https://github.com/gravity-ui/navigation/compare/v0.19.0...v0.20.0) (2023-09-27)
 
 
