@@ -9,6 +9,15 @@ export const useGroupedMenuItems = (items: MenuItem[]) => {
         const filteredItems = items.filter(
             (item) => item.type !== 'divider' && item.id !== ALL_PAGES_ID,
         );
+        filteredItems.sort((a, b) => {
+            if (a.type === 'action') {
+                return 1;
+            }
+            if (b.type === 'action') {
+                return -1;
+            }
+            return 0;
+        });
         const groupedItems = filteredItems.reduce((acc, item) => {
             const category = item.category || i18n('all-panel.menu.category.allOther');
             if (!acc[category]) {

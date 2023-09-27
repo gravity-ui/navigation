@@ -28,9 +28,9 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     const menuItemsRef = useRef(menuItems);
     menuItemsRef.current = menuItems;
 
-    const [isEditMode, setIsActive] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(false);
     const toggleEditMode = useCallback(() => {
-        setIsActive((prev) => !prev);
+        setIsEditMode((prev) => !prev);
     }, []);
 
     const groupedItems = useGroupedMenuItems(menuItems);

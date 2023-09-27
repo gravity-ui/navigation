@@ -42,7 +42,7 @@ export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
             {editMode && (
                 <Button
                     onClick={onPinButtonClick}
-                    view={item.hidden ? 'flat-secondary' : 'flat-info'}
+                    view={item.hidden ? 'flat-secondary' : 'flat-action'}
                 >
                     <Button.Icon>{item.hidden ? <Pin /> : <PinFill />}</Button.Icon>
                 </Button>
