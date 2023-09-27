@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.0](https://github.com/gravity-ui/navigation/compare/v0.19.0...v0.20.0) (2023-09-27)
+
+
+### Features
+
+* added right adornments for settings items ([#110](https://github.com/gravity-ui/navigation/issues/110)) ([fe14e64](https://github.com/gravity-ui/navigation/commit/fe14e64f7423df8f12d881c7347d51c5d0469aff))
+
 ## [0.19.0](https://github.com/gravity-ui/navigation/compare/v0.18.1...v0.19.0) (2023-09-26)
 
 
