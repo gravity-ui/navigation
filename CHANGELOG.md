@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.21.1](https://github.com/gravity-ui/navigation/compare/v0.21.0...v0.21.1) (2023-09-28)
+
+
+### Bug Fixes
+
+* **CompositeBar/Item:** fix odd closing popup by click inside ([#114](https://github.com/gravity-ui/navigation/issues/114)) ([cec9812](https://github.com/gravity-ui/navigation/commit/cec9812a3db6824bd4f78877e4247523b020737f))
+
 ## [0.21.0](https://github.com/gravity-ui/navigation/compare/v0.20.0...v0.21.0) (2023-09-27)
 
 
