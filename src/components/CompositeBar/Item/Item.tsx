@@ -221,7 +221,8 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     }
 
     const highlightedNode = makeIconNode(iconNode);
-
+    console.log(`open ${open}`);
+    console.log(`collapseItems ${collapseItems}`);
     return (
         <>
             {bringForward && (
@@ -268,6 +269,7 @@ function CollapsedPopup({
                     virtualized={false}
                     filterable={false}
                     sortable={false}
+                    onItemClick={onClose}
                     renderItem={(collapseItem) => {
                         const makeCollapseNode = ({title: titleEl}: MakeItemParams) => {
                             const res = (
