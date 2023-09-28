@@ -16,7 +16,7 @@ export const AsideHeader = (props: AsideHeaderProps) => {
     const {className, compact} = props;
     const size = compact ? ASIDE_HEADER_COMPACT_WIDTH : ASIDE_HEADER_EXPANDED_WIDTH;
     const asideHeaderContextValue = useMemo(() => ({size, compact}), [compact, size]);
-    const asideHeaderInnerContextValue = useAsideHeaderInnerContextValue(props);
+    const asideHeaderInnerContextValue = useAsideHeaderInnerContextValue({...props, size});
     return (
         <AsideHeaderContextProvider value={asideHeaderContextValue}>
             <AsideHeaderInnerContextProvider value={asideHeaderInnerContextValue}>

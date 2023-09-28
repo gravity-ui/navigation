@@ -40,7 +40,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     }, [isEditMode, onEditModeChanged]);
 
     const onItemClick = useCallback((item: ListItemData<MenuItem>) => {
-        //@ts-ignore TODO
+        //@ts-ignore TODO fix when @gravity-ui/uikit/List will provide event arg on item click
         item.onItemClick?.(item, false);
     }, []);
 

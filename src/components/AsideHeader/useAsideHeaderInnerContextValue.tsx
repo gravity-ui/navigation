@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../constants';
 import {AsideHeaderInnerContextType} from './AsideHeaderContext';
 import {AsideHeaderProps, InnerPanels} from './types';
 import {MenuItem} from '../types';
@@ -8,13 +7,13 @@ import {ALL_PAGES_MENU_ITEM, AllPagesPanel} from '../AllPagesPanel';
 const EMPTY_MENU_ITEMS: MenuItem[] = [];
 
 export const useAsideHeaderInnerContextValue = (
-    props: AsideHeaderProps,
+    props: AsideHeaderProps & {size: number},
 ): AsideHeaderInnerContextType => {
-    const {compact, onClosePanel, menuItems, panelItems, onMenuItemsChanged} = props;
+    const {size, onClosePanel, menuItems, panelItems, onMenuItemsChanged} = props;
     const [innerVisiblePanel, setInnerVisiblePanel] = useState<InnerPanels | undefined>();
 
-    const size = compact ? ASIDE_HEADER_COMPACT_WIDTH : ASIDE_HEADER_EXPANDED_WIDTH;
-    const allPagesIsAvailable = Boolean(onMenuItemsChanged);
+    const allPagesIsAvailable =
+        Boolean(onMenuItemsChanged) && (!menuItems || menuItems?.length > 0);
 
     useEffect(() => {
         // If any user panel became visible we need to switch off all inner panels
@@ -34,7 +33,13 @@ export const useAsideHeaderInnerContextValue = (
             collapsed: boolean,
             event: React.MouseEvent<HTMLDivElement, MouseEvent>,
         ) => {
-            innerOnClosePanel();
+            if (item.id === ALL_PAGES_MENU_ITEM.id) {
+                setInnerVisiblePanel((prev) =>
+                    prev === InnerPanels.AllPages ? undefined : InnerPanels.AllPages,
+                );
+            } else {
+                innerOnClosePanel();
+            }
             item.onItemClick?.(item, collapsed, event);
         },
         [innerOnClosePanel],
@@ -47,13 +52,11 @@ export const useAsideHeaderInnerContextValue = (
                       ...(menuItems || EMPTY_MENU_ITEMS),
                       {
                           ...ALL_PAGES_MENU_ITEM,
-                          onItemClick: () => {
-                              setInnerVisiblePanel(InnerPanels.AllPages);
-                          },
+                          current: innerVisiblePanel === InnerPanels.AllPages,
                       },
                   ]
                 : menuItems || EMPTY_MENU_ITEMS,
-        [menuItems, allPagesIsAvailable],
+        [allPagesIsAvailable, menuItems, innerVisiblePanel],
     );
 
     const innerPanelItems = useMemo(() => {
