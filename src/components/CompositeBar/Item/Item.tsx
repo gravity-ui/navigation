@@ -143,44 +143,45 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
         const createdNode = (
-            <div
-                className={b({type, current, compact}, className)}
-                ref={ref}
-                onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-                    if (collapsedItem) {
-                        /**
-                         * If we call onItemClick for collapsedItem then:
-                         * - User get unexpected item in onItemClick callback
-                         * - onClosePanel calls twice for each popuped item, as result it will prevent opening of panelItems
-                         */
-                        toggleOpen(!open);
-                    } else {
-                        onItemClick?.(item, false, event);
-                    }
-                }}
-                onClickCapture={onItemClickCapture}
-                onMouseEnter={() => {
-                    if (!compact) {
-                        onMouseEnter?.();
-                    }
-                }}
-                onMouseLeave={() => {
-                    if (!compact) {
-                        onMouseLeave?.();
-                    }
-                }}
-            >
-                <div className={b('icon-place')} ref={highlightedRef}>
-                    {makeIconNode(iconEl)}
-                </div>
-
+            <React.Fragment>
                 <div
-                    className={b('title')}
-                    title={typeof item.title === 'string' ? item.title : undefined}
+                    className={b({type, current, compact}, className)}
+                    ref={ref}
+                    onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                        if (collapsedItem) {
+                            /**
+                             * If we call onItemClick for collapsedItem then:
+                             * - User get unexpected item in onItemClick callback
+                             * - onClosePanel calls twice for each popuped item, as result it will prevent opening of panelItems
+                             */
+                            toggleOpen(!open);
+                        } else {
+                            onItemClick?.(item, false, event);
+                        }
+                    }}
+                    onClickCapture={onItemClickCapture}
+                    onMouseEnter={() => {
+                        if (!compact) {
+                            onMouseEnter?.();
+                        }
+                    }}
+                    onMouseLeave={() => {
+                        if (!compact) {
+                            onMouseLeave?.();
+                        }
+                    }}
                 >
-                    {titleEl}
-                </div>
+                    <div className={b('icon-place')} ref={highlightedRef}>
+                        {makeIconNode(iconEl)}
+                    </div>
 
+                    <div
+                        className={b('title')}
+                        title={typeof item.title === 'string' ? item.title : undefined}
+                    >
+                        {titleEl}
+                    </div>
+                </div>
                 {renderPopupContent && Boolean(anchorRef?.current) && (
                     <Popup
                         contentClassName={b('popup')}
@@ -194,7 +195,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                         {renderPopupContent()}
                     </Popup>
                 )}
-            </div>
+            </React.Fragment>
         );
 
         return item.link ? (
