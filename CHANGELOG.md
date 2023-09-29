@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.22.0](https://github.com/gravity-ui/navigation/compare/v0.21.1...v0.22.0) (2023-09-29)
+
+
+### Features
+
+* **all-pages-panel:** added all pages panel ([1ed3ba3](https://github.com/gravity-ui/navigation/commit/1ed3ba3a919c0902704a1e8ac7cf62ba401d35ab))
+* **all-pages-panel:** added all pages panel ([#109](https://github.com/gravity-ui/navigation/issues/109)) ([1ed3ba3](https://github.com/gravity-ui/navigation/commit/1ed3ba3a919c0902704a1e8ac7cf62ba401d35ab))
+
 ## [0.21.1](https://github.com/gravity-ui/navigation/compare/v0.21.0...v0.21.1) (2023-09-28)
 
 
