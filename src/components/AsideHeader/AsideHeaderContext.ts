@@ -3,6 +3,8 @@ import {MenuItem} from '../types';
 import {AsideHeaderInnerProps} from './types';
 
 export interface AsideHeaderInnerContextType extends AsideHeaderInnerProps {
+    menuItems: MenuItem[];
+    allPagesIsAvailable: boolean;
     size: number;
     onItemClick: (
         item: MenuItem,

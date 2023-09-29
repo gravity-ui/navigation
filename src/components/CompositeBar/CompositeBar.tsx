@@ -108,7 +108,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                 lastClickedItemIndex: undefined,
             });
         }
-    }, [multipleTooltipActive, setMultipleTooltipContextValue]);
+    }, [multipleTooltip, multipleTooltipActive, setMultipleTooltipContextValue]);
 
     const onMouseEnterByIndex = useCallback(
         (itemIndex) => () => {
@@ -129,7 +129,13 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                 });
             }
         },
-        [multipleTooltipActive, activeIndex, lastClickedItemIndex, setMultipleTooltipContextValue],
+        [
+            multipleTooltip,
+            multipleTooltipActive,
+            lastClickedItemIndex,
+            activeIndex,
+            setMultipleTooltipContextValue,
+        ],
     );
 
     const onMouseLeave = useCallback(() => {
@@ -145,7 +151,13 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                 });
             }
         }
-    }, [activeIndex, lastClickedItemIndex, setMultipleTooltipContextValue]);
+    }, [
+        activeIndex,
+        compact,
+        lastClickedItemIndex,
+        multipleTooltip,
+        setMultipleTooltipContextValue,
+    ]);
 
     const onItemClickByIndex = useCallback(
         (itemIndex): ItemProps['onItemClick'] =>
@@ -163,7 +175,13 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                 }
                 onItemClick?.(item, collapsed, event);
             },
-        [lastClickedItemIndex, setMultipleTooltipContextValue],
+        [
+            compact,
+            lastClickedItemIndex,
+            multipleTooltip,
+            onItemClick,
+            setMultipleTooltipContextValue,
+        ],
     );
 
     return (

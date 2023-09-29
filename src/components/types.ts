@@ -40,6 +40,18 @@ export interface MenuItem {
     rightAdornment?: React.ReactNode;
     type?: MenuItemType;
     afterMoreButton?: boolean;
+    /**
+     * Order number. Used to determine the display order in the side menu
+     */
+    order?: number;
+    /**
+     * Visibility flag in the side menu
+     */
+    hidden?: boolean;
+    /**
+     * The category to which the menu item belongs. Need for grouping in the display/editing mode of all pages
+     */
+    category?: string;
 }
 
 export type SubheaderMenuItem = Omit<ItemProps, 'onItemClick' | 'onItemClickCapture'>;

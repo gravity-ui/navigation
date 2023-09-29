@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 
 import {RadioButton, Radio, Modal, Button, eventBroker, EventBrokerData} from '@gravity-ui/uikit';
 import {Gear, Magnifier} from '@gravity-ui/icons';
@@ -6,7 +6,7 @@ import {Gear, Magnifier} from '@gravity-ui/icons';
 import {AsideHeader, FooterItem} from '../..';
 import {cn} from '../../utils/cn';
 import {menuItemsShowcase, text as placeholderText} from './moc';
-import {OpenModalSubscriber} from '../../types';
+import {MenuItem, OpenModalSubscriber} from '../../types';
 
 import logoIcon from '../../../../.storybook/assets/logo.svg';
 
@@ -54,6 +54,17 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
         });
     };
 
+    const [menuItems, setMenuItems] = useState<MenuItem[]>([
+        ...menuItemsShowcase,
+        {
+            id: 'components',
+            title: 'Components',
+            icon: Gear,
+            current: visiblePanel === Panel.Components,
+            onItemClick: () =>
+                setVisiblePanel(visiblePanel === Panel.Components ? undefined : Panel.Components),
+        },
+    ]);
     return (
         <div className={b()}>
             <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
@@ -69,19 +80,8 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                     onClick: () => alert('click on logo'),
                 }}
                 headerDecoration={headerDecoration === BOOLEAN_OPTIONS.Yes}
-                menuItems={[
-                    ...menuItemsShowcase,
-                    {
-                        id: 'components',
-                        title: 'Components',
-                        icon: Gear,
-                        current: visiblePanel === Panel.Components,
-                        onItemClick: () =>
-                            setVisiblePanel(
-                                visiblePanel === Panel.Components ? undefined : Panel.Components,
-                            ),
-                    },
-                ]}
+                onMenuItemsChanged={setMenuItems}
+                menuItems={menuItems}
                 subheaderItems={[
                     {
                         item: {

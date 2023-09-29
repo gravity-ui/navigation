@@ -1,0 +1,19 @@
+@use '../../variables';
+
+.#{variables.$ns}all-pages-list-item {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    height: 40px;
+    padding: 0 var(--g-spacing-6);
+    column-gap: var(--g-spacing-4);
+
+    &__text {
+        flex: 1;
+    }
+
+    &__icon {
+        color: var(--g-color-text-misc);
+    }
+}

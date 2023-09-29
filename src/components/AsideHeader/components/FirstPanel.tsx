@@ -2,6 +2,7 @@ import React, {useRef} from 'react';
 import {CompositeBar} from '../../CompositeBar/CompositeBar';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {b} from '../utils';
+import {useVisibleMenuItems} from '../../AllPagesPanel';
 
 import i18n from '../i18n';
 import {Header} from './Header';
@@ -12,13 +13,13 @@ export const FirstPanel = () => {
     const {
         size,
         onItemClick,
-        menuItems,
         headerDecoration,
         multipleTooltip,
         menuMoreTitle,
         renderFooter,
         compact,
     } = useAsideHeaderInnerContext();
+    const visibleMenuItems = useVisibleMenuItems();
 
     const asideRef = useRef<HTMLDivElement>(null);
 
@@ -28,10 +29,10 @@ export const FirstPanel = () => {
                 <div className={b('aside-popup-anchor')} ref={asideRef} />
                 <div className={b('aside-content', {['with-decoration']: headerDecoration})}>
                     <Header />
-                    {menuItems?.length ? (
+                    {visibleMenuItems?.length ? (
                         <CompositeBar
                             type="menu"
-                            items={menuItems}
+                            items={visibleMenuItems}
                             menuMoreTitle={menuMoreTitle ?? i18n('label_more')}
                             onItemClick={onItemClick}
                             multipleTooltip={multipleTooltip}
