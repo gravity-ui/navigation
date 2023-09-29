@@ -11,7 +11,7 @@ import {Header} from './Header';
 import {CollapseButton} from './CollapseButton';
 import {Panels} from './Panels';
 
-export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
+export const FirstPanel = React.forwardRef<HTMLDivElement, {maxHeight?: string}>((props, ref) => {
     const {
         size,
         onItemClick,
@@ -25,13 +25,20 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
     const asideRef = useRef<HTMLDivElement>(null);
 
+    const {maxHeight} = props;
+    const style: React.CSSProperties = {width: size};
+
+    if (maxHeight) {
+        style.maxHeight = maxHeight;
+    }
+
     React.useEffect(() => {
         setRef<HTMLDivElement>(ref, asideRef.current);
     }, [ref]);
 
     return (
         <>
-            <div className={b('aside')} style={{width: size}}>
+            <div className={b('aside')} style={style}>
                 <div className={b('aside-popup-anchor')} ref={asideRef} />
                 <div className={b('aside-content', {['with-decoration']: headerDecoration})}>
                     <Header />

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import type {Meta, StoryFn} from '@storybook/react';
+import {Alert} from '@gravity-ui/uikit';
 
 import {AsideHeader} from '../AsideHeader';
 import {AsideHeaderShowcase} from './AsideHeaderShowcase';
@@ -57,4 +58,20 @@ export const AdvancedUsage = AdvancedUsageTemplate.bind({});
 AdvancedUsage.args = {
     multipleTooltip: false,
     initialCompact: true,
+};
+
+const TopAlertTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
+export const HeaderAlert = TopAlertTemplate.bind({});
+HeaderAlert.args = {
+    topAlert: {
+        title: 'Maintenance',
+        view: 'filled',
+        message: 'Scheduled maintenance is being performed',
+        actions: [
+            {
+                text: 'More...',
+                handler: () => alert('More information about top alert'),
+            },
+        ],
+    },
 };
