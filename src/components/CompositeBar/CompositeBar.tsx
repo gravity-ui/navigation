@@ -112,7 +112,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
 
     const onMouseEnterByIndex = useCallback(
         (itemIndex) => () => {
-            if (multipleTooltip) {
+            if (multipleTooltip && document.hasFocus()) {
                 let multipleTooltipActiveValue = multipleTooltipActive;
                 if (!multipleTooltipActive && itemIndex !== lastClickedItemIndex) {
                     multipleTooltipActiveValue = true;
@@ -139,7 +139,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     );
 
     const onMouseLeave = useCallback(() => {
-        if (compact) {
+        if (compact && document.hasFocus()) {
             ref.current?.activateItem(undefined as unknown as number);
             if (
                 multipleTooltip &&
@@ -220,9 +220,9 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                     }}
                 />
             </div>
-            {type === 'menu' && (
+            {type === 'menu' && multipleTooltip && (
                 <MultipleTooltip
-                    open={compact && multipleTooltip && multipleTooltipActive}
+                    open={compact && multipleTooltipActive}
                     anchorRef={tooltipRef}
                     placement={['right-start']}
                     items={items}
