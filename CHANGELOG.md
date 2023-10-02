@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.22.1](https://github.com/gravity-ui/navigation/compare/v0.22.0...v0.22.1) (2023-10-02)
+
+
+### Bug Fixes
+
+* **AsideHeader:** return export AsideHeaderProps ([#119](https://github.com/gravity-ui/navigation/issues/119)) ([1ba6f85](https://github.com/gravity-ui/navigation/commit/1ba6f856479d22cb4330341a7164dee3e432e0cb))
+* **CompositeBar:** fix stucking multipleTooltip ([#117](https://github.com/gravity-ui/navigation/issues/117)) ([be6534e](https://github.com/gravity-ui/navigation/commit/be6534e1a6f49dd8ce1e1dde1aba837b661baf19))
+
 ## [0.22.0](https://github.com/gravity-ui/navigation/compare/v0.21.1...v0.22.0) (2023-09-29)
 
 
