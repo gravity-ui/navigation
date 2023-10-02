@@ -1,7 +1,6 @@
 import React from 'react';
 
 import type {Meta, StoryFn} from '@storybook/react';
-import {Alert} from '@gravity-ui/uikit';
 
 import {AsideHeader} from '../AsideHeader';
 import {AsideHeaderShowcase} from './AsideHeaderShowcase';
