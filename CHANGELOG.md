@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.22.2](https://github.com/gravity-ui/navigation/compare/v0.22.1...v0.22.2) (2023-10-04)
+
+
+### Bug Fixes
+
+* **AllPages:** fix stuck i18n ([#121](https://github.com/gravity-ui/navigation/issues/121)) ([f7879b3](https://github.com/gravity-ui/navigation/commit/f7879b3ddd361275c1d116efcb03f894b3a200ec))
+
 ## [0.22.1](https://github.com/gravity-ui/navigation/compare/v0.22.0...v0.22.1) (2023-10-02)
 
 
