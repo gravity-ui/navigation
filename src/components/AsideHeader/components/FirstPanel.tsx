@@ -9,7 +9,7 @@ import {Header} from './Header';
 import {CollapseButton} from './CollapseButton';
 import {Panels} from './Panels';
 
-export const FirstPanel = () => {
+export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
     const {
         size,
         onItemClick,
@@ -21,7 +21,7 @@ export const FirstPanel = () => {
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
 
-    const asideRef = useRef<HTMLDivElement>(null);
+    const asideRef = ref || useRef<HTMLDivElement>(null);
 
     return (
         <>
@@ -53,4 +53,4 @@ export const FirstPanel = () => {
             <Panels />
         </>
     );
-};
+});
