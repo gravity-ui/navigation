@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.23.0](https://github.com/gravity-ui/navigation/compare/v0.22.2...v0.23.0) (2023-10-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* **AsideHeader:** add ref prop for popup-anchor ([#123](https://github.com/gravity-ui/navigation/issues/123))
+
+### Features
+
+* **AsideHeader:** add ref prop for popup-anchor ([#123](https://github.com/gravity-ui/navigation/issues/123)) ([de2e3f4](https://github.com/gravity-ui/navigation/commit/de2e3f4fd094054b574d4b239a582bad37a3fef5))
+
 ## [0.22.2](https://github.com/gravity-ui/navigation/compare/v0.22.1...v0.22.2) (2023-10-04)
 
 
