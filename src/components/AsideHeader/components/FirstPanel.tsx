@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useMemo} from 'react';
 import {CompositeBar} from '../../CompositeBar/CompositeBar';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {b} from '../utils';
@@ -21,12 +21,14 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
 
-    const asideRef = ref || useRef<HTMLDivElement>(null);
+    const asideRef = useRef<HTMLDivElement>(null);
+
+    const popupAnchorRef = useMemo(() => ref || asideRef, [ref, asideRef]);
 
     return (
         <>
             <div className={b('aside')} style={{width: size}}>
-                <div className={b('aside-popup-anchor')} ref={asideRef} />
+                <div className={b('aside-popup-anchor')} ref={popupAnchorRef} />
                 <div className={b('aside-content', {['with-decoration']: headerDecoration})}>
                     <Header />
                     {visibleMenuItems?.length ? (
@@ -44,7 +46,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         {renderFooter?.({
                             size,
                             compact: Boolean(compact),
-                            asideRef,
+                            asideRef: popupAnchorRef,
                         })}
                     </div>
                     <CollapseButton />
