@@ -35,6 +35,7 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
     multipleTooltip = false,
     initialCompact = false,
 }) => {
+    const ref = React.useRef<HTMLDivElement>(null);
     const [popupVisible, setPopupVisible] = React.useState(false);
     const [subheaderPopupVisible, setSubheaderPopupVisible] = React.useState(false);
     const [visiblePanel, setVisiblePanel] = React.useState<Panel>();
@@ -73,6 +74,7 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                 </div>
             </Modal>
             <AsideHeader
+                ref={ref}
                 logo={{
                     text: 'Service',
                     icon: logoIcon,
@@ -93,12 +95,15 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                                 setSubheaderPopupVisible(!subheaderPopupVisible);
                             },
                         },
+                        popupAnchor: ref,
+                        popupPlacement: ['right-start'],
+                        popupOffset: [10, 10],
                         popupVisible: subheaderPopupVisible,
                         onClosePopup: () => setSubheaderPopupVisible(false),
                         renderPopupContent: () => {
                             return (
-                                <div className={b('settings-ul')}>
-                                    <ul>
+                                <div className={b('settings')}>
+                                    <ul className={b('settings-ul')}>
                                         <li>Set 1</li>
                                         <li>Set 2</li>
                                         <li>Set 3</li>

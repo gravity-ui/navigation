@@ -14,7 +14,7 @@ export interface AsideHeaderGeneralProps {
     renderFooter?: (data: {
         size: number;
         compact: boolean;
-        asideRef: React.RefObject<HTMLDivElement>;
+        asideRef: React.ForwardedRef<HTMLDivElement>;
     }) => React.ReactNode;
     onClosePanel?: () => void;
     onChangeCompact?: (compact: boolean) => void;

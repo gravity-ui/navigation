@@ -12,8 +12,9 @@ import './AsideHeader.scss';
 import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../constants';
 import {useAsideHeaderInnerContextValue} from './useAsideHeaderInnerContextValue';
 
-export const AsideHeader = (props: AsideHeaderProps) => {
+export const AsideHeader = React.forwardRef<HTMLDivElement, AsideHeaderProps>((props, ref) => {
     const {className, compact} = props;
+
     const size = compact ? ASIDE_HEADER_COMPACT_WIDTH : ASIDE_HEADER_EXPANDED_WIDTH;
     const asideHeaderContextValue = useMemo(() => ({size, compact}), [compact, size]);
     const asideHeaderInnerContextValue = useAsideHeaderInnerContextValue({...props, size});
@@ -23,7 +24,7 @@ export const AsideHeader = (props: AsideHeaderProps) => {
                 <div className={b({compact}, className)}>
                     <div className={b('pane-container')}>
                         {/* First Panel */}
-                        <FirstPanel />
+                        <FirstPanel ref={ref} />
                         {/* Second Panel */}
                         <Content
                             size={size}
@@ -35,4 +36,4 @@ export const AsideHeader = (props: AsideHeaderProps) => {
             </AsideHeaderInnerContextProvider>
         </AsideHeaderContextProvider>
     );
-};
+});

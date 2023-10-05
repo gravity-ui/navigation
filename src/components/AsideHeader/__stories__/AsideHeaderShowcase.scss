@@ -27,8 +27,12 @@ body {
         }
     }
 
-    &__settings-ul {
+    &__settings {
         padding-right: 30px;
+    }
+
+    &__settings-ul {
+        margin: 0;
     }
 
     &__panel {
