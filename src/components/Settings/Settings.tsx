@@ -234,7 +234,7 @@ function SettingsContent({
                         initialValue={initialSearch}
                         onChange={setSearch}
                         autoFocus={false}
-                        inputSize={'l'}
+                        inputSize={'xl'}
                     />
                     <SettingsMenuMobile
                         items={menu}

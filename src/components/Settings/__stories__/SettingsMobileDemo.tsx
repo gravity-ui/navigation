@@ -12,22 +12,22 @@ const b = cn('settings-mobile-demo');
 const SELECT_1_ITEMS = [
     {
         value: 'light',
-        title: 'Light',
+        content: 'Light',
         key: 'select_1_elem_1',
     },
     {
         value: 'dark',
-        title: 'Dark',
+        content: 'Dark',
         key: 'select_1_elem_2',
     },
     {
         value: 'special',
-        title: 'Special',
+        content: 'Special',
         key: 'select_1_elem_3',
     },
     {
         value: 'general',
-        title: 'Inherit from General',
+        content: 'Inherit from General',
         key: 'select_1_elem_4',
     },
 ];
@@ -145,7 +145,11 @@ export const SettingsMobileComponent = React.memo(
                     <Settings.Page id="appearance" title="Appearance">
                         <Settings.Section
                             title="Appearance"
-                            header={<div>These settings affect the appearance </div>}
+                            header={
+                                <div className={b('appearance-header')}>
+                                    These settings affect the appearance
+                                </div>
+                            }
                             showTitle={false}
                         >
                             <Settings.Item
@@ -157,19 +161,20 @@ export const SettingsMobileComponent = React.memo(
                                 )}
                             >
                                 <Select
-                                    value={settings.arcanumTheme ?? 'light'}
-                                    size="l"
+                                    value={[settings.arcanumTheme] ?? ['light']}
+                                    size="xl"
                                     onUpdate={(value) => {
-                                        handleChange('arcanumTheme', value);
+                                        handleChange('arcanumTheme', value[0]);
                                     }}
                                     options={SELECT_1_ITEMS}
                                     placeholder={'Select value...'}
                                     className={b('select')}
+                                    width="max"
                                 />
                             </Settings.Item>
                             <Settings.Item title="Code theme">
                                 <RadioButton
-                                    value={settings.codeTheme ?? 'light'}
+                                    value={settings.codeTheme ?? 'default'}
                                     onChange={(event) => {
                                         handleChange('codeTheme', event.target.value);
                                     }}
