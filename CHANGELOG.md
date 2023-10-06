@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.23.1](https://github.com/gravity-ui/navigation/compare/v0.23.0...v0.23.1) (2023-10-06)
+
+
+### Bug Fixes
+
+* **Settings:** not-found state styles for mobile ([#126](https://github.com/gravity-ui/navigation/issues/126)) ([75d354b](https://github.com/gravity-ui/navigation/commit/75d354b20a9b50fdff6ff0ecfc1e7a236d5df837))
+
 ## [0.23.0](https://github.com/gravity-ui/navigation/compare/v0.22.2...v0.23.0) (2023-10-05)
 
 
