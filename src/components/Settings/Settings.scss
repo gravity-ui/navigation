@@ -103,6 +103,13 @@ $block: '.#{variables.$ns}settings';
                 width: 100%;
             }
         }
+
+        #{$block}__not-found {
+            @include text-body-2;
+            justify-items: start;
+            color: var(--g-color-text-hint);
+            margin: 20px 0 0 20px;
+        }
     }
 
     &_loading {
