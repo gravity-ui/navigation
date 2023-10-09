@@ -21,11 +21,11 @@ import './Item.scss';
 const b = block('composite-bar-item');
 
 interface ItemPopup {
-    popupVisible?: boolean;
-    popupAnchor?: React.RefObject<HTMLElement>;
-    popupPlacement?: PopupPlacement;
+    popupVisible?: PopupProps['open'];
+    popupAnchor?: PopupProps['anchorRef'];
+    popupPlacement?: PopupProps['placement'];
     popupOffset?: PopupProps['offset'];
-    popupKeepMounted?: boolean;
+    popupKeepMounted?: PopupProps['keepMounted'];
     renderPopupContent?: () => React.ReactNode;
     onClosePopup?: () => void;
 }

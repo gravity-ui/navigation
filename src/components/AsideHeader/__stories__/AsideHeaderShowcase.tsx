@@ -129,7 +129,7 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                 compact={compact}
                 multipleTooltip={multipleTooltip}
                 openModalSubscriber={openModalSubscriber}
-                renderFooter={({compact}) => (
+                renderFooter={({compact, asideRef}) => (
                     <React.Fragment>
                         <FooterItem
                             compact={compact}
@@ -151,12 +151,14 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                             }}
                             enableTooltip={false}
                             popupVisible={popupVisible}
-                            popupOffset={[0, 8]}
+                            popupAnchor={asideRef}
+                            popupPlacement={['right-end']}
+                            popupOffset={[-20, 10]}
                             onClosePopup={() => setPopupVisible(false)}
                             renderPopupContent={() => {
                                 return (
-                                    <div className={b('settings-ul')}>
-                                        <ul>
+                                    <div className={b('settings')}>
+                                        <ul className={b('settings-ul')}>
                                             <li>Set 1</li>
                                             <li>Set 2</li>
                                             <li>Set 3</li>
