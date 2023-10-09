@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.23.2](https://github.com/gravity-ui/navigation/compare/v0.23.1...v0.23.2) (2023-10-09)
+
+
+### Bug Fixes
+
+* **AsideHeader:** change ref type ([#128](https://github.com/gravity-ui/navigation/issues/128)) ([a3274e8](https://github.com/gravity-ui/navigation/commit/a3274e8262a06cae8b54a0b2d220bce7a54a06b8))
+
 ## [0.23.1](https://github.com/gravity-ui/navigation/compare/v0.23.0...v0.23.1) (2023-10-06)
 
 
