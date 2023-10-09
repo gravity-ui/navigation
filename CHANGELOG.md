@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.23.3](https://github.com/gravity-ui/navigation/compare/v0.23.2...v0.23.3) (2023-10-09)
+
+
+### Bug Fixes
+
+* **AsideHeader:** add --gn-aside-header-size css var ([#130](https://github.com/gravity-ui/navigation/issues/130)) ([5b9e5a0](https://github.com/gravity-ui/navigation/commit/5b9e5a05fdd5dc6a17491498c54d6c969e7c31e1))
+
 ## [0.23.2](https://github.com/gravity-ui/navigation/compare/v0.23.1...v0.23.2) (2023-10-09)
 
 
