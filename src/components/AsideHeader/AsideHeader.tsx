@@ -21,7 +21,12 @@ export const AsideHeader = React.forwardRef<HTMLDivElement, AsideHeaderProps>((p
     return (
         <AsideHeaderContextProvider value={asideHeaderContextValue}>
             <AsideHeaderInnerContextProvider value={asideHeaderInnerContextValue}>
-                <div className={b({compact}, className)}>
+                <div
+                    className={b({compact}, className)}
+                    style={{
+                        ...({'--gn-aside-header-size': `${size}px`} as React.CSSProperties),
+                    }}
+                >
                     <div className={b('pane-container')}>
                         {/* First Panel */}
                         <FirstPanel ref={ref} />
