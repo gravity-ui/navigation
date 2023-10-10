@@ -40,7 +40,7 @@ Used for themization Navigation's components
 | Name                                                   | Description                                                      | Default                                                                |
 | :----------------------------------------------------- | :--------------------------------------------------------------- | :--------------------------------------------------------------------- |
 | `--gn-aside-header-background-color`                   | Сolor of decorations and selected items                          | `--g-color-base-warning-light`                                         |
-| `--gn-aside-header-subheader-divider-line-color`       | Divider line color for withDecoration and expanded `AsideHeader` | `--g-color-base-warning-light`                                         |
+| `--gn-aside-header-subheader-divider-line-color`       | Divider line color for withDecoration and expanded `AsideHeader` | Light theme: `--g-color-line-generic`, Dark theme: `--g-color-line-generic-solid`                                         |
 | `--gn-aside-header-collapse-button-divider-line-color` |                                                                  | `--gn-aside-header-subheader-divider-line-color`                       |
 | `--gn-aside-header-footer-item-icon-color`             |                                                                  | `--g-color-text-primary`                                               |
 | `--gn-aside-header-subheader-item-icon-color`          |                                                                  | `--g-color-text-primary`                                               |
