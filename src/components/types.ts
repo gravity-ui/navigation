@@ -15,7 +15,7 @@ export interface MakeItemParams {
 export interface MenuItem {
     id: string;
     title: React.ReactNode;
-    tooltipText?: string;
+    tooltipText?: React.ReactNode;
     icon?: IconProps['data'];
     iconSize?: number | string;
     link?: string;

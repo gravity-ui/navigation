@@ -173,7 +173,11 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                                 id: 'project-settings',
                                 icon: Gear,
                                 title: 'Settings with panel',
-                                tooltipText: 'Settings with panel',
+                                tooltipText: (
+                                    <div>
+                                        <b>Settings with panel</b>
+                                    </div>
+                                ),
                                 current: visiblePanel === Panel.ProjectSettings,
                                 onItemClick: () => {
                                     setVisiblePanel(
