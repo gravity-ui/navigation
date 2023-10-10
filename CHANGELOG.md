@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.0](https://github.com/gravity-ui/navigation/compare/v0.23.3...v1.0.0) (2023-10-10)
+
+
+### chore
+
+* bump version ([80a67a7](https://github.com/gravity-ui/navigation/commit/80a67a7ff27ec3d026fa365bfb3fa15d59c9978e))
+
 ## [0.23.3](https://github.com/gravity-ui/navigation/compare/v0.23.2...v0.23.3) (2023-10-09)
 
 
