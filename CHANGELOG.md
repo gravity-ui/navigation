@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/gravity-ui/navigation/compare/v1.0.0...v1.1.0) (2023-10-10)
+
+
+### Features
+
+* **MenuItem:** extend tooltipText prop ([#133](https://github.com/gravity-ui/navigation/issues/133)) ([2c8a6bf](https://github.com/gravity-ui/navigation/commit/2c8a6bffece849e2fe8133ade7a3e23a76a7c683))
+
 ## [1.0.0](https://github.com/gravity-ui/navigation/compare/v0.23.3...v1.0.0) (2023-10-10)
 
 
