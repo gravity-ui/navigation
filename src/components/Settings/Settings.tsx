@@ -63,7 +63,7 @@ export interface SettingsItemProps {
     children: React.ReactNode;
     withBadge?: boolean;
     mode?: 'row';
-    description?: string;
+    description?: React.ReactNode;
 }
 
 export interface SettingsContextType

@@ -55,7 +55,7 @@ The components provides layouting functionality of settings panel with the follo
 | renderTitleComponent | Function        |          |          | Cusomt header of                                           |
 | align                | 'top', 'center' |          | 'center' | Item alignment                                             |
 | mode                 | 'row'           |          |          | Layout for mobile. Title and control will be placed in row |
-| description          | string          |          |          | Description of item                                        |
+| description          | ReactNode       |          |          | Description of item                                        |
 
 ### Usage
 
