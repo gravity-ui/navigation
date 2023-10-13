@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/gravity-ui/navigation/compare/v1.1.0...v1.1.1) (2023-10-13)
+
+
+### Bug Fixes
+
+* **Settings:** extend description SettingsItem prop ([#136](https://github.com/gravity-ui/navigation/issues/136)) ([c285014](https://github.com/gravity-ui/navigation/commit/c285014fee69af84bfa207ba3e78dc5d6c61a49a))
+
 ## [1.1.0](https://github.com/gravity-ui/navigation/compare/v1.0.0...v1.1.0) (2023-10-10)
 
 
