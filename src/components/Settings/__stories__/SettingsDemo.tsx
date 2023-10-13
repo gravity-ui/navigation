@@ -93,7 +93,14 @@ export const SettingsComponent = React.memo(
                             </Settings.Item>
                         </Settings.Section>
                         <Settings.Section title="Common" withBadge={withBadge}>
-                            <Settings.Item title="Default VCS">
+                            <Settings.Item
+                                title="Default VCS"
+                                description={
+                                    <div>
+                                        <i>Description</i>
+                                    </div>
+                                }
+                            >
                                 <RadioButton
                                     value={settings.vcs}
                                     onChange={(event) => {
@@ -131,7 +138,6 @@ export const SettingsComponent = React.memo(
                                 renderTitleComponent={(highlightedTitle) => (
                                     <div>
                                         <span>{highlightedTitle || 'Theme'}</span>
-                                        <HelpPopover content="Change the look and feel of your application" />
                                     </div>
                                 )}
                             >
