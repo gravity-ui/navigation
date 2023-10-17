@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/gravity-ui/navigation/compare/v1.1.1...v1.1.2) (2023-10-17)
+
+
+### Bug Fixes
+
+* **CompositeBar:** recalc mounted PopupPosition if compact mode changed ([#138](https://github.com/gravity-ui/navigation/issues/138)) ([56ac451](https://github.com/gravity-ui/navigation/commit/56ac451bebb55a8d8163fb9ccd38acb236f1eb99))
+
 ## [1.1.1](https://github.com/gravity-ui/navigation/compare/v1.1.0...v1.1.1) (2023-10-13)
 
 
