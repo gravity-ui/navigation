@@ -102,6 +102,19 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const iconSize = item.iconSize || ASIDE_HEADER_ICON_SIZE;
     const collapsedItem = item.id === COLLAPSE_ITEM_ID;
 
+    const modifiers: Required<PopupProps>['modifiers'] = React.useMemo(
+        () => [
+            {
+                name: 'compact',
+                enabled: true,
+                options: {compact},
+                phase: 'main',
+                fn() {},
+            },
+        ],
+        [compact],
+    );
+
     const onClose = React.useCallback(
         (event: MouseEvent | KeyboardEvent) => {
             if (
@@ -191,6 +204,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                         offset={popupOffset}
                         anchorRef={anchorRef}
                         onClose={onClose}
+                        modifiers={modifiers}
                     >
                         {renderPopupContent()}
                     </Popup>

@@ -155,6 +155,7 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                             popupPlacement={['right-end']}
                             popupOffset={[-20, 10]}
                             onClosePopup={() => setPopupVisible(false)}
+                            popupKeepMounted={true}
                             renderPopupContent={() => {
                                 return (
                                     <div className={b('settings')}>
