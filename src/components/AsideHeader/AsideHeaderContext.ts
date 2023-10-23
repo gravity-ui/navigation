@@ -5,7 +5,6 @@ import {AsideHeaderInnerProps} from './types';
 export interface AsideHeaderInnerContextType extends AsideHeaderInnerProps {
     menuItems: MenuItem[];
     allPagesIsAvailable: boolean;
-    size: number;
     onItemClick: (
         item: MenuItem,
         collapsed: boolean,
@@ -30,7 +29,7 @@ export const useAsideHeaderInnerContext = (): AsideHeaderInnerContextType => {
 };
 
 export interface AsideHeaderContextType {
-    compact?: boolean;
+    compact: boolean;
     size: number;
 }
 
