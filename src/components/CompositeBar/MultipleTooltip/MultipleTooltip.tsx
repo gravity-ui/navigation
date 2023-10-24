@@ -39,6 +39,7 @@ export const MultipleTooltip: React.FC<MultipleTooltipProps> = ({
             offset={POPUP_OFFSET}
             contentClassName={b(null)}
             modifiers={POPUP_MODIFIERS}
+            disableLayer
         >
             <div className={b('items-container')}>
                 {items
