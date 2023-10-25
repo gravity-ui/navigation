@@ -7,7 +7,7 @@ import {b} from '../utils';
 
 import '../AsideHeader.scss';
 
-const PageLayout = ({
+const Layout = ({
     compact,
     reverse,
     className,
@@ -32,7 +32,7 @@ const PageLayout = ({
     );
 };
 
-const ConnectedContent: React.FC<Pick<ContentProps, 'renderContent'>> = ({
+const ConnectedContent: React.FC<PropsWithChildren<Pick<ContentProps, 'renderContent'>>> = ({
     children,
     renderContent,
 }) => {
@@ -45,6 +45,8 @@ const ConnectedContent: React.FC<Pick<ContentProps, 'renderContent'>> = ({
     );
 };
 
-PageLayout.Content = ConnectedContent;
+const PageLayout = Object.assign(Layout, {
+    Content: ConnectedContent,
+});
 
 export {PageLayout};
