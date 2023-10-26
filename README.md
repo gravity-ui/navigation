@@ -25,6 +25,7 @@ npm install --dev @gravity-ui/uikit@^3.0.2 @bem-react/classname@1.6.0 react@^16.
 - Drawer
 - DrawerItem
 - PageLayout
+- PageLayoutAside
 
 ## Optimization
 If your app content needs to be rendered faster than by passing it throw `AsideHeader` props,
