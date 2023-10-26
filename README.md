@@ -24,6 +24,35 @@ npm install --dev @gravity-ui/uikit@^3.0.2 @bem-react/classname@1.6.0 react@^16.
 - MobileHeaderFooterItem
 - Drawer
 - DrawerItem
+- PageLayout
+
+## Optimization
+If your app content needs to be rendered faster than by passing it throw `AsideHeader` props,
+you may need to switch usage of `AsideHeader` to advanced style with `PageLayout` like this:
+
+```diff
+-import {AsideHeader} from '@gravity-ui/navigation';
++import {PageLayout} from '@gravity-ui/navigation';
++
++const PageLayoutAside = React.lazy(
++    import('@gravity-ui/navigation').then((module) => ({default: module.PageLayoutAside})),
++);
+
+-    <AsideHeader renderContent={renderContent} {...restProps} />
++    <PageLayout reverse>
++        <PageLayout.Content>
++            <ContentExample />
++        </PageLayout.Content>
++
++        <Suspense fallback={null}>
++            <PageLayoutAside {...restProps} />
++        </Suspense>
++    </PageLayout>
+```
+
+
+
+
 
 ## Imports
 
