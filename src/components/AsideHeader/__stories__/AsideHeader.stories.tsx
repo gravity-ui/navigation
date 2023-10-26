@@ -66,11 +66,15 @@ HeaderAlert.args = {
         title: 'Maintenance',
         view: 'filled',
         message: 'Scheduled maintenance is being performed',
-        actions: [
-            {
-                text: 'More...',
-                handler: () => alert('More information about top alert'),
-            },
-        ],
+        closable: true,
+    },
+};
+
+export const HeaderAlertCentered = TopAlertTemplate.bind({});
+HeaderAlertCentered.args = {
+    topAlert: {
+        view: 'filled',
+        message: 'Scheduled maintenance is being performed',
+        centered: true,
     },
 };

@@ -193,7 +193,16 @@ $block: '.#{variables.$ns}aside-header';
     }
 
     &__pane-top {
-        border-bottom: 1px solid var(--gn-aside-header-collapse-button-divider-line-color);
+        &_opened {
+            border-bottom: 1px solid var(--gn-aside-header-collapse-button-divider-line-color);
+        }
+    }
+
+    &__pane-top-alert {
+        &_centered {
+            display: flex;
+            justify-content: space-around;
+        }
     }
 
     &_reverse #{$block}__pane-container {

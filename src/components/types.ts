@@ -75,4 +75,6 @@ export type AsideHeaderTopAlertProps = {
     view?: AlertProps['view'];
     theme?: AlertProps['theme'];
     actions?: AlertProps['actions'];
+    closable?: boolean;
+    centered?: boolean;
 };
