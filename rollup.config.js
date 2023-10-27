@@ -1,6 +1,6 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import typescript from 'rollup-plugin-typescript2';
+import typescript from '@rollup/plugin-typescript';
 import svgr from '@svgr/rollup';
 import postcss from 'rollup-plugin-postcss';
 import json from 'rollup-plugin-json';
@@ -23,6 +23,22 @@ const input = [
     'src/components/AsideHeader/PageLayout/PageLayoutAside.tsx',
 ];
 
+const getPlugins = (outDir) => {
+    return [
+        peerDepsExternal(),
+        json(),
+        resolve(),
+        commonjs(),
+        typescript({
+            typescript: require('typescript'),
+            tsconfig: './tsconfig.publish.json',
+            outDir,
+        }),
+        postcss(),
+        svgr(),
+    ];
+};
+
 export default [
     {
         input,
@@ -32,23 +48,18 @@ export default [
                 format: 'esm',
                 sourcemap: true,
             },
+        ],
+        plugins: getPlugins(packageJson.module),
+    },
+    {
+        input,
+        output: [
             {
                 dir: packageJson.main,
                 format: 'cjs',
                 sourcemap: true,
             },
         ],
-        plugins: [
-            peerDepsExternal(),
-            json(),
-            resolve(),
-            commonjs(),
-            typescript({
-                typescript: require('typescript'),
-                tsconfig: './tsconfig.publish.json',
-            }),
-            postcss(),
-            svgr(),
-        ],
+        plugins: getPlugins(packageJson.main),
     },
 ];
