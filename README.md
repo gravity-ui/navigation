@@ -35,7 +35,7 @@ you may need to switch usage of `AsideHeader` to advanced style with `PageLayout
 -import {AsideHeader} from '@gravity-ui/navigation';
 +import {PageLayout} from '@gravity-ui/navigation';
 +
-+const PageLayoutAside = React.lazy(
++const PageLayoutAside = React.lazy(() =>
 +    import('@gravity-ui/navigation').then((module) => ({default: module.PageLayoutAside})),
 +);
 
