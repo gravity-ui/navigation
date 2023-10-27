@@ -192,10 +192,10 @@ $block: '.#{variables.$ns}aside-header';
         flex-direction: row;
     }
 
-    &__pane-top {
-        &_opened {
-            border-bottom: 1px solid var(--gn-aside-header-collapse-button-divider-line-color);
-        }
+    &__pane-top-divider {
+        height: 1px;
+        background-color: var(--gn-aside-header-collapse-button-divider-line-color);
+        margin-top: -1px;
     }
 
     &__pane-top-alert {

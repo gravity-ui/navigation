@@ -4,7 +4,11 @@ import {Alert} from '@gravity-ui/uikit';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {b} from '../utils';
 
-export const TopPanel = React.forwardRef<HTMLDivElement>((_, ref) => {
+type Props = {
+    onClose: () => void;
+};
+
+export const TopPanel = React.forwardRef<HTMLDivElement, Props>(({onClose}, ref) => {
     const {topAlert} = useAsideHeaderInnerContext();
 
     const [opened, setOpened] = React.useState(true);
@@ -13,6 +17,12 @@ export const TopPanel = React.forwardRef<HTMLDivElement>((_, ref) => {
         setOpened(false);
     }, []);
 
+    React.useEffect(() => {
+        if (!opened) {
+            onClose();
+        }
+    }, [opened, onClose]);
+
     if (!topAlert) {
         return null;
     }
@@ -20,17 +30,20 @@ export const TopPanel = React.forwardRef<HTMLDivElement>((_, ref) => {
     return (
         <div ref={ref} className={b('pane-top', {opened})}>
             {opened && (
-                <Alert
-                    className={b('pane-top-alert', {centered: topAlert.centered})}
-                    corners="square"
-                    layout="horizontal"
-                    theme={topAlert.theme || 'warning'}
-                    icon={topAlert.icon}
-                    title={topAlert.title}
-                    message={topAlert.message}
-                    actions={topAlert.actions}
-                    onClose={topAlert.closable ? handleClose : undefined}
-                />
+                <React.Fragment>
+                    <Alert
+                        className={b('pane-top-alert', {centered: topAlert.centered})}
+                        corners="square"
+                        layout="horizontal"
+                        theme={topAlert.theme || 'warning'}
+                        icon={topAlert.icon}
+                        title={topAlert.title}
+                        message={topAlert.message}
+                        actions={topAlert.actions}
+                        onClose={topAlert.closable ? handleClose : undefined}
+                    />
+                    <div className={b('pane-top-divider')}></div>
+                </React.Fragment>
             )}
         </div>
     );
