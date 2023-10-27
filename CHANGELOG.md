@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/gravity-ui/navigation/compare/v1.1.2...v1.1.3) (2023-10-24)
+
+
+### Bug Fixes
+
+* **MultipleTooltip:** disable layer ([#141](https://github.com/gravity-ui/navigation/issues/141)) ([65452a9](https://github.com/gravity-ui/navigation/commit/65452a9e7558b10288f31bd646785b8a05c4dcb3))
+
 ## [1.1.2](https://github.com/gravity-ui/navigation/compare/v1.1.1...v1.1.2) (2023-10-17)
 
 
