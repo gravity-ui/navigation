@@ -4,8 +4,8 @@ import type {Meta, StoryFn} from '@storybook/react';
 
 import {AsideHeader} from '../AsideHeader';
 import {AsideHeaderShowcase} from './AsideHeaderShowcase';
-import {PageLayout} from '../PageLayout/PageLayout';
-import {PageLayoutAside} from '../PageLayout/PageLayoutAside';
+import {PageLayout} from '../components/PageLayout/PageLayout';
+import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
 import logoIcon from '../../../../.storybook/assets/logo.svg';
 import {menuItemsShowcase} from './moc';
 

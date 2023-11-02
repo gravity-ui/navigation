@@ -1,20 +1,17 @@
 import React, {PropsWithChildren, useMemo} from 'react';
-import {AsideHeaderContextProvider, useAsideHeaderContext} from '../AsideHeaderContext';
-import {Content, ContentProps} from '../../Content';
-import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../constants';
-import {PageLayoutProps} from '../types';
-import {b} from '../utils';
+import {AsideHeaderContextProvider, useAsideHeaderContext} from '../../AsideHeaderContext';
+import {Content, ContentProps} from '../../../Content';
+import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../../constants';
+import {LayoutProps} from '../../types';
+import {b} from '../../utils';
 
-import '../AsideHeader.scss';
+import '../../AsideHeader.scss';
 
-const Layout = ({
-    compact,
-    reverse,
-    className,
-    children,
-}: PropsWithChildren<PageLayoutProps> & {
+export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {
     reverse?: boolean;
-}) => {
+}
+
+const Layout = ({compact, reverse, className, children}: PageLayoutProps) => {
     const size = compact ? ASIDE_HEADER_COMPACT_WIDTH : ASIDE_HEADER_EXPANDED_WIDTH;
     const asideHeaderContextValue = useMemo(() => ({size, compact}), [compact, size]);
 

@@ -3,7 +3,7 @@ import {DrawerItemProps} from '../Drawer/Drawer';
 import {LogoProps, MenuItem, SubheaderMenuItem, OpenModalSubscriber} from '../types';
 import {AsideHeaderContextType} from './AsideHeaderContext';
 
-export interface PageLayoutProps {
+export interface LayoutProps {
     compact: boolean;
     className?: string;
 }
@@ -41,7 +41,7 @@ export type AsideHeaderInnerProps = AsideHeaderGeneralProps &
 
 export interface AsideHeaderProps
     extends AsideHeaderGeneralProps,
-        PageLayoutProps,
+        LayoutProps,
         Partial<AsideHeaderDefaultProps> {}
 
 export enum InnerPanels {

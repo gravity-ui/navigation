@@ -1,8 +1,8 @@
 import React from 'react';
 
 import {AsideHeaderProps} from './types';
-import {PageLayout} from './PageLayout/PageLayout';
-import {PageLayoutAside} from './PageLayout/PageLayoutAside';
+import {PageLayout} from './components/PageLayout/PageLayout';
+import {PageLayoutAside} from './components/PageLayout/PageLayoutAside';
 
 /**
  * Simply usage of AsideHeader:
