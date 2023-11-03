@@ -19,8 +19,8 @@ const input = [
     'src/components/AsideHeader/AsideHeaderContext.ts',
     'src/components/Drawer/Drawer.tsx',
     'src/components/FooterItem/FooterItem.tsx',
-    'src/components/AsideHeader/PageLayout/PageLayout.tsx',
-    'src/components/AsideHeader/PageLayout/PageLayoutAside.tsx',
+    'src/components/AsideHeader/components/PageLayout/PageLayout.tsx',
+    'src/components/AsideHeader/components/PageLayout/PageLayoutAside.tsx',
 ];
 
 const getPlugins = (outDir) => {
@@ -34,7 +34,9 @@ const getPlugins = (outDir) => {
             tsconfig: './tsconfig.publish.json',
             outDir,
         }),
-        postcss(),
+        postcss({
+            minimize: true,
+        }),
         svgr(),
     ];
 };
