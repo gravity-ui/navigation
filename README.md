@@ -28,6 +28,7 @@ npm install --dev @gravity-ui/uikit@^3.0.2 @bem-react/classname@1.6.0 react@^16.
 - PageLayoutAside
 
 ## Optimization
+
 If your app content needs to be rendered faster than by passing it throw `AsideHeader` props,
 you may need to switch usage of `AsideHeader` to advanced style with `PageLayout` like this:
 
@@ -50,10 +51,6 @@ you may need to switch usage of `AsideHeader` to advanced style with `PageLayout
 +        </Suspense>
 +    </PageLayout>
 ```
-
-
-
-
 
 ## Imports
 
