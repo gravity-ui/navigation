@@ -1,16 +1,15 @@
 import React from 'react';
 import {Alert} from '@gravity-ui/uikit';
 
-import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {b} from '../utils';
+import {AsideHeaderTopAlertProps} from '../../types';
 
 type Props = {
-    onClose: () => void;
+    topAlert?: AsideHeaderTopAlertProps;
+    onClose?: () => void;
 };
 
-export const TopPanel = React.forwardRef<HTMLDivElement, Props>(({onClose}, ref) => {
-    const {topAlert} = useAsideHeaderInnerContext();
-
+export const TopPanel = React.forwardRef<HTMLDivElement, Props>(({topAlert, onClose}, ref) => {
     const [opened, setOpened] = React.useState(true);
 
     const handleClose = React.useCallback(() => {
@@ -19,7 +18,7 @@ export const TopPanel = React.forwardRef<HTMLDivElement, Props>(({onClose}, ref)
 
     React.useEffect(() => {
         if (!opened) {
-            onClose();
+            onClose?.();
         }
     }, [opened, onClose]);
 

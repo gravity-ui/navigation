@@ -4,16 +4,20 @@ import {useAsideHeaderInnerContextValue} from '../../useAsideHeaderInnerContextV
 import {AsideHeaderInnerContextProvider, useAsideHeaderContext} from '../../AsideHeaderContext';
 import {AsideHeaderProps} from '../../types';
 
-type Props = Omit<AsideHeaderProps, 'compact' | 'size'>;
+type Props = Omit<AsideHeaderProps, 'compact' | 'size'> & {maxHeight?: string};
 
 export const PageLayoutAside = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
     const {size, compact} = useAsideHeaderContext();
 
-    const asideHeaderInnerContextValue = useAsideHeaderInnerContextValue({size, compact, ...props});
+    const asideHeaderInnerContextValue = useAsideHeaderInnerContextValue({
+        size,
+        compact,
+        ...props,
+    });
 
     return (
         <AsideHeaderInnerContextProvider value={asideHeaderInnerContextValue}>
-            <FirstPanel ref={ref} />
+            <FirstPanel ref={ref} maxHeight={props.maxHeight} />
         </AsideHeaderInnerContextProvider>
     );
 });
