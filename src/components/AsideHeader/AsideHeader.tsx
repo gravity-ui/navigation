@@ -22,21 +22,12 @@ import {useAsideHeaderTopPanel} from './useAsideHeaderTopPanel';
  */
 export const AsideHeader = React.forwardRef<HTMLDivElement, AsideHeaderProps>(
     ({compact, className, topAlert, ...props}, ref) => {
-        const {topRef, maxHeightWithTop, updateTopSize} = useAsideHeaderTopPanel({topAlert});
+        const {maxHeight, ...topAlertValue} = useAsideHeaderTopPanel({topAlert});
 
         return (
-            <PageLayout
-                compact={compact}
-                className={className}
-                topAlert={topAlert}
-                topRef={topRef}
-                updateTopSize={updateTopSize}
-            >
-                <PageLayoutAside ref={ref} {...props} maxHeight={maxHeightWithTop} />
-                <PageLayout.Content
-                    renderContent={props.renderContent}
-                    maxHeight={maxHeightWithTop}
-                />
+            <PageLayout compact={compact} className={className} topAlert={topAlertValue}>
+                <PageLayoutAside ref={ref} {...props} maxHeight={maxHeight} />
+                <PageLayout.Content renderContent={props.renderContent} maxHeight={maxHeight} />
             </PageLayout>
         );
     },

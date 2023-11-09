@@ -3,19 +3,28 @@ import React from 'react';
 import debounceFn from 'lodash/debounce';
 import {AsideHeaderTopAlertProps} from '../types';
 
-export const useAsideHeaderTopPanel = ({topAlert}: {topAlert?: AsideHeaderTopAlertProps}) => {
+export const useAsideHeaderTopPanel = ({
+    topAlert,
+}: {
+    topAlert?: AsideHeaderTopAlertProps;
+}): AsideHeaderTopAlertProps => {
     const topRef = React.useRef<HTMLDivElement>(null);
 
-    const [maxHeightWithTop, setMaxHeightWithTop] = React.useState<string | undefined>();
+    const [maxHeight, setMaxHeight] = React.useState<string | undefined>();
     const topHeight = topRef.current ? topRef.current.clientHeight : 0;
 
     const updateTopSize = React.useCallback(() => {
-        if (topRef.current || maxHeightWithTop) {
+        if (topRef.current || maxHeight) {
             const clientHeight = topRef.current?.clientHeight || 0;
 
-            setMaxHeightWithTop(`calc(100vh - ${clientHeight}px)`);
+            setMaxHeight(`calc(100vh - ${clientHeight}px)`);
         }
-    }, [maxHeightWithTop]);
+    }, [maxHeight]);
+
+    const onCloseTopAlert = React.useCallback(() => {
+        updateTopSize();
+        topAlert?.onCloseTopAlert?.();
+    }, [topAlert, updateTopSize]);
 
     React.useLayoutEffect(() => {
         const updateTopSizeDebounce = debounceFn(updateTopSize, 200, {leading: true});
@@ -28,8 +37,10 @@ export const useAsideHeaderTopPanel = ({topAlert}: {topAlert?: AsideHeaderTopAle
     }, [topAlert, topRef, topHeight, updateTopSize]);
 
     return {
-        topRef,
-        maxHeightWithTop,
-        updateTopSize,
+        ...(topAlert || {}),
+        message: topAlert?.message || '',
+        ref: topRef,
+        maxHeight,
+        onCloseTopAlert,
     };
 };

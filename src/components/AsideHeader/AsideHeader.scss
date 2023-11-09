@@ -203,6 +203,11 @@ $block: '.#{variables.$ns}aside-header';
             display: flex;
             justify-content: space-around;
         }
+
+        &_dense {
+            padding-top: var(--g-spacing-2);
+            padding-bottom: var(--g-spacing-2);
+        }
     }
 
     &_reverse #{$block}__pane-container {

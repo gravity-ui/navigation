@@ -6,10 +6,9 @@ import {AsideHeaderTopAlertProps} from '../../types';
 
 type Props = {
     topAlert?: AsideHeaderTopAlertProps;
-    onClose?: () => void;
 };
 
-export const TopPanel = React.forwardRef<HTMLDivElement, Props>(({topAlert, onClose}, ref) => {
+export const TopPanel = React.forwardRef<HTMLDivElement, Props>(({topAlert}) => {
     const [opened, setOpened] = React.useState(true);
 
     const handleClose = React.useCallback(() => {
@@ -18,20 +17,23 @@ export const TopPanel = React.forwardRef<HTMLDivElement, Props>(({topAlert, onCl
 
     React.useEffect(() => {
         if (!opened) {
-            onClose?.();
+            topAlert?.onCloseTopAlert?.();
         }
-    }, [opened, onClose]);
+    }, [opened, topAlert]);
 
-    if (!topAlert) {
+    if (!topAlert || !topAlert.message) {
         return null;
     }
 
     return (
-        <div ref={ref} className={b('pane-top', {opened})}>
+        <div ref={topAlert?.ref} className={b('pane-top', {opened})}>
             {opened && (
                 <React.Fragment>
                     <Alert
-                        className={b('pane-top-alert', {centered: topAlert.centered})}
+                        className={b('pane-top-alert', {
+                            centered: topAlert.centered,
+                            dense: topAlert.dense,
+                        })}
                         corners="square"
                         layout="horizontal"
                         theme={topAlert.theme || 'warning'}

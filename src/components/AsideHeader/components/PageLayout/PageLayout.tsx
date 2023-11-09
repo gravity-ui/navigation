@@ -12,15 +12,7 @@ export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {
     reverse?: boolean;
 }
 
-const Layout = ({
-    compact,
-    reverse,
-    className,
-    children,
-    topAlert,
-    updateTopSize,
-    topRef,
-}: PageLayoutProps) => {
+const Layout = ({compact, reverse, className, children, topAlert}: PageLayoutProps) => {
     const size = compact ? ASIDE_HEADER_COMPACT_WIDTH : ASIDE_HEADER_EXPANDED_WIDTH;
     const asideHeaderContextValue = useMemo(() => ({size, compact}), [compact, size]);
 
@@ -32,7 +24,7 @@ const Layout = ({
                     ...({'--gn-aside-header-size': `${size}px`} as React.CSSProperties),
                 }}
             >
-                {topAlert && <TopPanel topAlert={topAlert} onClose={updateTopSize} ref={topRef} />}
+                {topAlert && <TopPanel topAlert={topAlert} />}
                 <div className={b('pane-container')}>{children}</div>
             </div>
         </AsideHeaderContextProvider>

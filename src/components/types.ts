@@ -77,4 +77,8 @@ export type AsideHeaderTopAlertProps = {
     actions?: AlertProps['actions'];
     closable?: boolean;
     centered?: boolean;
+    dense?: boolean;
+    ref?: React.RefObject<HTMLDivElement>;
+    maxHeight?: string;
+    onCloseTopAlert?: () => void;
 };

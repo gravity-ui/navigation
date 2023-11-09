@@ -12,9 +12,7 @@ import {AsideHeaderContextType} from './AsideHeaderContext';
 export interface LayoutProps {
     compact: boolean;
     className?: string;
-    topRef?: React.RefObject<HTMLDivElement>;
     topAlert?: AsideHeaderTopAlertProps;
-    updateTopSize?: () => void;
 }
 
 export interface AsideHeaderGeneralProps {
