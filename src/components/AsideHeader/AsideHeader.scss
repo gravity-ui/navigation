@@ -14,7 +14,7 @@ $block: '.#{variables.$ns}aside-header';
 
 .g-root_theme_light,
 .g-root_theme_light-hc {
-    --gn-aside-header-divider-line-color: transparent;
+    --gn-aside-header-divider-line-color: var(--g-color-line-generic);
     --gn-aside-header-subheader-divider-line-color: var(--g-color-line-generic);
 }
 
@@ -77,16 +77,6 @@ $block: '.#{variables.$ns}aside-header';
             position: relative;
             z-index: 2;
             user-select: none;
-
-            &::after {
-                position: absolute;
-                top: 0;
-                right: -100px;
-                bottom: 0;
-                width: 100px;
-                content: '';
-                box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1), 0px 0px 24px rgba(0, 0, 0, 0.08);
-            }
 
             & > #{$class}-logo {
                 margin: 8px 0;
