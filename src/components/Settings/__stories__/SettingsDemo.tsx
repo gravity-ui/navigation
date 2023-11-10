@@ -2,12 +2,13 @@ import React, {useReducer} from 'react';
 
 import {Settings} from '../index';
 import {HelpPopover} from '@gravity-ui/components';
-import {Button, Switch, Checkbox, RadioButton, Radio, Select} from '@gravity-ui/uikit';
+import {Button, Switch, Checkbox, RadioButton, Radio, Select, Link} from '@gravity-ui/uikit';
 
 import featureIcon from '../../../../assets/icons/gear.svg';
 import {cn} from '../../utils/cn';
 
 import './SettingsDemo.scss';
+import {SettingsSelection} from '../Selection/types';
 
 export interface DemoProps {
     title: string;
@@ -60,17 +61,25 @@ export const SettingsComponent = React.memo(
         const handleChange = (name: string, value: any) => {
             dispatch(setSetting(name, value));
         };
+
+        const [selection, setSelection] = React.useState<SettingsSelection | undefined>(undefined);
+
         return (
             <Settings
                 initialPage={initialPage}
                 onPageChange={(page) => {
                     console.log({page});
+                    setSelection(undefined);
                 }}
                 onClose={onClose}
                 renderRightAdornment={({title}) => (
                     <HelpPopover content={`Some text for ${title}`} />
                 )}
+                renderSectionRightAdornment={({title}) => (
+                    <HelpPopover content={`Some text for ${title}`} />
+                )}
                 showRightAdornmentOnHover={true} // true by default
+                selection={selection}
             >
                 <Settings.Group id="arcanum" groupTitle="Arcanum">
                     <Settings.Page id="features" title="Features" icon={{data: featureIcon}}>
@@ -91,8 +100,30 @@ export const SettingsComponent = React.memo(
                                     }}
                                 />
                             </Settings.Item>
+                            <Settings.Item title="Go to setting">
+                                <Link
+                                    onClick={() =>
+                                        setSelection({settingId: 'arcanum-theme-setting'})
+                                    }
+                                >
+                                    Go to «Arcanum/Appearance/Appearance/Theme»
+                                </Link>
+                            </Settings.Item>
+                            <Settings.Item title="Go to section">
+                                <Link
+                                    onClick={() =>
+                                        setSelection({section: {id: 'arcanum-common-section'}})
+                                    }
+                                >
+                                    Go to «Arcanum/Features/Common»
+                                </Link>
+                            </Settings.Item>
                         </Settings.Section>
-                        <Settings.Section title="Common" withBadge={withBadge}>
+                        <Settings.Section
+                            id={'arcanum-common-section'}
+                            title="Common"
+                            withBadge={withBadge}
+                        >
                             <Settings.Item
                                 title="Default VCS"
                                 description={
@@ -134,6 +165,7 @@ export const SettingsComponent = React.memo(
                             }
                         >
                             <Settings.Item
+                                id="arcanum-theme-setting"
                                 title="Theme"
                                 renderTitleComponent={(highlightedTitle) => (
                                     <div>
