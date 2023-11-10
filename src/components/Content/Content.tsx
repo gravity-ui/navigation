@@ -4,7 +4,7 @@ import React from 'react';
 
 export type RenderContentType = (data: {size: number}) => React.ReactNode;
 
-interface ContentProps {
+export interface ContentProps {
     size: number;
     className?: string;
     cssSizeVariableName?: string;
@@ -27,14 +27,17 @@ export const Content: React.FC<ContentProps> = ({
     className,
     cssSizeVariableName = '--gn-aside-header-size',
     renderContent,
+    children,
 }) => {
     return (
         <div
             className={className}
             style={{...({[cssSizeVariableName]: `${size}px`} as React.CSSProperties)}}
         >
-            {typeof renderContent === 'function' && (
+            {typeof renderContent === 'function' ? (
                 <RenderContent size={size} renderContent={renderContent} />
+            ) : (
+                children
             )}
         </div>
     );

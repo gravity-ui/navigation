@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/gravity-ui/navigation/compare/v1.1.3...v1.2.0) (2023-11-03)
+
+
+### Features
+
+* split AsideHeader to compound components ([#140](https://github.com/gravity-ui/navigation/issues/140)) ([1099f68](https://github.com/gravity-ui/navigation/commit/1099f6830b25ceb393e3a4b51d33f92bc5b16760))
+
 ## [1.1.3](https://github.com/gravity-ui/navigation/compare/v1.1.2...v1.1.3) (2023-10-24)
 
 

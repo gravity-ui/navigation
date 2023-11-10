@@ -11,6 +11,7 @@ function renderTag(tag: string) {
 
 export const EMPTY_CONTEXT_VALUE: AsideHeaderContextType = {
     size: ASIDE_HEADER_EXPANDED_WIDTH,
+    compact: true,
 };
 
 export const menuItemsShowcase: MenuItem[] = [

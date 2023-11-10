@@ -1,11 +1,17 @@
 import {RenderContentType} from '../Content';
 import {DrawerItemProps} from '../Drawer/Drawer';
 import {LogoProps, MenuItem, SubheaderMenuItem, OpenModalSubscriber} from '../types';
+import {AsideHeaderContextType} from './AsideHeaderContext';
+
+export interface LayoutProps {
+    compact: boolean;
+    className?: string;
+}
 
 export interface AsideHeaderGeneralProps {
     logo: LogoProps;
-    compact: boolean;
     multipleTooltip?: boolean;
+    reverse?: boolean;
     className?: string;
     collapseTitle?: string;
     expandTitle?: string;
@@ -29,9 +35,13 @@ export interface AsideHeaderDefaultProps {
     headerDecoration?: boolean;
 }
 
-export type AsideHeaderInnerProps = AsideHeaderGeneralProps & AsideHeaderDefaultProps;
+export type AsideHeaderInnerProps = AsideHeaderGeneralProps &
+    AsideHeaderDefaultProps &
+    AsideHeaderContextType;
+
 export interface AsideHeaderProps
     extends AsideHeaderGeneralProps,
+        LayoutProps,
         Partial<AsideHeaderDefaultProps> {}
 
 export enum InnerPanels {
