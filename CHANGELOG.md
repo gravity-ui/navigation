@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/gravity-ui/navigation/compare/v1.2.0...v1.3.0) (2023-11-10)
+
+
+### Features
+
+* updated vertical divider ([#144](https://github.com/gravity-ui/navigation/issues/144)) ([1e7dc82](https://github.com/gravity-ui/navigation/commit/1e7dc8249fd869853eeabab45a08c306c95448de))
+
 ## [1.2.0](https://github.com/gravity-ui/navigation/compare/v1.1.3...v1.2.0) (2023-11-03)
 
 
