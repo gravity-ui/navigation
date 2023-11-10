@@ -72,4 +72,4 @@ Used for themization Navigation's components
 | `--gn-aside-header-footer-item-icon-color`             |                                                                  | `--g-color-text-primary`                                                          |
 | `--gn-aside-header-subheader-item-icon-color`          |                                                                  | `--g-color-text-primary`                                                          |
 | `--gn-aside-header-item-icon-background-size`          | Background size used when `AsideHeader` is compact               | `38px`                                                                            |
-| `--gn-aside-header-divider-line-color`                 | Vertical color divider between `AsideHeader` and content         | Light theme: `transparent`, Dark theme: `--g-color-line-generic-solid`            |
+| `--gn-aside-header-divider-line-color`                 | Vertical color divider between `AsideHeader` and content         | Light theme: `--g-color-line-generic`, Dark theme: `--g-color-line-generic-solid` |
