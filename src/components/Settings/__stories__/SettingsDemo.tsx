@@ -7,8 +7,9 @@ import {Button, Switch, Checkbox, RadioButton, Radio, Select, Link} from '@gravi
 import featureIcon from '../../../../assets/icons/gear.svg';
 import {cn} from '../../utils/cn';
 
-import './SettingsDemo.scss';
 import {SettingsSelection} from '../Selection/types';
+
+import './SettingsDemo.scss';
 
 export interface DemoProps {
     title: string;

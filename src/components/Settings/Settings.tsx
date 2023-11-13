@@ -17,14 +17,15 @@ import type {
 import {getSettingsFromChildren} from './collect-settings';
 import {escapeStringForRegExp} from './helpers';
 
-import './Settings.scss';
+import {SettingsSelection} from './Selection';
 import {
     SettingsSelectionContextProvider,
     useSettingsSelectionContext,
     useSettingsSelectionProviderValue,
 } from './Selection/context';
-import {SettingsSelection} from './Selection';
 import {isSectionSelected} from './Selection/utils';
+
+import './Settings.scss';
 
 const b = block('settings');
 
