@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/gravity-ui/navigation/compare/v1.3.0...v1.4.0) (2023-11-13)
+
+
+### Features
+
+* **Settings:** Added selection feature to the Settings ([#145](https://github.com/gravity-ui/navigation/issues/145)) ([9cacfe2](https://github.com/gravity-ui/navigation/commit/9cacfe2a1a91b50f14a88dfa0c481a412a2ef644))
+
 ## [1.3.0](https://github.com/gravity-ui/navigation/compare/v1.2.0...v1.3.0) (2023-11-10)
 
 
