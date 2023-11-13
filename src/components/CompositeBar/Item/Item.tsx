@@ -101,6 +101,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const icon = item.icon;
     const iconSize = item.iconSize || ASIDE_HEADER_ICON_SIZE;
     const collapsedItem = item.id === COLLAPSE_ITEM_ID;
+    let highlightedNode = null;
 
     const modifiers: Required<PopupProps>['modifiers'] = React.useMemo(
         () => [
@@ -155,6 +156,12 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     };
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
+        const iconNode = makeIconNode(iconEl);
+
+        if (bringForward) {
+            highlightedNode = iconNode;
+        }
+
         const createdNode = (
             <React.Fragment>
                 <div
@@ -185,7 +192,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     }}
                 >
                     <div className={b('icon-place')} ref={highlightedRef}>
-                        {makeIconNode(iconEl)}
+                        {iconNode}
                     </div>
 
                     <div
@@ -234,7 +241,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         node = makeNode(params);
     }
 
-    const highlightedNode = makeIconNode(iconNode);
     return (
         <>
             {bringForward && (
