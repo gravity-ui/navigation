@@ -208,9 +208,9 @@ function SettingsContent({
     }, [selectionInitialPage]);
 
     React.useEffect(() => {
-        if (!selected.selectedRef?.current) return;
-
-        selected.selectedRef.current.scrollIntoView();
+        if (selected.selectedRef?.current) {
+            selected.selectedRef.current.scrollIntoView();
+        }
     }, [selected.selectedRef]);
 
     const renderSetting = ({title: settingTitle, element}: SettingsItem) => {
