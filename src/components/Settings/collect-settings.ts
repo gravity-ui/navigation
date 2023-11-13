@@ -1,6 +1,7 @@
 import React from 'react';
 import {IconProps} from '@gravity-ui/uikit';
 import {escapeStringForRegExp, invariant} from './helpers';
+import {SettingsSelection} from './Selection/types';
 
 export type SettingsMenu = (SettingsMenuGroup | SettingsMenuItem)[];
 
@@ -24,7 +25,8 @@ export interface SettingsPage {
     withBadge?: boolean;
 }
 
-interface SettingsPageSection {
+export interface SettingsPageSection {
+    id?: string;
     title: string;
     header?: React.ReactNode;
     items: SettingsItem[];
@@ -33,12 +35,19 @@ interface SettingsPageSection {
     showTitle?: boolean;
 }
 
-interface SettingsItem {
+export interface SettingsItem {
+    id?: string;
     title: string;
     element: React.ReactElement;
     hidden: boolean;
     titleComponent?: React.ReactNode;
     renderTitleComponent?: (highlightedTitle: React.ReactNode | null) => React.ReactNode;
+}
+
+export interface SelectedSettingsPart {
+    page?: SettingsPage;
+    section?: SettingsPageSection;
+    setting?: SettingsItem;
 }
 
 interface SettingsDescription {
@@ -148,13 +157,12 @@ function getSettingsPageFromChildren(children: React.ReactNode, filterRe: RegExp
             page.withBadge = withBadge || page.withBadge;
             page.hidden = hidden && page.hidden;
         } else {
-            const {title, header, withBadge, showTitle = true} = element.props;
+            const {withBadge, showTitle = true} = element.props;
             const {items, hidden} = getSettingsItemsFromChildren(element.props.children, filterRe);
             page.withBadge = withBadge || page.withBadge;
             page.hidden = hidden && page.hidden;
             page.sections.push({
-                title,
-                header,
+                ...element.props,
                 withBadge,
                 items,
                 hidden,
@@ -180,8 +188,7 @@ function getSettingsItemsFromChildren(children: React.ReactNode, filterRe: RegEx
             hidden = hidden && fragmentItems.hidden;
         } else {
             const item: SettingsItem = {
-                title: element.props.title,
-                renderTitleComponent: element.props.renderTitleComponent,
+                ...element.props,
                 element,
                 hidden: !filterRe.test(element.props.title),
             };
@@ -190,4 +197,40 @@ function getSettingsItemsFromChildren(children: React.ReactNode, filterRe: RegEx
         }
     });
     return {items, hidden};
+}
+
+export function getSelectedSettingsPart(
+    pages: Record<string, SettingsPage>,
+    selection: SettingsSelection,
+): SelectedSettingsPart {
+    if (!selection.settingId && !selection.section && !selection.page) {
+        return {};
+    }
+
+    for (const page of Object.values(pages)) {
+        if (!selection.settingId && !selection.section) {
+            if (selection.page !== page.id) continue;
+
+            return {page};
+        }
+
+        for (const section of page.sections) {
+            if (selection.settingId) {
+                for (const setting of section.items) {
+                    if (setting.id === selection.settingId) {
+                        return {page, section, setting};
+                    }
+                }
+            } else if (
+                selection.section &&
+                ('id' in selection.section
+                    ? selection.section.id === section.id
+                    : selection.section.title === section.title)
+            ) {
+                return {page, section};
+            }
+        }
+    }
+
+    return {};
 }
