@@ -101,7 +101,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const icon = item.icon;
     const iconSize = item.iconSize || ASIDE_HEADER_ICON_SIZE;
     const collapsedItem = item.id === COLLAPSE_ITEM_ID;
-    let highlightedNode = null;
 
     const modifiers: Required<PopupProps>['modifiers'] = React.useMemo(
         () => [
@@ -231,6 +230,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const iconNode = icon ? <Icon data={icon} size={iconSize} className={b('icon')} /> : null;
     const titleNode = renderItemTitle(item);
     const params = {icon: iconNode, title: titleNode};
+    let highlightedNode = null;
     let node;
 
     const opts = {compact: Boolean(compact), collapsed: false, item, ref};
