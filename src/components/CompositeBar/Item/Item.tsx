@@ -155,12 +155,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     };
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
-        const iconNode = makeIconNode(iconEl);
-
-        if (bringForward) {
-            highlightedNode = iconNode;
-        }
-
         const createdNode = (
             <React.Fragment>
                 <div
@@ -191,7 +185,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     }}
                 >
                     <div className={b('icon-place')} ref={highlightedRef}>
-                        {iconNode}
+                        {makeIconNode(iconEl)}
                     </div>
 
                     <div
@@ -237,8 +231,16 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     if (typeof item.itemWrapper === 'function') {
         node = item.itemWrapper(params, makeNode, opts) as React.ReactElement;
+        highlightedNode =
+            bringForward &&
+            (item.itemWrapper(
+                params,
+                ({icon: iconEl}) => makeIconNode(iconEl),
+                opts,
+            ) as React.ReactElement);
     } else {
         node = makeNode(params);
+        highlightedNode = bringForward && makeIconNode(iconNode);
     }
 
     return (
