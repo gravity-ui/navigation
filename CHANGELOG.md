@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/gravity-ui/navigation/compare/v1.4.0...v1.4.1) (2023-11-14)
+
+
+### Bug Fixes
+
+* **CompositeBar/Item:** support itemWrapper icon for highlighted node ([#148](https://github.com/gravity-ui/navigation/issues/148)) ([6874ee1](https://github.com/gravity-ui/navigation/commit/6874ee1a0a18bc5cbcb64d5f674601199f6c034e))
+
 ## [1.4.0](https://github.com/gravity-ui/navigation/compare/v1.3.0...v1.4.0) (2023-11-13)
 
 
