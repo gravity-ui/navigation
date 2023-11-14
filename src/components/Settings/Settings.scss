@@ -150,6 +150,14 @@ $block: '.#{variables.$ns}settings';
     }
 
     &__section {
+        &-right-adornment_hidden {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        &-heading:hover &-right-adornment_hidden {
+            opacity: 1;
+        }
+
         &-heading {
             @include text-subheader-2;
             margin: 0;
@@ -210,6 +218,14 @@ $block: '.#{variables.$ns}settings';
         &:hover &-right-adornment_hidden {
             opacity: 1;
         }
+    }
+
+    &__item_selected,
+    &__section_selected {
+        background: var(--g-color-base-selection);
+        padding: 8px;
+        border-radius: 8px;
+        margin-left: -8px;
     }
 
     &__found {

@@ -9,9 +9,21 @@ import {SettingsMenuMobile} from './SettingsMenuMobile/SettingsMenuMobile';
 import {Title} from '../Title';
 import i18n from './i18n';
 
-import type {SettingsMenu as SettingsMenuType} from './collect-settings';
+import type {
+    SettingsItem,
+    SettingsMenu as SettingsMenuType,
+    SettingsPageSection,
+} from './collect-settings';
 import {getSettingsFromChildren} from './collect-settings';
 import {escapeStringForRegExp} from './helpers';
+
+import {SettingsSelection} from './Selection';
+import {
+    SettingsSelectionContextProvider,
+    useSettingsSelectionContext,
+    useSettingsSelectionProviderValue,
+} from './Selection/context';
+import {isSectionSelected} from './Selection/utils';
 
 import './Settings.scss';
 
@@ -24,13 +36,15 @@ export interface SettingsProps {
     emptyPlaceholder?: string;
     initialPage?: string;
     initialSearch?: string;
+    selection?: SettingsSelection;
     onPageChange?: (page: string | undefined) => void;
     renderNotFound?: () => React.ReactNode;
     renderLoading?: () => React.ReactNode;
     loading?: boolean;
     view?: 'normal' | 'mobile';
     onClose?: () => void;
-    renderRightAdornment?: (item: Pick<SettingsItemProps, 'title'>) => React.ReactNode;
+    renderRightAdornment?: (item: SettingsItemProps) => React.ReactNode;
+    renderSectionRightAdornment?: (section: SettingsPageSection) => React.ReactNode;
     showRightAdornmentOnHover?: boolean;
 }
 
@@ -48,6 +62,7 @@ export interface SettingsPageProps {
 }
 
 export interface SettingsSectionProps {
+    id?: string;
     title: string;
     header?: React.ReactNode;
     children: React.ReactNode;
@@ -56,6 +71,7 @@ export interface SettingsSectionProps {
 }
 
 export interface SettingsItemProps {
+    id?: string;
     title: string;
     highlightedTitle?: React.ReactNode | null;
     renderTitleComponent?: (highlightedTitle: React.ReactNode | null) => React.ReactNode;
@@ -67,7 +83,10 @@ export interface SettingsItemProps {
 }
 
 export interface SettingsContextType
-    extends Pick<SettingsProps, 'renderRightAdornment' | 'showRightAdornmentOnHover'> {}
+    extends Pick<
+        SettingsProps,
+        'renderRightAdornment' | 'renderSectionRightAdornment' | 'showRightAdornmentOnHover'
+    > {}
 
 const SettingsContext = React.createContext<SettingsContextType>({});
 
@@ -79,6 +98,7 @@ export function Settings({
     children,
     view = 'normal',
     renderRightAdornment,
+    renderSectionRightAdornment,
     showRightAdornmentOnHover = true,
     ...props
 }: SettingsProps) {
@@ -95,7 +115,9 @@ export function Settings({
     }
 
     return (
-        <SettingsContext.Provider value={{renderRightAdornment, showRightAdornmentOnHover}}>
+        <SettingsContext.Provider
+            value={{renderRightAdornment, renderSectionRightAdornment, showRightAdornmentOnHover}}
+        >
             <SettingsContent view={view} {...props}>
                 {children}
             </SettingsContent>
@@ -118,6 +140,7 @@ type SettingsContentProps = Omit<SettingsProps, 'loading' | 'renderLoading'>;
 function SettingsContent({
     initialPage,
     initialSearch,
+    selection,
     children,
     renderNotFound,
     title = i18n('label_title'),
@@ -127,11 +150,19 @@ function SettingsContent({
     onPageChange,
     onClose,
 }: SettingsContentProps) {
+    const {renderSectionRightAdornment, showRightAdornmentOnHover} = useSettingsContext();
+
     const [search, setSearch] = React.useState(initialSearch ?? '');
     const {menu, pages} = getSettingsFromChildren(children, search);
+
+    const selected = useSettingsSelectionProviderValue(pages, selection);
+
     const pageKeys = Object.keys(pages);
+    const selectionInitialPage =
+        selected.page && pageKeys.includes(selected.page.id) ? selected.page.id : undefined;
     const [selectedPage, setCurrentPage] = React.useState<string | undefined>(
-        initialPage && pageKeys.includes(initialPage) ? initialPage : undefined,
+        selectionInitialPage ||
+            (initialPage && pageKeys.includes(initialPage) ? initialPage : undefined),
     );
     const searchInputRef = React.useRef<HTMLInputElement>(null);
     const menuRef = React.useRef<SettingsMenuInstance>(null);
@@ -171,8 +202,71 @@ function SettingsContent({
         }
     });
 
-    const renderPageContent = () => {
-        if (!activePage) {
+    React.useEffect(() => {
+        if (!selectionInitialPage) return;
+        setCurrentPage(selectionInitialPage);
+    }, [selectionInitialPage]);
+
+    React.useEffect(() => {
+        if (selected.selectedRef?.current) {
+            selected.selectedRef.current.scrollIntoView();
+        }
+    }, [selected.selectedRef]);
+
+    const renderSetting = ({title: settingTitle, element}: SettingsItem) => {
+        return (
+            <div key={settingTitle} className={b('section-item')}>
+                {React.cloneElement(element, {
+                    ...element.props,
+                    highlightedTitle:
+                        search && settingTitle ? prepareTitle(settingTitle, search) : settingTitle,
+                })}
+            </div>
+        );
+    };
+
+    const renderSection = (page: string, section: SettingsPageSection) => {
+        const isSelected = isSectionSelected(selected, page, section);
+
+        return (
+            <div
+                key={section.title}
+                className={b('section', {selected: isSelected})}
+                ref={isSelected ? selected.selectedRef : undefined}
+            >
+                {section.showTitle && (
+                    <h3 className={b('section-heading')}>
+                        {renderSectionRightAdornment ? (
+                            <Flex gap={2} alignItems={'center'}>
+                                {section.title}
+                                <div
+                                    className={b('section-right-adornment', {
+                                        hidden: showRightAdornmentOnHover,
+                                    })}
+                                >
+                                    {renderSectionRightAdornment(section)}
+                                </div>
+                            </Flex>
+                        ) : (
+                            section.title
+                        )}
+                    </h3>
+                )}
+
+                {section.header &&
+                    (isMobile ? (
+                        <div className={b('section-subheader')}>{section.header}</div>
+                    ) : (
+                        section.header
+                    ))}
+
+                {section.items.map((setting) => (setting.hidden ? null : renderSetting(setting)))}
+            </div>
+        );
+    };
+
+    const renderPageContent = (page: string | undefined) => {
+        if (!page) {
             return typeof renderNotFound === 'function' ? (
                 renderNotFound()
             ) : (
@@ -180,104 +274,79 @@ function SettingsContent({
             );
         }
 
-        const filteredSections = pages[activePage].sections.filter((section) => !section.hidden);
+        const filteredSections = pages[page].sections.filter((section) => !section.hidden);
 
         return (
             <>
                 {!isMobile && (
                     <Title hasSeparator onClose={onClose}>
-                        {getPageTitleById(menu, activePage)}
+                        {getPageTitleById(menu, page)}
                     </Title>
                 )}
 
                 <div className={b('content')}>
-                    {filteredSections.map((section) => (
-                        <div key={section.title} className={b('section')}>
-                            {section.showTitle && (
-                                <h3 className={b('section-heading')}>{section.title}</h3>
-                            )}
-
-                            {section.header &&
-                                (isMobile ? (
-                                    <div className={b('section-subheader')}>{section.header}</div>
-                                ) : (
-                                    section.header
-                                ))}
-
-                            {section.items.map(({hidden, title, element}) =>
-                                hidden ? null : (
-                                    <div key={title} className={b('section-item')}>
-                                        {React.cloneElement(element, {
-                                            ...element.props,
-                                            highlightedTitle:
-                                                search && title
-                                                    ? prepareTitle(title, search)
-                                                    : title,
-                                        })}
-                                    </div>
-                                ),
-                            )}
-                        </div>
-                    ))}
+                    {filteredSections.map((section) => renderSection(page, section))}
                 </div>
             </>
         );
     };
 
     return (
-        <div className={b({view})}>
-            {isMobile ? (
-                <>
-                    <SettingsSearch
-                        inputRef={searchInputRef}
-                        className={b('search')}
-                        initialValue={initialSearch}
-                        onChange={setSearch}
-                        autoFocus={false}
-                        inputSize={'xl'}
-                    />
-                    <SettingsMenuMobile
-                        items={menu}
-                        onChange={handlePageChange}
-                        activeItemId={activePage}
-                        className={b('tabs')}
-                    />
-                </>
-            ) : (
-                <div
-                    className={b('menu')}
-                    onClick={() => {
-                        if (searchInputRef.current) {
-                            searchInputRef.current.focus();
-                        }
-                    }}
-                    onKeyDown={(event) => {
-                        if (menuRef.current) {
-                            if (menuRef.current.handleKeyDown(event)) {
-                                event.preventDefault();
+        <SettingsSelectionContextProvider value={selected}>
+            <div className={b({view})}>
+                {isMobile ? (
+                    <>
+                        <SettingsSearch
+                            inputRef={searchInputRef}
+                            className={b('search')}
+                            initialValue={initialSearch}
+                            onChange={setSearch}
+                            autoFocus={false}
+                            inputSize={'xl'}
+                        />
+                        <SettingsMenuMobile
+                            items={menu}
+                            onChange={handlePageChange}
+                            activeItemId={activePage}
+                            className={b('tabs')}
+                        />
+                    </>
+                ) : (
+                    <div
+                        className={b('menu')}
+                        onClick={() => {
+                            if (searchInputRef.current) {
+                                searchInputRef.current.focus();
                             }
-                        }
-                    }}
-                >
-                    <Title>{title}</Title>
-                    <SettingsSearch
-                        inputRef={searchInputRef}
-                        className={b('search')}
-                        initialValue={initialSearch}
-                        onChange={setSearch}
-                        placeholder={filterPlaceholder}
-                        autoFocus
-                    />
-                    <SettingsMenu
-                        ref={menuRef}
-                        items={menu}
-                        onChange={handlePageChange}
-                        activeItemId={activePage}
-                    />
-                </div>
-            )}
-            <div className={b('page')}>{renderPageContent()}</div>
-        </div>
+                        }}
+                        onKeyDown={(event) => {
+                            if (menuRef.current) {
+                                if (menuRef.current.handleKeyDown(event)) {
+                                    event.preventDefault();
+                                }
+                            }
+                        }}
+                    >
+                        <Title>{title}</Title>
+                        <SettingsSearch
+                            inputRef={searchInputRef}
+                            className={b('search')}
+                            initialValue={initialSearch}
+                            onChange={setSearch}
+                            placeholder={filterPlaceholder}
+                            autoFocus
+                        />
+                        <SettingsMenu
+                            ref={menuRef}
+                            items={menu}
+                            onChange={handlePageChange}
+                            activeItemId={activePage}
+                        />
+                    </div>
+                )}
+                <div className={b('page')}>{renderPageContent(activePage)}</div>
+            </div>
+        </SettingsSelectionContextProvider>
     );
 }
 
@@ -293,16 +362,21 @@ Settings.Section = function SettingsSection({children}: SettingsSectionProps) {
     return <React.Fragment>{children}</React.Fragment>;
 };
 
-Settings.Item = function SettingsItem({
-    title,
-    highlightedTitle,
-    children,
-    align = 'center',
-    withBadge,
-    renderTitleComponent = identity,
-    mode,
-    description,
-}: SettingsItemProps) {
+Settings.Item = function SettingsItem(setting: SettingsItemProps) {
+    const {
+        id,
+        highlightedTitle,
+        children,
+        align = 'center',
+        withBadge,
+        renderTitleComponent = identity,
+        mode,
+        description,
+    } = setting;
+
+    const selected = useSettingsSelectionContext();
+    const isSettingSelected = selected.setting && selected.setting.id === id;
+
     const {renderRightAdornment, showRightAdornmentOnHover} = useSettingsContext();
     const titleNode = (
         <span className={b('item-title', {badge: withBadge})}>
@@ -310,7 +384,10 @@ Settings.Item = function SettingsItem({
         </span>
     );
     return (
-        <div className={b('item', {align, mode})}>
+        <div
+            className={b('item', {align, mode, selected: isSettingSelected})}
+            ref={isSettingSelected ? selected.selectedRef : undefined}
+        >
             <label className={b('item-heading')}>
                 {renderRightAdornment ? (
                     <Flex className={b('item-title-wrapper')} gap={3}>
@@ -320,7 +397,7 @@ Settings.Item = function SettingsItem({
                                 hidden: showRightAdornmentOnHover,
                             })}
                         >
-                            {renderRightAdornment({title})}
+                            {renderRightAdornment(setting)}
                         </div>
                     </Flex>
                 ) : (
