@@ -224,17 +224,25 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const iconNode = icon ? <Icon data={icon} size={iconSize} className={b('icon')} /> : null;
     const titleNode = renderItemTitle(item);
     const params = {icon: iconNode, title: titleNode};
+    let highlightedNode = null;
     let node;
 
     const opts = {compact: Boolean(compact), collapsed: false, item, ref};
 
     if (typeof item.itemWrapper === 'function') {
         node = item.itemWrapper(params, makeNode, opts) as React.ReactElement;
+        highlightedNode =
+            bringForward &&
+            (item.itemWrapper(
+                params,
+                ({icon: iconEl}) => makeIconNode(iconEl),
+                opts,
+            ) as React.ReactElement);
     } else {
         node = makeNode(params);
+        highlightedNode = bringForward && makeIconNode(iconNode);
     }
 
-    const highlightedNode = makeIconNode(iconNode);
     return (
         <>
             {bringForward && (

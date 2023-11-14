@@ -1,12 +1,21 @@
 import React, {FC, useState} from 'react';
 
-import {RadioButton, Radio, Modal, Button, eventBroker, EventBrokerData} from '@gravity-ui/uikit';
-import {Gear, Magnifier} from '@gravity-ui/icons';
+import {
+    Button,
+    EventBrokerData,
+    Radio,
+    RadioButton,
+    Modal,
+    Icon,
+    eventBroker,
+} from '@gravity-ui/uikit';
+import {Bug, Gear, Magnifier} from '@gravity-ui/icons';
 
 import {AsideHeader, FooterItem} from '../..';
 import {cn} from '../../utils/cn';
 import {menuItemsShowcase, text as placeholderText} from './moc';
 import {MenuItem, OpenModalSubscriber} from '../../types';
+import {ASIDE_HEADER_ICON_SIZE} from '../../constants';
 
 import logoIcon from '../../../../.storybook/assets/logo.svg';
 
@@ -172,7 +181,6 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                         <FooterItem
                             item={{
                                 id: 'project-settings',
-                                icon: Gear,
                                 title: 'Settings with panel',
                                 tooltipText: (
                                     <div>
@@ -180,6 +188,11 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                                     </div>
                                 ),
                                 current: visiblePanel === Panel.ProjectSettings,
+                                itemWrapper: (params, makeItem) =>
+                                    makeItem({
+                                        ...params,
+                                        icon: <Icon data={Bug} size={ASIDE_HEADER_ICON_SIZE} />,
+                                    }),
                                 onItemClick: () => {
                                     setVisiblePanel(
                                         visiblePanel === Panel.ProjectSettings
