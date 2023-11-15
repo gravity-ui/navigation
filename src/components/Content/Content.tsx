@@ -8,7 +8,6 @@ export interface ContentProps {
     size: number;
     className?: string;
     cssSizeVariableName?: string;
-    maxHeight?: string;
     renderContent?: RenderContentType;
 }
 
