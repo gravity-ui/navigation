@@ -41,14 +41,14 @@ you may need to switch usage of `AsideHeader` to advanced style with `PageLayout
 +);
 
 -    <AsideHeader renderContent={renderContent} {...restProps} />
-+    <PageLayout reverse>
-+        <PageLayout.Content>
-+            <ContentExample />
-+        </PageLayout.Content>
-+
++    <PageLayout>
 +        <Suspense fallback={null}>
 +            <PageLayoutAside {...restProps} />
 +        </Suspense>
++
++        <PageLayout.Content>
++            <ContentExample />
++        </PageLayout.Content>
 +    </PageLayout>
 ```
 
