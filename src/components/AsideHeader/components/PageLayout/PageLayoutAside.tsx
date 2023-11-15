@@ -17,7 +17,7 @@ export const PageLayoutAside = React.forwardRef<HTMLDivElement, Props>((props, r
 
     return (
         <AsideHeaderInnerContextProvider value={asideHeaderInnerContextValue}>
-            <FirstPanel ref={ref} maxHeight={props.maxHeight} />
+            <FirstPanel ref={ref} />
         </AsideHeaderInnerContextProvider>
     );
 });

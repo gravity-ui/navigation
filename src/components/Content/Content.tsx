@@ -26,16 +26,15 @@ RenderContent.displayName = 'RenderContent';
 export const Content: React.FC<ContentProps> = ({
     size, // TODO: move to context when MobileHeader will support it
     className,
-    maxHeight,
     cssSizeVariableName = '--gn-aside-header-size',
     renderContent,
     children,
 }) => {
-    const style: React.CSSProperties = {[cssSizeVariableName]: `${size}px`};
-    if (maxHeight) {
-        style.maxHeight = maxHeight;
-        style.overflowY = 'auto';
-    }
+    const style: React.CSSProperties = {
+        [cssSizeVariableName]: `${size}px`,
+        maxHeight: 'calc(100vh - var(--gn-aside-top-panel-height))',
+        overflowY: 'auto',
+    };
 
     return (
         <div className={className} style={style}>

@@ -2,6 +2,10 @@
 
 $block: '.#{variables.$ns}aside-header';
 
+:root {
+    --gn-aside-top-panel-height: 0px;
+}
+
 .g-root {
     --gn-aside-header-background-color: var(--g-color-base-warning-light);
     --gn-aside-header-collapse-button-divider-line-color: var(
@@ -43,6 +47,7 @@ $block: '.#{variables.$ns}aside-header';
         flex-direction: column;
         background-color: var(--g-color-base-background);
         z-index: 100;
+        max-height: calc(100vh - var(--gn-aside-top-panel-height));
 
         box-sizing: border-box;
 

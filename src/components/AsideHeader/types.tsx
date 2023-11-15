@@ -12,7 +12,6 @@ import {AsideHeaderContextType} from './AsideHeaderContext';
 export interface LayoutProps {
     compact: boolean;
     className?: string;
-    topAlert?: AsideHeaderTopAlertProps;
 }
 
 export interface AsideHeaderGeneralProps {

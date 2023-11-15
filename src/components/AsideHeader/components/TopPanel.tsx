@@ -3,30 +3,34 @@ import {Alert} from '@gravity-ui/uikit';
 
 import {b} from '../utils';
 import {AsideHeaderTopAlertProps} from '../../types';
+import {useAsideHeaderTopPanel} from '../useAsideHeaderTopPanel';
 
 type Props = {
     topAlert?: AsideHeaderTopAlertProps;
 };
 
-export const TopPanel = React.forwardRef<HTMLDivElement, Props>(({topAlert}) => {
+export const TopPanel = ({topAlert}: Props) => {
+    const {topRef, updateTopSize} = useAsideHeaderTopPanel({topAlert});
+
     const [opened, setOpened] = React.useState(true);
 
     const handleClose = React.useCallback(() => {
         setOpened(false);
-    }, []);
+        topAlert?.onCloseTopAlert?.();
+    }, [topAlert]);
 
     React.useEffect(() => {
         if (!opened) {
-            topAlert?.onCloseTopAlert?.();
+            updateTopSize();
         }
-    }, [opened, topAlert]);
+    }, [opened, updateTopSize]);
 
     if (!topAlert || !topAlert.message) {
         return null;
     }
 
     return (
-        <div ref={topAlert?.ref} className={b('pane-top', {opened})}>
+        <div ref={topRef} className={b('pane-top', {opened})}>
             {opened && (
                 <React.Fragment>
                     <Alert
@@ -48,4 +52,4 @@ export const TopPanel = React.forwardRef<HTMLDivElement, Props>(({topAlert}) => 
             )}
         </div>
     );
-});
+};

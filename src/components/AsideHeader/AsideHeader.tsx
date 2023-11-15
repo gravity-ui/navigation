@@ -3,7 +3,6 @@ import React from 'react';
 import {AsideHeaderProps} from './types';
 import {PageLayout} from './components/PageLayout/PageLayout';
 import {PageLayoutAside} from './components/PageLayout/PageLayoutAside';
-import {useAsideHeaderTopPanel} from './useAsideHeaderTopPanel';
 
 /**
  * Simply usage of AsideHeader:
@@ -22,12 +21,10 @@ import {useAsideHeaderTopPanel} from './useAsideHeaderTopPanel';
  */
 export const AsideHeader = React.forwardRef<HTMLDivElement, AsideHeaderProps>(
     ({compact, className, topAlert, ...props}, ref) => {
-        const {maxHeight, ...topAlertValue} = useAsideHeaderTopPanel({topAlert});
-
         return (
-            <PageLayout compact={compact} className={className} topAlert={topAlertValue}>
-                <PageLayoutAside ref={ref} {...props} maxHeight={maxHeight} />
-                <PageLayout.Content renderContent={props.renderContent} maxHeight={maxHeight} />
+            <PageLayout compact={compact} className={className} topAlert={topAlert}>
+                <PageLayoutAside ref={ref} {...props} />
+                <PageLayout.Content renderContent={props.renderContent} />
             </PageLayout>
         );
     },
