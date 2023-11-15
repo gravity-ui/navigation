@@ -36,7 +36,7 @@ export const useAsideHeaderTopPanel = ({
                 clientHeight + 'px',
             );
         }
-    }, []);
+    }, [topRef]);
 
     React.useLayoutEffect(() => {
         const updateTopSizeDebounce = debounceFn(updateTopSize, 200, {leading: true});
