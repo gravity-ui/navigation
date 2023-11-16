@@ -28,6 +28,6 @@ export function useSettingsSelectionProviderValue(
 
 export const SettingsSelectionContextProvider = context.Provider;
 
-export function useSettingsSelectionContext() {
+export function useSettingsSelectionContext(): ContextValue {
     return React.useContext(context);
 }
