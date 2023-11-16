@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/gravity-ui/navigation/compare/v1.4.1...v1.4.2) (2023-11-16)
+
+
+### Bug Fixes
+
+* **Settings:** fixed the Settings/Selection imports in index.ts ([#152](https://github.com/gravity-ui/navigation/issues/152)) ([1d28fda](https://github.com/gravity-ui/navigation/commit/1d28fdad11c412a907d85dd32ee04eca5e1f2b93))
+
 ## [1.4.1](https://github.com/gravity-ui/navigation/compare/v1.4.0...v1.4.1) (2023-11-14)
 
 
