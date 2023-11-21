@@ -68,6 +68,7 @@ export function HotkeysPanel<T = {}>({
                 placeholder={filterPlaceholder}
                 autoFocus
                 className={b('search')}
+                hasClear
             />
             <List<HotkeysListItem>
                 className={b('list')}
