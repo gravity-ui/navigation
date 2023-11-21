@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/gravity-ui/navigation/compare/v1.4.2...v1.5.0) (2023-11-21)
+
+
+### Features
+
+* **HotkeysPanel:** add clear button for the search input ([#154](https://github.com/gravity-ui/navigation/issues/154)) ([bb948cf](https://github.com/gravity-ui/navigation/commit/bb948cf2ad2cc39431371164ed0fa8c4507eaceb))
+
 ## [1.4.2](https://github.com/gravity-ui/navigation/compare/v1.4.1...v1.4.2) (2023-11-16)
 
 
