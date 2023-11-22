@@ -8,6 +8,8 @@ type AsideHeaderTopPanel = {
     updateTopSize: () => void;
 };
 
+const G_ROOT_CLASS_NAME = 'g-root';
+
 const useRefHeight = (ref: React.RefObject<HTMLDivElement>) => {
     const [topHeight, setTopHeight] = React.useState(0);
     React.useEffect(() => {
@@ -28,10 +30,10 @@ export const useAsideHeaderTopPanel = ({
     const topHeight = useRefHeight(topRef);
 
     const setAsideTopPanelHeight = React.useCallback((clientHeight: number) => {
-        document.documentElement.style.setProperty(
-            '--gn-aside-top-panel-height',
-            clientHeight + 'px',
-        );
+        const gRootElement = document
+            .getElementsByClassName(G_ROOT_CLASS_NAME)
+            .item(0) as HTMLElement | null;
+        gRootElement?.style.setProperty('--gn-aside-top-panel-height', clientHeight + 'px');
     }, []);
 
     const updateTopSize = React.useCallback(() => {

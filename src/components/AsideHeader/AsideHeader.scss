@@ -2,10 +2,6 @@
 
 $block: '.#{variables.$ns}aside-header';
 
-:root {
-    --gn-aside-top-panel-height: 0px;
-}
-
 .g-root {
     --gn-aside-header-background-color: var(--g-color-base-warning-light);
     --gn-aside-header-collapse-button-divider-line-color: var(
@@ -14,6 +10,8 @@ $block: '.#{variables.$ns}aside-header';
     --gn-aside-header-footer-item-icon-color: var(--g-color-text-primary);
     --gn-aside-header-subheader-item-icon-color: var(--g-color-text-primary);
     --gn-aside-header-item-icon-background-size: 38px;
+
+    --gn-aside-top-panel-height: 0px;
 }
 
 .g-root_theme_light,
