@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React from 'react';
 
 import {
     Button,
@@ -41,7 +41,7 @@ interface AsideHeaderShowcaseProps {
     topAlert?: AsideHeaderTopAlertProps;
 }
 
-export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
+export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
     multipleTooltip = false,
     initialCompact = false,
     topAlert,
