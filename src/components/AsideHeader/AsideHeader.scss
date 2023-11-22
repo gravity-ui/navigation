@@ -181,8 +181,9 @@ $block: '.#{variables.$ns}aside-header';
         left: 0;
         right: 0;
         bottom: 0;
-        top: 0;
+        top: var(--gn-aside-top-panel-height);
         overflow: auto;
+        max-height: calc(100vh - var(--gn-aside-top-panel-height));
     }
 
     &__panel {

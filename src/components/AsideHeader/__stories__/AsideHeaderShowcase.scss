@@ -80,7 +80,7 @@ body {
     &__settings-panel,
     &__search-panel {
         width: 300px;
-        height: 100%;
+        height: calc(100% - 40px);
         padding: 20px;
     }
 }

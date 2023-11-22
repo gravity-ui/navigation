@@ -27,16 +27,18 @@ export const useAsideHeaderTopPanel = ({
     const topRef = React.useRef<HTMLDivElement>(null);
     const topHeight = useRefHeight(topRef);
 
+    const setAsideTopPanelHeight = React.useCallback((clientHeight: number) => {
+        document.documentElement.style.setProperty(
+            '--gn-aside-top-panel-height',
+            clientHeight + 'px',
+        );
+    }, []);
+
     const updateTopSize = React.useCallback(() => {
         if (topRef.current) {
-            const clientHeight = topRef.current?.clientHeight || 0;
-
-            document.documentElement.style.setProperty(
-                '--gn-aside-top-panel-height',
-                clientHeight + 'px',
-            );
+            setAsideTopPanelHeight(topRef.current?.clientHeight || 0);
         }
-    }, [topRef]);
+    }, [topRef, setAsideTopPanelHeight]);
 
     React.useLayoutEffect(() => {
         const updateTopSizeDebounce = debounceFn(updateTopSize, 200, {leading: true});
@@ -45,7 +47,10 @@ export const useAsideHeaderTopPanel = ({
             window.addEventListener('resize', updateTopSizeDebounce);
             updateTopSizeDebounce();
         }
-        return () => window.removeEventListener('resize', updateTopSizeDebounce);
+        return () => {
+            window.removeEventListener('resize', updateTopSizeDebounce);
+            setAsideTopPanelHeight(0);
+        };
     }, [topAlert, topHeight, topRef, updateTopSize]);
 
     return {
