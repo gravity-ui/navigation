@@ -1,11 +1,18 @@
 import {RenderContentType} from '../Content';
 import {DrawerItemProps} from '../Drawer/Drawer';
-import {LogoProps, MenuItem, SubheaderMenuItem, OpenModalSubscriber} from '../types';
+import {
+    LogoProps,
+    MenuItem,
+    SubheaderMenuItem,
+    OpenModalSubscriber,
+    AsideHeaderTopAlertProps,
+} from '../types';
 import {AsideHeaderContextType} from './AsideHeaderContext';
 
 export interface LayoutProps {
     compact: boolean;
     className?: string;
+    topAlert?: AsideHeaderTopAlertProps;
 }
 
 export interface AsideHeaderGeneralProps {
@@ -16,6 +23,7 @@ export interface AsideHeaderGeneralProps {
     collapseTitle?: string;
     expandTitle?: string;
     menuMoreTitle?: string;
+    topAlert?: AsideHeaderTopAlertProps;
     renderContent?: RenderContentType;
     renderFooter?: (data: {
         size: number;

@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React from 'react';
 
 import {
     Button,
@@ -11,7 +11,7 @@ import {
 } from '@gravity-ui/uikit';
 import {Bug, Gear, Magnifier} from '@gravity-ui/icons';
 
-import {AsideHeader, FooterItem} from '../..';
+import {AsideHeader, FooterItem, AsideHeaderTopAlertProps} from '../..';
 import {cn} from '../../utils/cn';
 import {menuItemsShowcase, text as placeholderText} from './moc';
 import {MenuItem, OpenModalSubscriber} from '../../types';
@@ -38,11 +38,13 @@ enum Panel {
 interface AsideHeaderShowcaseProps {
     multipleTooltip?: boolean;
     initialCompact?: boolean;
+    topAlert?: AsideHeaderTopAlertProps;
 }
 
-export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
+export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
     multipleTooltip = false,
     initialCompact = false,
+    topAlert,
 }) => {
     const ref = React.useRef<HTMLDivElement>(null);
     const [popupVisible, setPopupVisible] = React.useState(false);
@@ -64,7 +66,7 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
         });
     };
 
-    const [menuItems, setMenuItems] = useState<MenuItem[]>([
+    const [menuItems, setMenuItems] = React.useState<MenuItem[]>([
         ...menuItemsShowcase,
         {
             id: 'components',
@@ -138,6 +140,7 @@ export const AsideHeaderShowcase: FC<AsideHeaderShowcaseProps> = ({
                 compact={compact}
                 multipleTooltip={multipleTooltip}
                 openModalSubscriber={openModalSubscriber}
+                topAlert={topAlert}
                 renderFooter={({compact, asideRef}) => (
                     <React.Fragment>
                         <FooterItem

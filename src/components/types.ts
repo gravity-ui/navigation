@@ -1,5 +1,5 @@
 import React from 'react';
-import {IconProps} from '@gravity-ui/uikit';
+import {IconProps, AlertProps} from '@gravity-ui/uikit';
 
 import {ItemProps} from 'src/components/CompositeBar/Item/Item';
 
@@ -67,3 +67,16 @@ export interface LogoProps {
     wrapper?: (node: React.ReactNode, compact: boolean) => React.ReactNode;
     onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 }
+
+export type AsideHeaderTopAlertProps = {
+    message: AlertProps['message'];
+    title?: AlertProps['title'];
+    icon?: AlertProps['icon'];
+    view?: AlertProps['view'];
+    theme?: AlertProps['theme'];
+    actions?: AlertProps['actions'];
+    closable?: boolean;
+    centered?: boolean;
+    dense?: boolean;
+    onCloseTopAlert?: () => void;
+};

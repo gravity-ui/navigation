@@ -58,3 +58,23 @@ AdvancedUsage.args = {
     multipleTooltip: false,
     initialCompact: true,
 };
+
+const TopAlertTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
+export const HeaderAlert = TopAlertTemplate.bind({});
+HeaderAlert.args = {
+    topAlert: {
+        title: 'Maintenance',
+        view: 'filled',
+        message: 'Scheduled maintenance is being performed',
+        closable: true,
+    },
+};
+
+export const HeaderAlertCentered = TopAlertTemplate.bind({});
+HeaderAlertCentered.args = {
+    topAlert: {
+        view: 'filled',
+        message: 'Scheduled maintenance is being performed',
+        centered: true,
+    },
+};

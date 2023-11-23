@@ -29,11 +29,14 @@ export const Content: React.FC<ContentProps> = ({
     renderContent,
     children,
 }) => {
+    const style: React.CSSProperties = {
+        [cssSizeVariableName]: `${size}px`,
+        maxHeight: 'calc(100vh - var(--gn-aside-top-panel-height))',
+        overflowY: 'auto',
+    };
+
     return (
-        <div
-            className={className}
-            style={{...({[cssSizeVariableName]: `${size}px`} as React.CSSProperties)}}
-        >
+        <div className={className} style={style}>
             {typeof renderContent === 'function' ? (
                 <RenderContent size={size} renderContent={renderContent} />
             ) : (
