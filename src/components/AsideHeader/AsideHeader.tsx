@@ -24,7 +24,10 @@ export const AsideHeader = React.forwardRef<HTMLDivElement, AsideHeaderProps>(
         return (
             <PageLayout compact={compact} className={className} topAlert={topAlert}>
                 <PageLayoutAside ref={ref} {...props} />
-                <PageLayout.Content renderContent={props.renderContent} />
+                <PageLayout.Content
+                    renderContent={props.renderContent}
+                    withTop={Boolean(topAlert)}
+                />
             </PageLayout>
         );
     },
