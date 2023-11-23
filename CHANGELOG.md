@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/gravity-ui/navigation/compare/v1.5.0...v1.6.0) (2023-11-23)
+
+
+### Features
+
+* aside header top alert ([#118](https://github.com/gravity-ui/navigation/issues/118)) ([efc4839](https://github.com/gravity-ui/navigation/commit/efc483966dafbd2cf28b5c4a39c5530532deea66))
+
 ## [1.5.0](https://github.com/gravity-ui/navigation/compare/v1.4.2...v1.5.0) (2023-11-21)
 
 
