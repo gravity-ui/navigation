@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1](https://github.com/gravity-ui/navigation/compare/v1.6.0...v1.6.1) (2023-11-23)
+
+
+### Bug Fixes
+
+* global scroll without top alert ([#157](https://github.com/gravity-ui/navigation/issues/157)) ([8648858](https://github.com/gravity-ui/navigation/commit/86488587eac075e1d0bcccc959e3bb7050805ed8))
+
 ## [1.6.0](https://github.com/gravity-ui/navigation/compare/v1.5.0...v1.6.0) (2023-11-23)
 
 
