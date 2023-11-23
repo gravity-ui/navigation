@@ -31,18 +31,14 @@ const Layout = ({compact, reverse, className, children, topAlert}: PageLayoutPro
     );
 };
 
-const ConnectedContent: React.FC<
-    PropsWithChildren<Pick<ContentProps, 'renderContent' | 'withTop'>>
-> = ({children, withTop, renderContent}) => {
+const ConnectedContent: React.FC<PropsWithChildren<Pick<ContentProps, 'renderContent'>>> = ({
+    children,
+    renderContent,
+}) => {
     const {size} = useAsideHeaderContext();
 
     return (
-        <Content
-            withTop={withTop}
-            size={size}
-            className={b('content')}
-            renderContent={renderContent}
-        >
+        <Content size={size} className={b('content')} renderContent={renderContent}>
             {children}
         </Content>
     );
