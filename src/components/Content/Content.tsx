@@ -8,6 +8,7 @@ export interface ContentProps {
     size: number;
     className?: string;
     cssSizeVariableName?: string;
+    withTop?: boolean;
     renderContent?: RenderContentType;
 }
 
@@ -26,14 +27,18 @@ export const Content: React.FC<ContentProps> = ({
     size, // TODO: move to context when MobileHeader will support it
     className,
     cssSizeVariableName = '--gn-aside-header-size',
+    withTop,
     renderContent,
     children,
 }) => {
     const style: React.CSSProperties = {
         [cssSizeVariableName]: `${size}px`,
-        maxHeight: 'calc(100vh - var(--gn-aside-top-panel-height))',
-        overflowY: 'auto',
     };
+
+    if (withTop) {
+        style.maxHeight = 'calc(100vh - var(--gn-aside-top-panel-height))';
+        style.overflowY = 'auto';
+    }
 
     return (
         <div className={className} style={style}>
