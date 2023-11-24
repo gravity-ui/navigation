@@ -37,7 +37,7 @@ $block: '.#{variables.$ns}aside-header';
 
     &__aside {
         position: sticky;
-        top: var(--gn-aside-top-panel-height);
+        top: 0;
         left: 0;
         height: 100vh;
         width: inherit;
@@ -46,6 +46,7 @@ $block: '.#{variables.$ns}aside-header';
         background-color: var(--g-color-base-background);
         z-index: 100;
         max-height: calc(100vh - var(--gn-aside-top-panel-height));
+        margin-top: var(--gn-aside-top-panel-height);
 
         box-sizing: border-box;
 
