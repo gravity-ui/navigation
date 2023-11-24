@@ -37,7 +37,7 @@ $block: '.#{variables.$ns}aside-header';
 
     &__aside {
         position: sticky;
-        top: 0;
+        top: var(--gn-aside-top-panel-height);
         left: 0;
         height: 100vh;
         width: inherit;
