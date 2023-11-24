@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.2](https://github.com/gravity-ui/navigation/compare/v1.6.1...v1.6.2) (2023-11-24)
+
+
+### Bug Fixes
+
+* global scroll with top panel and aside header ([#159](https://github.com/gravity-ui/navigation/issues/159)) ([cfe44e0](https://github.com/gravity-ui/navigation/commit/cfe44e0fe0beeb87ebf7855e6a9ac4a2f048ae8f))
+
 ## [1.6.1](https://github.com/gravity-ui/navigation/compare/v1.6.0...v1.6.1) (2023-11-23)
 
 
