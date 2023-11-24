@@ -65,7 +65,8 @@ HeaderAlert.args = {
     topAlert: {
         title: 'Maintenance',
         view: 'filled',
-        message: 'Scheduled maintenance is being performed',
+        message:
+            'Scheduled maintenance is being performed Scheduled maintenance is being performed Scheduled maintenance is being performed Scheduled maintenance is being performed  Scheduled maintenance is being performed Scheduled maintenance is being performed Scheduled mainten',
         closable: true,
     },
 };
@@ -76,5 +77,6 @@ HeaderAlertCentered.args = {
         view: 'filled',
         message: 'Scheduled maintenance is being performed',
         centered: true,
+        dense: true,
     },
 };

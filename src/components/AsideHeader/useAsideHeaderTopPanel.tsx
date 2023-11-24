@@ -53,7 +53,7 @@ export const useAsideHeaderTopPanel = ({
             window.removeEventListener('resize', updateTopSizeDebounce);
             setAsideTopPanelHeight(0);
         };
-    }, [topAlert, topHeight, topRef, updateTopSize]);
+    }, [topAlert, topHeight, topRef, updateTopSize, setAsideTopPanelHeight]);
 
     return {
         topRef,

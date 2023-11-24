@@ -37,7 +37,7 @@ $block: '.#{variables.$ns}aside-header';
 
     &__aside {
         position: sticky;
-        top: 0;
+        top: var(--gn-aside-top-panel-height);
         left: 0;
         height: 100vh;
         width: inherit;
@@ -46,6 +46,7 @@ $block: '.#{variables.$ns}aside-header';
         background-color: var(--g-color-base-background);
         z-index: 100;
         max-height: calc(100vh - var(--gn-aside-top-panel-height));
+        margin-top: var(--gn-aside-top-panel-height);
 
         box-sizing: border-box;
 
@@ -198,8 +199,16 @@ $block: '.#{variables.$ns}aside-header';
 
     &__pane-top-divider {
         height: 1px;
-        background-color: var(--gn-aside-header-collapse-button-divider-line-color);
+        background-color: var(--gn-aside-header-divider-line-color);
         margin-top: -1px;
+    }
+
+    &__pane-top {
+        position: fixed;
+        z-index: 98;
+        top: 0;
+        background: var(--g-color-base-background);
+        width: 100%;
     }
 
     &__pane-top-alert {
@@ -221,6 +230,7 @@ $block: '.#{variables.$ns}aside-header';
     &__content {
         width: calc(100% - var(--gn-aside-header-size));
         z-index: 95;
+        margin-top: var(--gn-aside-top-panel-height);
     }
 
     &__collapse-button {
