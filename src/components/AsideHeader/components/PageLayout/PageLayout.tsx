@@ -1,30 +1,35 @@
-import React, {PropsWithChildren, useMemo} from 'react';
+import React, {PropsWithChildren, Suspense, useMemo} from 'react';
 import {AsideHeaderContextProvider, useAsideHeaderContext} from '../../AsideHeaderContext';
 import {Content, ContentProps} from '../../../Content';
-import {TopPanel} from '..';
 import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../../constants';
 import {LayoutProps} from '../../types';
 import {b} from '../../utils';
 
 import '../../AsideHeader.scss';
 
-export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {
-    reverse?: boolean;
-}
+const TopPanel = React.lazy(() =>
+    import('../TopPanel').then((module) => ({default: module.TopPanel})),
+);
 
-const Layout = ({compact, reverse, className, children, topAlert}: PageLayoutProps) => {
+export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {}
+
+const Layout = ({compact, className, children, topAlert}: PageLayoutProps) => {
     const size = compact ? ASIDE_HEADER_COMPACT_WIDTH : ASIDE_HEADER_EXPANDED_WIDTH;
     const asideHeaderContextValue = useMemo(() => ({size, compact}), [compact, size]);
 
     return (
         <AsideHeaderContextProvider value={asideHeaderContextValue}>
             <div
-                className={b({compact, reverse}, className)}
+                className={b({compact}, className)}
                 style={{
                     ...({'--gn-aside-header-size': `${size}px`} as React.CSSProperties),
                 }}
             >
-                {topAlert && <TopPanel topAlert={topAlert} />}
+                {topAlert && (
+                    <Suspense fallback={null}>
+                        <TopPanel topAlert={topAlert} />
+                    </Suspense>
+                )}
                 <div className={b('pane-container')}>{children}</div>
             </div>
         </AsideHeaderContextProvider>

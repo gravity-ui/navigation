@@ -223,10 +223,6 @@ $block: '.#{variables.$ns}aside-header';
         }
     }
 
-    &_reverse #{$block}__pane-container {
-        flex-direction: row-reverse;
-    }
-
     &__content {
         width: calc(100% - var(--gn-aside-header-size));
         z-index: 95;
