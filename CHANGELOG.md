@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/gravity-ui/navigation/compare/v1.6.2...v1.7.0) (2023-11-27)
+
+
+### Features
+
+* add AsideFallback ([#161](https://github.com/gravity-ui/navigation/issues/161)) ([6e08a91](https://github.com/gravity-ui/navigation/commit/6e08a9188fd53d245c6f1c117099622e3ce755a8))
+
 ## [1.6.2](https://github.com/gravity-ui/navigation/compare/v1.6.1...v1.6.2) (2023-11-24)
 
 
