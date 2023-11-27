@@ -26,6 +26,7 @@ npm install --dev @gravity-ui/uikit@^3.0.2 @bem-react/classname@1.6.0 react@^16.
 - DrawerItem
 - PageLayout
 - PageLayoutAside
+- AsideFallback
 
 ## Optimization
 
@@ -33,23 +34,35 @@ If your app content needs to be rendered faster than by passing it throw `AsideH
 you may need to switch usage of `AsideHeader` to advanced style with `PageLayout` like this:
 
 ```diff
--import {AsideHeader} from '@gravity-ui/navigation';
-+import {PageLayout} from '@gravity-ui/navigation';
-+
-+const PageLayoutAside = React.lazy(() =>
-+    import('@gravity-ui/navigation').then((module) => ({default: module.PageLayoutAside})),
+--- Main.tsx
++++ Main.tsx
+-import {AsideHeader} from './AsideHeader'
++import {PageLayout, AsideFallback} from '@gravity-ui/navigation';
++const Aside = React.lazy(() =>
++    import('./Aside').then(({Aside}) => ({ default: Aside }))
 +);
 
 -    <AsideHeader renderContent={renderContent} {...restProps} />
 +    <PageLayout>
-+        <Suspense fallback={null}>
-+            <PageLayoutAside {...restProps} />
++        <Suspense fallback={<AsideFallback />}>
++           <Aside />
 +        </Suspense>
 +
 +        <PageLayout.Content>
 +            <ContentExample />
 +        </PageLayout.Content>
 +    </PageLayout>
+--- Aside.tsx
++++ Aside.tsx
+-import {AsideHeader} from '@gravity-ui/navigation';
++import {PageLayoutAside} from '@gravity-ui/navigation';
+
+export const Aside: FC = () => {
+    return (
+-        <AsideHeader {...props}>
++        <PageLayoutAside {...props}/>
+    );
+};
 ```
 
 ## Imports

@@ -18,7 +18,6 @@ export interface LayoutProps {
 export interface AsideHeaderGeneralProps {
     logo: LogoProps;
     multipleTooltip?: boolean;
-    reverse?: boolean;
     className?: string;
     collapseTitle?: string;
     expandTitle?: string;

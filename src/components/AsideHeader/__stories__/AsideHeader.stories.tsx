@@ -8,6 +8,8 @@ import {PageLayout} from '../components/PageLayout/PageLayout';
 import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
 import logoIcon from '../../../../.storybook/assets/logo.svg';
 import {menuItemsShowcase} from './moc';
+import {AsideFallback} from '../components/PageLayout/AsideFallback';
+import {Button} from '@gravity-ui/uikit';
 
 export default {
     title: 'components/AsideHeader',
@@ -34,8 +36,7 @@ const AdvancedUsageTemplate: StoryFn = (args) => {
     const [compact, setCompact] = React.useState(args.initialCompact);
 
     return (
-        <PageLayout reverse compact={compact}>
-            <PageLayout.Content>PageContent</PageLayout.Content>
+        <PageLayout compact={compact}>
             <PageLayoutAside
                 headerDecoration
                 menuItems={menuItemsShowcase}
@@ -48,6 +49,8 @@ const AdvancedUsageTemplate: StoryFn = (args) => {
                 onChangeCompact={setCompact}
                 {...args}
             />
+
+            <PageLayout.Content>PageContent</PageLayout.Content>
         </PageLayout>
     );
 };
@@ -80,3 +83,33 @@ HeaderAlertCentered.args = {
         dense: true,
     },
 };
+
+const fallbackArgs = {
+    headerDecoration: true,
+    subheaderItemsCount: 2,
+};
+
+const FallbackTemplate: StoryFn<typeof fallbackArgs> = ({
+    headerDecoration,
+    subheaderItemsCount,
+}) => {
+    const [compact, setCompact] = React.useState(false);
+
+    return (
+        <PageLayout compact={compact}>
+            <AsideFallback
+                headerDecoration={headerDecoration}
+                subheaderItemsCount={subheaderItemsCount}
+            />
+
+            <PageLayout.Content>
+                <div style={{padding: 16}}>
+                    <Button onClick={() => setCompact((prev) => !prev)}>Toggle compact</Button>
+                </div>
+            </PageLayout.Content>
+        </PageLayout>
+    );
+};
+
+export const Fallback = FallbackTemplate.bind({});
+Fallback.args = fallbackArgs;

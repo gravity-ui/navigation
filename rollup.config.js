@@ -21,6 +21,7 @@ const input = [
     'src/components/FooterItem/FooterItem.tsx',
     'src/components/AsideHeader/components/PageLayout/PageLayout.tsx',
     'src/components/AsideHeader/components/PageLayout/PageLayoutAside.tsx',
+    'src/components/AsideHeader/components/PageLayout/AsideFallback.tsx',
 ];
 
 const getPlugins = (outDir) => {

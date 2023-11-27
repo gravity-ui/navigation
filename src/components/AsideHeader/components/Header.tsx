@@ -3,7 +3,7 @@ import React, {useCallback} from 'react';
 import {Icon} from '@gravity-ui/uikit';
 
 import {SubheaderMenuItem} from '../../types';
-import {ASIDE_HEADER_COMPACT_WIDTH} from '../../constants';
+import {ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT} from '../../constants';
 import {Logo} from '../../Logo/Logo';
 import {CompositeBar} from '../../CompositeBar/CompositeBar';
 
@@ -40,7 +40,7 @@ export const Header = () => {
                 data={headerDividerCollapsedIcon}
                 className={b('header-divider')}
                 width={ASIDE_HEADER_COMPACT_WIDTH}
-                height="29"
+                height={HEADER_DIVIDER_HEIGHT}
             />
         </div>
     );
