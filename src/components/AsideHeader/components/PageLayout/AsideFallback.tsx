@@ -3,8 +3,7 @@ import {useAsideHeaderContext} from '../../AsideHeaderContext';
 import headerDividerCollapsedIcon from '../../../../../assets/icons/divider-collapsed.svg';
 import {b} from '../../utils';
 import {Icon} from '@gravity-ui/uikit';
-import {ASIDE_HEADER_COMPACT_WIDTH} from '../../../constants';
-import {ITEM_HEIGHT} from 'src/components/constants';
+import {ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT, ITEM_HEIGHT} from '../../../constants';
 
 export interface Props {
     headerDecoration?: boolean;
@@ -28,7 +27,7 @@ export const AsideFallback: React.FC<Props> = ({headerDecoration, subheaderItems
                             data={headerDividerCollapsedIcon}
                             className={b('header-divider')}
                             width={ASIDE_HEADER_COMPACT_WIDTH}
-                            height="29"
+                            height={HEADER_DIVIDER_HEIGHT}
                         />
                     ) : null}
                 </div>
