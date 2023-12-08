@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/gravity-ui/navigation/compare/v1.7.0...v1.8.0) (2023-12-08)
+
+
+### Features
+
+* **AsideHeader:** add custom background ([#163](https://github.com/gravity-ui/navigation/issues/163)) ([f2226d9](https://github.com/gravity-ui/navigation/commit/f2226d96555ac4a42053693301d83c0b145e5bba))
+
 ## [1.7.0](https://github.com/gravity-ui/navigation/compare/v1.6.2...v1.7.0) (2023-11-27)
 
 
