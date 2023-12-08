@@ -32,7 +32,16 @@ MultipleTooltip.args = {
     initialCompact: true,
 };
 
-const CustomThemeTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
+const CustomThemeTemplate: StoryFn = (args) => (
+    <React.Fragment>
+        <style>
+            {`.g-root {
+                --gn-aside-header-menu-item-icon-color: var(--g-color-text-primary);
+            }`}
+        </style>
+        <AsideHeaderShowcase {...args} />
+    </React.Fragment>
+);
 export const CustomTheme = CustomThemeTemplate.bind({});
 CustomTheme.args = {
     headerDecoration: false,
