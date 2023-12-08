@@ -23,6 +23,8 @@ export interface AsideHeaderGeneralProps {
     expandTitle?: string;
     menuMoreTitle?: string;
     topAlert?: AsideHeaderTopAlertProps;
+    customBackground?: React.ReactNode;
+    customBackgroundClassName?: string;
     renderContent?: RenderContentType;
     renderFooter?: (data: {
         size: number;
