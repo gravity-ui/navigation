@@ -7,6 +7,7 @@ $block: '.#{variables.$ns}aside-header';
     --gn-aside-header-collapse-button-divider-line-color: var(
         --gn-aside-header-subheader-divider-line-color
     );
+    --gn-aside-header-menu-item-icon-color: var(--g-color-text-misc);
     --gn-aside-header-footer-item-icon-color: var(--g-color-text-primary);
     --gn-aside-header-subheader-item-icon-color: var(--g-color-text-primary);
     --gn-aside-header-item-icon-background-size: 38px;
@@ -93,6 +94,16 @@ $block: '.#{variables.$ns}aside-header';
                 var(--gn-aside-header-background-color) calc(var(--gradient-height) * 0.33),
                 transparent calc(var(--gradient-height) * 0.88)
             );
+        }
+
+        &-custom-background {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+
+            display: flex;
+
+            z-index: -1;
         }
     }
 

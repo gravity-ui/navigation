@@ -32,6 +32,16 @@ MultipleTooltip.args = {
     initialCompact: true,
 };
 
+const CustomThemeTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
+export const CustomTheme = CustomThemeTemplate.bind({});
+CustomTheme.args = {
+    headerDecoration: false,
+    customBackground: (
+        <img src="https://cdn.stocksnap.io/img-thumbs/960w/blue-night_DBUU6N5YUY.jpg" />
+    ),
+    customBackgroundClassName: 'aside-header-showcase__custom-background',
+};
+
 const AdvancedUsageTemplate: StoryFn = (args) => {
     const [compact, setCompact] = React.useState(args.initialCompact);
 

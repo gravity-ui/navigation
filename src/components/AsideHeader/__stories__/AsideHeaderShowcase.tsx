@@ -39,19 +39,27 @@ interface AsideHeaderShowcaseProps {
     multipleTooltip?: boolean;
     initialCompact?: boolean;
     topAlert?: AsideHeaderTopAlertProps;
+    customBackground?: React.ReactNode;
+    customBackgroundClassName?: string;
+    headerDecoration?: boolean;
 }
 
 export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
     multipleTooltip = false,
     initialCompact = false,
     topAlert,
+    customBackground,
+    customBackgroundClassName,
+    headerDecoration,
 }) => {
     const ref = React.useRef<HTMLDivElement>(null);
     const [popupVisible, setPopupVisible] = React.useState(false);
     const [subheaderPopupVisible, setSubheaderPopupVisible] = React.useState(false);
     const [visiblePanel, setVisiblePanel] = React.useState<Panel>();
     const [compact, setCompact] = React.useState(initialCompact);
-    const [headerDecoration, setHeaderDecoration] = React.useState<string>(BOOLEAN_OPTIONS.Yes);
+    const [addonHeaderDecoration, setHeaderDecoration] = React.useState<string>(
+        BOOLEAN_OPTIONS.Yes,
+    );
     const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
 
     const openModalSubscriber = (callback: OpenModalSubscriber) => {
@@ -92,9 +100,15 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                     href: '#',
                     onClick: () => alert('click on logo'),
                 }}
-                headerDecoration={headerDecoration === BOOLEAN_OPTIONS.Yes}
+                headerDecoration={
+                    headerDecoration === undefined
+                        ? addonHeaderDecoration === BOOLEAN_OPTIONS.Yes
+                        : headerDecoration
+                }
                 onMenuItemsChanged={setMenuItems}
                 menuItems={menuItems}
+                customBackground={customBackground}
+                customBackgroundClassName={customBackgroundClassName}
                 subheaderItems={[
                     {
                         item: {
@@ -231,7 +245,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                         <div className={b('content')}>
                             <pre>{placeholderText}</pre>
                             <RadioButton
-                                value={headerDecoration}
+                                value={addonHeaderDecoration}
                                 onChange={(event) => {
                                     setHeaderDecoration(event.target.value);
                                 }}

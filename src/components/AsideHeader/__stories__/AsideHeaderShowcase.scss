@@ -83,6 +83,12 @@ body {
         height: calc(100% - 40px);
         padding: 20px;
     }
+
+    &__custom-background {
+        --gn-aside-header-menu-item-icon-color: var(--g-color-text-primary);
+
+        opacity: 75%;
+    }
 }
 
 .composite-bar-showcase__tag {

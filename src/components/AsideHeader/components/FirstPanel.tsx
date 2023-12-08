@@ -20,6 +20,8 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         menuMoreTitle,
         renderFooter,
         compact,
+        customBackground,
+        customBackgroundClassName,
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
 
@@ -33,7 +35,13 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         <>
             <div className={b('aside')} style={{width: size}}>
                 <div className={b('aside-popup-anchor')} ref={asideRef} />
+
                 <div className={b('aside-content', {['with-decoration']: headerDecoration})}>
+                    {customBackground && (
+                        <div className={b('aside-custom-background', customBackgroundClassName)}>
+                            {customBackground}
+                        </div>
+                    )}
                     <Header />
                     {visibleMenuItems?.length ? (
                         <CompositeBar
