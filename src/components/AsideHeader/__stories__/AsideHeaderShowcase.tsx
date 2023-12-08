@@ -245,7 +245,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                         <div className={b('content')}>
                             <pre>{placeholderText}</pre>
                             <RadioButton
-                                value={headerDecoration}
+                                value={addonHeaderDecoration}
                                 onChange={(event) => {
                                     setHeaderDecoration(event.target.value);
                                 }}
