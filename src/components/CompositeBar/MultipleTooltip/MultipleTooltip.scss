@@ -27,8 +27,10 @@ $block: '.#{variables.$ns}multiple-tooltip';
 }
 
 #{$block} {
-    background-color: transparent;
-    box-shadow: none;
+    &#{&} {
+        background-color: transparent;
+        box-shadow: none;
+    }
 
     &::before {
         content: '';
