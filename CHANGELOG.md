@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.1](https://github.com/gravity-ui/navigation/compare/v1.8.0...v1.8.1) (2023-12-14)
+
+
+### Bug Fixes
+
+* multiple tooltip backgroud styles precedence ([#167](https://github.com/gravity-ui/navigation/issues/167)) ([dd9ebc7](https://github.com/gravity-ui/navigation/commit/dd9ebc7c38c702c5daec1c2e725e8204f50639d9))
+
 ## [1.8.0](https://github.com/gravity-ui/navigation/compare/v1.7.0...v1.8.0) (2023-12-08)
 
 
