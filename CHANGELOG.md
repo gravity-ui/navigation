@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.2](https://github.com/gravity-ui/navigation/compare/v1.8.1...v1.8.2) (2023-12-19)
+
+
+### Bug Fixes
+
+* return mock in AsideHeaderContext ([#169](https://github.com/gravity-ui/navigation/issues/169)) ([873fb73](https://github.com/gravity-ui/navigation/commit/873fb731225071c281f5f0319c558be34acffc65))
+
 ## [1.8.1](https://github.com/gravity-ui/navigation/compare/v1.8.0...v1.8.1) (2023-12-14)
 
 
