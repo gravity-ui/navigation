@@ -33,9 +33,11 @@ export interface AsideHeaderContextType {
     size: number;
 }
 
-export const AsideHeaderContext = React.createContext<AsideHeaderContextType | undefined>(
-    undefined,
-);
+export const AsideHeaderContext = React.createContext<AsideHeaderContextType | undefined>({
+    compact: false,
+    size: 0,
+});
+
 AsideHeaderContext.displayName = 'AsideHeaderContext';
 
 export const AsideHeaderContextProvider = AsideHeaderContext.Provider;
