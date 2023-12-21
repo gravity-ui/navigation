@@ -257,7 +257,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
 
                             const {listItems, collapseItems} = getAutosizeListItems(
                                 items,
-                                height,
+                                height || 0,
                                 collapseItem,
                             );
                             return (
