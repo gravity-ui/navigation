@@ -45,7 +45,7 @@ const CustomThemeTemplate: StoryFn = (args) => (
 export const CustomTheme = CustomThemeTemplate.bind({});
 CustomTheme.args = {
     headerDecoration: false,
-    customBackground: <img src="custom-theme-background.png" />,
+    customBackground: <img src="custom-theme-background.png" width="100%" />,
     customBackgroundClassName: 'aside-header-showcase__custom-background',
 };
 
