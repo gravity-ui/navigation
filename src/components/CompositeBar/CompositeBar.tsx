@@ -251,7 +251,10 @@ export const CompositeBar: FC<CompositeBarProps> = ({
             <div className={b({autosizer: true})} style={{minHeight}}>
                 {items.length !== 0 && (
                     <AutoSizer>
-                        {({width, height}: Size) => {
+                        {(size: Size) => {
+                            const width = Number.isNaN(size.width) ? 0 : size.width;
+                            const height = Number.isNaN(size.height) ? 0 : size.height;
+
                             const {listItems, collapseItems} = getAutosizeListItems(
                                 items,
                                 height,

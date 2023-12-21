@@ -45,9 +45,7 @@ const CustomThemeTemplate: StoryFn = (args) => (
 export const CustomTheme = CustomThemeTemplate.bind({});
 CustomTheme.args = {
     headerDecoration: false,
-    customBackground: (
-        <img src="https://cdn.stocksnap.io/img-thumbs/960w/blue-night_DBUU6N5YUY.jpg" />
-    ),
+    customBackground: <img src="custom-theme-background.png" width="100%" />,
     customBackgroundClassName: 'aside-header-showcase__custom-background',
 };
 
