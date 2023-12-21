@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.3](https://github.com/gravity-ui/navigation/compare/v1.8.2...v1.8.3) (2023-12-21)
+
+
+### Bug Fixes
+
+* **CompositeBar:** remove NaN warning ([#171](https://github.com/gravity-ui/navigation/issues/171)) ([8b3857e](https://github.com/gravity-ui/navigation/commit/8b3857e31a9511e0954879eeb7bc71e47531f299))
+
 ## [1.8.2](https://github.com/gravity-ui/navigation/compare/v1.8.1...v1.8.2) (2023-12-19)
 
 
