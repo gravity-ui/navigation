@@ -12,7 +12,7 @@ import {EMPTY_CONTEXT_VALUE} from '../../AsideHeader/__stories__/moc';
 import './FooterItemShowcase.scss';
 
 export default {
-    title: 'Components/AsideHeader/FooterItem',
+    title: 'Components/FooterItem',
     component: FooterItem,
     decorators: [
         (DecoratedStory, context) => {
