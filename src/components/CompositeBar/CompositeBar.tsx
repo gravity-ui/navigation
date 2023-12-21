@@ -252,12 +252,12 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                 {items.length !== 0 && (
                     <AutoSizer>
                         {(size: Size) => {
-                            const width = Number.isNaN(size.width) ? undefined : size.width;
-                            const height = Number.isNaN(size.height) ? undefined : size.height;
+                            const width = Number.isNaN(size.width) ? 0 : size.width;
+                            const height = Number.isNaN(size.height) ? 0 : size.height;
 
                             const {listItems, collapseItems} = getAutosizeListItems(
                                 items,
-                                height || 0,
+                                height,
                                 collapseItem,
                             );
                             return (
