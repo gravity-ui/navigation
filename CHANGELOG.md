@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.4](https://github.com/gravity-ui/navigation/compare/v1.8.3...v1.8.4) (2024-01-24)
+
+
+### Bug Fixes
+
+* className for FirstPanel ([#174](https://github.com/gravity-ui/navigation/issues/174)) ([3d11be8](https://github.com/gravity-ui/navigation/commit/3d11be89a03695205d896410e8785be76501b59d))
+
 ## [1.8.3](https://github.com/gravity-ui/navigation/compare/v1.8.2...v1.8.3) (2023-12-21)
 
 
