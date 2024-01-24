@@ -22,6 +22,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         compact,
         customBackground,
         customBackgroundClassName,
+        className,
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
 
@@ -33,7 +34,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
     return (
         <>
-            <div className={b('aside')} style={{width: size}}>
+            <div className={b('aside', className)} style={{width: size}}>
                 <div className={b('aside-popup-anchor')} ref={asideRef} />
 
                 <div className={b('aside-content', {['with-decoration']: headerDecoration})}>
