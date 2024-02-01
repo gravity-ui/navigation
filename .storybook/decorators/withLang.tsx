@@ -1,13 +1,17 @@
 import React from 'react';
 import type {Decorator} from '@storybook/react';
-import {Lang, configure} from '../../src';
+import {Lang, configure} from '@gravity-ui/uikit';
 
 export const withLang: Decorator = (Story, context) => {
     const lang = context.globals.lang;
+    const [key, forceRender] = React.useState(0);
 
-    configure({
-        lang: lang as Lang,
-    });
+    React.useEffect(() => {
+        configure({
+            lang: lang as Lang,
+        });
 
-    return <Story key={lang} {...context} />;
+        forceRender((c) => c + 1);
+    }, [lang]);
+    return <Story key={key} {...context} />;
 };
