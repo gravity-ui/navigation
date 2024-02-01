@@ -2,8 +2,9 @@
 
 $block: '.#{variables.$ns}multiple-tooltip';
 
-.g-root_theme_dark,
-.g-root_theme_dark-hc {
+.g-root_theme_dark #{$block},
+.g-root_theme_dark-hc #{$block} {
+    // TODO: Replace private color variable with special one which should appear in next uikit major version
     --multiple-tooltip-item-bg-color: var(--g-color-private-white-100-solid);
     --multiple-tooltip-item-active-bg-color: var(--g-color-base-float-heavy);
     --multiple-tooltip-backdrop-background: linear-gradient(
@@ -14,12 +15,14 @@ $block: '.#{variables.$ns}multiple-tooltip';
     --multiple-tooltip-backdrop-filter: blur(16px);
 }
 
-.g-root_theme_dark-hc {
+.g-root_theme_dark-hc #{$block} {
+    // TODO: Replace private color variable with special one which should appear in next uikit major version
     --multiple-tooltip-item-bg-color: var(--g-color-private-white-150-solid);
 }
 
 .g-root_theme_light #{$block},
 .g-root_theme_light-hc #{$block} {
+    // TODO: Replace private color variable with special one which should appear in next uikit major version
     --multiple-tooltip-item-bg-color: var(--g-color-private-black-550-solid);
     --multiple-tooltip-item-active-bg-color: var(--g-color-base-float-heavy);
     --multiple-tooltip-backdrop-background: linear-gradient(
