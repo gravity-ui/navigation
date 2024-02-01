@@ -4,24 +4,31 @@ $block: '.#{variables.$ns}multiple-tooltip';
 
 .g-root_theme_dark #{$block},
 .g-root_theme_dark-hc #{$block} {
-    --multiple-tooltip-item-bg-color: #424147; // TODO: color variable will appear in uikit 5
+    // TODO: Replace private color variable with special one which should appear in next uikit major version
+    --multiple-tooltip-item-bg-color: var(--g-color-private-white-100-solid);
     --multiple-tooltip-item-active-bg-color: var(--g-color-base-float-heavy);
     --multiple-tooltip-backdrop-background: linear-gradient(
         90deg,
-        #313036 0%,
-        rgba(49, 48, 54, 0.3) 100%
+        var(--g-color-base-background) 50%,
+        transparent
     );
     --multiple-tooltip-backdrop-filter: blur(16px);
 }
 
+.g-root_theme_dark-hc #{$block} {
+    // TODO: Replace private color variable with special one which should appear in next uikit major version
+    --multiple-tooltip-item-bg-color: var(--g-color-private-white-150-solid);
+}
+
 .g-root_theme_light #{$block},
 .g-root_theme_light-hc #{$block} {
-    --multiple-tooltip-item-bg-color: #7a7a7a; // TODO: color variable will appear in uikit 5
+    // TODO: Replace private color variable with special one which should appear in next uikit major version
+    --multiple-tooltip-item-bg-color: var(--g-color-private-black-550-solid);
     --multiple-tooltip-item-active-bg-color: var(--g-color-base-float-heavy);
     --multiple-tooltip-backdrop-background: linear-gradient(
         90deg,
-        #ffffff 0%,
-        rgba(255, 255, 255, 0.3) 100%
+        var(--g-color-base-background) 50%,
+        transparent
     );
     --multiple-tooltip-backdrop-filter: blur(12px);
 }
@@ -39,6 +46,7 @@ $block: '.#{variables.$ns}multiple-tooltip';
         width: 100%;
         height: 100%;
         z-index: -1;
+        opacity: 0.7;
         background: var(--multiple-tooltip-backdrop-background);
         filter: var(--multiple-tooltip-backdrop-filter);
     }
