@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.9.0](https://github.com/gravity-ui/navigation/compare/v1.8.4...v1.9.0) (2024-02-02)
+
+
+### Features
+
+* **Item:** added popupContentClassName prop ([#181](https://github.com/gravity-ui/navigation/issues/181)) ([38bfdd6](https://github.com/gravity-ui/navigation/commit/38bfdd60b3a108c7e5f90e67ad0eb27c52480e2b))
+
+
+### Bug Fixes
+
+* **MultipleTooltip:** changed tooltips and it's backdrop styles ([#179](https://github.com/gravity-ui/navigation/issues/179)) ([0a12da5](https://github.com/gravity-ui/navigation/commit/0a12da5064730be8dc134a8037e18a2d29cc0b4c))
+
 ## [1.8.4](https://github.com/gravity-ui/navigation/compare/v1.8.3...v1.8.4) (2024-01-24)
 
 
