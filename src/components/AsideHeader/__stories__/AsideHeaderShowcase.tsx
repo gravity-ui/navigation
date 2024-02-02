@@ -125,6 +125,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                         popupOffset: [10, 10],
                         popupVisible: subheaderPopupVisible,
                         onClosePopup: () => setSubheaderPopupVisible(false),
+                        popupContentClassName: b('popup-content-class-name'),
                         renderPopupContent: () => {
                             return (
                                 <div className={b('settings')}>
