@@ -3,33 +3,20 @@
 $block: '.#{variables.$ns}aside-header';
 
 .g-root {
-    --gn-aside-header-background-color: var(--g-color-base-warning-light);
-    --gn-aside-header-collapse-button-divider-line-color: var(
-        --gn-aside-header-subheader-divider-line-color
-    );
     --gn-aside-header-menu-item-icon-color: var(--g-color-text-misc);
     --gn-aside-header-footer-item-icon-color: var(--g-color-text-primary);
     --gn-aside-header-subheader-item-icon-color: var(--g-color-text-primary);
     --gn-aside-header-item-icon-background-size: 38px;
-
-    --gn-aside-top-panel-height: 0px;
-}
-
-.g-root_theme_light,
-.g-root_theme_light-hc {
-    --gn-aside-header-divider-line-color: var(--g-color-line-generic);
-    --gn-aside-header-subheader-divider-line-color: var(--g-color-line-generic);
-}
-
-.g-root_theme_dark,
-.g-root_theme_dark-hc {
-    --gn-aside-header-divider-line-color: var(--g-color-line-generic-solid);
-    --gn-aside-header-subheader-divider-line-color: var(--g-color-line-generic-solid);
 }
 
 #{$block} {
     $class: &;
     --gn-aside-header-min-width: 56px;
+
+    --_--decoration-background-color: var(--g-color-base-warning-light);
+    --_--divider-line-color: var(--g-color-line-generic);
+
+    --_--top-panel-height: 0px;
 
     height: 100%;
     width: 100%;
@@ -38,7 +25,7 @@ $block: '.#{variables.$ns}aside-header';
 
     &__aside {
         position: sticky;
-        top: var(--gn-aside-top-panel-height);
+        top: var(--gn-aside-top-panel-height, var(--_--top-panel-height));
         left: 0;
         height: 100vh;
         width: inherit;
@@ -46,8 +33,8 @@ $block: '.#{variables.$ns}aside-header';
         flex-direction: column;
         background-color: var(--g-color-base-background);
         z-index: 100;
-        max-height: calc(100vh - var(--gn-aside-top-panel-height));
-        margin-top: var(--gn-aside-top-panel-height);
+        max-height: calc(100vh - var(--gn-aside-top-panel-height, var(--_--top-panel-height)));
+        margin-top: var(--gn-aside-top-panel-height, var(--_--top-panel-height));
 
         box-sizing: border-box;
 
@@ -59,7 +46,10 @@ $block: '.#{variables.$ns}aside-header';
             width: 1px;
             height: 100%;
             content: '';
-            background-color: var(--gn-aside-header-divider-line-color);
+            background-color: var(
+                --gn-aside-header-divider-line-color,
+                var(--_--divider-line-color)
+            );
         }
 
         &-popup-anchor {
@@ -91,7 +81,8 @@ $block: '.#{variables.$ns}aside-header';
         &-content_with-decoration {
             background: linear-gradient(
                 180deg,
-                var(--gn-aside-header-background-color) calc(var(--gradient-height) * 0.33),
+                var(--gn-aside-header-background-color, var(--_--decoration-background-color))
+                    calc(var(--gradient-height) * 0.33),
                 transparent calc(var(--gradient-height) * 0.88)
             );
         }
@@ -130,7 +121,7 @@ $block: '.#{variables.$ns}aside-header';
             left: 0;
             z-index: -2;
             display: none;
-            color: var(--gn-aside-header-background-color);
+            color: var(--gn-aside-header-background-color, var(--_--decoration-background-color));
         }
 
         &_with-decoration::before {
@@ -142,7 +133,10 @@ $block: '.#{variables.$ns}aside-header';
             width: 100%;
             height: calc(100% - var(--gn-aside-header-header-divider-height));
             content: '';
-            background-color: var(--gn-aside-header-background-color);
+            background-color: var(
+                --gn-aside-header-background-color,
+                var(--_--decoration-background-color)
+            );
         }
 
         &::after {
@@ -153,7 +147,10 @@ $block: '.#{variables.$ns}aside-header';
             width: 100%;
             height: 1px;
             content: '';
-            background-color: var(--gn-aside-header-subheader-divider-line-color);
+            background-color: var(
+                --gn-aside-header-subheader-divider-line-color,
+                var(--_--divider-line-color)
+            );
         }
     }
 
@@ -210,7 +207,7 @@ $block: '.#{variables.$ns}aside-header';
 
     &__pane-top-divider {
         height: 1px;
-        background-color: var(--gn-aside-header-divider-line-color);
+        background-color: var(--gn-aside-header-divider-line-color, var(--_--divider-line-color));
         margin-top: -1px;
     }
 
@@ -256,7 +253,8 @@ $block: '.#{variables.$ns}aside-header';
         flex: none;
         width: 100%;
         height: 20px;
-        border-top: 1px solid var(--gn-aside-header-collapse-button-divider-line-color);
+        border-top: 1px solid
+            var(--gn-aside-header-collapse-button-divider-line-color, var(--_--divider-line-color));
         margin-top: auto;
 
         &:not(&_compact) {
