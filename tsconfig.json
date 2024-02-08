@@ -8,13 +8,11 @@
     "outDir": "build",
     "declaration": true
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": [
     "node_modules",
     "build",
+    "**/__stories__",
     "**/__tests__",
     "**/*.test.ts",
     "**/*.test.tsx"

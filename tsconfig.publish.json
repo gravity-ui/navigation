@@ -3,5 +3,5 @@
   "compilerOptions": {
     "paths": {}
   },
-  "exclude": ["src/stories", "src/**/*.test.ts", "src/**/*.test.tsx"]
+  "exclude": ["**/__stories__", "src/**/*.test.ts", "src/**/*.test.tsx"]
 }
