@@ -2,19 +2,16 @@
 
 $block: '.#{variables.$ns}aside-header';
 
-.g-root {
-    --gn-aside-header-menu-item-icon-color: var(--g-color-text-misc);
-    --gn-aside-header-footer-item-icon-color: var(--g-color-text-primary);
-    --gn-aside-header-subheader-item-icon-color: var(--g-color-text-primary);
-    --gn-aside-header-item-icon-background-size: 38px;
-}
-
 #{$block} {
     $class: &;
     --gn-aside-header-min-width: 56px;
 
-    --_--decoration-background-color: var(--g-color-base-warning-light);
-    --_--divider-line-color: var(--g-color-line-generic);
+    --_--item-icon-background-size: 38px;
+    --_--background-color: var(--g-color-base-background);
+    --_--decoration-collapsed-background-color: var(--g-color-base-warning-light);
+    --_--decoration-expanded-background-color: var(--g-color-base-warning-light);
+    --_--vertical-divider-line-color: var(--g-color-line-generic);
+    --_--horizontal-divider-line-color: var(--g-color-line-generic);
 
     --_--top-panel-height: 0px;
 
@@ -31,7 +28,7 @@ $block: '.#{variables.$ns}aside-header';
         width: inherit;
         display: flex;
         flex-direction: column;
-        background-color: var(--g-color-base-background);
+        background-color: var(--gn-color-background, var(--_--background-color));
         z-index: 100;
         max-height: calc(100vh - var(--gn-aside-top-panel-height, var(--_--top-panel-height)));
         margin-top: var(--gn-aside-top-panel-height, var(--_--top-panel-height));
@@ -46,10 +43,7 @@ $block: '.#{variables.$ns}aside-header';
             width: 1px;
             height: 100%;
             content: '';
-            background-color: var(
-                --gn-aside-header-divider-line-color,
-                var(--_--divider-line-color)
-            );
+            background-color: var(--gn-color-line-vertical, var(--_--vertical-divider-line-color));
         }
 
         &-popup-anchor {
@@ -81,7 +75,7 @@ $block: '.#{variables.$ns}aside-header';
         &-content_with-decoration {
             background: linear-gradient(
                 180deg,
-                var(--gn-aside-header-background-color, var(--_--decoration-background-color))
+                var(--gn-color-accent-expanded, var(--_--decoration-expanded-background-color))
                     calc(var(--gradient-height) * 0.33),
                 transparent calc(var(--gradient-height) * 0.88)
             );
@@ -121,7 +115,10 @@ $block: '.#{variables.$ns}aside-header';
             left: 0;
             z-index: -2;
             display: none;
-            color: var(--gn-aside-header-background-color, var(--_--decoration-background-color));
+            color: var(
+                --gn-color-accent-collapsed,
+                var(--_--decoration-collapsed-background-color)
+            );
         }
 
         &_with-decoration::before {
@@ -134,8 +131,8 @@ $block: '.#{variables.$ns}aside-header';
             height: calc(100% - var(--gn-aside-header-header-divider-height));
             content: '';
             background-color: var(
-                --gn-aside-header-background-color,
-                var(--_--decoration-background-color)
+                --gn-color-accent-collapsed,
+                var(--_--decoration-collapsed-background-color)
             );
         }
 
@@ -148,8 +145,8 @@ $block: '.#{variables.$ns}aside-header';
             height: 1px;
             content: '';
             background-color: var(
-                --gn-aside-header-subheader-divider-line-color,
-                var(--_--divider-line-color)
+                --gn-color-line-horizontal,
+                var(--_--horizontal-divider-line-color)
             );
         }
     }
@@ -207,7 +204,7 @@ $block: '.#{variables.$ns}aside-header';
 
     &__pane-top-divider {
         height: 1px;
-        background-color: var(--gn-aside-header-divider-line-color, var(--_--divider-line-color));
+        background-color: var(--gn-color-line-horizontal, var(--_--horizontal-divider-line-color));
         margin-top: -1px;
     }
 
@@ -254,7 +251,7 @@ $block: '.#{variables.$ns}aside-header';
         width: 100%;
         height: 20px;
         border-top: 1px solid
-            var(--gn-aside-header-collapse-button-divider-line-color, var(--_--divider-line-color));
+            var(--gn-color-line-horizontal, var(--_--horizontal-divider-line-color));
         margin-top: auto;
 
         &:not(&_compact) {

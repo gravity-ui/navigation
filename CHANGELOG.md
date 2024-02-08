@@ -1,3 +1,22 @@
+### ⚠ BREAKING CHANGES
+
+* Rename css vars ([#99](https://github.com/gravity-ui/navigation/issues/99))
+  * `--gn-aside-header-background-color` -> `--gn-color-accent-collapsed`, `--gn-color-accent-expanded`
+  * `--gn-aside-header-divider-line-color` -> `--gn-color-line-vertical`, `--gn-color-line-horizontal`
+  * `--gn-aside-header-collapse-button-divider-line-color` -> `--gn-color-line-horizontal`
+  * `--gn-aside-header-subheader-item-icon-color`, `--gn-aside-header-footer-item-icon-color`-> `--gn-color-item-icon-general`
+  * `--gn-aside-header-menu-item-icon-color` -> `--gn-color-item-icon`
+
+
+
+
+* Add new css vars
+  * `--gn-color-background`
+  * `--gn-color-item-background-hover`
+  * `--gn-color-item-background-selected`
+  * `--gn-color-item-text`
+
+
 # Changelog
 
 ## [1.8.4](https://github.com/gravity-ui/navigation/compare/v1.8.3...v1.8.4) (2024-01-24)
@@ -250,7 +269,7 @@
   * `--aside-header-collapse-button-divider-line-color` -> `--gn-aside-header-collapse-button-divider-line-color`
   * `--aside-header-divider-line-color` -> `--gn-aside-header-divider-line-color`
   * `--aside-header-header-divider-line-color` -> `--gn-aside-header-subheader-divider-line-color`
-  
+
 Read more about [themization](https://github.com/gravity-ui/navigation#css-variables)
 
 ### Features

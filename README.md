@@ -77,12 +77,16 @@ Used for themization Navigation's components
 
 ### AsideHeader vars
 
-| Name                                                   | Description                                                      | Default                                                                           |
-| :----------------------------------------------------- | :--------------------------------------------------------------- | :-------------------------------------------------------------------------------- |
-| `--gn-aside-header-background-color`                   | Сolor of decorations and selected items                          | `--g-color-base-warning-light`                                                    |
-| `--gn-aside-header-subheader-divider-line-color`       | Divider line color for withDecoration and expanded `AsideHeader` | Light theme: `--g-color-line-generic`, Dark theme: `--g-color-line-generic-solid` |
-| `--gn-aside-header-collapse-button-divider-line-color` |                                                                  | `--gn-aside-header-subheader-divider-line-color`                                  |
-| `--gn-aside-header-footer-item-icon-color`             |                                                                  | `--g-color-text-primary`                                                          |
-| `--gn-aside-header-subheader-item-icon-color`          |                                                                  | `--g-color-text-primary`                                                          |
-| `--gn-aside-header-item-icon-background-size`          | Background size used when `AsideHeader` is compact               | `38px`                                                                            |
-| `--gn-aside-header-divider-line-color`                 | Vertical color divider between `AsideHeader` and content         | Light theme: `--g-color-line-generic`, Dark theme: `--g-color-line-generic-solid` |
+| Name                                          | Description                                                      |            Default             |
+| :-------------------------------------------- | :--------------------------------------------------------------- | :----------------------------: |
+| `--gn-color-accent-collapsed`                 | Decoration color for collapsed navigation                        | `--g-color-base-warning-light` |
+| `--gn-color-accent-expanded`                  | Decoration color for expanded navigation                         | `--g-color-base-warning-light` |
+| `--gn-color-background`                       | Navigation background color                                      |  `--g-color-base-background`   |
+| `--gn-color-line-horizontal`                  | Divider line color for withDecoration and expanded `AsideHeader` |    `--g-color-line-generic`    |
+| `--gn-color-line-vertical`                    | Vertical color divider between `AsideHeader` and content         |    `--g-color-line-generic`    |
+| `--gn-color-item-background-hover`            |                                                                  | `--g-color-base-simple-hover`  |
+| `--gn-color-item-background-selected`         |                                                                  |   `--g-color-base-selection`   |
+| `--gn-color-item-icon-general`                |                                                                  |    `--g-color-text-primary`    |
+| `--gn-color-item-icon`                        |                                                                  |     `--g-color-text-misc`      |
+| `--gn-color-item-text`                        |                                                                  |    `--g-color-text-primary`    |
+| `--gn-aside-header-item-icon-background-size` | Background size used when `AsideHeader` is compact               |             `38px`             |
