@@ -32,7 +32,7 @@ MultipleTooltip.args = {
     initialCompact: true,
 };
 
-const CustomTemplate: StoryFn = (args) => (
+const CustomThemeTemplate: StoryFn = (args) => (
     <React.Fragment>
         <style>
             {`.g-root {
@@ -44,13 +44,13 @@ const CustomTemplate: StoryFn = (args) => (
                 --gn-color-item-background-hover: #2626f75c;
                 --gn-color-item-background-selected: #f8ca7d;
                 --gn-color-item-icon-general: #4a4a4a;
-                --gn-color-item-icon: black;
+                --gn-color-item-icon: var(--g-color-text-primary);
             }`}
         </style>
         <AsideHeaderShowcase {...args} />
     </React.Fragment>
 );
-export const Custom = CustomTemplate.bind({});
+export const CustomTheme = CustomThemeTemplate.bind({});
 
 const CustomBackgroundTemplate: StoryFn = (args) => (
     <React.Fragment>

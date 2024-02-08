@@ -185,9 +185,9 @@ $block: '.#{variables.$ns}aside-header';
         left: 0;
         right: 0;
         bottom: 0;
-        top: var(--gn-aside-top-panel-height);
+        top: var(--gn-aside-top-panel-height, var(--_--top-panel-height));
         overflow: auto;
-        max-height: calc(100vh - var(--gn-aside-top-panel-height));
+        max-height: calc(100vh - var(--gn-aside-top-panel-height, var(--_--top-panel-height)));
     }
 
     &__panel {
@@ -231,7 +231,7 @@ $block: '.#{variables.$ns}aside-header';
     &__content {
         width: calc(100% - var(--gn-aside-header-size));
         z-index: 95;
-        margin-top: var(--gn-aside-top-panel-height);
+        margin-top: var(--gn-aside-top-panel-height, var(--_--top-panel-height));
     }
 
     &__collapse-button {
