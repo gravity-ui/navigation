@@ -1,7 +1,8 @@
 import {Ellipsis} from '@gravity-ui/icons';
 
-import i18n from './i18n';
 import {MenuItem} from '../types';
+
+import i18n from './i18n';
 
 export const ALL_PAGES_ID = 'all-pages' as const;
 

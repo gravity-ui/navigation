@@ -1,6 +1,7 @@
 import React from 'react';
-import type {Decorator} from '@storybook/react';
+
 import {useMobile} from '@gravity-ui/uikit';
+import type {Decorator} from '@storybook/react';
 
 export const withMobile: Decorator = (Story, context) => {
     const mobileValue = context.globals.platform === 'mobile';

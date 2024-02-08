@@ -1,5 +1,6 @@
 import React from 'react';
-import {IconProps, AlertProps} from '@gravity-ui/uikit';
+
+import {AlertProps, IconProps} from '@gravity-ui/uikit';
 
 import {ItemProps} from 'src/components/CompositeBar/Item/Item';
 

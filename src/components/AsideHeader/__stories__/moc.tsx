@@ -1,8 +1,9 @@
 import React from 'react';
+
 import {Gear, Plus} from '@gravity-ui/icons';
 
-import {MenuItem} from '../../types';
 import {ASIDE_HEADER_EXPANDED_WIDTH} from '../../constants';
+import {MenuItem} from '../../types';
 import {AsideHeaderContextType} from '../AsideHeaderContext';
 
 function renderTag(tag: string) {

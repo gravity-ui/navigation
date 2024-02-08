@@ -1,12 +1,12 @@
-import './styles.scss';
-import '@gravity-ui/uikit/styles/styles.css';
-
 import React from 'react';
 import type {Decorator, Preview} from '@storybook/react';
 import {ThemeProvider, MobileProvider, Lang, configure as uiKitConfigure} from '@gravity-ui/uikit';
 import {configure as componentsConfigure} from '@gravity-ui/components';
 import {withMobile} from './decorators/withMobile';
 import {withLang} from './decorators/withLang';
+
+import './styles.scss';
+import '@gravity-ui/uikit/styles/styles.css';
 
 uiKitConfigure({
     lang: Lang.En,

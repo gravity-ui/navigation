@@ -1,8 +1,8 @@
 import React from 'react';
-import {block} from '../utils/cn';
 
 import {Item, ItemProps} from '../CompositeBar/Item/Item';
 import {ASIDE_HEADER_ICON_SIZE} from '../constants';
+import {block} from '../utils/cn';
 
 import './FooterItem.scss';
 

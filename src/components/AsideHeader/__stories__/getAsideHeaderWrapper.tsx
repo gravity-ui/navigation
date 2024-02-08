@@ -1,7 +1,9 @@
 import React, {FC} from 'react';
-import logoIcon from '../../../../.storybook/assets/logo.svg';
+
 import {AsideHeader} from '../AsideHeader';
 import {AsideHeaderProps} from '../types';
+
+import logoIcon from '../../../../.storybook/assets/logo.svg';
 
 const AsideHeaderWrapper = ({Story, ...props}: AsideHeaderProps & {Story: FC}) => {
     const [compact, setCompact] = React.useState(props.compact);

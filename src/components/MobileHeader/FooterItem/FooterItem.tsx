@@ -1,8 +1,8 @@
 import React from 'react';
+
+import {Icon, IconProps, Sheet, eventBroker} from '@gravity-ui/uikit';
+
 import {block} from '../../utils/cn';
-
-import {eventBroker, Icon, IconProps, Sheet} from '@gravity-ui/uikit';
-
 import {MOBILE_HEADER_ICON_SIZE} from '../constants';
 import {ModalItem} from '../types';
 

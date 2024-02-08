@@ -1,7 +1,10 @@
 import React from 'react';
-import {Button, Icon, Text} from '@gravity-ui/uikit';
+
 import {Xmark} from '@gravity-ui/icons';
+import {Button, Icon, Text} from '@gravity-ui/uikit';
+
 import {block} from '../utils/cn';
+
 import i18n from './i18n';
 
 import './Title.scss';

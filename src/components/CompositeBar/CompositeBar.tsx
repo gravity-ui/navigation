@@ -1,24 +1,25 @@
 import React, {FC, ReactNode, useCallback, useContext, useRef} from 'react';
-import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
+
 import {List} from '@gravity-ui/uikit';
+import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
 
-import {block} from '../utils/cn';
+import {useAsideHeaderContext} from '../AsideHeader/AsideHeaderContext';
+import {ASIDE_HEADER_COMPACT_WIDTH} from '../constants';
 import {MenuItem, SubheaderMenuItem} from '../types';
-import {
-    getItemsHeight,
-    getItemHeight,
-    getSelectedItemIndex,
-    getItemsMinHeight,
-    getMoreButtonItem,
-    getAutosizeListItems,
-    isMenuItem,
-} from './utils';
-import {Item, ItemProps} from './Item/Item';
+import {block} from '../utils/cn';
 
+import {Item, ItemProps} from './Item/Item';
 import {MultipleTooltip, MultipleTooltipContext, MultipleTooltipProvider} from './MultipleTooltip';
 import {COLLAPSE_ITEM_ID} from './constants';
-import {ASIDE_HEADER_COMPACT_WIDTH} from '../constants';
-import {useAsideHeaderContext} from '../AsideHeader/AsideHeaderContext';
+import {
+    getAutosizeListItems,
+    getItemHeight,
+    getItemsHeight,
+    getItemsMinHeight,
+    getMoreButtonItem,
+    getSelectedItemIndex,
+    isMenuItem,
+} from './utils';
 
 import './CompositeBar.scss';
 

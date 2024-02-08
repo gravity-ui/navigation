@@ -1,9 +1,10 @@
 import React from 'react';
+
 import {Alert} from '@gravity-ui/uikit';
 
-import {b} from '../utils';
 import {AsideHeaderTopAlertProps} from '../../types';
 import {useAsideHeaderTopPanel} from '../useAsideHeaderTopPanel';
+import {b} from '../utils';
 
 type Props = {
     topAlert?: AsideHeaderTopAlertProps;

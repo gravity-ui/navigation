@@ -1,9 +1,10 @@
 import React from 'react';
-import {block} from '../utils/cn';
-import {LogoProps} from '../types';
+
 import {Button, Icon} from '@gravity-ui/uikit';
 
 import {useAsideHeaderContext} from '../AsideHeader/AsideHeaderContext';
+import {LogoProps} from '../types';
+import {block} from '../utils/cn';
 
 import './Logo.scss';
 

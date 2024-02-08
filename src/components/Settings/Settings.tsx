@@ -1,21 +1,10 @@
 import React from 'react';
-import {block} from '../utils/cn';
-import identity from 'lodash/identity';
 
 import {Flex, IconProps, Loader} from '@gravity-ui/uikit';
-import {SettingsSearch} from './SettingsSearch/SettingsSearch';
-import {SettingsMenu, SettingsMenuInstance} from './SettingsMenu/SettingsMenu';
-import {SettingsMenuMobile} from './SettingsMenuMobile/SettingsMenuMobile';
-import {Title} from '../Title';
-import i18n from './i18n';
+import identity from 'lodash/identity';
 
-import type {
-    SettingsItem,
-    SettingsMenu as SettingsMenuType,
-    SettingsPageSection,
-} from './collect-settings';
-import {getSettingsFromChildren} from './collect-settings';
-import {escapeStringForRegExp} from './helpers';
+import {Title} from '../Title';
+import {block} from '../utils/cn';
 
 import {SettingsSelection} from './Selection';
 import {
@@ -24,6 +13,17 @@ import {
     useSettingsSelectionProviderValue,
 } from './Selection/context';
 import {isSectionSelected} from './Selection/utils';
+import {SettingsMenu, SettingsMenuInstance} from './SettingsMenu/SettingsMenu';
+import {SettingsMenuMobile} from './SettingsMenuMobile/SettingsMenuMobile';
+import {SettingsSearch} from './SettingsSearch/SettingsSearch';
+import type {
+    SettingsItem,
+    SettingsMenu as SettingsMenuType,
+    SettingsPageSection,
+} from './collect-settings';
+import {getSettingsFromChildren} from './collect-settings';
+import {escapeStringForRegExp} from './helpers';
+import i18n from './i18n';
 
 import './Settings.scss';
 
@@ -277,7 +277,7 @@ function SettingsContent({
         const filteredSections = pages[page].sections.filter((section) => !section.hidden);
 
         return (
-            <>
+            <React.Fragment>
                 {!isMobile && (
                     <Title hasSeparator onClose={onClose}>
                         {getPageTitleById(menu, page)}
@@ -287,7 +287,7 @@ function SettingsContent({
                 <div className={b('content')}>
                     {filteredSections.map((section) => renderSection(page, section))}
                 </div>
-            </>
+            </React.Fragment>
         );
     };
 
@@ -295,7 +295,7 @@ function SettingsContent({
         <SettingsSelectionContextProvider value={selected}>
             <div className={b({view})}>
                 {isMobile ? (
-                    <>
+                    <React.Fragment>
                         <SettingsSearch
                             inputRef={searchInputRef}
                             className={b('search')}
@@ -310,7 +310,7 @@ function SettingsContent({
                             activeItemId={activePage}
                             className={b('tabs')}
                         />
-                    </>
+                    </React.Fragment>
                 ) : (
                     <div
                         className={b('menu')}

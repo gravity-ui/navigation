@@ -1,13 +1,13 @@
 import React, {useReducer} from 'react';
 
-import {Settings} from '../index';
 import {HelpPopover} from '@gravity-ui/components';
-import {Button, Switch, Checkbox, RadioButton, Radio, Select, Link} from '@gravity-ui/uikit';
+import {Button, Checkbox, Link, Radio, RadioButton, Select, Switch} from '@gravity-ui/uikit';
+
+import {cn} from '../../utils/cn';
+import {SettingsSelection} from '../Selection/types';
+import {Settings} from '../index';
 
 import featureIcon from '../../../../assets/icons/gear.svg';
-import {cn} from '../../utils/cn';
-
-import {SettingsSelection} from '../Selection/types';
 
 import './SettingsDemo.scss';
 

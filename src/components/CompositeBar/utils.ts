@@ -1,8 +1,10 @@
 import {Ellipsis} from '@gravity-ui/icons';
-import {MenuItem} from './../types';
-import {COLLAPSE_ITEM_ID} from './constants';
+
 import {CompositeBarItem} from '../CompositeBar/CompositeBar';
 import {ITEM_HEIGHT} from '../constants';
+
+import {MenuItem} from './../types';
+import {COLLAPSE_ITEM_ID} from './constants';
 
 export function getItemHeight(item: CompositeBarItem) {
     if (!isMenuItem(item)) {

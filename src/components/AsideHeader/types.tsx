@@ -1,12 +1,13 @@
 import {RenderContentType} from '../Content';
 import {DrawerItemProps} from '../Drawer/Drawer';
 import {
+    AsideHeaderTopAlertProps,
     LogoProps,
     MenuItem,
-    SubheaderMenuItem,
     OpenModalSubscriber,
-    AsideHeaderTopAlertProps,
+    SubheaderMenuItem,
 } from '../types';
+
 import {AsideHeaderContextType} from './AsideHeaderContext';
 
 export interface LayoutProps {

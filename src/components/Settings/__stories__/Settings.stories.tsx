@@ -1,7 +1,9 @@
 import React from 'react';
+
 import type {Meta, StoryFn} from '@storybook/react';
 
 import {Settings} from '..';
+
 import {SettingsDemo} from './SettingsDemo';
 import {SettingsMobileDemo} from './SettingsMobileDemo';
 
