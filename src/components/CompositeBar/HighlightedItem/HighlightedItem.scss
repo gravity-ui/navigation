@@ -5,17 +5,28 @@ $block: '.#{variables.$ns}composite-bar-highlighted-item';
 #{$block} {
     $class: &;
 
+    --_--background-color: var(--g-color-base-background);
+    --_--item-icon-background-size: 38px;
+    --_--item-background-color-hover: var(--g-color-base-selection-hover);
+    --_--item-selected-background-color-active: var(--g-color-base-selection);
+
     position: absolute;
     z-index: 10000;
     display: flex;
     justify-content: center;
 
     &__icon {
-        width: var(--gn-aside-header-item-icon-background-size);
-        height: var(--gn-aside-header-item-icon-background-size);
+        width: var(
+            --gn-aside-header-item-icon-background-size,
+            var(--_--item-icon-background-size)
+        );
+        height: var(
+            --gn-aside-header-item-icon-background-size,
+            var(--_--item-icon-background-size)
+        );
         border-radius: 7px;
         cursor: pointer;
-        background-color: var(--g-color-base-background);
+        background-color: var(--gn-color-background, var(--_--background-color));
         display: flex;
         justify-content: center;
         align-items: center;
@@ -31,11 +42,17 @@ $block: '.#{variables.$ns}composite-bar-highlighted-item';
             height: 100%;
             z-index: -1;
 
-            background-color: var(--g-color-base-selection);
+            background-color: var(
+                --gn-color-item-background-selected,
+                var(--_--item-selected-background-color-active)
+            );
         }
 
         &:hover::before {
-            background-color: var(--g-color-base-selection-hover);
+            background-color: var(
+                --gn-color-item-background-hover,
+                var(--_--item-background-color-hover)
+            );
         }
     }
 }

@@ -23,7 +23,10 @@ $block: '.#{variables.$ns}logo';
     }
 
     &__btn-logo.yc-button_view_flat.yc-button_size_l {
-        --yc-button-height: var(--gn-aside-header-item-icon-background-size);
+        --yc-button-height: var(
+            --gn-aside-header-item-icon-background-size,
+            var(--_--item-icon-background-size)
+        );
     }
 
     &__logo {
