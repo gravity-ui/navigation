@@ -36,14 +36,34 @@ const CustomThemeTemplate: StoryFn = (args) => (
     <React.Fragment>
         <style>
             {`.g-root {
-                --gn-aside-header-menu-item-icon-color: var(--g-color-text-primary);
+                --gn-color-accent-collapsed: #c8c8ff;
+                --gn-color-accent-expanded: #8585fc;
+                --gn-color-line-vertical: #b5b5b5;
+                --gn-color-line-horizontal: #8e8e8e;
+                --gn-color-background: #fadfb2;
+                --gn-color-item-background-hover: #2626f75c;
+                --gn-color-item-background-selected: #f8ca7d;
+                --gn-color-item-icon-general: #4a4a4a;
+                --gn-color-item-icon: var(--g-color-text-primary);
             }`}
         </style>
         <AsideHeaderShowcase {...args} />
     </React.Fragment>
 );
 export const CustomTheme = CustomThemeTemplate.bind({});
-CustomTheme.args = {
+
+const CustomBackgroundTemplate: StoryFn = (args) => (
+    <React.Fragment>
+        <style>
+            {`.g-root {
+                --gn-color-item-icon: var(--g-color-text-primary);
+            }`}
+        </style>
+        <AsideHeaderShowcase {...args} />
+    </React.Fragment>
+);
+export const CustomBackground = CustomBackgroundTemplate.bind({});
+CustomBackground.args = {
     headerDecoration: false,
     customBackground: <img src="custom-theme-background.png" width="100%" />,
     customBackgroundClassName: 'aside-header-showcase__custom-background',
