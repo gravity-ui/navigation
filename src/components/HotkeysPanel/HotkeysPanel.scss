@@ -39,7 +39,7 @@ $block: '.#{variables.$ns}hotkeys-panel';
         height: auto;
         padding: 8px var(--hotkeys-panel-horizontal-padding);
 
-        &.yc-list__item_active {
+        &.g-list__item_active {
             background: inherit;
         }
     }

@@ -5,7 +5,7 @@
 $block: '.#{variables.$ns}settings-menu-mobile';
 
 #{$block} {
-    &.yc-tabs_direction_horizontal {
+    &.g-tabs_direction_horizontal {
         overflow-x: auto;
         flex-wrap: nowrap;
         overscroll-behavior-x: none;

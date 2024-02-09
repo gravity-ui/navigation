@@ -42,11 +42,11 @@ $block: '.#{variables.$ns}settings';
         }
 
         #{$block}__tabs {
-            .yc-tabs__item:first-child {
+            .g-tabs__item:first-child {
                 margin-left: #{$content-padding};
             }
 
-            .yc-tabs__item:last-child {
+            .g-tabs__item:last-child {
                 margin-right: #{$content-padding};
             }
         }

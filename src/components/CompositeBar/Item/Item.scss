@@ -119,12 +119,8 @@ $block: '.#{variables.$ns}composite-bar-item';
             transform 0.1s ease-out,
             background-color 0.15s linear;
 
-        &:focus {
+        &:focus-visible {
             box-shadow: 0 0 0 2px var(--g-color-line-misc);
-        }
-
-        &:focus:not(:focus-visible) {
-            box-shadow: none;
         }
 
         &:hover {

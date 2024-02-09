@@ -18,13 +18,13 @@ $block: '.#{variables.$ns}logo';
         justify-content: center;
         cursor: pointer;
 
-        & .yc-button::before {
+        & .g-button::before {
             background-color: transparent;
         }
     }
 
-    &__btn-logo.yc-button_view_flat.yc-button_size_l {
-        --yc-button-height: var(
+    &__btn-logo.g-button_view_flat.g-button_size_l {
+        --g-button-height: var(
             --gn-aside-header-item-icon-background-size,
             var(--_--item-icon-background-size)
         );

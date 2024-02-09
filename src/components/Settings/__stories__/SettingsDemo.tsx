@@ -103,6 +103,7 @@ export const SettingsComponent = React.memo(
                             </Settings.Item>
                             <Settings.Item title="Go to setting">
                                 <Link
+                                    href=""
                                     onClick={() =>
                                         setSelection({settingId: 'arcanum-theme-setting'})
                                     }
@@ -112,6 +113,7 @@ export const SettingsComponent = React.memo(
                             </Settings.Item>
                             <Settings.Item title="Go to section">
                                 <Link
+                                    href=""
                                     onClick={() =>
                                         setSelection({section: {id: 'arcanum-common-section'}})
                                     }
