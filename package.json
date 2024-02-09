@@ -18,7 +18,7 @@
     "build"
   ],
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "husky",
     "typecheck": "tsc --noEmit",
     "test": "jest --passWithNoTests",
     "build": "rimraf build && rollup -c",
@@ -69,7 +69,7 @@
     "eslint": "^8.56.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-testing-library": "^6.2.0",
-    "husky": "^8.0.0",
+    "husky": "^9.0.9",
     "jest": "^28.0.0",
     "nano-staged": "^0.6.0",
     "npm-run-all": "^4.0.0",
