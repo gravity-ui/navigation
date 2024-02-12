@@ -1,14 +1,12 @@
 @use '../variables';
+
 @import '../../../styles/mixins';
 
 $block: '.#{variables.$ns}hotkeys-panel';
 
 #{$block} {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
 
     --hotkeys-panel-width: 400px;
     --hotkeys-panel-vertical-padding: 18px;
@@ -41,7 +39,7 @@ $block: '.#{variables.$ns}hotkeys-panel';
         height: auto;
         padding: 8px var(--hotkeys-panel-horizontal-padding);
 
-        &.yc-list__item_active {
+        &.g-list__item_active {
             background: inherit;
         }
     }

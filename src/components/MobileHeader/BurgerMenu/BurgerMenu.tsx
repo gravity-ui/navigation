@@ -1,8 +1,10 @@
 import React from 'react';
-import {Sheet} from '@gravity-ui/uikit';
-import {block} from '../../utils/cn';
 
+import {Sheet} from '@gravity-ui/uikit';
+
+import {block} from '../../utils/cn';
 import {MobileMenuItem, ModalItem} from '../types';
+
 import {BurgerCompositeBar} from './BurgerCompositeBar/BurgerCompositeBar';
 
 import './BurgerMenu.scss';

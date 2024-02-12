@@ -2,15 +2,14 @@ import React, {useCallback} from 'react';
 
 import {Icon} from '@gravity-ui/uikit';
 
-import {SubheaderMenuItem} from '../../types';
-import {ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT} from '../../constants';
-import {Logo} from '../../Logo/Logo';
 import {CompositeBar} from '../../CompositeBar/CompositeBar';
-
-import headerDividerCollapsedIcon from '../../../../assets/icons/divider-collapsed.svg';
-
+import {Logo} from '../../Logo/Logo';
+import {ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT} from '../../constants';
+import {SubheaderMenuItem} from '../../types';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {b} from '../utils';
+
+import headerDividerCollapsedIcon from '../../../../assets/icons/divider-collapsed.svg';
 
 const DEFAULT_SUBHEADER_ITEMS: SubheaderMenuItem[] = [];
 

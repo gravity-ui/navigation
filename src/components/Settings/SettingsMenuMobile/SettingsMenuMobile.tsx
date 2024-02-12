@@ -1,5 +1,7 @@
 import React from 'react';
+
 import {Tabs, TabsItemProps} from '@gravity-ui/uikit';
+
 import {block} from '../../utils/cn';
 import {SettingsMenuProps} from '../types';
 

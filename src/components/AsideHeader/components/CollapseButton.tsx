@@ -1,11 +1,11 @@
 import React, {useCallback} from 'react';
+
 import {Button, Icon} from '@gravity-ui/uikit';
 
 import {fakeDisplayName} from '../../helpers';
-import i18n from '../i18n';
-
-import {b} from '../utils';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
+import i18n from '../i18n';
+import {b} from '../utils';
 
 import controlMenuButtonIcon from '../../../../assets/icons/control-menu-button.svg';
 

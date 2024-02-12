@@ -1,10 +1,12 @@
 import React from 'react';
+
 import {Popup, PopupProps} from '@gravity-ui/uikit';
 
-import {MultipleTooltipContext} from './MultipleTooltipContext';
 import {MenuItem} from '../../types';
 import {block} from '../../utils/cn';
 import {COLLAPSE_ITEM_ID} from '../constants';
+
+import {MultipleTooltipContext} from './MultipleTooltipContext';
 
 import './MultipleTooltip.scss';
 

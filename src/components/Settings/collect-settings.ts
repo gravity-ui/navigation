@@ -1,7 +1,9 @@
 import React from 'react';
+
 import {IconProps} from '@gravity-ui/uikit';
-import {escapeStringForRegExp, invariant} from './helpers';
+
 import {SettingsSelection} from './Selection/types';
+import {escapeStringForRegExp, invariant} from './helpers';
 
 export type SettingsMenu = (SettingsMenuGroup | SettingsMenuItem)[];
 

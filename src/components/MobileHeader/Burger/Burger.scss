@@ -1,4 +1,5 @@
 @use '../../variables';
+
 @import '~@gravity-ui/uikit/styles/mixins';
 
 $block: '.#{variables.$ns}mobile-header-burger';
@@ -31,8 +32,7 @@ $block: '.#{variables.$ns}mobile-header-burger';
 
     &__icon {
         display: flex;
-        align-content: center;
-        justify-content: center;
+        place-content: center;
         height: var(--mobile-header-icon-size);
         width: var(--mobile-header-icon-size);
         position: relative;
@@ -41,7 +41,9 @@ $block: '.#{variables.$ns}mobile-header-burger';
         &:before {
             content: '';
             transform-origin: left center;
-            transition: transform 0.2s, left 0.2s;
+            transition:
+                transform 0.2s,
+                left 0.2s;
         }
 
         &:before {

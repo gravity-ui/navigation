@@ -1,7 +1,7 @@
 import React from 'react';
-import {CSSTransition, Transition} from 'react-transition-group';
 
 import {useBodyScrollLock} from '@gravity-ui/uikit';
+import {CSSTransition, Transition} from 'react-transition-group';
 
 import {block} from '../utils/cn';
 

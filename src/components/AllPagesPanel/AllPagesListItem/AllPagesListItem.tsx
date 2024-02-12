@@ -1,10 +1,10 @@
-import React, {useCallback, MouseEvent} from 'react';
+import React, {MouseEvent, useCallback} from 'react';
 
+import {Pin, PinFill} from '@gravity-ui/icons';
 import {Button, Icon} from '@gravity-ui/uikit';
-import {PinFill, Pin} from '@gravity-ui/icons';
 
-import {block} from '../../utils/cn';
 import {MenuItem} from '../../types';
+import {block} from '../../utils/cn';
 
 import './AllPagesListItem.scss';
 

@@ -1,20 +1,19 @@
 import React from 'react';
-import {block} from '../../utils/cn';
 
-import {List, Icon, Popup, PopupPlacement, PopupProps, Tooltip} from '@gravity-ui/uikit';
+import {Icon, List, Popup, PopupPlacement, PopupProps, Tooltip} from '@gravity-ui/uikit';
 
-import {MakeItemParams, MenuItem} from '../../types';
-import {getSelectedItemIndex} from '../utils';
+import {useAsideHeaderContext} from '../../AsideHeader/AsideHeaderContext';
 import {ASIDE_HEADER_ICON_SIZE} from '../../constants';
+import {MakeItemParams, MenuItem} from '../../types';
+import {block} from '../../utils/cn';
+import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {
     COLLAPSE_ITEM_ID,
+    ITEM_TYPE_REGULAR,
     POPUP_ITEM_HEIGHT,
     POPUP_PLACEMENT,
-    ITEM_TYPE_REGULAR,
 } from '../constants';
-
-import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
-import {useAsideHeaderContext} from '../../AsideHeader/AsideHeaderContext';
+import {getSelectedItemIndex} from '../utils';
 
 import './Item.scss';
 
@@ -246,7 +245,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     }
 
     return (
-        <>
+        <React.Fragment>
             {bringForward && (
                 <HighlightedItem
                     iconNode={highlightedNode}
@@ -261,7 +260,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             {open && collapsedItem && collapseItems?.length && Boolean(anchorRef?.current) && (
                 <CollapsedPopup {...props} anchorRef={ref} onClose={() => toggleOpen(false)} />
             )}
-        </>
+        </React.Fragment>
     );
 };
 

@@ -1,15 +1,17 @@
 import React from 'react';
 
+import {Button} from '@gravity-ui/uikit';
 import type {Meta, StoryFn} from '@storybook/react';
 
 import {AsideHeader} from '../AsideHeader';
-import {AsideHeaderShowcase} from './AsideHeaderShowcase';
+import {AsideFallback} from '../components/PageLayout/AsideFallback';
 import {PageLayout} from '../components/PageLayout/PageLayout';
 import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
-import logoIcon from '../../../../.storybook/assets/logo.svg';
+
+import {AsideHeaderShowcase} from './AsideHeaderShowcase';
 import {menuItemsShowcase} from './moc';
-import {AsideFallback} from '../components/PageLayout/AsideFallback';
-import {Button} from '@gravity-ui/uikit';
+
+import logoIcon from '../../../../.storybook/assets/logo.svg';
 
 export default {
     title: 'components/AsideHeader',

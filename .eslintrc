@@ -1,29 +1,30 @@
 {
     "extends": [
         "@gravity-ui/eslint-config",
-        "@gravity-ui/eslint-config/prettier"
+        "@gravity-ui/eslint-config/client",
+        "@gravity-ui/eslint-config/import-order",
+        "@gravity-ui/eslint-config/prettier",
     ],
     "root": true,
     "env": {
         "node": true,
-        "jest": true
+        "jest": true,
     },
     "overrides": [
         {
-            "files": [
-                "**/__tests__/**/*.[jt]s?(x)",
-                "**/?(*.)+(spec|test).[jt]s?(x)"
-            ],
-            "extends": [
-                "plugin:testing-library/react"
-            ]
+            "files": ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
+            "extends": ["plugin:testing-library/react"],
+        },
+        {
+            "files": ["**/*.js", "!src/**/*"],
+            "env": {
+                "node": true,
+            },
         },
     ],
-    "plugins": [
-        "react-hooks"
-    ],
+    "plugins": ["react-hooks"],
     "rules": {
         "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
-        "react-hooks/exhaustive-deps": "warn" // Checks effect dependencies
-    }
+        "react-hooks/exhaustive-deps": "warn", // Checks effect dependencies
+    },
 }

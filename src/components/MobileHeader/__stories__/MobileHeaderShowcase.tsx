@@ -1,15 +1,17 @@
 import React from 'react';
-import {Icon, Button, TextInput, MobileProvider} from '@gravity-ui/uikit';
+
 import {Gear} from '@gravity-ui/icons';
+import {Button, Icon, MobileProvider, TextInput} from '@gravity-ui/uikit';
 
 import {
     MobileHeader,
-    MobileHeaderProps,
-    MobileHeaderFooterItem,
     MobileHeaderEventOptions,
+    MobileHeaderFooterItem,
+    MobileHeaderProps,
 } from '../';
-import {cn} from '../../utils/cn';
 import {SettingsMobileComponent} from '../../Settings/__stories__/SettingsMobileDemo';
+import {cn} from '../../utils/cn';
+
 import {text as placeholderText} from './moc';
 
 import logoIcon from '../../../../.storybook/assets/logo.svg';

@@ -1,7 +1,9 @@
 import React from 'react';
+
 import {Icon} from '@gravity-ui/uikit';
-import {block} from '../../utils/cn';
+
 import {LogoProps} from '../../types';
+import {block} from '../../utils/cn';
 
 import './Logo.scss';
 

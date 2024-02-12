@@ -1,4 +1,5 @@
 import {addComponentKeysets} from '@gravity-ui/uikit/i18n';
+
 import {NAMESPACE} from '../../utils/cn';
 
 import en from './en.json';

@@ -1,9 +1,10 @@
 import React from 'react';
-import {List, Icon} from '@gravity-ui/uikit';
+
+import {Icon, List} from '@gravity-ui/uikit';
 
 import {block} from '../../../utils/cn';
-import {MobileMenuItem} from '../../types';
 import {MOBILE_HEADER_ICON_SIZE} from '../../constants';
+import {MobileMenuItem} from '../../types';
 import {getItemHeight, getSelectedItemIndex} from '../../utils';
 
 import './BurgerCompositeBar.scss';

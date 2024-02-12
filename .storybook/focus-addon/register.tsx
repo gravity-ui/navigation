@@ -8,4 +8,4 @@ const focusIframe = () => {
     const previewIframe: HTMLInputElement | null = document.querySelector('#storybook-preview-iframe');
 
     previewIframe?.focus?.();
-  }
+}
