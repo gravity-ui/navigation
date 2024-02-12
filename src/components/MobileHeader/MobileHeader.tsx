@@ -1,21 +1,22 @@
-import React, {useCallback, useState, useMemo, useEffect} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {block} from '../utils/cn';
-import {LogoProps} from '../types';
-import {MobileMenuItem, MobileHeaderEvent} from './types';
 import {useForwardRef} from '../../hooks/useForwardRef';
-import {Drawer, DrawerItem, DrawerItemProps} from '../Drawer/Drawer';
 import {Content, RenderContentType} from '../Content';
+import {Drawer, DrawerItem, DrawerItemProps} from '../Drawer/Drawer';
+import {LogoProps} from '../types';
+import {block} from '../utils/cn';
+
 import {Burger} from './Burger/Burger';
-import {Logo} from './Logo/Logo';
 import {BurgerMenu, BurgerMenuInnerProps} from './BurgerMenu/BurgerMenu';
+import {Logo} from './Logo/Logo';
 import {
+    BURGER_PANEL_ITEM_ID,
+    EVENT_NAMES,
     MOBILE_HEADER_COMPACT_HEIGHT,
     MOBILE_HEADER_EXPANDED_HEIGHT,
-    EVENT_NAMES,
-    BURGER_PANEL_ITEM_ID,
 } from './constants';
 import i18n from './i18n';
+import {MobileHeaderEvent, MobileMenuItem} from './types';
 
 import './MobileHeader.scss';
 

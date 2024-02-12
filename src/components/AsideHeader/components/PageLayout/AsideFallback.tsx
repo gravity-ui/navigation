@@ -1,9 +1,12 @@
 import React from 'react';
-import {useAsideHeaderContext} from '../../AsideHeaderContext';
-import headerDividerCollapsedIcon from '../../../../../assets/icons/divider-collapsed.svg';
-import {b} from '../../utils';
+
 import {Icon} from '@gravity-ui/uikit';
+
 import {ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT, ITEM_HEIGHT} from '../../../constants';
+import {useAsideHeaderContext} from '../../AsideHeaderContext';
+import {b} from '../../utils';
+
+import headerDividerCollapsedIcon from '../../../../../assets/icons/divider-collapsed.svg';
 
 export interface Props {
     headerDecoration?: boolean;

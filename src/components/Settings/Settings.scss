@@ -1,4 +1,5 @@
 @use '../variables';
+
 @import '../../../styles/mixins';
 
 $block: '.#{variables.$ns}settings';
@@ -41,11 +42,11 @@ $block: '.#{variables.$ns}settings';
         }
 
         #{$block}__tabs {
-            .yc-tabs__item:first-child {
+            .g-tabs__item:first-child {
                 margin-left: #{$content-padding};
             }
 
-            .yc-tabs__item:last-child {
+            .g-tabs__item:last-child {
                 margin-right: #{$content-padding};
             }
         }
@@ -117,14 +118,12 @@ $block: '.#{variables.$ns}settings';
     }
 
     &__loader {
-        align-self: center;
-        justify-self: center;
+        place-self: center;
     }
 
     &__not-found {
         display: grid;
-        align-items: center;
-        justify-items: center;
+        place-items: center;
         height: 100%;
     }
 

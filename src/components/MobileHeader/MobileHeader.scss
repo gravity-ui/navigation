@@ -41,10 +41,7 @@ $block: '.#{variables.$ns}mobile-header';
     &__panels {
         z-index: 98;
         position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        top: var(--mobile-header-min-heigth);
+        inset: var(--mobile-header-min-heigth) 0 0;
         overflow: hidden;
     }
 

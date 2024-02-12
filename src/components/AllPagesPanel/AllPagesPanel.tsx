@@ -1,18 +1,18 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import {Button, Icon, List, ListItemData, Text, Flex} from '@gravity-ui/uikit';
 import {Gear} from '@gravity-ui/icons';
+import {Button, Flex, Icon, List, ListItemData, Text} from '@gravity-ui/uikit';
 
+import {useAsideHeaderInnerContext} from '../AsideHeader/AsideHeaderContext';
+import {MenuItem} from '../types';
 import {block} from '../utils/cn';
 
-import {useGroupedMenuItems} from './useGroupedMenuItems';
 import {AllPagesListItem} from './AllPagesListItem';
-import './AllPagesPanel.scss';
-
-import i18n from './i18n';
-import {MenuItem} from '../types';
-import {useAsideHeaderInnerContext} from '../AsideHeader/AsideHeaderContext';
 import {ALL_PAGES_ID} from './constants';
+import i18n from './i18n';
+import {useGroupedMenuItems} from './useGroupedMenuItems';
+
+import './AllPagesPanel.scss';
 
 const b = block('all-pages-panel');
 

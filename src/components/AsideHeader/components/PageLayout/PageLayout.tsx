@@ -1,7 +1,8 @@
 import React, {PropsWithChildren, Suspense, useMemo} from 'react';
-import {AsideHeaderContextProvider, useAsideHeaderContext} from '../../AsideHeaderContext';
+
 import {Content, ContentProps} from '../../../Content';
 import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../../constants';
+import {AsideHeaderContextProvider, useAsideHeaderContext} from '../../AsideHeaderContext';
 import {LayoutProps} from '../../types';
 import {b} from '../../utils';
 

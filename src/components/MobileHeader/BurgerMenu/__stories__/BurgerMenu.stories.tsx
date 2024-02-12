@@ -1,7 +1,9 @@
 import React from 'react';
+
 import type {Meta, StoryFn} from '@storybook/react';
 
 import {BurgerMenu, BurgerMenuInnerProps} from '../BurgerMenu';
+
 import {mobileMenuItemsShowcase} from './moc';
 
 import './BurgerMenuShowcase.scss';

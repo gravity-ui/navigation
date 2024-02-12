@@ -1,8 +1,8 @@
 import React from 'react';
 
-import {AsideHeaderProps} from './types';
 import {PageLayout} from './components/PageLayout/PageLayout';
 import {PageLayoutAside} from './components/PageLayout/PageLayoutAside';
+import {AsideHeaderProps} from './types';
 
 export const AsideHeader = React.forwardRef<HTMLDivElement, AsideHeaderProps>(
     ({compact, className, topAlert, ...props}, ref) => {
@@ -14,3 +14,5 @@ export const AsideHeader = React.forwardRef<HTMLDivElement, AsideHeaderProps>(
         );
     },
 );
+
+AsideHeader.displayName = 'AsideHeader';

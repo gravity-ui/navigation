@@ -1,11 +1,13 @@
 import React, {useReducer} from 'react';
 
+import {Button, Radio, RadioButton, Select, Switch} from '@gravity-ui/uikit';
+
 import {Settings} from '../../..';
-import {Switch, RadioButton, Button, Radio, Select} from '@gravity-ui/uikit';
-import './SettingsMobileDemo.scss';
 import {cn} from '../../utils/cn';
 
 import featureIcon from '../../../../assets/icons/gear.svg';
+
+import './SettingsMobileDemo.scss';
 
 const b = cn('settings-mobile-demo');
 

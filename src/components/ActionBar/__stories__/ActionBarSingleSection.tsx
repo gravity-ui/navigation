@@ -1,6 +1,8 @@
 import React from 'react';
-import {ActionBar} from '../ActionBar';
+
 import {Breadcrumbs, Button, ClipboardButton, DropdownMenu} from '@gravity-ui/uikit';
+
+import {ActionBar} from '../ActionBar';
 
 export function ActionBarSingleSection() {
     return (

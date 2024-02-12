@@ -1,7 +1,7 @@
 import React from 'react';
-import debounceFn from 'lodash/debounce';
 
 import {TextInput, TextInputSize} from '@gravity-ui/uikit';
+import debounceFn from 'lodash/debounce';
 
 import {block} from '../../utils/cn';
 import {useStableCallback} from '../helpers';

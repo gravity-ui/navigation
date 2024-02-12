@@ -64,10 +64,7 @@ $block: '.#{variables.$ns}drawer';
 
     &__veil {
         position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        top: 0;
+        inset: 0;
         background-color: var(--g-color-sfx-veil);
     }
 

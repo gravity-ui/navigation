@@ -1,8 +1,9 @@
 import React from 'react';
+
 import {FirstPanel} from '..';
-import {useAsideHeaderInnerContextValue} from '../../useAsideHeaderInnerContextValue';
 import {AsideHeaderInnerContextProvider, useAsideHeaderContext} from '../../AsideHeaderContext';
 import {AsideHeaderProps} from '../../types';
+import {useAsideHeaderInnerContextValue} from '../../useAsideHeaderInnerContextValue';
 
 type Props = Omit<AsideHeaderProps, 'compact' | 'size'>;
 
@@ -17,3 +18,5 @@ export const PageLayoutAside = React.forwardRef<HTMLDivElement, Props>((props, r
         </AsideHeaderInnerContextProvider>
     );
 });
+
+PageLayoutAside.displayName = 'PageLayoutAside';

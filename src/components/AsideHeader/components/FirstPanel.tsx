@@ -1,14 +1,15 @@
 import React, {useRef} from 'react';
 
 import {setRef} from '@gravity-ui/uikit';
+
+import {useVisibleMenuItems} from '../../AllPagesPanel';
 import {CompositeBar} from '../../CompositeBar/CompositeBar';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
-import {b} from '../utils';
-import {useVisibleMenuItems} from '../../AllPagesPanel';
-
 import i18n from '../i18n';
-import {Header} from './Header';
+import {b} from '../utils';
+
 import {CollapseButton} from './CollapseButton';
+import {Header} from './Header';
 import {Panels} from './Panels';
 
 export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
@@ -33,7 +34,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
     }, [ref]);
 
     return (
-        <>
+        <React.Fragment>
             <div className={b('aside', className)} style={{width: size}}>
                 <div className={b('aside-popup-anchor')} ref={asideRef} />
 
@@ -66,6 +67,8 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 </div>
             </div>
             <Panels />
-        </>
+        </React.Fragment>
     );
 });
+
+FirstPanel.displayName = 'FirstPanel';

@@ -1,5 +1,7 @@
 import React from 'react';
+
 import {SelectedSettingsPart, SettingsPage, getSelectedSettingsPart} from '../collect-settings';
+
 import {SettingsSelection} from './types';
 
 interface ContextValue extends SelectedSettingsPart {

@@ -1,4 +1,4 @@
-import React, {useMemo, useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import type {ReactNode} from 'react';
 
 import {Hotkey, List, TextInput} from '@gravity-ui/uikit';
@@ -8,9 +8,10 @@ import {Drawer, DrawerItem} from '../Drawer/Drawer';
 import type {DrawerProps} from '../Drawer/Drawer';
 import {block} from '../utils/cn';
 
-import {flattenHotkeyGroups} from './utils/flattenHotkeyGroups';
+import type {HotkeysGroup, HotkeysListItem} from './types';
 import {filterHotkeys} from './utils/filterHotkeys';
-import type {HotkeysListItem, HotkeysGroup} from './types';
+import {flattenHotkeyGroups} from './utils/flattenHotkeyGroups';
+
 import './HotkeysPanel.scss';
 
 const b = block('hotkeys-panel');

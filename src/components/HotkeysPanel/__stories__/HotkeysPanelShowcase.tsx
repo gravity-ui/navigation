@@ -6,6 +6,7 @@ import {HotkeysPanel} from '../../../components/HotkeysPanel';
 import {cn} from '../../utils/cn';
 
 import {hotkeys} from './moc';
+
 import './HotkeysPanelShowcase.scss';
 
 const b = cn('hotkeys-panel-showcase');
