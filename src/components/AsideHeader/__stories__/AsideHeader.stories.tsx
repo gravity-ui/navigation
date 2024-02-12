@@ -38,15 +38,15 @@ const CustomThemeTemplate: StoryFn = (args) => (
     <React.Fragment>
         <style>
             {`.g-root {
-                --gn-color-accent-collapsed: #c8c8ff;
-                --gn-color-accent-expanded: #8585fc;
-                --gn-color-line-vertical: #b5b5b5;
-                --gn-color-line-horizontal: #8e8e8e;
-                --gn-color-background: #fadfb2;
-                --gn-color-item-background-hover: #2626f75c;
-                --gn-color-item-background-selected: #f8ca7d;
-                --gn-color-item-icon-general: #4a4a4a;
-                --gn-color-item-icon: var(--g-color-text-primary);
+                --gn-aside-header-decoration-collapsed-background-color: #c8c8ff;
+                --gn-aside-header-decoration-expanded-background-color: #8585fc;
+                --gn-aside-header-divider-vertical-color: #b5b5b5;
+                --gn-aside-header-divider-horizontal-color: #8e8e8e;
+                --gn-aside-header-background-color: #fadfb2;
+                --gn-aside-header-item-background-color-hover: #2626f75c;
+                --gn-aside-header-item-current-background-color: #f8ca7d;
+                --gn-aside-header-general-item-icon-color: #4a4a4a;
+                --gn-aside-header-item-icon-color: var(--g-color-text-primary);
             }`}
         </style>
         <AsideHeaderShowcase {...args} />
@@ -58,7 +58,7 @@ const CustomBackgroundTemplate: StoryFn = (args) => (
     <React.Fragment>
         <style>
             {`.g-root {
-                --gn-color-item-icon: var(--g-color-text-primary);
+                --gn-aside-header-item-icon-color: var(--g-color-text-primary);
             }`}
         </style>
         <AsideHeaderShowcase {...args} />
