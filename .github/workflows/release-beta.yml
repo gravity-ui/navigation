@@ -1,4 +1,4 @@
-# Build and publish -beta tag for @gravity-ui/chartkit
+# Build and publish -beta tag for @gravity-ui/navigation
 # Runs manually in Actions tabs in github
 # Runs on any branch except main
 
