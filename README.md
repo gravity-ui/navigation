@@ -77,15 +77,15 @@ Used for themization Navigation's components
 
 ### AsideHeader vars
 
-| Name                                  | Description                                                   |            Default             |
-| :------------------------------------ | :------------------------------------------------------------ | :----------------------------: |
-| `--gn-color-accent-collapsed`         | Decoration color for collapsed navigation                     | `--g-color-base-warning-light` |
-| `--gn-color-accent-expanded`          | Decoration color for expanded navigation                      | `--g-color-base-warning-light` |
-| `--gn-color-background`               | Navigation background color                                   |  `--g-color-base-background`   |
-| `--gn-color-line-horizontal`          | All horizontal divider line color                             |    `--g-color-line-generic`    |
-| `--gn-color-line-vertical`            | Vertical divider line color between `AsideHeader` and content |    `--g-color-line-generic`    |
-| `--gn-color-item-background-hover`    |                                                               | `--g-color-base-simple-hover`  |
-| `--gn-color-item-background-selected` |                                                               |   `--g-color-base-selection`   |
-| `--gn-color-item-icon-general`        | Icon color for Subheader and Footer items                     |    `--g-color-text-primary`    |
-| `--gn-color-item-icon`                | Icon color for CompositeBar items                             |     `--g-color-text-misc`      |
-| `--gn-color-item-text`                |                                                               |    `--g-color-text-primary`    |
+| Name                                                      | Description                                                   |            Default             |
+| :-------------------------------------------------------- | :------------------------------------------------------------ | :----------------------------: |
+| `--gn-aside-header-decoration-collapsed-background-color` | Decoration color for collapsed navigation                     | `--g-color-base-warning-light` |
+| `--gn-aside-header-decoration-expanded-background-color`  | Decoration color for expanded navigation                      | `--g-color-base-warning-light` |
+| `--gn-aside-header-background-color`                      | Navigation background color                                   |  `--g-color-base-background`   |
+| `--gn-aside-header-divider-horizontal-color`              | All horizontal divider line color                             |    `--g-color-line-generic`    |
+| `--gn-aside-header-divider-vertical-color`                | Vertical divider line color between `AsideHeader` and content |    `--g-color-line-generic`    |
+| `--gn-aside-header-item-background-color-hover`           |                                                               | `--g-color-base-simple-hover`  |
+| `--gn-aside-header-item-current-background-color`         |                                                               |   `--g-color-base-selection`   |
+| `--gn-aside-header-general-item-icon-color`               | Icon color for Subheader and Footer items                     |    `--g-color-text-primary`    |
+| `--gn-aside-header-item-icon-color`                       | Icon color for CompositeBar items                             |     `--g-color-text-misc`      |
+| `--gn-aside-header-item-text-color`                       |                                                               |    `--g-color-text-primary`    |

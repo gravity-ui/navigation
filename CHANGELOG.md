@@ -1,20 +1,20 @@
 ### ⚠ BREAKING CHANGES
 
 * Rename css vars ([#99](https://github.com/gravity-ui/navigation/issues/99))
-  * `--gn-aside-header-background-color` -> `--gn-color-accent-collapsed`, `--gn-color-accent-expanded`
-  * `--gn-aside-header-divider-line-color` -> `--gn-color-line-vertical`, `--gn-color-line-horizontal`
-  * `--gn-aside-header-collapse-button-divider-line-color` -> `--gn-color-line-horizontal`
-  * `--gn-aside-header-subheader-item-icon-color`, `--gn-aside-header-footer-item-icon-color`-> `--gn-color-item-icon-general`
-  * `--gn-aside-header-menu-item-icon-color` -> `--gn-color-item-icon`
+  * `--gn-aside-header-background-color` -> `--gn-aside-header-decoration-collapsed-background-color`, `--gn-aside-header-decoration-expanded-background-color`
+  * `--gn-aside-header-divider-line-color` -> `--gn-aside-header-divider-vertical-color`, `--gn-aside-header-divider-horizontal-color`
+  * `--gn-aside-header-collapse-button-divider-line-color` -> `--gn-aside-header-divider-horizontal-color`
+  * `--gn-aside-header-subheader-item-icon-color`, `--gn-aside-header-footer-item-icon-color`-> `--gn-aside-header-general-item-icon-color`
+  * `--gn-aside-header-menu-item-icon-color` -> `--gn-aside-header-item-icon-color`
 
 
 
 
 * Add new css vars
-  * `--gn-color-background`
-  * `--gn-color-item-background-hover`
-  * `--gn-color-item-background-selected`
-  * `--gn-color-item-text`
+  * `--gn-aside-header-background-color`
+  * `--gn-aside-header-item-background-color-hover`
+  * `--gn-aside-header-item-current-background-color`
+  * `--gn-aside-header-item-text-color`
 
 
 # Changelog

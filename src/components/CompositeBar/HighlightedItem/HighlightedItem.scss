@@ -26,7 +26,7 @@ $block: '.#{variables.$ns}composite-bar-highlighted-item';
         );
         border-radius: 7px;
         cursor: pointer;
-        background-color: var(--gn-color-background, var(--_--background-color));
+        background-color: var(--gn-aside-header-background-color, var(--_--background-color));
         display: flex;
         justify-content: center;
         align-items: center;
@@ -43,14 +43,14 @@ $block: '.#{variables.$ns}composite-bar-highlighted-item';
             z-index: -1;
 
             background-color: var(
-                --gn-color-item-background-selected,
+                --gn-aside-header-item-current-background-color,
                 var(--_--item-selected-background-color-active)
             );
         }
 
         &:hover::before {
             background-color: var(
-                --gn-color-item-background-hover,
+                --gn-aside-header-item-background-color-hover,
                 var(--_--item-background-color-hover)
             );
         }

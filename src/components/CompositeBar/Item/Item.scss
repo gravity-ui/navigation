@@ -19,15 +19,21 @@ $block: '.#{variables.$ns}composite-bar-item';
     cursor: pointer;
 
     &__icon {
-        color: var(--gn-color-item-icon, var(--_--item-icon-color));
+        color: var(--gn-aside-header-item-icon-color, var(--_--item-icon-color));
 
         .#{variables.$ns}footer-item &,
         .#{variables.$ns}composite-bar-highlighted-item & {
-            color: var(--gn-color-item-icon-general, var(--_--item-general-icon-color));
+            color: var(
+                --gn-aside-header-general-item-icon-color,
+                var(--_--item-general-icon-color)
+            );
         }
 
         .#{variables.$ns}composite-bar_subheader & {
-            color: var(--gn-color-item-icon-general, var(--_--item-general-icon-color));
+            color: var(
+                --gn-aside-header-general-item-icon-color,
+                var(--_--item-general-icon-color)
+            );
         }
     }
 
@@ -50,7 +56,7 @@ $block: '.#{variables.$ns}composite-bar-item';
         text-overflow: ellipsis;
         overflow: hidden;
 
-        color: var(--gn-color-item-text, var(--_--item-text-color));
+        color: var(--gn-aside-header-item-text-color, var(--_--item-text-color));
     }
 
     &__title-adornment {
@@ -73,7 +79,8 @@ $block: '.#{variables.$ns}composite-bar-item';
     &__menu-divider {
         margin: 0 8px;
         width: 100%;
-        border-top: 1px solid var(--gn-color-line-horizontal, --_--horizontal-divider-line-color);
+        border-top: 1px solid
+            var(--gn-aside-header-divider-horizontal-color, --_--horizontal-divider-line-color);
         cursor: default;
     }
 
@@ -150,7 +157,7 @@ $block: '.#{variables.$ns}composite-bar-item';
         &#{$class}_current {
             &#{$class}_type_regular {
                 background-color: var(
-                    --gn-color-item-background-selected,
+                    --gn-aside-header-item-current-background-color,
                     var(--_--item-selected-background-color-active)
                 );
             }
@@ -159,7 +166,7 @@ $block: '.#{variables.$ns}composite-bar-item';
         &:not(#{$class}_current):hover {
             &#{$class}_type_regular {
                 background-color: var(
-                    --gn-color-item-background-hover,
+                    --gn-aside-header-item-background-color-hover,
                     var(--_--item-background-color-hover)
                 );
             }
@@ -206,7 +213,7 @@ $block: '.#{variables.$ns}composite-bar-item';
 
                     &::before {
                         background-color: var(
-                            --gn-color-item-background-selected,
+                            --gn-aside-header-item-current-background-color,
                             var(--_--item-selected-background-color-active)
                         );
                     }
@@ -221,7 +228,7 @@ $block: '.#{variables.$ns}composite-bar-item';
 
                     &::before {
                         background-color: var(
-                            --gn-color-item-background-hover,
+                            --gn-aside-header-item-background-color-hover,
                             var(--_--item-background-color-hover)
                         );
                     }
