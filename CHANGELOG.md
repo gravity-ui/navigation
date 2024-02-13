@@ -1,23 +1,22 @@
+# Changelog
+
+## [2.0.0](https://github.com/gravity-ui/navigation/compare/v1.9.0...v2.0.0) (2024-02-12)
+
+
 ### ⚠ BREAKING CHANGES
 
-* Rename css vars ([#99](https://github.com/gravity-ui/navigation/issues/99))
-  * `--gn-aside-header-background-color` -> `--gn-aside-header-decoration-collapsed-background-color`, `--gn-aside-header-decoration-expanded-background-color`
-  * `--gn-aside-header-divider-line-color` -> `--gn-aside-header-divider-vertical-color`, `--gn-aside-header-divider-horizontal-color`
-  * `--gn-aside-header-collapse-button-divider-line-color` -> `--gn-aside-header-divider-horizontal-color`
-  * `--gn-aside-header-subheader-item-icon-color`, `--gn-aside-header-footer-item-icon-color`-> `--gn-aside-header-general-item-icon-color`
-  * `--gn-aside-header-menu-item-icon-color` -> `--gn-aside-header-item-icon-color`
+* rename CSS API vars ([#186](https://github.com/gravity-ui/navigation/issues/186))
+    * `--gn-aside-header-background-color` -> `--gn-aside-header-decoration-collapsed-background-color`, `--gn-aside-header-decoration-expanded-background-color`
+    * `--gn-aside-header-divider-line-color` -> `--gn-aside-header-divider-vertical-color`, `--gn-aside-header-divider-horizontal-color`
+    * `--gn-aside-header-collapse-button-divider-line-color` -> `--gn-aside-header-divider-horizontal-color`
+    * `--gn-aside-header-subheader-item-icon-color`, `--gn-aside-header-footer-item-icon-color`-> `--gn-aside-header-general-item-icon-color`
+    * `--gn-aside-header-menu-item-icon-color` -> `--gn-aside-header-item-icon-color`
+* update uikit 6, components 2 and other deps ([#185](https://github.com/gravity-ui/navigation/issues/185))
+* remove local configure, use uikit/i18n ([#177](https://github.com/gravity-ui/navigation/issues/177)) ([f39870f](https://github.com/gravity-ui/navigation/commit/f39870fd5f15373495bcfc2460559d3052725481))
 
+### Features
 
-
-
-* Add new css vars
-  * `--gn-aside-header-background-color`
-  * `--gn-aside-header-item-background-color-hover`
-  * `--gn-aside-header-item-current-background-color`
-  * `--gn-aside-header-item-text-color`
-
-
-# Changelog
+* **AsideHeader:** support CSS API ([#182](https://github.com/gravity-ui/navigation/issues/182)) ([3328b09](https://github.com/gravity-ui/navigation/commit/3328b09dcc5b03722f8cf24eb7fe4f07425eefe0))
 
 ## [1.9.0](https://github.com/gravity-ui/navigation/compare/v1.8.4...v1.9.0) (2024-02-02)
 
