@@ -7,11 +7,16 @@ $block: '.#{variables.$ns}composite-bar-item';
     --gn-composite-bar-item-action-size: 36px;
     --_--horizontal-divider-line-color: var(--g-color-line-generic);
 
+    --_--horizontal-divider-line-color: var(--g-color-line-generic);
     --_--item-background-color-hover: var(--g-color-base-simple-hover);
-    --_--item-selected-background-color-active: var(--g-color-base-selection);
+
     --_--item-general-icon-color: var(--g-color-text-primary);
     --_--item-icon-color: var(--g-color-text-misc);
     --_--item-text-color: var(--g-color-text-primary);
+
+    // selected item
+    --_--item-selected-text-color: var(--g-color-text-primary);
+    --_--item-selected-background-color-active: var(--g-color-base-selection);
 
     display: flex;
     width: 100%;
@@ -22,18 +27,28 @@ $block: '.#{variables.$ns}composite-bar-item';
     &__icon {
         color: var(--gn-aside-header-item-icon-color, var(--_--item-icon-color));
 
+        #{$class}_current & {
+            color: var(
+                --gn-aside-header-item-current-icon-color,
+                var(--gn-aside-header-item-icon-color, var(--_--item-icon-color))
+            );
+        }
+
         .#{variables.$ns}footer-item &,
-        .#{variables.$ns}composite-bar-highlighted-item & {
+        .#{variables.$ns}composite-bar-highlighted-item &,
+        .#{variables.$ns}composite-bar_subheader & {
             color: var(
                 --gn-aside-header-general-item-icon-color,
                 var(--_--item-general-icon-color)
             );
         }
 
-        .#{variables.$ns}composite-bar_subheader & {
+        .#{variables.$ns}footer-item#{$class}_current &,
+        .#{variables.$ns}composite-bar-highlighted-item#{$class}_current &,
+        .#{variables.$ns}composite-bar_subheader #{$class}_current & {
             color: var(
-                --gn-aside-header-general-item-icon-color,
-                var(--_--item-general-icon-color)
+                --gn-aside-header-item-current-icon-color,
+                var(--gn-aside-header-general-item-icon-color, var(--_--item-general-icon-color))
             );
         }
     }
@@ -58,6 +73,13 @@ $block: '.#{variables.$ns}composite-bar-item';
         overflow: hidden;
 
         color: var(--gn-aside-header-item-text-color, var(--_--item-text-color));
+
+        #{$class}_current & {
+            color: var(
+                --gn-aside-header-item-current-text-color,
+                var(--_--item-selected-text-color)
+            );
+        }
     }
 
     &__title-adornment {
@@ -164,6 +186,18 @@ $block: '.#{variables.$ns}composite-bar-item';
             }
         }
 
+        &:hover {
+            &#{$class}_type_regular {
+                background-color: var(
+                    --gn-aside-header-item-current-background-color-hover,
+                    var(
+                        --gn-aside-header-item-current-background-color,
+                        var(--_--item-selected-background-color-active)
+                    )
+                );
+            }
+        }
+
         &:not(#{$class}_current):hover {
             &#{$class}_type_regular {
                 background-color: var(
@@ -216,6 +250,24 @@ $block: '.#{variables.$ns}composite-bar-item';
                         background-color: var(
                             --gn-aside-header-item-current-background-color,
                             var(--_--item-selected-background-color-active)
+                        );
+                    }
+                }
+            }
+        }
+
+        &:hover {
+            &#{$class}_type_regular {
+                #{$class}__btn-icon {
+                    @include item-bg();
+
+                    &::before {
+                        background-color: var(
+                            --gn-aside-header-item-current-background-color-hover,
+                            var(
+                                --gn-aside-header-item-current-background-color,
+                                var(--_--item-selected-background-color-active)
+                            )
                         );
                     }
                 }
