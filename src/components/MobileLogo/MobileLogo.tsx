@@ -2,18 +2,18 @@ import React from 'react';
 
 import {Icon} from '@gravity-ui/uikit';
 
-import {LogoProps} from '../../types';
-import {block} from '../../utils/cn';
+import {LogoProps} from '../types';
+import {block} from '../utils/cn';
 
-import './Logo.scss';
+import './MobileLogo.scss';
 
-const b = block('mobile-header-logo');
+const b = block('mobile-logo');
 
-interface LogoInnerProps extends LogoProps {
+export interface MobileLogoProps extends LogoProps {
     compact: boolean;
 }
 
-export const Logo: React.FC<LogoInnerProps> = ({
+export const MobileLogo: React.FC<MobileLogoProps> = ({
     text,
     compact,
     icon,

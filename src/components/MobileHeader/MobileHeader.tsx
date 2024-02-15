@@ -3,12 +3,12 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useForwardRef} from '../../hooks/useForwardRef';
 import {Content, RenderContentType} from '../Content';
 import {Drawer, DrawerItem, DrawerItemProps} from '../Drawer/Drawer';
+import {MobileLogo} from '../MobileLogo';
 import {LogoProps} from '../types';
 import {block} from '../utils/cn';
 
 import {Burger} from './Burger/Burger';
 import {BurgerMenu, BurgerMenuInnerProps} from './BurgerMenu/BurgerMenu';
-import {Logo} from './Logo/Logo';
 import {
     BURGER_PANEL_ITEM_ID,
     EVENT_NAMES,
@@ -212,7 +212,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                         closeTitle={burgerCloseTitle}
                         openTitle={burgerOpenTitle}
                     />
-                    <Logo {...logo} compact={compact} onClick={onLogoClick} />
+                    <MobileLogo {...logo} compact={compact} onClick={onLogoClick} />
 
                     <div className={b('side-item')}>{sideItemRenderContent?.({size})}</div>
                 </header>

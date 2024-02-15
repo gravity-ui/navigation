@@ -3,7 +3,7 @@ import React, {useCallback} from 'react';
 import {Icon} from '@gravity-ui/uikit';
 
 import {CompositeBar} from '../../CompositeBar/CompositeBar';
-import {Logo} from '../../Logo/Logo';
+import {Logo} from '../../Logo';
 import {ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT} from '../../constants';
 import {SubheaderMenuItem} from '../../types';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';

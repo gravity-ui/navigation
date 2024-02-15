@@ -1,8 +1,8 @@
-@use '../../variables';
+@use '../variables';
 
-@import '../../../../styles/mixins';
+@import '../../../styles/mixins';
 
-$block: '.#{variables.$ns}mobile-header-logo';
+$block: '.#{variables.$ns}mobile-logo';
 
 #{$block} {
     display: flex;
