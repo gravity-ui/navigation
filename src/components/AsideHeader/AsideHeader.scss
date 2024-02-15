@@ -1,6 +1,7 @@
 @use '../variables';
 
 $block: '.#{variables.$ns}aside-header';
+$logoBlock: '.#{variables.$ns}logo';
 
 .g-root {
     --gn-aside-header-background-color: var(--g-color-base-warning-light);
@@ -64,10 +65,7 @@ $block: '.#{variables.$ns}aside-header';
 
         &-popup-anchor {
             position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
+            inset: 0;
             z-index: 1;
         }
 
@@ -188,10 +186,7 @@ $block: '.#{variables.$ns}aside-header';
     &__panels {
         z-index: 98;
         position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        top: var(--gn-aside-top-panel-height);
+        inset: var(--gn-aside-top-panel-height) 0 0 0;
         overflow: auto;
         max-height: calc(100vh - var(--gn-aside-top-panel-height));
     }
@@ -271,6 +266,17 @@ $block: '.#{variables.$ns}aside-header';
 
         &:hover #{$class}__collapse-icon {
             color: var(--g-color-text-primary);
+        }
+    }
+
+    &__logo-icon {
+        width: var(--gn-aside-header-min-width);
+
+        .yc-button_view_flat.yc-button_size_l {
+            --yc-button-height: var(
+                --gn-aside-header-item-icon-background-size,
+                var(--_--item-icon-background-size)
+            );
         }
     }
 }

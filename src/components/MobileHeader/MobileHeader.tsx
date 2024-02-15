@@ -1,19 +1,19 @@
-import React, {useCallback, useState, useMemo, useEffect} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {block} from '../utils/cn';
 import {LogoProps} from '../types';
-import {MobileMenuItem, MobileHeaderEvent} from './types';
+import {MobileHeaderEvent, MobileMenuItem} from './types';
 import {useForwardRef} from '../../hooks/useForwardRef';
 import {Drawer, DrawerItem, DrawerItemProps} from '../Drawer/Drawer';
 import {Content, RenderContentType} from '../Content';
 import {Burger} from './Burger/Burger';
-import {Logo} from './Logo/Logo';
+import {MobileLogo} from '../MobileLogo';
 import {BurgerMenu, BurgerMenuInnerProps} from './BurgerMenu/BurgerMenu';
 import {
+    BURGER_PANEL_ITEM_ID,
+    EVENT_NAMES,
     MOBILE_HEADER_COMPACT_HEIGHT,
     MOBILE_HEADER_EXPANDED_HEIGHT,
-    EVENT_NAMES,
-    BURGER_PANEL_ITEM_ID,
 } from './constants';
 import i18n from './i18n';
 
@@ -211,7 +211,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                         closeTitle={burgerCloseTitle}
                         openTitle={burgerOpenTitle}
                     />
-                    <Logo {...logo} compact={compact} onClick={onLogoClick} />
+                    <MobileLogo {...logo} compact={compact} onClick={onLogoClick} />
 
                     <div className={b('side-item')}>{sideItemRenderContent?.({size})}</div>
                 </header>
