@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/gravity-ui/navigation/compare/v2.0.0...v2.1.0) (2024-02-15)
+
+
+### Features
+
+* **Logo:** export logo components ([#190](https://github.com/gravity-ui/navigation/issues/190)) ([f2dca3a](https://github.com/gravity-ui/navigation/commit/f2dca3aa2d531da9ffd26d96d773e88e14fe9c72))
+
 ## [2.0.0](https://github.com/gravity-ui/navigation/compare/v1.9.0...v2.0.0) (2024-02-12)
 
 
