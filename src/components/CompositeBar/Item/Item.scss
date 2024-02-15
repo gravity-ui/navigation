@@ -5,6 +5,7 @@ $block: '.#{variables.$ns}composite-bar-item';
 #{$block} {
     $class: &;
     --gn-composite-bar-item-action-size: 36px;
+    --_--horizontal-divider-line-color: var(--g-color-line-generic);
 
     --_--item-background-color-hover: var(--g-color-base-simple-hover);
     --_--item-selected-background-color-active: var(--g-color-base-selection);
@@ -80,7 +81,7 @@ $block: '.#{variables.$ns}composite-bar-item';
         margin: 0 8px;
         width: 100%;
         border-top: 1px solid
-            var(--gn-aside-header-divider-horizontal-color, --_--horizontal-divider-line-color);
+            var(--gn-aside-header-divider-horizontal-color, var(--_--horizontal-divider-line-color));
         cursor: default;
     }
 
