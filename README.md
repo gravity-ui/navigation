@@ -27,6 +27,8 @@ npm install --dev @gravity-ui/uikit@^3.0.2 @bem-react/classname@1.6.0 react@^16.
 - PageLayout
 - PageLayoutAside
 - AsideFallback
+- Logo
+- MobileLogo
 
 ## Optimization
 
