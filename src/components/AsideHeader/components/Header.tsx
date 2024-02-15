@@ -4,7 +4,7 @@ import {Icon} from '@gravity-ui/uikit';
 
 import {SubheaderMenuItem} from '../../types';
 import {ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT} from '../../constants';
-import {Logo} from '../../Logo/Logo';
+import {Logo} from '../../Logo';
 import {CompositeBar} from '../../CompositeBar/CompositeBar';
 
 import headerDividerCollapsedIcon from '../../../../assets/icons/divider-collapsed.svg';
@@ -28,7 +28,7 @@ export const Header = () => {
 
     return (
         <div className={b('header', {['with-decoration']: headerDecoration})}>
-            <Logo {...logo} onClick={onLogoClick} />
+            <Logo {...logo} onClick={onLogoClick} iconWrapperClassName={b('logo-icon')} />
 
             <CompositeBar
                 type="subheader"

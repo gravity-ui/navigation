@@ -7,7 +7,7 @@ import {useForwardRef} from '../../hooks/useForwardRef';
 import {Drawer, DrawerItem, DrawerItemProps} from '../Drawer/Drawer';
 import {Content, RenderContentType} from '../Content';
 import {Burger} from './Burger/Burger';
-import {Logo} from './Logo/Logo';
+import {MobileLogo} from '../MobileLogo';
 import {BurgerMenu, BurgerMenuInnerProps} from './BurgerMenu/BurgerMenu';
 import {
     MOBILE_HEADER_COMPACT_HEIGHT,
@@ -211,7 +211,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                         closeTitle={burgerCloseTitle}
                         openTitle={burgerOpenTitle}
                     />
-                    <Logo {...logo} compact={compact} onClick={onLogoClick} />
+                    <MobileLogo {...logo} compact={compact} onClick={onLogoClick} />
 
                     <div className={b('side-item')}>{sideItemRenderContent?.({size})}</div>
                 </header>

@@ -1,6 +1,7 @@
 @use '../variables';
 
 $block: '.#{variables.$ns}aside-header';
+$logoBlock: '.#{variables.$ns}logo';
 
 #{$block} {
     $class: &;
@@ -266,6 +267,17 @@ $block: '.#{variables.$ns}aside-header';
 
         &:hover #{$class}__collapse-icon {
             color: var(--g-color-text-primary);
+        }
+    }
+
+    &__logo-icon {
+        width: var(--gn-aside-header-min-width);
+
+        .yc-button_view_flat.yc-button_size_l {
+            --yc-button-height: var(
+                --gn-aside-header-item-icon-background-size,
+                var(--_--item-icon-background-size)
+            );
         }
     }
 }
