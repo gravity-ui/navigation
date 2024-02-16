@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/gravity-ui/navigation/compare/v2.1.0...v2.1.1) (2024-02-16)
+
+
+### Bug Fixes
+
+* **Item:** fix default css var ([#193](https://github.com/gravity-ui/navigation/issues/193)) ([5df8e2d](https://github.com/gravity-ui/navigation/commit/5df8e2d6ed09066eed2b7551a3e531f4f970c6b2))
+
 ## [2.1.0](https://github.com/gravity-ui/navigation/compare/v2.0.0...v2.1.0) (2024-02-15)
 
 
