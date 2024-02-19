@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.2](https://github.com/gravity-ui/navigation/compare/v2.1.1...v2.1.2) (2024-02-19)
+
+
+### Bug Fixes
+
+* **MobileFooterItem:** make modalItem prop optional ([#200](https://github.com/gravity-ui/navigation/issues/200)) ([2c968b3](https://github.com/gravity-ui/navigation/commit/2c968b35cb4c4346313ecb77eb534e8742ae6746))
+
 ## [2.1.1](https://github.com/gravity-ui/navigation/compare/v2.1.0...v2.1.1) (2024-02-16)
 
 
