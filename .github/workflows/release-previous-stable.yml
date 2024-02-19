@@ -59,11 +59,13 @@ jobs:
                      } catch (error) {
                        core.setFailed(error.message);
                      }' $(npm view . versions --json | tr -d '\n ')
-                  npm version ${PUBLISH_VERSION} --git-tag-version=false
               env:
                   VERSION_TYPE: ${{ github.event.inputs.version_type }}
+            - name: Set version
+              run: |
+                npm version ${{ env.PUBLISH_VERSION }} --git-tag-version=false
             - name: Publish version
-              run: npm publish --tag stable-v${PUBLISH_VERSION_MAJOR} --access public
+              run: npm publish --tag stable-v${{ env.PUBLISH_VERSION_MAJOR }} --access public
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.GRAVITY_UI_BOT_NPM_TOKEN }}
               shell: bash
