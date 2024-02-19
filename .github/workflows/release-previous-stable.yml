@@ -54,16 +54,18 @@ jobs:
                      }
                      const newVersion = versionParts.join(".");
                      try {
-                       core.exportVariable('publishVersion', newVersion);
-                       core.exportVariable('publishVersionMajor', versionParts[0]);
+                       core.exportVariable('PUBLISH_VERSION', newVersion);
+                       core.exportVariable('PUBLISH_VERSION_MAJOR', versionParts[0]);
                      } catch (error) {
                        core.setFailed(error.message);
                      }' $(npm view . versions --json | tr -d '\n ')
-                  npm version ${{ env.publishVersion }} --git-tag-version=false
               env:
                   VERSION_TYPE: ${{ github.event.inputs.version_type }}
+            - name: Set version
+              run: |
+                npm version ${{ env.PUBLISH_VERSION }} --git-tag-version=false
             - name: Publish version
-              run: npm publish --tag stable-v${{ env.publishVersionMajor }} --access public
+              run: npm publish --tag stable-v${{ env.PUBLISH_VERSION_MAJOR }} --access public
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.GRAVITY_UI_BOT_NPM_TOKEN }}
               shell: bash
