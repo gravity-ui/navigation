@@ -14,7 +14,7 @@ export interface FooterItemProps {
     icon?: IconProps['data'];
     iconSize?: string | number;
     className?: string;
-    modalItem: ModalItem;
+    modalItem?: ModalItem;
     onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 }
 
