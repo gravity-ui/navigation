@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/gravity-ui/navigation/compare/v2.1.2...v2.2.0) (2024-02-20)
+
+
+### Features
+
+* **AsideHeader:** add current item to CSS API ([#194](https://github.com/gravity-ui/navigation/issues/194)) ([cdbdf6a](https://github.com/gravity-ui/navigation/commit/cdbdf6adc575d5ee9e69d4d4e2ac68320be52d2f))
+
 ## [2.1.2](https://github.com/gravity-ui/navigation/compare/v2.1.1...v2.1.2) (2024-02-19)
 
 
