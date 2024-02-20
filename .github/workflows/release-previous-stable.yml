@@ -31,36 +31,43 @@ jobs:
               shell: bash
             - run: npm test
               shell: bash
-            - run: npm i -D @actions/core
-              shell: bash
-            - name: Bump and commit version
+            - name: Get package versions
+              id: npm_versions
               run: |
-                  node -e 'const core = require("@actions/core");
-                     const versions = JSON.parse(process.argv[1]).reverse();
-                     const currMajor = versions[0].split(".")[0];
-                     const prevVersion = versions.find(v => !v.startsWith(`${currMajor}.`));
-                     if (!prevVersion) {
-                       throw Error("Previous major versions not found");
-                     }
-                     const versionParts = prevVersion.split(".");
-                     if (versionParts.length !== 3) {
-                       throw Error(`Cannot parse version ${prevVersion}`);
-                     }
-                     if (process.env.VERSION_TYPE === "minor") {
-                       versionParts[1] = `${Number(versionParts[1])+1}`;
-                     }
-                     else {
-                       versionParts[2] = `${Number(versionParts[2])+1}`;
-                     }
-                     const newVersion = versionParts.join(".");
-                     try {
-                       core.exportVariable('PUBLISH_VERSION', newVersion);
-                       core.exportVariable('PUBLISH_VERSION_MAJOR', versionParts[0]);
-                     } catch (error) {
-                       core.setFailed(error.message);
-                     }' $(npm view . versions --json | tr -d '\n ')
+                  npm_view_output=$(npm view . versions --json | tr -d '\n ')
+                  echo ${npm_view_output}
+                  echo "npm_versions=${npm_view_output}" >> $GITHUB_OUTPUT
+            - name: Bump and commit version
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      const versions = JSON.parse(process.env.VERSIONS).reverse();
+                      const currMajor = versions[0].split(".")[0];
+                      const prevVersion = versions.find(v => !v.startsWith(`${currMajor}.`));
+                      if (!prevVersion) {
+                        throw Error("Previous major versions not found");
+                      }
+                      const versionParts = prevVersion.split(".");
+                      if (versionParts.length !== 3) {
+                        throw Error(`Cannot parse version ${prevVersion}`);
+                      }
+                      if (process.env.VERSION_TYPE === "minor") {
+                        versionParts[1] = `${Number(versionParts[1])+1}`;
+                      }
+                      else {
+                        versionParts[2] = `${Number(versionParts[2])+1}`;
+                      }
+                      const newVersion = versionParts.join(".");
+                      core.info(`New version: ${newVersion}`);
+                      try {
+                        core.exportVariable('PUBLISH_VERSION', newVersion);
+                        core.exportVariable('PUBLISH_VERSION_MAJOR', versionParts[0]);
+                      } catch (error) {
+                        core.setFailed(error.message);
+                      }
               env:
                   VERSION_TYPE: ${{ github.event.inputs.version_type }}
+                  VERSIONS: ${{ steps.npm_versions.outputs.npm_versions }}
             - name: Set version
               run: |
                 npm version ${{ env.PUBLISH_VERSION }} --git-tag-version=false
