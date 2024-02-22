@@ -22,6 +22,7 @@ export const MobileLogo: React.FC<MobileLogoProps> = ({
     iconSize = 32,
     textSize = 20,
     href = '/',
+    target = '_self',
     wrapper,
     onClick,
 }) => {
@@ -31,7 +32,8 @@ export const MobileLogo: React.FC<MobileLogoProps> = ({
     const linkProps = hasClickHandler
         ? {}
         : {
-              target: '_self',
+              target,
+              ref: target === '_self' ? undefined : 'noreferrer',
               href,
           };
 

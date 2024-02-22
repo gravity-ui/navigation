@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {HTMLAttributeAnchorTarget} from 'react';
 
 import {AlertProps, IconProps} from '@gravity-ui/uikit';
 
@@ -65,6 +65,7 @@ export interface LogoProps {
     iconSize?: number;
     textSize?: number;
     href?: string;
+    target?: HTMLAttributeAnchorTarget;
     wrapper?: (node: React.ReactNode, compact: boolean) => React.ReactNode;
     onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 }
