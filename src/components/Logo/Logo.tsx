@@ -18,6 +18,7 @@ export const Logo: React.FC<LogoProps> = ({
     iconSize = 24,
     textSize = 15,
     href,
+    target = '_self',
     wrapper,
     onClick,
 }) => {
@@ -43,7 +44,8 @@ export const Logo: React.FC<LogoProps> = ({
             className={b('btn-logo')}
             component={hasWrapper ? 'span' : undefined}
             onClick={onClick}
-            target="_self"
+            target={target}
+            rel={target === '_self' ? undefined : 'noreferrer'}
             href={href}
         >
             {buttonIcon}
@@ -73,7 +75,8 @@ export const Logo: React.FC<LogoProps> = ({
                 ) : (
                     <a
                         href={href ?? '/'}
-                        target="_self"
+                        target={target}
+                        rel={target === '_self' ? undefined : 'noreferrer'}
                         className={b('logo-link')}
                         onClick={onClick}
                     >
