@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/gravity-ui/navigation/compare/v2.2.0...v2.3.0) (2024-02-22)
+
+
+### Features
+
+* **logo:** add target property ([#203](https://github.com/gravity-ui/navigation/issues/203)) ([c04e0f0](https://github.com/gravity-ui/navigation/commit/c04e0f0c2a98915ae107313edadd88494e628912))
+
 ## [2.2.0](https://github.com/gravity-ui/navigation/compare/v2.1.2...v2.2.0) (2024-02-20)
 
 
