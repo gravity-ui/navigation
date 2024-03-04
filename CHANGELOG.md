@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.1](https://github.com/gravity-ui/navigation/compare/v2.3.0...v2.3.1) (2024-03-04)
+
+
+### Bug Fixes
+
+* **logo:** make logo independent of the aside state ([#205](https://github.com/gravity-ui/navigation/issues/205)) ([78e2f09](https://github.com/gravity-ui/navigation/commit/78e2f09b37f13fe6b1fd2ef514c0fb07d81e7631))
+
 ## [2.3.0](https://github.com/gravity-ui/navigation/compare/v2.2.0...v2.3.0) (2024-02-22)
 
 
