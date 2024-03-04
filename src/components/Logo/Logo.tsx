@@ -2,7 +2,6 @@ import React from 'react';
 
 import {Button, Icon} from '@gravity-ui/uikit';
 
-import {useAsideHeaderContext} from '../AsideHeader/AsideHeaderContext';
 import {LogoProps} from '../types';
 import {block} from '../utils/cn';
 
@@ -10,7 +9,7 @@ import './Logo.scss';
 
 const b = block('logo');
 
-export const Logo: React.FC<LogoProps> = ({
+export const Logo: React.FC<LogoProps & {compact?: boolean}> = ({
     text,
     icon,
     iconSrc,
@@ -21,8 +20,8 @@ export const Logo: React.FC<LogoProps> = ({
     target = '_self',
     wrapper,
     onClick,
+    compact,
 }) => {
-    const {compact} = useAsideHeaderContext();
     const hasWrapper = typeof wrapper === 'function';
 
     let buttonIcon;

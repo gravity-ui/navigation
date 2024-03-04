@@ -6,7 +6,7 @@ import {CompositeBar} from '../../CompositeBar/CompositeBar';
 import {Logo} from '../../Logo';
 import {ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT} from '../../constants';
 import {SubheaderMenuItem} from '../../types';
-import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
+import {useAsideHeaderContext, useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {b} from '../utils';
 
 import headerDividerCollapsedIcon from '../../../../assets/icons/divider-collapsed.svg';
@@ -16,6 +16,7 @@ const DEFAULT_SUBHEADER_ITEMS: SubheaderMenuItem[] = [];
 export const Header = () => {
     const {logo, onItemClick, onClosePanel, headerDecoration, subheaderItems} =
         useAsideHeaderInnerContext();
+    const {compact} = useAsideHeaderContext();
     const {onClick: onLogoClickProp} = logo;
     const onLogoClick = useCallback(
         (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -27,7 +28,7 @@ export const Header = () => {
 
     return (
         <div className={b('header', {['with-decoration']: headerDecoration})}>
-            <Logo {...logo} onClick={onLogoClick} />
+            <Logo {...logo} onClick={onLogoClick} compact={compact} />
 
             <CompositeBar
                 type="subheader"
