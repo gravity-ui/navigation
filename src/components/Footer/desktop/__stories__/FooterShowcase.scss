@@ -1,0 +1,28 @@
+.footer-showcase {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-sizing: border-box;
+    height: 100vh;
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    &__body {
+        flex: 1;
+    }
+
+    &_mobile {
+        border: none;
+
+        .footer-demo__footer {
+            position: fixed;
+            bottom: 36px;
+            right: 0;
+            left: 0;
+        }
+    }
+}

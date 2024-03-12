@@ -1,0 +1,29 @@
+@use '../../variables';
+
+@import '../../../../styles/mixins';
+
+$block: '.#{variables.$ns}footer-menu-item';
+
+#{$block} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+
+    height: 100%;
+
+    .g-menu__item-content {
+        @include overflow-ellipsis(ellipsis);
+
+        @include text-body-1;
+        color: var(--g-color-text-secondary);
+    }
+
+    &[class]:hover {
+        background-color: inherit;
+
+        &[href] .g-menu__item-content {
+            color: var(--g-color-text-link-hover);
+        }
+    }
+}

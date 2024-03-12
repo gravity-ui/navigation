@@ -13,4 +13,5 @@ export * from './Settings';
 export * from './MobileHeader';
 export * from './Logo';
 export * from './MobileLogo';
+export * from './Footer';
 export * from './types';
