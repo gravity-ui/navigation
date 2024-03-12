@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.0](https://github.com/gravity-ui/navigation/compare/v2.3.1...v2.4.0) (2024-03-12)
+
+
+### Features
+
+* **Footer:** add footer components ([#207](https://github.com/gravity-ui/navigation/issues/207)) ([773d039](https://github.com/gravity-ui/navigation/commit/773d039f2472136f582c42923351454fb35e9b86))
+
 ## [2.3.1](https://github.com/gravity-ui/navigation/compare/v2.3.0...v2.3.1) (2024-03-04)
 
 
