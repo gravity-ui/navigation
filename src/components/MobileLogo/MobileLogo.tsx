@@ -25,6 +25,7 @@ export const MobileLogo: React.FC<MobileLogoProps> = ({
     target = '_self',
     wrapper,
     onClick,
+    className,
 }) => {
     const hasClickHandler = typeof onClick === 'function';
     const hasWrapper = typeof wrapper === 'function';
@@ -73,11 +74,11 @@ export const MobileLogo: React.FC<MobileLogoProps> = ({
     );
 
     return hasWrapper ? (
-        <div className={b()} onClick={onClick}>
+        <div className={b(null, className)} onClick={onClick}>
             {wrapper(logo, compact)}
         </div>
     ) : (
-        <a {...linkProps} className={b()} onClick={onClick}>
+        <a {...linkProps} className={b(null, className)} onClick={onClick}>
             {logo}
         </a>
     );

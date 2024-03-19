@@ -28,7 +28,13 @@ export const Header = () => {
 
     return (
         <div className={b('header', {['with-decoration']: headerDecoration})}>
-            <Logo {...logo} onClick={onLogoClick} compact={compact} />
+            <Logo
+                {...logo}
+                onClick={onLogoClick}
+                compact={compact}
+                buttonWrapperClassName={b('logo-button-wrapper')}
+                buttonClassName={b('logo-button')}
+            />
 
             <CompositeBar
                 type="subheader"
