@@ -9,7 +9,9 @@ import './Logo.scss';
 
 const b = block('logo');
 
-export const Logo: React.FC<LogoProps & {compact?: boolean}> = ({
+export const Logo: React.FC<
+    LogoProps & {compact?: boolean; buttonClassName?: string; buttonWrapperClassName?: string}
+> = ({
     text,
     icon,
     iconSrc,
@@ -21,6 +23,9 @@ export const Logo: React.FC<LogoProps & {compact?: boolean}> = ({
     wrapper,
     onClick,
     compact,
+    className,
+    buttonWrapperClassName,
+    buttonClassName,
 }) => {
     const hasWrapper = typeof wrapper === 'function';
 
@@ -40,7 +45,7 @@ export const Logo: React.FC<LogoProps & {compact?: boolean}> = ({
         <Button
             view="flat"
             size="l"
-            className={b('btn-logo')}
+            className={b('btn-logo', buttonClassName)}
             component={hasWrapper ? 'span' : undefined}
             onClick={onClick}
             target={target}
@@ -64,8 +69,8 @@ export const Logo: React.FC<LogoProps & {compact?: boolean}> = ({
     }
 
     return (
-        <div className={b()}>
-            <div className={b('logo-btn-place')}>
+        <div className={b(null, className)}>
+            <div className={b('logo-btn-place', buttonWrapperClassName)}>
                 {hasWrapper ? wrapper(button, Boolean(compact)) : button}
             </div>
             {!compact &&

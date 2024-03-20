@@ -59,6 +59,7 @@ export type SubheaderMenuItem = Omit<ItemProps, 'onItemClick' | 'onItemClickCapt
 
 export interface LogoProps {
     text: (() => React.ReactNode) | string;
+    className?: string;
     icon?: IconProps['data'];
     iconSrc?: string;
     iconClassName?: string;
