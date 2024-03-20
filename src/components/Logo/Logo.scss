@@ -12,7 +12,6 @@ $block: '.#{variables.$ns}logo';
 
     &__logo-btn-place {
         flex-shrink: 0;
-        width: var(--gn-aside-header-min-width);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -21,13 +20,6 @@ $block: '.#{variables.$ns}logo';
         & .g-button::before {
             background-color: transparent;
         }
-    }
-
-    &__btn-logo.g-button_view_flat.g-button_size_l {
-        --g-button-height: var(
-            --gn-aside-header-item-icon-background-size,
-            var(--_--item-icon-background-size)
-        );
     }
 
     &__logo {
