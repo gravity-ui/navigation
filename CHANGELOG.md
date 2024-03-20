@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.1](https://github.com/gravity-ui/navigation/compare/v2.4.0...v2.4.1) (2024-03-20)
+
+
+### Bug Fixes
+
+* **Logo:** remove aside header variables from logo ([#210](https://github.com/gravity-ui/navigation/issues/210)) ([8228ce3](https://github.com/gravity-ui/navigation/commit/8228ce3b210b960432859a2e49db99cd3d994975))
+
 ## [2.4.0](https://github.com/gravity-ui/navigation/compare/v2.3.1...v2.4.0) (2024-03-12)
 
 
