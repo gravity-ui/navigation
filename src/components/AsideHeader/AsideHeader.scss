@@ -5,6 +5,7 @@ $block: '.#{variables.$ns}aside-header';
 #{$block} {
     $class: &;
     --gn-aside-header-min-width: 56px;
+    --gn-aside-top-panel-height: 0px;
 
     --_--item-icon-background-size: 38px;
     --_--background-color: var(--g-color-base-background);
@@ -13,8 +14,6 @@ $block: '.#{variables.$ns}aside-header';
     --_--vertical-divider-line-color: var(--g-color-line-generic);
     --_--horizontal-divider-line-color: var(--g-color-line-generic);
 
-    --_--top-panel-height: 0px;
-
     height: 100%;
     width: 100%;
     position: relative;
@@ -22,7 +21,7 @@ $block: '.#{variables.$ns}aside-header';
 
     &__aside {
         position: sticky;
-        top: var(--gn-aside-top-panel-height, var(--_--top-panel-height));
+        top: var(--gn-aside-top-panel-height);
         left: 0;
         height: 100vh;
         width: inherit;
@@ -30,8 +29,8 @@ $block: '.#{variables.$ns}aside-header';
         flex-direction: column;
         background-color: var(--gn-aside-header-background-color, var(--_--background-color));
         z-index: 100;
-        max-height: calc(100vh - var(--gn-aside-top-panel-height, var(--_--top-panel-height)));
-        margin-top: var(--gn-aside-top-panel-height, var(--_--top-panel-height));
+        max-height: calc(100vh - var(--gn-aside-top-panel-height));
+        margin-top: var(--gn-aside-top-panel-height);
 
         box-sizing: border-box;
 
@@ -199,9 +198,9 @@ $block: '.#{variables.$ns}aside-header';
     &__panels {
         z-index: 98;
         position: fixed;
-        inset: var(--gn-aside-top-panel-height, var(--_--top-panel-height)) 0 0;
+        inset: var(--gn-aside-top-panel-height) 0 0;
         overflow: auto;
-        max-height: calc(100vh - var(--gn-aside-top-panel-height, var(--_--top-panel-height)));
+        max-height: calc(100vh - var(--gn-aside-top-panel-height));
     }
 
     &__panel {
@@ -248,7 +247,7 @@ $block: '.#{variables.$ns}aside-header';
     &__content {
         width: calc(100% - var(--gn-aside-header-size));
         z-index: 95;
-        margin-top: var(--gn-aside-top-panel-height, var(--_--top-panel-height));
+        margin-top: var(--gn-aside-top-panel-height);
     }
 
     &__collapse-button {
