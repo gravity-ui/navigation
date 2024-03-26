@@ -59,7 +59,7 @@
     "@storybook/addon-links": "^7.6.13",
     "@storybook/preset-scss": "^1.0.3",
     "@storybook/react": "^7.6.13",
-    "@storybook/react-webpack5": "^7.6.13",
+    "@storybook/react-webpack5": "^7.6.17",
     "@storybook/testing-library": "0.2.0",
     "@svgr/rollup": "^6.4.0",
     "@types/lodash": "^4.14.202",
