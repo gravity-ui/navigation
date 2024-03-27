@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.0](https://github.com/gravity-ui/navigation/compare/v2.4.2...v2.5.0) (2024-03-27)
+
+
+### Features
+
+* **CompositeBar:** use uikit ActionTooltip instead of Tooltip ([#217](https://github.com/gravity-ui/navigation/issues/217)) ([4673f8c](https://github.com/gravity-ui/navigation/commit/4673f8c5a584bce02e6f6a16fa7b86ab833a35d3))
+
 ## [2.4.2](https://github.com/gravity-ui/navigation/compare/v2.4.1...v2.4.2) (2024-03-27)
 
 
