@@ -2,10 +2,13 @@
 
 $block: '.#{variables.$ns}aside-header';
 
+.g-root {
+    --gn-aside-top-panel-height: 0px;
+}
+
 #{$block} {
     $class: &;
     --gn-aside-header-min-width: 56px;
-    --gn-aside-top-panel-height: 0px;
 
     --_--item-icon-background-size: 38px;
     --_--background-color: var(--g-color-base-background);
