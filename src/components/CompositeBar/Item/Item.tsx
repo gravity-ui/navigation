@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Icon, List, Popup, PopupPlacement, PopupProps, Tooltip} from '@gravity-ui/uikit';
+import {ActionTooltip, Icon, List, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
 
 import {useAsideHeaderContext} from '../../AsideHeader/AsideHeaderContext';
 import {ASIDE_HEADER_ICON_SIZE} from '../../constants';
@@ -136,8 +136,9 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const makeIconNode = (iconEl: React.ReactNode): React.ReactNode => {
         return compact ? (
-            <Tooltip
-                content={tooltipText}
+            <ActionTooltip
+                title=""
+                description={tooltipText}
                 disabled={!enableTooltip || (collapsedItem && open) || popupVisible}
                 placement="right"
                 className={b('icon-tooltip', {'item-type': type})}
@@ -149,7 +150,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 >
                     {iconEl}
                 </div>
-            </Tooltip>
+            </ActionTooltip>
         ) : (
             iconEl
         );

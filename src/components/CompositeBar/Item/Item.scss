@@ -50,6 +50,12 @@ $block: '.#{variables.$ns}composite-bar-item';
                 var(--gn-aside-header-general-item-icon-color, var(--_--item-general-icon-color))
             );
         }
+
+        // FIXME: fix hack in the next major
+        &-tooltip .g-action-tooltip__description {
+            color: var(--g-color-text-light-primary);
+            margin-block-start: 0px;
+        }
     }
 
     &__icon-place {
