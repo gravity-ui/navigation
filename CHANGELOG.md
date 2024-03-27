@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.4.2](https://github.com/gravity-ui/navigation/compare/v2.4.1...v2.4.2) (2024-03-27)
+
+
+### Bug Fixes
+
+* **AsideHeader:** move top-panel-height var to g-root ([#216](https://github.com/gravity-ui/navigation/issues/216)) ([424cba2](https://github.com/gravity-ui/navigation/commit/424cba28e623854a09fd0208937e68d13d9b07a0))
+* **AsideHeader:** return css public read only var --gn-aside-top-panel-height ([#214](https://github.com/gravity-ui/navigation/issues/214)) ([69e4bf2](https://github.com/gravity-ui/navigation/commit/69e4bf2637afa616df2faff35fc93c4c38040dbb))
+
 ## [2.4.1](https://github.com/gravity-ui/navigation/compare/v2.4.0...v2.4.1) (2024-03-20)
 
 
