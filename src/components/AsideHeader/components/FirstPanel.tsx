@@ -24,6 +24,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         customBackground,
         customBackgroundClassName,
         className,
+        hideCollapseButton,
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
 
@@ -63,7 +64,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             asideRef,
                         })}
                     </div>
-                    <CollapseButton />
+                    {!hideCollapseButton && <CollapseButton />}
                 </div>
             </div>
             <Panels />

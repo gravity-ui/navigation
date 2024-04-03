@@ -26,6 +26,7 @@ export interface AsideHeaderGeneralProps {
     topAlert?: AsideHeaderTopAlertProps;
     customBackground?: React.ReactNode;
     customBackgroundClassName?: string;
+    hideCollapseButton?: boolean;
     renderContent?: RenderContentType;
     renderFooter?: (data: {
         size: number;

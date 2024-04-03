@@ -25,6 +25,7 @@ const CompactTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
 export const Compact = CompactTemplate.bind({});
 Compact.args = {
     initialCompact: true,
+    hideCollapseButton: true,
 };
 
 const MultipleTooltipTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
