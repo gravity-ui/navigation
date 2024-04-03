@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.0](https://github.com/gravity-ui/navigation/compare/v2.5.0...v2.6.0) (2024-04-03)
+
+
+### Features
+
+* **AsideHeader:** hide collapse button ([#219](https://github.com/gravity-ui/navigation/issues/219)) ([290d920](https://github.com/gravity-ui/navigation/commit/290d920168ece85b88bd9adeff5d5cfb7b555925))
+
 ## [2.5.0](https://github.com/gravity-ui/navigation/compare/v2.4.2...v2.5.0) (2024-03-27)
 
 
