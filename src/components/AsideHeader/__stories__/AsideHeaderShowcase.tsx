@@ -43,6 +43,7 @@ interface AsideHeaderShowcaseProps {
     customBackground?: React.ReactNode;
     customBackgroundClassName?: string;
     headerDecoration?: boolean;
+    hideCollapseButton?: boolean;
 }
 
 export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
@@ -52,6 +53,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
     customBackground,
     customBackgroundClassName,
     headerDecoration,
+    hideCollapseButton,
 }) => {
     const ref = React.useRef<HTMLDivElement>(null);
     const [popupVisible, setPopupVisible] = React.useState(false);
@@ -154,6 +156,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                     },
                 ]}
                 compact={compact}
+                hideCollapseButton={hideCollapseButton}
                 multipleTooltip={multipleTooltip}
                 openModalSubscriber={openModalSubscriber}
                 topAlert={topAlert}
