@@ -52,6 +52,14 @@ interface ItemInnerProps extends ItemProps {
 function renderItemTitle(item: MenuItem) {
     let titleNode = <div className={b('title-text')}>{item.title}</div>;
 
+    if (item.description) {
+        titleNode = (
+            <div className={b('title-with-description')}>
+                {titleNode}
+                <div className={b('title-description')}>{item.description}</div>
+            </div>
+        );
+    }
     if (item.rightAdornment) {
         titleNode = (
             <React.Fragment>
@@ -157,6 +165,14 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     };
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
+        const nodeTittle = [];
+        if (typeof item.title === 'string') {
+            nodeTittle.push(item.title);
+        }
+        if (typeof item.description === 'string') {
+            nodeTittle.push(item.description);
+        }
+
         const createdNode = (
             <React.Fragment>
                 <div
@@ -190,10 +206,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                         {makeIconNode(iconEl)}
                     </div>
 
-                    <div
-                        className={b('title')}
-                        title={typeof item.title === 'string' ? item.title : undefined}
-                    >
+                    <div className={b('title')} title={nodeTittle.join('. ')}>
                         {titleEl}
                     </div>
                 </div>

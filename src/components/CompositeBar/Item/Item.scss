@@ -69,6 +69,13 @@ $block: '.#{variables.$ns}composite-bar-item';
 
     &__title {
         display: flex;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    &__title-with-description {
+        display: flex;
+        flex-direction: column;
         overflow: hidden;
     }
 
@@ -85,6 +92,13 @@ $block: '.#{variables.$ns}composite-bar-item';
                 var(--_--item-selected-text-color)
             );
         }
+    }
+
+    &__title-description {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        color: var(--g-color-text-secondary);
     }
 
     &__title-adornment {

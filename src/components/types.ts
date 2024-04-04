@@ -11,12 +11,14 @@ export type OpenModalSubscriber = (open: boolean) => void;
 export interface MakeItemParams {
     icon?: React.ReactNode;
     title: React.ReactNode;
+    description?: React.ReactNode;
 }
 
 export interface MenuItem {
     id: string;
     title: React.ReactNode;
     tooltipText?: React.ReactNode;
+    description?: React.ReactNode;
     icon?: IconProps['data'];
     iconSize?: number | string;
     link?: string;

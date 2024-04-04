@@ -20,11 +20,13 @@ export const menuItemsShowcase: MenuItem[] = [
         id: 'overview',
         title: 'Overview',
         icon: Gear,
+        description: 'Overview description',
     },
     {
         id: 'operations',
         title: 'Operations',
         icon: Gear,
+        description: 'Operations description',
         rightAdornment: renderTag('New'),
     },
     {
@@ -49,6 +51,7 @@ export const menuItemsShowcase: MenuItem[] = [
     {
         id: 'dashboard',
         title: 'Dashboard',
+        description: 'Super long long long description',
         icon: Gear,
         rightAdornment: renderTag('New'),
         onItemClick({id, title, current}) {
