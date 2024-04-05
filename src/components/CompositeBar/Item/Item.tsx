@@ -224,7 +224,9 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         );
     };
 
-    const iconNode = icon ? <Icon qa={iconQa} data={icon} size={iconSize} className={b('icon')} /> : null;
+    const iconNode = icon ? (
+        <Icon qa={iconQa} data={icon} size={iconSize} className={b('icon')} />
+    ) : null;
     const titleNode = renderItemTitle(item);
     const params = {icon: iconNode, title: titleNode};
     let highlightedNode = null;
