@@ -19,6 +19,7 @@ export interface MenuItem {
     tooltipText?: React.ReactNode;
     icon?: IconProps['data'];
     iconSize?: number | string;
+    iconQa?: string;
     link?: string;
     current?: boolean;
     pinned?: boolean;
