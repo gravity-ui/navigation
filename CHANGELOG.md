@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.0](https://github.com/gravity-ui/navigation/compare/v2.6.0...v2.7.0) (2024-04-05)
+
+
+### Features
+
+* **MenuItem:** add qa property ([#222](https://github.com/gravity-ui/navigation/issues/222)) ([28bf116](https://github.com/gravity-ui/navigation/commit/28bf116fc2cbc396aa0ab731ca05ac7387fda6e3))
+
 ## [2.6.0](https://github.com/gravity-ui/navigation/compare/v2.5.0...v2.6.0) (2024-04-03)
 
 
