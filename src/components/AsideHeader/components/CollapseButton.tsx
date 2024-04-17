@@ -26,6 +26,7 @@ export const CollapseButton = () => {
         <Button
             className={b('collapse-button', {compact})}
             view="flat"
+            pin="brick-brick"
             onClick={onCollapseButtonClick}
             title={buttonTitle}
         >
