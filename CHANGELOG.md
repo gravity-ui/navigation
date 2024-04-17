@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.1](https://github.com/gravity-ui/navigation/compare/v2.7.0...v2.7.1) (2024-04-17)
+
+
+### Bug Fixes
+
+* **CollapseButton:** set pin ([#224](https://github.com/gravity-ui/navigation/issues/224)) ([7652474](https://github.com/gravity-ui/navigation/commit/7652474e8d7ea6d2ccd6abe27a0f5b139185b3ae))
+
 ## [2.7.0](https://github.com/gravity-ui/navigation/compare/v2.6.0...v2.7.0) (2024-04-05)
 
 
