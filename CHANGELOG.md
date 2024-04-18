@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.0](https://github.com/gravity-ui/navigation/compare/v2.7.1...v2.8.0) (2024-04-18)
+
+
+### Features
+
+* **MobileHeader:** add contentClassName prop ([#226](https://github.com/gravity-ui/navigation/issues/226)) ([e5a92a3](https://github.com/gravity-ui/navigation/commit/e5a92a3a9bc3bc31ff1fb05e9db7e70b4734f0d1))
+
 ## [2.7.1](https://github.com/gravity-ui/navigation/compare/v2.7.0...v2.7.1) (2024-04-17)
 
 
