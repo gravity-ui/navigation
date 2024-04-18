@@ -41,6 +41,7 @@ export interface MobileHeaderProps {
     onEvent?: (itemName: string, eventName: MobileHeaderEvent) => void;
     onClosePanel?: () => void;
     className?: string;
+    contentClassName?: string;
 }
 
 export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
@@ -56,6 +57,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
             onClosePanel,
             onEvent,
             className,
+            contentClassName,
         },
         ref,
     ): React.ReactElement => {
@@ -236,7 +238,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                 <Content
                     size={size}
                     renderContent={renderContent}
-                    className={b('content')}
+                    className={b('content', contentClassName)}
                     cssSizeVariableName="--mobile-header-size"
                 />
             </div>
