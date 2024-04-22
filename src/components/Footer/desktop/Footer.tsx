@@ -57,30 +57,33 @@ export const Footer: FC<FooterProps> = ({
     );
 
     const shouldRenderLogo = view !== 'clear' && Boolean(logo);
+    const shouldRenderMenu = (menuItems?.length ?? 0) > 0;
 
     return (
         <footer className={b({desktop: true, 'with-divider': withDivider, view}, className)}>
-            <div className={b('menu', {measured})} ref={menuContainerRef}>
-                {visibleItems.length > 0 && (
-                    <Menu className={b('list')}>
-                        {visibleItems.map((item, index) => (
-                            <MenuItem
-                                key={index}
-                                {...item}
-                                className={b('menu-item', item.className)}
-                            />
-                        ))}
-                    </Menu>
-                )}
-                {dropdownMenuItems.length > 0 && (
-                    <DropdownMenu
-                        items={dropdownMenuItems}
-                        switcherWrapperClassName={b('more-button')}
-                        popupProps={moreItemsPopupProps}
-                        defaultSwitcherProps={moreButtonProps}
-                    />
-                )}
-            </div>
+            {shouldRenderMenu && (
+                <div className={b('menu', {measured})} ref={menuContainerRef}>
+                    {visibleItems.length > 0 && (
+                        <Menu className={b('list')}>
+                            {visibleItems.map((item, index) => (
+                                <MenuItem
+                                    key={index}
+                                    {...item}
+                                    className={b('menu-item', item.className)}
+                                />
+                            ))}
+                        </Menu>
+                    )}
+                    {dropdownMenuItems.length > 0 && (
+                        <DropdownMenu
+                            items={dropdownMenuItems}
+                            switcherWrapperClassName={b('more-button')}
+                            popupProps={moreItemsPopupProps}
+                            defaultSwitcherProps={moreButtonProps}
+                        />
+                    )}
+                </div>
+            )}
             <div className={b('right')}>
                 <small className={b('copyright', {small: !menuItems?.length})}>{copyright}</small>
                 {shouldRenderLogo && (

@@ -7,6 +7,7 @@ $block: '.#{variables.$ns}footer';
 #{$block}_desktop {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     height: 40px;
     padding: 0 var(--g-spacing-6) 0 var(--g-spacing-3);
     gap: var(--g-spacing-6);
@@ -63,4 +64,5 @@ $block: '.#{variables.$ns}footer';
 
 #{$block}_view_clear {
     background: transparent;
+    z-index: -1;
 }

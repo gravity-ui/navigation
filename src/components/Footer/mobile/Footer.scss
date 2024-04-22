@@ -66,6 +66,7 @@ $block: '.#{variables.$ns}footer';
 
 #{$block}_view_clear {
     background: transparent;
+    z-index: -1;
 
     #{$block}__bottom-row {
         justify-content: flex-end;
