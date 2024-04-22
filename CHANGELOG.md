@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.1](https://github.com/gravity-ui/navigation/compare/v2.8.0...v2.8.1) (2024-04-22)
+
+
+### Bug Fixes
+
+* **Footer:** fix clear footer clicking ([#228](https://github.com/gravity-ui/navigation/issues/228)) ([20a6964](https://github.com/gravity-ui/navigation/commit/20a6964380e6e82ef326cfa60a21ed4a3de1a46b))
+
 ## [2.8.0](https://github.com/gravity-ui/navigation/compare/v2.7.1...v2.8.0) (2024-04-18)
 
 
