@@ -21,14 +21,14 @@
     "prepare": "husky",
     "typecheck": "tsc --noEmit",
     "test": "jest --passWithNoTests",
-    "test-storybook": "test-storybook --url ${PR_PREVIEW_URL:-http://localhost:7007}",
+    "test-storybook": "test-storybook --url ${PR_PREVIEW_URL:-http://localhost:7008}",
     "build": "rimraf build && rollup -c",
     "lint:js": "eslint src --ext .js,.jsx,.ts,.tsx",
     "lint:styles": "stylelint '{styles,src}/**/*.scss'",
     "lint:prettier": "prettier --check '**/*.md'",
     "lint": "run-p lint:*",
     "build-storybook": "storybook build",
-    "start": "TS_NODE_PROJECT=.storybook/tsconfig.json storybook dev",
+    "start": "TS_NODE_PROJECT=.storybook/tsconfig.json storybook dev -p 7008",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
