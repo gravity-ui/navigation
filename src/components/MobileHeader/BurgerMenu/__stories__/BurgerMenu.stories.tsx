@@ -20,6 +20,28 @@ export default {
             );
         },
     ],
+    parameters: {
+        a11y: {
+            element: '#storybook-root',
+            config: {
+                rules: [
+                    {
+                        id: 'duplicate-id',
+                        enabled: false,
+                        selector: 'defs', // one may use same id in different <defs>
+                    },
+                    {
+                        id: 'aria-allowed-attr', // https://github.com/gravity-ui/uikit/issues/1336
+                        enabled: false,
+                    },
+                    {
+                        id: 'color-contrast',
+                        enabled: false,
+                    },
+                ],
+            },
+        },
+    },
 } as Meta;
 
 const ShowcaseTemplate: StoryFn<BurgerMenuInnerProps> = () => {

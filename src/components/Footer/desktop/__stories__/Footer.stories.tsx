@@ -22,6 +22,34 @@ export default {
             icon: logoIcon,
             iconSize: 24,
             text: 'My Service',
+            'aria-label': 'My Service',
+        },
+    },
+    parameters: {
+        a11y: {
+            element: '#storybook-root',
+            config: {
+                rules: [
+                    {
+                        id: 'aria-required-children',
+                        enabled: false,
+                        selector: '.g-menu', // https://github.com/gravity-ui/uikit/pull/1548
+                    },
+                    {
+                        id: 'aria-required-parent',
+                        enabled: false,
+                        selector: '.g-menu__item', // https://github.com/gravity-ui/uikit/pull/1548
+                    },
+                    {
+                        id: 'color-contrast',
+                        enabled: false,
+                    },
+                    {
+                        id: 'listitem', // https://github.com/gravity-ui/uikit/pull/1548
+                        enabled: false,
+                    },
+                ],
+            },
         },
     },
 } as Meta<typeof Footer>;

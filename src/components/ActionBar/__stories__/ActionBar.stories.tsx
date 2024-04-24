@@ -15,6 +15,19 @@ export default {
         'aria-label': 'Actions bar',
     },
     decorators: [getAsideHeaderWrapper()],
+    parameters: {
+        a11y: {
+            element: '#storybook-root',
+            config: {
+                rules: [
+                    {
+                        id: 'color-contrast',
+                        enabled: false,
+                    },
+                ],
+            },
+        },
+    },
 } as ComponentMeta<typeof ActionBar>;
 
 const ShowcaseTemplate: ComponentStory<typeof ActionBar> = () => <ActionBarShowcase />;

@@ -26,6 +26,8 @@ export const Logo: React.FC<
     className,
     buttonWrapperClassName,
     buttonClassName,
+    'aria-label': ariaLabel,
+    'aria-labelledby': ariaLabelledby,
 }) => {
     const hasWrapper = typeof wrapper === 'function';
 
@@ -51,6 +53,10 @@ export const Logo: React.FC<
             target={target}
             rel={target === '_self' ? undefined : 'noreferrer'}
             href={href}
+            extraProps={{
+                'aria-label': ariaLabel,
+                'aria-labelledby': ariaLabelledby,
+            }}
         >
             {buttonIcon}
         </Button>

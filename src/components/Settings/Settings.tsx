@@ -72,6 +72,7 @@ export interface SettingsSectionProps {
 
 export interface SettingsItemProps {
     id?: string;
+    labelId?: string;
     title: string;
     highlightedTitle?: React.ReactNode | null;
     renderTitleComponent?: (highlightedTitle: React.ReactNode | null) => React.ReactNode;
@@ -365,6 +366,7 @@ Settings.Section = function SettingsSection({children}: SettingsSectionProps) {
 Settings.Item = function SettingsItem(setting: SettingsItemProps) {
     const {
         id,
+        labelId,
         highlightedTitle,
         children,
         align = 'center',
@@ -388,7 +390,7 @@ Settings.Item = function SettingsItem(setting: SettingsItemProps) {
             className={b('item', {align, mode, selected: isSettingSelected})}
             ref={isSettingSelected ? selected.selectedRef : undefined}
         >
-            <label className={b('item-heading')}>
+            <label className={b('item-heading')} id={labelId}>
                 {renderRightAdornment ? (
                     <Flex className={b('item-title-wrapper')} gap={3}>
                         {titleNode}

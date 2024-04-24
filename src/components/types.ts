@@ -70,6 +70,8 @@ export interface LogoProps {
     target?: HTMLAttributeAnchorTarget;
     wrapper?: (node: React.ReactNode, compact: boolean) => React.ReactNode;
     onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+    'aria-label'?: string;
+    'aria-labelledby'?: string;
 }
 
 export type AsideHeaderTopAlertProps = {

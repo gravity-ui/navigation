@@ -1,6 +1,6 @@
 import React, {useReducer} from 'react';
 
-import {Button, Radio, RadioButton, Select, Switch} from '@gravity-ui/uikit';
+import {Button, Radio, RadioButton, Select, Switch, useUniqId} from '@gravity-ui/uikit';
 
 import {Settings} from '../../..';
 import {cn} from '../../utils/cn';
@@ -75,6 +75,10 @@ export const SettingsMobileComponent = React.memo(
         const handleChange = (name: string, value: any) => {
             dispatch(setSetting(name, value));
         };
+        const yfmMarkdownInFilesLabelId = useUniqId();
+        const lazyDiffFieldLabelId = useUniqId();
+        const startFromDashboardFieldLabelId = useUniqId();
+
         return (
             <Settings
                 view="mobile"
@@ -87,22 +91,36 @@ export const SettingsMobileComponent = React.memo(
                 <Settings.Group id="arcanum" groupTitle="Arcanum">
                     <Settings.Page id="features" title="Features">
                         <Settings.Section title="Beta functionality">
-                            <Settings.Item title="YFM markdown in md. files" mode="row">
+                            <Settings.Item
+                                title="YFM markdown in md. files"
+                                mode="row"
+                                labelId={yfmMarkdownInFilesLabelId}
+                            >
                                 <Switch
                                     checked={settings.yfmMarkdown}
                                     onChange={() => {
                                         handleChange('yfmMarkdown', !settings.yfmMarkdown);
                                     }}
                                     size="l"
+                                    controlProps={{
+                                        'aria-labelledby': yfmMarkdownInFilesLabelId,
+                                    }}
                                 />
                             </Settings.Item>
-                            <Settings.Item title="Lazy diff" mode="row">
+                            <Settings.Item
+                                title="Lazy diff"
+                                mode="row"
+                                labelId={lazyDiffFieldLabelId}
+                            >
                                 <Switch
                                     checked={settings.lazyDiff}
                                     onChange={() => {
                                         handleChange('lazyDiff', !settings.lazyDiff);
                                     }}
                                     size="l"
+                                    controlProps={{
+                                        'aria-labelledby': yfmMarkdownInFilesLabelId,
+                                    }}
                                 />
                             </Settings.Item>
                         </Settings.Section>
@@ -123,6 +141,7 @@ export const SettingsMobileComponent = React.memo(
                                 title="Start from dashboard page"
                                 withBadge={withBadge}
                                 mode="row"
+                                labelId={startFromDashboardFieldLabelId}
                             >
                                 <Switch
                                     checked={settings.startFromDashboardPage}
@@ -133,6 +152,9 @@ export const SettingsMobileComponent = React.memo(
                                         );
                                     }}
                                     size="l"
+                                    controlProps={{
+                                        'aria-labelledby': startFromDashboardFieldLabelId,
+                                    }}
                                 />
                             </Settings.Item>
                             {onClose && (

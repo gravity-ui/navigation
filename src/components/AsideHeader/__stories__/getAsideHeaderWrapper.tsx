@@ -24,6 +24,7 @@ export function getAsideHeaderWrapper(
             icon: logoIcon,
             iconSize: 24,
             text: 'My Service',
+            'aria-label': 'My Service',
         },
         compact: true,
     },

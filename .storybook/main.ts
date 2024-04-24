@@ -10,7 +10,8 @@ const config: StorybookConfig = {
         '@storybook/preset-scss',
         'storybook-preset-inline-svg',
         './theme-addon/register.tsx',
-        './focus-addon/register.tsx'
+        './focus-addon/register.tsx',
+        '@storybook/addon-a11y',
     ],
     framework: {
         name: '@storybook/react-webpack5',
