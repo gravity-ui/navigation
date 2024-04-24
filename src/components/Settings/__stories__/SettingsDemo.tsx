@@ -1,7 +1,16 @@
 import React, {useReducer} from 'react';
 
 import {HelpPopover} from '@gravity-ui/components';
-import {Button, Checkbox, Link, Radio, RadioButton, Select, Switch} from '@gravity-ui/uikit';
+import {
+    Button,
+    Checkbox,
+    Link,
+    Radio,
+    RadioButton,
+    Select,
+    Switch,
+    useUniqId,
+} from '@gravity-ui/uikit';
 
 import {cn} from '../../utils/cn';
 import {SettingsSelection} from '../Selection/types';
@@ -64,6 +73,9 @@ export const SettingsComponent = React.memo(
         };
 
         const [selection, setSelection] = React.useState<SettingsSelection | undefined>(undefined);
+        const yfmMarkdownInFilesLabelId = useUniqId();
+        const lazyDiffFieldLabelId = useUniqId();
+        const startFromDashboardFieldLabelId = useUniqId();
 
         return (
             <Settings
@@ -74,10 +86,20 @@ export const SettingsComponent = React.memo(
                 }}
                 onClose={onClose}
                 renderRightAdornment={({title}) => (
-                    <HelpPopover content={`Some text for ${title}`} />
+                    <HelpPopover
+                        content={`Some text for ${title}`}
+                        buttonProps={{
+                            'aria-label': 'Note',
+                        }}
+                    />
                 )}
                 renderSectionRightAdornment={({title}) => (
-                    <HelpPopover content={`Some text for ${title}`} />
+                    <HelpPopover
+                        content={`Some text for ${title}`}
+                        buttonProps={{
+                            'aria-label': 'Note',
+                        }}
+                    />
                 )}
                 showRightAdornmentOnHover={true} // true by default
                 selection={selection}
@@ -85,19 +107,28 @@ export const SettingsComponent = React.memo(
                 <Settings.Group id="arcanum" groupTitle="Arcanum">
                     <Settings.Page id="features" title="Features" icon={{data: featureIcon}}>
                         <Settings.Section title="Beta functionality">
-                            <Settings.Item title="YFM markdown in md. files">
+                            <Settings.Item
+                                title="YFM markdown in md. files"
+                                labelId={yfmMarkdownInFilesLabelId}
+                            >
                                 <Switch
                                     checked={settings.yfmMarkdown}
                                     onChange={() => {
                                         handleChange('yfmMarkdown', !settings.yfmMarkdown);
                                     }}
+                                    controlProps={{
+                                        'aria-labelledby': yfmMarkdownInFilesLabelId,
+                                    }}
                                 />
                             </Settings.Item>
-                            <Settings.Item title="Lazy diff">
+                            <Settings.Item title="Lazy diff" labelId={lazyDiffFieldLabelId}>
                                 <Switch
                                     checked={settings.lazyDiff}
                                     onChange={() => {
                                         handleChange('lazyDiff', !settings.lazyDiff);
+                                    }}
+                                    controlProps={{
+                                        'aria-labelledby': lazyDiffFieldLabelId,
                                     }}
                                 />
                             </Settings.Item>
@@ -145,7 +176,11 @@ export const SettingsComponent = React.memo(
                                     <Radio value="svn">{'SVN'}</Radio>
                                 </RadioButton>
                             </Settings.Item>
-                            <Settings.Item title="Start from dashboard page" withBadge={withBadge}>
+                            <Settings.Item
+                                title="Start from dashboard page"
+                                withBadge={withBadge}
+                                labelId={startFromDashboardFieldLabelId}
+                            >
                                 <Switch
                                     checked={settings.startFromDashboardPage}
                                     onChange={() => {
@@ -153,6 +188,9 @@ export const SettingsComponent = React.memo(
                                             'startFromDashboardPage',
                                             !settings.startFromDashboardPage,
                                         );
+                                    }}
+                                    controlProps={{
+                                        'aria-labelledby': startFromDashboardFieldLabelId,
                                     }}
                                 />
                             </Settings.Item>

@@ -5,6 +5,7 @@ import debounceFn from 'lodash/debounce';
 
 import {block} from '../../utils/cn';
 import {useStableCallback} from '../helpers';
+import i18n from '../i18n';
 
 const b = block('settings-search');
 
@@ -47,6 +48,9 @@ export function SettingsSearch({
                 size={inputSize}
                 placeholder={placeholder}
                 onUpdate={handleUpdate}
+                controlProps={{
+                    'aria-label': i18n('label_search'),
+                }}
             />
         </div>
     );

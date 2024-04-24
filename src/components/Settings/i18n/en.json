@@ -1,5 +1,6 @@
 {
   "label_title": "Settings",
   "label_filter-placeholder": "Search settings",
-  "label_empty-placeholder": "No results found"
+  "label_empty-placeholder": "No results found",
+  "label_search": "Search"
 }

@@ -10,6 +10,23 @@ import {SettingsMobileDemo} from './SettingsMobileDemo';
 export default {
     title: 'components/Settings',
     component: Settings,
+    parameters: {
+        a11y: {
+            element: '#storybook-root',
+            config: {
+                rules: [
+                    {
+                        id: 'color-contrast',
+                        enabled: false,
+                    },
+                    {
+                        id: 'heading-order', // not relevant in stories
+                        enabled: false,
+                    },
+                ],
+            },
+        },
+    },
 } as Meta;
 
 const ShowcaseTemplate: StoryFn = () => <SettingsDemo />;
