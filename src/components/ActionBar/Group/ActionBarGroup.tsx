@@ -14,11 +14,7 @@ export type Props = PropsWithChildren<
 const b = block('action-bar-group');
 
 export const ActionBarGroup = ({children, className, pull}: Props) => {
-    return (
-        <ul className={b({pull}, className)} role="group">
-            {children}
-        </ul>
-    );
+    return <ul className={b({pull}, className)}>{children}</ul>;
 };
 
 ActionBarGroup.displayName = 'ActionBar.Group';
