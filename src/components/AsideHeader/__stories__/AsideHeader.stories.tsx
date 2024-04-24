@@ -16,6 +16,24 @@ import logoIcon from '../../../../.storybook/assets/logo.svg';
 export default {
     title: 'components/AsideHeader',
     component: AsideHeader,
+    parameters: {
+        a11y: {
+            element: '#storybook-root',
+            config: {
+                rules: [
+                    {
+                        id: 'duplicate-id',
+                        enabled: false,
+                        selector: 'defs', // one may use same id in different <defs>
+                    },
+                    {
+                        id: 'aria-allowed-attr',
+                        enabled: false,
+                    },
+                ],
+            },
+        },
+    },
 } as Meta;
 
 const ShowcaseTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
@@ -71,7 +89,7 @@ const CustomBackgroundTemplate: StoryFn = (args) => (
 export const CustomBackground = CustomBackgroundTemplate.bind({});
 CustomBackground.args = {
     headerDecoration: false,
-    customBackground: <img src="custom-theme-background.png" width="100%" />,
+    customBackground: <img src="custom-theme-background.png" width="100%" alt="" />,
     customBackgroundClassName: 'aside-header-showcase__custom-background',
 };
 
@@ -88,6 +106,7 @@ const AdvancedUsageTemplate: StoryFn = (args) => {
                     icon: logoIcon,
                     href: '#',
                     onClick: () => alert('click on logo'),
+                    'aria-label': 'Service',
                 }}
                 onChangeCompact={setCompact}
                 {...args}

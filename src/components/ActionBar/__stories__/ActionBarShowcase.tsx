@@ -19,6 +19,7 @@ export function ActionBarShowcase() {
                                     value: 'dev',
                                 },
                             ]}
+                            title={'Select an environment'}
                         />
                     </ActionBar.Item>
                 </ActionBar.Group>
@@ -51,6 +52,11 @@ export function ActionBarShowcase() {
                                 {text: 'New File', action() {}},
                                 {text: 'New Folder', action() {}},
                             ]}
+                            defaultSwitcherProps={{
+                                extraProps: {
+                                    'aria-label': 'More',
+                                },
+                            }}
                         />
                     </ActionBar.Item>
                 </ActionBar.Group>

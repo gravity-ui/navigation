@@ -15,6 +15,7 @@ export default {
         icon: logoIcon,
         href: '#',
         onClick: () => alert('click on logo'),
+        'aria-label': 'Service',
     },
 } as Meta<typeof Logo>;
 

@@ -102,6 +102,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                     icon: logoIcon,
                     href: '#',
                     onClick: () => alert('click on logo'),
+                    'aria-label': 'Service',
                 }}
                 headerDecoration={
                     headerDecoration === undefined
