@@ -10,7 +10,7 @@ const b = block('action-bar-section');
 
 export const ActionBarSection = ({children, type = 'primary'}: Props) => {
     return (
-        <div className={b({type})} role={'menu'}>
+        <div className={b({type})} role="menu">
             {children}
         </div>
     );
