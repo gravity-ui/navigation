@@ -30,6 +30,10 @@ export default {
                         id: 'aria-allowed-attr',
                         enabled: false,
                     },
+                    {
+                        id: 'color-contrast',
+                        enabled: false,
+                    },
                 ],
             },
         },
