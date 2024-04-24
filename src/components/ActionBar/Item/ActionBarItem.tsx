@@ -15,7 +15,11 @@ export type Props = PropsWithChildren<
 const b = block('action-bar-item');
 
 export const ActionBarItem = ({children, className, pull, spacing = true}: Props) => {
-    return <li className={b({pull, spacing}, className)}>{children}</li>;
+    return (
+        <li className={b({pull, spacing}, className)} role="menuitem">
+            {children}
+        </li>
+    );
 };
 
 ActionBarItem.displayName = 'ActionBar.Item';
