@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.0](https://github.com/gravity-ui/navigation/compare/v2.8.1...v2.9.0) (2024-04-24)
+
+
+### Features
+
+* some a11y issues fixed ([#230](https://github.com/gravity-ui/navigation/issues/230)) ([650e38b](https://github.com/gravity-ui/navigation/commit/650e38ba6c4c5252fa894eed67a6b0254fd5e8de))
+
 ## [2.8.1](https://github.com/gravity-ui/navigation/compare/v2.8.0...v2.8.1) (2024-04-22)
 
 
