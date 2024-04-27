@@ -41,7 +41,7 @@ export function useOverflowingHorizontalListItems<ItemType>({
         }
 
         const updateContainerSize = (entries: ResizeObserverEntry[]) => {
-            if (entries.length > 0) {
+            if (entries.length > 0 && footerMenu) {
                 setContainerWidth(entries[0].contentRect.width);
             }
         };
