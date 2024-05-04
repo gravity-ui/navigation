@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.1](https://github.com/gravity-ui/navigation/compare/v2.9.0...v2.9.1) (2024-04-27)
+
+
+### Bug Fixes
+
+* **Footer:** fix warning with setState on unmounted component ([#233](https://github.com/gravity-ui/navigation/issues/233)) ([a67b62c](https://github.com/gravity-ui/navigation/commit/a67b62ce90d57c294bbf23377e606106899b8940))
+
 ## [2.9.0](https://github.com/gravity-ui/navigation/compare/v2.8.1...v2.9.0) (2024-04-24)
 
 
