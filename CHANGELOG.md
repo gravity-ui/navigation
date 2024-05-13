@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.10.0](https://github.com/gravity-ui/navigation/compare/v2.9.1...v2.10.0) (2024-05-13)
+
+
+### Features
+
+* **MultipleTooltip:** use uikit background color instead of private ([#235](https://github.com/gravity-ui/navigation/issues/235)) ([5bbb3ca](https://github.com/gravity-ui/navigation/commit/5bbb3cac6b1abe39373b4cc00b88d83310d0439e))
+
 ## [2.9.1](https://github.com/gravity-ui/navigation/compare/v2.9.0...v2.9.1) (2024-04-27)
 
 
