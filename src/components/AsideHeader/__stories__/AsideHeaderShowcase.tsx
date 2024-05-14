@@ -106,7 +106,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                 }}
                 headerDecoration={
                     headerDecoration === undefined
-                        ? addonHeaderDecoration === BOOLEAN_OPTIONS.Yes
+                        ? addonHeaderDecoration === BOOLEAN_OPTIONS.No
                         : headerDecoration
                 }
                 onMenuItemsChanged={setMenuItems}

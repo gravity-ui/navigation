@@ -7,7 +7,7 @@ $block: '.#{variables.$ns}composite-bar-item';
     --gn-composite-bar-item-action-size: 36px;
     --_--horizontal-divider-line-color: var(--g-color-line-generic);
 
-    --_--item-background-color-hover: var(--g-color-base-simple-hover);
+    --_--item-background-color-hover: var(--gn-ah-hovered-item-background-color);
 
     --_--item-general-icon-color: var(--g-color-text-primary);
     --_--item-icon-color: var(--g-color-text-misc);
@@ -15,7 +15,7 @@ $block: '.#{variables.$ns}composite-bar-item';
 
     // selected item
     --_--item-selected-text-color: var(--g-color-text-primary);
-    --_--item-selected-background-color-active: var(--g-color-base-selection);
+    --_--item-selected-background-color-active: var(--gn-ah-selected-item-background-color);
 
     display: flex;
     width: 100%;
