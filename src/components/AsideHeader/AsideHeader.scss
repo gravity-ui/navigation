@@ -29,7 +29,7 @@ $block: '.#{variables.$ns}aside-header';
     --gn-aside-header-min-width: 56px;
 
     --_--item-icon-background-size: 38px;
-    --_--background-color: var(--g-color-base-background);
+    --_--background-color: var(--gn-ah-background-color);
     --_--decoration-collapsed-background-color: var(--gn-ah-decoration-background-color);
     --_--decoration-expanded-background-color: var(--gn-ah-decoration-background-color);
     --_--vertical-divider-line-color: var(--g-color-line-generic);
