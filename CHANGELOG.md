@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.11.0](https://github.com/gravity-ui/navigation/compare/v2.10.0...v2.11.0) (2024-05-16)
+
+
+### Features
+
+* **Footer:** add callback for footer more button click ([#239](https://github.com/gravity-ui/navigation/issues/239)) ([9fdf655](https://github.com/gravity-ui/navigation/commit/9fdf655c5741fd25ff25d0fa09ad63ab1cb7e257))
+
 ## [2.10.0](https://github.com/gravity-ui/navigation/compare/v2.9.1...v2.10.0) (2024-05-13)
 
 
