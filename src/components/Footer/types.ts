@@ -1,4 +1,4 @@
-import {ReactNode} from 'react';
+import {MouseEventHandler, ReactNode} from 'react';
 
 import {MenuItemProps} from '@gravity-ui/uikit';
 
@@ -13,6 +13,7 @@ export type FooterProps = {
     menuItems?: FooterMenuItem[];
     withDivider?: boolean;
     moreButtonTitle?: string;
+    onMoreButtonClick?: MouseEventHandler<HTMLElement>;
     view?: 'normal' | 'clear';
     logo?: LogoProps;
     logoWrapperClassName?: string;
