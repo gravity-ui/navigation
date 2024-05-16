@@ -5,16 +5,17 @@ Both components have the same properties.
 
 ### PropTypes
 
-| Property                                                                                 | Type                | Required | Default | Description                   |
-| :--------------------------------------------------------------------------------------- | :------------------ | :------: | :------ | :---------------------------- |
-| className                                                                                | `String`            |          |         | Footer class name             |
-| [menuItems](https://github.com/gravity-ui/uikit/tree/main/src/components/Menu)           | `FooterMenuItem[]`  |          |         | List of footer menu items     |
-| withDivider                                                                              | `Boolean`           |          |         | Show top border on the footer |
-| moreButtonTitle                                                                          | `String`            |          |         | The more items button title   |
-| [view](#view)                                                                            | `normal` or `clear` |          |         | The footer view               |
-| [logo](https://preview.gravity-ui.com/navigation/?path=/story/components-logo--showcase) | `LogoProps`         |          |         | The service logo properties   |
-| logoWrapperClassName                                                                     | `string`            |          |         | The logo wrapper class name   |
-| copyright                                                                                | `string`            |          |         | The copyright                 |
+| Property                                                                                 | Type                             | Required | Default | Description                   |
+| :--------------------------------------------------------------------------------------- | :------------------------------- | :------: | :------ | :---------------------------- |
+| className                                                                                | `String`                         |          |         | Footer class name             |
+| [menuItems](https://github.com/gravity-ui/uikit/tree/main/src/components/Menu)           | `FooterMenuItem[]`               |          |         | List of footer menu items     |
+| withDivider                                                                              | `Boolean`                        |          |         | Show top border on the footer |
+| moreButtonTitle                                                                          | `String`                         |          |         | The more items button title   |
+| onMoreButtonClick                                                                        | `MouseEventHandler<HTMLElement>` |          |         | The more button click handler |
+| [view](#view)                                                                            | `normal` or `clear`              |          |         | The footer view               |
+| [logo](https://preview.gravity-ui.com/navigation/?path=/story/components-logo--showcase) | `LogoProps`                      |          |         | The service logo properties   |
+| logoWrapperClassName                                                                     | `string`                         |          |         | The logo wrapper class name   |
+| copyright                                                                                | `string`                         |          |         | The copyright                 |
 
 ### view
 
