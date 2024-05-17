@@ -25,6 +25,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         customBackgroundClassName,
         className,
         hideCollapseButton,
+        qa,
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
 
@@ -36,7 +37,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
     return (
         <React.Fragment>
-            <div className={b('aside', className)} style={{width: size}}>
+            <div className={b('aside', className)} style={{width: size}} data-qa={qa}>
                 <div className={b('aside-popup-anchor')} ref={asideRef} />
 
                 <div className={b('aside-content', {['with-decoration']: headerDecoration})}>

@@ -1,6 +1,6 @@
 import React, {HTMLAttributeAnchorTarget} from 'react';
 
-import {AlertProps, IconProps} from '@gravity-ui/uikit';
+import {AlertProps, IconProps, QAProps} from '@gravity-ui/uikit';
 
 import {ItemProps} from 'src/components/CompositeBar/Item/Item';
 
@@ -13,7 +13,7 @@ export interface MakeItemParams {
     title: React.ReactNode;
 }
 
-export interface MenuItem {
+export interface MenuItem extends QAProps {
     id: string;
     title: React.ReactNode;
     tooltipText?: React.ReactNode;
