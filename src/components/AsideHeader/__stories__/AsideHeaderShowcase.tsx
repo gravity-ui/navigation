@@ -97,6 +97,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
             </Modal>
             <AsideHeader
                 ref={ref}
+                qa={'ah-aside'}
                 logo={{
                     text: 'Service',
                     icon: logoIcon,
@@ -147,6 +148,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                         item: {
                             id: 'search',
                             title: 'Search',
+                            qa: 'subheader-item-search',
                             icon: Magnifier,
                             current: visiblePanel === Panel.Search,
                             onItemClick: () =>
@@ -169,6 +171,8 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                                 id: 'infra',
                                 icon: Gear,
                                 current: popupVisible,
+                                qa: 'footer-item-gear',
+                                iconQa: 'footer-item-icon-gear',
                                 title: (
                                     <div className={b('infra-text')}>
                                         <span className={b('infra-label')}>Minor issue</span>

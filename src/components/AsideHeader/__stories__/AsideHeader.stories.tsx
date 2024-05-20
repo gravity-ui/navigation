@@ -113,6 +113,7 @@ const AdvancedUsageTemplate: StoryFn = (args) => {
                     'aria-label': 'Service',
                 }}
                 onChangeCompact={setCompact}
+                qa={'pl-aside'}
                 {...args}
             />
 
@@ -166,6 +167,7 @@ const FallbackTemplate: StoryFn<typeof fallbackArgs> = ({
             <AsideFallback
                 headerDecoration={headerDecoration}
                 subheaderItemsCount={subheaderItemsCount}
+                qa="pl-aside-fallback"
             />
 
             <PageLayout.Content>
