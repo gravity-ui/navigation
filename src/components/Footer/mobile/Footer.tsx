@@ -21,6 +21,7 @@ export const MobileFooter: FC<FooterProps> = ({
     menuItems: providedMenuItems,
     withDivider,
     moreButtonTitle,
+    onMoreButtonClick,
     view = 'normal',
     logo,
     logoWrapperClassName,
@@ -29,9 +30,13 @@ export const MobileFooter: FC<FooterProps> = ({
     const [moreItemsMenuVisible, setMoreItemsMenuVisible] = useState(false);
     const menuContainerRef = useRef<HTMLDivElement>(null);
 
-    const handleOpenMoreItemsMenu = useCallback(() => {
-        setMoreItemsMenuVisible(true);
-    }, []);
+    const handleOpenMoreItemsMenu = useCallback(
+        (event) => {
+            setMoreItemsMenuVisible(true);
+            onMoreButtonClick?.(event);
+        },
+        [onMoreButtonClick],
+    );
 
     const handleCloseMoreItemsMenu = useCallback(() => {
         setMoreItemsMenuVisible(false);

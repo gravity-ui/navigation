@@ -21,6 +21,7 @@ export const Footer: FC<FooterProps> = ({
     menuItems: providedMenuItems,
     withDivider,
     moreButtonTitle,
+    onMoreButtonClick,
     view = 'normal',
     logo,
     logoWrapperClassName,
@@ -80,6 +81,7 @@ export const Footer: FC<FooterProps> = ({
                             switcherWrapperClassName={b('more-button')}
                             popupProps={moreItemsPopupProps}
                             defaultSwitcherProps={moreButtonProps}
+                            onSwitcherClick={onMoreButtonClick}
                         />
                     )}
                 </div>

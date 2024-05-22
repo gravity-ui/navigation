@@ -20,6 +20,8 @@ export const menuItemsShowcase: MenuItem[] = [
         id: 'overview',
         title: 'Overview',
         icon: Gear,
+        qa: 'menu-item-gear',
+        iconQa: 'menu-item-icon-gear',
     },
     {
         id: 'operations',

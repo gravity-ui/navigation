@@ -1,3 +1,5 @@
+import {QAProps} from '@gravity-ui/uikit';
+
 import {RenderContentType} from '../Content';
 import {DrawerItemProps} from '../Drawer/Drawer';
 import {
@@ -16,7 +18,7 @@ export interface LayoutProps {
     topAlert?: AsideHeaderTopAlertProps;
 }
 
-export interface AsideHeaderGeneralProps {
+export interface AsideHeaderGeneralProps extends QAProps {
     logo: LogoProps;
     multipleTooltip?: boolean;
     className?: string;
