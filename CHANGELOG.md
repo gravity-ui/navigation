@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.12.0](https://github.com/gravity-ui/navigation/compare/v2.11.0...v2.12.0) (2024-05-22)
+
+
+### Features
+
+* **AsideHeader:** change default decoration, item background colors ([#238](https://github.com/gravity-ui/navigation/issues/238)) ([cf75f1f](https://github.com/gravity-ui/navigation/commit/cf75f1fc8ede4a0891d233376f10d9c01364c78d))
+* support data-qa attribute for aside and menu items ([#241](https://github.com/gravity-ui/navigation/issues/241)) ([a5e9df0](https://github.com/gravity-ui/navigation/commit/a5e9df018b8b0907fa2023914764b842ac2b02c0))
+
 ## [2.11.0](https://github.com/gravity-ui/navigation/compare/v2.10.0...v2.11.0) (2024-05-16)
 
 
