@@ -3,14 +3,10 @@ import React from 'react';
 import {Gear} from '@gravity-ui/icons';
 import {Button, Icon, MobileProvider, TextInput} from '@gravity-ui/uikit';
 
-import {
-    MobileHeader,
-    MobileHeaderEventOptions,
-    MobileHeaderFooterItem,
-    MobileHeaderProps,
-} from '../';
+import {MobileHeader, MobileHeaderFooterItem, MobileHeaderProps} from '../';
 import {SettingsMobileComponent} from '../../Settings/__stories__/SettingsMobileDemo';
 import {cn} from '../../utils/cn';
+import {getMobileHeaderCustomEvent} from '../utils';
 
 import {text as placeholderText} from './moc';
 
@@ -19,10 +15,6 @@ import logoIcon from '../../../../.storybook/assets/logo.svg';
 import './MobileHeaderShowcase.scss';
 
 const b = cn('mobile-header-demo');
-
-function getCustomEvent(eventName: string, detail?: MobileHeaderEventOptions) {
-    return new CustomEvent<MobileHeaderEventOptions>(eventName, {detail});
-}
 
 export function MobileHeaderShowcase() {
     const ref = React.useRef<HTMLDivElement>(null);
@@ -96,7 +88,7 @@ export function MobileHeaderShowcase() {
             className={b('side-item')}
             onClick={() => {
                 ref?.current?.dispatchEvent(
-                    getCustomEvent('MOBILE_PANEL_TOGGLE', {panelName: 'settings'}),
+                    getMobileHeaderCustomEvent('MOBILE_PANEL_TOGGLE', {panelName: 'settings'}),
                 );
             }}
         >
@@ -193,7 +185,7 @@ export function MobileHeaderShowcase() {
                                     className={b('button')}
                                     onClick={() => {
                                         ref?.current?.dispatchEvent(
-                                            getCustomEvent('MOBILE_PANEL_OPEN', {
+                                            getMobileHeaderCustomEvent('MOBILE_PANEL_OPEN', {
                                                 panelName: 'settings',
                                             }),
                                         );
@@ -206,7 +198,7 @@ export function MobileHeaderShowcase() {
                                     className={b('button')}
                                     onClick={() => {
                                         ref?.current?.dispatchEvent(
-                                            getCustomEvent('MOBILE_BURGER_OPEN'),
+                                            getMobileHeaderCustomEvent('MOBILE_BURGER_OPEN'),
                                         );
                                         toggleSearchModal();
                                     }}
