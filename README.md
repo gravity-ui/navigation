@@ -75,25 +75,27 @@ export const Aside: FC = () => {
 import {AsideHeader} from '@gravity-ui/navigation';
 ```
 
-## CSS API AsideHeader
+## CSS variables
 
 Used for themization Navigation's components
 
-| Name                                                      | Description                                                   |
-| :-------------------------------------------------------- | :------------------------------------------------------------ |
-| `--gn-aside-header-decoration-collapsed-background-color` | Decoration color for collapsed navigation                     |
-| `--gn-aside-header-decoration-expanded-background-color`  | Decoration color for expanded navigation                      |
-| `--gn-aside-header-background-color`                      | Navigation background color                                   |
-| `--gn-aside-header-divider-horizontal-color`              | All horizontal divider line color                             |
-| `--gn-aside-header-divider-vertical-color`                | Vertical divider line color between `AsideHeader` and content |
-| `--gn-aside-top-panel-height`                             | **Read only**.`AsideHeader` top alert height                  |
+### AsideHeader vars
+
+| Name                                                      | Description                                                   |            Default             |
+| :-------------------------------------------------------- | :------------------------------------------------------------ | :----------------------------: |
+| `--gn-aside-header-decoration-collapsed-background-color` | Decoration color for collapsed navigation                     | `--g-color-base-warning-light` |
+| `--gn-aside-header-decoration-expanded-background-color`  | Decoration color for expanded navigation                      | `--g-color-base-warning-light` |
+| `--gn-aside-header-background-color`                      | Navigation background color                                   |  `--g-color-base-background`   |
+| `--gn-aside-header-divider-horizontal-color`              | All horizontal divider line color                             |    `--g-color-line-generic`    |
+| `--gn-aside-header-divider-vertical-color`                | Vertical divider line color between `AsideHeader` and content |    `--g-color-line-generic`    |
+| `--gn-aside-top-panel-height`                             | **Read only**.`AsideHeader` top alert height                  |              0px               |
 | Item                                                      |
-| `--gn-aside-header-general-item-icon-color`               | Icon color for Subheader and Footer items                     |
-| `--gn-aside-header-item-icon-color`                       | Icon color for CompositeBar items                             |
-| `--gn-aside-header-item-text-color`                       |                                                               |
-| `--gn-aside-header-item-background-color-hover`           |                                                               |
+| `--gn-aside-header-general-item-icon-color`               | Icon color for Subheader and Footer items                     |    `--g-color-text-primary`    |
+| `--gn-aside-header-item-icon-color`                       | Icon color for CompositeBar items                             |     `--g-color-text-misc`      |
+| `--gn-aside-header-item-text-color`                       |                                                               |    `--g-color-text-primary`    |
+| `--gn-aside-header-item-background-color-hover`           |                                                               | `--g-color-base-simple-hover`  |
 | Current Item                                              |
-| `--gn-aside-header-item-current-background-color`         |                                                               |
-| `--gn-aside-header-item-current-icon-color`               |                                                               |
-| `--gn-aside-header-item-current-text-color`               |                                                               |
-| `--gn-aside-header-item-current-background-color-hover`   |                                                               |
+| `--gn-aside-header-item-current-background-color`         |                                                               |   `--g-color-base-selection`   |
+| `--gn-aside-header-item-current-icon-color`               |                                                               |                                |
+| `--gn-aside-header-item-current-text-color`               |                                                               |    `--g-color-text-primary`    |
+| `--gn-aside-header-item-current-background-color-hover`   |                                                               |                                |
