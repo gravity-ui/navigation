@@ -6,6 +6,6 @@ export {
 
 export {getMobileHeaderCustomEvent} from './utils';
 
-export {EVENT_NAMES} from './constants';
+export {MOBILE_HEADER_EVENT_NAMES} from './constants';
 
 export type {MobileMenuItem, ModalItem, MobileHeaderEvent, MobileHeaderEventOptions} from './types';

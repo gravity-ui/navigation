@@ -11,8 +11,8 @@ import {Burger} from './Burger/Burger';
 import {BurgerMenu, BurgerMenuInnerProps} from './BurgerMenu/BurgerMenu';
 import {
     BURGER_PANEL_ITEM_ID,
-    EVENT_NAMES,
     MOBILE_HEADER_COMPACT_HEIGHT,
+    MOBILE_HEADER_EVENT_NAMES,
     MOBILE_HEADER_EXPANDED_HEIGHT,
 } from './constants';
 import i18n from './i18n';
@@ -75,7 +75,12 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                 setVisiblePanel((prev) => {
                     const panelOpen = prev === name;
 
-                    onEvent?.(name, panelOpen ? EVENT_NAMES.closeEvent : EVENT_NAMES.openEvent);
+                    onEvent?.(
+                        name,
+                        panelOpen
+                            ? MOBILE_HEADER_EVENT_NAMES.closeEvent
+                            : MOBILE_HEADER_EVENT_NAMES.openEvent,
+                    );
 
                     return panelOpen ? null : name;
                 });
@@ -95,7 +100,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
         const onMobilePanelOpen = useCallback(
             ({detail}) => {
                 if (typeof detail?.panelName === 'string') {
-                    onEvent?.(detail?.panelName, EVENT_NAMES.openEvent);
+                    onEvent?.(detail?.panelName, MOBILE_HEADER_EVENT_NAMES.openEvent);
                     setVisiblePanel(detail?.panelName);
                 }
             },
@@ -105,7 +110,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
         const onMobilePanelClose = useCallback(
             ({detail}) => {
                 if (typeof detail?.panelName === 'string') {
-                    onEvent?.(detail?.panelName, EVENT_NAMES.closeEvent);
+                    onEvent?.(detail?.panelName, MOBILE_HEADER_EVENT_NAMES.closeEvent);
                     setVisiblePanel(null);
                 }
             },
@@ -113,18 +118,18 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
         );
 
         const onBurgerOpen = useCallback(() => {
-            onEvent?.(BURGER_PANEL_ITEM_ID, EVENT_NAMES.openEvent);
+            onEvent?.(BURGER_PANEL_ITEM_ID, MOBILE_HEADER_EVENT_NAMES.openEvent);
             setVisiblePanel(BURGER_PANEL_ITEM_ID);
         }, [onEvent]);
 
         const onBurgerClose = useCallback(() => {
-            onEvent?.(BURGER_PANEL_ITEM_ID, EVENT_NAMES.closeEvent);
+            onEvent?.(BURGER_PANEL_ITEM_ID, MOBILE_HEADER_EVENT_NAMES.closeEvent);
             setVisiblePanel(null);
         }, [onEvent]);
 
         const onCloseDrawer = useCallback(() => {
             if (visiblePanel) {
-                onEvent?.(visiblePanel, EVENT_NAMES.closeEvent);
+                onEvent?.(visiblePanel, MOBILE_HEADER_EVENT_NAMES.closeEvent);
             }
             setVisiblePanel(null);
         }, [visiblePanel, onEvent]);
