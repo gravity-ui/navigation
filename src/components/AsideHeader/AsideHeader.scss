@@ -1,27 +1,9 @@
 @use '../variables';
 
-@import '../../../styles/themes';
-
 $block: '.#{variables.$ns}aside-header';
 
 .g-root {
     --gn-aside-top-panel-height: 0px;
-
-    &_theme_light {
-        @include gn-theme-light();
-    }
-
-    &_theme_light-hc {
-        @include gn-theme-light-hc();
-    }
-
-    &_theme_dark {
-        @include gn-theme-dark();
-    }
-
-    &_theme_dark-hc {
-        @include gn-theme-dark-hc();
-    }
 }
 
 #{$block} {
@@ -29,9 +11,9 @@ $block: '.#{variables.$ns}aside-header';
     --gn-aside-header-min-width: 56px;
 
     --_--item-icon-background-size: 38px;
-    --_--background-color: var(--gn-ah-background-color);
-    --_--decoration-collapsed-background-color: var(--gn-ah-decoration-background-color);
-    --_--decoration-expanded-background-color: var(--gn-ah-decoration-background-color);
+    --_--background-color: var(--g-color-base-background);
+    --_--decoration-collapsed-background-color: var(--g-color-base-warning-light);
+    --_--decoration-expanded-background-color: var(--g-color-base-warning-light);
     --_--vertical-divider-line-color: var(--g-color-line-generic);
     --_--horizontal-divider-line-color: var(--g-color-line-generic);
 
