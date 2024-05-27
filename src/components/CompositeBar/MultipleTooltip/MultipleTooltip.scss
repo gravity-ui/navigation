@@ -4,6 +4,10 @@ $block: '.#{variables.$ns}multiple-tooltip';
 
 .g-root_theme_dark #{$block},
 .g-root_theme_dark-hc #{$block} {
+    --multiple-tooltip-item-bg-color: var(
+        --g-color-base-float-medium,
+        var(--g-color-private-white-100-solid)
+    );
     --multiple-tooltip-item-active-bg-color: var(--g-color-base-float-heavy);
     --multiple-tooltip-backdrop-background: linear-gradient(
         90deg,
@@ -13,8 +17,19 @@ $block: '.#{variables.$ns}multiple-tooltip';
     --multiple-tooltip-backdrop-filter: blur(16px);
 }
 
+.g-root_theme_dark-hc #{$block} {
+    --multiple-tooltip-item-bg-color: var(
+        --g-color-base-float-medium,
+        var(--g-color-private-white-150-solid)
+    );
+}
+
 .g-root_theme_light #{$block},
 .g-root_theme_light-hc #{$block} {
+    --multiple-tooltip-item-bg-color: var(
+        --g-color-base-float-medium,
+        var(--g-color-private-black-550-solid)
+    );
     --multiple-tooltip-item-active-bg-color: var(--g-color-base-float-heavy);
     --multiple-tooltip-backdrop-background: linear-gradient(
         90deg,
@@ -54,7 +69,7 @@ $block: '.#{variables.$ns}multiple-tooltip';
         box-sizing: border-box;
         height: 30px;
         padding: 8px 12px;
-        background-color: var(--g-color-base-float-medium);
+        background-color: var(--multiple-tooltip-item-bg-color);
         position: relative;
         border-radius: 5px;
         align-items: center;
