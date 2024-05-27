@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.13.0](https://github.com/gravity-ui/navigation/compare/v2.12.0...v2.13.0) (2024-05-27)
+
+
+### Features
+
+* **MobileHeader:** add export EVENT_NAMES and getMobileHeaderCustomEvent ([#243](https://github.com/gravity-ui/navigation/issues/243)) ([62e52ac](https://github.com/gravity-ui/navigation/commit/62e52ac8343058c6b791bdf3626dee7f26663cf2))
+* **MultipleTooltip:** add fallback to private color for bg ([#244](https://github.com/gravity-ui/navigation/issues/244)) ([4f54626](https://github.com/gravity-ui/navigation/commit/4f546262aee1b56c71c75600aafb679b2aabf646))
+
 ## [2.12.0](https://github.com/gravity-ui/navigation/compare/v2.11.0...v2.12.0) (2024-05-22)
 
 
