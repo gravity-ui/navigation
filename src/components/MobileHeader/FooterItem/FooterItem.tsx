@@ -16,6 +16,7 @@ export interface FooterItemProps {
     className?: string;
     modalItem?: ModalItem;
     onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+    meta?: Record<string, string | undefined>;
 }
 
 export const FooterItem = ({
@@ -24,6 +25,7 @@ export const FooterItem = ({
     className,
     modalItem = {visible: false},
     onClick,
+    meta,
 }: FooterItemProps) => {
     const handleClick = React.useCallback(
         (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -31,6 +33,7 @@ export const FooterItem = ({
                 componentId: 'MobileHeaderFooterItem',
                 eventId: 'click',
                 domEvent: event,
+                meta,
             });
 
             onClick?.(event);
