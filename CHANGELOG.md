@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.14.0](https://github.com/gravity-ui/navigation/compare/v2.13.0...v2.14.0) (2024-06-05)
+
+
+### Features
+
+* **FooterItem:** add meta property for eventBroker ([#248](https://github.com/gravity-ui/navigation/issues/248)) ([c129f77](https://github.com/gravity-ui/navigation/commit/c129f771cd63088c5c7e46db435952deecb9a84e))
+
 ## [2.13.0](https://github.com/gravity-ui/navigation/compare/v2.12.0...v2.13.0) (2024-05-27)
 
 
