@@ -1,0 +1,34 @@
+@use '../../../variables';
+
+$block: '.#{variables.$ns}collapse-button';
+
+$buttonHeight: 20px;
+
+#{$block} {
+    --g-button-background-color-hover: transparent;
+    --g-button-height: #{$buttonHeight};
+
+    box-sizing: border-box;
+    overflow: hidden;
+    height: $buttonHeight;
+    border-top: 1px solid
+        var(--gn-aside-header-divider-horizontal-color, var(--_--horizontal-divider-line-color));
+
+    &__button {
+        width: 100%;
+
+        &:not(&_compact) {
+            #{$block}__icon {
+                transform: rotate(180deg);
+            }
+        }
+
+        &:hover #{$block}__icon {
+            color: var(--g-color-text-primary);
+        }
+    }
+
+    &__icon {
+        color: var(--g-color-text-secondary);
+    }
+}

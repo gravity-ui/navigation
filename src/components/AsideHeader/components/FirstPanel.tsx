@@ -8,7 +8,7 @@ import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import i18n from '../i18n';
 import {b} from '../utils';
 
-import {CollapseButton} from './CollapseButton';
+import {CollapseButton} from './CollapseButton/CollapseButton';
 import {Header} from './Header';
 import {Panels} from './Panels';
 

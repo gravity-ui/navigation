@@ -252,39 +252,4 @@ $block: '.#{variables.$ns}aside-header';
         z-index: 95;
         margin-top: var(--gn-aside-top-panel-height);
     }
-
-    &__collapse-button {
-        --g-button-background-color-hover: transparent;
-
-        // TODO: remove temporary fix for expand button
-        & > .g-button__text {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 20px;
-        }
-
-        overflow: hidden;
-        box-sizing: border-box;
-        flex: none;
-        width: 100%;
-        height: 20px;
-        border-top: 1px solid
-            var(--gn-aside-header-divider-horizontal-color, var(--_--horizontal-divider-line-color));
-        margin-top: auto;
-
-        &:not(&_compact) {
-            #{$class}__collapse-icon {
-                transform: rotate(180deg);
-            }
-        }
-
-        #{$class}__collapse-icon {
-            color: var(--g-color-text-secondary);
-        }
-
-        &:hover #{$class}__collapse-icon {
-            color: var(--g-color-text-primary);
-        }
-    }
 }
