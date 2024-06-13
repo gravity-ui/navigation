@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.14.1](https://github.com/gravity-ui/navigation/compare/v2.14.0...v2.14.1) (2024-06-13)
+
+
+### Bug Fixes
+
+* **AsideHeader:** prevent collapse button styles overriding ([#250](https://github.com/gravity-ui/navigation/issues/250)) ([06d8ff1](https://github.com/gravity-ui/navigation/commit/06d8ff1dab341556c7442b922a9cc1004722f1f9))
+
 ## [2.14.0](https://github.com/gravity-ui/navigation/compare/v2.13.0...v2.14.0) (2024-06-05)
 
 
