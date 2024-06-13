@@ -38,7 +38,7 @@ export const FooterItem = ({
 
             onClick?.(event);
         },
-        [onClick],
+        [onClick, eventBrokerMeta],
     );
 
     return (
