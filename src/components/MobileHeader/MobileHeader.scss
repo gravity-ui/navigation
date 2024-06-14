@@ -19,7 +19,7 @@ $block: '.#{variables.$ns}mobile-header';
         display: flex;
         justify-content: space-between;
         align-items: center;
-        z-index: 100;
+        z-index: var(--gn-mobile-header-z-index, 100);
     }
 
     &__burger {
@@ -39,7 +39,7 @@ $block: '.#{variables.$ns}mobile-header';
     }
 
     &__panels {
-        z-index: 98;
+        z-index: var(--gn-mobile-header-panel-z-index, 98);
         position: fixed;
         inset: var(--mobile-header-min-heigth) 0 0;
         overflow: hidden;

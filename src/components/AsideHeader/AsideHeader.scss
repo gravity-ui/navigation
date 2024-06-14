@@ -31,7 +31,7 @@ $block: '.#{variables.$ns}aside-header';
         display: flex;
         flex-direction: column;
         background-color: var(--gn-aside-header-background-color, var(--_--background-color));
-        z-index: 100;
+        z-index: var(--gn-aside-header-z-index, 100);
         max-height: calc(100vh - var(--gn-aside-top-panel-height));
         margin-top: var(--gn-aside-top-panel-height);
 
@@ -199,7 +199,7 @@ $block: '.#{variables.$ns}aside-header';
     }
 
     &__panels {
-        z-index: 98;
+        z-index: var(--gn-aside-header-panel-z-index, 98);
         position: fixed;
         inset: var(--gn-aside-top-panel-height) 0 0;
         overflow: auto;
@@ -229,7 +229,7 @@ $block: '.#{variables.$ns}aside-header';
 
     &__pane-top {
         position: fixed;
-        z-index: 98;
+        z-index: var(--gn-aside-header-pane-top-z-index, 98);
         top: 0;
         background: var(--g-color-base-background);
         width: 100%;
@@ -249,7 +249,7 @@ $block: '.#{variables.$ns}aside-header';
 
     &__content {
         width: calc(100% - var(--gn-aside-header-size));
-        z-index: 95;
+        z-index: var(--gn-aside-header-content-z-index, 95);
         margin-top: var(--gn-aside-top-panel-height);
     }
 }
