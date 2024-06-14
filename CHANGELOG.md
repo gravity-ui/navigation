@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.15.0](https://github.com/gravity-ui/navigation/compare/v2.14.1...v2.15.0) (2024-06-14)
+
+
+### Features
+
+* support css vars for z-index in Mobile-, Aside- Header ([#255](https://github.com/gravity-ui/navigation/issues/255)) ([eb5326e](https://github.com/gravity-ui/navigation/commit/eb5326e6daae3973ed3f43959890549e98354609))
+
+
+### Bug Fixes
+
+* **FooterItem:** add eventBrokerMeta to useCallback deps ([#253](https://github.com/gravity-ui/navigation/issues/253)) ([6eae9cd](https://github.com/gravity-ui/navigation/commit/6eae9cd35c5962d03022b06abf82ca2d9531c9e5))
+
 ## [2.14.1](https://github.com/gravity-ui/navigation/compare/v2.14.0...v2.14.1) (2024-06-13)
 
 
