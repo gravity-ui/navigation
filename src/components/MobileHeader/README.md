@@ -54,3 +54,11 @@ Available panelName
 
 1. 'burger'
 2. `id` of element [panelItems prop](https://github.com/gravity-ui/navigation/blob/main/src/components/MobileHeader/MobileHeader.tsx#L38C5-L38C15)
+
+## MobileHeader vars
+
+| Name                               | Description                                    | Default |
+| :--------------------------------- | :--------------------------------------------- | :-----: |
+| z-indexes                          |                                                |         |
+| `--gn-mobile-header-z-index`       | Mobile header z-index                          |  `100`  |
+| `--gn-mobile-header-panel-z-index` | Mobile header panel (Drawer component) z-index |  `98`   |
