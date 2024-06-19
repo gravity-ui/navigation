@@ -10,7 +10,7 @@ $buttonHeight: 20px;
 
     box-sizing: border-box;
     overflow: hidden;
-    height: $buttonHeight;
+    min-height: $buttonHeight;
     border-top: 1px solid
         var(--gn-aside-header-divider-horizontal-color, var(--_--horizontal-divider-line-color));
 
