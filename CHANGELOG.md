@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.15.1](https://github.com/gravity-ui/navigation/compare/v2.15.0...v2.15.1) (2024-06-19)
+
+
+### Bug Fixes
+
+* **AsideHeader:** fix CollapseButton min-height ([#256](https://github.com/gravity-ui/navigation/issues/256)) ([e75e080](https://github.com/gravity-ui/navigation/commit/e75e08077440dd3938030bb067806331d7cccd55))
+
 ## [2.15.0](https://github.com/gravity-ui/navigation/compare/v2.14.1...v2.15.0) (2024-06-14)
 
 
