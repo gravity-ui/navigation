@@ -36,7 +36,9 @@ const getPlugins = (outDir) => {
             outDir,
         }),
         postcss({
+            extract: true,
             minimize: true,
+            use: ['sass'],
         }),
         svgr(),
     ];

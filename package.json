@@ -10,6 +10,9 @@
   "main": "build/cjs",
   "module": "build/esm",
   "types": "build/esm/index.d.ts",
+  "exports": {
+    "./styles.css": "./build/esm/index.css"
+  },
   "sideEffects": [
     "*.css",
     "*.scss"
