@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 
-import {Button, Icon} from '@gravity-ui/uikit';
+import {Icon} from '@gravity-ui/uikit';
 
 import {block} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
@@ -27,17 +27,12 @@ export const CollapseButton = ({className}: CollapseButtonProps) => {
         ? expandTitle || i18n('button_expand')
         : collapseTitle || i18n('button_collapse');
     return (
-        <div className={b(null, className)}>
-            <Button
-                className={b('button', {compact})}
-                view="flat"
-                pin="brick-brick"
-                onClick={onCollapseButtonClick}
-                title={buttonTitle}
-                width="max"
-            >
-                <Icon data={controlMenuButtonIcon} className={b('icon')} width="16" height="10" />
-            </Button>
-        </div>
+        <button
+            className={b({compact}, className)}
+            onClick={onCollapseButtonClick}
+            title={buttonTitle}
+        >
+            <Icon data={controlMenuButtonIcon} className={b('icon')} width="16" height="10" />
+        </button>
     );
 };
