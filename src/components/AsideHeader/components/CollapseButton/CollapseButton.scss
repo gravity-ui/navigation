@@ -1,31 +1,46 @@
 @use '../../../variables';
+@use '@gravity-ui/uikit/styles/mixins';
 
 $block: '.#{variables.$ns}collapse-button';
 
 $buttonHeight: 20px;
 
 #{$block} {
-    --g-button-background-color-hover: transparent;
-    --g-button-height: #{$buttonHeight};
+    --_--focus-outline-color: var(--g-color-line-focus);
+    --_--focus-outline-offset: 0;
 
-    box-sizing: border-box;
-    overflow: hidden;
+    @include mixins.button-reset();
+
     min-height: $buttonHeight;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-top: 1px solid
         var(--gn-aside-header-divider-horizontal-color, var(--_--horizontal-divider-line-color));
+    position: relative;
+    box-sizing: content-box;
 
-    &__button {
-        width: 100%;
+    &::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: 0 2px 2px;
+    }
 
-        &:not(&_compact) {
-            #{$block}__icon {
-                transform: rotate(180deg);
-            }
+    &:focus-visible::before {
+        outline: var(--_--focus-outline-color) solid 2px;
+        outline-offset: var(--_--focus-outline-offset);
+    }
+
+    &:not(&_compact) {
+        #{$block}__icon {
+            transform: rotate(180deg);
         }
+    }
 
-        &:hover #{$block}__icon {
-            color: var(--g-color-text-primary);
-        }
+    &:hover #{$block}__icon {
+        color: var(--g-color-text-primary);
     }
 
     &__icon {
