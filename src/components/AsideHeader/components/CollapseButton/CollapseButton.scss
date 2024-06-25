@@ -1,5 +1,5 @@
 @use '../../../variables';
-@use '@gravity-ui/uikit/styles/mixins';
+@use '~@gravity-ui/uikit/styles/mixins';
 
 $block: '.#{variables.$ns}collapse-button';
 
