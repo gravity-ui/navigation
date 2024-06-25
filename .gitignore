@@ -16,3 +16,6 @@ pnpm-lock.yaml
 /playwright/playwright/.cache
 /playwright-report
 /test-results
+
+# other files
+pnpm-lock.yaml
