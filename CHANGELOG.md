@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.15.3](https://github.com/gravity-ui/navigation/compare/v2.15.2...v2.15.3) (2024-06-25)
+
+
+### Bug Fixes
+
+* **CollapseButton:** fix scss ([#263](https://github.com/gravity-ui/navigation/issues/263)) ([df09b99](https://github.com/gravity-ui/navigation/commit/df09b99dfb0adc7f751d58a3c72308241899ecd5))
+
 ## [2.15.2](https://github.com/gravity-ui/navigation/compare/v2.15.1...v2.15.2) (2024-06-25)
 
 
