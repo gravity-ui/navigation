@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.16.0](https://github.com/gravity-ui/navigation/compare/v2.15.3...v2.16.0) (2024-06-27)
+
+
+### Features
+
+* **Drawer:** Add docs and children property ([#258](https://github.com/gravity-ui/navigation/issues/258)) ([7af75f3](https://github.com/gravity-ui/navigation/commit/7af75f3e35f70c90c4dd745e56b81cf1ecc72fb6))
+
 ## [2.15.3](https://github.com/gravity-ui/navigation/compare/v2.15.2...v2.15.3) (2024-06-25)
 
 
