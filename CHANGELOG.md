@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.15.3](https://github.com/gravity-ui/navigation/compare/v2.15.2...v2.15.3) (2024-06-25)
+
+
+### Bug Fixes
+
+* **CollapseButton:** fix scss ([#263](https://github.com/gravity-ui/navigation/issues/263)) ([df09b99](https://github.com/gravity-ui/navigation/commit/df09b99dfb0adc7f751d58a3c72308241899ecd5))
+
+## [2.15.2](https://github.com/gravity-ui/navigation/compare/v2.15.1...v2.15.2) (2024-06-25)
+
+
+### Bug Fixes
+
+* **CollapseButton:** get rid of the impact of the border on the height of the button ([#260](https://github.com/gravity-ui/navigation/issues/260)) ([92b3896](https://github.com/gravity-ui/navigation/commit/92b38965314c7005803a104d2b35566ea96fb1eb))
+* **MobileLogo:** fix href prop ([#261](https://github.com/gravity-ui/navigation/issues/261)) ([0a81446](https://github.com/gravity-ui/navigation/commit/0a81446db1064f06bdb5cdb45134430481eaa6c9))
+
 ## [2.15.1](https://github.com/gravity-ui/navigation/compare/v2.15.0...v2.15.1) (2024-06-19)
 
 
