@@ -70,11 +70,19 @@ const config: PlaywrightTestConfig = {
     projects: [
         {
             name: 'chromium',
-            use: {...devices['Desktop Chrome'], deviceScaleFactor: 2},
+            use: {
+                ...devices['Desktop Chrome'],
+                deviceScaleFactor: 2,
+                viewport: {width: 1200, height: 720},
+            },
         },
         {
             name: 'webkit',
-            use: {...devices['Desktop Safari'], deviceScaleFactor: 2},
+            use: {
+                ...devices['Desktop Safari'],
+                deviceScaleFactor: 2,
+                viewport: {width: 1200, height: 720},
+            },
         },
     ],
 };
