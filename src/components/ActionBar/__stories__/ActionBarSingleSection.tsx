@@ -21,7 +21,7 @@ export function ActionBarSingleSection() {
                     </ActionBar.Item>
 
                     <ActionBar.Item spacing={false}>
-                        <ClipboardButton size={16} text={'DEVTOOLSSUPPORT-21001'} />
+                        <ClipboardButton size="m" text={'DEVTOOLSSUPPORT-21001'} />
                     </ActionBar.Item>
                 </ActionBar.Group>
 

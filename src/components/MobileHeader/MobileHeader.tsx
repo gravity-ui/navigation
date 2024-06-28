@@ -89,7 +89,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
         );
 
         const onMobilePanelToggle = useCallback(
-            ({detail}) => {
+            ({detail}: any) => {
                 if (typeof detail?.panelName === 'string') {
                     onPanelToggle(detail?.panelName);
                 }
@@ -98,7 +98,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
         );
 
         const onMobilePanelOpen = useCallback(
-            ({detail}) => {
+            ({detail}: any) => {
                 if (typeof detail?.panelName === 'string') {
                     onEvent?.(detail?.panelName, MOBILE_HEADER_EVENT_NAMES.openEvent);
                     setVisiblePanel(detail?.panelName);
@@ -108,7 +108,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
         );
 
         const onMobilePanelClose = useCallback(
-            ({detail}) => {
+            ({detail}: any) => {
                 if (typeof detail?.panelName === 'string') {
                     onEvent?.(detail?.panelName, MOBILE_HEADER_EVENT_NAMES.closeEvent);
                     setVisiblePanel(null);

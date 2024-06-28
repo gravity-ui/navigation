@@ -1,7 +1,7 @@
 export * from './MobileHeader';
 export {
     FooterItem as MobileHeaderFooterItem,
-    FooterItemProps as MobileHeaderFooterItemProps,
+    type FooterItemProps as MobileHeaderFooterItemProps,
 } from './FooterItem/FooterItem';
 
 export {getMobileHeaderCustomEvent} from './utils';

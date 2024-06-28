@@ -7,7 +7,7 @@ export interface ModalItem {
     className?: string;
     contentClassName?: string;
     modalAllowHideOnContentScroll?: boolean;
-    renderContent?: () => void;
+    renderContent?: () => React.ReactNode;
     onClose?: () => void;
 }
 

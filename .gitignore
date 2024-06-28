@@ -9,5 +9,7 @@ node_modules
 # Generated content
 build
 
-
-
+#Playwright
+/playwright/playwright/.cache
+/playwright-report
+/test-results
