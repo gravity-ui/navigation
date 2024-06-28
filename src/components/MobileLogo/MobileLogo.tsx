@@ -27,16 +27,7 @@ export const MobileLogo: React.FC<MobileLogoProps> = ({
     onClick,
     className,
 }) => {
-    const hasClickHandler = typeof onClick === 'function';
     const hasWrapper = typeof wrapper === 'function';
-
-    const linkProps = hasClickHandler
-        ? {}
-        : {
-              target,
-              ref: target === '_self' ? undefined : 'noreferrer',
-              href,
-          };
 
     let logoIcon;
 
@@ -78,7 +69,13 @@ export const MobileLogo: React.FC<MobileLogoProps> = ({
             {wrapper(logo, compact)}
         </div>
     ) : (
-        <a {...linkProps} className={b(null, className)} onClick={onClick}>
+        <a
+            href={href}
+            target={target}
+            ref={target === '_self' ? undefined : 'noreferrer'}
+            className={b(null, className)}
+            onClick={onClick}
+        >
             {logo}
         </a>
     );
