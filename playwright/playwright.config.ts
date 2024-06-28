@@ -73,7 +73,6 @@ const config: PlaywrightTestConfig = {
             use: {
                 ...devices['Desktop Chrome'],
                 deviceScaleFactor: 2,
-                viewport: {width: 1200, height: 720},
             },
         },
         {
@@ -81,7 +80,6 @@ const config: PlaywrightTestConfig = {
             use: {
                 ...devices['Desktop Safari'],
                 deviceScaleFactor: 2,
-                viewport: {width: 1200, height: 720},
             },
         },
     ],
