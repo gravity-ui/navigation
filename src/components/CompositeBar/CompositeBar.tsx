@@ -78,7 +78,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     }, [multipleTooltip, multipleTooltipActive, setMultipleTooltipContextValue]);
 
     const onTooltipMouseEnter = useCallback(
-        (e) => {
+        (e: {clientX: number}) => {
             if (
                 multipleTooltip &&
                 compact &&
@@ -112,7 +112,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     }, [multipleTooltip, multipleTooltipActive, setMultipleTooltipContextValue]);
 
     const onMouseEnterByIndex = useCallback(
-        (itemIndex) => () => {
+        (itemIndex: number) => () => {
             if (multipleTooltip && document.hasFocus()) {
                 let multipleTooltipActiveValue = multipleTooltipActive;
                 if (!multipleTooltipActive && itemIndex !== lastClickedItemIndex) {
@@ -161,7 +161,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     ]);
 
     const onItemClickByIndex = useCallback(
-        (itemIndex): ItemProps['onItemClick'] =>
+        (itemIndex: number): ItemProps['onItemClick'] =>
             (item, collapsed, event) => {
                 if (
                     compact &&

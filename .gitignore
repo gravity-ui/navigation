@@ -12,4 +12,7 @@ build
 # other files
 pnpm-lock.yaml
 
-
+#Playwright
+/playwright/playwright/.cache
+/playwright-report
+/test-results

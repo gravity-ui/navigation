@@ -9,6 +9,7 @@ export interface ContentProps {
     className?: string;
     cssSizeVariableName?: string;
     renderContent?: RenderContentType;
+    children?: React.ReactNode;
 }
 
 interface RenderContentProps {
