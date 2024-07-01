@@ -1,3 +1,6 @@
 @import '@gravity-ui/uikit/styles/styles.scss';
 @import '@gravity-ui/uikit/styles/fonts.scss';
 @import '../../styles/mixins.scss';
+
+$defaultFontFamily: var(--g-text-body-font-family);
+$titleFontFamily: 'YS Display', helveticaneue, arial, helvetica, sans-serif;
