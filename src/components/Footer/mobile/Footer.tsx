@@ -31,7 +31,7 @@ export const MobileFooter: FC<FooterProps> = ({
     const menuContainerRef = useRef<HTMLDivElement>(null);
 
     const handleOpenMoreItemsMenu = useCallback(
-        (event) => {
+        (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
             setMoreItemsMenuVisible(true);
             onMoreButtonClick?.(event);
         },

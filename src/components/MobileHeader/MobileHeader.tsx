@@ -16,7 +16,7 @@ import {
     MOBILE_HEADER_EXPANDED_HEIGHT,
 } from './constants';
 import i18n from './i18n';
-import {MobileHeaderEvent, MobileMenuItem} from './types';
+import {MobileHeaderEvent, MobileHeaderEventOptions, MobileMenuItem} from './types';
 
 import './MobileHeader.scss';
 
@@ -89,7 +89,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
         );
 
         const onMobilePanelToggle = useCallback(
-            ({detail}) => {
+            ({detail}: {detail: MobileHeaderEventOptions}) => {
                 if (typeof detail?.panelName === 'string') {
                     onPanelToggle(detail?.panelName);
                 }
@@ -98,7 +98,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
         );
 
         const onMobilePanelOpen = useCallback(
-            ({detail}) => {
+            ({detail}: {detail: MobileHeaderEventOptions}) => {
                 if (typeof detail?.panelName === 'string') {
                     onEvent?.(detail?.panelName, MOBILE_HEADER_EVENT_NAMES.openEvent);
                     setVisiblePanel(detail?.panelName);
@@ -108,7 +108,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
         );
 
         const onMobilePanelClose = useCallback(
-            ({detail}) => {
+            ({detail}: {detail: MobileHeaderEventOptions}) => {
                 if (typeof detail?.panelName === 'string') {
                     onEvent?.(detail?.panelName, MOBILE_HEADER_EVENT_NAMES.closeEvent);
                     setVisiblePanel(null);
@@ -185,9 +185,18 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                 node.addEventListener('MOBILE_BURGER_OPEN', onBurgerOpen);
                 node.addEventListener('MOBILE_BURGER_CLOSE', onBurgerClose);
 
-                node.addEventListener('MOBILE_PANEL_TOGGLE', onMobilePanelToggle);
-                node.addEventListener('MOBILE_PANEL_OPEN', onMobilePanelOpen);
-                node.addEventListener('MOBILE_PANEL_CLOSE', onMobilePanelClose);
+                node.addEventListener(
+                    'MOBILE_PANEL_TOGGLE',
+                    onMobilePanelToggle as unknown as EventListener,
+                );
+                node.addEventListener(
+                    'MOBILE_PANEL_OPEN',
+                    onMobilePanelOpen as unknown as EventListener,
+                );
+                node.addEventListener(
+                    'MOBILE_PANEL_CLOSE',
+                    onMobilePanelClose as unknown as EventListener,
+                );
             }
 
             return () => {
@@ -195,9 +204,18 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                     node.removeEventListener('MOBILE_BURGER_OPEN', onBurgerOpen);
                     node.removeEventListener('MOBILE_BURGER_CLOSE', onBurgerClose);
 
-                    node.removeEventListener('MOBILE_PANEL_TOGGLE', onMobilePanelToggle);
-                    node.removeEventListener('MOBILE_PANEL_OPEN', onMobilePanelOpen);
-                    node.removeEventListener('MOBILE_PANEL_CLOSE', onMobilePanelClose);
+                    node.removeEventListener(
+                        'MOBILE_PANEL_TOGGLE',
+                        onMobilePanelToggle as unknown as EventListener,
+                    );
+                    node.removeEventListener(
+                        'MOBILE_PANEL_OPEN',
+                        onMobilePanelOpen as unknown as EventListener,
+                    );
+                    node.removeEventListener(
+                        'MOBILE_PANEL_CLOSE',
+                        onMobilePanelClose as unknown as EventListener,
+                    );
                 }
             };
         }, [

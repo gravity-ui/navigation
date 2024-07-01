@@ -8,4 +8,5 @@ module.exports = {
     transformIgnorePatterns: ['node_modules/(?!(@gravity-ui)/)'],
     coverageDirectory: './coverage',
     collectCoverageFrom: ['src/**/*.{ts,tsx}', '!**/__stories__/**/*', '!**/*/*.stories.{ts,tsx}'],
+    modulePathIgnorePatterns: ['visual', 'helpersPlaywright'],
 };
