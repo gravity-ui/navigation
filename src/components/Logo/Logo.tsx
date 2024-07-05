@@ -31,17 +31,13 @@ export const Logo: React.FC<
 }) => {
     const hasWrapper = typeof wrapper === 'function';
 
-    let buttonIcon;
-
-    if (iconSrc) {
-        buttonIcon = (
-            <Button.Icon className={iconClassName}>
-                <img alt="logo icon" src={iconSrc} width={iconSize} height={iconSize} />
-            </Button.Icon>
-        );
-    } else if (icon) {
-        buttonIcon = <Icon data={icon} size={iconSize} className={iconClassName} />;
-    }
+    const buttonIcon = iconSrc ? (
+        <Button.Icon className={iconClassName}>
+            <img alt="logo icon" src={iconSrc} width={iconSize} height={iconSize} />
+        </Button.Icon>
+    ) : (
+        icon && <Icon data={icon} size={iconSize} className={iconClassName} />
+    );
 
     const button = (
         <Button
@@ -62,37 +58,39 @@ export const Logo: React.FC<
         </Button>
     );
 
-    let logo: React.ReactNode;
+    const logoContent = typeof text === 'function' ? text() : text;
 
-    if (typeof text === 'function') {
-        logo = text();
-    } else {
-        logo = (
-            <div className={b('logo')} style={{fontSize: textSize}}>
-                {text}
-            </div>
-        );
-    }
+    const logo = (
+        <div className={b('logo')} style={{fontSize: textSize}}>
+            {logoContent}
+        </div>
+    );
+
+    const renderLogoSection = () => {
+        if (compact) return null;
+        if (hasWrapper && !href) {
+            return <div onClick={onClick}>{wrapper(logo, Boolean(compact))}</div>;
+        } else {
+            return (
+                <a
+                    href={href ?? '/'}
+                    target={target}
+                    rel={target === '_self' ? undefined : 'noreferrer'}
+                    className={b('logo-link')}
+                    onClick={onClick}
+                >
+                    {logo}
+                </a>
+            );
+        }
+    };
 
     return (
         <div className={b(null, className)}>
             <div className={b('logo-btn-place', buttonWrapperClassName)}>
                 {hasWrapper ? wrapper(button, Boolean(compact)) : button}
             </div>
-            {!compact &&
-                (hasWrapper ? (
-                    <div onClick={onClick}>{wrapper(logo, Boolean(compact))}</div>
-                ) : (
-                    <a
-                        href={href ?? '/'}
-                        target={target}
-                        rel={target === '_self' ? undefined : 'noreferrer'}
-                        className={b('logo-link')}
-                        onClick={onClick}
-                    >
-                        {logo}
-                    </a>
-                ))}
+            {renderLogoSection()}
         </div>
     );
 };
