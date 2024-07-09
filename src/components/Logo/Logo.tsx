@@ -31,13 +31,17 @@ export const Logo: React.FC<
 }) => {
     const hasWrapper = typeof wrapper === 'function';
 
-    const buttonIcon = iconSrc ? (
-        <Button.Icon className={iconClassName}>
-            <img alt="logo icon" src={iconSrc} width={iconSize} height={iconSize} />
-        </Button.Icon>
-    ) : (
-        icon && <Icon data={icon} size={iconSize} className={iconClassName} />
-    );
+    let buttonIcon;
+
+    if (iconSrc) {
+        buttonIcon = (
+            <Button.Icon className={iconClassName}>
+                <img alt="logo icon" src={iconSrc} width={iconSize} height={iconSize} />
+            </Button.Icon>
+        );
+    } else {
+        buttonIcon = icon && <Icon data={icon} size={iconSize} className={iconClassName} />;
+    }
 
     const button = (
         <Button
@@ -66,7 +70,7 @@ export const Logo: React.FC<
         </div>
     );
 
-    const renderLogoSection = () => {
+    const renderTextLogoSection = () => {
         if (compact) return null;
         if (hasWrapper && !href) {
             return <div onClick={onClick}>{wrapper(logo, Boolean(compact))}</div>;
@@ -79,7 +83,7 @@ export const Logo: React.FC<
                     className={b('logo-link')}
                     onClick={onClick}
                 >
-                    {logo}
+                    {hasWrapper ? wrapper(logo, Boolean(compact)) : logo}
                 </a>
             );
         }
@@ -90,7 +94,7 @@ export const Logo: React.FC<
             <div className={b('logo-btn-place', buttonWrapperClassName)}>
                 {hasWrapper ? wrapper(button, Boolean(compact)) : button}
             </div>
-            {renderLogoSection()}
+            {renderTextLogoSection()}
         </div>
     );
 };
