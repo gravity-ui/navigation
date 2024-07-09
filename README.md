@@ -13,7 +13,7 @@ npm install @gravity-ui/navigation
 Ensure that peer dependencies are installed in your project
 
 ```bash
-npm install --dev @gravity-ui/uikit@^6.15.0 @gravity-ui/icons@2.2.0 @gravity-ui/components@3.0.0 @bem-react/classname@1.6.0 react@^16.0.0 react-dom@16.0.0
+npm install --dev @gravity-ui/uikit@^6.15.0 @gravity-ui/icons@2.2.0 @gravity-ui/components@3.0.0 @bem-react/classname@1.6.0 react@^18.0.0 react-dom@18.0.0
 ```
 
 ## Components
