@@ -22,12 +22,12 @@ npm install --dev @gravity-ui/uikit@^6.15.0 @gravity-ui/icons@2.2.0 @gravity-ui/
 - MobileHeader
 - FooterItem
 - MobileHeaderFooterItem
-- Drawer
+- [Drawer](/src/components/Drawer/README.md)
 - DrawerItem
 - PageLayout
 - PageLayoutAside
 - AsideFallback
-- Logo
+- [Logo](/src/components/Logo/Readme.md)
 - MobileLogo
 - Footer
 - MobileFooter

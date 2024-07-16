@@ -45,7 +45,7 @@ The Drawer module consists of two primary components: `Drawer` and `DrawerItem`.
 | content   | (deprecated) use children. Content to be displayed within the drawer item.              | `React.ReactNode` |         |
 | visible   | Determines whether the drawer item is visible or hidden.                                |     `boolean`     |         |
 | direction | Specifies the direction from which the drawer should slide in (left or right).          | `DrawerDirection` | `left`  |
-| className | Additional custom class name applied to the drawer item.                                |     `string`      |         |
+| className | HTML `class` attribute                                                                  |     `string`      |         |
 
 ### `Drawer` Props
 

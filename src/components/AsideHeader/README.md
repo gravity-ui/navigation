@@ -8,6 +8,14 @@ Including additional components like `FooterItem`, `Drawer`.
 import {AsideHeader} from '@gravity-ui/navigation';
 ```
 
+## Rendering Content
+
+`WIP`
+
+## Rendering Footer
+
+`WIP`
+
 ## Rendering optimization
 
 If your app content needs to be rendered faster than by passing it throw `AsideHeader` props,
@@ -47,14 +55,58 @@ export const Aside: FC = () => {
 
 ## Properties
 
-| Name                      | Description                                    |                                           Type                                           | Default |
-| :------------------------ | :--------------------------------------------- | :--------------------------------------------------------------------------------------: | :-----: | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| ref                       | `ref` to target popup anchor                   |                  `React.ForwardedRef<HTMLDivElement, AsideHeaderProps>`                  |         |
-| logo                      |                                                | [Logo](https://github.com/gravity-ui/navigation/blob/main/src/components/Logo/Readme.md) |         |
-| customBackground          | `AsideHeader`` background                      |                                    `React.ReactNode`                                     |         |     |     |     |     |     |     |     |     |     |     |     |     |     |     |     |     |     |     |     |     |
-| customBackgroundClassName | Override default background container's styles |                                         `string`                                         |         |
+| Name                      | Description                                                                          |                             Type                              |         Default         |
+| :------------------------ | :----------------------------------------------------------------------------------- | :-----------------------------------------------------------: | :---------------------: |
+| className                 | HTML `class` attribute of the Logo                                                   |                           `string`                            |                         |
+| collapseTitle             | `CollapseButton` title for collapsing navigation                                     |                           `string`                            | `"Свернуть" "Collapse"` |
+| compact                   | Navigation visual state                                                              |                           `boolean`                           |         `false`         |
+| customBackground          | `AsideHeader` background                                                             |                       `React.ReactNode`                       |                         |
+| customBackgroundClassName | Override default background container's styles                                       |                           `string`                            |                         |
+| expandTitle               | `CollapseButton` title for expanding navigation                                      |                           `string`                            | `"Развернуть" "Expand"` |
+| headerDecoration          | Color background of the top section with logo and subheader items                    |                           `boolean`                           |                         |
+| hideCollapseButton        | Hiding `CollapseButton`. Use `compact` prop for setting default navigation state     |                           `boolean`                           |         `false`         |
+| logo                      | Logo container includes icon, title, handling clicks                                 |              [`Logo`](./../Logo/Readme.md#logo)               |                         |
+| menuItems                 | Items in the navigation middle section                                               |                       `Array<MenuItem>`                       |          `[]`           |
+| menuMoreTitle             | Additional element title of menuItems if elements don't fit                          |                           `string`                            |     `"Ещё" "More"`      |
+| multipleTooltip           | Show multiple tooltip by hovering elements of menuItems                              |                           `boolean`                           |         `false`         |
+| onChangeCompact           | Callback will be called when changing navigation visual state                        |                 `(compact: boolean) => void;`                 |                         |
+| onClosePanel              | Callback will be called when closing panel. You can add panels via `panelItems` prop |                         `() => void;`                         |                         |
+| onMenuItemsChanged        | Callback will be called when updating list of the menuItems in AllPagesPanel         |              `(items: Array<MenuItem>) => void`               |                         |
+| openModalSubscriber       | Function notifies `AsideHeader` about Modals visibility changes. (Example wip)       |             `( (open: boolean) => void) => void`              |                         |
+| panelItems                | Items for `Drawer` component. Used for show additional information over main content | Array<[`DrawerItem`](./../Drawer/README.md#draweritem-props)> |          `[]`           |
+| renderContent             | Function rendering main content at right of the `AsideHeader`                        |          `(data: {size: number}) => React.ReactNode`          |                         |
+| renderFooter              | Function rendering navigation bottom section                                         |          `(data: {size: number}) => React.ReactNode`          |                         |
+| ref                       | `ref` to target popup anchor                                                         |    `React.ForwardedRef<HTMLDivElement, AsideHeaderProps>`     |                         |
+| subheaderItems            | Items in the navigation top section under Logo                                       |                    `Array<SubheaderItem>`                     |          `[]`           |
+| topAlert                  | Container above the navigation based on uikit `Alert` component                      |                          `TopAlert`                           |                         |
+| qa                        | The value to be passed to `data-qa` attribute of the `AsideHeader` container         |                           `string`                            |                         |
 
-### CSS API
+### `MenuItem`
+
+`WIP`
+
+### `SubheaderItem`
+
+`WIP`
+
+### `TopAlert`
+
+`WIP`
+
+| Name            | Description |                                                Type                                                | Default |
+| :-------------- | :---------- | :------------------------------------------------------------------------------------------------: | :-----: |
+| actions         |             |  [`AlertActions`](https://github.com/gravity-ui/uikit/tree/main/src/components/Alert#properties)   |         |
+| centered        |             |                                             `boolean`                                              |         |
+| closable        |             |                                             `boolean`                                              |         |
+| dense           |             |                                             `boolean`                                              |         |
+| icon            |             |    [`AlertIcon`](https://github.com/gravity-ui/uikit/tree/main/src/components/Alert#properties)    |         |
+| message         |             | [`AlertMessage`](https://github.com/gravity-ui/uikit/tree/main/src/components/Alert#alert-message) |         |
+| onCloseTopAlert |             |                                            `() => void`                                            |         |
+| title           |             |   [`AlertTitle`](https://github.com/gravity-ui/uikit/tree/main/src/components/Alert#alert-title)   |         |
+| theme           |             |      [`AlertTheme`](https://github.com/gravity-ui/uikit/tree/main/src/components/Alert#theme)      |         |
+| view            |             |       [`AlertView`](https://github.com/gravity-ui/uikit/tree/main/src/components/Alert#view)       |         |
+
+## CSS API
 
 | Name                                                      | Description                                                   |            Default             |
 | :-------------------------------------------------------- | :------------------------------------------------------------ | :----------------------------: |
