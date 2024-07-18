@@ -89,3 +89,14 @@ The Drawer module consists of two primary components: `Drawer` and `DrawerItem`.
 | onEscape          | Optional callback function that is called when the escape key is pressed, if the drawer is open. |            `() => void`             |         |
 | hideVeil          | Optional flag to hide the background darkening                                                   |              `boolean`              |         |
 | disablePortal     | Optional flag to hide the background darkening                                                   |              `boolean`              |         |
+
+## CSS API
+
+| Name                                          | Description                                                 |            Default             |
+| :-------------------------------------------- | :---------------------------------------------------------- | :----------------------------: |
+| Resizer                                       |                                                             |                                |
+| `--gn-drawer-item-resizer-width`              | The width of the resizer element                            |              8px               |
+| `--gn-drawer-item-resizer-color`              | The color of the resizer element                            |    `--g-color-base-generic`    |
+| `--gn-drawer-item-resizer-handle-color`       | The color of the resizer handle                             |    `--g-color-line-generic`    |
+| `--gn-drawer-item-resizer-handle-color-hover` | The color of the resizer handle when the resizer is hovered | `--g-color-line-generic-hover` |
+| `--gn-drawer-item-resizer-z-index`            | z-index of the resizer element                              |              100               |

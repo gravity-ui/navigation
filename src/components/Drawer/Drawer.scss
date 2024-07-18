@@ -5,6 +5,7 @@ $block: '.#{variables.$ns}drawer';
 #{$block} {
     pointer-events: none;
 
+    --_--resizer-width: 8px;
     --_--resizer-color: var(--g-color-base-generic);
     --_--resizer-handle-color: var(--g-color-line-generic);
     --_--resizer-handle-color-hover: var(--g-color-line-generic-hover);
@@ -121,7 +122,7 @@ $block: '.#{variables.$ns}drawer';
         justify-content: center;
         align-items: center;
 
-        width: 8px;
+        width: var(--gn-drawer-item-resizer-width, var(--_--resizer-width));
         height: 100%;
 
         cursor: col-resize;

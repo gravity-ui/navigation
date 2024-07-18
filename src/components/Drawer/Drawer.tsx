@@ -232,5 +232,3 @@ export const Drawer: React.FC<DrawerProps> = ({
 
     return <Portal>{drawer}</Portal>;
 };
-
-export type {DrawerDirection} from './utils';
