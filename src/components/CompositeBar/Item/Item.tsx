@@ -297,7 +297,10 @@ function CollapsedPopup({
                     sortable={false}
                     onItemClick={onClose}
                     renderItem={(collapseItem) => {
-                        const makeCollapseNode = ({title: titleEl}: MakeItemParams) => {
+                        const makeCollapseNode = ({
+                            title: titleEl,
+                            icon: iconEl,
+                        }: MakeItemParams) => {
                             const res = (
                                 <div
                                     className={b('collapse-item')}
@@ -307,6 +310,7 @@ function CollapsedPopup({
                                         onItemClick?.(collapseItem, true, event);
                                     }}
                                 >
+                                    {iconEl}
                                     {titleEl}
                                 </div>
                             );
@@ -321,7 +325,15 @@ function CollapsedPopup({
                         };
 
                         const titleNode = renderItemTitle(collapseItem);
-                        const params = {title: titleNode};
+                        const iconNode = collapseItem.icon && (
+                            <Icon
+                                data={collapseItem.icon}
+                                size={14}
+                                className={b('collapse-item-icon')}
+                            />
+                        );
+
+                        const params = {title: titleNode, icon: iconNode};
                         const opts = {
                             compact: Boolean(compact),
                             collapsed: true,
