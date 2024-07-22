@@ -3,6 +3,14 @@
 $block: '.#{variables.$ns}drawer';
 
 #{$block} {
+    pointer-events: none;
+
+    --_--resizer-width: 8px;
+    --_--resizer-color: var(--g-color-base-generic);
+    --_--resizer-handle-color: var(--g-color-line-generic);
+    --_--resizer-handle-color-hover: var(--g-color-line-generic-hover);
+    --_--resizer-z-index: 100;
+
     &__item {
         position: absolute;
         left: 0;
@@ -11,6 +19,7 @@ $block: '.#{variables.$ns}drawer';
         height: 100%;
         will-change: transform;
         background-color: var(--g-color-base-background);
+        pointer-events: initial;
 
         &_direction_right {
             left: auto;
@@ -64,8 +73,13 @@ $block: '.#{variables.$ns}drawer';
 
     &__veil {
         position: absolute;
+        pointer-events: initial;
         inset: 0;
         background-color: var(--g-color-sfx-veil);
+
+        &_hidden {
+            display: none;
+        }
     }
 
     &__veil-transition-enter {
@@ -88,5 +102,46 @@ $block: '.#{variables.$ns}drawer';
 
     &__veil-transition-exit-done {
         visibility: hidden;
+    }
+
+    &__resizer-handle {
+        width: 2px;
+        height: 28px;
+
+        background: var(--gn-drawer-item-resizer-handle-color, var(--_--resizer-handle-color));
+        border-radius: 2px;
+    }
+
+    &__resizer {
+        position: absolute;
+        top: 0;
+        z-index: var(--gn-drawer-item-resizer-z-index, var(--_--resizer-z-index));
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        width: var(--gn-drawer-item-resizer-width, var(--_--resizer-width));
+        height: 100%;
+
+        cursor: col-resize;
+
+        background: var(--gn-drawer-item-resizer-color, var(--_--resizer-color));
+
+        &_direction_right {
+            left: 0;
+        }
+
+        &_direction_left {
+            right: 0;
+        }
+    }
+
+    &__resizer:hover &__resizer-handle {
+        background: var(
+            --gn-drawer-item-resizer-handle-color-hover,
+            var(--_--resizer-handle-color-hover)
+        );
     }
 }
