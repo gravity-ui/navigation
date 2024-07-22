@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.17.1](https://github.com/gravity-ui/navigation/compare/v2.17.0...v2.17.1) (2024-07-22)
+
+
+### Bug Fixes
+
+* **Drawer:** change disablePortal default value ([#274](https://github.com/gravity-ui/navigation/issues/274)) ([31cd649](https://github.com/gravity-ui/navigation/commit/31cd6496ce191f5ea2aa6ac3441bef0be7bc88b1))
+
 ## [2.17.0](https://github.com/gravity-ui/navigation/compare/v2.16.0...v2.17.0) (2024-07-22)
 
 
