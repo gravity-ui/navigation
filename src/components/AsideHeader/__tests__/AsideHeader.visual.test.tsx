@@ -7,7 +7,6 @@ import {AsideHeaderStories} from './helpersPlaywright';
 test.describe('AsideHeader', () => {
     test('render story: <AdvancedUsage>', async ({mount, expectScreenshot}) => {
         await mount(<AsideHeaderStories.AdvancedUsage />, undefined, {
-            padding: 20,
             width: 1200,
             height: 720,
         });
@@ -17,7 +16,6 @@ test.describe('AsideHeader', () => {
 
     test('render story: <Compact>', async ({mount, expectScreenshot}) => {
         await mount(<AsideHeaderStories.Compact />, undefined, {
-            padding: 20,
             width: 1200,
             height: 720,
         });
@@ -27,7 +25,6 @@ test.describe('AsideHeader', () => {
 
     test('render story: <CustomBackground>', async ({mount, expectScreenshot}) => {
         await mount(<AsideHeaderStories.CustomBackground />, undefined, {
-            padding: 20,
             width: 1200,
             height: 720,
         });
@@ -37,7 +34,6 @@ test.describe('AsideHeader', () => {
 
     test('render story: <CustomTheme>', async ({mount, expectScreenshot}) => {
         await mount(<AsideHeaderStories.CustomTheme />, undefined, {
-            padding: 20,
             width: 1200,
             height: 720,
         });
@@ -47,7 +43,6 @@ test.describe('AsideHeader', () => {
 
     test('render story: <Fallback>', async ({mount, expectScreenshot}) => {
         await mount(<AsideHeaderStories.Fallback />, undefined, {
-            padding: 20,
             width: 1200,
             height: 720,
         });
@@ -75,7 +70,6 @@ test.describe('AsideHeader', () => {
 
     test('render story: <MultipleTooltip>', async ({mount, expectScreenshot}) => {
         await mount(<AsideHeaderStories.MultipleTooltip />, undefined, {
-            padding: 20,
             width: 1200,
             height: 720,
         });
@@ -85,7 +79,6 @@ test.describe('AsideHeader', () => {
 
     test('render story: <Showcase>', async ({mount, expectScreenshot}) => {
         await mount(<AsideHeaderStories.Showcase />, undefined, {
-            padding: 20,
             width: 1200,
             height: 720,
         });
