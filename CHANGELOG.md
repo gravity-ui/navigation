@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.17.0](https://github.com/gravity-ui/navigation/compare/v2.16.0...v2.17.0) (2024-07-22)
+
+
+### Features
+
+* **Drawer:** resizer, portal rendering, hide veil ([#270](https://github.com/gravity-ui/navigation/issues/270)) ([64da0f2](https://github.com/gravity-ui/navigation/commit/64da0f2c436706a82d8c984684868f51616bb88d))
+
 ## [2.16.0](https://github.com/gravity-ui/navigation/compare/v2.15.3...v2.16.0) (2024-06-27)
 
 
