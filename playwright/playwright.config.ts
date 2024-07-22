@@ -2,11 +2,10 @@ import {resolve} from 'path';
 
 import type {PlaywrightTestConfig} from '@playwright/experimental-ct-react';
 import {defineConfig, devices} from '@playwright/experimental-ct-react';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import react from '@vitejs/plugin-react';
 // eslint-disable-next-line import/no-extraneous-dependencies
+import reactRefresh from '@vitejs/plugin-react-refresh';
 import commonjs from 'vite-plugin-commonjs';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import svgrPlugin from 'vite-plugin-svgr';
 
 function pathFromRoot(p: string) {
@@ -81,6 +80,8 @@ const config: PlaywrightTestConfig = {
                 }),
                 //@ts-ignore
                 commonjs(),
+                //@ts-ignore
+                reactRefresh(),
             ],
             resolve: {
                 alias: {
