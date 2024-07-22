@@ -151,7 +151,7 @@ export const Drawer: React.FC<DrawerProps> = ({
     onEscape,
     preventScrollBody = true,
     hideVeil,
-    disablePortal,
+    disablePortal = true,
 }) => {
     let someItemVisible = false;
     React.Children.forEach(children, (child) => {
