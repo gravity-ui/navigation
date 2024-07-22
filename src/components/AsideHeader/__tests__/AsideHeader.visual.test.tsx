@@ -71,6 +71,7 @@ test.describe('AsideHeader', () => {
         await mount(<AsideHeaderStories.HeaderAlertCentered />, undefined, {
             width: 1200,
             height: 720,
+            paddingTop: 34,
         });
 
         await expectScreenshot();
