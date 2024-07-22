@@ -2,15 +2,15 @@ import React from 'react';
 
 import {test} from '~playwright/core';
 
+import {MobileFooter} from '../Footer';
+
 import {MobileFooterStories} from './helpersPlaywright';
 
 test.describe('MobileFooter', () => {
     test('render story: <ClearView>', async ({mount, expectScreenshot, defaultDelay}) => {
-        await mount(<MobileFooterStories.ClearView />, undefined, {
-            padding: 20,
-            width: 390,
-            height: 844,
-        });
+        await mount(
+            <MobileFooter copyright={`@ ${new Date().getFullYear()} "My Service"`} view="clear" />,
+        );
 
         await defaultDelay();
 

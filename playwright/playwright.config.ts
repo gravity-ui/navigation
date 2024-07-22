@@ -1,11 +1,13 @@
 import {resolve} from 'path';
 
-// eslint-disable-next-line import/no-extraneous-dependencies
-import svgLoader from '@andylacko/vite-svg-react-loader';
 import type {PlaywrightTestConfig} from '@playwright/experimental-ct-react';
 import {defineConfig, devices} from '@playwright/experimental-ct-react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import react from '@vitejs/plugin-react';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import commonjs from 'vite-plugin-commonjs';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import svgrPlugin from 'vite-plugin-svgr';
 
 function pathFromRoot(p: string) {
     return resolve(__dirname, '../', p);
@@ -57,7 +59,29 @@ const config: PlaywrightTestConfig = {
         timezoneId: 'UTC',
         ctViteConfig: {
             //@ts-ignore
-            plugins: [react(), svgLoader()],
+            plugins: [
+                //@ts-ignore
+                react(),
+                //@ts-ignore
+                svgrPlugin({
+                    include: '**/*.svg',
+                    svgrOptions: {
+                        exportType: 'default',
+                        svgo: true,
+                        svgoConfig: {
+                            plugins: [
+                                {
+                                    removeViewBox: false,
+                                },
+                            ],
+                        },
+                        titleProp: true,
+                        icon: true,
+                    },
+                }),
+                //@ts-ignore
+                commonjs(),
+            ],
             resolve: {
                 alias: {
                     '~playwright': resolve(__dirname),

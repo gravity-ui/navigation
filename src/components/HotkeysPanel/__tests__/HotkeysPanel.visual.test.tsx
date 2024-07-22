@@ -6,7 +6,10 @@ import {HotkeysPanelStories} from './helpersPlaywright';
 
 test.describe('HotkeysPanel', () => {
     test('render story: <Showcase>', async ({mount, expectScreenshot}) => {
-        await mount(<HotkeysPanelStories.Showcase />);
+        await mount(<HotkeysPanelStories.Showcase />, undefined, {
+            width: 1200,
+            height: 720,
+        });
 
         await expectScreenshot();
     });
