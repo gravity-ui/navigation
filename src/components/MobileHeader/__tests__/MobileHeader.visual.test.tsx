@@ -6,7 +6,7 @@ import {MobileHeaderStories} from './helpersPlaywright';
 
 test.describe('MobileHeader', () => {
     test('render story: <Showcase>', async ({mount, expectScreenshot}) => {
-        await mount(<MobileHeaderStories.Showcase />);
+        await mount(<MobileHeaderStories.Showcase />, undefined, {width: 390, height: 844});
 
         await expectScreenshot();
     });
