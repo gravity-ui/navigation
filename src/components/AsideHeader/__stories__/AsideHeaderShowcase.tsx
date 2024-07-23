@@ -8,6 +8,7 @@ import {
     Modal,
     Radio,
     RadioButton,
+    Text,
     eventBroker,
 } from '@gravity-ui/uikit';
 
@@ -91,9 +92,9 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
     return (
         <div className={b()}>
             <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <div className={b('content')}>
+                <Text className={b('content')} as="div" variant="body-3">
                     <pre>{placeholderText}</pre>
-                </div>
+                </Text>
             </Modal>
             <AsideHeader
                 ref={ref}
@@ -252,7 +253,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                 )}
                 renderContent={() => {
                     return (
-                        <div className={b('content')}>
+                        <Text className={b('content')} as="div" variant="body-3">
                             <pre>{placeholderText}</pre>
                             <RadioButton
                                 value={addonHeaderDecoration}
@@ -266,7 +267,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                             <br />
                             <br />
                             <Button onClick={() => setIsModalOpen(true)}>Open Modal</Button>
-                        </div>
+                        </Text>
                     );
                 }}
                 panelItems={[
