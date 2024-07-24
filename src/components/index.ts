@@ -1,7 +1,7 @@
 export {AsideHeader} from './AsideHeader/AsideHeader';
 export type {AsideHeaderProps} from './AsideHeader/types';
 export {AsideHeaderContextProvider, useAsideHeaderContext} from './AsideHeader/AsideHeaderContext';
-export {FooterItem, FooterItemProps} from './FooterItem/FooterItem';
+export {FooterItem, type FooterItemProps} from './FooterItem/FooterItem';
 export {PageLayout, type PageLayoutProps} from './AsideHeader/components/PageLayout/PageLayout';
 export {PageLayoutAside} from './AsideHeader/components/PageLayout/PageLayoutAside';
 export {AsideFallback} from './AsideHeader/components/PageLayout/AsideFallback';
