@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.17.2](https://github.com/gravity-ui/navigation/compare/v2.17.1...v2.17.2) (2024-07-30)
+
+
+### Bug Fixes
+
+* close other panels when all pages panel opening ([#279](https://github.com/gravity-ui/navigation/issues/279)) ([14a2f0f](https://github.com/gravity-ui/navigation/commit/14a2f0fcd2abb915621a61ce52bfe22626e1992d))
+
 ## [2.17.1](https://github.com/gravity-ui/navigation/compare/v2.17.0...v2.17.1) (2024-07-22)
 
 
