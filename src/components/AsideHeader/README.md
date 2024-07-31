@@ -124,26 +124,29 @@ export const Aside: FC = () => {
 
 ## CSS API
 
-| Name                                                      | Description                                                   |            Default             |
-| :-------------------------------------------------------- | :------------------------------------------------------------ | :----------------------------: |
-| `--gn-aside-header-decoration-collapsed-background-color` | Decoration color for collapsed navigation                     | `--g-color-base-warning-light` |
-| `--gn-aside-header-decoration-expanded-background-color`  | Decoration color for expanded navigation                      | `--g-color-base-warning-light` |
-| `--gn-aside-header-background-color`                      | Navigation background color                                   |  `--g-color-base-background`   |
-| `--gn-aside-header-divider-horizontal-color`              | All horizontal divider line color                             |    `--g-color-line-generic`    |
-| `--gn-aside-header-divider-vertical-color`                | Vertical divider line color between `AsideHeader` and content |    `--g-color-line-generic`    |
-| `--gn-aside-top-panel-height`                             | **Read only**.`AsideHeader` top alert height                  |              0px               |
-| Item                                                      |                                                               |                                |
-| `--gn-aside-header-general-item-icon-color`               | Icon color for Subheader and Footer items                     |    `--g-color-text-primary`    |
-| `--gn-aside-header-item-icon-color`                       | Icon color for CompositeBar items                             |     `--g-color-text-misc`      |
-| `--gn-aside-header-item-text-color`                       |                                                               |    `--g-color-text-primary`    |
-| `--gn-aside-header-item-background-color-hover`           |                                                               | `--g-color-base-simple-hover`  |
-| Current Item                                              |                                                               |                                |
-| `--gn-aside-header-item-current-background-color`         |                                                               |   `--g-color-base-selection`   |
-| `--gn-aside-header-item-current-icon-color`               |                                                               |                                |
-| `--gn-aside-header-item-current-text-color`               |                                                               |    `--g-color-text-primary`    |
-| `--gn-aside-header-item-current-background-color-hover`   |                                                               |                                |
-| z-indexes                                                 |                                                               |                                |
-| `--gn-aside-header-z-index`                               | Aside header z-index                                          |              100               |
-| `--gn-aside-header-panel-z-index`                         | Aside header panel (Drawer component) z-index                 |               98               |
-| `--gn-aside-header-pane-top-z-index`                      | Top pane z-index                                              |               98               |
-| `--gn-aside-header-content-z-index`                       | Content (right part) z-index                                  |               95               |
+| Name                                                      | Description                                                               |            Default             |
+| :-------------------------------------------------------- | :------------------------------------------------------------------------ | :----------------------------: |
+| `--gn-aside-header-decoration-collapsed-background-color` | Decoration color for collapsed navigation                                 | `--g-color-base-warning-light` |
+| `--gn-aside-header-decoration-expanded-background-color`  | Decoration color for expanded navigation                                  | `--g-color-base-warning-light` |
+| `--gn-aside-header-background-color`                      | Navigation background color                                               |  `--g-color-base-background`   |
+| `--gn-aside-header-divider-horizontal-color`              | All horizontal divider line color                                         |    `--g-color-line-generic`    |
+| `--gn-aside-header-divider-vertical-color`                | Vertical divider line color between `AsideHeader` and content             |    `--g-color-line-generic`    |
+| `--gn-aside-top-panel-height`                             | **Read only**.`AsideHeader` top alert height                              |              0px               |
+| `--gn-aside-header-padding-top`                           | Navigation top padding. May be helpful when logo and subheader items hide |                                |
+| Item                                                      |                                                                           |                                |
+| `--gn-aside-header-general-item-icon-color`               | Icon color for Subheader and Footer items                                 |    `--g-color-text-primary`    |
+| `--gn-aside-header-item-icon-color`                       | Icon color for CompositeBar items                                         |     `--g-color-text-misc`      |
+| `--gn-aside-header-item-text-color`                       |                                                                           |    `--g-color-text-primary`    |
+| `--gn-aside-header-item-background-color-hover`           |                                                                           | `--g-color-base-simple-hover`  |
+| Current Item                                              |                                                                           |                                |
+| `--gn-aside-header-item-current-background-color`         |                                                                           |   `--g-color-base-selection`   |
+| `--gn-aside-header-item-current-icon-color`               |                                                                           |                                |
+| `--gn-aside-header-item-current-text-color`               |                                                                           |    `--g-color-text-primary`    |
+| `--gn-aside-header-item-current-background-color-hover`   |                                                                           |                                |
+| `--gn-aside-header-item-collapsed-radius`                 | Item border radius for collapsed navigation                               |              7px               |
+| `--gn-aside-header-item-expanded-radius`                  | Item border radius for expanded navigation                                |                                |
+| z-indexes                                                 |                                                                           |                                |
+| `--gn-aside-header-z-index`                               | Aside header z-index                                                      |              100               |
+| `--gn-aside-header-panel-z-index`                         | Aside header panel (Drawer component) z-index                             |               98               |
+| `--gn-aside-header-pane-top-z-index`                      | Top pane z-index                                                          |               98               |
+| `--gn-aside-header-content-z-index`                       | Content (right part) z-index                                              |               95               |
