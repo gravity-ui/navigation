@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.18.0](https://github.com/gravity-ui/navigation/compare/v2.17.2...v2.18.0) (2024-07-31)
+
+
+### Features
+
+* **Header:** make logo optional, expand css api ([#283](https://github.com/gravity-ui/navigation/issues/283)) ([f994709](https://github.com/gravity-ui/navigation/commit/f994709fff90a751bd9f79a3a93894bf21e0391b))
+
 ## [2.17.2](https://github.com/gravity-ui/navigation/compare/v2.17.1...v2.17.2) (2024-07-30)
 
 
