@@ -17,14 +17,18 @@ export const Header = () => {
     const {logo, onItemClick, onClosePanel, headerDecoration, subheaderItems} =
         useAsideHeaderInnerContext();
     const {compact} = useAsideHeaderContext();
-    const {onClick: onLogoClickProp} = logo;
+
     const onLogoClick = useCallback(
         (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
             onClosePanel?.();
-            onLogoClickProp?.(event);
+            logo?.onClick?.(event);
         },
-        [onClosePanel, onLogoClickProp],
+        [onClosePanel, logo],
     );
+
+    if (!logo) {
+        return null;
+    }
 
     return (
         <div className={b('header', {['with-decoration']: headerDecoration})}>

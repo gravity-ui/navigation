@@ -69,6 +69,8 @@ $block: '.#{variables.$ns}aside-header';
             z-index: 2;
             user-select: none;
 
+            padding-top: var(--gn-aside-header-padding-top);
+
             & > #{$class}-logo {
                 margin: 8px 0;
             }
