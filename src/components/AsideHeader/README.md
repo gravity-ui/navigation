@@ -129,6 +129,8 @@ export const Aside: FC = () => {
 | `--gn-aside-header-decoration-collapsed-background-color` | Decoration color for collapsed navigation                                 | `--g-color-base-warning-light` |
 | `--gn-aside-header-decoration-expanded-background-color`  | Decoration color for expanded navigation                                  | `--g-color-base-warning-light` |
 | `--gn-aside-header-background-color`                      | Navigation background color                                               |  `--g-color-base-background`   |
+| `--gn-aside-header-collapsed-background-color`            | Collapsed navigation background color                                     |  `--g-color-base-background`   |
+| `--gn-aside-header-expanded-background-color`             | Expanded navigation background color                                      |  `--g-color-base-background`   |
 | `--gn-aside-header-divider-horizontal-color`              | All horizontal divider line color                                         |    `--g-color-line-generic`    |
 | `--gn-aside-header-divider-vertical-color`                | Vertical divider line color between `AsideHeader` and content             |    `--g-color-line-generic`    |
 | `--gn-aside-top-panel-height`                             | **Read only**.`AsideHeader` top alert height                              |              0px               |
