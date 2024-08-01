@@ -47,6 +47,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             {customBackground}
                         </div>
                     )}
+                    {/* TODO add new prop for hiding Header */}
                     {logo && <Header />}
                     {visibleMenuItems?.length ? (
                         <CompositeBar

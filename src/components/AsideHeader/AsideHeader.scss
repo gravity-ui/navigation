@@ -30,7 +30,10 @@ $block: '.#{variables.$ns}aside-header';
         width: inherit;
         display: flex;
         flex-direction: column;
-        background-color: var(--gn-aside-header-background-color, var(--_--background-color));
+        background-color: var(
+            --gn-aside-header-expanded-background-color,
+            var(--gn-aside-header-background-color, var(--_--background-color))
+        );
         z-index: var(--gn-aside-header-z-index, 100);
         max-height: calc(100vh - var(--gn-aside-top-panel-height));
         margin-top: var(--gn-aside-top-panel-height);
@@ -100,6 +103,11 @@ $block: '.#{variables.$ns}aside-header';
     }
 
     &_compact &__aside {
+        background-color: var(
+            --gn-aside-header-collapsed-background-color,
+            var(--gn-aside-header-background-color, var(--_--background-color))
+        );
+
         &-content {
             background: transparent;
         }
