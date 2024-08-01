@@ -130,6 +130,9 @@ export interface DrawerProps {
     /** Optional inline styles to be applied to the drawer component. */
     style?: React.CSSProperties;
 
+    /** Optional additional class names to style the background veil element. */
+    veilClassName?: string;
+
     /** Optional callback function that is called when the veil (overlay) is clicked. */
     onVeilClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 
@@ -145,6 +148,7 @@ export interface DrawerProps {
 
 export const Drawer: React.FC<DrawerProps> = ({
     className,
+    veilClassName,
     children,
     style,
     onVeilClick,
@@ -193,7 +197,7 @@ export const Drawer: React.FC<DrawerProps> = ({
             {(state) => {
                 const childrenVisible = someItemVisible && state === 'entered';
                 return (
-                    <div ref={containerRef} className={b(null, className)} style={style}>
+                    <div ref={containerRef} className={b({hideVeil}, className)} style={style}>
                         <CSSTransition
                             in={childrenVisible}
                             timeout={TIMEOUT}
@@ -203,7 +207,7 @@ export const Drawer: React.FC<DrawerProps> = ({
                         >
                             <div
                                 ref={veilRef}
-                                className={b('veil', {hidden: hideVeil})}
+                                className={b('veil', {hidden: hideVeil}, veilClassName)}
                                 onClick={onVeilClick}
                             />
                         </CSSTransition>

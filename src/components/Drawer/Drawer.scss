@@ -11,6 +11,12 @@ $block: '.#{variables.$ns}drawer';
     --_--resizer-handle-color-hover: var(--g-color-line-generic-hover);
     --_--resizer-z-index: 100;
 
+    --_--veil-background-color: var(--g-color-sfx-veil);
+
+    &_hideVeil {
+        --_--item-shadow: 0 1px 5px 0 var(--g-color-sfx-shadow);
+    }
+
     &__item {
         position: absolute;
         left: 0;
@@ -20,6 +26,7 @@ $block: '.#{variables.$ns}drawer';
         will-change: transform;
         background-color: var(--g-color-base-background);
         pointer-events: initial;
+        box-shadow: var(--_--item-shadow, none);
 
         &_direction_right {
             left: auto;
@@ -75,7 +82,7 @@ $block: '.#{variables.$ns}drawer';
         position: absolute;
         pointer-events: initial;
         inset: 0;
-        background-color: var(--g-color-sfx-veil);
+        background-color: var(--gn-drawer-veil-background-color, var(--_--veil-background-color));
 
         &_hidden {
             display: none;
