@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.19.0](https://github.com/gravity-ui/navigation/compare/v2.18.0...v2.19.0) (2024-08-01)
+
+
+### Features
+
+* **AsideHeader:** add background color to CSS API ([#287](https://github.com/gravity-ui/navigation/issues/287)) ([f56c02b](https://github.com/gravity-ui/navigation/commit/f56c02b99494070e587c18c875613de75acc2410))
+
 ## [2.18.0](https://github.com/gravity-ui/navigation/compare/v2.17.2...v2.18.0) (2024-07-31)
 
 
