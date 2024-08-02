@@ -5,6 +5,8 @@ $block: '.#{variables.$ns}drawer';
 #{$block} {
     pointer-events: none;
 
+    --_--item-shadow-default: 0 1px 5px 0 var(--g-color-sfx-shadow);
+
     --_--resizer-width: 8px;
     --_--resizer-color: var(--g-color-base-generic);
     --_--resizer-handle-color: var(--g-color-line-generic);
@@ -14,7 +16,7 @@ $block: '.#{variables.$ns}drawer';
     --_--veil-background-color: var(--g-color-sfx-veil);
 
     &_hideVeil {
-        --_--item-shadow: 0 1px 5px 0 var(--g-color-sfx-shadow);
+        --_--item-shadow: var(--gn-drawer-item-shadow, var(--_--item-shadow-default));
     }
 
     &__item {
