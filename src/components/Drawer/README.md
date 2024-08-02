@@ -84,6 +84,7 @@ The Drawer module consists of two primary components: `Drawer` and `DrawerItem`.
 | children          | Child components to be rendered within the drawer.                                               |   `'DrawerChild' 'DrawerChild[]'`   |         |
 | preventScrollBody | Optional flag to prevent the body from scrolling when the drawer is open.                        |              `boolean`              | `true`  |
 | className         | Optional additional class names to style the drawer component.                                   |              `string`               |         |
+| veilClassName     | Optional additional class names to style the veil (overlay) element.                             |              `string`               |         |
 | style             | Optional inline styles to be applied to the drawer component.                                    |        `React.CSSProperties`        |         |
 | onVeilClick       | Optional callback function that is called when the veil (overlay) is clicked.                    | `(event: React.MouseEvent) => void` |         |
 | onEscape          | Optional callback function that is called when the escape key is pressed, if the drawer is open. |            `() => void`             |         |
@@ -92,11 +93,15 @@ The Drawer module consists of two primary components: `Drawer` and `DrawerItem`.
 
 ## CSS API
 
-| Name                                          | Description                                                 |            Default             |
-| :-------------------------------------------- | :---------------------------------------------------------- | :----------------------------: |
-| Resizer                                       |                                                             |                                |
-| `--gn-drawer-item-resizer-width`              | The width of the resizer element                            |              8px               |
-| `--gn-drawer-item-resizer-color`              | The color of the resizer element                            |    `--g-color-base-generic`    |
-| `--gn-drawer-item-resizer-handle-color`       | The color of the resizer handle                             |    `--g-color-line-generic`    |
-| `--gn-drawer-item-resizer-handle-color-hover` | The color of the resizer handle when the resizer is hovered | `--g-color-line-generic-hover` |
-| `--gn-drawer-item-resizer-z-index`            | z-index of the resizer element                              |              100               |
+| Name                                          | Description                                                 |                 Default                 |
+| :-------------------------------------------- | :---------------------------------------------------------- | :-------------------------------------: |
+| DrawerItem                                    |                                                             |                                         |
+| `--gn-drawer-item-shadow`                     | The box-shadow of the drawer item when veil is hidden       | `0 1px 5px 0 var(--g-color-sfx-shadow)` |
+| Veil                                          |                                                             |                                         |
+| `--gn-drawer-veil-background-color`           | The color of the veil element                               |          `--g-color-sfx-veil`           |
+| Resizer                                       |                                                             |                                         |
+| `--gn-drawer-item-resizer-width`              | The width of the resizer element                            |                   8px                   |
+| `--gn-drawer-item-resizer-color`              | The color of the resizer element                            |        `--g-color-base-generic`         |
+| `--gn-drawer-item-resizer-handle-color`       | The color of the resizer handle                             |        `--g-color-line-generic`         |
+| `--gn-drawer-item-resizer-handle-color-hover` | The color of the resizer handle when the resizer is hovered |     `--g-color-line-generic-hover`      |
+| `--gn-drawer-item-resizer-z-index`            | z-index of the resizer element                              |                   100                   |
