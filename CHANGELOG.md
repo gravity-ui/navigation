@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.20.0](https://github.com/gravity-ui/navigation/compare/v2.19.0...v2.20.0) (2024-08-02)
+
+
+### Features
+
+* **Drawer:** add veil color to CSS API, shadow for DrawerItem ([#290](https://github.com/gravity-ui/navigation/issues/290)) ([0a8637b](https://github.com/gravity-ui/navigation/commit/0a8637bc41095221963827c7bc321abbf714cd10))
+
 ## [2.19.0](https://github.com/gravity-ui/navigation/compare/v2.18.0...v2.19.0) (2024-08-01)
 
 
