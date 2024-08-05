@@ -14,6 +14,7 @@ export function DrawerShowcase() {
     const [visible2, setVisible2] = React.useState<boolean>(false);
 
     const [direction, setDirection] = React.useState<string>('left');
+    const [direction2, setDirection2] = React.useState<string>('left');
 
     const hideAll = React.useCallback(() => {
         setVisible1(false);
@@ -35,6 +36,11 @@ export function DrawerShowcase() {
                     <RadioButton.Option value="left">left</RadioButton.Option>
                     <RadioButton.Option value="right">right</RadioButton.Option>
                 </RadioButton>
+                &nbsp;&nbsp; Direction2: &nbsp;
+                <RadioButton value={direction2} onUpdate={setDirection2}>
+                    <RadioButton.Option value="left">left</RadioButton.Option>
+                    <RadioButton.Option value="right">right</RadioButton.Option>
+                </RadioButton>
             </div>
             <Drawer className={b('drawer')} onVeilClick={hideAll} onEscape={hideAll}>
                 <DrawerItem
@@ -49,7 +55,7 @@ export function DrawerShowcase() {
                     id="item-2"
                     className={b('item-2')}
                     content=""
-                    direction={direction as DrawerItemProps['direction']}
+                    direction={direction2 as DrawerItemProps['direction']}
                 />
             </Drawer>
         </div>

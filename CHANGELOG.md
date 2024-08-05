@@ -1,5 +1,47 @@
 # Changelog
 
+## [2.20.0](https://github.com/gravity-ui/navigation/compare/v2.19.0...v2.20.0) (2024-08-02)
+
+
+### Features
+
+* **Drawer:** add veil color to CSS API, shadow for DrawerItem ([#290](https://github.com/gravity-ui/navigation/issues/290)) ([0a8637b](https://github.com/gravity-ui/navigation/commit/0a8637bc41095221963827c7bc321abbf714cd10))
+
+## [2.19.0](https://github.com/gravity-ui/navigation/compare/v2.18.0...v2.19.0) (2024-08-01)
+
+
+### Features
+
+* **AsideHeader:** add background color to CSS API ([#287](https://github.com/gravity-ui/navigation/issues/287)) ([f56c02b](https://github.com/gravity-ui/navigation/commit/f56c02b99494070e587c18c875613de75acc2410))
+
+## [2.18.0](https://github.com/gravity-ui/navigation/compare/v2.17.2...v2.18.0) (2024-07-31)
+
+
+### Features
+
+* **Header:** make logo optional, expand css api ([#283](https://github.com/gravity-ui/navigation/issues/283)) ([f994709](https://github.com/gravity-ui/navigation/commit/f994709fff90a751bd9f79a3a93894bf21e0391b))
+
+## [2.17.2](https://github.com/gravity-ui/navigation/compare/v2.17.1...v2.17.2) (2024-07-30)
+
+
+### Bug Fixes
+
+* close other panels when all pages panel opening ([#279](https://github.com/gravity-ui/navigation/issues/279)) ([14a2f0f](https://github.com/gravity-ui/navigation/commit/14a2f0fcd2abb915621a61ce52bfe22626e1992d))
+
+## [2.17.1](https://github.com/gravity-ui/navigation/compare/v2.17.0...v2.17.1) (2024-07-22)
+
+
+### Bug Fixes
+
+* **Drawer:** change disablePortal default value ([#274](https://github.com/gravity-ui/navigation/issues/274)) ([31cd649](https://github.com/gravity-ui/navigation/commit/31cd6496ce191f5ea2aa6ac3441bef0be7bc88b1))
+
+## [2.17.0](https://github.com/gravity-ui/navigation/compare/v2.16.0...v2.17.0) (2024-07-22)
+
+
+### Features
+
+* **Drawer:** resizer, portal rendering, hide veil ([#270](https://github.com/gravity-ui/navigation/issues/270)) ([64da0f2](https://github.com/gravity-ui/navigation/commit/64da0f2c436706a82d8c984684868f51616bb88d))
+
 ## [2.16.0](https://github.com/gravity-ui/navigation/compare/v2.15.3...v2.16.0) (2024-06-27)
 
 

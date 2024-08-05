@@ -6,15 +6,11 @@
     "baseUrl": ".",
     "resolveJsonModule": true,
     "outDir": "build",
-    "declaration": true
+    "declaration": true,
+    "paths": {
+      "~playwright/*": ["playwright/*"]
+    }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "exclude": [
-    "node_modules",
-    "build",
-    "**/__stories__",
-    "**/__tests__",
-    "**/*.test.ts",
-    "**/*.test.tsx"
-  ]
+  "exclude": ["node_modules", "build", "**/__stories__", "**/*.test.ts", "**/*.test.tsx"]
 }

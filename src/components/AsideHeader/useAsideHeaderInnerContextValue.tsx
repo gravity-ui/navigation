@@ -39,6 +39,7 @@ export const useAsideHeaderInnerContextValue = (
             event: React.MouseEvent<HTMLDivElement, MouseEvent>,
         ) => {
             if (item.id === ALL_PAGES_MENU_ITEM.id) {
+                onClosePanel?.();
                 setInnerVisiblePanel((prev) =>
                     prev === InnerPanels.AllPages ? undefined : InnerPanels.AllPages,
                 );
@@ -47,7 +48,7 @@ export const useAsideHeaderInnerContextValue = (
             }
             item.onItemClick?.(item, collapsed, event);
         },
-        [innerOnClosePanel, ALL_PAGES_MENU_ITEM],
+        [innerOnClosePanel, ALL_PAGES_MENU_ITEM, onClosePanel],
     );
 
     const innerMenuItems = useMemo(

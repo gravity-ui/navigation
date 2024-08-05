@@ -19,7 +19,7 @@ export interface LayoutProps {
 }
 
 export interface AsideHeaderGeneralProps extends QAProps {
-    logo: LogoProps;
+    logo?: LogoProps;
     multipleTooltip?: boolean;
     className?: string;
     collapseTitle?: string;

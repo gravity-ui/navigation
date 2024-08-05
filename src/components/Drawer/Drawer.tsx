@@ -1,16 +1,16 @@
 import React from 'react';
 
-import {useBodyScrollLock} from '@gravity-ui/uikit';
+import {Portal, useBodyScrollLock, useForkRef} from '@gravity-ui/uikit';
 import {CSSTransition, Transition} from 'react-transition-group';
 
 import {block} from '../utils/cn';
+
+import {type DrawerDirection, useResizableDrawerItem} from './utils';
 
 import './Drawer.scss';
 
 const b = block('drawer');
 const TIMEOUT = 300;
-
-export type DrawerDirection = 'right' | 'left';
 
 export interface DrawerItemProps {
     /** Unique identifier for the drawer item. */
@@ -35,32 +35,82 @@ export interface DrawerItemProps {
 
     /** Additional custom class name applied to the drawer item. */
     className?: string;
+
+    /** Determines whether the drawer item can be resized */
+    resizable?: boolean;
+
+    /**
+     * The width of the resizable drawer item.
+     * If not provided, the width will be stored internally.
+     */
+    width?: number;
+
+    /**
+     * Called at the end of resizing. Can be used to save the new width.
+     * @param width The new width of the drawer item
+     */
+    onResize?: (width: number) => void;
+
+    /** The minimum width of the resizable drawer item */
+    minResizeWidth?: number;
+
+    /** The maximum width of the resizable drawer item */
+    maxResizeWidth?: number;
 }
 
-export const DrawerItem: React.FC<DrawerItemProps> = ({
-    visible,
-    content,
-    children,
-    direction = 'left',
-    className,
-}) => {
-    const itemRef = React.useRef<HTMLDivElement>(null);
-    const cssDirection = direction === 'left' ? undefined : direction;
+export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
+    function DrawerItem(props, ref) {
+        const {
+            visible,
+            content,
+            children,
+            direction = 'left',
+            className,
+            resizable,
+            width,
+            minResizeWidth,
+            maxResizeWidth,
+            onResize,
+        } = props;
 
-    return (
-        <CSSTransition
-            in={visible}
-            timeout={TIMEOUT}
-            unmountOnExit
-            classNames={b('item-transition', {direction: cssDirection})}
-            nodeRef={itemRef}
-        >
-            <div ref={itemRef} className={b('item', {direction: cssDirection}, className)}>
-                {children ?? content}
+        const itemRef = React.useRef<HTMLDivElement>(null);
+        const handleRef = useForkRef(ref, itemRef);
+        const cssDirection = direction === 'left' ? undefined : direction;
+
+        const {resizedWidth, resizerHandlers} = useResizableDrawerItem({
+            direction,
+            width,
+            minResizeWidth,
+            maxResizeWidth,
+            onResize,
+        });
+
+        const resizerElement = resizable ? (
+            <div className={b('resizer', {direction})} {...resizerHandlers}>
+                <div className={b('resizer-handle')} />
             </div>
-        </CSSTransition>
-    );
-};
+        ) : null;
+
+        return (
+            <CSSTransition
+                in={visible}
+                timeout={TIMEOUT}
+                unmountOnExit
+                classNames={b('item-transition', {direction: cssDirection})}
+                nodeRef={itemRef}
+            >
+                <div
+                    ref={handleRef}
+                    className={b('item', {direction: cssDirection}, className)}
+                    style={{width: resizable ? `${resizedWidth}px` : undefined}}
+                >
+                    {resizerElement}
+                    {children ?? content}
+                </div>
+            </CSSTransition>
+        );
+    },
+);
 
 type DrawerChild = React.ReactElement<DrawerItemProps>;
 
@@ -80,20 +130,32 @@ export interface DrawerProps {
     /** Optional inline styles to be applied to the drawer component. */
     style?: React.CSSProperties;
 
+    /** Optional additional class names to style the background veil element. */
+    veilClassName?: string;
+
     /** Optional callback function that is called when the veil (overlay) is clicked. */
     onVeilClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 
     /** Optional callback function that is called when the escape key is pressed, if the drawer is open. */
     onEscape?: () => void;
+
+    /** Optional flag to hide the background darkening */
+    hideVeil?: boolean;
+
+    /** Optional flag to not use `Portal` for drawer */
+    disablePortal?: boolean;
 }
 
 export const Drawer: React.FC<DrawerProps> = ({
     className,
+    veilClassName,
     children,
     style,
     onVeilClick,
     onEscape,
     preventScrollBody = true,
+    hideVeil,
+    disablePortal = true,
 }) => {
     let someItemVisible = false;
     React.Children.forEach(children, (child) => {
@@ -124,7 +186,7 @@ export const Drawer: React.FC<DrawerProps> = ({
     const containerRef = React.useRef<HTMLDivElement>(null);
     const veilRef = React.useRef<HTMLDivElement>(null);
 
-    return (
+    const drawer = (
         <Transition
             in={someItemVisible}
             timeout={{enter: 0, exit: TIMEOUT}}
@@ -135,7 +197,7 @@ export const Drawer: React.FC<DrawerProps> = ({
             {(state) => {
                 const childrenVisible = someItemVisible && state === 'entered';
                 return (
-                    <div ref={containerRef} className={b(null, className)} style={style}>
+                    <div ref={containerRef} className={b({hideVeil}, className)} style={style}>
                         <CSSTransition
                             in={childrenVisible}
                             timeout={TIMEOUT}
@@ -143,7 +205,11 @@ export const Drawer: React.FC<DrawerProps> = ({
                             classNames={b('veil-transition')}
                             nodeRef={veilRef}
                         >
-                            <div ref={veilRef} className={b('veil')} onClick={onVeilClick} />
+                            <div
+                                ref={veilRef}
+                                className={b('veil', {hidden: hideVeil}, veilClassName)}
+                                onClick={onVeilClick}
+                            />
                         </CSSTransition>
                         {React.Children.map(children, (child) => {
                             if (
@@ -163,4 +229,10 @@ export const Drawer: React.FC<DrawerProps> = ({
             }}
         </Transition>
     );
+
+    if (disablePortal) {
+        return drawer;
+    }
+
+    return <Portal>{drawer}</Portal>;
 };
