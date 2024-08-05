@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.21.0](https://github.com/gravity-ui/navigation/compare/v2.20.0...v2.21.0) (2024-08-05)
+
+
+### Features
+
+* **CompositeBar:** add icon to collapsed list ([#272](https://github.com/gravity-ui/navigation/issues/272)) ([47c13fa](https://github.com/gravity-ui/navigation/commit/47c13fa15a54b4f0d1d2fb4c93027b555495d123))
+
 ## [2.20.0](https://github.com/gravity-ui/navigation/compare/v2.19.0...v2.20.0) (2024-08-02)
 
 
