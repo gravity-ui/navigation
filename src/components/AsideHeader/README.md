@@ -8,15 +8,43 @@ Including additional components like `FooterItem`, `Drawer`.
 import {AsideHeader} from '@gravity-ui/navigation';
 ```
 
+## Appearance
+
+### State
+
+The component has two possible states: collapsed, expanded.
+Уou can manage between states using `compact`, `onChangeCompact` props and also hide button with `hideCollapseButton`.
+
+### Top decoration
+
+Navigation highlights top section with Logo and Subheader items using `headerDecoration` props.
+
+### Custom background
+
+The component supports specific themization cases, e.g. image on background or splitting sections by color — using `customBackground`, `customBackgroundClassName` props.
+
+## Sections
+
+### Top
+
+Top section constains logo and items.
+**Popup, Tooltip, Panels**
+
+### Middle (menuItems)
+
+### Footer
+
+`WIP`
+
 ## Rendering Content
 
-`WIP`
+Right part near to `AsideHeader`, main page content.
+When expanding and collapsing navigation, navigation `size` will be changed. This knowledge may be helpfull, e.g. reculculating layout in some components.
+CSS-variable `--gn-aside-header-size` contains actual navigation size.
 
-## Rendering Footer
+Alternative path of rendering content below
 
-`WIP`
-
-## Rendering optimization
+### Rendering optimization
 
 If your app content needs to be rendered faster than by passing it throw `AsideHeader` props,
 you may need to switch usage of `AsideHeader` to advanced style with `PageLayout` like this:
