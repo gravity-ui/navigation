@@ -161,7 +161,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         const createdNode = (
             <React.Fragment>
                 <div
-                    className={b({type, current, compact}, className)}
+                    className={b({type, current, compact}, [className])}
                     ref={ref}
                     data-qa={item.qa}
                     onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
