@@ -41,31 +41,31 @@ The elements will collapse into three dots if there is no vertical space by defa
 
 Navigation elements can be in one of two states: collapsed (isCollapsed), where only the icon is visible, and expanded. There is some space for customization of the entire item through a wrapper.
 
-With additional configuration via AllPages, users can further customize menu to their preference by hiding unnecessary items. This brings in a new state for items - pinned/hidden. If item is pinned, it will always be displayed in the section.
+With additional configuration via `AllPages` users can further customize menu to their preference by hiding unnecessary items. This brings in a new state for items - pinned/hidden. If item is pinned, it will always be displayed in the section.
 
-The `onMenuItemsChanged` callback is required for adding extra component “All Pages,” which displays panel for editing the list of visible menu items.
+The `onMenuItemsChanged` callback is required for adding extra component `All Pages` which displays panel for editing the list of visible menu items.
 
 **Important note**: A user manages a modified list of the menu items that they receive from the callback and provides the new state of items to `AsideHeader`.
 
 ### The Bottom
 
-The Footer improves user experience by offering easy access to the elements and supplementary resources. It gives oportunity to connect with support add custom information to be sure that user will not get lost.
+The Footer improves user experience by offering easy access to the elements and supplementary resources. It gives opportunity to connect with support add custom information to be sure that user will not get lost.
 
-There can be both their own components inside, or aslo you can use `AsideHeaderFooterItem`.
+There can be both their own components inside, or also you can use `AsideHeaderFooterItem`.
 
 #### Highlighting element
 
 Highlighting an element over modal windows can be useful when a user wants to report an error via a feedback form, and the form with bug is opened in a modal window.
 
-In the `AsideHeaderFooterItem` component, you can pass a `bringForward` prop, which renders the icon above modal windows. Additionally, you need to pass a function to AsideHeader that will notify about the opening of modal windows.
+In the `AsideHeaderFooterItem` component, you can pass a `bringForward` prop, which renders the icon above modal windows. Additionally, you need to pass a function to `AsideHeader` that will notify about the opening of modal windows.
 
 ## Rendering Content
 
-Right part near to `AsideHeader`, main page content.
-When expanding and collapsing navigation, navigation `size` will be changed. This knowledge may be helpfull, e.g. recalculating layout in some components.
+Right part near to AsideHeader is place for main page content.
+When expanding and collapsing navigation, navigation `size` will be changed. This knowledge may be helpful, e.g. recalculating layout in some components.
 CSS-variable `--gn-aside-header-size` contains actual navigation size.
 
-Alternative path of rendering content below
+See below about alternative path of rendering content.
 
 ### Rendering optimization
 
