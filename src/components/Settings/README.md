@@ -46,6 +46,7 @@ The components provides layouting functionality of settings panel with the follo
 | header    | ReactNode |          |         | Header of section                                                             |
 | withBadge | boolean   |          |         | Show badge on a section and menu                                              |
 | showTitle | boolean   |          |         | Show section title. Prop is needed to hide title in simple settings on Mobile |
+| onlyChild | boolean   |          |         | Hide title if only one Settings.Section exists on page.                       |
 
 #### Settings.Item
 
