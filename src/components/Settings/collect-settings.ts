@@ -35,6 +35,7 @@ export interface SettingsPageSection {
     hidden?: boolean;
     withBadge?: boolean;
     showTitle?: boolean;
+    onlyChild?: boolean;
 }
 
 export interface SettingsItem {

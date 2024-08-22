@@ -68,6 +68,7 @@ export interface SettingsSectionProps {
     children: React.ReactNode;
     withBadge?: boolean;
     showTitle?: boolean;
+    onlyChild?: boolean;
 }
 
 export interface SettingsItemProps {
@@ -232,7 +233,7 @@ function SettingsContent({
         return (
             <div
                 key={section.title}
-                className={b('section', {selected: isSelected})}
+                className={b('section', {selected: isSelected, 'only-child': section.onlyChild})}
                 ref={isSelected ? selected.selectedRef : undefined}
             >
                 {section.showTitle && (

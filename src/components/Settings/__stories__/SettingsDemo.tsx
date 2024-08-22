@@ -276,7 +276,7 @@ function renderGeneralSettings(
     return (
         <Settings.Group id="general" groupTitle="General">
             <Settings.Page id="appearance" title="Appearance" icon={{data: featureIcon}}>
-                <Settings.Section title="Appearance">
+                <Settings.Section title="Appearance" onlyChild={true}>
                     <Settings.Item title="Interface language">
                         <RadioButton
                             value={settings.lang ?? 'ru'}

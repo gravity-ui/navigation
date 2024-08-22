@@ -169,6 +169,14 @@ $block: '.#{variables.$ns}settings';
         & + & {
             margin-top: 32px;
         }
+
+        &_only-child:only-child &-item:first-of-type {
+            margin-top: 0px;
+        }
+
+        &_only-child:only-child &-heading {
+            display: none;
+        }
     }
 
     &__item {
