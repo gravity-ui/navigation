@@ -42,6 +42,7 @@ export const TopPanel = ({topAlert}: Props) => {
                         corners="square"
                         layout="horizontal"
                         theme={topAlert.theme || 'warning'}
+                        view={topAlert.view}
                         icon={topAlert.icon}
                         title={topAlert.title}
                         message={topAlert.message}
