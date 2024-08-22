@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.22.0](https://github.com/gravity-ui/navigation/compare/v2.21.1...v2.22.0) (2024-08-22)
+
+
+### Features
+
+* **Settings:** added onlyChild option to the Settings.Section ([#298](https://github.com/gravity-ui/navigation/issues/298)) ([7fe46f5](https://github.com/gravity-ui/navigation/commit/7fe46f56e57c3dd79ee38b193bb762fe3d482668))
+
 ## [2.21.1](https://github.com/gravity-ui/navigation/compare/v2.21.0...v2.21.1) (2024-08-20)
 
 
