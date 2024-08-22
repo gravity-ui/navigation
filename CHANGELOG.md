@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.21.1](https://github.com/gravity-ui/navigation/compare/v2.21.0...v2.21.1) (2024-08-20)
+
+
+### Bug Fixes
+
+* **TopPanel:** throw view prop ([#296](https://github.com/gravity-ui/navigation/issues/296)) ([2bd4464](https://github.com/gravity-ui/navigation/commit/2bd4464ddf3758ba6d17f5d1577ab5cb4498c1b4))
+
 ## [2.21.0](https://github.com/gravity-ui/navigation/compare/v2.20.0...v2.21.0) (2024-08-05)
 
 
