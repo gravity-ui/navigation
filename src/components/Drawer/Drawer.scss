@@ -29,6 +29,7 @@ $block: '.#{variables.$ns}drawer';
         background-color: var(--g-color-base-background);
         pointer-events: initial;
         box-shadow: var(--_--item-shadow, none);
+        z-index: var(--gn-drawer-item-z-index);
 
         &_direction_right {
             left: auto;
@@ -85,6 +86,7 @@ $block: '.#{variables.$ns}drawer';
         pointer-events: initial;
         inset: 0;
         background-color: var(--gn-drawer-veil-background-color, var(--_--veil-background-color));
+        z-index: var(--gn-drawer-veil-z-index);
 
         &_hidden {
             display: none;
