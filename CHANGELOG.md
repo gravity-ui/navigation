@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.23.0](https://github.com/gravity-ui/navigation/compare/v2.22.0...v2.23.0) (2024-08-30)
+
+
+### Features
+
+* **Drawer:** add veil, drawer item z-index to CSS API ([#299](https://github.com/gravity-ui/navigation/issues/299)) ([41c6e37](https://github.com/gravity-ui/navigation/commit/41c6e378eb1e1501af712825439dd651c20dbd44))
+
 ## [2.22.0](https://github.com/gravity-ui/navigation/compare/v2.21.1...v2.22.0) (2024-08-22)
 
 
