@@ -25,7 +25,6 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         customBackgroundClassName,
         className,
         hideCollapseButton,
-        logo,
         qa,
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
@@ -47,8 +46,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             {customBackground}
                         </div>
                     )}
-                    {/* TODO add new prop for hiding Header */}
-                    {logo && <Header />}
+                    <Header />
                     {visibleMenuItems?.length ? (
                         <CompositeBar
                             type="menu"

@@ -26,19 +26,17 @@ export const Header = () => {
         [onClosePanel, logo],
     );
 
-    if (!logo) {
-        return null;
-    }
-
     return (
         <div className={b('header', {['with-decoration']: headerDecoration})}>
-            <Logo
-                {...logo}
-                onClick={onLogoClick}
-                compact={compact}
-                buttonWrapperClassName={b('logo-button-wrapper')}
-                buttonClassName={b('logo-button')}
-            />
+            {logo && (
+                <Logo
+                    {...logo}
+                    onClick={onLogoClick}
+                    compact={compact}
+                    buttonWrapperClassName={b('logo-button-wrapper')}
+                    buttonClassName={b('logo-button')}
+                />
+            )}
 
             <CompositeBar
                 type="subheader"
