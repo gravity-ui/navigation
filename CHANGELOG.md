@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.23.1](https://github.com/gravity-ui/navigation/compare/v2.23.0...v2.23.1) (2024-09-10)
+
+
+### Bug Fixes
+
+* **Logo:** fix condition display logo ([#306](https://github.com/gravity-ui/navigation/issues/306)) ([38f234a](https://github.com/gravity-ui/navigation/commit/38f234a98f2d526e04f1d85ad6907e015cd81315))
+
 ## [2.23.0](https://github.com/gravity-ui/navigation/compare/v2.22.0...v2.23.0) (2024-08-30)
 
 
