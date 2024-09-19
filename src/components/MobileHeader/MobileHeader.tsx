@@ -10,10 +10,15 @@ import {block} from '../utils/cn';
 import {Burger} from './Burger/Burger';
 import {BurgerMenu, BurgerMenuInnerProps} from './BurgerMenu/BurgerMenu';
 import {
+    OverlapPanelProps as CommonOverlapPanelProps,
+    OverlapPanel,
+} from './OverlapPanel/OverlapPanel';
+import {
     BURGER_PANEL_ITEM_ID,
     MOBILE_HEADER_COMPACT_HEIGHT,
     MOBILE_HEADER_EVENT_NAMES,
     MOBILE_HEADER_EXPANDED_HEIGHT,
+    OVERLAP_PANEL_ITEM_ID,
 } from './constants';
 import i18n from './i18n';
 import {MobileHeaderEvent, MobileHeaderEventOptions, MobileMenuItem} from './types';
@@ -28,11 +33,14 @@ interface BurgerMenuProps extends Omit<BurgerMenuInnerProps, 'renderFooter'> {
     renderFooter?: (data: {size: number; isCompact: boolean}) => React.ReactNode;
 }
 
+type OverlapPanelProps = Omit<CommonOverlapPanelProps, 'onClose' | 'visible'>;
+
 interface PanelItem extends Omit<DrawerItemProps, 'visible'> {}
 
 export interface MobileHeaderProps {
     logo: LogoProps;
     burgerMenu: BurgerMenuProps;
+    overlapPanel?: OverlapPanelProps;
     burgerCloseTitle?: string;
     burgerOpenTitle?: string;
     panelItems?: PanelItem[];
@@ -58,12 +66,14 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
             onEvent,
             className,
             contentClassName,
+            overlapPanel,
         },
         ref,
     ): React.ReactElement => {
         const targetRef = useForwardRef<HTMLDivElement>(ref);
         const [compact] = useState(true);
         const [visiblePanel, setVisiblePanel] = useState<PanelName>(null);
+        const [overlapPanelVisible, setOverlapPanelVisible] = useState(false);
 
         // for expand top panel cases (i.e. switch service panel). Will be removed if not used in future design
         const size = compact ? MOBILE_HEADER_COMPACT_HEIGHT : MOBILE_HEADER_EXPANDED_HEIGHT;
@@ -84,6 +94,8 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
 
                     return panelOpen ? null : name;
                 });
+
+                setOverlapPanelVisible(false);
             },
             [onEvent],
         );
@@ -102,6 +114,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                 if (typeof detail?.panelName === 'string') {
                     onEvent?.(detail?.panelName, MOBILE_HEADER_EVENT_NAMES.openEvent);
                     setVisiblePanel(detail?.panelName);
+                    setOverlapPanelVisible(false);
                 }
             },
             [onEvent],
@@ -112,6 +125,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                 if (typeof detail?.panelName === 'string') {
                     onEvent?.(detail?.panelName, MOBILE_HEADER_EVENT_NAMES.closeEvent);
                     setVisiblePanel(null);
+                    setOverlapPanelVisible(false);
                 }
             },
             [onEvent],
@@ -125,6 +139,16 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
         const onBurgerClose = useCallback(() => {
             onEvent?.(BURGER_PANEL_ITEM_ID, MOBILE_HEADER_EVENT_NAMES.closeEvent);
             setVisiblePanel(null);
+        }, [onEvent]);
+
+        const onOverlapOpen = useCallback(() => {
+            onEvent?.(OVERLAP_PANEL_ITEM_ID, MOBILE_HEADER_EVENT_NAMES.openEvent);
+            setOverlapPanelVisible(true);
+        }, [onEvent]);
+
+        const onOverlapClose = useCallback(() => {
+            onEvent?.(OVERLAP_PANEL_ITEM_ID, MOBILE_HEADER_EVENT_NAMES.closeEvent);
+            setOverlapPanelVisible(false);
         }, [onEvent]);
 
         const onCloseDrawer = useCallback(() => {
@@ -185,6 +209,9 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                 node.addEventListener('MOBILE_BURGER_OPEN', onBurgerOpen);
                 node.addEventListener('MOBILE_BURGER_CLOSE', onBurgerClose);
 
+                node.addEventListener('MOBILE_OVERLAP_PANEL_OPEN', onOverlapOpen);
+                node.addEventListener('MOBILE_OVERLAP_PANEL_CLOSE', onOverlapClose);
+
                 node.addEventListener(
                     'MOBILE_PANEL_TOGGLE',
                     onMobilePanelToggle as unknown as EventListener,
@@ -203,6 +230,9 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                 if (node) {
                     node.removeEventListener('MOBILE_BURGER_OPEN', onBurgerOpen);
                     node.removeEventListener('MOBILE_BURGER_CLOSE', onBurgerClose);
+
+                    node.removeEventListener('MOBILE_OVERLAP_PANEL_OPEN', onOverlapOpen);
+                    node.removeEventListener('MOBILE_OVERLAP_PANEL_CLOSE', onOverlapClose);
 
                     node.removeEventListener(
                         'MOBILE_PANEL_TOGGLE',
@@ -225,6 +255,8 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
             onMobilePanelToggle,
             onMobilePanelOpen,
             onMobilePanelClose,
+            onOverlapOpen,
+            onOverlapClose,
         ]);
 
         return (
@@ -257,7 +289,17 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                         />
                     ))}
                 </Drawer>
-
+                {overlapPanel && (
+                    <OverlapPanel
+                        topOffset={size}
+                        className={b('overlap-panel')}
+                        title={overlapPanel.title}
+                        onClose={onOverlapClose}
+                        action={overlapPanel.action}
+                        visible={overlapPanelVisible}
+                        renderContent={overlapPanel.renderContent}
+                    />
+                )}
                 <Content
                     size={size}
                     renderContent={renderContent}

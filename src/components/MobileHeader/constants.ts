@@ -12,3 +12,4 @@ export const MOBILE_HEADER_EVENT_NAMES: ItemEventsConfig = {
 };
 
 export const BURGER_PANEL_ITEM_ID = 'burger';
+export const OVERLAP_PANEL_ITEM_ID = 'overlap';

@@ -38,6 +38,10 @@ $block: '.#{variables.$ns}mobile-header';
         overflow-y: auto;
     }
 
+    &__overlap-panel {
+        z-index: var(--gn-mobile-header-panel-z-index, 98);
+    }
+
     &__panels {
         z-index: var(--gn-mobile-header-panel-z-index, 98);
         position: fixed;
