@@ -2,6 +2,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import svgr from '@svgr/rollup';
+import autoprefixer from 'autoprefixer';
 import json from 'rollup-plugin-json';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import postcss from 'rollup-plugin-postcss';
@@ -27,19 +28,39 @@ const input = [
 const getPlugins = (outDir) => {
     return [
         peerDepsExternal(),
-        json(),
-        resolve(),
-        commonjs(),
         typescript({
-            typescript: require('typescript'),
             tsconfig: './tsconfig.publish.json',
             outDir,
         }),
         postcss({
+            extract: true,
+            modules: false,
             minimize: true,
+            sourceMap: true,
+            extensions: ['.css', '.scss'],
+            use: [
+                [
+                    'sass',
+                    {
+                        includePaths: ['./src'],
+                    },
+                ],
+            ],
+            plugins: [autoprefixer()],
         }),
+        commonjs({
+            defaultIsModuleExports: true,
+        }),
+        resolve(),
+        json(),
         svgr(),
     ];
+};
+
+const cssExtractOptions = {
+    preserveModules: true,
+    assetFileNames: '[name][extname]',
+    exports: 'named',
 };
 
 export default [
@@ -50,6 +71,7 @@ export default [
                 dir: packageJson.module,
                 format: 'esm',
                 sourcemap: true,
+                ...cssExtractOptions,
             },
         ],
         plugins: getPlugins(packageJson.module),
@@ -61,6 +83,7 @@ export default [
                 dir: packageJson.main,
                 format: 'cjs',
                 sourcemap: true,
+                ...cssExtractOptions,
             },
         ],
         plugins: getPlugins(packageJson.main),
