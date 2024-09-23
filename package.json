@@ -118,10 +118,10 @@
     "webpack": "^5.88.2"
   },
   "nano-staged": {
-    "*.{scss}": [
+    "src/**/*.{scss}": [
       "stylelint --fix --quiet"
     ],
-    "*.{js,jsx,ts,tsx}": [
+    "src/**/*.{js,jsx,ts,tsx}": [
       "eslint --fix --quiet"
     ],
     "*.md": [

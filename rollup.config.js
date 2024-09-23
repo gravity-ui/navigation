@@ -1,11 +1,10 @@
 import commonjs from '@rollup/plugin-commonjs';
-import resolve from '@rollup/plugin-node-resolve';
-import typescript from '@rollup/plugin-typescript';
-import svgr from '@svgr/rollup';
-import autoprefixer from 'autoprefixer';
 import json from 'rollup-plugin-json';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
-import postcss from 'rollup-plugin-postcss';
+import resolve from '@rollup/plugin-node-resolve';
+import styles from 'rollup-plugin-styles';
+import svgr from '@svgr/rollup';
+import typescript from '@rollup/plugin-typescript';
 
 const packageJson = require('./package.json');
 
@@ -28,39 +27,39 @@ const input = [
 const getPlugins = (outDir) => {
     return [
         peerDepsExternal(),
+        resolve(),
+        commonjs({
+            defaultIsModuleExports: true,
+        }),
         typescript({
             tsconfig: './tsconfig.publish.json',
             outDir,
         }),
-        postcss({
-            extract: true,
-            modules: false,
-            minimize: true,
-            sourceMap: true,
+        styles({
+            mode: ['extract', (filename) => {
+                // Сохраняем структуру директорий и имена файлов
+                const relativePath = path.relative(path.resolve(__dirname, 'src'), filename);
+                return path.resolve(outDir, relativePath.replace(/\.(ts|tsx|js|jsx)$/, '.css'));
+            }],
             extensions: ['.css', '.scss'],
-            use: [
-                [
-                    'sass',
-                    {
-                        includePaths: ['./src'],
-                    },
-                ],
-            ],
-            plugins: [autoprefixer()],
+            sass: {
+                includePaths: ['./src'],
+            },
+            sourceMap: true,
+            minimize: true,
         }),
-        commonjs({
-            defaultIsModuleExports: true,
-        }),
-        resolve(),
+
         json(),
         svgr(),
     ];
 };
 
-const cssExtractOptions = {
+const outputOptions = {
     preserveModules: true,
-    assetFileNames: '[name][extname]',
+    preserveModulesRoot: 'src',
     exports: 'named',
+    sourcemap: true,
+    assetFileNames: "[name].[extname]",
 };
 
 export default [
@@ -70,8 +69,7 @@ export default [
             {
                 dir: packageJson.module,
                 format: 'esm',
-                sourcemap: true,
-                ...cssExtractOptions,
+                ...outputOptions,
             },
         ],
         plugins: getPlugins(packageJson.module),
@@ -82,8 +80,7 @@ export default [
             {
                 dir: packageJson.main,
                 format: 'cjs',
-                sourcemap: true,
-                ...cssExtractOptions,
+                ...outputOptions,
             },
         ],
         plugins: getPlugins(packageJson.main),
