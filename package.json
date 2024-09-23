@@ -22,7 +22,8 @@
     "typecheck": "tsc --noEmit",
     "test": "jest --passWithNoTests",
     "test-storybook": "test-storybook --url ${PR_PREVIEW_URL:-http://localhost:7008}",
-    "build": "rimraf build && rollup -c",
+    "build": "vite build",
+    "build:old": "rimraf build && rollup -c",
     "lint:js": "eslint src --ext .js,.jsx,.ts,.tsx",
     "lint:styles": "stylelint '{styles,src}/**/*.scss'",
     "lint:prettier": "prettier --check '**/*.md'",
@@ -94,7 +95,7 @@
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
-    "sass": "^1.49.7",
+    "sass": "^1.79.3",
     "sass-loader": "^10.2.1",
     "storybook": "^7.6.13",
     "storybook-preset-inline-svg": "^1.0.1",
@@ -102,6 +103,8 @@
     "svg-inline-loader": "^0.8.2",
     "ts-jest": "^28.0.0",
     "typescript": "^4.5.5",
+    "vite": "^5.4.7",
+    "vite-plugin-dts": "^4.2.1",
     "vite-plugin-svgr": "^4.2.0"
   },
   "peerDependencies": {
