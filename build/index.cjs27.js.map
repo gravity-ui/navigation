@@ -1,0 +1,1 @@
+{"version":3,"file":"index.cjs27.js","sources":["../src/components/AsideHeader/utils.ts"],"sourcesContent":["import {block} from '../utils/cn';\n\nexport const b = block('aside-header');\n"],"names":["block"],"mappings":";;;;;;AAEa,MAAA,CAAA,GAAIA,SAAM,cAAc;;;;"}

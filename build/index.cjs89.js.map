@@ -1,0 +1,1 @@
+{"version":3,"file":"index.cjs89.js","sources":["../src/components/Footer/desktop/constants/moreItemsPopupProps.ts"],"sourcesContent":["import {PopupProps} from '@gravity-ui/uikit';\n\nexport const moreItemsPopupProps: PopupProps = {\n    placement: 'top-start',\n};\n"],"names":[],"mappings":";;;;AAEO,MAAM,mBAAkC,GAAA;AAAA,EAC3C,SAAW,EAAA,WAAA;AACf;;;;"}
