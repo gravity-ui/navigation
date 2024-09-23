@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/gravity-ui/navigation"
   },
-  "dev-mark": "2 add esm and cjs",
+  "dev-mark": "3 exclude node modules from build",
   "main": "build/cjs",
   "module": "build/esm",
   "types": "build/types/index.d.ts",

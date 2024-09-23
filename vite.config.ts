@@ -16,7 +16,6 @@ const commonOutputOptions = {
         }
         return 'assets/[name][extname]';
     },
-    sourcemap: true,
     preserveModules: true,
     preserveModulesRoot: 'src',
     exports: 'named' as const,
@@ -35,7 +34,6 @@ export default defineConfig({
         lib: {
             entry: 'src/index.ts',
             name,
-            formats: ['es', 'cjs'],
             fileName: (format) => {
                 if (format === 'es') {
                     return `index.[name].mjs`;
@@ -81,9 +79,7 @@ export default defineConfig({
             scss: {
                 importer: [
                     (url: string) => {
-                        // Проверяем, начинается ли путь с '~'
                         if (url.startsWith('~')) {
-                            // Убираем '~' и преобразуем путь к абсолютному относительно node_modules
                             const modulePath = path.resolve(
                                 __dirname,
                                 'node_modules',

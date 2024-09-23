@@ -1,0 +1,14 @@
+.gn-all-pages-list-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  padding: 0 var(--g-spacing-6);
+  column-gap: var(--g-spacing-4);
+}
+.gn-all-pages-list-item__text {
+  flex: 1;
+}
+.gn-all-pages-list-item__icon {
+  color: var(--g-color-text-misc);
+}

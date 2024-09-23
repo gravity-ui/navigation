@@ -1,0 +1,31 @@
+.gn-logo {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: 40px;
+}
+.gn-logo__logo-btn-place {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.gn-logo__logo-btn-place .g-button::before {
+  background-color: transparent;
+}
+.gn-logo__logo {
+  font-size: var(--g-text-body-2-font-size);
+  line-height: var(--g-text-body-2-line-height);
+  font-weight: var(--g-text-body-font-weight);
+  vertical-align: middle;
+  cursor: pointer;
+}
+.gn-logo__logo-link, .gn-logo__logo-link:hover, .gn-logo__logo-link:active, .gn-logo__logo-link:visited, .gn-logo__logo-link:focus {
+  text-decoration: none;
+  outline: none;
+  color: inherit;
+}
+.g-root .gn-logo__btn-logo.button2_theme_flat.button2_hovered_yes::before {
+  background-color: transparent;
+}

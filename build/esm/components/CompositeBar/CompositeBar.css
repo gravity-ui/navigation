@@ -1,0 +1,8 @@
+.gn-composite-bar {
+  flex: 1 0 auto;
+  width: 100%;
+  min-height: 40px;
+}
+.gn-composite-bar .gn-composite-bar__root-menu-item[class] {
+  background-color: transparent;
+}
