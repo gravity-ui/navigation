@@ -6,20 +6,45 @@ import dts from 'vite-plugin-dts';
 
 const packageJson = require('./package.json');
 
+const name = packageJson.name;
+const outDir = 'build';
+
+const commonOutputOptions = {
+    assetFileNames: (assetInfo) => {
+        if (assetInfo.name?.endsWith('.css')) {
+            return '[name][extname]';
+        }
+        return 'assets/[name][extname]';
+    },
+    sourcemap: true,
+    preserveModules: true,
+    preserveModulesRoot: 'src',
+    exports: 'named' as const,
+};
+
 export default defineConfig({
     plugins: [
         react(),
         dts({
             include: ['src/'],
+            tsconfigPath: './tsconfig.publish.json',
         }),
     ],
     build: {
-        outDir: 'build',
+        outDir,
         lib: {
             entry: 'src/index.ts',
-            name: packageJson.name,
+            name,
             formats: ['es', 'cjs'],
-            fileName: (format) => `index.${format}.js`,
+            fileName: (format) => {
+                if (format === 'es') {
+                    return `index.[name].mjs`;
+                }
+                if (format === 'cjs') {
+                    return `index.[name].cjs`;
+                }
+                return `index.[name].js`;
+            },
         },
         cssCodeSplit: true, // Включаем разделение CSS
         rollupOptions: {
@@ -30,17 +55,22 @@ export default defineConfig({
                 '@gravity-ui/uikit',
                 '@gravity-ui/icons',
             ],
-            output: {
-                assetFileNames: (assetInfo) => {
-                    if (assetInfo.name?.endsWith('.css')) {
-                        return '[name][extname]';
-                    }
-                    return 'assets/[name][extname]';
+            output: [
+                {
+                    dir: `${outDir}/esm`,
+                    format: 'es',
+                    entryFileNames: '[name].mjs',
+                    chunkFileNames: '[name]-[hash].mjs',
+                    ...commonOutputOptions,
                 },
-                preserveModules: true,
-                preserveModulesRoot: 'src',
-                exports: 'named',
-            },
+                {
+                    dir: `${outDir}/cjs`,
+                    format: 'cjs',
+                    entryFileNames: '[name].cjs',
+                    chunkFileNames: '[name]-[hash].cjs',
+                    ...commonOutputOptions,
+                },
+            ],
         },
         sourcemap: true,
         target: 'esnext',

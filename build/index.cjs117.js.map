@@ -1,1 +1,0 @@
-{"version":3,"file":"index.cjs117.js","sources":["../node_modules/react-transition-group/esm/TransitionGroupContext.js"],"sourcesContent":["import React from 'react';\nexport default React.createContext(null);"],"names":[],"mappings":";;;;;;AACA,+BAAe,KAAK,CAAC,aAAa,CAAC,IAAI,CAAC;;;;","x_google_ignoreList":[0]}
