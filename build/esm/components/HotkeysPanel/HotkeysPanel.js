@@ -1,4 +1,4 @@
-import { __rest } from '../../node_modules/tslib/tslib.es6.mjs.js';
+import { __rest } from 'tslib';
 import React__default, { useState, useMemo, useCallback } from 'react';
 import { Hotkey, TextInput, List } from '@gravity-ui/uikit';
 import { Drawer, DrawerItem } from '../Drawer/Drawer.js';

@@ -1,4 +1,4 @@
-import { __rest } from '../../node_modules/tslib/tslib.es6.mjs.js';
+import { __rest } from 'tslib';
 import React__default from 'react';
 import { PageLayout } from './components/PageLayout/PageLayout.js';
 import { PageLayoutAside } from './components/PageLayout/PageLayoutAside.js';

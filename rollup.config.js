@@ -65,6 +65,7 @@ const outputOptions = {
 export default [
     {
         input,
+        external: ['tslib'],
         output: [
             {
                 dir: packageJson.module,
@@ -76,6 +77,7 @@ export default [
     },
     {
         input,
+        external: ['tslib'],
         output: [
             {
                 dir: packageJson.main,

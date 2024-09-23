@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var tslib_es6 = require('../../node_modules/tslib/tslib.es6.mjs.js');
+var tslib = require('tslib');
 var React = require('react');
 var uikit = require('@gravity-ui/uikit');
 var Drawer = require('../Drawer/Drawer.js');
@@ -16,7 +16,7 @@ var React__default = /*#__PURE__*/_interopDefaultLegacy(React);
 
 const b = cn.block('hotkeys-panel');
 function HotkeysPanel(_a) {
-    var { visible, onClose, leftOffset, topOffset, className, preventScrollBody, hotkeys, itemClassName, filterPlaceholder, title, emptyState } = _a, listProps = tslib_es6.__rest(_a, ["visible", "onClose", "leftOffset", "topOffset", "className", "preventScrollBody", "hotkeys", "itemClassName", "filterPlaceholder", "title", "emptyState"]);
+    var { visible, onClose, leftOffset, topOffset, className, preventScrollBody, hotkeys, itemClassName, filterPlaceholder, title, emptyState } = _a, listProps = tslib.__rest(_a, ["visible", "onClose", "leftOffset", "topOffset", "className", "preventScrollBody", "hotkeys", "itemClassName", "filterPlaceholder", "title", "emptyState"]);
     const [filter, setFilter] = React.useState('');
     const hotkeysList = React.useMemo(() => {
         const filteredHotkeys = filterHotkeys.filterHotkeys(hotkeys, filter);

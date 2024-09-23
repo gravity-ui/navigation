@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var tslib_es6 = require('../../../node_modules/tslib/tslib.es6.mjs.js');
+var tslib = require('tslib');
 var React = require('react');
 var uikit = require('@gravity-ui/uikit');
 var cn = require('../../utils/cn.js');
@@ -13,7 +13,7 @@ var React__default = /*#__PURE__*/_interopDefaultLegacy(React);
 
 const b = cn.block('footer-menu-item');
 const MenuItem = (_a) => {
-    var { text, className } = _a, menuItemProps = tslib_es6.__rest(_a, ["text", "className"]);
+    var { text, className } = _a, menuItemProps = tslib.__rest(_a, ["text", "className"]);
     return (React__default["default"].createElement(uikit.Menu.Item, Object.assign({ className: b(null, className) }, menuItemProps), text));
 };
 

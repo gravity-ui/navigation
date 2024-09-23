@@ -1,4 +1,4 @@
-import { __rest } from '../../node_modules/tslib/tslib.es6.mjs.js';
+import { __rest } from 'tslib';
 import React__default from 'react';
 import { Loader, Flex } from '@gravity-ui/uikit';
 import identity_1 from '../../node_modules/lodash/identity.js';

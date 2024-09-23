@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var tslib_es6 = require('../../node_modules/tslib/tslib.es6.mjs.js');
+var tslib = require('tslib');
 var React = require('react');
 var uikit = require('@gravity-ui/uikit');
 var identity = require('../../node_modules/lodash/identity.js');
@@ -25,7 +25,7 @@ const b = cn.block('settings');
 const SettingsContext = React__default["default"].createContext({});
 const useSettingsContext = () => React__default["default"].useContext(SettingsContext);
 function Settings(_a) {
-    var { loading, renderLoading, children, view = 'normal', renderRightAdornment, renderSectionRightAdornment, showRightAdornmentOnHover = true } = _a, props = tslib_es6.__rest(_a, ["loading", "renderLoading", "children", "view", "renderRightAdornment", "renderSectionRightAdornment", "showRightAdornmentOnHover"]);
+    var { loading, renderLoading, children, view = 'normal', renderRightAdornment, renderSectionRightAdornment, showRightAdornmentOnHover = true } = _a, props = tslib.__rest(_a, ["loading", "renderLoading", "children", "view", "renderRightAdornment", "renderSectionRightAdornment", "showRightAdornmentOnHover"]);
     if (loading) {
         return (React__default["default"].createElement("div", { className: b({ loading: true, view }) }, typeof renderLoading === 'function' ? (renderLoading()) : (React__default["default"].createElement(uikit.Loader, { className: b('loader'), size: "m" }))));
     }

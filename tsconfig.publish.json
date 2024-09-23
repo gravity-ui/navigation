@@ -1,7 +1,12 @@
 {
   "extends": "./tsconfig",
   "compilerOptions": {
-    "paths": {}
+    "paths": {},
+    "importHelpers": true,
   },
-  "exclude": ["**/__stories__", "src/**/*.test.ts", "src/**/*.test.tsx"]
+  "exclude": [
+    "**/__stories__",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx"
+  ]
 }
