@@ -24,9 +24,19 @@ const commonOutputOptions = {
 export default defineConfig({
     plugins: [
         react(),
+        // Генерация типов для esm
         dts({
             include: ['src/'],
+            outDir: `${outDir}/esm`, // Типы будут сохранены в папку esm
             tsconfigPath: './tsconfig.publish.json',
+            entryRoot: 'src',
+        }),
+        // Генерация типов для cjs
+        dts({
+            include: ['src/'],
+            outDir: `${outDir}/cjs`, // Типы будут сохранены в папку cjs
+            tsconfigPath: './tsconfig.publish.json',
+            entryRoot: 'src',
         }),
     ],
     build: {
@@ -34,15 +44,7 @@ export default defineConfig({
         lib: {
             entry: 'src/index.ts',
             name,
-            fileName: (format) => {
-                if (format === 'es') {
-                    return `index.[name].mjs`;
-                }
-                if (format === 'cjs') {
-                    return `index.[name].cjs`;
-                }
-                return `index.[name].js`;
-            },
+            fileName: (format) => (format === 'es' ? 'index.mjs' : 'index.cjs'),
         },
         cssCodeSplit: true, // Включаем разделение CSS
         rollupOptions: {
@@ -52,6 +54,7 @@ export default defineConfig({
                 'react/jsx-runtime',
                 '@gravity-ui/uikit',
                 '@gravity-ui/icons',
+                /^node_modules\//,
             ],
             output: [
                 {

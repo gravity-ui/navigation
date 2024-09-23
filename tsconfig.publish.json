@@ -1,7 +1,19 @@
 {
   "extends": "./tsconfig",
   "compilerOptions": {
+    "emitDeclarationOnly": true,
+    "outDir": "build/types",
+    "moduleResolution": "node",
+    "module": "ESNext",
+    "target": "ESNext",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
     "paths": {}
   },
-  "exclude": ["**/__stories__", "src/**/*.test.ts", "src/**/*.test.tsx"]
+  "exclude": [
+    "**/__stories__",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx"
+  ]
 }
