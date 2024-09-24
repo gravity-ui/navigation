@@ -1,5 +1,3 @@
-import path from 'path';
-
 import react from '@vitejs/plugin-react';
 import {defineConfig} from 'vite';
 import dts from 'vite-plugin-dts';
@@ -69,25 +67,5 @@ export default defineConfig({
         sourcemap: true,
         target: 'esnext',
         minify: false,
-    },
-    css: {
-        preprocessorOptions: {
-            scss: {
-                importer: [
-                    (url: string) => {
-                        if (url.startsWith('~')) {
-                            const modulePath = path.resolve(
-                                __dirname,
-                                'node_modules',
-                                url.slice(1),
-                            );
-                            return {file: modulePath};
-                        }
-                        return null;
-                    },
-                ],
-                includePaths: [path.resolve(__dirname, 'node_modules')],
-            },
-        },
     },
 });

@@ -1,4 +1,4 @@
-@import '~@gravity-ui/uikit/styles/mixins';
+@import '@gravity-ui/uikit/styles/mixins';
 
 @mixin aside-header-button() {
     &_current::before {

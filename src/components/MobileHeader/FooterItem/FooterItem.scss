@@ -1,6 +1,6 @@
 @use '../../variables';
 
-@import '~@gravity-ui/uikit/styles/mixins';
+@import '@gravity-ui/uikit/styles/mixins';
 
 $block: '.#{variables.$ns}mobile-header-footer-item';
 
