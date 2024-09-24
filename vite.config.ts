@@ -24,17 +24,9 @@ const commonOutputOptions = {
 export default defineConfig({
     plugins: [
         react(),
-        // Генерация типов для esm
         dts({
             include: ['src/'],
-            outDir: `${outDir}/esm`, // Типы будут сохранены в папку esm
-            tsconfigPath: './tsconfig.publish.json',
-            entryRoot: 'src',
-        }),
-        // Генерация типов для cjs
-        dts({
-            include: ['src/'],
-            outDir: `${outDir}/cjs`, // Типы будут сохранены в папку cjs
+            outDir: `${outDir}/types`,
             tsconfigPath: './tsconfig.publish.json',
             entryRoot: 'src',
         }),
