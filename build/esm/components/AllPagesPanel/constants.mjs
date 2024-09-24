@@ -1,5 +1,5 @@
-import { Ellipsis } from '@gravity-ui/icons';
 import i18n from './i18n/index.mjs';
+import Ellipsis from '../../node_modules/@gravity-ui/icons/esm/Ellipsis.mjs';
 
 const ALL_PAGES_ID = "all-pages";
 function getAllPagesMenuItem() {

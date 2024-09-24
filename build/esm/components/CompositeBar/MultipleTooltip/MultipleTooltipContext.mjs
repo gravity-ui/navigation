@@ -1,5 +1,5 @@
-import { jsx } from 'react/jsx-runtime';
-import React__default from 'react';
+import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
+import React from '../../../node_modules/react/index.mjs';
 
 const multipleTooltipContextDefaults = {
   active: false,
@@ -9,10 +9,10 @@ const multipleTooltipContextDefaults = {
   setValue: () => {
   }
 };
-const MultipleTooltipContext = React__default.createContext(
+const MultipleTooltipContext = React.createContext(
   multipleTooltipContextDefaults
 );
-class MultipleTooltipProvider extends React__default.PureComponent {
+class MultipleTooltipProvider extends React.PureComponent {
   constructor() {
     super(...arguments);
     this.state = {
@@ -24,7 +24,7 @@ class MultipleTooltipProvider extends React__default.PureComponent {
   }
   render() {
     const { children } = this.props;
-    return /* @__PURE__ */ jsx(MultipleTooltipContext.Provider, { value: { ...this.state, setValue: this.setValue }, children });
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(MultipleTooltipContext.Provider, { value: { ...this.state, setValue: this.setValue }, children });
   }
 }
 

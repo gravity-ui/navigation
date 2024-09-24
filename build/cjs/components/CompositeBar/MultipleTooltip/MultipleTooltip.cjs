@@ -2,13 +2,13 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('react/jsx-runtime');
-const React = require('react');
-const uikit = require('@gravity-ui/uikit');
+const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
+const index = require('../../../node_modules/react/index.cjs');
 const cn = require('../../utils/cn.cjs');
 const constants = require('../constants.cjs');
 const MultipleTooltipContext = require('./MultipleTooltipContext.cjs');
 ;/* empty css                       */
+const Popup = require('../../../node_modules/@gravity-ui/uikit/build/esm/components/Popup/Popup.cjs');
 
 const b = cn.block("multiple-tooltip");
 const POPUP_OFFSET = [-32, 4];
@@ -24,10 +24,10 @@ const MultipleTooltip = ({
   anchorRef,
   placement
 }) => {
-  const { activeIndex, hideCollapseItemTooltip } = React.useContext(MultipleTooltipContext.MultipleTooltipContext);
+  const { activeIndex, hideCollapseItemTooltip } = index.default.useContext(MultipleTooltipContext.MultipleTooltipContext);
   const activeItem = activeIndex === void 0 ? null : items[activeIndex];
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    uikit.Popup,
+  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+    Popup.Popup,
     {
       open,
       anchorRef,
@@ -36,14 +36,14 @@ const MultipleTooltip = ({
       contentClassName: b(null),
       modifiers: POPUP_MODIFIERS,
       disableLayer: true,
-      children: /* @__PURE__ */ jsxRuntime.jsx("div", { className: b("items-container"), children: items.filter(
+      children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("items-container"), children: items.filter(
         ({ type = "regular", id }) => !hideCollapseItemTooltip || id !== constants.COLLAPSE_ITEM_ID && type !== "action"
       ).map((item, idx) => {
         switch (item.type) {
           case "divider":
-            return /* @__PURE__ */ jsxRuntime.jsx("div", { className: b("item", { divider: true }), children: item.title }, idx);
+            return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("item", { divider: true }), children: item.title }, idx);
           default:
-            return /* @__PURE__ */ jsxRuntime.jsx(
+            return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
               "div",
               {
                 className: b("item", {

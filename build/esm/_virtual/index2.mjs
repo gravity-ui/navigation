@@ -1,4 +1,4 @@
-var propTypes = {exports: {}};
+var classname = {exports: {}};
 
-export { propTypes as __module };
+export { classname as __module };
 //# sourceMappingURL=index2.mjs.map

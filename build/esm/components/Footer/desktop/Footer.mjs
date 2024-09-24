@@ -1,11 +1,12 @@
-import { jsxs, jsx } from 'react/jsx-runtime';
-import { useRef, useMemo } from 'react';
-import { Menu, DropdownMenu } from '@gravity-ui/uikit';
+import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
+import { r as reactExports } from '../../../node_modules/react/index.mjs';
 import { block } from '../../utils/cn.mjs';
 import { MenuItem } from '../MenuItem/MenuItem.mjs';
 import { moreItemsPopupProps } from './constants/moreItemsPopupProps.mjs';
 /* empty css             */
 import { useOverflowingHorizontalListItems } from '../../../hooks/useOverflowingHorizontalListItems/useOverflowingHorizontalListItems.mjs';
+import { Menu } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/Menu/Menu.mjs';
+import { DropdownMenu as DropdownMenuExport } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/DropdownMenu/DropdownMenu.mjs';
 import { Logo } from '../../Logo/Logo.mjs';
 
 const b = block("footer");
@@ -20,7 +21,7 @@ const Footer = ({
   logoWrapperClassName,
   copyright
 }) => {
-  const menuContainerRef = useRef(null);
+  const menuContainerRef = reactExports.useRef(null);
   const menuItems = view === "clear" ? void 0 : providedMenuItems;
   const { visibleItems, hiddenItems, measured } = useOverflowingHorizontalListItems({
     containerRef: menuContainerRef,
@@ -28,13 +29,13 @@ const Footer = ({
     itemSelector: `.${b("menu-item")}`,
     moreButtonWidth: 28
   });
-  const moreButtonProps = useMemo(
+  const moreButtonProps = reactExports.useMemo(
     () => ({
       title: moreButtonTitle
     }),
     [moreButtonTitle]
   );
-  const dropdownMenuItems = useMemo(
+  const dropdownMenuItems = reactExports.useMemo(
     () => hiddenItems.map(
       (item) => ({
         ...item,
@@ -45,9 +46,9 @@ const Footer = ({
   );
   const shouldRenderLogo = view !== "clear" && Boolean(logo);
   const shouldRenderMenu = (menuItems?.length ?? 0) > 0;
-  return /* @__PURE__ */ jsxs("footer", { className: b({ desktop: true, "with-divider": withDivider, view }, className), children: [
-    shouldRenderMenu && /* @__PURE__ */ jsxs("div", { className: b("menu", { measured }), ref: menuContainerRef, children: [
-      visibleItems.length > 0 && /* @__PURE__ */ jsx(Menu, { className: b("list"), children: visibleItems.map((item, index) => /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("footer", { className: b({ desktop: true, "with-divider": withDivider, view }, className), children: [
+    shouldRenderMenu && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b("menu", { measured }), ref: menuContainerRef, children: [
+      visibleItems.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(Menu, { className: b("list"), children: visibleItems.map((item, index) => /* @__PURE__ */ jsxRuntimeExports.jsx(
         MenuItem,
         {
           ...item,
@@ -55,8 +56,8 @@ const Footer = ({
         },
         index
       )) }),
-      dropdownMenuItems.length > 0 && /* @__PURE__ */ jsx(
-        DropdownMenu,
+      dropdownMenuItems.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(
+        DropdownMenuExport,
         {
           items: dropdownMenuItems,
           switcherWrapperClassName: b("more-button"),
@@ -66,9 +67,9 @@ const Footer = ({
         }
       )
     ] }),
-    /* @__PURE__ */ jsxs("div", { className: b("right"), children: [
-      /* @__PURE__ */ jsx("small", { className: b("copyright", { small: !menuItems?.length }), children: copyright }),
-      shouldRenderLogo && /* @__PURE__ */ jsx("div", { className: logoWrapperClassName, children: /* @__PURE__ */ jsx(Logo, { ...logo }) })
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b("right"), children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("small", { className: b("copyright", { small: !menuItems?.length }), children: copyright }),
+      shouldRenderLogo && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: logoWrapperClassName, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Logo, { ...logo }) })
     ] })
   ] });
 };

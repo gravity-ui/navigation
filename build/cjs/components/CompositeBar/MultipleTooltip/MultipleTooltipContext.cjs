@@ -2,8 +2,8 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('react/jsx-runtime');
-const React = require('react');
+const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
+const index = require('../../../node_modules/react/index.cjs');
 
 const multipleTooltipContextDefaults = {
   active: false,
@@ -13,10 +13,10 @@ const multipleTooltipContextDefaults = {
   setValue: () => {
   }
 };
-const MultipleTooltipContext = React.createContext(
+const MultipleTooltipContext = index.default.createContext(
   multipleTooltipContextDefaults
 );
-class MultipleTooltipProvider extends React.PureComponent {
+class MultipleTooltipProvider extends index.default.PureComponent {
   constructor() {
     super(...arguments);
     this.state = {
@@ -28,7 +28,7 @@ class MultipleTooltipProvider extends React.PureComponent {
   }
   render() {
     const { children } = this.props;
-    return /* @__PURE__ */ jsxRuntime.jsx(MultipleTooltipContext.Provider, { value: { ...this.state, setValue: this.setValue }, children });
+    return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(MultipleTooltipContext.Provider, { value: { ...this.state, setValue: this.setValue }, children });
   }
 }
 

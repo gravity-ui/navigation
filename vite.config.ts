@@ -40,14 +40,7 @@ export default defineConfig({
         },
         cssCodeSplit: true, // Включаем разделение CSS
         rollupOptions: {
-            external: [
-                'react',
-                'react-dom',
-                'react/jsx-runtime',
-                '@gravity-ui/uikit',
-                '@gravity-ui/icons',
-                /^node_modules\//,
-            ],
+            external: (id) => /^node_modules/.test(id),
             output: [
                 {
                     dir: `${outDir}/esm`,

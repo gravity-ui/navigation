@@ -2,10 +2,11 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('react/jsx-runtime');
-const uikit = require('@gravity-ui/uikit');
+const jsxRuntime = require('../../node_modules/react/jsx-runtime.cjs');
 const cn = require('../utils/cn.cjs');
 ;/* empty css            */
+const Button = require('../../node_modules/@gravity-ui/uikit/build/esm/components/Button/Button.cjs');
+const Icon = require('../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.cjs');
 
 const b = cn.block("logo");
 const Logo = ({
@@ -29,12 +30,12 @@ const Logo = ({
   const hasWrapper = typeof wrapper === "function";
   let buttonIcon;
   if (iconSrc) {
-    buttonIcon = /* @__PURE__ */ jsxRuntime.jsx(uikit.Button.Icon, { className: iconClassName, children: /* @__PURE__ */ jsxRuntime.jsx("img", { alt: "logo icon", src: iconSrc, width: iconSize, height: iconSize }) });
+    buttonIcon = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(Button.Button.Icon, { className: iconClassName, children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("img", { alt: "logo icon", src: iconSrc, width: iconSize, height: iconSize }) });
   } else if (icon) {
-    buttonIcon = /* @__PURE__ */ jsxRuntime.jsx(uikit.Icon, { data: icon, size: iconSize, className: iconClassName });
+    buttonIcon = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(Icon.Icon, { data: icon, size: iconSize, className: iconClassName });
   }
-  const button = /* @__PURE__ */ jsxRuntime.jsx(
-    uikit.Button,
+  const button = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+    Button.Button,
     {
       view: "flat",
       size: "l",
@@ -55,11 +56,11 @@ const Logo = ({
   if (typeof text === "function") {
     logo = text();
   } else {
-    logo = /* @__PURE__ */ jsxRuntime.jsx("div", { className: b("logo"), style: { fontSize: textSize }, children: text });
+    logo = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("logo"), style: { fontSize: textSize }, children: text });
   }
-  return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: b(null, className), children: [
-    /* @__PURE__ */ jsxRuntime.jsx("div", { className: b("logo-btn-place", buttonWrapperClassName), children: hasWrapper ? wrapper(button, Boolean(compact)) : button }),
-    !compact && (hasWrapper ? /* @__PURE__ */ jsxRuntime.jsx("div", { onClick, children: wrapper(logo, Boolean(compact)) }) : /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("div", { className: b(null, className), children: [
+    /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("logo-btn-place", buttonWrapperClassName), children: hasWrapper ? wrapper(button, Boolean(compact)) : button }),
+    !compact && (hasWrapper ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { onClick, children: wrapper(logo, Boolean(compact)) }) : /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
       "a",
       {
         href: href ?? "/",

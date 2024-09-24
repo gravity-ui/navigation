@@ -1,4 +1,4 @@
-import { jsx } from 'react/jsx-runtime';
+import { j as jsxRuntimeExports } from '../../node_modules/react/jsx-runtime.mjs';
 import { Item } from '../CompositeBar/Item/Item.mjs';
 import { ASIDE_HEADER_ICON_SIZE } from '../constants.mjs';
 import { block } from '../utils/cn.mjs';
@@ -6,7 +6,7 @@ import { block } from '../utils/cn.mjs';
 
 const b = block("footer-item");
 const FooterItem = ({ item, ...props }) => {
-  return /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
     Item,
     {
       ...props,

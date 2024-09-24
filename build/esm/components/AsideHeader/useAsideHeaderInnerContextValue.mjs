@@ -1,5 +1,5 @@
-import { jsx } from 'react/jsx-runtime';
-import React__default, { useState, useEffect, useCallback, useMemo } from 'react';
+import { j as jsxRuntimeExports } from '../../node_modules/react/jsx-runtime.mjs';
+import React, { r as reactExports } from '../../node_modules/react/index.mjs';
 import { InnerPanels } from './types.mjs';
 import { getAllPagesMenuItem } from '../AllPagesPanel/constants.mjs';
 import { AllPagesPanel } from '../AllPagesPanel/AllPagesPanel.mjs';
@@ -7,21 +7,21 @@ import { AllPagesPanel } from '../AllPagesPanel/AllPagesPanel.mjs';
 const EMPTY_MENU_ITEMS = [];
 const useAsideHeaderInnerContextValue = (props) => {
   const { size, onClosePanel, menuItems, panelItems, onMenuItemsChanged } = props;
-  const [innerVisiblePanel, setInnerVisiblePanel] = useState();
-  const ALL_PAGES_MENU_ITEM = React__default.useMemo(() => {
+  const [innerVisiblePanel, setInnerVisiblePanel] = reactExports.useState();
+  const ALL_PAGES_MENU_ITEM = React.useMemo(() => {
     return getAllPagesMenuItem();
   }, []);
   const allPagesIsAvailable = Boolean(onMenuItemsChanged) && (!menuItems || menuItems?.length > 0);
-  useEffect(() => {
+  reactExports.useEffect(() => {
     if (panelItems?.some((x) => x.visible)) {
       setInnerVisiblePanel(void 0);
     }
   }, [panelItems]);
-  const innerOnClosePanel = useCallback(() => {
+  const innerOnClosePanel = reactExports.useCallback(() => {
     setInnerVisiblePanel(void 0);
     onClosePanel?.();
   }, [onClosePanel]);
-  const onItemClick = useCallback(
+  const onItemClick = reactExports.useCallback(
     (item, collapsed, event) => {
       if (item.id === ALL_PAGES_MENU_ITEM.id) {
         onClosePanel?.();
@@ -35,7 +35,7 @@ const useAsideHeaderInnerContextValue = (props) => {
     },
     [innerOnClosePanel, ALL_PAGES_MENU_ITEM, onClosePanel]
   );
-  const innerMenuItems = useMemo(
+  const innerMenuItems = reactExports.useMemo(
     () => allPagesIsAvailable ? [
       ...menuItems || EMPTY_MENU_ITEMS,
       {
@@ -45,7 +45,7 @@ const useAsideHeaderInnerContextValue = (props) => {
     ] : menuItems || EMPTY_MENU_ITEMS,
     [allPagesIsAvailable, menuItems, innerVisiblePanel, ALL_PAGES_MENU_ITEM]
   );
-  const innerPanelItems = useMemo(() => {
+  const innerPanelItems = reactExports.useMemo(() => {
     if (!allPagesIsAvailable) {
       return panelItems;
     }
@@ -53,7 +53,7 @@ const useAsideHeaderInnerContextValue = (props) => {
       ...panelItems || [],
       {
         id: InnerPanels.AllPages,
-        content: /* @__PURE__ */ jsx(AllPagesPanel, {}),
+        content: /* @__PURE__ */ jsxRuntimeExports.jsx(AllPagesPanel, {}),
         visible: innerVisiblePanel === InnerPanels.AllPages
       }
     ];

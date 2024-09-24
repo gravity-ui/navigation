@@ -2,20 +2,20 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('react/jsx-runtime');
-const React = require('react');
-const uikit = require('@gravity-ui/uikit');
+const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
+const index = require('../../../node_modules/react/index.cjs');
 const useAsideHeaderTopPanel = require('../useAsideHeaderTopPanel.cjs');
 const utils = require('../utils.cjs');
+const Alert = require('../../../node_modules/@gravity-ui/uikit/build/esm/components/Alert/Alert.cjs');
 
 const TopPanel = ({ topAlert }) => {
   const { topRef, updateTopSize } = useAsideHeaderTopPanel.useAsideHeaderTopPanel({ topAlert });
-  const [opened, setOpened] = React.useState(true);
-  const handleClose = React.useCallback(() => {
+  const [opened, setOpened] = index.default.useState(true);
+  const handleClose = index.default.useCallback(() => {
     setOpened(false);
     topAlert?.onCloseTopAlert?.();
   }, [topAlert]);
-  React.useEffect(() => {
+  index.default.useEffect(() => {
     if (!opened) {
       updateTopSize();
     }
@@ -23,9 +23,9 @@ const TopPanel = ({ topAlert }) => {
   if (!topAlert || !topAlert.message) {
     return null;
   }
-  return /* @__PURE__ */ jsxRuntime.jsx("div", { ref: topRef, className: utils.b("pane-top", { opened }), children: opened && /* @__PURE__ */ jsxRuntime.jsxs(React.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntime.jsx(
-      uikit.Alert,
+  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { ref: topRef, className: utils.b("pane-top", { opened }), children: opened && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(index.default.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+      Alert.Alert,
       {
         className: utils.b("pane-top-alert", {
           centered: topAlert.centered,
@@ -42,7 +42,7 @@ const TopPanel = ({ topAlert }) => {
         onClose: topAlert.closable ? handleClose : void 0
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx("div", { className: utils.b("pane-top-divider") })
+    /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: utils.b("pane-top-divider") })
   ] }) });
 };
 

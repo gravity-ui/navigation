@@ -2,14 +2,15 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('react/jsx-runtime');
-const React = require('react');
-const uikit = require('@gravity-ui/uikit');
+const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
+const index = require('../../../node_modules/react/index.cjs');
 const cn = require('../../utils/cn.cjs');
 const MenuItem = require('../MenuItem/MenuItem.cjs');
 const moreItemsPopupProps = require('./constants/moreItemsPopupProps.cjs');
 ;/* empty css              */
 const useOverflowingHorizontalListItems = require('../../../hooks/useOverflowingHorizontalListItems/useOverflowingHorizontalListItems.cjs');
+const Menu = require('../../../node_modules/@gravity-ui/uikit/build/esm/components/Menu/Menu.cjs');
+const DropdownMenu = require('../../../node_modules/@gravity-ui/uikit/build/esm/components/DropdownMenu/DropdownMenu.cjs');
 const Logo = require('../../Logo/Logo.cjs');
 
 const b = cn.block("footer");
@@ -24,7 +25,7 @@ const Footer = ({
   logoWrapperClassName,
   copyright
 }) => {
-  const menuContainerRef = React.useRef(null);
+  const menuContainerRef = index.reactExports.useRef(null);
   const menuItems = view === "clear" ? void 0 : providedMenuItems;
   const { visibleItems, hiddenItems, measured } = useOverflowingHorizontalListItems.useOverflowingHorizontalListItems({
     containerRef: menuContainerRef,
@@ -32,13 +33,13 @@ const Footer = ({
     itemSelector: `.${b("menu-item")}`,
     moreButtonWidth: 28
   });
-  const moreButtonProps = React.useMemo(
+  const moreButtonProps = index.reactExports.useMemo(
     () => ({
       title: moreButtonTitle
     }),
     [moreButtonTitle]
   );
-  const dropdownMenuItems = React.useMemo(
+  const dropdownMenuItems = index.reactExports.useMemo(
     () => hiddenItems.map(
       (item) => ({
         ...item,
@@ -49,9 +50,9 @@ const Footer = ({
   );
   const shouldRenderLogo = view !== "clear" && Boolean(logo);
   const shouldRenderMenu = (menuItems?.length ?? 0) > 0;
-  return /* @__PURE__ */ jsxRuntime.jsxs("footer", { className: b({ desktop: true, "with-divider": withDivider, view }, className), children: [
-    shouldRenderMenu && /* @__PURE__ */ jsxRuntime.jsxs("div", { className: b("menu", { measured }), ref: menuContainerRef, children: [
-      visibleItems.length > 0 && /* @__PURE__ */ jsxRuntime.jsx(uikit.Menu, { className: b("list"), children: visibleItems.map((item, index) => /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("footer", { className: b({ desktop: true, "with-divider": withDivider, view }, className), children: [
+    shouldRenderMenu && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("div", { className: b("menu", { measured }), ref: menuContainerRef, children: [
+      visibleItems.length > 0 && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(Menu.Menu, { className: b("list"), children: visibleItems.map((item, index) => /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
         MenuItem.MenuItem,
         {
           ...item,
@@ -59,8 +60,8 @@ const Footer = ({
         },
         index
       )) }),
-      dropdownMenuItems.length > 0 && /* @__PURE__ */ jsxRuntime.jsx(
-        uikit.DropdownMenu,
+      dropdownMenuItems.length > 0 && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+        DropdownMenu.DropdownMenu,
         {
           items: dropdownMenuItems,
           switcherWrapperClassName: b("more-button"),
@@ -70,9 +71,9 @@ const Footer = ({
         }
       )
     ] }),
-    /* @__PURE__ */ jsxRuntime.jsxs("div", { className: b("right"), children: [
-      /* @__PURE__ */ jsxRuntime.jsx("small", { className: b("copyright", { small: !menuItems?.length }), children: copyright }),
-      shouldRenderLogo && /* @__PURE__ */ jsxRuntime.jsx("div", { className: logoWrapperClassName, children: /* @__PURE__ */ jsxRuntime.jsx(Logo.Logo, { ...logo }) })
+    /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("div", { className: b("right"), children: [
+      /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("small", { className: b("copyright", { small: !menuItems?.length }), children: copyright }),
+      shouldRenderLogo && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: logoWrapperClassName, children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(Logo.Logo, { ...logo }) })
     ] })
   ] });
 };

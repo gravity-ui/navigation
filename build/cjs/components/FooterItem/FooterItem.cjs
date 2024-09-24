@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('react/jsx-runtime');
+const jsxRuntime = require('../../node_modules/react/jsx-runtime.cjs');
 const Item = require('../CompositeBar/Item/Item.cjs');
 const constants = require('../constants.cjs');
 const cn = require('../utils/cn.cjs');
@@ -10,7 +10,7 @@ const cn = require('../utils/cn.cjs');
 
 const b = cn.block("footer-item");
 const FooterItem = ({ item, ...props }) => {
-  return /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
     Item.Item,
     {
       ...props,

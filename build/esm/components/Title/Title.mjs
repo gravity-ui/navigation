@@ -1,9 +1,11 @@
-import { jsxs, jsx } from 'react/jsx-runtime';
-import { Xmark } from '@gravity-ui/icons';
-import { Text, Button, Icon } from '@gravity-ui/uikit';
+import { j as jsxRuntimeExports } from '../../node_modules/react/jsx-runtime.mjs';
 import { block } from '../utils/cn.mjs';
 import i18n from './i18n/index.mjs';
 /* empty css            */
+import Xmark from '../../node_modules/@gravity-ui/icons/esm/Xmark.mjs';
+import { Text } from '../../node_modules/@gravity-ui/uikit/build/esm/components/Text/Text.mjs';
+import { Button } from '../../node_modules/@gravity-ui/uikit/build/esm/components/Button/Button.mjs';
+import { Icon } from '../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.mjs';
 
 const b = block("title");
 const Title = ({
@@ -13,9 +15,9 @@ const Title = ({
   closeTitle = i18n("button_close"),
   onClose
 }) => {
-  return /* @__PURE__ */ jsxs("div", { className: b({ separator: hasSeparator }), children: [
-    /* @__PURE__ */ jsx(Text, { className: b("text"), as: "h3", variant: "subheader-3", children }),
-    onClose && /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b({ separator: hasSeparator }), children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Text, { className: b("text"), as: "h3", variant: "subheader-3", children }),
+    onClose && /* @__PURE__ */ jsxRuntimeExports.jsx(
       Button,
       {
         onClick: onClose,
@@ -24,7 +26,7 @@ const Title = ({
         extraProps: {
           "aria-label": closeTitle
         },
-        children: /* @__PURE__ */ jsx(Icon, { data: Xmark, size: closeIconSize })
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Icon, { data: Xmark, size: closeIconSize })
       }
     )
   ] });

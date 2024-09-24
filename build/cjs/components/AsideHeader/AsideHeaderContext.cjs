@@ -2,29 +2,29 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const React = require('react');
+const index = require('../../node_modules/react/index.cjs');
 
-const AsideHeaderInnerContext = React.createContext(
+const AsideHeaderInnerContext = index.default.createContext(
   void 0
 );
 AsideHeaderInnerContext.displayName = "AsideHeaderInnerContext";
 const AsideHeaderInnerContextProvider = AsideHeaderInnerContext.Provider;
 const useAsideHeaderInnerContext = () => {
-  const contextValue = React.useContext(AsideHeaderInnerContext);
+  const contextValue = index.default.useContext(AsideHeaderInnerContext);
   if (contextValue === void 0) {
     throw new Error(`AsideHeaderInnerContext is not initialized.
         Please check if you wrapped your component with AsideHeaderInnerContext.Provider`);
   }
   return contextValue;
 };
-const AsideHeaderContext = React.createContext({
+const AsideHeaderContext = index.default.createContext({
   compact: false,
   size: 0
 });
 AsideHeaderContext.displayName = "AsideHeaderContext";
 const AsideHeaderContextProvider = AsideHeaderContext.Provider;
 const useAsideHeaderContext = () => {
-  const contextValue = React.useContext(AsideHeaderContext);
+  const contextValue = index.default.useContext(AsideHeaderContext);
   if (contextValue === void 0) {
     throw new Error(`AsideHeaderContext is not initialized.
         Please check if you wrapped your component with AsideHeader

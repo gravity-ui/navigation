@@ -1,8 +1,8 @@
-import React__default from 'react';
+import React from '../node_modules/react/index.mjs';
 
 const useForwardRef = (ref, initialValue = null) => {
-  const targetRef = React__default.useRef(initialValue);
-  React__default.useEffect(() => {
+  const targetRef = React.useRef(initialValue);
+  React.useEffect(() => {
     if (!ref) return;
     if (typeof ref === "function") {
       ref(targetRef.current);

@@ -1,18 +1,18 @@
-import { jsx, jsxs } from 'react/jsx-runtime';
-import { Icon } from '@gravity-ui/uikit';
+import { j as jsxRuntimeExports } from '../../../../node_modules/react/jsx-runtime.mjs';
 import { ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT, ITEM_HEIGHT } from '../../../constants.mjs';
 import { useAsideHeaderContext } from '../../AsideHeaderContext.mjs';
 import { b } from '../../utils.mjs';
 import headerDividerCollapsedIcon from '../../../../assets/icons/divider-collapsed.svg.mjs';
+import { Icon } from '../../../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.mjs';
 
 const AsideFallback = ({ headerDecoration, subheaderItemsCount = 0, qa }) => {
   const { compact } = useAsideHeaderContext();
   const widthVar = compact ? "--gn-aside-header-min-width" : "--gn-aside-header-size";
   const subheaderHeight = (1 + subheaderItemsCount) * ITEM_HEIGHT;
-  return /* @__PURE__ */ jsx("div", { className: b("aside"), style: { width: `var(${widthVar})` }, "data-qa": qa, children: /* @__PURE__ */ jsxs("div", { className: b("aside-content", { "with-decoration": headerDecoration }), children: [
-    /* @__PURE__ */ jsxs("div", { className: b("header", { "with-decoration": headerDecoration }), children: [
-      /* @__PURE__ */ jsx("div", { style: { height: subheaderHeight } }),
-      compact ? /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("aside"), style: { width: `var(${widthVar})` }, "data-qa": qa, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b("aside-content", { "with-decoration": headerDecoration }), children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b("header", { "with-decoration": headerDecoration }), children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: subheaderHeight } }),
+      compact ? /* @__PURE__ */ jsxRuntimeExports.jsx(
         Icon,
         {
           data: headerDividerCollapsedIcon,
@@ -22,7 +22,7 @@ const AsideFallback = ({ headerDecoration, subheaderItemsCount = 0, qa }) => {
         }
       ) : null
     ] }),
-    /* @__PURE__ */ jsx("div", { style: { flex: 1 } })
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { flex: 1 } })
   ] }) });
 };
 

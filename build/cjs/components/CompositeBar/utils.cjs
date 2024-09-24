@@ -2,9 +2,9 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const icons = require('@gravity-ui/icons');
 const constants = require('../constants.cjs');
 const constants$1 = require('./constants.cjs');
+const Ellipsis = require('../../node_modules/@gravity-ui/icons/esm/Ellipsis.cjs');
 
 function getItemHeight(item) {
   if (!isMenuItem(item)) {
@@ -48,7 +48,7 @@ function getMoreButtonItem(menuMoreTitle) {
   return {
     id: constants$1.COLLAPSE_ITEM_ID,
     title: menuMoreTitle,
-    icon: icons.Ellipsis,
+    icon: Ellipsis.default,
     iconSize: 18
   };
 }

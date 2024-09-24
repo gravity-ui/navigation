@@ -2,26 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const React = require('react');
-
-function _interopNamespaceDefault(e) {
-    const n = Object.create(null, { [Symbol.toStringTag]: { value: 'Module' } });
-    if (e) {
-        for (const k in e) {
-            if (k !== 'default') {
-                const d = Object.getOwnPropertyDescriptor(e, k);
-                Object.defineProperty(n, k, d.get ? d : {
-                    enumerable: true,
-                    get: () => e[k]
-                });
-            }
-        }
-    }
-    n.default = e;
-    return Object.freeze(n);
-}
-
-const React__namespace = /*#__PURE__*/_interopNamespaceDefault(React);
+const index = require('../../node_modules/react/index.cjs');
 
 const DRAWER_ITEM_MIN_RESIZE_WIDTH = 200;
 const DRAWER_ITEM_MAX_RESIZE_WIDTH = 800;
@@ -30,9 +11,9 @@ function getEventClientX(e) {
   return "touches" in e ? e.touches[0]?.clientX ?? 0 : e.clientX;
 }
 function useResizeHandlers({ onStart, onMove, onEnd }) {
-  const initialXPosition = React__namespace.useRef(0);
-  const currentXPosition = React__namespace.useRef(0);
-  const handleMove = React__namespace.useCallback(
+  const initialXPosition = index.reactExports.useRef(0);
+  const currentXPosition = index.reactExports.useRef(0);
+  const handleMove = index.reactExports.useCallback(
     (e) => {
       const currentX = getEventClientX(e);
       if (currentXPosition.current === currentX) {
@@ -44,7 +25,7 @@ function useResizeHandlers({ onStart, onMove, onEnd }) {
     },
     [onMove]
   );
-  const handleEnd = React__namespace.useCallback(
+  const handleEnd = index.reactExports.useCallback(
     (e) => {
       window.removeEventListener("mousemove", handleMove);
       window.removeEventListener("touchmove", handleMove);
@@ -57,7 +38,7 @@ function useResizeHandlers({ onStart, onMove, onEnd }) {
     },
     [handleMove, onEnd]
   );
-  const handleStart = React__namespace.useCallback(
+  const handleStart = index.reactExports.useCallback(
     (e) => {
       const currentX = getEventClientX(e);
       initialXPosition.current = currentX;
@@ -87,16 +68,16 @@ function useResizableDrawerItem(params) {
     maxResizeWidth = DRAWER_ITEM_MAX_RESIZE_WIDTH,
     onResize
   } = params;
-  const [isResizing, setIsResizing] = React__namespace.useState(false);
-  const [resizeDelta, setResizeDelta] = React__namespace.useState(0);
-  const [internalWidth, setInternalWidth] = React__namespace.useState(
+  const [isResizing, setIsResizing] = index.reactExports.useState(false);
+  const [resizeDelta, setResizeDelta] = index.reactExports.useState(0);
+  const [internalWidth, setInternalWidth] = index.reactExports.useState(
     width ?? DRAWER_ITEM_INITIAL_RESIZE_WIDTH
   );
-  const getClampedWidth = React__namespace.useCallback(
+  const getClampedWidth = index.reactExports.useCallback(
     (width2) => Math.min(Math.max(width2, minResizeWidth), maxResizeWidth),
     [minResizeWidth, maxResizeWidth]
   );
-  const getResizedWidth = React__namespace.useCallback(
+  const getResizedWidth = index.reactExports.useCallback(
     (delta) => {
       const signedDelta = direction === "right" ? delta : -delta;
       const newWidth = (width ?? internalWidth) + signedDelta;
@@ -104,14 +85,14 @@ function useResizableDrawerItem(params) {
     },
     [width, internalWidth, direction, getClampedWidth]
   );
-  const onStart = React__namespace.useCallback(() => {
+  const onStart = index.reactExports.useCallback(() => {
     setIsResizing(true);
     setResizeDelta(0);
   }, [setIsResizing, setResizeDelta]);
-  const onMove = React__namespace.useCallback((delta) => {
+  const onMove = index.reactExports.useCallback((delta) => {
     setResizeDelta(delta);
   }, []);
-  const onEnd = React__namespace.useCallback(
+  const onEnd = index.reactExports.useCallback(
     (delta) => {
       const newWidth = getResizedWidth(delta);
       setIsResizing(false);

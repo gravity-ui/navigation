@@ -1,15 +1,17 @@
-import { jsx, jsxs } from 'react/jsx-runtime';
-import React__default from 'react';
-import { useForkRef, useBodyScrollLock, Portal } from '@gravity-ui/uikit';
+import { j as jsxRuntimeExports } from '../../node_modules/react/jsx-runtime.mjs';
+import React from '../../node_modules/react/index.mjs';
 import { block } from '../utils/cn.mjs';
 import { useResizableDrawerItem } from './utils.mjs';
 /* empty css             */
 import CSSTransition from '../../node_modules/react-transition-group/esm/CSSTransition.mjs';
 import Transition from '../../node_modules/react-transition-group/esm/Transition.mjs';
+import { useForkRef } from '../../node_modules/@gravity-ui/uikit/build/esm/hooks/useForkRef/useForkRef.mjs';
+import { useBodyScrollLock } from '../../node_modules/@gravity-ui/uikit/build/esm/hooks/useBodyScrollLock/useBodyScrollLock.mjs';
+import { Portal } from '../../node_modules/@gravity-ui/uikit/build/esm/components/Portal/Portal.mjs';
 
 const b = block("drawer");
 const TIMEOUT = 300;
-const DrawerItem = React__default.forwardRef(
+const DrawerItem = React.forwardRef(
   function DrawerItem2(props, ref) {
     const {
       visible,
@@ -23,7 +25,7 @@ const DrawerItem = React__default.forwardRef(
       maxResizeWidth,
       onResize
     } = props;
-    const itemRef = React__default.useRef(null);
+    const itemRef = React.useRef(null);
     const handleRef = useForkRef(ref, itemRef);
     const cssDirection = direction === "left" ? void 0 : direction;
     const { resizedWidth, resizerHandlers } = useResizableDrawerItem({
@@ -33,8 +35,8 @@ const DrawerItem = React__default.forwardRef(
       maxResizeWidth,
       onResize
     });
-    const resizerElement = resizable ? /* @__PURE__ */ jsx("div", { className: b("resizer", { direction }), ...resizerHandlers, children: /* @__PURE__ */ jsx("div", { className: b("resizer-handle") }) }) : null;
-    return /* @__PURE__ */ jsx(
+    const resizerElement = resizable ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("resizer", { direction }), ...resizerHandlers, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("resizer-handle") }) }) : null;
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
       CSSTransition,
       {
         in: visible,
@@ -42,7 +44,7 @@ const DrawerItem = React__default.forwardRef(
         unmountOnExit: true,
         classNames: b("item-transition", { direction: cssDirection }),
         nodeRef: itemRef,
-        children: /* @__PURE__ */ jsxs(
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "div",
           {
             ref: handleRef,
@@ -70,15 +72,15 @@ const Drawer = ({
   disablePortal = true
 }) => {
   let someItemVisible = false;
-  React__default.Children.forEach(children, (child) => {
-    if (React__default.isValidElement(child) && child.type === DrawerItem) {
+  React.Children.forEach(children, (child) => {
+    if (React.isValidElement(child) && child.type === DrawerItem) {
       const childVisible = Boolean(child.props.visible);
       if (childVisible) {
         someItemVisible = true;
       }
     }
   });
-  React__default.useEffect(() => {
+  React.useEffect(() => {
     function onKeyDown(event) {
       if (event.key === "Escape") {
         onEscape?.();
@@ -92,9 +94,9 @@ const Drawer = ({
     };
   }, [onEscape, someItemVisible]);
   useBodyScrollLock({ enabled: preventScrollBody && someItemVisible });
-  const containerRef = React__default.useRef(null);
-  const veilRef = React__default.useRef(null);
-  const drawer = /* @__PURE__ */ jsx(
+  const containerRef = React.useRef(null);
+  const veilRef = React.useRef(null);
+  const drawer = /* @__PURE__ */ jsxRuntimeExports.jsx(
     Transition,
     {
       in: someItemVisible,
@@ -104,8 +106,8 @@ const Drawer = ({
       nodeRef: containerRef,
       children: (state) => {
         const childrenVisible = someItemVisible && state === "entered";
-        return /* @__PURE__ */ jsxs("div", { ref: containerRef, className: b({ hideVeil }, className), style, children: [
-          /* @__PURE__ */ jsx(
+        return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { ref: containerRef, className: b({ hideVeil }, className), style, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
             CSSTransition,
             {
               in: childrenVisible,
@@ -113,7 +115,7 @@ const Drawer = ({
               unmountOnExit: true,
               classNames: b("veil-transition"),
               nodeRef: veilRef,
-              children: /* @__PURE__ */ jsx(
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "div",
                 {
                   ref: veilRef,
@@ -123,10 +125,10 @@ const Drawer = ({
               )
             }
           ),
-          React__default.Children.map(children, (child) => {
-            if (React__default.isValidElement(child) && child.type === DrawerItem) {
+          React.Children.map(children, (child) => {
+            if (React.isValidElement(child) && child.type === DrawerItem) {
               const childVisible = Boolean(child.props.visible);
-              return React__default.cloneElement(child, {
+              return React.cloneElement(child, {
                 ...child.props,
                 visible: childVisible && childrenVisible
               });
@@ -140,7 +142,7 @@ const Drawer = ({
   if (disablePortal) {
     return drawer;
   }
-  return /* @__PURE__ */ jsx(Portal, { children: drawer });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Portal, { children: drawer });
 };
 
 export { Drawer, DrawerItem };

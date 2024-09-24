@@ -1,19 +1,19 @@
-import { jsx, jsxs } from 'react/jsx-runtime';
-import React__default from 'react';
-import { Icon } from '@gravity-ui/uikit';
+import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
+import React from '../../../node_modules/react/index.mjs';
 import { block } from '../../utils/cn.mjs';
 import { useStableCallback, useCurrent } from '../helpers.mjs';
 /* empty css                   */
+import { Icon } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.mjs';
 
 const b = block("settings-menu");
-const SettingsMenu = React__default.forwardRef(
+const SettingsMenu = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
   function SettingsMenu2({ items, onChange, activeItemId }, ref) {
-    const [focusItemId, setFocusId] = React__default.useState();
-    const containerRef = React__default.useRef(null);
+    const [focusItemId, setFocusId] = React.useState();
+    const containerRef = React.useRef(null);
     const handleChange = useStableCallback(onChange);
     const getFocused = useCurrent(focusItemId);
-    React__default.useImperativeHandle(
+    React.useImperativeHandle(
       ref,
       () => ({
         handleKeyDown(event) {
@@ -39,10 +39,10 @@ const SettingsMenu = React__default.forwardRef(
       }),
       [getFocused, handleChange]
     );
-    return /* @__PURE__ */ jsx("div", { ref: containerRef, className: b(), children: items.map((firstLevelItem) => {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { ref: containerRef, className: b(), children: items.map((firstLevelItem) => {
       if ("groupTitle" in firstLevelItem) {
-        return /* @__PURE__ */ jsxs("div", { className: b("group"), children: [
-          /* @__PURE__ */ jsx("span", { className: b("group-heading"), children: firstLevelItem.groupTitle }),
+        return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b("group"), children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: b("group-heading"), children: firstLevelItem.groupTitle }),
           firstLevelItem.items.map((item) => {
             return renderMenuItem(
               item,
@@ -58,7 +58,7 @@ const SettingsMenu = React__default.forwardRef(
   }
 );
 function renderMenuItem(item, onChange, activeItemId, focusItemId) {
-  return /* @__PURE__ */ jsxs(
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "span",
     {
       className: b("item", {
@@ -74,8 +74,8 @@ function renderMenuItem(item, onChange, activeItemId, focusItemId) {
       },
       "data-id": item.id,
       children: [
-        item.icon ? /* @__PURE__ */ jsx(Icon, { size: 16, ...item.icon, className: b("item-icon") }) : void 0,
-        /* @__PURE__ */ jsx("span", { children: item.title })
+        item.icon ? /* @__PURE__ */ jsxRuntimeExports.jsx(Icon, { size: 16, ...item.icon, className: b("item-icon") }) : void 0,
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: item.title })
       ]
     },
     item.title

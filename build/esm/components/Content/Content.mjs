@@ -1,8 +1,8 @@
-import { jsx } from 'react/jsx-runtime';
-import React__default from 'react';
+import { j as jsxRuntimeExports } from '../../node_modules/react/jsx-runtime.mjs';
+import React from '../../node_modules/react/index.mjs';
 
-const RenderContent = React__default.memo(({ renderContent, size }) => {
-  return /* @__PURE__ */ jsx(React__default.Fragment, { children: renderContent({ size }) });
+const RenderContent = React.memo(({ renderContent, size }) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(React.Fragment, { children: renderContent({ size }) });
 });
 RenderContent.displayName = "RenderContent";
 const Content = ({
@@ -13,12 +13,12 @@ const Content = ({
   renderContent,
   children
 }) => {
-  return /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "div",
     {
       className,
       style: { ...{ [cssSizeVariableName]: `${size}px` } },
-      children: typeof renderContent === "function" ? /* @__PURE__ */ jsx(RenderContent, { size, renderContent }) : children
+      children: typeof renderContent === "function" ? /* @__PURE__ */ jsxRuntimeExports.jsx(RenderContent, { size, renderContent }) : children
     }
   );
 };

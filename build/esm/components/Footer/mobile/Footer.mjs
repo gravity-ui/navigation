@@ -1,12 +1,15 @@
-import { jsxs, Fragment, jsx } from 'react/jsx-runtime';
-import { useState, useRef, useCallback } from 'react';
-import { Ellipsis } from '@gravity-ui/icons';
-import { Button, Icon, Sheet, Menu } from '@gravity-ui/uikit';
+import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
+import { r as reactExports } from '../../../node_modules/react/index.mjs';
 import { block } from '../../utils/cn.mjs';
 import { MenuItem } from '../MenuItem/MenuItem.mjs';
 /* empty css             */
+import Ellipsis from '../../../node_modules/@gravity-ui/icons/esm/Ellipsis.mjs';
 import { useOverflowingHorizontalListItems } from '../../../hooks/useOverflowingHorizontalListItems/useOverflowingHorizontalListItems.mjs';
+import { Button } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/Button/Button.mjs';
+import { Icon } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.mjs';
+import { Sheet } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/Sheet/Sheet.mjs';
 import { Logo } from '../../Logo/Logo.mjs';
+import { Menu } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/Menu/Menu.mjs';
 
 const b = block("footer");
 const modalId = "footer-more-items";
@@ -21,16 +24,16 @@ const MobileFooter = ({
   logoWrapperClassName,
   copyright
 }) => {
-  const [moreItemsMenuVisible, setMoreItemsMenuVisible] = useState(false);
-  const menuContainerRef = useRef(null);
-  const handleOpenMoreItemsMenu = useCallback(
+  const [moreItemsMenuVisible, setMoreItemsMenuVisible] = reactExports.useState(false);
+  const menuContainerRef = reactExports.useRef(null);
+  const handleOpenMoreItemsMenu = reactExports.useCallback(
     (event) => {
       setMoreItemsMenuVisible(true);
       onMoreButtonClick?.(event);
     },
     [onMoreButtonClick]
   );
-  const handleCloseMoreItemsMenu = useCallback(() => {
+  const handleCloseMoreItemsMenu = reactExports.useCallback(() => {
     setMoreItemsMenuVisible(false);
   }, []);
   const menuItems = view === "clear" ? void 0 : providedMenuItems;
@@ -40,23 +43,23 @@ const MobileFooter = ({
     itemSelector: `.${b("menu-item")}`,
     moreButtonWidth: 28
   });
-  const renderMenu = (items) => /* @__PURE__ */ jsx(Menu, { className: b("list"), children: items.map((item, index) => /* @__PURE__ */ jsx(MenuItem, { ...item, className: b("menu-item", item.className) }, index)) });
+  const renderMenu = (items) => /* @__PURE__ */ jsxRuntimeExports.jsx(Menu, { className: b("list"), children: items.map((item, index) => /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { ...item, className: b("menu-item", item.className) }, index)) });
   const shouldRenderLogo = view !== "clear" && Boolean(logo);
-  return /* @__PURE__ */ jsxs("footer", { className: b({ mobile: true, "with-divider": withDivider, view }, className), children: [
-    /* @__PURE__ */ jsxs("div", { className: b("menu", { measured }), ref: menuContainerRef, children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("footer", { className: b({ mobile: true, "with-divider": withDivider, view }, className), children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b("menu", { measured }), ref: menuContainerRef, children: [
       visibleItems.length > 0 && renderMenu(visibleItems),
-      hiddenItems.length > 0 && /* @__PURE__ */ jsxs(Fragment, { children: [
-        /* @__PURE__ */ jsx(
+      hiddenItems.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
           Button,
           {
             view: "flat-secondary",
             size: "l",
             onClick: handleOpenMoreItemsMenu,
             title: moreButtonTitle,
-            children: /* @__PURE__ */ jsx(Icon, { data: Ellipsis, size: 16 })
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Icon, { data: Ellipsis, size: 16 })
           }
         ),
-        /* @__PURE__ */ jsx(
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
           Sheet,
           {
             id: modalId,
@@ -69,9 +72,9 @@ const MobileFooter = ({
         )
       ] })
     ] }),
-    /* @__PURE__ */ jsxs("div", { className: b("bottom-row"), children: [
-      /* @__PURE__ */ jsx("small", { className: b("copyright"), children: copyright }),
-      shouldRenderLogo && /* @__PURE__ */ jsx("div", { className: logoWrapperClassName, children: /* @__PURE__ */ jsx(Logo, { ...logo }) })
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b("bottom-row"), children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("small", { className: b("copyright"), children: copyright }),
+      shouldRenderLogo && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: logoWrapperClassName, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Logo, { ...logo }) })
     ] })
   ] });
 };

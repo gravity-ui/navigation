@@ -1,9 +1,9 @@
-import { useMemo } from 'react';
+import { r as reactExports } from '../../node_modules/react/index.mjs';
 import { ALL_PAGES_ID } from './constants.mjs';
 import i18n from './i18n/index.mjs';
 
 const useGroupedMenuItems = (items) => {
-  const allPagesMenuItems = useMemo(() => {
+  const allPagesMenuItems = reactExports.useMemo(() => {
     const filteredItems = items.filter(
       (item) => item.type !== "divider" && item.id !== ALL_PAGES_ID
     );

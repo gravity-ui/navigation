@@ -2,11 +2,11 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('react/jsx-runtime');
-const React = require('react');
-const uikit = require('@gravity-ui/uikit');
+const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
+const index = require('../../../node_modules/react/index.cjs');
 const cn = require('../../utils/cn.cjs');
 ;/* empty css                          */
+const Tabs = require('../../../node_modules/@gravity-ui/uikit/build/esm/components/Tabs/Tabs.cjs');
 
 const b = cn.block("settings-menu-mobile");
 const SettingsMenuMobile = ({
@@ -15,8 +15,8 @@ const SettingsMenuMobile = ({
   activeItemId,
   className
 }) => {
-  const ref = React.useRef(null);
-  const tabItems = React.useMemo(() => {
+  const ref = index.default.useRef(null);
+  const tabItems = index.default.useMemo(() => {
     const tabItems2 = [];
     items.forEach((firstLevelItem) => {
       if ("groupTitle" in firstLevelItem) {
@@ -38,8 +38,8 @@ const SettingsMenuMobile = ({
   const handleTouchMove = (e) => {
     e.stopPropagation();
   };
-  return /* @__PURE__ */ jsxRuntime.jsx("div", { ref, onTouchMove: handleTouchMove, children: /* @__PURE__ */ jsxRuntime.jsx(
-    uikit.Tabs,
+  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { ref, onTouchMove: handleTouchMove, children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+    Tabs.Tabs,
     {
       items: tabItems,
       className: b(null, className),

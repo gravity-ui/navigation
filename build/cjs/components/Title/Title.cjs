@@ -2,12 +2,14 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('react/jsx-runtime');
-const icons = require('@gravity-ui/icons');
-const uikit = require('@gravity-ui/uikit');
+const jsxRuntime = require('../../node_modules/react/jsx-runtime.cjs');
 const cn = require('../utils/cn.cjs');
 const index = require('./i18n/index.cjs');
 ;/* empty css             */
+const Xmark = require('../../node_modules/@gravity-ui/icons/esm/Xmark.cjs');
+const Text = require('../../node_modules/@gravity-ui/uikit/build/esm/components/Text/Text.cjs');
+const Button = require('../../node_modules/@gravity-ui/uikit/build/esm/components/Button/Button.cjs');
+const Icon = require('../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.cjs');
 
 const b = cn.block("title");
 const Title = ({
@@ -17,10 +19,10 @@ const Title = ({
   closeTitle = index.default("button_close"),
   onClose
 }) => {
-  return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: b({ separator: hasSeparator }), children: [
-    /* @__PURE__ */ jsxRuntime.jsx(uikit.Text, { className: b("text"), as: "h3", variant: "subheader-3", children }),
-    onClose && /* @__PURE__ */ jsxRuntime.jsx(
-      uikit.Button,
+  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("div", { className: b({ separator: hasSeparator }), children: [
+    /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(Text.Text, { className: b("text"), as: "h3", variant: "subheader-3", children }),
+    onClose && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+      Button.Button,
       {
         onClick: onClose,
         view: "flat",
@@ -28,7 +30,7 @@ const Title = ({
         extraProps: {
           "aria-label": closeTitle
         },
-        children: /* @__PURE__ */ jsxRuntime.jsx(uikit.Icon, { data: icons.Xmark, size: closeIconSize })
+        children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(Icon.Icon, { data: Xmark.default, size: closeIconSize })
       }
     )
   ] });

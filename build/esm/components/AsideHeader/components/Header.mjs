@@ -1,26 +1,26 @@
-import { jsxs, jsx } from 'react/jsx-runtime';
-import { useCallback } from 'react';
-import { Icon } from '@gravity-ui/uikit';
+import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
+import { r as reactExports } from '../../../node_modules/react/index.mjs';
 import { CompositeBar } from '../../CompositeBar/CompositeBar.mjs';
 import { ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT } from '../../constants.mjs';
 import { useAsideHeaderInnerContext, useAsideHeaderContext } from '../AsideHeaderContext.mjs';
 import { b } from '../utils.mjs';
 import headerDividerCollapsedIcon from '../../../assets/icons/divider-collapsed.svg.mjs';
 import { Logo } from '../../Logo/Logo.mjs';
+import { Icon } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.mjs';
 
 const DEFAULT_SUBHEADER_ITEMS = [];
 const Header = () => {
   const { logo, onItemClick, onClosePanel, headerDecoration, subheaderItems } = useAsideHeaderInnerContext();
   const { compact } = useAsideHeaderContext();
-  const onLogoClick = useCallback(
+  const onLogoClick = reactExports.useCallback(
     (event) => {
       onClosePanel?.();
       logo?.onClick?.(event);
     },
     [onClosePanel, logo]
   );
-  return /* @__PURE__ */ jsxs("div", { className: b("header", { ["with-decoration"]: headerDecoration }), children: [
-    logo && /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b("header", { ["with-decoration"]: headerDecoration }), children: [
+    logo && /* @__PURE__ */ jsxRuntimeExports.jsx(
       Logo,
       {
         ...logo,
@@ -30,7 +30,7 @@ const Header = () => {
         buttonClassName: b("logo-button")
       }
     ),
-    /* @__PURE__ */ jsx(
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
       CompositeBar,
       {
         type: "subheader",
@@ -38,7 +38,7 @@ const Header = () => {
         onItemClick
       }
     ),
-    /* @__PURE__ */ jsx(
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
       Icon,
       {
         data: headerDividerCollapsedIcon,

@@ -1,6 +1,6 @@
-import { Ellipsis } from '@gravity-ui/icons';
 import { ITEM_HEIGHT } from '../constants.mjs';
 import { COLLAPSE_ITEM_ID } from './constants.mjs';
+import Ellipsis from '../../node_modules/@gravity-ui/icons/esm/Ellipsis.mjs';
 
 function getItemHeight(item) {
   if (!isMenuItem(item)) {
