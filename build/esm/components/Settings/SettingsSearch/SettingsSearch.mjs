@@ -1,10 +1,10 @@
 import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
-import React from '../../../node_modules/react/index.mjs';
+import React__default from 'react';
+import { TextInput } from '@gravity-ui/uikit';
 import debounceFn from '../../../node_modules/lodash/debounce.mjs';
 import { block } from '../../utils/cn.mjs';
 import { useStableCallback } from '../helpers.mjs';
 import i18n from '../i18n/index.mjs';
-import { TextInput } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/controls/TextInput/TextInput.mjs';
 
 const b = block("settings-search");
 function SettingsSearch({
@@ -17,7 +17,7 @@ function SettingsSearch({
   placeholder,
   autoFocus = true
 }) {
-  const [value, setValue] = React.useState(initialValue ?? "");
+  const [value, setValue] = React__default.useState(initialValue ?? "");
   const onChangeDebounced = useStableCallback(debounceFn(onChange, debounce));
   const handleUpdate = useStableCallback((updated) => {
     setValue(updated);

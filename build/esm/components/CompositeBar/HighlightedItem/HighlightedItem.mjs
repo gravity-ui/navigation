@@ -1,10 +1,10 @@
 import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
-import { r as reactExports } from '../../../node_modules/react/index.mjs';
+import { useState, useMemo, useCallback, useEffect } from 'react';
+import { Portal } from '@gravity-ui/uikit';
 import debounceFn from '../../../node_modules/lodash/debounce.mjs';
 import { useAsideHeaderInnerContext } from '../../AsideHeader/AsideHeaderContext.mjs';
 import { block } from '../../utils/cn.mjs';
 /* empty css                      */
-import { Portal } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/Portal/Portal.mjs';
 
 const b = block("composite-bar-highlighted-item");
 const DEBOUNCE_TIME = 200;
@@ -15,14 +15,14 @@ const HighlightedItem = ({
   onClickCapture
 }) => {
   const { openModalSubscriber } = useAsideHeaderInnerContext();
-  const [{ top, left, width, height }, setPosition] = reactExports.useState({
+  const [{ top, left, width, height }, setPosition] = useState({
     top: 0,
     left: 0,
     width: 0,
     height: 0
   });
-  const [isModalOpen, setIsModalOpen] = reactExports.useState(false);
-  const handleResizeDebounced = reactExports.useMemo(
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleResizeDebounced = useMemo(
     () => debounceFn(
       () => {
         const {
@@ -43,8 +43,8 @@ const HighlightedItem = ({
     ),
     [iconRef]
   );
-  const handleResize = reactExports.useCallback(() => handleResizeDebounced(), [handleResizeDebounced]);
-  reactExports.useEffect(() => {
+  const handleResize = useCallback(() => handleResizeDebounced(), [handleResizeDebounced]);
+  useEffect(() => {
     if (!isModalOpen) {
       return;
     }

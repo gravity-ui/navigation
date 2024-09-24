@@ -3,7 +3,7 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
 const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
-const index = require('../../../node_modules/react/index.cjs');
+const React = require('react');
 
 const multipleTooltipContextDefaults = {
   active: false,
@@ -13,10 +13,10 @@ const multipleTooltipContextDefaults = {
   setValue: () => {
   }
 };
-const MultipleTooltipContext = index.default.createContext(
+const MultipleTooltipContext = React.createContext(
   multipleTooltipContextDefaults
 );
-class MultipleTooltipProvider extends index.default.PureComponent {
+class MultipleTooltipProvider extends React.PureComponent {
   constructor() {
     super(...arguments);
     this.state = {

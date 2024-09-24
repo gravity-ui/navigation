@@ -1,11 +1,10 @@
 import { j as jsxRuntimeExports } from '../../../../node_modules/react/jsx-runtime.mjs';
-import React from '../../../../node_modules/react/index.mjs';
+import React__default from 'react';
+import { List, Icon } from '@gravity-ui/uikit';
 import { block } from '../../../utils/cn.mjs';
 import { MOBILE_HEADER_ICON_SIZE } from '../../constants.mjs';
 import { getSelectedItemIndex, getItemHeight } from '../../utils.mjs';
 /* empty css                         */
-import { List } from '../../../../node_modules/@gravity-ui/uikit/build/esm/components/List/List.mjs';
-import { Icon } from '../../../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.mjs';
 
 const b = block("burger-composite-bar");
 const Item = ({ item, onItemClick }) => {
@@ -37,7 +36,7 @@ const Item = ({ item, onItemClick }) => {
   return item.link ? /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: item.link, className: b("link"), children: node }) : node;
 };
 Item.displayName = "Item";
-const BurgerCompositeBar = React.memo(({ items, onItemClick }) => {
+const BurgerCompositeBar = React__default.memo(({ items, onItemClick }) => {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("nav", { className: b(), children: /* @__PURE__ */ jsxRuntimeExports.jsx(
     List,
     {

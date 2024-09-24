@@ -3,13 +3,12 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
 const jsxRuntime = require('../../../../node_modules/react/jsx-runtime.cjs');
-const index = require('../../../../node_modules/react/index.cjs');
+const React = require('react');
+const uikit = require('@gravity-ui/uikit');
 const cn = require('../../../utils/cn.cjs');
 const constants = require('../../constants.cjs');
 const utils = require('../../utils.cjs');
 ;/* empty css                          */
-const List = require('../../../../node_modules/@gravity-ui/uikit/build/esm/components/List/List.cjs');
-const Icon = require('../../../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.cjs');
 
 const b = cn.block("burger-composite-bar");
 const Item = ({ item, onItemClick }) => {
@@ -30,7 +29,7 @@ const Item = ({ item, onItemClick }) => {
         }
       },
       children: [
-        /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("item-icon-place"), children: icon && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(Icon.Icon, { data: icon, size: iconSize, className: b("item-icon") }) }),
+        /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("item-icon-place"), children: icon && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Icon, { data: icon, size: iconSize, className: b("item-icon") }) }),
         /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("item-title"), children: item.title })
       ]
     }
@@ -41,9 +40,9 @@ const Item = ({ item, onItemClick }) => {
   return item.link ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("a", { href: item.link, className: b("link"), children: node }) : node;
 };
 Item.displayName = "Item";
-const BurgerCompositeBar = index.default.memo(({ items, onItemClick }) => {
+const BurgerCompositeBar = React.memo(({ items, onItemClick }) => {
   return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("nav", { className: b(), children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
-    List.List,
+    uikit.List,
     {
       items,
       selectedItemIndex: utils.getSelectedItemIndex(items),

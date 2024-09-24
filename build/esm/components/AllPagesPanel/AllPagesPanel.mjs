@@ -1,5 +1,7 @@
 import { j as jsxRuntimeExports } from '../../node_modules/react/jsx-runtime.mjs';
-import { r as reactExports } from '../../node_modules/react/index.mjs';
+import { useRef, useState, useCallback, useEffect } from 'react';
+import { Gear } from '@gravity-ui/icons';
+import { Flex, Text, Button, Icon, List } from '@gravity-ui/uikit';
 import { useAsideHeaderInnerContext } from '../AsideHeader/AsideHeaderContext.mjs';
 import { block } from '../utils/cn.mjs';
 import { ALL_PAGES_ID } from './constants.mjs';
@@ -7,31 +9,25 @@ import i18n from './i18n/index.mjs';
 import { useGroupedMenuItems } from './useGroupedMenuItems.mjs';
 /* empty css                    */
 import { AllPagesListItem } from './AllPagesListItem/AllPagesListItem.mjs';
-import Gear from '../../node_modules/@gravity-ui/icons/esm/Gear.mjs';
-import { Flex } from '../../node_modules/@gravity-ui/uikit/build/esm/components/layout/Flex/Flex.mjs';
-import { Text } from '../../node_modules/@gravity-ui/uikit/build/esm/components/Text/Text.mjs';
-import { Button } from '../../node_modules/@gravity-ui/uikit/build/esm/components/Button/Button.mjs';
-import { Icon } from '../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.mjs';
-import { List } from '../../node_modules/@gravity-ui/uikit/build/esm/components/List/List.mjs';
 
 const b = block("all-pages-panel");
 const AllPagesPanel = (props) => {
   const { startEditIcon, onEditModeChanged, className } = props;
   const { menuItems, onMenuItemsChanged } = useAsideHeaderInnerContext();
-  const menuItemsRef = reactExports.useRef(menuItems);
+  const menuItemsRef = useRef(menuItems);
   menuItemsRef.current = menuItems;
-  const [isEditMode, setIsEditMode] = reactExports.useState(false);
-  const toggleEditMode = reactExports.useCallback(() => {
+  const [isEditMode, setIsEditMode] = useState(false);
+  const toggleEditMode = useCallback(() => {
     setIsEditMode((prev) => !prev);
   }, []);
   const groupedItems = useGroupedMenuItems(menuItems);
-  reactExports.useEffect(() => {
+  useEffect(() => {
     onEditModeChanged?.(isEditMode);
   }, [isEditMode, onEditModeChanged]);
-  const onItemClick = reactExports.useCallback((item) => {
+  const onItemClick = useCallback((item) => {
     item.onItemClick?.(item, false);
   }, []);
-  const togglePageVisibility = reactExports.useCallback(
+  const togglePageVisibility = useCallback(
     (item) => {
       if (!onMenuItemsChanged) {
         return;
@@ -51,7 +47,7 @@ const AllPagesPanel = (props) => {
     },
     [onMenuItemsChanged]
   );
-  const itemRender = reactExports.useCallback(
+  const itemRender = useCallback(
     (item, _isActive, _itemIndex) => /* @__PURE__ */ jsxRuntimeExports.jsx(
       AllPagesListItem,
       {
@@ -62,7 +58,7 @@ const AllPagesPanel = (props) => {
     ),
     [isEditMode, togglePageVisibility]
   );
-  const onResetToDefaultClick = reactExports.useCallback(() => {
+  const onResetToDefaultClick = useCallback(() => {
     if (!onMenuItemsChanged) {
       return;
     }

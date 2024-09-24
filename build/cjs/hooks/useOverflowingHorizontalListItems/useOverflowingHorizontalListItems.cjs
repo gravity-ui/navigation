@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const index = require('../../node_modules/react/index.cjs');
+const React = require('react');
 const debounce = require('../../node_modules/lodash/debounce.cjs');
 
 function useOverflowingHorizontalListItems({
@@ -11,9 +11,9 @@ function useOverflowingHorizontalListItems({
   itemSelector,
   moreButtonWidth = 0
 }) {
-  const [containerWidth, setContainerWidth] = index.reactExports.useState(0);
-  const [itemWidths, setItemWidths] = index.reactExports.useState([]);
-  index.reactExports.useLayoutEffect(() => {
+  const [containerWidth, setContainerWidth] = React.useState(0);
+  const [itemWidths, setItemWidths] = React.useState([]);
+  React.useLayoutEffect(() => {
     if (!containerRef.current) {
       return;
     }
@@ -25,7 +25,7 @@ function useOverflowingHorizontalListItems({
     };
     measureItemSizes();
   }, [containerRef, itemSelector]);
-  index.reactExports.useLayoutEffect(() => {
+  React.useLayoutEffect(() => {
     const footerMenu = containerRef.current;
     if (!footerMenu) {
       return;
@@ -40,7 +40,7 @@ function useOverflowingHorizontalListItems({
     footerMenuResizeObserver.observe(footerMenu);
   }, [containerRef]);
   const isMeasured = containerWidth > 0;
-  const { visibleItems, hiddenItems } = index.reactExports.useMemo(() => {
+  const { visibleItems, hiddenItems } = React.useMemo(() => {
     if (!isMeasured) {
       return {
         visibleItems: items ?? [],

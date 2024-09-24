@@ -1,12 +1,11 @@
 import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
-import { r as reactExports } from '../../../node_modules/react/index.mjs';
+import { useRef, useMemo } from 'react';
+import { Menu, DropdownMenu } from '@gravity-ui/uikit';
 import { block } from '../../utils/cn.mjs';
 import { MenuItem } from '../MenuItem/MenuItem.mjs';
 import { moreItemsPopupProps } from './constants/moreItemsPopupProps.mjs';
 /* empty css             */
 import { useOverflowingHorizontalListItems } from '../../../hooks/useOverflowingHorizontalListItems/useOverflowingHorizontalListItems.mjs';
-import { Menu } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/Menu/Menu.mjs';
-import { DropdownMenu as DropdownMenuExport } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/DropdownMenu/DropdownMenu.mjs';
 import { Logo } from '../../Logo/Logo.mjs';
 
 const b = block("footer");
@@ -21,7 +20,7 @@ const Footer = ({
   logoWrapperClassName,
   copyright
 }) => {
-  const menuContainerRef = reactExports.useRef(null);
+  const menuContainerRef = useRef(null);
   const menuItems = view === "clear" ? void 0 : providedMenuItems;
   const { visibleItems, hiddenItems, measured } = useOverflowingHorizontalListItems({
     containerRef: menuContainerRef,
@@ -29,13 +28,13 @@ const Footer = ({
     itemSelector: `.${b("menu-item")}`,
     moreButtonWidth: 28
   });
-  const moreButtonProps = reactExports.useMemo(
+  const moreButtonProps = useMemo(
     () => ({
       title: moreButtonTitle
     }),
     [moreButtonTitle]
   );
-  const dropdownMenuItems = reactExports.useMemo(
+  const dropdownMenuItems = useMemo(
     () => hiddenItems.map(
       (item) => ({
         ...item,
@@ -57,7 +56,7 @@ const Footer = ({
         index
       )) }),
       dropdownMenuItems.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(
-        DropdownMenuExport,
+        DropdownMenu,
         {
           items: dropdownMenuItems,
           switcherWrapperClassName: b("more-button"),

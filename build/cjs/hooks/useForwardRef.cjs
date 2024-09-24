@@ -2,11 +2,11 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const index = require('../node_modules/react/index.cjs');
+const React = require('react');
 
 const useForwardRef = (ref, initialValue = null) => {
-  const targetRef = index.default.useRef(initialValue);
-  index.default.useEffect(() => {
+  const targetRef = React.useRef(initialValue);
+  React.useEffect(() => {
     if (!ref) return;
     if (typeof ref === "function") {
       ref(targetRef.current);

@@ -1,14 +1,14 @@
-import { r as reactExports } from '../../node_modules/react/index.mjs';
+import * as React from 'react';
 
 function useStableCallback(func) {
-  const funcRef = reactExports.useRef();
-  reactExports.useEffect(() => {
+  const funcRef = React.useRef();
+  React.useEffect(() => {
     funcRef.current = func;
     return () => {
       funcRef.current = void 0;
     };
   }, [func]);
-  return reactExports.useCallback((...args) => {
+  return React.useCallback((...args) => {
     if (typeof funcRef.current === "function") {
       return funcRef.current(...args);
     }
@@ -16,9 +16,9 @@ function useStableCallback(func) {
   }, []);
 }
 function useCurrent(value) {
-  const ref = reactExports.useRef(value);
+  const ref = React.useRef(value);
   ref.current = value;
-  return reactExports.useCallback(() => ref.current, []);
+  return React.useCallback(() => ref.current, []);
 }
 function invariant(cond, message) {
   if (!cond) {

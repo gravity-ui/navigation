@@ -1,9 +1,9 @@
-import { r as reactExports } from '../../node_modules/react/index.mjs';
+import { useMemo } from 'react';
 import { useAsideHeaderInnerContext } from '../AsideHeader/AsideHeaderContext.mjs';
 
 const useVisibleMenuItems = () => {
   const { menuItems, allPagesIsAvailable } = useAsideHeaderInnerContext();
-  return reactExports.useMemo(() => {
+  return useMemo(() => {
     if (!allPagesIsAvailable) {
       return menuItems;
     }

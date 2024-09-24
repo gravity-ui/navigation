@@ -3,10 +3,10 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
 const jsxRuntime = require('../../node_modules/react/jsx-runtime.cjs');
-const index = require('../../node_modules/react/index.cjs');
+const React = require('react');
+const uikit = require('@gravity-ui/uikit');
 const cn = require('../utils/cn.cjs');
 ;/* empty css                  */
-const Icon = require('../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.cjs');
 
 const b = cn.block("mobile-logo");
 const MobileLogo = ({
@@ -37,7 +37,7 @@ const MobileLogo = ({
       }
     );
   } else if (icon) {
-    logoIcon = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(Icon.Icon, { data: icon, size: iconSize, className: b("icon", iconClassName) });
+    logoIcon = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Icon, { data: icon, size: iconSize, className: b("icon", iconClassName) });
   }
   let logoTitle;
   if (typeof text === "function") {
@@ -45,7 +45,7 @@ const MobileLogo = ({
   } else {
     logoTitle = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("span", { className: b("title"), style: { fontSize: textSize }, children: text });
   }
-  const logo = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(index.default.Fragment, { children: [
+  const logo = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(React.Fragment, { children: [
     logoIcon,
     logoTitle
   ] });

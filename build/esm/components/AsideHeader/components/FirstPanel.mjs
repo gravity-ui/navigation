@@ -1,5 +1,6 @@
 import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
-import React, { r as reactExports } from '../../../node_modules/react/index.mjs';
+import React__default, { useRef } from 'react';
+import { setRef } from '@gravity-ui/uikit';
 import { CompositeBar } from '../../CompositeBar/CompositeBar.mjs';
 import { useAsideHeaderInnerContext } from '../AsideHeaderContext.mjs';
 import i18n from '../i18n/index.mjs';
@@ -8,9 +9,8 @@ import { CollapseButton } from './CollapseButton/CollapseButton.mjs';
 import { Header } from './Header.mjs';
 import { Panels } from './Panels.mjs';
 import { useVisibleMenuItems } from '../../AllPagesPanel/useVisibleMenuItems.mjs';
-import { setRef } from '../../../node_modules/@gravity-ui/uikit/build/esm/hooks/useForkRef/setRef.mjs';
 
-const FirstPanel = React.forwardRef((_props, ref) => {
+const FirstPanel = React__default.forwardRef((_props, ref) => {
   const {
     size,
     onItemClick,
@@ -26,11 +26,11 @@ const FirstPanel = React.forwardRef((_props, ref) => {
     qa
   } = useAsideHeaderInnerContext();
   const visibleMenuItems = useVisibleMenuItems();
-  const asideRef = reactExports.useRef(null);
-  React.useEffect(() => {
+  const asideRef = useRef(null);
+  React__default.useEffect(() => {
     setRef(ref, asideRef.current);
   }, [ref]);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(React__default.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b("aside", className), style: { width: size }, "data-qa": qa, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("aside-popup-anchor"), ref: asideRef }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b("aside-content", { ["with-decoration"]: headerDecoration }), children: [

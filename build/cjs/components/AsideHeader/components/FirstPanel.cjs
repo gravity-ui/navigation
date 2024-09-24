@@ -3,18 +3,18 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
 const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
-const index = require('../../../node_modules/react/index.cjs');
+const React = require('react');
+const uikit = require('@gravity-ui/uikit');
 const CompositeBar = require('../../CompositeBar/CompositeBar.cjs');
 const AsideHeaderContext = require('../AsideHeaderContext.cjs');
-const index$1 = require('../i18n/index.cjs');
+const index = require('../i18n/index.cjs');
 const utils = require('../utils.cjs');
 const CollapseButton = require('./CollapseButton/CollapseButton.cjs');
 const Header = require('./Header.cjs');
 const Panels = require('./Panels.cjs');
 const useVisibleMenuItems = require('../../AllPagesPanel/useVisibleMenuItems.cjs');
-const setRef = require('../../../node_modules/@gravity-ui/uikit/build/esm/hooks/useForkRef/setRef.cjs');
 
-const FirstPanel = index.default.forwardRef((_props, ref) => {
+const FirstPanel = React.forwardRef((_props, ref) => {
   const {
     size,
     onItemClick,
@@ -30,11 +30,11 @@ const FirstPanel = index.default.forwardRef((_props, ref) => {
     qa
   } = AsideHeaderContext.useAsideHeaderInnerContext();
   const visibleMenuItems = useVisibleMenuItems.useVisibleMenuItems();
-  const asideRef = index.reactExports.useRef(null);
-  index.default.useEffect(() => {
-    setRef.setRef(ref, asideRef.current);
+  const asideRef = React.useRef(null);
+  React.useEffect(() => {
+    uikit.setRef(ref, asideRef.current);
   }, [ref]);
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(index.default.Fragment, { children: [
+  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(React.Fragment, { children: [
     /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("div", { className: utils.b("aside", className), style: { width: size }, "data-qa": qa, children: [
       /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: utils.b("aside-popup-anchor"), ref: asideRef }),
       /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("div", { className: utils.b("aside-content", { ["with-decoration"]: headerDecoration }), children: [
@@ -45,7 +45,7 @@ const FirstPanel = index.default.forwardRef((_props, ref) => {
           {
             type: "menu",
             items: visibleMenuItems,
-            menuMoreTitle: menuMoreTitle ?? index$1.default("label_more"),
+            menuMoreTitle: menuMoreTitle ?? index.default("label_more"),
             onItemClick,
             multipleTooltip
           }

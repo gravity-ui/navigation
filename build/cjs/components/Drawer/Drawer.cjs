@@ -3,19 +3,17 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
 const jsxRuntime = require('../../node_modules/react/jsx-runtime.cjs');
-const index = require('../../node_modules/react/index.cjs');
+const React = require('react');
+const uikit = require('@gravity-ui/uikit');
 const cn = require('../utils/cn.cjs');
 const utils = require('./utils.cjs');
 ;/* empty css              */
 const CSSTransition = require('../../node_modules/react-transition-group/esm/CSSTransition.cjs');
 const Transition = require('../../node_modules/react-transition-group/esm/Transition.cjs');
-const useForkRef = require('../../node_modules/@gravity-ui/uikit/build/esm/hooks/useForkRef/useForkRef.cjs');
-const useBodyScrollLock = require('../../node_modules/@gravity-ui/uikit/build/esm/hooks/useBodyScrollLock/useBodyScrollLock.cjs');
-const Portal = require('../../node_modules/@gravity-ui/uikit/build/esm/components/Portal/Portal.cjs');
 
 const b = cn.block("drawer");
 const TIMEOUT = 300;
-const DrawerItem = index.default.forwardRef(
+const DrawerItem = React.forwardRef(
   function DrawerItem2(props, ref) {
     const {
       visible,
@@ -29,8 +27,8 @@ const DrawerItem = index.default.forwardRef(
       maxResizeWidth,
       onResize
     } = props;
-    const itemRef = index.default.useRef(null);
-    const handleRef = useForkRef.useForkRef(ref, itemRef);
+    const itemRef = React.useRef(null);
+    const handleRef = uikit.useForkRef(ref, itemRef);
     const cssDirection = direction === "left" ? void 0 : direction;
     const { resizedWidth, resizerHandlers } = utils.useResizableDrawerItem({
       direction,
@@ -76,15 +74,15 @@ const Drawer = ({
   disablePortal = true
 }) => {
   let someItemVisible = false;
-  index.default.Children.forEach(children, (child) => {
-    if (index.default.isValidElement(child) && child.type === DrawerItem) {
+  React.Children.forEach(children, (child) => {
+    if (React.isValidElement(child) && child.type === DrawerItem) {
       const childVisible = Boolean(child.props.visible);
       if (childVisible) {
         someItemVisible = true;
       }
     }
   });
-  index.default.useEffect(() => {
+  React.useEffect(() => {
     function onKeyDown(event) {
       if (event.key === "Escape") {
         onEscape?.();
@@ -97,9 +95,9 @@ const Drawer = ({
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [onEscape, someItemVisible]);
-  useBodyScrollLock.useBodyScrollLock({ enabled: preventScrollBody && someItemVisible });
-  const containerRef = index.default.useRef(null);
-  const veilRef = index.default.useRef(null);
+  uikit.useBodyScrollLock({ enabled: preventScrollBody && someItemVisible });
+  const containerRef = React.useRef(null);
+  const veilRef = React.useRef(null);
   const drawer = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
     Transition.default,
     {
@@ -129,10 +127,10 @@ const Drawer = ({
               )
             }
           ),
-          index.default.Children.map(children, (child) => {
-            if (index.default.isValidElement(child) && child.type === DrawerItem) {
+          React.Children.map(children, (child) => {
+            if (React.isValidElement(child) && child.type === DrawerItem) {
               const childVisible = Boolean(child.props.visible);
-              return index.default.cloneElement(child, {
+              return React.cloneElement(child, {
                 ...child.props,
                 visible: childVisible && childrenVisible
               });
@@ -146,7 +144,7 @@ const Drawer = ({
   if (disablePortal) {
     return drawer;
   }
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(Portal.Portal, { children: drawer });
+  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Portal, { children: drawer });
 };
 
 exports.Drawer = Drawer;

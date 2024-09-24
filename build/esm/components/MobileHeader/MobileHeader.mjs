@@ -1,5 +1,5 @@
 import { j as jsxRuntimeExports } from '../../node_modules/react/jsx-runtime.mjs';
-import React, { r as reactExports } from '../../node_modules/react/index.mjs';
+import React__default, { useState, useCallback, useMemo, useEffect, createElement } from 'react';
 import { useForwardRef } from '../../hooks/useForwardRef.mjs';
 import { Drawer, DrawerItem } from '../Drawer/Drawer.mjs';
 import { block } from '../utils/cn.mjs';
@@ -12,7 +12,7 @@ import { MobileLogo } from '../MobileLogo/MobileLogo.mjs';
 import { Content } from '../Content/Content.mjs';
 
 const b = block("mobile-header");
-const MobileHeader = React.forwardRef(
+const MobileHeader = React__default.forwardRef(
   ({
     logo,
     burgerMenu,
@@ -27,10 +27,10 @@ const MobileHeader = React.forwardRef(
     contentClassName
   }, ref) => {
     const targetRef = useForwardRef(ref);
-    const [compact] = reactExports.useState(true);
-    const [visiblePanel, setVisiblePanel] = reactExports.useState(null);
+    const [compact] = useState(true);
+    const [visiblePanel, setVisiblePanel] = useState(null);
     const size = compact ? MOBILE_HEADER_COMPACT_HEIGHT : MOBILE_HEADER_EXPANDED_HEIGHT;
-    const onPanelToggle = reactExports.useCallback(
+    const onPanelToggle = useCallback(
       (name) => {
         if (!name) return;
         setVisiblePanel((prev) => {
@@ -44,7 +44,7 @@ const MobileHeader = React.forwardRef(
       },
       [onEvent]
     );
-    const onMobilePanelToggle = reactExports.useCallback(
+    const onMobilePanelToggle = useCallback(
       ({ detail }) => {
         if (typeof detail?.panelName === "string") {
           onPanelToggle(detail?.panelName);
@@ -52,7 +52,7 @@ const MobileHeader = React.forwardRef(
       },
       [onPanelToggle]
     );
-    const onMobilePanelOpen = reactExports.useCallback(
+    const onMobilePanelOpen = useCallback(
       ({ detail }) => {
         if (typeof detail?.panelName === "string") {
           onEvent?.(detail?.panelName, MOBILE_HEADER_EVENT_NAMES.openEvent);
@@ -61,7 +61,7 @@ const MobileHeader = React.forwardRef(
       },
       [onEvent]
     );
-    const onMobilePanelClose = reactExports.useCallback(
+    const onMobilePanelClose = useCallback(
       ({ detail }) => {
         if (typeof detail?.panelName === "string") {
           onEvent?.(detail?.panelName, MOBILE_HEADER_EVENT_NAMES.closeEvent);
@@ -70,21 +70,21 @@ const MobileHeader = React.forwardRef(
       },
       [onEvent]
     );
-    const onBurgerOpen = reactExports.useCallback(() => {
+    const onBurgerOpen = useCallback(() => {
       onEvent?.(BURGER_PANEL_ITEM_ID, MOBILE_HEADER_EVENT_NAMES.openEvent);
       setVisiblePanel(BURGER_PANEL_ITEM_ID);
     }, [onEvent]);
-    const onBurgerClose = reactExports.useCallback(() => {
+    const onBurgerClose = useCallback(() => {
       onEvent?.(BURGER_PANEL_ITEM_ID, MOBILE_HEADER_EVENT_NAMES.closeEvent);
       setVisiblePanel(null);
     }, [onEvent]);
-    const onCloseDrawer = reactExports.useCallback(() => {
+    const onCloseDrawer = useCallback(() => {
       if (visiblePanel) {
         onEvent?.(visiblePanel, MOBILE_HEADER_EVENT_NAMES.closeEvent);
       }
       setVisiblePanel(null);
     }, [visiblePanel, onEvent]);
-    const onBurgerMenuItemClick = reactExports.useCallback(
+    const onBurgerMenuItemClick = useCallback(
       (item) => {
         const closeMenuOnClick = item.closeMenuOnClick ?? true;
         if (closeMenuOnClick) {
@@ -93,21 +93,21 @@ const MobileHeader = React.forwardRef(
       },
       [onBurgerClose]
     );
-    const renderBurgerMenuFooter = reactExports.useCallback(
+    const renderBurgerMenuFooter = useCallback(
       () => burgerMenu.renderFooter?.({
         size,
         isCompact: compact
       }),
       [burgerMenu, size, compact]
     );
-    const onLogoClick = reactExports.useCallback(
+    const onLogoClick = useCallback(
       (event) => {
         onClosePanel?.();
         logo.onClick?.(event);
       },
       [logo, onClosePanel]
     );
-    const burgerPanelItem = reactExports.useMemo(
+    const burgerPanelItem = useMemo(
       () => ({
         id: BURGER_PANEL_ITEM_ID,
         content: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -123,7 +123,7 @@ const MobileHeader = React.forwardRef(
       }),
       [burgerMenu.items, burgerMenu.modalItem, onBurgerMenuItemClick, renderBurgerMenuFooter]
     );
-    reactExports.useEffect(() => {
+    useEffect(() => {
       const node = targetRef?.current;
       if (node) {
         node.addEventListener("MOBILE_BURGER_OPEN", onBurgerOpen);
@@ -189,7 +189,7 @@ const MobileHeader = React.forwardRef(
           onVeilClick: onCloseDrawer,
           onEscape: onCloseDrawer,
           style: { top: size },
-          children: [burgerPanelItem, ...panelItems].map((item) => /* @__PURE__ */ reactExports.createElement(
+          children: [burgerPanelItem, ...panelItems].map((item) => /* @__PURE__ */ createElement(
             DrawerItem,
             {
               ...item,

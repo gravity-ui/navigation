@@ -3,13 +3,11 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
 const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
-const index = require('../../../node_modules/react/index.cjs');
+const React = require('react');
+const uikit = require('@gravity-ui/uikit');
 const cn = require('../../utils/cn.cjs');
 const constants = require('../constants.cjs');
 ;/* empty css                  */
-const EventBroker = require('../../../node_modules/@gravity-ui/uikit/build/esm/components/utils/event-broker/EventBroker.cjs');
-const Icon = require('../../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.cjs');
-const Sheet = require('../../../node_modules/@gravity-ui/uikit/build/esm/components/Sheet/Sheet.cjs');
 
 const b = cn.block("mobile-header-footer-item");
 const FooterItem = ({
@@ -20,9 +18,9 @@ const FooterItem = ({
   onClick,
   eventBrokerMeta
 }) => {
-  const handleClick = index.default.useCallback(
+  const handleClick = React.useCallback(
     (event) => {
-      EventBroker.eventBroker.publish({
+      uikit.eventBroker.publish({
         componentId: "MobileHeaderFooterItem",
         eventId: "click",
         domEvent: event,
@@ -33,9 +31,9 @@ const FooterItem = ({
     [onClick, eventBrokerMeta]
   );
   return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("div", { className: b(), children: [
-    /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("button", { className: b("button", className), onClick: handleClick, children: icon ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(Icon.Icon, { data: icon, size: iconSize, className: b("icon") }) : null }),
+    /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("button", { className: b("button", className), onClick: handleClick, children: icon ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Icon, { data: icon, size: iconSize, className: b("icon") }) : null }),
     /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
-      Sheet.Sheet,
+      uikit.Sheet,
       {
         id: modalItem.id,
         title: modalItem.title,

@@ -1,8 +1,8 @@
 import { j as jsxRuntimeExports } from '../../node_modules/react/jsx-runtime.mjs';
-import React from '../../node_modules/react/index.mjs';
+import React__default from 'react';
+import { Icon } from '@gravity-ui/uikit';
 import { block } from '../utils/cn.mjs';
 /* empty css                 */
-import { Icon } from '../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.mjs';
 
 const b = block("mobile-logo");
 const MobileLogo = ({
@@ -41,7 +41,7 @@ const MobileLogo = ({
   } else {
     logoTitle = /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: b("title"), style: { fontSize: textSize }, children: text });
   }
-  const logo = /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
+  const logo = /* @__PURE__ */ jsxRuntimeExports.jsxs(React__default.Fragment, { children: [
     logoIcon,
     logoTitle
   ] });

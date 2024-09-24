@@ -2,12 +2,12 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const index = require('../../node_modules/react/index.cjs');
+const React = require('react');
 const constants = require('./constants.cjs');
-const index$1 = require('./i18n/index.cjs');
+const index = require('./i18n/index.cjs');
 
 const useGroupedMenuItems = (items) => {
-  const allPagesMenuItems = index.reactExports.useMemo(() => {
+  const allPagesMenuItems = React.useMemo(() => {
     const filteredItems = items.filter(
       (item) => item.type !== "divider" && item.id !== constants.ALL_PAGES_ID
     );
@@ -22,7 +22,7 @@ const useGroupedMenuItems = (items) => {
     });
     const groupedItems = filteredItems.reduce(
       (acc, item) => {
-        const category = item.category || index$1.default("all-panel.menu.category.allOther");
+        const category = item.category || index.default("all-panel.menu.category.allOther");
         if (!acc[category]) {
           acc[category] = [];
         }

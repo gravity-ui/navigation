@@ -1,11 +1,9 @@
 import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
-import React from '../../../node_modules/react/index.mjs';
+import React__default from 'react';
+import { eventBroker, Icon, Sheet } from '@gravity-ui/uikit';
 import { block } from '../../utils/cn.mjs';
 import { MOBILE_HEADER_ICON_SIZE } from '../constants.mjs';
 /* empty css                 */
-import { eventBroker } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/utils/event-broker/EventBroker.mjs';
-import { Icon } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.mjs';
-import { Sheet } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/Sheet/Sheet.mjs';
 
 const b = block("mobile-header-footer-item");
 const FooterItem = ({
@@ -16,7 +14,7 @@ const FooterItem = ({
   onClick,
   eventBrokerMeta
 }) => {
-  const handleClick = React.useCallback(
+  const handleClick = React__default.useCallback(
     (event) => {
       eventBroker.publish({
         componentId: "MobileHeaderFooterItem",

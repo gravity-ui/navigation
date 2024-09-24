@@ -3,12 +3,12 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
 const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
-const index = require('../../../node_modules/react/index.cjs');
+const React = require('react');
+const uikit = require('@gravity-ui/uikit');
 const debounce = require('../../../node_modules/lodash/debounce.cjs');
 const AsideHeaderContext = require('../../AsideHeader/AsideHeaderContext.cjs');
 const cn = require('../../utils/cn.cjs');
 ;/* empty css                       */
-const Portal = require('../../../node_modules/@gravity-ui/uikit/build/esm/components/Portal/Portal.cjs');
 
 const b = cn.block("composite-bar-highlighted-item");
 const DEBOUNCE_TIME = 200;
@@ -19,14 +19,14 @@ const HighlightedItem = ({
   onClickCapture
 }) => {
   const { openModalSubscriber } = AsideHeaderContext.useAsideHeaderInnerContext();
-  const [{ top, left, width, height }, setPosition] = index.reactExports.useState({
+  const [{ top, left, width, height }, setPosition] = React.useState({
     top: 0,
     left: 0,
     width: 0,
     height: 0
   });
-  const [isModalOpen, setIsModalOpen] = index.reactExports.useState(false);
-  const handleResizeDebounced = index.reactExports.useMemo(
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const handleResizeDebounced = React.useMemo(
     () => debounce.default(
       () => {
         const {
@@ -47,8 +47,8 @@ const HighlightedItem = ({
     ),
     [iconRef]
   );
-  const handleResize = index.reactExports.useCallback(() => handleResizeDebounced(), [handleResizeDebounced]);
-  index.reactExports.useEffect(() => {
+  const handleResize = React.useCallback(() => handleResizeDebounced(), [handleResizeDebounced]);
+  React.useEffect(() => {
     if (!isModalOpen) {
       return;
     }
@@ -62,7 +62,7 @@ const HighlightedItem = ({
   if (!iconNode || !isModalOpen) {
     return null;
   }
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(Portal.Portal, { children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Portal, { children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
     "div",
     {
       className: b(),

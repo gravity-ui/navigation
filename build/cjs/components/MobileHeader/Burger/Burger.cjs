@@ -3,12 +3,12 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
 const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
-const index = require('../../../node_modules/react/index.cjs');
+const React = require('react');
 const cn = require('../../utils/cn.cjs');
 ;/* empty css              */
 
 const b = cn.block("mobile-header-burger");
-const Burger = index.default.memo(
+const Burger = React.memo(
   ({ closeTitle, openTitle, opened, className, onClick }) => /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
     "button",
     {

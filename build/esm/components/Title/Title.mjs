@@ -1,11 +1,9 @@
 import { j as jsxRuntimeExports } from '../../node_modules/react/jsx-runtime.mjs';
+import { Xmark } from '@gravity-ui/icons';
+import { Text, Button, Icon } from '@gravity-ui/uikit';
 import { block } from '../utils/cn.mjs';
 import i18n from './i18n/index.mjs';
 /* empty css            */
-import Xmark from '../../node_modules/@gravity-ui/icons/esm/Xmark.mjs';
-import { Text } from '../../node_modules/@gravity-ui/uikit/build/esm/components/Text/Text.mjs';
-import { Button } from '../../node_modules/@gravity-ui/uikit/build/esm/components/Button/Button.mjs';
-import { Icon } from '../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.mjs';
 
 const b = block("title");
 const Title = ({

@@ -1,4 +1,4 @@
-import { r as reactExports } from '../../node_modules/react/index.mjs';
+import * as React from 'react';
 
 const DRAWER_ITEM_MIN_RESIZE_WIDTH = 200;
 const DRAWER_ITEM_MAX_RESIZE_WIDTH = 800;
@@ -7,9 +7,9 @@ function getEventClientX(e) {
   return "touches" in e ? e.touches[0]?.clientX ?? 0 : e.clientX;
 }
 function useResizeHandlers({ onStart, onMove, onEnd }) {
-  const initialXPosition = reactExports.useRef(0);
-  const currentXPosition = reactExports.useRef(0);
-  const handleMove = reactExports.useCallback(
+  const initialXPosition = React.useRef(0);
+  const currentXPosition = React.useRef(0);
+  const handleMove = React.useCallback(
     (e) => {
       const currentX = getEventClientX(e);
       if (currentXPosition.current === currentX) {
@@ -21,7 +21,7 @@ function useResizeHandlers({ onStart, onMove, onEnd }) {
     },
     [onMove]
   );
-  const handleEnd = reactExports.useCallback(
+  const handleEnd = React.useCallback(
     (e) => {
       window.removeEventListener("mousemove", handleMove);
       window.removeEventListener("touchmove", handleMove);
@@ -34,7 +34,7 @@ function useResizeHandlers({ onStart, onMove, onEnd }) {
     },
     [handleMove, onEnd]
   );
-  const handleStart = reactExports.useCallback(
+  const handleStart = React.useCallback(
     (e) => {
       const currentX = getEventClientX(e);
       initialXPosition.current = currentX;
@@ -64,16 +64,16 @@ function useResizableDrawerItem(params) {
     maxResizeWidth = DRAWER_ITEM_MAX_RESIZE_WIDTH,
     onResize
   } = params;
-  const [isResizing, setIsResizing] = reactExports.useState(false);
-  const [resizeDelta, setResizeDelta] = reactExports.useState(0);
-  const [internalWidth, setInternalWidth] = reactExports.useState(
+  const [isResizing, setIsResizing] = React.useState(false);
+  const [resizeDelta, setResizeDelta] = React.useState(0);
+  const [internalWidth, setInternalWidth] = React.useState(
     width ?? DRAWER_ITEM_INITIAL_RESIZE_WIDTH
   );
-  const getClampedWidth = reactExports.useCallback(
+  const getClampedWidth = React.useCallback(
     (width2) => Math.min(Math.max(width2, minResizeWidth), maxResizeWidth),
     [minResizeWidth, maxResizeWidth]
   );
-  const getResizedWidth = reactExports.useCallback(
+  const getResizedWidth = React.useCallback(
     (delta) => {
       const signedDelta = direction === "right" ? delta : -delta;
       const newWidth = (width ?? internalWidth) + signedDelta;
@@ -81,14 +81,14 @@ function useResizableDrawerItem(params) {
     },
     [width, internalWidth, direction, getClampedWidth]
   );
-  const onStart = reactExports.useCallback(() => {
+  const onStart = React.useCallback(() => {
     setIsResizing(true);
     setResizeDelta(0);
   }, [setIsResizing, setResizeDelta]);
-  const onMove = reactExports.useCallback((delta) => {
+  const onMove = React.useCallback((delta) => {
     setResizeDelta(delta);
   }, []);
-  const onEnd = reactExports.useCallback(
+  const onEnd = React.useCallback(
     (delta) => {
       const newWidth = getResizedWidth(delta);
       setIsResizing(false);

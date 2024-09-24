@@ -1,5 +1,6 @@
 import { j as jsxRuntimeExports } from '../../node_modules/react/jsx-runtime.mjs';
-import React from '../../node_modules/react/index.mjs';
+import React__default from 'react';
+import { Loader, Flex } from '@gravity-ui/uikit';
 import identity from '../../node_modules/lodash/identity.mjs';
 import { block } from '../utils/cn.mjs';
 import { useSettingsSelectionProviderValue, SettingsSelectionContextProvider, useSettingsSelectionContext } from './Selection/context.mjs';
@@ -12,12 +13,10 @@ import { escapeStringForRegExp } from './helpers.mjs';
 import i18n from './i18n/index.mjs';
 /* empty css               */
 import { Title } from '../Title/Title.mjs';
-import { Loader } from '../../node_modules/@gravity-ui/uikit/build/esm/components/Loader/Loader.mjs';
-import { Flex } from '../../node_modules/@gravity-ui/uikit/build/esm/components/layout/Flex/Flex.mjs';
 
 const b = block("settings");
-const SettingsContext = React.createContext({});
-const useSettingsContext = () => React.useContext(SettingsContext);
+const SettingsContext = React__default.createContext({});
+const useSettingsContext = () => React__default.useContext(SettingsContext);
 function Settings({
   loading,
   renderLoading,
@@ -62,21 +61,21 @@ function SettingsContent({
   onClose
 }) {
   const { renderSectionRightAdornment, showRightAdornmentOnHover } = useSettingsContext();
-  const [search, setSearch] = React.useState(initialSearch ?? "");
+  const [search, setSearch] = React__default.useState(initialSearch ?? "");
   const { menu, pages } = getSettingsFromChildren(children, search);
   const selected = useSettingsSelectionProviderValue(pages, selection);
   const pageKeys = Object.keys(pages);
   const selectionInitialPage = selected.page && pageKeys.includes(selected.page.id) ? selected.page.id : void 0;
-  const [selectedPage, setCurrentPage] = React.useState(
+  const [selectedPage, setCurrentPage] = React__default.useState(
     selectionInitialPage || (initialPage && pageKeys.includes(initialPage) ? initialPage : void 0)
   );
-  const searchInputRef = React.useRef(null);
-  const menuRef = React.useRef(null);
+  const searchInputRef = React__default.useRef(null);
+  const menuRef = React__default.useRef(null);
   const isMobile = view === "mobile";
-  React.useEffect(() => {
+  React__default.useEffect(() => {
     menuRef.current?.clearFocus();
   }, [search]);
-  React.useEffect(() => {
+  React__default.useEffect(() => {
     const handler = () => {
       menuRef.current?.clearFocus();
     };
@@ -97,22 +96,22 @@ function SettingsContent({
       return newPage;
     });
   };
-  React.useEffect(() => {
+  React__default.useEffect(() => {
     if (activePage !== selectedPage) {
       handlePageChange(activePage);
     }
   });
-  React.useEffect(() => {
+  React__default.useEffect(() => {
     if (!selectionInitialPage) return;
     setCurrentPage(selectionInitialPage);
   }, [selectionInitialPage]);
-  React.useEffect(() => {
+  React__default.useEffect(() => {
     if (selected.selectedRef?.current) {
       selected.selectedRef.current.scrollIntoView();
     }
   }, [selected.selectedRef]);
   const renderSetting = ({ title: settingTitle, element }) => {
-    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("section-item"), children: React.cloneElement(element, {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("section-item"), children: React__default.cloneElement(element, {
       ...element.props,
       highlightedTitle: search && settingTitle ? prepareTitle(settingTitle, search) : settingTitle
     }) }, settingTitle);
@@ -149,13 +148,13 @@ function SettingsContent({
       return typeof renderNotFound === "function" ? renderNotFound() : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("not-found"), children: emptyPlaceholder });
     }
     const filteredSections = pages[page].sections.filter((section) => !section.hidden);
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs(React__default.Fragment, { children: [
       !isMobile && /* @__PURE__ */ jsxRuntimeExports.jsx(Title, { hasSeparator: true, onClose, children: getPageTitleById(menu, page) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("content"), children: filteredSections.map((section) => renderSection(page, section)) })
     ] });
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsSelectionContextProvider, { value: selected, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b({ view }), children: [
-    isMobile ? /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
+    isMobile ? /* @__PURE__ */ jsxRuntimeExports.jsxs(React__default.Fragment, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         SettingsSearch,
         {
@@ -221,13 +220,13 @@ function SettingsContent({
   ] }) });
 }
 Settings.Group = function SettingsGroup({ children }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(React.Fragment, { children });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(React__default.Fragment, { children });
 };
 Settings.Page = function SettingsPage({ children }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(React.Fragment, { children });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(React__default.Fragment, { children });
 };
 Settings.Section = function SettingsSection({ children }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(React.Fragment, { children });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(React__default.Fragment, { children });
 };
 Settings.Item = function SettingsItem(setting) {
   const {

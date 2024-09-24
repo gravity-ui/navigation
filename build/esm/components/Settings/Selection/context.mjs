@@ -1,12 +1,12 @@
-import React from '../../../node_modules/react/index.mjs';
+import React__default from 'react';
 import { getSelectedSettingsPart } from '../collect-settings.mjs';
 
 const defaultValue = {};
-const context = React.createContext(defaultValue);
+const context = React__default.createContext(defaultValue);
 context.displayName = "SettingsSelectionContext";
 function useSettingsSelectionProviderValue(pages, selection) {
-  const selectedRef = React.useRef(null);
-  const contextValue = React.useMemo(() => {
+  const selectedRef = React__default.useRef(null);
+  const contextValue = React__default.useMemo(() => {
     if (!selection) return { selectedRef };
     return { selectedRef, ...getSelectedSettingsPart(pages, selection) };
   }, [pages, selection]);
@@ -14,7 +14,7 @@ function useSettingsSelectionProviderValue(pages, selection) {
 }
 const SettingsSelectionContextProvider = context.Provider;
 function useSettingsSelectionContext() {
-  return React.useContext(context);
+  return React__default.useContext(context);
 }
 
 export { SettingsSelectionContextProvider, useSettingsSelectionContext, useSettingsSelectionProviderValue };

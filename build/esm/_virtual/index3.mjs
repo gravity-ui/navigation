@@ -1,4 +1,4 @@
-var propTypes = {exports: {}};
+var reactIs = {exports: {}};
 
-export { propTypes as __module };
+export { reactIs as __module };
 //# sourceMappingURL=index3.mjs.map

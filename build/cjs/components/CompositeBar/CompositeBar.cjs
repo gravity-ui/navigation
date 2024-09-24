@@ -3,8 +3,9 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
 const jsxRuntime = require('../../node_modules/react/jsx-runtime.cjs');
-const index = require('../../node_modules/react/index.cjs');
-const reactVirtualizedAutoSizer_esm = require('../../node_modules/react-virtualized-auto-sizer/dist/react-virtualized-auto-sizer.esm.cjs');
+const React = require('react');
+const uikit = require('@gravity-ui/uikit');
+const AutoSizer = require('react-virtualized-auto-sizer');
 const AsideHeaderContext = require('../AsideHeader/AsideHeaderContext.cjs');
 const constants = require('../constants.cjs');
 const cn = require('../utils/cn.cjs');
@@ -14,7 +15,6 @@ const utils = require('./utils.cjs');
 ;/* empty css                    */
 const MultipleTooltipContext = require('./MultipleTooltip/MultipleTooltipContext.cjs');
 const MultipleTooltip = require('./MultipleTooltip/MultipleTooltip.cjs');
-const List = require('../../node_modules/@gravity-ui/uikit/build/esm/components/List/List.cjs');
 
 const b = cn.block("composite-bar");
 const CompositeBarView = ({
@@ -24,16 +24,16 @@ const CompositeBarView = ({
   collapseItems,
   multipleTooltip = false
 }) => {
-  const ref = index.reactExports.useRef(null);
-  const tooltipRef = index.reactExports.useRef(null);
+  const ref = React.useRef(null);
+  const tooltipRef = React.useRef(null);
   const {
     setValue: setMultipleTooltipContextValue,
     active: multipleTooltipActive,
     activeIndex,
     lastClickedItemIndex
-  } = index.reactExports.useContext(MultipleTooltipContext.MultipleTooltipContext);
+  } = React.useContext(MultipleTooltipContext.MultipleTooltipContext);
   const { compact } = AsideHeaderContext.useAsideHeaderContext();
-  index.default.useEffect(() => {
+  React.useEffect(() => {
     function handleBlurWindow() {
       if (multipleTooltip && multipleTooltipActive) {
         setMultipleTooltipContextValue({ active: false });
@@ -44,7 +44,7 @@ const CompositeBarView = ({
       window.removeEventListener("blur", handleBlurWindow);
     };
   }, [multipleTooltip, multipleTooltipActive, setMultipleTooltipContextValue]);
-  const onTooltipMouseEnter = index.reactExports.useCallback(
+  const onTooltipMouseEnter = React.useCallback(
     (e) => {
       if (multipleTooltip && compact && !multipleTooltipActive && document.hasFocus() && activeIndex !== lastClickedItemIndex && e.clientX <= constants.ASIDE_HEADER_COMPACT_WIDTH) {
         setMultipleTooltipContextValue?.({
@@ -61,7 +61,7 @@ const CompositeBarView = ({
       setMultipleTooltipContextValue
     ]
   );
-  const onTooltipMouseLeave = index.reactExports.useCallback(() => {
+  const onTooltipMouseLeave = React.useCallback(() => {
     if (multipleTooltip && multipleTooltipActive && document.hasFocus()) {
       setMultipleTooltipContextValue?.({
         active: false,
@@ -69,7 +69,7 @@ const CompositeBarView = ({
       });
     }
   }, [multipleTooltip, multipleTooltipActive, setMultipleTooltipContextValue]);
-  const onMouseEnterByIndex = index.reactExports.useCallback(
+  const onMouseEnterByIndex = React.useCallback(
     (itemIndex) => () => {
       if (multipleTooltip && document.hasFocus()) {
         let multipleTooltipActiveValue = multipleTooltipActive;
@@ -93,7 +93,7 @@ const CompositeBarView = ({
       setMultipleTooltipContextValue
     ]
   );
-  const onMouseLeave = index.reactExports.useCallback(() => {
+  const onMouseLeave = React.useCallback(() => {
     if (compact && document.hasFocus()) {
       ref.current?.activateItem(void 0);
       if (multipleTooltip && (activeIndex !== void 0 || lastClickedItemIndex !== void 0)) {
@@ -110,7 +110,7 @@ const CompositeBarView = ({
     multipleTooltip,
     setMultipleTooltipContextValue
   ]);
-  const onItemClickByIndex = index.reactExports.useCallback(
+  const onItemClickByIndex = React.useCallback(
     (itemIndex) => (item, collapsed, event) => {
       if (compact && multipleTooltip && itemIndex !== lastClickedItemIndex && item.id !== constants$1.COLLAPSE_ITEM_ID) {
         setMultipleTooltipContextValue({
@@ -128,7 +128,7 @@ const CompositeBarView = ({
       setMultipleTooltipContextValue
     ]
   );
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(index.default.Fragment, { children: [
+  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(React.Fragment, { children: [
     /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
       "div",
       {
@@ -136,7 +136,7 @@ const CompositeBarView = ({
         onMouseEnter: onTooltipMouseEnter,
         onMouseLeave: onTooltipMouseLeave,
         children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
-          List.List,
+          uikit.List,
           {
             ref,
             items,
@@ -191,7 +191,7 @@ const CompositeBar = ({
   if (type === "menu") {
     const minHeight = utils.getItemsMinHeight(items);
     const collapseItem = utils.getMoreButtonItem(menuMoreTitle);
-    node = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b({ autosizer: true }), style: { minHeight }, children: items.length !== 0 && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(reactVirtualizedAutoSizer_esm.default, { children: (size) => {
+    node = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b({ autosizer: true }), style: { minHeight }, children: items.length !== 0 && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(AutoSizer, { children: (size) => {
       const width = Number.isNaN(size.width) ? 0 : size.width;
       const height = Number.isNaN(size.height) ? 0 : size.height;
       const { listItems, collapseItems } = utils.getAutosizeListItems(

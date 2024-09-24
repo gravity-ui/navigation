@@ -2,12 +2,12 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const index = require('../../node_modules/react/index.cjs');
+const React = require('react');
 const AsideHeaderContext = require('../AsideHeader/AsideHeaderContext.cjs');
 
 const useVisibleMenuItems = () => {
   const { menuItems, allPagesIsAvailable } = AsideHeaderContext.useAsideHeaderInnerContext();
-  return index.reactExports.useMemo(() => {
+  return React.useMemo(() => {
     if (!allPagesIsAvailable) {
       return menuItems;
     }

@@ -1,16 +1,14 @@
 import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
-import { r as reactExports } from '../../../node_modules/react/index.mjs';
+import { useCallback } from 'react';
+import { Pin, PinFill } from '@gravity-ui/icons';
+import { Icon, Button } from '@gravity-ui/uikit';
 import { block } from '../../utils/cn.mjs';
 /* empty css                       */
-import Pin from '../../../node_modules/@gravity-ui/icons/esm/Pin.mjs';
-import PinFill from '../../../node_modules/@gravity-ui/icons/esm/PinFill.mjs';
-import { Icon } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.mjs';
-import { Button } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/Button/Button.mjs';
 
 const b = block("all-pages-list-item");
 const AllPagesListItem = (props) => {
   const { item, editMode, onToggle } = props;
-  const onPinButtonClick = reactExports.useCallback(
+  const onPinButtonClick = useCallback(
     (e) => {
       e.stopPropagation();
       e.preventDefault();

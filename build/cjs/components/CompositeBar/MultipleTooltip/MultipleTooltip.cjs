@@ -3,12 +3,12 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
 const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
-const index = require('../../../node_modules/react/index.cjs');
+const React = require('react');
+const uikit = require('@gravity-ui/uikit');
 const cn = require('../../utils/cn.cjs');
 const constants = require('../constants.cjs');
 const MultipleTooltipContext = require('./MultipleTooltipContext.cjs');
 ;/* empty css                       */
-const Popup = require('../../../node_modules/@gravity-ui/uikit/build/esm/components/Popup/Popup.cjs');
 
 const b = cn.block("multiple-tooltip");
 const POPUP_OFFSET = [-32, 4];
@@ -24,10 +24,10 @@ const MultipleTooltip = ({
   anchorRef,
   placement
 }) => {
-  const { activeIndex, hideCollapseItemTooltip } = index.default.useContext(MultipleTooltipContext.MultipleTooltipContext);
+  const { activeIndex, hideCollapseItemTooltip } = React.useContext(MultipleTooltipContext.MultipleTooltipContext);
   const activeItem = activeIndex === void 0 ? null : items[activeIndex];
   return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
-    Popup.Popup,
+    uikit.Popup,
     {
       open,
       anchorRef,

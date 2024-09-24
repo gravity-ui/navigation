@@ -1,5 +1,6 @@
 import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
-import React from '../../../node_modules/react/index.mjs';
+import React__default from 'react';
+import { Icon, Popup, List, ActionTooltip } from '@gravity-ui/uikit';
 import { useAsideHeaderContext } from '../../AsideHeader/AsideHeaderContext.mjs';
 import { ASIDE_HEADER_ICON_SIZE } from '../../constants.mjs';
 import { block } from '../../utils/cn.mjs';
@@ -7,16 +8,12 @@ import { HighlightedItem } from '../HighlightedItem/HighlightedItem.mjs';
 import { ITEM_TYPE_REGULAR, COLLAPSE_ITEM_ID, POPUP_PLACEMENT, POPUP_ITEM_HEIGHT } from '../constants.mjs';
 import { getSelectedItemIndex } from '../utils.mjs';
 /* empty css           */
-import { ActionTooltip } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/ActionTooltip/ActionTooltip.mjs';
-import { Icon } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.mjs';
-import { Popup } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/Popup/Popup.mjs';
-import { List } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/List/List.mjs';
 
 const b = block("composite-bar-item");
 function renderItemTitle(item) {
   let titleNode = /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("title-text"), children: item.title });
   if (item.rightAdornment) {
-    titleNode = /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
+    titleNode = /* @__PURE__ */ jsxRuntimeExports.jsxs(React__default.Fragment, { children: [
       titleNode,
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("title-adornment"), children: item.rightAdornment })
     ] });
@@ -46,10 +43,10 @@ const Item = (props) => {
     bringForward
   } = props;
   const { compact } = useAsideHeaderContext();
-  const [open, toggleOpen] = React.useState(false);
-  const ref = React.useRef(null);
+  const [open, toggleOpen] = React__default.useState(false);
+  const ref = React__default.useRef(null);
   const anchorRef = popupAnchor || ref;
-  const highlightedRef = React.useRef(null);
+  const highlightedRef = React__default.useRef(null);
   const type = item.type || ITEM_TYPE_REGULAR;
   const current = item.current || false;
   const tooltipText = item.tooltipText || item.title;
@@ -57,7 +54,7 @@ const Item = (props) => {
   const iconSize = item.iconSize || ASIDE_HEADER_ICON_SIZE;
   const iconQa = item.iconQa;
   const collapsedItem = item.id === COLLAPSE_ITEM_ID;
-  const modifiers = React.useMemo(
+  const modifiers = React__default.useMemo(
     () => [
       {
         name: "compact",
@@ -70,7 +67,7 @@ const Item = (props) => {
     ],
     [compact]
   );
-  const onClose = React.useCallback(
+  const onClose = React__default.useCallback(
     (event) => {
       if (event instanceof MouseEvent && event.target && ref.current?.contains(event.target)) {
         return;
@@ -104,7 +101,7 @@ const Item = (props) => {
     ) : iconEl;
   };
   const makeNode = ({ icon: iconEl, title: titleEl }) => {
-    const createdNode = /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
+    const createdNode = /* @__PURE__ */ jsxRuntimeExports.jsxs(React__default.Fragment, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "div",
         {
@@ -176,7 +173,7 @@ const Item = (props) => {
     node = makeNode(params);
     highlightedNode = bringForward && makeIconNode(iconNode);
   }
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(React__default.Fragment, { children: [
     bringForward && /* @__PURE__ */ jsxRuntimeExports.jsx(
       HighlightedItem,
       {

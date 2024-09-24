@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const index = require('../../node_modules/react/index.cjs');
+const React = require('react');
 const helpers = require('./helpers.cjs');
 
 function getSettingsFromChildren(children, searchText = "") {
@@ -15,11 +15,11 @@ function getSettingsFromChildrenRecursive(children, basepath = "", filterRe) {
   const pages = {};
   let hasGroup = false;
   let hasItems = false;
-  index.default.Children.forEach(children, (element) => {
-    if (!index.default.isValidElement(element)) {
+  React.Children.forEach(children, (element) => {
+    if (!React.isValidElement(element)) {
       return;
     }
-    if (element.type === index.default.Fragment) {
+    if (element.type === React.Fragment) {
       const { menu: menuFragment, pages: pagesFragment } = getSettingsFromChildrenRecursive(
         element.props.children,
         basepath,
@@ -74,11 +74,11 @@ function getSettingsFromChildrenRecursive(children, basepath = "", filterRe) {
 }
 function getSettingsPageFromChildren(children, filterRe) {
   const page = { id: "", sections: [], hidden: true };
-  index.default.Children.forEach(children, (element) => {
-    if (!index.default.isValidElement(element)) {
+  React.Children.forEach(children, (element) => {
+    if (!React.isValidElement(element)) {
       return;
     }
-    if (element.type === index.default.Fragment) {
+    if (element.type === React.Fragment) {
       const { sections, withBadge, hidden } = getSettingsPageFromChildren(
         element.props.children,
         filterRe
@@ -105,11 +105,11 @@ function getSettingsPageFromChildren(children, filterRe) {
 function getSettingsItemsFromChildren(children, filterRe) {
   let hidden = true;
   const items = [];
-  index.default.Children.forEach(children, (element) => {
-    if (!index.default.isValidElement(element)) {
+  React.Children.forEach(children, (element) => {
+    if (!React.isValidElement(element)) {
       return;
     }
-    if (element.type === index.default.Fragment) {
+    if (element.type === React.Fragment) {
       const fragmentItems = getSettingsItemsFromChildren(element.props.children, filterRe);
       items.push(...fragmentItems.items);
       hidden = hidden && fragmentItems.hidden;

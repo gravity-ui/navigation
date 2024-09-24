@@ -1,9 +1,9 @@
 import { j as jsxRuntimeExports } from '../../../../node_modules/react/jsx-runtime.mjs';
+import { Icon } from '@gravity-ui/uikit';
 import { ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT, ITEM_HEIGHT } from '../../../constants.mjs';
 import { useAsideHeaderContext } from '../../AsideHeaderContext.mjs';
 import { b } from '../../utils.mjs';
 import headerDividerCollapsedIcon from '../../../../assets/icons/divider-collapsed.svg.mjs';
-import { Icon } from '../../../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.mjs';
 
 const AsideFallback = ({ headerDecoration, subheaderItemsCount = 0, qa }) => {
   const { compact } = useAsideHeaderContext();

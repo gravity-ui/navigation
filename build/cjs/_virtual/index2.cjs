@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-var classname = {exports: {}};
+var propTypes = {exports: {}};
 
-exports.__module = classname;
+exports.__module = propTypes;
 //# sourceMappingURL=index2.cjs.map

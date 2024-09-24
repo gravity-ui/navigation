@@ -2,15 +2,15 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const index = require('../../../node_modules/react/index.cjs');
+const React = require('react');
 const collectSettings = require('../collect-settings.cjs');
 
 const defaultValue = {};
-const context = index.default.createContext(defaultValue);
+const context = React.createContext(defaultValue);
 context.displayName = "SettingsSelectionContext";
 function useSettingsSelectionProviderValue(pages, selection) {
-  const selectedRef = index.default.useRef(null);
-  const contextValue = index.default.useMemo(() => {
+  const selectedRef = React.useRef(null);
+  const contextValue = React.useMemo(() => {
     if (!selection) return { selectedRef };
     return { selectedRef, ...collectSettings.getSelectedSettingsPart(pages, selection) };
   }, [pages, selection]);
@@ -18,7 +18,7 @@ function useSettingsSelectionProviderValue(pages, selection) {
 }
 const SettingsSelectionContextProvider = context.Provider;
 function useSettingsSelectionContext() {
-  return index.default.useContext(context);
+  return React.useContext(context);
 }
 
 exports.SettingsSelectionContextProvider = SettingsSelectionContextProvider;

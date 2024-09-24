@@ -1,4 +1,4 @@
-import { r as reactExports } from '../../node_modules/react/index.mjs';
+import { useState, useLayoutEffect, useMemo } from 'react';
 import debounceFn from '../../node_modules/lodash/debounce.mjs';
 
 function useOverflowingHorizontalListItems({
@@ -7,9 +7,9 @@ function useOverflowingHorizontalListItems({
   itemSelector,
   moreButtonWidth = 0
 }) {
-  const [containerWidth, setContainerWidth] = reactExports.useState(0);
-  const [itemWidths, setItemWidths] = reactExports.useState([]);
-  reactExports.useLayoutEffect(() => {
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [itemWidths, setItemWidths] = useState([]);
+  useLayoutEffect(() => {
     if (!containerRef.current) {
       return;
     }
@@ -21,7 +21,7 @@ function useOverflowingHorizontalListItems({
     };
     measureItemSizes();
   }, [containerRef, itemSelector]);
-  reactExports.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     const footerMenu = containerRef.current;
     if (!footerMenu) {
       return;
@@ -36,7 +36,7 @@ function useOverflowingHorizontalListItems({
     footerMenuResizeObserver.observe(footerMenu);
   }, [containerRef]);
   const isMeasured = containerWidth > 0;
-  const { visibleItems, hiddenItems } = reactExports.useMemo(() => {
+  const { visibleItems, hiddenItems } = useMemo(() => {
     if (!isMeasured) {
       return {
         visibleItems: items ?? [],

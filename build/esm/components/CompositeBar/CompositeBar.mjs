@@ -1,6 +1,7 @@
 import { j as jsxRuntimeExports } from '../../node_modules/react/jsx-runtime.mjs';
-import React, { r as reactExports } from '../../node_modules/react/index.mjs';
-import AutoSizer from '../../node_modules/react-virtualized-auto-sizer/dist/react-virtualized-auto-sizer.esm.mjs';
+import React__default, { useRef, useContext, useCallback } from 'react';
+import { List } from '@gravity-ui/uikit';
+import AutoSizer from 'react-virtualized-auto-sizer';
 import { useAsideHeaderContext } from '../AsideHeader/AsideHeaderContext.mjs';
 import { ASIDE_HEADER_COMPACT_WIDTH } from '../constants.mjs';
 import { block } from '../utils/cn.mjs';
@@ -10,7 +11,6 @@ import { getItemsMinHeight, getAutosizeListItems, getSelectedItemIndex, getItemH
 /* empty css                   */
 import { MultipleTooltipProvider, MultipleTooltipContext } from './MultipleTooltip/MultipleTooltipContext.mjs';
 import { MultipleTooltip } from './MultipleTooltip/MultipleTooltip.mjs';
-import { List } from '../../node_modules/@gravity-ui/uikit/build/esm/components/List/List.mjs';
 
 const b = block("composite-bar");
 const CompositeBarView = ({
@@ -20,16 +20,16 @@ const CompositeBarView = ({
   collapseItems,
   multipleTooltip = false
 }) => {
-  const ref = reactExports.useRef(null);
-  const tooltipRef = reactExports.useRef(null);
+  const ref = useRef(null);
+  const tooltipRef = useRef(null);
   const {
     setValue: setMultipleTooltipContextValue,
     active: multipleTooltipActive,
     activeIndex,
     lastClickedItemIndex
-  } = reactExports.useContext(MultipleTooltipContext);
+  } = useContext(MultipleTooltipContext);
   const { compact } = useAsideHeaderContext();
-  React.useEffect(() => {
+  React__default.useEffect(() => {
     function handleBlurWindow() {
       if (multipleTooltip && multipleTooltipActive) {
         setMultipleTooltipContextValue({ active: false });
@@ -40,7 +40,7 @@ const CompositeBarView = ({
       window.removeEventListener("blur", handleBlurWindow);
     };
   }, [multipleTooltip, multipleTooltipActive, setMultipleTooltipContextValue]);
-  const onTooltipMouseEnter = reactExports.useCallback(
+  const onTooltipMouseEnter = useCallback(
     (e) => {
       if (multipleTooltip && compact && !multipleTooltipActive && document.hasFocus() && activeIndex !== lastClickedItemIndex && e.clientX <= ASIDE_HEADER_COMPACT_WIDTH) {
         setMultipleTooltipContextValue?.({
@@ -57,7 +57,7 @@ const CompositeBarView = ({
       setMultipleTooltipContextValue
     ]
   );
-  const onTooltipMouseLeave = reactExports.useCallback(() => {
+  const onTooltipMouseLeave = useCallback(() => {
     if (multipleTooltip && multipleTooltipActive && document.hasFocus()) {
       setMultipleTooltipContextValue?.({
         active: false,
@@ -65,7 +65,7 @@ const CompositeBarView = ({
       });
     }
   }, [multipleTooltip, multipleTooltipActive, setMultipleTooltipContextValue]);
-  const onMouseEnterByIndex = reactExports.useCallback(
+  const onMouseEnterByIndex = useCallback(
     (itemIndex) => () => {
       if (multipleTooltip && document.hasFocus()) {
         let multipleTooltipActiveValue = multipleTooltipActive;
@@ -89,7 +89,7 @@ const CompositeBarView = ({
       setMultipleTooltipContextValue
     ]
   );
-  const onMouseLeave = reactExports.useCallback(() => {
+  const onMouseLeave = useCallback(() => {
     if (compact && document.hasFocus()) {
       ref.current?.activateItem(void 0);
       if (multipleTooltip && (activeIndex !== void 0 || lastClickedItemIndex !== void 0)) {
@@ -106,7 +106,7 @@ const CompositeBarView = ({
     multipleTooltip,
     setMultipleTooltipContextValue
   ]);
-  const onItemClickByIndex = reactExports.useCallback(
+  const onItemClickByIndex = useCallback(
     (itemIndex) => (item, collapsed, event) => {
       if (compact && multipleTooltip && itemIndex !== lastClickedItemIndex && item.id !== COLLAPSE_ITEM_ID) {
         setMultipleTooltipContextValue({
@@ -124,7 +124,7 @@ const CompositeBarView = ({
       setMultipleTooltipContextValue
     ]
   );
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(React__default.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       "div",
       {

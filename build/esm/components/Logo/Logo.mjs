@@ -1,8 +1,7 @@
 import { j as jsxRuntimeExports } from '../../node_modules/react/jsx-runtime.mjs';
+import { Button, Icon } from '@gravity-ui/uikit';
 import { block } from '../utils/cn.mjs';
 /* empty css           */
-import { Button } from '../../node_modules/@gravity-ui/uikit/build/esm/components/Button/Button.mjs';
-import { Icon } from '../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.mjs';
 
 const b = block("logo");
 const Logo = ({

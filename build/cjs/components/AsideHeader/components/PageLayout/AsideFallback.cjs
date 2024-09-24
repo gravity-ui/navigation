@@ -3,11 +3,11 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
 const jsxRuntime = require('../../../../node_modules/react/jsx-runtime.cjs');
+const uikit = require('@gravity-ui/uikit');
 const constants = require('../../../constants.cjs');
 const AsideHeaderContext = require('../../AsideHeaderContext.cjs');
 const utils = require('../../utils.cjs');
 const dividerCollapsed = require('../../../../assets/icons/divider-collapsed.svg.cjs');
-const Icon = require('../../../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.cjs');
 
 const AsideFallback = ({ headerDecoration, subheaderItemsCount = 0, qa }) => {
   const { compact } = AsideHeaderContext.useAsideHeaderContext();
@@ -17,7 +17,7 @@ const AsideFallback = ({ headerDecoration, subheaderItemsCount = 0, qa }) => {
     /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("div", { className: utils.b("header", { "with-decoration": headerDecoration }), children: [
       /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { style: { height: subheaderHeight } }),
       compact ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
-        Icon.Icon,
+        uikit.Icon,
         {
           data: dividerCollapsed.default,
           className: utils.b("header-divider"),

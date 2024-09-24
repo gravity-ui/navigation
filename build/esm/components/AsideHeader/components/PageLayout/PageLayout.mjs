@@ -1,17 +1,17 @@
 import { j as jsxRuntimeExports } from '../../../../node_modules/react/jsx-runtime.mjs';
-import React, { r as reactExports } from '../../../../node_modules/react/index.mjs';
+import React__default, { useMemo, Suspense } from 'react';
 import { ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH } from '../../../constants.mjs';
 import { AsideHeaderContextProvider, useAsideHeaderContext } from '../../AsideHeaderContext.mjs';
 import { b } from '../../utils.mjs';
 /* empty css                      */
 import { Content } from '../../../Content/Content.mjs';
 
-const TopPanel = React.lazy(
+const TopPanel = React__default.lazy(
   () => import('../TopPanel.mjs').then((module) => ({ default: module.TopPanel }))
 );
 const Layout = ({ compact, className, children, topAlert }) => {
   const size = compact ? ASIDE_HEADER_COMPACT_WIDTH : ASIDE_HEADER_EXPANDED_WIDTH;
-  const asideHeaderContextValue = reactExports.useMemo(() => ({ size, compact }), [compact, size]);
+  const asideHeaderContextValue = useMemo(() => ({ size, compact }), [compact, size]);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(AsideHeaderContextProvider, { value: asideHeaderContextValue, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "div",
     {
@@ -20,7 +20,7 @@ const Layout = ({ compact, className, children, topAlert }) => {
         ...{ "--gn-aside-header-size": `${size}px` }
       },
       children: [
-        topAlert && /* @__PURE__ */ jsxRuntimeExports.jsx(reactExports.Suspense, { fallback: null, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TopPanel, { topAlert }) }),
+        topAlert && /* @__PURE__ */ jsxRuntimeExports.jsx(Suspense, { fallback: null, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TopPanel, { topAlert }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("pane-container"), children })
       ]
     }

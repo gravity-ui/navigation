@@ -2,13 +2,13 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const index = require('../../node_modules/react/index.cjs');
+const React = require('react');
 const debounce = require('../../node_modules/lodash/debounce.cjs');
 
 const G_ROOT_CLASS_NAME = "g-root";
 const useRefHeight = (ref) => {
-  const [topHeight, setTopHeight] = index.default.useState(0);
-  index.default.useEffect(() => {
+  const [topHeight, setTopHeight] = React.useState(0);
+  React.useEffect(() => {
     if (ref.current) {
       const { current } = ref;
       setTopHeight(current.clientHeight);
@@ -19,18 +19,18 @@ const useRefHeight = (ref) => {
 const useAsideHeaderTopPanel = ({
   topAlert
 }) => {
-  const topRef = index.default.useRef(null);
+  const topRef = React.useRef(null);
   const topHeight = useRefHeight(topRef);
-  const setAsideTopPanelHeight = index.default.useCallback((clientHeight) => {
+  const setAsideTopPanelHeight = React.useCallback((clientHeight) => {
     const gRootElement = document.getElementsByClassName(G_ROOT_CLASS_NAME).item(0);
     gRootElement?.style.setProperty("--gn-aside-top-panel-height", clientHeight + "px");
   }, []);
-  const updateTopSize = index.default.useCallback(() => {
+  const updateTopSize = React.useCallback(() => {
     if (topRef.current) {
       setAsideTopPanelHeight(topRef.current?.clientHeight || 0);
     }
   }, [topRef, setAsideTopPanelHeight]);
-  index.default.useLayoutEffect(() => {
+  React.useLayoutEffect(() => {
     const updateTopSizeDebounce = debounce.default(updateTopSize, 200, { leading: true });
     if (topAlert) {
       window.addEventListener("resize", updateTopSizeDebounce);

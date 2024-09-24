@@ -1,19 +1,19 @@
 import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
-import React from '../../../node_modules/react/index.mjs';
+import React__default from 'react';
+import { Icon } from '@gravity-ui/uikit';
 import { block } from '../../utils/cn.mjs';
 import { useStableCallback, useCurrent } from '../helpers.mjs';
 /* empty css                   */
-import { Icon } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.mjs';
 
 const b = block("settings-menu");
-const SettingsMenu = React.forwardRef(
+const SettingsMenu = React__default.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
   function SettingsMenu2({ items, onChange, activeItemId }, ref) {
-    const [focusItemId, setFocusId] = React.useState();
-    const containerRef = React.useRef(null);
+    const [focusItemId, setFocusId] = React__default.useState();
+    const containerRef = React__default.useRef(null);
     const handleChange = useStableCallback(onChange);
     const getFocused = useCurrent(focusItemId);
-    React.useImperativeHandle(
+    React__default.useImperativeHandle(
       ref,
       () => ({
         handleKeyDown(event) {

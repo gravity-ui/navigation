@@ -3,7 +3,8 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
 const jsxRuntime = require('../../node_modules/react/jsx-runtime.cjs');
-const index = require('../../node_modules/react/index.cjs');
+const React = require('react');
+const uikit = require('@gravity-ui/uikit');
 const identity = require('../../node_modules/lodash/identity.cjs');
 const cn = require('../utils/cn.cjs');
 const context = require('./Selection/context.cjs');
@@ -13,15 +14,13 @@ const SettingsMenuMobile = require('./SettingsMenuMobile/SettingsMenuMobile.cjs'
 const SettingsSearch = require('./SettingsSearch/SettingsSearch.cjs');
 const collectSettings = require('./collect-settings.cjs');
 const helpers = require('./helpers.cjs');
-const index$1 = require('./i18n/index.cjs');
+const index = require('./i18n/index.cjs');
 ;/* empty css                */
 const Title = require('../Title/Title.cjs');
-const Loader = require('../../node_modules/@gravity-ui/uikit/build/esm/components/Loader/Loader.cjs');
-const Flex = require('../../node_modules/@gravity-ui/uikit/build/esm/components/layout/Flex/Flex.cjs');
 
 const b = cn.block("settings");
-const SettingsContext = index.default.createContext({});
-const useSettingsContext = () => index.default.useContext(SettingsContext);
+const SettingsContext = React.createContext({});
+const useSettingsContext = () => React.useContext(SettingsContext);
 function Settings({
   loading,
   renderLoading,
@@ -33,7 +32,7 @@ function Settings({
   ...props
 }) {
   if (loading) {
-    return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b({ loading: true, view }), children: typeof renderLoading === "function" ? renderLoading() : /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(Loader.Loader, { className: b("loader"), size: "m" }) });
+    return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b({ loading: true, view }), children: typeof renderLoading === "function" ? renderLoading() : /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Loader, { className: b("loader"), size: "m" }) });
   }
   return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
     SettingsContext.Provider,
@@ -58,29 +57,29 @@ function SettingsContent({
   selection,
   children,
   renderNotFound,
-  title = index$1.default("label_title"),
-  filterPlaceholder = index$1.default("label_filter-placeholder"),
-  emptyPlaceholder = index$1.default("label_empty-placeholder"),
+  title = index.default("label_title"),
+  filterPlaceholder = index.default("label_filter-placeholder"),
+  emptyPlaceholder = index.default("label_empty-placeholder"),
   view,
   onPageChange,
   onClose
 }) {
   const { renderSectionRightAdornment, showRightAdornmentOnHover } = useSettingsContext();
-  const [search, setSearch] = index.default.useState(initialSearch ?? "");
+  const [search, setSearch] = React.useState(initialSearch ?? "");
   const { menu, pages } = collectSettings.getSettingsFromChildren(children, search);
   const selected = context.useSettingsSelectionProviderValue(pages, selection);
   const pageKeys = Object.keys(pages);
   const selectionInitialPage = selected.page && pageKeys.includes(selected.page.id) ? selected.page.id : void 0;
-  const [selectedPage, setCurrentPage] = index.default.useState(
+  const [selectedPage, setCurrentPage] = React.useState(
     selectionInitialPage || (initialPage && pageKeys.includes(initialPage) ? initialPage : void 0)
   );
-  const searchInputRef = index.default.useRef(null);
-  const menuRef = index.default.useRef(null);
+  const searchInputRef = React.useRef(null);
+  const menuRef = React.useRef(null);
   const isMobile = view === "mobile";
-  index.default.useEffect(() => {
+  React.useEffect(() => {
     menuRef.current?.clearFocus();
   }, [search]);
-  index.default.useEffect(() => {
+  React.useEffect(() => {
     const handler = () => {
       menuRef.current?.clearFocus();
     };
@@ -101,22 +100,22 @@ function SettingsContent({
       return newPage;
     });
   };
-  index.default.useEffect(() => {
+  React.useEffect(() => {
     if (activePage !== selectedPage) {
       handlePageChange(activePage);
     }
   });
-  index.default.useEffect(() => {
+  React.useEffect(() => {
     if (!selectionInitialPage) return;
     setCurrentPage(selectionInitialPage);
   }, [selectionInitialPage]);
-  index.default.useEffect(() => {
+  React.useEffect(() => {
     if (selected.selectedRef?.current) {
       selected.selectedRef.current.scrollIntoView();
     }
   }, [selected.selectedRef]);
   const renderSetting = ({ title: settingTitle, element }) => {
-    return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("section-item"), children: index.default.cloneElement(element, {
+    return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("section-item"), children: React.cloneElement(element, {
       ...element.props,
       highlightedTitle: search && settingTitle ? prepareTitle(settingTitle, search) : settingTitle
     }) }, settingTitle);
@@ -129,7 +128,7 @@ function SettingsContent({
         className: b("section", { selected: isSelected, "only-child": section.onlyChild }),
         ref: isSelected ? selected.selectedRef : void 0,
         children: [
-          section.showTitle && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("h3", { className: b("section-heading"), children: renderSectionRightAdornment ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(Flex.Flex, { gap: 2, alignItems: "center", children: [
+          section.showTitle && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("h3", { className: b("section-heading"), children: renderSectionRightAdornment ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(uikit.Flex, { gap: 2, alignItems: "center", children: [
             section.title,
             /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
               "div",
@@ -153,13 +152,13 @@ function SettingsContent({
       return typeof renderNotFound === "function" ? renderNotFound() : /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("not-found"), children: emptyPlaceholder });
     }
     const filteredSections = pages[page].sections.filter((section) => !section.hidden);
-    return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(index.default.Fragment, { children: [
+    return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(React.Fragment, { children: [
       !isMobile && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(Title.Title, { hasSeparator: true, onClose, children: getPageTitleById(menu, page) }),
       /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("content"), children: filteredSections.map((section) => renderSection(page, section)) })
     ] });
   };
   return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(context.SettingsSelectionContextProvider, { value: selected, children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("div", { className: b({ view }), children: [
-    isMobile ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(index.default.Fragment, { children: [
+    isMobile ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(React.Fragment, { children: [
       /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
         SettingsSearch.SettingsSearch,
         {
@@ -225,13 +224,13 @@ function SettingsContent({
   ] }) });
 }
 Settings.Group = function SettingsGroup({ children }) {
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(index.default.Fragment, { children });
+  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(React.Fragment, { children });
 };
 Settings.Page = function SettingsPage({ children }) {
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(index.default.Fragment, { children });
+  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(React.Fragment, { children });
 };
 Settings.Section = function SettingsSection({ children }) {
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(index.default.Fragment, { children });
+  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(React.Fragment, { children });
 };
 Settings.Item = function SettingsItem(setting) {
   const {
@@ -256,7 +255,7 @@ Settings.Item = function SettingsItem(setting) {
       ref: isSettingSelected ? selected.selectedRef : void 0,
       children: [
         /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("label", { className: b("item-heading"), id: labelId, children: [
-          renderRightAdornment ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(Flex.Flex, { className: b("item-title-wrapper"), gap: 3, children: [
+          renderRightAdornment ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(uikit.Flex, { className: b("item-title-wrapper"), gap: 3, children: [
             titleNode,
             /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
               "div",

@@ -1,10 +1,10 @@
 import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
-import React from '../../../node_modules/react/index.mjs';
+import React__default from 'react';
 import { block } from '../../utils/cn.mjs';
 /* empty css             */
 
 const b = block("mobile-header-burger");
-const Burger = React.memo(
+const Burger = React__default.memo(
   ({ closeTitle, openTitle, opened, className, onClick }) => /* @__PURE__ */ jsxRuntimeExports.jsx(
     "button",
     {

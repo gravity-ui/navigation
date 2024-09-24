@@ -3,10 +3,9 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
 const jsxRuntime = require('../../node_modules/react/jsx-runtime.cjs');
+const uikit = require('@gravity-ui/uikit');
 const cn = require('../utils/cn.cjs');
 ;/* empty css            */
-const Button = require('../../node_modules/@gravity-ui/uikit/build/esm/components/Button/Button.cjs');
-const Icon = require('../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.cjs');
 
 const b = cn.block("logo");
 const Logo = ({
@@ -30,12 +29,12 @@ const Logo = ({
   const hasWrapper = typeof wrapper === "function";
   let buttonIcon;
   if (iconSrc) {
-    buttonIcon = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(Button.Button.Icon, { className: iconClassName, children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("img", { alt: "logo icon", src: iconSrc, width: iconSize, height: iconSize }) });
+    buttonIcon = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Button.Icon, { className: iconClassName, children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("img", { alt: "logo icon", src: iconSrc, width: iconSize, height: iconSize }) });
   } else if (icon) {
-    buttonIcon = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(Icon.Icon, { data: icon, size: iconSize, className: iconClassName });
+    buttonIcon = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Icon, { data: icon, size: iconSize, className: iconClassName });
   }
   const button = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
-    Button.Button,
+    uikit.Button,
     {
       view: "flat",
       size: "l",

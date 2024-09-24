@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-var react = {exports: {}};
+var classname = {exports: {}};
 
-exports.__module = react;
+exports.__module = classname;
 //# sourceMappingURL=index.cjs.map

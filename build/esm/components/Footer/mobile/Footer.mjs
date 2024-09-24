@@ -1,15 +1,12 @@
 import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
-import { r as reactExports } from '../../../node_modules/react/index.mjs';
+import { useState, useRef, useCallback } from 'react';
+import { Ellipsis } from '@gravity-ui/icons';
+import { Button, Icon, Sheet, Menu } from '@gravity-ui/uikit';
 import { block } from '../../utils/cn.mjs';
 import { MenuItem } from '../MenuItem/MenuItem.mjs';
 /* empty css             */
-import Ellipsis from '../../../node_modules/@gravity-ui/icons/esm/Ellipsis.mjs';
 import { useOverflowingHorizontalListItems } from '../../../hooks/useOverflowingHorizontalListItems/useOverflowingHorizontalListItems.mjs';
-import { Button } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/Button/Button.mjs';
-import { Icon } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.mjs';
-import { Sheet } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/Sheet/Sheet.mjs';
 import { Logo } from '../../Logo/Logo.mjs';
-import { Menu } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/Menu/Menu.mjs';
 
 const b = block("footer");
 const modalId = "footer-more-items";
@@ -24,16 +21,16 @@ const MobileFooter = ({
   logoWrapperClassName,
   copyright
 }) => {
-  const [moreItemsMenuVisible, setMoreItemsMenuVisible] = reactExports.useState(false);
-  const menuContainerRef = reactExports.useRef(null);
-  const handleOpenMoreItemsMenu = reactExports.useCallback(
+  const [moreItemsMenuVisible, setMoreItemsMenuVisible] = useState(false);
+  const menuContainerRef = useRef(null);
+  const handleOpenMoreItemsMenu = useCallback(
     (event) => {
       setMoreItemsMenuVisible(true);
       onMoreButtonClick?.(event);
     },
     [onMoreButtonClick]
   );
-  const handleCloseMoreItemsMenu = reactExports.useCallback(() => {
+  const handleCloseMoreItemsMenu = useCallback(() => {
     setMoreItemsMenuVisible(false);
   }, []);
   const menuItems = view === "clear" ? void 0 : providedMenuItems;

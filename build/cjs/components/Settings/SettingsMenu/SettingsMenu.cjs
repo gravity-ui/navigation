@@ -3,21 +3,21 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
 const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
-const index = require('../../../node_modules/react/index.cjs');
+const React = require('react');
+const uikit = require('@gravity-ui/uikit');
 const cn = require('../../utils/cn.cjs');
 const helpers = require('../helpers.cjs');
 ;/* empty css                    */
-const Icon = require('../../../node_modules/@gravity-ui/uikit/build/esm/components/Icon/Icon.cjs');
 
 const b = cn.block("settings-menu");
-const SettingsMenu = index.default.forwardRef(
+const SettingsMenu = React.forwardRef(
   // eslint-disable-next-line prefer-arrow-callback
   function SettingsMenu2({ items, onChange, activeItemId }, ref) {
-    const [focusItemId, setFocusId] = index.default.useState();
-    const containerRef = index.default.useRef(null);
+    const [focusItemId, setFocusId] = React.useState();
+    const containerRef = React.useRef(null);
     const handleChange = helpers.useStableCallback(onChange);
     const getFocused = helpers.useCurrent(focusItemId);
-    index.default.useImperativeHandle(
+    React.useImperativeHandle(
       ref,
       () => ({
         handleKeyDown(event) {
@@ -78,7 +78,7 @@ function renderMenuItem(item, onChange, activeItemId, focusItemId) {
       },
       "data-id": item.id,
       children: [
-        item.icon ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(Icon.Icon, { size: 16, ...item.icon, className: b("item-icon") }) : void 0,
+        item.icon ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Icon, { size: 16, ...item.icon, className: b("item-icon") }) : void 0,
         /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("span", { children: item.title })
       ]
     },

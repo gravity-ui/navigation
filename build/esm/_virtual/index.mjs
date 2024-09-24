@@ -1,4 +1,4 @@
-var react = {exports: {}};
+var classname = {exports: {}};
 
-export { react as __module };
+export { classname as __module };
 //# sourceMappingURL=index.mjs.map

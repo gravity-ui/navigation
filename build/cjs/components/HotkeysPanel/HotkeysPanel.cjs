@@ -3,15 +3,13 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
 const jsxRuntime = require('../../node_modules/react/jsx-runtime.cjs');
-const index = require('../../node_modules/react/index.cjs');
+const React = require('react');
+const uikit = require('@gravity-ui/uikit');
 const Drawer = require('../Drawer/Drawer.cjs');
 const cn = require('../utils/cn.cjs');
 const filterHotkeys = require('./utils/filterHotkeys.cjs');
 const flattenHotkeyGroups = require('./utils/flattenHotkeyGroups.cjs');
 ;/* empty css                    */
-const Hotkey = require('../../node_modules/@gravity-ui/uikit/build/esm/components/Hotkey/Hotkey.cjs');
-const TextInput = require('../../node_modules/@gravity-ui/uikit/build/esm/components/controls/TextInput/TextInput.cjs');
-const List = require('../../node_modules/@gravity-ui/uikit/build/esm/components/List/List.cjs');
 
 const b = cn.block("hotkeys-panel");
 function HotkeysPanel({
@@ -28,22 +26,22 @@ function HotkeysPanel({
   emptyState,
   ...listProps
 }) {
-  const [filter, setFilter] = index.reactExports.useState("");
-  const hotkeysList = index.reactExports.useMemo(() => {
+  const [filter, setFilter] = React.useState("");
+  const hotkeysList = React.useMemo(() => {
     const filteredHotkeys = filterHotkeys.filterHotkeys(hotkeys, filter);
     return flattenHotkeyGroups.flattenHotkeyGroups(filteredHotkeys);
   }, [hotkeys, filter]);
-  const renderItem = index.reactExports.useCallback(
+  const renderItem = React.useCallback(
     (item) => /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("div", { className: b("item-content", { group: item.group }), children: [
       item.title,
-      item.value && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(Hotkey.Hotkey, { className: b("hotkey"), value: item.value })
+      item.value && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Hotkey, { className: b("hotkey"), value: item.value })
     ] }, item.title),
     []
   );
-  const drawerItemContent = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(index.default.Fragment, { children: [
+  const drawerItemContent = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(React.Fragment, { children: [
     /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("h2", { className: b("title"), children: title }),
     /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
-      TextInput.TextInput,
+      uikit.TextInput,
       {
         value: filter,
         onUpdate: setFilter,
@@ -54,7 +52,7 @@ function HotkeysPanel({
       }
     ),
     /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
-      List.List,
+      uikit.List,
       {
         className: b("list"),
         virtualized: false,

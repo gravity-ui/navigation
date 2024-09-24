@@ -1,7 +1,7 @@
 import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
+import { Menu } from '@gravity-ui/uikit';
 import { block } from '../../utils/cn.mjs';
 /* empty css               */
-import { Menu } from '../../../node_modules/@gravity-ui/uikit/build/esm/components/Menu/Menu.mjs';
 
 const b = block("footer-menu-item");
 const MenuItem = ({ text, className, ...menuItemProps }) => {
