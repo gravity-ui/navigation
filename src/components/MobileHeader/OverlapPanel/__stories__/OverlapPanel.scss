@@ -1,0 +1,20 @@
+.overlap-panel-showcase {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-sizing: border-box;
+    width: 100dvw;
+    height: 100dvh;
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    &__header {
+        width: 100%;
+        padding: 20px;
+        border-bottom: 1px solid var(--g-color-line-generic);
+    }
+}
