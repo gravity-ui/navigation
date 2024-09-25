@@ -1,7 +1,7 @@
 import { jsx } from 'react/jsx-runtime';
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { Portal } from '@gravity-ui/uikit';
-import debounceFn from '../../../node_modules/lodash/debounce.mjs';
+import debounceFn from 'lodash/debounce';
 import { useAsideHeaderInnerContext } from '../../AsideHeader/AsideHeaderContext.mjs';
 import { block } from '../../utils/cn.mjs';
 /* empty css                      */

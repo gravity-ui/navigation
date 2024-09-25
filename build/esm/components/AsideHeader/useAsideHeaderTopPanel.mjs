@@ -1,5 +1,5 @@
 import React__default from 'react';
-import debounceFn from '../../node_modules/lodash/debounce.mjs';
+import debounceFn from 'lodash/debounce';
 
 const G_ROOT_CLASS_NAME = "g-root";
 const useRefHeight = (ref) => {

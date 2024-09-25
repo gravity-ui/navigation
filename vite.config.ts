@@ -43,6 +43,9 @@ export default defineConfig({
             external: [
                 ...Object.keys(packageJson.peerDependencies || {}),
                 ...Object.keys(packageJson.dependencies || {}),
+                'react-transition-group',
+                'lodash/debounce',
+                'lodash/identity',
             ],
             plugins: [
                 peerDepsExternal(),

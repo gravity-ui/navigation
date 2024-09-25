@@ -1,7 +1,7 @@
 import { jsx } from 'react/jsx-runtime';
 import React__default from 'react';
 import { TextInput } from '@gravity-ui/uikit';
-import debounceFn from '../../../node_modules/lodash/debounce.mjs';
+import debounceFn from 'lodash/debounce';
 import { block } from '../../utils/cn.mjs';
 import { useStableCallback } from '../helpers.mjs';
 import i18n from '../i18n/index.mjs';

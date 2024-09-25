@@ -5,7 +5,7 @@ Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const uikit = require('@gravity-ui/uikit');
-const debounce = require('../../../node_modules/lodash/debounce.cjs');
+const debounceFn = require('lodash/debounce');
 const AsideHeaderContext = require('../../AsideHeader/AsideHeaderContext.cjs');
 const cn = require('../../utils/cn.cjs');
 ;/* empty css                       */
@@ -27,7 +27,7 @@ const HighlightedItem = ({
   });
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const handleResizeDebounced = React.useMemo(
-    () => debounce.default(
+    () => debounceFn(
       () => {
         const {
           top: top2 = 0,

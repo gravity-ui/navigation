@@ -5,7 +5,7 @@ Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const uikit = require('@gravity-ui/uikit');
-const debounce = require('../../../node_modules/lodash/debounce.cjs');
+const debounceFn = require('lodash/debounce');
 const cn = require('../../utils/cn.cjs');
 const helpers = require('../helpers.cjs');
 const index = require('../i18n/index.cjs');
@@ -15,14 +15,14 @@ function SettingsSearch({
   className,
   initialValue,
   onChange,
-  debounce: debounce$1 = 200,
+  debounce = 200,
   inputRef,
   inputSize,
   placeholder,
   autoFocus = true
 }) {
   const [value, setValue] = React.useState(initialValue ?? "");
-  const onChangeDebounced = helpers.useStableCallback(debounce.default(onChange, debounce$1));
+  const onChangeDebounced = helpers.useStableCallback(debounceFn(onChange, debounce));
   const handleUpdate = helpers.useStableCallback((updated) => {
     setValue(updated);
     onChangeDebounced(updated);

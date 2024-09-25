@@ -1,7 +1,7 @@
 import { jsx, jsxs } from 'react/jsx-runtime';
 import React__default from 'react';
 import { Loader, Flex } from '@gravity-ui/uikit';
-import identity from '../../node_modules/lodash/identity.mjs';
+import identity from 'lodash/identity';
 import { block } from '../utils/cn.mjs';
 import { useSettingsSelectionProviderValue, SettingsSelectionContextProvider, useSettingsSelectionContext } from './Selection/context.mjs';
 import { isSectionSelected } from './Selection/utils.mjs';

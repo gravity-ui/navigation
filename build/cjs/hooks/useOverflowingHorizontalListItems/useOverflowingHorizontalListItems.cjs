@@ -3,7 +3,7 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
 const React = require('react');
-const debounce = require('../../node_modules/lodash/debounce.cjs');
+const debounceFn = require('lodash/debounce');
 
 function useOverflowingHorizontalListItems({
   containerRef,
@@ -35,7 +35,7 @@ function useOverflowingHorizontalListItems({
         setContainerWidth(entries[0].contentRect.width);
       }
     };
-    const updateContainerSizeDebounced = debounce.default(updateContainerSize, 100);
+    const updateContainerSizeDebounced = debounceFn(updateContainerSize, 100);
     const footerMenuResizeObserver = new ResizeObserver(updateContainerSizeDebounced);
     footerMenuResizeObserver.observe(footerMenu);
   }, [containerRef]);

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
 const React = require('react');
-const debounce = require('../../node_modules/lodash/debounce.cjs');
+const debounceFn = require('lodash/debounce');
 
 const G_ROOT_CLASS_NAME = "g-root";
 const useRefHeight = (ref) => {
@@ -31,7 +31,7 @@ const useAsideHeaderTopPanel = ({
     }
   }, [topRef, setAsideTopPanelHeight]);
   React.useLayoutEffect(() => {
-    const updateTopSizeDebounce = debounce.default(updateTopSize, 200, { leading: true });
+    const updateTopSizeDebounce = debounceFn(updateTopSize, 200, { leading: true });
     if (topAlert) {
       window.addEventListener("resize", updateTopSizeDebounce);
       updateTopSizeDebounce();

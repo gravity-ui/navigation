@@ -5,7 +5,7 @@ Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const uikit = require('@gravity-ui/uikit');
-const identity = require('../../node_modules/lodash/identity.cjs');
+const identity = require('lodash/identity');
 const cn = require('../utils/cn.cjs');
 const context = require('./Selection/context.cjs');
 const utils = require('./Selection/utils.cjs');
@@ -240,7 +240,7 @@ Settings.Item = function SettingsItem(setting) {
     children,
     align = "center",
     withBadge,
-    renderTitleComponent = identity.default,
+    renderTitleComponent = identity,
     mode,
     description
   } = setting;
