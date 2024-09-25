@@ -34,12 +34,16 @@ export default defineConfig(({mode}) => {
                 formats: [format],
             },
             rollupOptions: {
-                external: [
-                    ...Object.keys(packageJson.peerDependencies || {}),
-                    ...Object.keys(packageJson.dependencies || {}),
-                    'lodash/debounce',
-                    'lodash/identity',
-                ],
+                external: (id) => {
+                    // Treat all dependencies and peerDependencies as external
+                    const dependencies = [
+                        ...Object.keys(packageJson.dependencies || {}),
+                        ...Object.keys(packageJson.peerDependencies || {}),
+                    ];
+
+                    // Check if the id matches any dependency or their subpaths
+                    return dependencies.some((dep) => id === dep || id.startsWith(`${dep}/`));
+                },
                 plugins: [
                     peerDepsExternal(),
                     nodeResolve({
