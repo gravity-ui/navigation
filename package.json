@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/gravity-ui/navigation"
   },
-  "dev-mark": "4 fix types declaration in cjs and esm folders",
+  "dev-mark": "replace lodash",
   "main": "build/cjs/index.cjs",
   "module": "build/esm/index.mjs",
   "types": "build/types/index.d.ts",
