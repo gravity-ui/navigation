@@ -5,7 +5,7 @@ Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const uikit = require('@gravity-ui/uikit');
-const reactVirtualizedAutoSizer_esm = require('../../node_modules/react-virtualized-auto-sizer/dist/react-virtualized-auto-sizer.esm.cjs');
+const AutoSizer = require('react-virtualized-auto-sizer');
 const AsideHeaderContext = require('../AsideHeader/AsideHeaderContext.cjs');
 const constants = require('../constants.cjs');
 const cn = require('../utils/cn.cjs');
@@ -191,7 +191,7 @@ const CompositeBar = ({
   if (type === "menu") {
     const minHeight = utils.getItemsMinHeight(items);
     const collapseItem = utils.getMoreButtonItem(menuMoreTitle);
-    node = /* @__PURE__ */ jsxRuntime.jsx("div", { className: b({ autosizer: true }), style: { minHeight }, children: items.length !== 0 && /* @__PURE__ */ jsxRuntime.jsx(reactVirtualizedAutoSizer_esm.default, { children: (size) => {
+    node = /* @__PURE__ */ jsxRuntime.jsx("div", { className: b({ autosizer: true }), style: { minHeight }, children: items.length !== 0 && /* @__PURE__ */ jsxRuntime.jsx(AutoSizer, { children: (size) => {
       const width = Number.isNaN(size.width) ? 0 : size.width;
       const height = Number.isNaN(size.height) ? 0 : size.height;
       const { listItems, collapseItems } = utils.getAutosizeListItems(

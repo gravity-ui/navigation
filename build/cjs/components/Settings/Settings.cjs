@@ -5,7 +5,7 @@ Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const uikit = require('@gravity-ui/uikit');
-const identity = require('lodash/identity');
+const identity = require('lodash.identity');
 const cn = require('../utils/cn.cjs');
 const context = require('./Selection/context.cjs');
 const utils = require('./Selection/utils.cjs');

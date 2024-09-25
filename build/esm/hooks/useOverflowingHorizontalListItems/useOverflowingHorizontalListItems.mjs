@@ -1,5 +1,5 @@
 import { useState, useLayoutEffect, useMemo } from 'react';
-import debounceFn from 'lodash/debounce';
+import debounceFn from 'lodash.debounce';
 
 function useOverflowingHorizontalListItems({
   containerRef,

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import debounceFn from 'lodash/debounce';
+import debounceFn from 'lodash.debounce';
 
 import {AsideHeaderTopAlertProps} from '../types';
 

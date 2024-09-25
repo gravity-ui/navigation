@@ -1,7 +1,7 @@
 import {useLayoutEffect, useMemo, useState} from 'react';
 import type {RefObject} from 'react';
 
-import debounceFn from 'lodash/debounce';
+import debounceFn from 'lodash.debounce';
 
 export type UseOverflowingContainerListItemsProps<ItemType extends unknown> = {
     containerRef: RefObject<HTMLElement>;

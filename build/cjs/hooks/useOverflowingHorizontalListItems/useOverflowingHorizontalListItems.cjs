@@ -3,7 +3,7 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
 const React = require('react');
-const debounceFn = require('lodash/debounce');
+const debounceFn = require('lodash.debounce');
 
 function useOverflowingHorizontalListItems({
   containerRef,

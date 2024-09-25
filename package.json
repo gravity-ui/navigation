@@ -23,7 +23,9 @@
     "typecheck": "tsc --noEmit",
     "test": "jest --passWithNoTests",
     "test-storybook": "test-storybook --url ${PR_PREVIEW_URL:-http://localhost:7008}",
-    "build": "vite build",
+    "build:es": "vite build --config vite.config.ts --mode esm",
+    "build:cjs": "vite build --config vite.config.ts --mode cjs",
+    "build": "rm -rf build && npm run build:es && npm run build:cjs",
     "build:old": "rimraf build && rollup -c",
     "lint:js": "eslint src --ext .js,.jsx,.ts,.tsx",
     "lint:styles": "stylelint '{styles,src}/**/*.scss'",
@@ -40,7 +42,10 @@
     "playwright:docker:clear-cache": "./scripts/playwright-docker.sh clear-cache"
   },
   "dependencies": {
+    "lodash.debounce": "^4.0.8",
+    "lodash.identity": "^3.0.0",
     "react-transition-group": "^4.4.1",
+    "react-virtualized-auto-sizer": "^1.0.24",
     "tslib": "^2.4.0",
     "vite-plugin-commonjs": "^0.10.3"
   },
@@ -77,6 +82,8 @@
     "@storybook/testing-library": "0.2.0",
     "@svgr/rollup": "^6.4.0",
     "@types/lodash": "^4.14.202",
+    "@types/lodash.debounce": "^4.0.9",
+    "@types/lodash.identity": "^3.0.9",
     "@types/react": "^18.3.3",
     "@types/react-transition-group": "^4.4.10",
     "@types/react-virtualized-auto-sizer": "^1.0.4",

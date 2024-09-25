@@ -3,7 +3,7 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
 const React = require('react');
-const debounceFn = require('lodash/debounce');
+const debounceFn = require('lodash.debounce');
 
 const G_ROOT_CLASS_NAME = "g-root";
 const useRefHeight = (ref) => {

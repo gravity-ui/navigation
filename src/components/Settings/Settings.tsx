@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {Flex, IconProps, Loader} from '@gravity-ui/uikit';
-import identity from 'lodash/identity';
+import identity from 'lodash.identity';
 
 import {Title} from '../Title';
 import {block} from '../utils/cn';
