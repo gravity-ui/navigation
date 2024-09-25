@@ -2,11 +2,11 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const index = require('../../node_modules/@bem-react/classname/index.cjs');
+const classname = require('@bem-react/classname');
 
 const NAMESPACE = "gn-";
-index.classnameExports.withNaming({ e: "__", m: "_" });
-const block = index.classnameExports.withNaming({ n: NAMESPACE, e: "__", m: "_" });
+classname.withNaming({ e: "__", m: "_" });
+const block = classname.withNaming({ n: NAMESPACE, e: "__", m: "_" });
 
 exports.NAMESPACE = NAMESPACE;
 exports.block = block;

@@ -1,4 +1,6 @@
+import {nodeResolve} from '@rollup/plugin-node-resolve';
 import react from '@vitejs/plugin-react';
+import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import {defineConfig} from 'vite';
 import dts from 'vite-plugin-dts';
 
@@ -39,28 +41,28 @@ export default defineConfig({
         cssCodeSplit: true, // Включаем разделение CSS
         rollupOptions: {
             external: [
-                'react',
-                'react-dom',
-                'react/jsx-runtime', // https://ru.legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html
-                'lodash',
-                'react-virtualized-auto-sizer',
-                '@gravity-ui/uikit',
-                '@gravity-ui/icons',
-                /^node_modules\//,
+                ...Object.keys(packageJson.peerDependencies || {}),
+                ...Object.keys(packageJson.dependencies || {}),
+            ],
+            plugins: [
+                peerDepsExternal(),
+                nodeResolve({
+                    extensions: ['.js', '.ts', '.tsx', '.json', '.jsx'],
+                }),
             ],
             output: [
                 {
                     dir: `${outDir}/esm`,
                     format: 'es',
                     entryFileNames: '[name].mjs',
-                    chunkFileNames: '[name]-[hash].mjs',
+                    chunkFileNames: 'chunks/[name]-[hash].mjs',
                     ...commonOutputOptions,
                 },
                 {
                     dir: `${outDir}/cjs`,
                     format: 'cjs',
                     entryFileNames: '[name].cjs',
-                    chunkFileNames: '[name]-[hash].cjs',
+                    chunkFileNames: 'chunks/[name]-[hash].cjs',
                     ...commonOutputOptions,
                 },
             ],

@@ -1,7 +1,7 @@
 import { jsx, jsxs } from 'react/jsx-runtime';
 import React__default, { useRef, useContext, useCallback } from 'react';
 import { List } from '@gravity-ui/uikit';
-import AutoSizer from 'react-virtualized-auto-sizer';
+import AutoSizer from '../../node_modules/react-virtualized-auto-sizer/dist/react-virtualized-auto-sizer.esm.mjs';
 import { useAsideHeaderContext } from '../AsideHeader/AsideHeaderContext.mjs';
 import { ASIDE_HEADER_COMPACT_WIDTH } from '../constants.mjs';
 import { block } from '../utils/cn.mjs';

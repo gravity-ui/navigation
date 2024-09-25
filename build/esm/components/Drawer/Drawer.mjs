@@ -1,11 +1,10 @@
 import { jsx, jsxs } from 'react/jsx-runtime';
 import React__default from 'react';
 import { useForkRef, useBodyScrollLock, Portal } from '@gravity-ui/uikit';
+import { CSSTransition, Transition } from 'react-transition-group';
 import { block } from '../utils/cn.mjs';
 import { useResizableDrawerItem } from './utils.mjs';
 /* empty css             */
-import CSSTransition from '../../node_modules/react-transition-group/esm/CSSTransition.mjs';
-import Transition from '../../node_modules/react-transition-group/esm/Transition.mjs';
 
 const b = block("drawer");
 const TIMEOUT = 300;

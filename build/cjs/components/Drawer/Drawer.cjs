@@ -5,11 +5,10 @@ Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const uikit = require('@gravity-ui/uikit');
+const reactTransitionGroup = require('react-transition-group');
 const cn = require('../utils/cn.cjs');
 const utils = require('./utils.cjs');
 ;/* empty css              */
-const CSSTransition = require('../../node_modules/react-transition-group/esm/CSSTransition.cjs');
-const Transition = require('../../node_modules/react-transition-group/esm/Transition.cjs');
 
 const b = cn.block("drawer");
 const TIMEOUT = 300;
@@ -39,7 +38,7 @@ const DrawerItem = React.forwardRef(
     });
     const resizerElement = resizable ? /* @__PURE__ */ jsxRuntime.jsx("div", { className: b("resizer", { direction }), ...resizerHandlers, children: /* @__PURE__ */ jsxRuntime.jsx("div", { className: b("resizer-handle") }) }) : null;
     return /* @__PURE__ */ jsxRuntime.jsx(
-      CSSTransition.default,
+      reactTransitionGroup.CSSTransition,
       {
         in: visible,
         timeout: TIMEOUT,
@@ -99,7 +98,7 @@ const Drawer = ({
   const containerRef = React.useRef(null);
   const veilRef = React.useRef(null);
   const drawer = /* @__PURE__ */ jsxRuntime.jsx(
-    Transition.default,
+    reactTransitionGroup.Transition,
     {
       in: someItemVisible,
       timeout: { enter: 0, exit: TIMEOUT },
@@ -110,7 +109,7 @@ const Drawer = ({
         const childrenVisible = someItemVisible && state === "entered";
         return /* @__PURE__ */ jsxRuntime.jsxs("div", { ref: containerRef, className: b({ hideVeil }, className), style, children: [
           /* @__PURE__ */ jsxRuntime.jsx(
-            CSSTransition.default,
+            reactTransitionGroup.CSSTransition,
             {
               in: childrenVisible,
               timeout: TIMEOUT,
