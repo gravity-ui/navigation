@@ -28,6 +28,7 @@ $block: '.#{variables.$ns}hotkeys-panel';
     &__search {
         padding: 0 var(--hotkeys-panel-horizontal-padding);
         margin-bottom: 14px;
+        box-sizing: border-box;
     }
 
     &__list {
