@@ -19,15 +19,36 @@ const b = block('hotkeys-panel');
 export type HotkeysPanelProps<T> = {
     hotkeys: HotkeysGroup<T>[];
     title?: ReactNode;
+    filterable?: boolean;
     filterPlaceholder?: string;
     emptyState?: ReactNode;
     visible: boolean;
     onClose?: () => void;
     className?: string;
+    drawerItemClassName?: string;
+    filterClassName?: string;
+    titleClassName?: string;
+    itemContentClassName?: string;
+    listClassName?: string;
     leftOffset?: number | string;
     topOffset?: number | string;
     preventScrollBody?: DrawerProps['preventScrollBody'];
-} & Omit<ListProps<HotkeysListItem>, 'items' | 'emptyPlaceholder'>;
+} & Omit<
+    ListProps<HotkeysListItem>,
+    | 'items'
+    | 'emptyPlaceholder'
+    | 'className'
+    | 'size'
+    | 'renderItem'
+    | 'filterable'
+    | 'autoFocus'
+    | 'filterPlaceholder'
+    | 'filterClassName'
+    | 'filter'
+    | 'filterItem'
+    | 'onFilterEnd'
+    | 'onFilterUpdate'
+>;
 
 export function HotkeysPanel<T = {}>({
     visible,
@@ -35,9 +56,15 @@ export function HotkeysPanel<T = {}>({
     leftOffset,
     topOffset,
     className,
+    drawerItemClassName,
+    filterClassName,
+    titleClassName,
+    listClassName,
+    itemContentClassName,
     preventScrollBody,
     hotkeys,
     itemClassName,
+    filterable = true,
     filterPlaceholder,
     title,
     emptyState,
@@ -52,7 +79,10 @@ export function HotkeysPanel<T = {}>({
 
     const renderItem = useCallback(
         (item: HotkeysListItem) => (
-            <div className={b('item-content', {group: item.group})} key={item.title}>
+            <div
+                className={b('item-content', {group: item.group}, itemContentClassName)}
+                key={item.title}
+            >
                 {item.title}
                 {item.value && <Hotkey className={b('hotkey')} value={item.value} />}
             </div>
@@ -62,17 +92,19 @@ export function HotkeysPanel<T = {}>({
 
     const drawerItemContent = (
         <React.Fragment>
-            <h2 className={b('title')}>{title}</h2>
-            <TextInput
-                value={filter}
-                onUpdate={setFilter}
-                placeholder={filterPlaceholder}
-                autoFocus
-                className={b('search')}
-                hasClear
-            />
+            <h2 className={b('title', titleClassName)}>{title}</h2>
+            {filterable && (
+                <TextInput
+                    value={filter}
+                    onUpdate={setFilter}
+                    placeholder={filterPlaceholder}
+                    autoFocus
+                    className={b('search', filterClassName)}
+                    hasClear
+                />
+            )}
             <List<HotkeysListItem>
-                className={b('list')}
+                className={b('list', listClassName)}
                 virtualized={false}
                 filterable={false}
                 items={hotkeysList}
@@ -98,7 +130,7 @@ export function HotkeysPanel<T = {}>({
             <DrawerItem
                 id="hotkeys"
                 visible={visible}
-                className={b('drawer-item')}
+                className={b('drawer-item', drawerItemClassName)}
                 content={drawerItemContent}
             />
         </Drawer>

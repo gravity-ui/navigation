@@ -2,7 +2,7 @@ import React from 'react';
 
 import {Button, Hotkey} from '@gravity-ui/uikit';
 
-import {HotkeysPanel} from '../../../components/HotkeysPanel';
+import {HotkeysGroup, HotkeysPanel, HotkeysPanelProps} from '../../../components/HotkeysPanel';
 import {cn} from '../../utils/cn';
 
 import {hotkeys} from './moc';
@@ -11,7 +11,9 @@ import './HotkeysPanelShowcase.scss';
 
 const b = cn('hotkeys-panel-showcase');
 
-export function HotkeysPanelShowcase() {
+type HotkeysPanelShowcaseProps = Pick<HotkeysPanelProps<HotkeysGroup>, 'filterable'>;
+
+export function HotkeysPanelShowcase({filterable}: HotkeysPanelShowcaseProps) {
     const [visible, setVisible] = React.useState<boolean>(true);
 
     const handleClose = () => {
@@ -37,6 +39,7 @@ export function HotkeysPanelShowcase() {
                         <Hotkey value="shift+K" />
                     </span>
                 }
+                filterable={filterable}
                 filterPlaceholder="Search"
                 emptyState={<div className={b('empty')}>No hotkeys found</div>}
             />
