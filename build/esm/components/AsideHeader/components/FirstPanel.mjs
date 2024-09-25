@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
+import { jsxs, jsx } from 'react/jsx-runtime';
 import React__default, { useRef } from 'react';
 import { setRef } from '@gravity-ui/uikit';
 import { CompositeBar } from '../../CompositeBar/CompositeBar.mjs';
@@ -30,13 +30,13 @@ const FirstPanel = React__default.forwardRef((_props, ref) => {
   React__default.useEffect(() => {
     setRef(ref, asideRef.current);
   }, [ref]);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(React__default.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b("aside", className), style: { width: size }, "data-qa": qa, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("aside-popup-anchor"), ref: asideRef }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b("aside-content", { ["with-decoration"]: headerDecoration }), children: [
-        customBackground && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("aside-custom-background", customBackgroundClassName), children: customBackground }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Header, {}),
-        visibleMenuItems?.length ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxs(React__default.Fragment, { children: [
+    /* @__PURE__ */ jsxs("div", { className: b("aside", className), style: { width: size }, "data-qa": qa, children: [
+      /* @__PURE__ */ jsx("div", { className: b("aside-popup-anchor"), ref: asideRef }),
+      /* @__PURE__ */ jsxs("div", { className: b("aside-content", { ["with-decoration"]: headerDecoration }), children: [
+        customBackground && /* @__PURE__ */ jsx("div", { className: b("aside-custom-background", customBackgroundClassName), children: customBackground }),
+        /* @__PURE__ */ jsx(Header, {}),
+        visibleMenuItems?.length ? /* @__PURE__ */ jsx(
           CompositeBar,
           {
             type: "menu",
@@ -45,16 +45,16 @@ const FirstPanel = React__default.forwardRef((_props, ref) => {
             onItemClick,
             multipleTooltip
           }
-        ) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("menu-items") }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("footer"), children: renderFooter?.({
+        ) : /* @__PURE__ */ jsx("div", { className: b("menu-items") }),
+        /* @__PURE__ */ jsx("div", { className: b("footer"), children: renderFooter?.({
           size,
           compact: Boolean(compact),
           asideRef
         }) }),
-        !hideCollapseButton && /* @__PURE__ */ jsxRuntimeExports.jsx(CollapseButton, {})
+        !hideCollapseButton && /* @__PURE__ */ jsx(CollapseButton, {})
       ] })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Panels, {})
+    /* @__PURE__ */ jsx(Panels, {})
   ] });
 });
 FirstPanel.displayName = "FirstPanel";

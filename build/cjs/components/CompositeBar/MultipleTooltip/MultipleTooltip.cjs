@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
+const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const uikit = require('@gravity-ui/uikit');
 const cn = require('../../utils/cn.cjs');
@@ -26,7 +26,7 @@ const MultipleTooltip = ({
 }) => {
   const { activeIndex, hideCollapseItemTooltip } = React.useContext(MultipleTooltipContext.MultipleTooltipContext);
   const activeItem = activeIndex === void 0 ? null : items[activeIndex];
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxRuntime.jsx(
     uikit.Popup,
     {
       open,
@@ -36,14 +36,14 @@ const MultipleTooltip = ({
       contentClassName: b(null),
       modifiers: POPUP_MODIFIERS,
       disableLayer: true,
-      children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("items-container"), children: items.filter(
+      children: /* @__PURE__ */ jsxRuntime.jsx("div", { className: b("items-container"), children: items.filter(
         ({ type = "regular", id }) => !hideCollapseItemTooltip || id !== constants.COLLAPSE_ITEM_ID && type !== "action"
       ).map((item, idx) => {
         switch (item.type) {
           case "divider":
-            return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("item", { divider: true }), children: item.title }, idx);
+            return /* @__PURE__ */ jsxRuntime.jsx("div", { className: b("item", { divider: true }), children: item.title }, idx);
           default:
-            return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+            return /* @__PURE__ */ jsxRuntime.jsx(
               "div",
               {
                 className: b("item", {

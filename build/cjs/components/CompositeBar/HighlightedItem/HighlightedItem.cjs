@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
+const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const uikit = require('@gravity-ui/uikit');
 const debounce = require('../../../node_modules/lodash/debounce.cjs');
@@ -62,7 +62,7 @@ const HighlightedItem = ({
   if (!iconNode || !isModalOpen) {
     return null;
   }
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Portal, { children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxRuntime.jsx(uikit.Portal, { children: /* @__PURE__ */ jsxRuntime.jsx(
     "div",
     {
       className: b(),
@@ -70,7 +70,7 @@ const HighlightedItem = ({
       onClick,
       onClickCapture,
       "data-toast": true,
-      children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("icon"), children: iconNode })
+      children: /* @__PURE__ */ jsxRuntime.jsx("div", { className: b("icon"), children: iconNode })
     }
   ) });
 };

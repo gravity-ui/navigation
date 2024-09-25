@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
+import { jsxs, jsx } from 'react/jsx-runtime';
 import React__default from 'react';
 import { eventBroker, Icon, Sheet } from '@gravity-ui/uikit';
 import { block } from '../../utils/cn.mjs';
@@ -26,9 +26,9 @@ const FooterItem = ({
     },
     [onClick, eventBrokerMeta]
   );
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b(), children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: b("button", className), onClick: handleClick, children: icon ? /* @__PURE__ */ jsxRuntimeExports.jsx(Icon, { data: icon, size: iconSize, className: b("icon") }) : null }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxs("div", { className: b(), children: [
+    /* @__PURE__ */ jsx("button", { className: b("button", className), onClick: handleClick, children: icon ? /* @__PURE__ */ jsx(Icon, { data: icon, size: iconSize, className: b("icon") }) : null }),
+    /* @__PURE__ */ jsx(
       Sheet,
       {
         id: modalItem.id,

@@ -41,6 +41,7 @@ export default defineConfig({
             external: [
                 'react',
                 'react-dom',
+                'react/jsx-runtime', // https://ru.legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html
                 'lodash',
                 'react-virtualized-auto-sizer',
                 '@gravity-ui/uikit',

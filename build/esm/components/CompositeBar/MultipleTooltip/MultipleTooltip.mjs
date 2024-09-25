@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
+import { jsx } from 'react/jsx-runtime';
 import React__default from 'react';
 import { Popup } from '@gravity-ui/uikit';
 import { block } from '../../utils/cn.mjs';
@@ -22,7 +22,7 @@ const MultipleTooltip = ({
 }) => {
   const { activeIndex, hideCollapseItemTooltip } = React__default.useContext(MultipleTooltipContext);
   const activeItem = activeIndex === void 0 ? null : items[activeIndex];
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsx(
     Popup,
     {
       open,
@@ -32,14 +32,14 @@ const MultipleTooltip = ({
       contentClassName: b(null),
       modifiers: POPUP_MODIFIERS,
       disableLayer: true,
-      children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("items-container"), children: items.filter(
+      children: /* @__PURE__ */ jsx("div", { className: b("items-container"), children: items.filter(
         ({ type = "regular", id }) => !hideCollapseItemTooltip || id !== COLLAPSE_ITEM_ID && type !== "action"
       ).map((item, idx) => {
         switch (item.type) {
           case "divider":
-            return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("item", { divider: true }), children: item.title }, idx);
+            return /* @__PURE__ */ jsx("div", { className: b("item", { divider: true }), children: item.title }, idx);
           default:
-            return /* @__PURE__ */ jsxRuntimeExports.jsx(
+            return /* @__PURE__ */ jsx(
               "div",
               {
                 className: b("item", {

@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from '../../node_modules/react/jsx-runtime.mjs';
+import { jsx, jsxs } from 'react/jsx-runtime';
 import React__default, { useState, useCallback, useMemo, useEffect, createElement } from 'react';
 import { useForwardRef } from '../../hooks/useForwardRef.mjs';
 import { Drawer, DrawerItem } from '../Drawer/Drawer.mjs';
@@ -110,7 +110,7 @@ const MobileHeader = React__default.forwardRef(
     const burgerPanelItem = useMemo(
       () => ({
         id: BURGER_PANEL_ITEM_ID,
-        content: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        content: /* @__PURE__ */ jsx(
           BurgerMenu,
           {
             items: burgerMenu.items,
@@ -167,9 +167,9 @@ const MobileHeader = React__default.forwardRef(
       onMobilePanelOpen,
       onMobilePanelClose
     ]);
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b({ compact }, className), ref: targetRef, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: b("header"), style: { height: size }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
+    return /* @__PURE__ */ jsxs("div", { className: b({ compact }, className), ref: targetRef, children: [
+      /* @__PURE__ */ jsxs("header", { className: b("header"), style: { height: size }, children: [
+        /* @__PURE__ */ jsx(
           Burger,
           {
             opened: visiblePanel === burgerPanelItem.id,
@@ -179,10 +179,10 @@ const MobileHeader = React__default.forwardRef(
             openTitle: burgerOpenTitle
           }
         ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(MobileLogo, { ...logo, compact, onClick: onLogoClick }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("side-item"), children: sideItemRenderContent?.({ size }) })
+        /* @__PURE__ */ jsx(MobileLogo, { ...logo, compact, onClick: onLogoClick }),
+        /* @__PURE__ */ jsx("div", { className: b("side-item"), children: sideItemRenderContent?.({ size }) })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
+      /* @__PURE__ */ jsx(
         Drawer,
         {
           className: b("panels"),
@@ -200,7 +200,7 @@ const MobileHeader = React__default.forwardRef(
           ))
         }
       ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
+      /* @__PURE__ */ jsx(
         Content,
         {
           size,

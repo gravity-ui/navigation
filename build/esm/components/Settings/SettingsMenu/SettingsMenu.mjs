@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
+import { jsx, jsxs } from 'react/jsx-runtime';
 import React__default from 'react';
 import { Icon } from '@gravity-ui/uikit';
 import { block } from '../../utils/cn.mjs';
@@ -39,10 +39,10 @@ const SettingsMenu = React__default.forwardRef(
       }),
       [getFocused, handleChange]
     );
-    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { ref: containerRef, className: b(), children: items.map((firstLevelItem) => {
+    return /* @__PURE__ */ jsx("div", { ref: containerRef, className: b(), children: items.map((firstLevelItem) => {
       if ("groupTitle" in firstLevelItem) {
-        return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b("group"), children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: b("group-heading"), children: firstLevelItem.groupTitle }),
+        return /* @__PURE__ */ jsxs("div", { className: b("group"), children: [
+          /* @__PURE__ */ jsx("span", { className: b("group-heading"), children: firstLevelItem.groupTitle }),
           firstLevelItem.items.map((item) => {
             return renderMenuItem(
               item,
@@ -58,7 +58,7 @@ const SettingsMenu = React__default.forwardRef(
   }
 );
 function renderMenuItem(item, onChange, activeItemId, focusItemId) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+  return /* @__PURE__ */ jsxs(
     "span",
     {
       className: b("item", {
@@ -74,8 +74,8 @@ function renderMenuItem(item, onChange, activeItemId, focusItemId) {
       },
       "data-id": item.id,
       children: [
-        item.icon ? /* @__PURE__ */ jsxRuntimeExports.jsx(Icon, { size: 16, ...item.icon, className: b("item-icon") }) : void 0,
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: item.title })
+        item.icon ? /* @__PURE__ */ jsx(Icon, { size: 16, ...item.icon, className: b("item-icon") }) : void 0,
+        /* @__PURE__ */ jsx("span", { children: item.title })
       ]
     },
     item.title

@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('../../node_modules/react/jsx-runtime.cjs');
+const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const uikit = require('@gravity-ui/uikit');
 const AutoSizer = require('react-virtualized-auto-sizer');
@@ -128,14 +128,14 @@ const CompositeBarView = ({
       setMultipleTooltipContextValue
     ]
   );
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(React.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxRuntime.jsxs(React.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntime.jsx(
       "div",
       {
         ref: tooltipRef,
         onMouseEnter: onTooltipMouseEnter,
         onMouseLeave: onTooltipMouseLeave,
-        children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+        children: /* @__PURE__ */ jsxRuntime.jsx(
           uikit.List,
           {
             ref,
@@ -150,7 +150,7 @@ const CompositeBarView = ({
             renderItem: (item, _isItemActive, itemIndex) => {
               const itemExtraProps = utils.isMenuItem(item) ? { item } : item;
               const enableTooltip = utils.isMenuItem(item) ? !multipleTooltip : item.enableTooltip;
-              return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+              return /* @__PURE__ */ jsxRuntime.jsx(
                 Item.Item,
                 {
                   ...itemExtraProps,
@@ -166,7 +166,7 @@ const CompositeBarView = ({
         )
       }
     ),
-    type === "menu" && multipleTooltip && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+    type === "menu" && multipleTooltip && /* @__PURE__ */ jsxRuntime.jsx(
       MultipleTooltip.MultipleTooltip,
       {
         open: compact && multipleTooltipActive,
@@ -191,7 +191,7 @@ const CompositeBar = ({
   if (type === "menu") {
     const minHeight = utils.getItemsMinHeight(items);
     const collapseItem = utils.getMoreButtonItem(menuMoreTitle);
-    node = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b({ autosizer: true }), style: { minHeight }, children: items.length !== 0 && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(AutoSizer, { children: (size) => {
+    node = /* @__PURE__ */ jsxRuntime.jsx("div", { className: b({ autosizer: true }), style: { minHeight }, children: items.length !== 0 && /* @__PURE__ */ jsxRuntime.jsx(AutoSizer, { children: (size) => {
       const width = Number.isNaN(size.width) ? 0 : size.width;
       const height = Number.isNaN(size.height) ? 0 : size.height;
       const { listItems, collapseItems } = utils.getAutosizeListItems(
@@ -199,7 +199,7 @@ const CompositeBar = ({
         height,
         collapseItem
       );
-      return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { style: { width, height }, children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+      return /* @__PURE__ */ jsxRuntime.jsx("div", { style: { width, height }, children: /* @__PURE__ */ jsxRuntime.jsx(
         CompositeBarView,
         {
           type: "menu",
@@ -211,9 +211,9 @@ const CompositeBar = ({
       ) });
     } }) });
   } else {
-    node = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b({ subheader: true }), children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(CompositeBarView, { type: "subheader", items, onItemClick }) });
+    node = /* @__PURE__ */ jsxRuntime.jsx("div", { className: b({ subheader: true }), children: /* @__PURE__ */ jsxRuntime.jsx(CompositeBarView, { type: "subheader", items, onItemClick }) });
   }
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(MultipleTooltipContext.MultipleTooltipProvider, { children: node });
+  return /* @__PURE__ */ jsxRuntime.jsx(MultipleTooltipContext.MultipleTooltipProvider, { children: node });
 };
 
 exports.CompositeBar = CompositeBar;

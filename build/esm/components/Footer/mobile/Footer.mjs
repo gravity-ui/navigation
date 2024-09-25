@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
+import { jsxs, Fragment, jsx } from 'react/jsx-runtime';
 import { useState, useRef, useCallback } from 'react';
 import { Ellipsis } from '@gravity-ui/icons';
 import { Button, Icon, Sheet, Menu } from '@gravity-ui/uikit';
@@ -40,23 +40,23 @@ const MobileFooter = ({
     itemSelector: `.${b("menu-item")}`,
     moreButtonWidth: 28
   });
-  const renderMenu = (items) => /* @__PURE__ */ jsxRuntimeExports.jsx(Menu, { className: b("list"), children: items.map((item, index) => /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { ...item, className: b("menu-item", item.className) }, index)) });
+  const renderMenu = (items) => /* @__PURE__ */ jsx(Menu, { className: b("list"), children: items.map((item, index) => /* @__PURE__ */ jsx(MenuItem, { ...item, className: b("menu-item", item.className) }, index)) });
   const shouldRenderLogo = view !== "clear" && Boolean(logo);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("footer", { className: b({ mobile: true, "with-divider": withDivider, view }, className), children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b("menu", { measured }), ref: menuContainerRef, children: [
+  return /* @__PURE__ */ jsxs("footer", { className: b({ mobile: true, "with-divider": withDivider, view }, className), children: [
+    /* @__PURE__ */ jsxs("div", { className: b("menu", { measured }), ref: menuContainerRef, children: [
       visibleItems.length > 0 && renderMenu(visibleItems),
-      hiddenItems.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
+      hiddenItems.length > 0 && /* @__PURE__ */ jsxs(Fragment, { children: [
+        /* @__PURE__ */ jsx(
           Button,
           {
             view: "flat-secondary",
             size: "l",
             onClick: handleOpenMoreItemsMenu,
             title: moreButtonTitle,
-            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Icon, { data: Ellipsis, size: 16 })
+            children: /* @__PURE__ */ jsx(Icon, { data: Ellipsis, size: 16 })
           }
         ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
+        /* @__PURE__ */ jsx(
           Sheet,
           {
             id: modalId,
@@ -69,9 +69,9 @@ const MobileFooter = ({
         )
       ] })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b("bottom-row"), children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("small", { className: b("copyright"), children: copyright }),
-      shouldRenderLogo && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: logoWrapperClassName, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Logo, { ...logo }) })
+    /* @__PURE__ */ jsxs("div", { className: b("bottom-row"), children: [
+      /* @__PURE__ */ jsx("small", { className: b("copyright"), children: copyright }),
+      shouldRenderLogo && /* @__PURE__ */ jsx("div", { className: logoWrapperClassName, children: /* @__PURE__ */ jsx(Logo, { ...logo }) })
     ] })
   ] });
 };

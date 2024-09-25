@@ -2,11 +2,11 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('../../node_modules/react/jsx-runtime.cjs');
+const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 
 const RenderContent = React.memo(({ renderContent, size }) => {
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(React.Fragment, { children: renderContent({ size }) });
+  return /* @__PURE__ */ jsxRuntime.jsx(React.Fragment, { children: renderContent({ size }) });
 });
 RenderContent.displayName = "RenderContent";
 const Content = ({
@@ -17,12 +17,12 @@ const Content = ({
   renderContent,
   children
 }) => {
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxRuntime.jsx(
     "div",
     {
       className,
       style: { ...{ [cssSizeVariableName]: `${size}px` } },
-      children: typeof renderContent === "function" ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(RenderContent, { size, renderContent }) : children
+      children: typeof renderContent === "function" ? /* @__PURE__ */ jsxRuntime.jsx(RenderContent, { size, renderContent }) : children
     }
   );
 };

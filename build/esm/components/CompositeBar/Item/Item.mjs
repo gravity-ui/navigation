@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
+import { jsx, jsxs } from 'react/jsx-runtime';
 import React__default from 'react';
 import { Icon, Popup, List, ActionTooltip } from '@gravity-ui/uikit';
 import { useAsideHeaderContext } from '../../AsideHeader/AsideHeaderContext.mjs';
@@ -11,11 +11,11 @@ import { getSelectedItemIndex } from '../utils.mjs';
 
 const b = block("composite-bar-item");
 function renderItemTitle(item) {
-  let titleNode = /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("title-text"), children: item.title });
+  let titleNode = /* @__PURE__ */ jsx("div", { className: b("title-text"), children: item.title });
   if (item.rightAdornment) {
-    titleNode = /* @__PURE__ */ jsxRuntimeExports.jsxs(React__default.Fragment, { children: [
+    titleNode = /* @__PURE__ */ jsxs(React__default.Fragment, { children: [
       titleNode,
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("title-adornment"), children: item.rightAdornment })
+      /* @__PURE__ */ jsx("div", { className: b("title-adornment"), children: item.rightAdornment })
     ] });
   }
   return titleNode;
@@ -77,10 +77,10 @@ const Item = (props) => {
     [onClosePopup]
   );
   if (item.type === "divider") {
-    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("menu-divider") });
+    return /* @__PURE__ */ jsx("div", { className: b("menu-divider") });
   }
   const makeIconNode = (iconEl) => {
-    return compact ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+    return compact ? /* @__PURE__ */ jsx(
       ActionTooltip,
       {
         title: "",
@@ -88,7 +88,7 @@ const Item = (props) => {
         disabled: !enableTooltip || collapsedItem && open || popupVisible,
         placement: "right",
         className: b("icon-tooltip", { "item-type": type }),
-        children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        children: /* @__PURE__ */ jsx(
           "div",
           {
             onMouseEnter: () => onMouseEnter?.(),
@@ -101,8 +101,8 @@ const Item = (props) => {
     ) : iconEl;
   };
   const makeNode = ({ icon: iconEl, title: titleEl }) => {
-    const createdNode = /* @__PURE__ */ jsxRuntimeExports.jsxs(React__default.Fragment, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    const createdNode = /* @__PURE__ */ jsxs(React__default.Fragment, { children: [
+      /* @__PURE__ */ jsxs(
         "div",
         {
           className: b({ type, current, compact }, className),
@@ -127,8 +127,8 @@ const Item = (props) => {
             }
           },
           children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("icon-place"), ref: highlightedRef, children: makeIconNode(iconEl) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
+            /* @__PURE__ */ jsx("div", { className: b("icon-place"), ref: highlightedRef, children: makeIconNode(iconEl) }),
+            /* @__PURE__ */ jsx(
               "div",
               {
                 className: b("title"),
@@ -139,7 +139,7 @@ const Item = (props) => {
           ]
         }
       ),
-      renderPopupContent && Boolean(anchorRef?.current) && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      renderPopupContent && Boolean(anchorRef?.current) && /* @__PURE__ */ jsx(
         Popup,
         {
           contentClassName: b("popup", popupContentClassName),
@@ -154,9 +154,9 @@ const Item = (props) => {
         }
       )
     ] });
-    return item.link ? /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: item.link, className: b("link"), children: createdNode }) : createdNode;
+    return item.link ? /* @__PURE__ */ jsx("a", { href: item.link, className: b("link"), children: createdNode }) : createdNode;
   };
-  const iconNode = icon ? /* @__PURE__ */ jsxRuntimeExports.jsx(Icon, { qa: iconQa, data: icon, size: iconSize, className: b("icon") }) : null;
+  const iconNode = icon ? /* @__PURE__ */ jsx(Icon, { qa: iconQa, data: icon, size: iconSize, className: b("icon") }) : null;
   const titleNode = renderItemTitle(item);
   const params = { icon: iconNode, title: titleNode };
   let highlightedNode = null;
@@ -173,8 +173,8 @@ const Item = (props) => {
     node = makeNode(params);
     highlightedNode = bringForward && makeIconNode(iconNode);
   }
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(React__default.Fragment, { children: [
-    bringForward && /* @__PURE__ */ jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxs(React__default.Fragment, { children: [
+    bringForward && /* @__PURE__ */ jsx(
       HighlightedItem,
       {
         iconNode: highlightedNode,
@@ -184,7 +184,7 @@ const Item = (props) => {
       }
     ),
     node,
-    open && collapsedItem && collapseItems?.length && Boolean(anchorRef?.current) && /* @__PURE__ */ jsxRuntimeExports.jsx(CollapsedPopup, { ...props, anchorRef: ref, onClose: () => toggleOpen(false) })
+    open && collapsedItem && collapseItems?.length && Boolean(anchorRef?.current) && /* @__PURE__ */ jsx(CollapsedPopup, { ...props, anchorRef: ref, onClose: () => toggleOpen(false) })
   ] });
 };
 Item.displayName = "Item";
@@ -195,7 +195,7 @@ function CollapsedPopup({
   onClose
 }) {
   const { compact } = useAsideHeaderContext();
-  return collapseItems?.length ? /* @__PURE__ */ jsxRuntimeExports.jsx(Popup, { placement: POPUP_PLACEMENT, open: true, anchorRef, onClose, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("collapse-items-popup-content"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+  return collapseItems?.length ? /* @__PURE__ */ jsx(Popup, { placement: POPUP_PLACEMENT, open: true, anchorRef, onClose, children: /* @__PURE__ */ jsx("div", { className: b("collapse-items-popup-content"), children: /* @__PURE__ */ jsx(
     List,
     {
       itemClassName: b("root-collapse-item"),
@@ -212,7 +212,7 @@ function CollapsedPopup({
           title: titleEl,
           icon: iconEl
         }) => {
-          const res = /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          const res = /* @__PURE__ */ jsxs(
             "div",
             {
               className: b("collapse-item"),
@@ -225,10 +225,10 @@ function CollapsedPopup({
               ]
             }
           );
-          return collapseItem.link ? /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: collapseItem.link, className: b("link"), children: res }) : res;
+          return collapseItem.link ? /* @__PURE__ */ jsx("a", { href: collapseItem.link, className: b("link"), children: res }) : res;
         };
         const titleNode = renderItemTitle(collapseItem);
-        const iconNode = collapseItem.icon && /* @__PURE__ */ jsxRuntimeExports.jsx(
+        const iconNode = collapseItem.icon && /* @__PURE__ */ jsx(
           Icon,
           {
             data: collapseItem.icon,

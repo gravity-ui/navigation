@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
+import { jsx } from 'react/jsx-runtime';
 import React__default from 'react';
 
 const multipleTooltipContextDefaults = {
@@ -24,7 +24,7 @@ class MultipleTooltipProvider extends React__default.PureComponent {
   }
   render() {
     const { children } = this.props;
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(MultipleTooltipContext.Provider, { value: { ...this.state, setValue: this.setValue }, children });
+    return /* @__PURE__ */ jsx(MultipleTooltipContext.Provider, { value: { ...this.state, setValue: this.setValue }, children });
   }
 }
 

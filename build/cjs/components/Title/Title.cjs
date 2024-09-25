@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('../../node_modules/react/jsx-runtime.cjs');
+const jsxRuntime = require('react/jsx-runtime');
 const icons = require('@gravity-ui/icons');
 const uikit = require('@gravity-ui/uikit');
 const cn = require('../utils/cn.cjs');
@@ -17,9 +17,9 @@ const Title = ({
   closeTitle = index.default("button_close"),
   onClose
 }) => {
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("div", { className: b({ separator: hasSeparator }), children: [
-    /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Text, { className: b("text"), as: "h3", variant: "subheader-3", children }),
-    onClose && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: b({ separator: hasSeparator }), children: [
+    /* @__PURE__ */ jsxRuntime.jsx(uikit.Text, { className: b("text"), as: "h3", variant: "subheader-3", children }),
+    onClose && /* @__PURE__ */ jsxRuntime.jsx(
       uikit.Button,
       {
         onClick: onClose,
@@ -28,7 +28,7 @@ const Title = ({
         extraProps: {
           "aria-label": closeTitle
         },
-        children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Icon, { data: icons.Xmark, size: closeIconSize })
+        children: /* @__PURE__ */ jsxRuntime.jsx(uikit.Icon, { data: icons.Xmark, size: closeIconSize })
       }
     )
   ] });

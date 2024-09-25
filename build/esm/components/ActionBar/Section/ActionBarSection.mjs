@@ -1,10 +1,10 @@
-import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
+import { jsx } from 'react/jsx-runtime';
 import { block } from '../../utils/cn.mjs';
 /* empty css                       */
 
 const b = block("action-bar-section");
 const ActionBarSection = ({ children, type = "primary" }) => {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b({ type }), role: "menu", children });
+  return /* @__PURE__ */ jsx("div", { className: b({ type }), role: "menu", children });
 };
 ActionBarSection.displayName = "ActionBar.Section";
 

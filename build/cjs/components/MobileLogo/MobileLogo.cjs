@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('../../node_modules/react/jsx-runtime.cjs');
+const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const uikit = require('@gravity-ui/uikit');
 const cn = require('../utils/cn.cjs');
@@ -26,7 +26,7 @@ const MobileLogo = ({
   const hasWrapper = typeof wrapper === "function";
   let logoIcon;
   if (iconSrc) {
-    logoIcon = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+    logoIcon = /* @__PURE__ */ jsxRuntime.jsx(
       "img",
       {
         alt: "logo icon",
@@ -37,19 +37,19 @@ const MobileLogo = ({
       }
     );
   } else if (icon) {
-    logoIcon = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Icon, { data: icon, size: iconSize, className: b("icon", iconClassName) });
+    logoIcon = /* @__PURE__ */ jsxRuntime.jsx(uikit.Icon, { data: icon, size: iconSize, className: b("icon", iconClassName) });
   }
   let logoTitle;
   if (typeof text === "function") {
     logoTitle = text();
   } else {
-    logoTitle = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("span", { className: b("title"), style: { fontSize: textSize }, children: text });
+    logoTitle = /* @__PURE__ */ jsxRuntime.jsx("span", { className: b("title"), style: { fontSize: textSize }, children: text });
   }
-  const logo = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(React.Fragment, { children: [
+  const logo = /* @__PURE__ */ jsxRuntime.jsxs(React.Fragment, { children: [
     logoIcon,
     logoTitle
   ] });
-  return hasWrapper ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b(null, className), onClick, children: wrapper(logo, compact) }) : /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+  return hasWrapper ? /* @__PURE__ */ jsxRuntime.jsx("div", { className: b(null, className), onClick, children: wrapper(logo, compact) }) : /* @__PURE__ */ jsxRuntime.jsx(
     "a",
     {
       href,

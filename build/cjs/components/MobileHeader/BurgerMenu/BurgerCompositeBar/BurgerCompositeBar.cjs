@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('../../../../node_modules/react/jsx-runtime.cjs');
+const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const uikit = require('@gravity-ui/uikit');
 const cn = require('../../../utils/cn.cjs');
@@ -14,9 +14,9 @@ const b = cn.block("burger-composite-bar");
 const Item = ({ item, onItemClick }) => {
   const { icon, type = "regular", iconSize = constants.MOBILE_HEADER_ICON_SIZE } = item;
   if (type === "divider") {
-    return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("menu-divider") });
+    return /* @__PURE__ */ jsxRuntime.jsx("div", { className: b("menu-divider") });
   }
-  const node = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(
+  const node = /* @__PURE__ */ jsxRuntime.jsxs(
     "div",
     {
       className: b("item", { type }),
@@ -29,19 +29,19 @@ const Item = ({ item, onItemClick }) => {
         }
       },
       children: [
-        /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("item-icon-place"), children: icon && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Icon, { data: icon, size: iconSize, className: b("item-icon") }) }),
-        /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("item-title"), children: item.title })
+        /* @__PURE__ */ jsxRuntime.jsx("div", { className: b("item-icon-place"), children: icon && /* @__PURE__ */ jsxRuntime.jsx(uikit.Icon, { data: icon, size: iconSize, className: b("item-icon") }) }),
+        /* @__PURE__ */ jsxRuntime.jsx("div", { className: b("item-title"), children: item.title })
       ]
     }
   );
   if (typeof item.itemWrapper === "function") {
     return item.itemWrapper(node, item);
   }
-  return item.link ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("a", { href: item.link, className: b("link"), children: node }) : node;
+  return item.link ? /* @__PURE__ */ jsxRuntime.jsx("a", { href: item.link, className: b("link"), children: node }) : node;
 };
 Item.displayName = "Item";
 const BurgerCompositeBar = React.memo(({ items, onItemClick }) => {
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("nav", { className: b(), children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxRuntime.jsx("nav", { className: b(), children: /* @__PURE__ */ jsxRuntime.jsx(
     uikit.List,
     {
       items,
@@ -51,7 +51,7 @@ const BurgerCompositeBar = React.memo(({ items, onItemClick }) => {
       virtualized: false,
       filterable: false,
       sortable: false,
-      renderItem: (item) => /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(Item, { item, onItemClick })
+      renderItem: (item) => /* @__PURE__ */ jsxRuntime.jsx(Item, { item, onItemClick })
     }
   ) });
 });

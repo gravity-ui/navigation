@@ -1,10 +1,10 @@
-import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
+import { jsx } from 'react/jsx-runtime';
 import { block } from '../../utils/cn.mjs';
 /* empty css                    */
 
 const b = block("action-bar-item");
 const ActionBarItem = ({ children, className, pull, spacing = true }) => {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("li", { className: b({ pull, spacing }, className), role: "menuitem", children });
+  return /* @__PURE__ */ jsx("li", { className: b({ pull, spacing }, className), role: "menuitem", children });
 };
 ActionBarItem.displayName = "ActionBar.Item";
 

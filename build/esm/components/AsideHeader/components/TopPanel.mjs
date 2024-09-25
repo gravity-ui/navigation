@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
+import { jsx, jsxs } from 'react/jsx-runtime';
 import React__default from 'react';
 import { Alert } from '@gravity-ui/uikit';
 import { useAsideHeaderTopPanel } from '../useAsideHeaderTopPanel.mjs';
@@ -19,8 +19,8 @@ const TopPanel = ({ topAlert }) => {
   if (!topAlert || !topAlert.message) {
     return null;
   }
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { ref: topRef, className: b("pane-top", { opened }), children: opened && /* @__PURE__ */ jsxRuntimeExports.jsxs(React__default.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsx("div", { ref: topRef, className: b("pane-top", { opened }), children: opened && /* @__PURE__ */ jsxs(React__default.Fragment, { children: [
+    /* @__PURE__ */ jsx(
       Alert,
       {
         className: b("pane-top-alert", {
@@ -38,7 +38,7 @@ const TopPanel = ({ topAlert }) => {
         onClose: topAlert.closable ? handleClose : void 0
       }
     ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("pane-top-divider") })
+    /* @__PURE__ */ jsx("div", { className: b("pane-top-divider") })
   ] }) });
 };
 

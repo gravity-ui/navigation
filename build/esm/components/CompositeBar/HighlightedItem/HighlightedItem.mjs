@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
+import { jsx } from 'react/jsx-runtime';
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { Portal } from '@gravity-ui/uikit';
 import debounceFn from '../../../node_modules/lodash/debounce.mjs';
@@ -58,7 +58,7 @@ const HighlightedItem = ({
   if (!iconNode || !isModalOpen) {
     return null;
   }
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(Portal, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsx(Portal, { children: /* @__PURE__ */ jsx(
     "div",
     {
       className: b(),
@@ -66,7 +66,7 @@ const HighlightedItem = ({
       onClick,
       onClickCapture,
       "data-toast": true,
-      children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("icon"), children: iconNode })
+      children: /* @__PURE__ */ jsx("div", { className: b("icon"), children: iconNode })
     }
   ) });
 };

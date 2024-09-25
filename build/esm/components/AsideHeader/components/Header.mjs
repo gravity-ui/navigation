@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
+import { jsxs, jsx } from 'react/jsx-runtime';
 import { useCallback } from 'react';
 import { Icon } from '@gravity-ui/uikit';
 import { CompositeBar } from '../../CompositeBar/CompositeBar.mjs';
@@ -19,8 +19,8 @@ const Header = () => {
     },
     [onClosePanel, logo]
   );
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b("header", { ["with-decoration"]: headerDecoration }), children: [
-    logo && /* @__PURE__ */ jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxs("div", { className: b("header", { ["with-decoration"]: headerDecoration }), children: [
+    logo && /* @__PURE__ */ jsx(
       Logo,
       {
         ...logo,
@@ -30,7 +30,7 @@ const Header = () => {
         buttonClassName: b("logo-button")
       }
     ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
+    /* @__PURE__ */ jsx(
       CompositeBar,
       {
         type: "subheader",
@@ -38,7 +38,7 @@ const Header = () => {
         onItemClick
       }
     ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
+    /* @__PURE__ */ jsx(
       Icon,
       {
         data: headerDividerCollapsedIcon,

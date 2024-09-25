@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from '../../node_modules/react/jsx-runtime.mjs';
+import { jsx, jsxs } from 'react/jsx-runtime';
 import React__default from 'react';
 import { useForkRef, useBodyScrollLock, Portal } from '@gravity-ui/uikit';
 import { block } from '../utils/cn.mjs';
@@ -33,8 +33,8 @@ const DrawerItem = React__default.forwardRef(
       maxResizeWidth,
       onResize
     });
-    const resizerElement = resizable ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("resizer", { direction }), ...resizerHandlers, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("resizer-handle") }) }) : null;
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    const resizerElement = resizable ? /* @__PURE__ */ jsx("div", { className: b("resizer", { direction }), ...resizerHandlers, children: /* @__PURE__ */ jsx("div", { className: b("resizer-handle") }) }) : null;
+    return /* @__PURE__ */ jsx(
       CSSTransition,
       {
         in: visible,
@@ -42,7 +42,7 @@ const DrawerItem = React__default.forwardRef(
         unmountOnExit: true,
         classNames: b("item-transition", { direction: cssDirection }),
         nodeRef: itemRef,
-        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        children: /* @__PURE__ */ jsxs(
           "div",
           {
             ref: handleRef,
@@ -94,7 +94,7 @@ const Drawer = ({
   useBodyScrollLock({ enabled: preventScrollBody && someItemVisible });
   const containerRef = React__default.useRef(null);
   const veilRef = React__default.useRef(null);
-  const drawer = /* @__PURE__ */ jsxRuntimeExports.jsx(
+  const drawer = /* @__PURE__ */ jsx(
     Transition,
     {
       in: someItemVisible,
@@ -104,8 +104,8 @@ const Drawer = ({
       nodeRef: containerRef,
       children: (state) => {
         const childrenVisible = someItemVisible && state === "entered";
-        return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { ref: containerRef, className: b({ hideVeil }, className), style, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
+        return /* @__PURE__ */ jsxs("div", { ref: containerRef, className: b({ hideVeil }, className), style, children: [
+          /* @__PURE__ */ jsx(
             CSSTransition,
             {
               in: childrenVisible,
@@ -113,7 +113,7 @@ const Drawer = ({
               unmountOnExit: true,
               classNames: b("veil-transition"),
               nodeRef: veilRef,
-              children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              children: /* @__PURE__ */ jsx(
                 "div",
                 {
                   ref: veilRef,
@@ -140,7 +140,7 @@ const Drawer = ({
   if (disablePortal) {
     return drawer;
   }
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(Portal, { children: drawer });
+  return /* @__PURE__ */ jsx(Portal, { children: drawer });
 };
 
 export { Drawer, DrawerItem };

@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
+const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const uikit = require('@gravity-ui/uikit');
 const debounce = require('../../../node_modules/lodash/debounce.cjs');
@@ -27,7 +27,7 @@ function SettingsSearch({
     setValue(updated);
     onChangeDebounced(updated);
   });
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b(null, className), children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxRuntime.jsx("div", { className: b(null, className), children: /* @__PURE__ */ jsxRuntime.jsx(
     uikit.TextInput,
     {
       value,

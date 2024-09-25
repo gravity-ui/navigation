@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from '../../node_modules/react/jsx-runtime.mjs';
+import { jsx } from 'react/jsx-runtime';
 import React__default, { useState, useEffect, useCallback, useMemo } from 'react';
 import { InnerPanels } from './types.mjs';
 import { getAllPagesMenuItem } from '../AllPagesPanel/constants.mjs';
@@ -53,7 +53,7 @@ const useAsideHeaderInnerContextValue = (props) => {
       ...panelItems || [],
       {
         id: InnerPanels.AllPages,
-        content: /* @__PURE__ */ jsxRuntimeExports.jsx(AllPagesPanel, {}),
+        content: /* @__PURE__ */ jsx(AllPagesPanel, {}),
         visible: innerVisiblePanel === InnerPanels.AllPages
       }
     ];

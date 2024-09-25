@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
+const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const uikit = require('@gravity-ui/uikit');
 const AsideHeaderContext = require('../../AsideHeader/AsideHeaderContext.cjs');
@@ -15,11 +15,11 @@ const utils = require('../utils.cjs');
 
 const b = cn.block("composite-bar-item");
 function renderItemTitle(item) {
-  let titleNode = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("title-text"), children: item.title });
+  let titleNode = /* @__PURE__ */ jsxRuntime.jsx("div", { className: b("title-text"), children: item.title });
   if (item.rightAdornment) {
-    titleNode = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(React.Fragment, { children: [
+    titleNode = /* @__PURE__ */ jsxRuntime.jsxs(React.Fragment, { children: [
       titleNode,
-      /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("title-adornment"), children: item.rightAdornment })
+      /* @__PURE__ */ jsxRuntime.jsx("div", { className: b("title-adornment"), children: item.rightAdornment })
     ] });
   }
   return titleNode;
@@ -81,10 +81,10 @@ const Item = (props) => {
     [onClosePopup]
   );
   if (item.type === "divider") {
-    return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("menu-divider") });
+    return /* @__PURE__ */ jsxRuntime.jsx("div", { className: b("menu-divider") });
   }
   const makeIconNode = (iconEl) => {
-    return compact ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+    return compact ? /* @__PURE__ */ jsxRuntime.jsx(
       uikit.ActionTooltip,
       {
         title: "",
@@ -92,7 +92,7 @@ const Item = (props) => {
         disabled: !enableTooltip || collapsedItem && open || popupVisible,
         placement: "right",
         className: b("icon-tooltip", { "item-type": type }),
-        children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+        children: /* @__PURE__ */ jsxRuntime.jsx(
           "div",
           {
             onMouseEnter: () => onMouseEnter?.(),
@@ -105,8 +105,8 @@ const Item = (props) => {
     ) : iconEl;
   };
   const makeNode = ({ icon: iconEl, title: titleEl }) => {
-    const createdNode = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(React.Fragment, { children: [
-      /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(
+    const createdNode = /* @__PURE__ */ jsxRuntime.jsxs(React.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntime.jsxs(
         "div",
         {
           className: b({ type, current, compact }, className),
@@ -131,8 +131,8 @@ const Item = (props) => {
             }
           },
           children: [
-            /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("icon-place"), ref: highlightedRef, children: makeIconNode(iconEl) }),
-            /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+            /* @__PURE__ */ jsxRuntime.jsx("div", { className: b("icon-place"), ref: highlightedRef, children: makeIconNode(iconEl) }),
+            /* @__PURE__ */ jsxRuntime.jsx(
               "div",
               {
                 className: b("title"),
@@ -143,7 +143,7 @@ const Item = (props) => {
           ]
         }
       ),
-      renderPopupContent && Boolean(anchorRef?.current) && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+      renderPopupContent && Boolean(anchorRef?.current) && /* @__PURE__ */ jsxRuntime.jsx(
         uikit.Popup,
         {
           contentClassName: b("popup", popupContentClassName),
@@ -158,9 +158,9 @@ const Item = (props) => {
         }
       )
     ] });
-    return item.link ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("a", { href: item.link, className: b("link"), children: createdNode }) : createdNode;
+    return item.link ? /* @__PURE__ */ jsxRuntime.jsx("a", { href: item.link, className: b("link"), children: createdNode }) : createdNode;
   };
-  const iconNode = icon ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Icon, { qa: iconQa, data: icon, size: iconSize, className: b("icon") }) : null;
+  const iconNode = icon ? /* @__PURE__ */ jsxRuntime.jsx(uikit.Icon, { qa: iconQa, data: icon, size: iconSize, className: b("icon") }) : null;
   const titleNode = renderItemTitle(item);
   const params = { icon: iconNode, title: titleNode };
   let highlightedNode = null;
@@ -177,8 +177,8 @@ const Item = (props) => {
     node = makeNode(params);
     highlightedNode = bringForward && makeIconNode(iconNode);
   }
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(React.Fragment, { children: [
-    bringForward && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxRuntime.jsxs(React.Fragment, { children: [
+    bringForward && /* @__PURE__ */ jsxRuntime.jsx(
       HighlightedItem.HighlightedItem,
       {
         iconNode: highlightedNode,
@@ -188,7 +188,7 @@ const Item = (props) => {
       }
     ),
     node,
-    open && collapsedItem && collapseItems?.length && Boolean(anchorRef?.current) && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(CollapsedPopup, { ...props, anchorRef: ref, onClose: () => toggleOpen(false) })
+    open && collapsedItem && collapseItems?.length && Boolean(anchorRef?.current) && /* @__PURE__ */ jsxRuntime.jsx(CollapsedPopup, { ...props, anchorRef: ref, onClose: () => toggleOpen(false) })
   ] });
 };
 Item.displayName = "Item";
@@ -199,7 +199,7 @@ function CollapsedPopup({
   onClose
 }) {
   const { compact } = AsideHeaderContext.useAsideHeaderContext();
-  return collapseItems?.length ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Popup, { placement: constants.POPUP_PLACEMENT, open: true, anchorRef, onClose, children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("collapse-items-popup-content"), children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+  return collapseItems?.length ? /* @__PURE__ */ jsxRuntime.jsx(uikit.Popup, { placement: constants.POPUP_PLACEMENT, open: true, anchorRef, onClose, children: /* @__PURE__ */ jsxRuntime.jsx("div", { className: b("collapse-items-popup-content"), children: /* @__PURE__ */ jsxRuntime.jsx(
     uikit.List,
     {
       itemClassName: b("root-collapse-item"),
@@ -216,7 +216,7 @@ function CollapsedPopup({
           title: titleEl,
           icon: iconEl
         }) => {
-          const res = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(
+          const res = /* @__PURE__ */ jsxRuntime.jsxs(
             "div",
             {
               className: b("collapse-item"),
@@ -229,10 +229,10 @@ function CollapsedPopup({
               ]
             }
           );
-          return collapseItem.link ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("a", { href: collapseItem.link, className: b("link"), children: res }) : res;
+          return collapseItem.link ? /* @__PURE__ */ jsxRuntime.jsx("a", { href: collapseItem.link, className: b("link"), children: res }) : res;
         };
         const titleNode = renderItemTitle(collapseItem);
-        const iconNode = collapseItem.icon && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+        const iconNode = collapseItem.icon && /* @__PURE__ */ jsxRuntime.jsx(
           uikit.Icon,
           {
             data: collapseItem.icon,

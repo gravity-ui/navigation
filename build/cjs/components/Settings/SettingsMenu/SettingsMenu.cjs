@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
+const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const uikit = require('@gravity-ui/uikit');
 const cn = require('../../utils/cn.cjs');
@@ -43,10 +43,10 @@ const SettingsMenu = React.forwardRef(
       }),
       [getFocused, handleChange]
     );
-    return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { ref: containerRef, className: b(), children: items.map((firstLevelItem) => {
+    return /* @__PURE__ */ jsxRuntime.jsx("div", { ref: containerRef, className: b(), children: items.map((firstLevelItem) => {
       if ("groupTitle" in firstLevelItem) {
-        return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("div", { className: b("group"), children: [
-          /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("span", { className: b("group-heading"), children: firstLevelItem.groupTitle }),
+        return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: b("group"), children: [
+          /* @__PURE__ */ jsxRuntime.jsx("span", { className: b("group-heading"), children: firstLevelItem.groupTitle }),
           firstLevelItem.items.map((item) => {
             return renderMenuItem(
               item,
@@ -62,7 +62,7 @@ const SettingsMenu = React.forwardRef(
   }
 );
 function renderMenuItem(item, onChange, activeItemId, focusItemId) {
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(
+  return /* @__PURE__ */ jsxRuntime.jsxs(
     "span",
     {
       className: b("item", {
@@ -78,8 +78,8 @@ function renderMenuItem(item, onChange, activeItemId, focusItemId) {
       },
       "data-id": item.id,
       children: [
-        item.icon ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Icon, { size: 16, ...item.icon, className: b("item-icon") }) : void 0,
-        /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("span", { children: item.title })
+        item.icon ? /* @__PURE__ */ jsxRuntime.jsx(uikit.Icon, { size: 16, ...item.icon, className: b("item-icon") }) : void 0,
+        /* @__PURE__ */ jsxRuntime.jsx("span", { children: item.title })
       ]
     },
     item.title

@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
+const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const uikit = require('@gravity-ui/uikit');
 const cn = require('../../utils/cn.cjs');
@@ -12,8 +12,8 @@ const BurgerCompositeBar = require('./BurgerCompositeBar/BurgerCompositeBar.cjs'
 const b = cn.block("mobile-header-burger-menu");
 const BurgerMenu = React.memo(
   ({ items = [], renderFooter, modalItem, className, onItemClick }) => {
-    return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("div", { className: b(null, className), children: [
-      modalItem && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+    return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: b(null, className), children: [
+      modalItem && /* @__PURE__ */ jsxRuntime.jsx(
         uikit.Sheet,
         {
           visible: modalItem.visible,
@@ -25,8 +25,8 @@ const BurgerMenu = React.memo(
           children: modalItem.renderContent?.()
         }
       ),
-      /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(BurgerCompositeBar.BurgerCompositeBar, { items, onItemClick }),
-      renderFooter && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("footer"), children: renderFooter?.() })
+      /* @__PURE__ */ jsxRuntime.jsx(BurgerCompositeBar.BurgerCompositeBar, { items, onItemClick }),
+      renderFooter && /* @__PURE__ */ jsxRuntime.jsx("div", { className: b("footer"), children: renderFooter?.() })
     ] });
   }
 );

@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
+const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const uikit = require('@gravity-ui/uikit');
 const CompositeBar = require('../../CompositeBar/CompositeBar.cjs');
@@ -23,8 +23,8 @@ const Header = () => {
     },
     [onClosePanel, logo]
   );
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("div", { className: utils.b("header", { ["with-decoration"]: headerDecoration }), children: [
-    logo && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: utils.b("header", { ["with-decoration"]: headerDecoration }), children: [
+    logo && /* @__PURE__ */ jsxRuntime.jsx(
       Logo.Logo,
       {
         ...logo,
@@ -34,7 +34,7 @@ const Header = () => {
         buttonClassName: utils.b("logo-button")
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+    /* @__PURE__ */ jsxRuntime.jsx(
       CompositeBar.CompositeBar,
       {
         type: "subheader",
@@ -42,7 +42,7 @@ const Header = () => {
         onItemClick
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+    /* @__PURE__ */ jsxRuntime.jsx(
       uikit.Icon,
       {
         data: dividerCollapsed.default,

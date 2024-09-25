@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
+import { jsx } from 'react/jsx-runtime';
 import React__default from 'react';
 import { TextInput } from '@gravity-ui/uikit';
 import debounceFn from '../../../node_modules/lodash/debounce.mjs';
@@ -23,7 +23,7 @@ function SettingsSearch({
     setValue(updated);
     onChangeDebounced(updated);
   });
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b(null, className), children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsx("div", { className: b(null, className), children: /* @__PURE__ */ jsx(
     TextInput,
     {
       value,

@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from '../../node_modules/react/jsx-runtime.mjs';
+import { jsx, jsxs } from 'react/jsx-runtime';
 import React__default from 'react';
 import { Icon } from '@gravity-ui/uikit';
 import { block } from '../utils/cn.mjs';
@@ -22,7 +22,7 @@ const MobileLogo = ({
   const hasWrapper = typeof wrapper === "function";
   let logoIcon;
   if (iconSrc) {
-    logoIcon = /* @__PURE__ */ jsxRuntimeExports.jsx(
+    logoIcon = /* @__PURE__ */ jsx(
       "img",
       {
         alt: "logo icon",
@@ -33,19 +33,19 @@ const MobileLogo = ({
       }
     );
   } else if (icon) {
-    logoIcon = /* @__PURE__ */ jsxRuntimeExports.jsx(Icon, { data: icon, size: iconSize, className: b("icon", iconClassName) });
+    logoIcon = /* @__PURE__ */ jsx(Icon, { data: icon, size: iconSize, className: b("icon", iconClassName) });
   }
   let logoTitle;
   if (typeof text === "function") {
     logoTitle = text();
   } else {
-    logoTitle = /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: b("title"), style: { fontSize: textSize }, children: text });
+    logoTitle = /* @__PURE__ */ jsx("span", { className: b("title"), style: { fontSize: textSize }, children: text });
   }
-  const logo = /* @__PURE__ */ jsxRuntimeExports.jsxs(React__default.Fragment, { children: [
+  const logo = /* @__PURE__ */ jsxs(React__default.Fragment, { children: [
     logoIcon,
     logoTitle
   ] });
-  return hasWrapper ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b(null, className), onClick, children: wrapper(logo, compact) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+  return hasWrapper ? /* @__PURE__ */ jsx("div", { className: b(null, className), onClick, children: wrapper(logo, compact) }) : /* @__PURE__ */ jsx(
     "a",
     {
       href,

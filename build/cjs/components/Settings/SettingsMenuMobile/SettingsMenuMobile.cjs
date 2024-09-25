@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
+const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const uikit = require('@gravity-ui/uikit');
 const cn = require('../../utils/cn.cjs');
@@ -38,7 +38,7 @@ const SettingsMenuMobile = ({
   const handleTouchMove = (e) => {
     e.stopPropagation();
   };
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { ref, onTouchMove: handleTouchMove, children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxRuntime.jsx("div", { ref, onTouchMove: handleTouchMove, children: /* @__PURE__ */ jsxRuntime.jsx(
     uikit.Tabs,
     {
       items: tabItems,

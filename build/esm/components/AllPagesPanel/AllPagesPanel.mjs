@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from '../../node_modules/react/jsx-runtime.mjs';
+import { jsx, jsxs } from 'react/jsx-runtime';
 import { useRef, useState, useCallback, useEffect } from 'react';
 import { Gear } from '@gravity-ui/icons';
 import { Flex, Text, Button, Icon, List } from '@gravity-ui/uikit';
@@ -48,7 +48,7 @@ const AllPagesPanel = (props) => {
     [onMenuItemsChanged]
   );
   const itemRender = useCallback(
-    (item, _isActive, _itemIndex) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+    (item, _isActive, _itemIndex) => /* @__PURE__ */ jsx(
       AllPagesListItem,
       {
         item,
@@ -70,15 +70,15 @@ const AllPagesPanel = (props) => {
       }))
     );
   }, [onMenuItemsChanged]);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { className: b(null, className), gap: "5", direction: "column", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { gap: "4", alignItems: "center", justifyContent: "space-between", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Text, { variant: "subheader-2", children: isEditMode ? i18n("all-panel.title.editing") : i18n("all-panel.title.main") }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { selected: isEditMode, view: "normal", onClick: toggleEditMode, children: startEditIcon ? startEditIcon : /* @__PURE__ */ jsxRuntimeExports.jsx(Icon, { data: Gear }) })
+  return /* @__PURE__ */ jsxs(Flex, { className: b(null, className), gap: "5", direction: "column", children: [
+    /* @__PURE__ */ jsxs(Flex, { gap: "4", alignItems: "center", justifyContent: "space-between", children: [
+      /* @__PURE__ */ jsx(Text, { variant: "subheader-2", children: isEditMode ? i18n("all-panel.title.editing") : i18n("all-panel.title.main") }),
+      /* @__PURE__ */ jsx(Button, { selected: isEditMode, view: "normal", onClick: toggleEditMode, children: startEditIcon ? startEditIcon : /* @__PURE__ */ jsx(Icon, { data: Gear }) })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Flex, { className: b("content"), gap: "5", direction: "column", children: Object.keys(groupedItems).map((category) => {
-      return /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { direction: "column", gap: "3", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Text, { className: b("category"), variant: "body-1", color: "secondary", children: category }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
+    /* @__PURE__ */ jsx(Flex, { className: b("content"), gap: "5", direction: "column", children: Object.keys(groupedItems).map((category) => {
+      return /* @__PURE__ */ jsxs(Flex, { direction: "column", gap: "3", children: [
+        /* @__PURE__ */ jsx(Text, { className: b("category"), variant: "body-1", color: "secondary", children: category }),
+        /* @__PURE__ */ jsx(
           List,
           {
             virtualized: false,
@@ -90,7 +90,7 @@ const AllPagesPanel = (props) => {
         )
       ] }, category);
     }) }),
-    isEditMode && /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: onResetToDefaultClick, children: i18n("all-panel.resetToDefault") })
+    isEditMode && /* @__PURE__ */ jsx(Button, { onClick: onResetToDefaultClick, children: i18n("all-panel.resetToDefault") })
   ] });
 };
 

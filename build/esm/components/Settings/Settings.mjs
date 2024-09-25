@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from '../../node_modules/react/jsx-runtime.mjs';
+import { jsx, jsxs } from 'react/jsx-runtime';
 import React__default from 'react';
 import { Loader, Flex } from '@gravity-ui/uikit';
 import identity from '../../node_modules/lodash/identity.mjs';
@@ -28,13 +28,13 @@ function Settings({
   ...props
 }) {
   if (loading) {
-    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b({ loading: true, view }), children: typeof renderLoading === "function" ? renderLoading() : /* @__PURE__ */ jsxRuntimeExports.jsx(Loader, { className: b("loader"), size: "m" }) });
+    return /* @__PURE__ */ jsx("div", { className: b({ loading: true, view }), children: typeof renderLoading === "function" ? renderLoading() : /* @__PURE__ */ jsx(Loader, { className: b("loader"), size: "m" }) });
   }
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsx(
     SettingsContext.Provider,
     {
       value: { renderRightAdornment, renderSectionRightAdornment, showRightAdornmentOnHover },
-      children: /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsContent, { view, ...props, children })
+      children: /* @__PURE__ */ jsx(SettingsContent, { view, ...props, children })
     }
   );
 }
@@ -111,22 +111,22 @@ function SettingsContent({
     }
   }, [selected.selectedRef]);
   const renderSetting = ({ title: settingTitle, element }) => {
-    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("section-item"), children: React__default.cloneElement(element, {
+    return /* @__PURE__ */ jsx("div", { className: b("section-item"), children: React__default.cloneElement(element, {
       ...element.props,
       highlightedTitle: search && settingTitle ? prepareTitle(settingTitle, search) : settingTitle
     }) }, settingTitle);
   };
   const renderSection = (page, section) => {
     const isSelected = isSectionSelected(selected, page, section);
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    return /* @__PURE__ */ jsxs(
       "div",
       {
         className: b("section", { selected: isSelected, "only-child": section.onlyChild }),
         ref: isSelected ? selected.selectedRef : void 0,
         children: [
-          section.showTitle && /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: b("section-heading"), children: renderSectionRightAdornment ? /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { gap: 2, alignItems: "center", children: [
+          section.showTitle && /* @__PURE__ */ jsx("h3", { className: b("section-heading"), children: renderSectionRightAdornment ? /* @__PURE__ */ jsxs(Flex, { gap: 2, alignItems: "center", children: [
             section.title,
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
+            /* @__PURE__ */ jsx(
               "div",
               {
                 className: b("section-right-adornment", {
@@ -136,7 +136,7 @@ function SettingsContent({
               }
             )
           ] }) : section.title }),
-          section.header && (isMobile ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("section-subheader"), children: section.header }) : section.header),
+          section.header && (isMobile ? /* @__PURE__ */ jsx("div", { className: b("section-subheader"), children: section.header }) : section.header),
           section.items.map((setting) => setting.hidden ? null : renderSetting(setting))
         ]
       },
@@ -145,17 +145,17 @@ function SettingsContent({
   };
   const renderPageContent = (page) => {
     if (!page) {
-      return typeof renderNotFound === "function" ? renderNotFound() : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("not-found"), children: emptyPlaceholder });
+      return typeof renderNotFound === "function" ? renderNotFound() : /* @__PURE__ */ jsx("div", { className: b("not-found"), children: emptyPlaceholder });
     }
     const filteredSections = pages[page].sections.filter((section) => !section.hidden);
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs(React__default.Fragment, { children: [
-      !isMobile && /* @__PURE__ */ jsxRuntimeExports.jsx(Title, { hasSeparator: true, onClose, children: getPageTitleById(menu, page) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("content"), children: filteredSections.map((section) => renderSection(page, section)) })
+    return /* @__PURE__ */ jsxs(React__default.Fragment, { children: [
+      !isMobile && /* @__PURE__ */ jsx(Title, { hasSeparator: true, onClose, children: getPageTitleById(menu, page) }),
+      /* @__PURE__ */ jsx("div", { className: b("content"), children: filteredSections.map((section) => renderSection(page, section)) })
     ] });
   };
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsSelectionContextProvider, { value: selected, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b({ view }), children: [
-    isMobile ? /* @__PURE__ */ jsxRuntimeExports.jsxs(React__default.Fragment, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsx(SettingsSelectionContextProvider, { value: selected, children: /* @__PURE__ */ jsxs("div", { className: b({ view }), children: [
+    isMobile ? /* @__PURE__ */ jsxs(React__default.Fragment, { children: [
+      /* @__PURE__ */ jsx(
         SettingsSearch,
         {
           inputRef: searchInputRef,
@@ -166,7 +166,7 @@ function SettingsContent({
           inputSize: "xl"
         }
       ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
+      /* @__PURE__ */ jsx(
         SettingsMenuMobile,
         {
           items: menu,
@@ -175,7 +175,7 @@ function SettingsContent({
           className: b("tabs")
         }
       )
-    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    ] }) : /* @__PURE__ */ jsxs(
       "div",
       {
         className: b("menu"),
@@ -192,8 +192,8 @@ function SettingsContent({
           }
         },
         children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Title, { children: title }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
+          /* @__PURE__ */ jsx(Title, { children: title }),
+          /* @__PURE__ */ jsx(
             SettingsSearch,
             {
               inputRef: searchInputRef,
@@ -204,7 +204,7 @@ function SettingsContent({
               autoFocus: true
             }
           ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
+          /* @__PURE__ */ jsx(
             SettingsMenu,
             {
               ref: menuRef,
@@ -216,17 +216,17 @@ function SettingsContent({
         ]
       }
     ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("page"), children: renderPageContent(activePage) })
+    /* @__PURE__ */ jsx("div", { className: b("page"), children: renderPageContent(activePage) })
   ] }) });
 }
 Settings.Group = function SettingsGroup({ children }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(React__default.Fragment, { children });
+  return /* @__PURE__ */ jsx(React__default.Fragment, { children });
 };
 Settings.Page = function SettingsPage({ children }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(React__default.Fragment, { children });
+  return /* @__PURE__ */ jsx(React__default.Fragment, { children });
 };
 Settings.Section = function SettingsSection({ children }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(React__default.Fragment, { children });
+  return /* @__PURE__ */ jsx(React__default.Fragment, { children });
 };
 Settings.Item = function SettingsItem(setting) {
   const {
@@ -243,17 +243,17 @@ Settings.Item = function SettingsItem(setting) {
   const selected = useSettingsSelectionContext();
   const isSettingSelected = selected.setting && selected.setting.id === id;
   const { renderRightAdornment, showRightAdornmentOnHover } = useSettingsContext();
-  const titleNode = /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: b("item-title", { badge: withBadge }), children: renderTitleComponent(highlightedTitle) });
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+  const titleNode = /* @__PURE__ */ jsx("span", { className: b("item-title", { badge: withBadge }), children: renderTitleComponent(highlightedTitle) });
+  return /* @__PURE__ */ jsxs(
     "div",
     {
       className: b("item", { align, mode, selected: isSettingSelected }),
       ref: isSettingSelected ? selected.selectedRef : void 0,
       children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: b("item-heading"), id: labelId, children: [
-          renderRightAdornment ? /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { className: b("item-title-wrapper"), gap: 3, children: [
+        /* @__PURE__ */ jsxs("label", { className: b("item-heading"), id: labelId, children: [
+          renderRightAdornment ? /* @__PURE__ */ jsxs(Flex, { className: b("item-title-wrapper"), gap: 3, children: [
             titleNode,
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
+            /* @__PURE__ */ jsx(
               "div",
               {
                 className: b("item-right-adornment", {
@@ -263,9 +263,9 @@ Settings.Item = function SettingsItem(setting) {
               }
             )
           ] }) : titleNode,
-          description ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: b("item-description"), children: description }) : null
+          description ? /* @__PURE__ */ jsx("span", { className: b("item-description"), children: description }) : null
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: b("item-content"), children })
+        /* @__PURE__ */ jsx("div", { className: b("item-content"), children })
       ]
     }
   );
@@ -285,7 +285,7 @@ function prepareTitle(string, search) {
         title.push(temp.slice(0, i));
       }
       title.push(
-        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: b("found"), children: m }, key++)
+        /* @__PURE__ */ jsx("strong", { className: b("found"), children: m }, key++)
       );
       temp = temp.slice(i + m.length);
     }

@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from '../../node_modules/react/jsx-runtime.mjs';
+import { jsxs, jsx } from 'react/jsx-runtime';
 import React__default, { useState, useMemo, useCallback } from 'react';
 import { Hotkey, TextInput, List } from '@gravity-ui/uikit';
 import { Drawer, DrawerItem } from '../Drawer/Drawer.mjs';
@@ -28,15 +28,15 @@ function HotkeysPanel({
     return flattenHotkeyGroups(filteredHotkeys);
   }, [hotkeys, filter]);
   const renderItem = useCallback(
-    (item) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: b("item-content", { group: item.group }), children: [
+    (item) => /* @__PURE__ */ jsxs("div", { className: b("item-content", { group: item.group }), children: [
       item.title,
-      item.value && /* @__PURE__ */ jsxRuntimeExports.jsx(Hotkey, { className: b("hotkey"), value: item.value })
+      item.value && /* @__PURE__ */ jsx(Hotkey, { className: b("hotkey"), value: item.value })
     ] }, item.title),
     []
   );
-  const drawerItemContent = /* @__PURE__ */ jsxRuntimeExports.jsxs(React__default.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: b("title"), children: title }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
+  const drawerItemContent = /* @__PURE__ */ jsxs(React__default.Fragment, { children: [
+    /* @__PURE__ */ jsx("h2", { className: b("title"), children: title }),
+    /* @__PURE__ */ jsx(
       TextInput,
       {
         value: filter,
@@ -47,7 +47,7 @@ function HotkeysPanel({
         hasClear: true
       }
     ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
+    /* @__PURE__ */ jsx(
       List,
       {
         className: b("list"),
@@ -61,7 +61,7 @@ function HotkeysPanel({
       }
     )
   ] });
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsx(
     Drawer,
     {
       className: b(null, className),
@@ -72,7 +72,7 @@ function HotkeysPanel({
         left: leftOffset,
         top: topOffset
       },
-      children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      children: /* @__PURE__ */ jsx(
         DrawerItem,
         {
           id: "hotkeys",

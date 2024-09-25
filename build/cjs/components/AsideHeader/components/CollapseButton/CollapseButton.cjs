@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('../../../../node_modules/react/jsx-runtime.cjs');
+const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const uikit = require('@gravity-ui/uikit');
 const cn = require('../../../utils/cn.cjs');
@@ -18,13 +18,13 @@ const CollapseButton = ({ className }) => {
     onChangeCompact?.(!compact);
   }, [compact, onChangeCompact]);
   const buttonTitle = compact ? expandTitle || index.default("button_expand") : collapseTitle || index.default("button_collapse");
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxRuntime.jsx(
     "button",
     {
       className: b({ compact }, className),
       onClick: onCollapseButtonClick,
       title: buttonTitle,
-      children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Icon, { data: controlMenuButton.default, className: b("icon"), width: "16", height: "10" })
+      children: /* @__PURE__ */ jsxRuntime.jsx(uikit.Icon, { data: controlMenuButton.default, className: b("icon"), width: "16", height: "10" })
     }
   );
 };

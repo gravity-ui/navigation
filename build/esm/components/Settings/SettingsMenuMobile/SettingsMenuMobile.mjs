@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from '../../../node_modules/react/jsx-runtime.mjs';
+import { jsx } from 'react/jsx-runtime';
 import React__default from 'react';
 import { Tabs } from '@gravity-ui/uikit';
 import { block } from '../../utils/cn.mjs';
@@ -34,7 +34,7 @@ const SettingsMenuMobile = ({
   const handleTouchMove = (e) => {
     e.stopPropagation();
   };
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { ref, onTouchMove: handleTouchMove, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsx("div", { ref, onTouchMove: handleTouchMove, children: /* @__PURE__ */ jsx(
     Tabs,
     {
       items: tabItems,

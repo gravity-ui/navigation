@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
+const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const uikit = require('@gravity-ui/uikit');
 const cn = require('../../utils/cn.cjs');
@@ -49,9 +49,9 @@ const Footer = ({
   );
   const shouldRenderLogo = view !== "clear" && Boolean(logo);
   const shouldRenderMenu = (menuItems?.length ?? 0) > 0;
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("footer", { className: b({ desktop: true, "with-divider": withDivider, view }, className), children: [
-    shouldRenderMenu && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("div", { className: b("menu", { measured }), ref: menuContainerRef, children: [
-      visibleItems.length > 0 && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Menu, { className: b("list"), children: visibleItems.map((item, index) => /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxRuntime.jsxs("footer", { className: b({ desktop: true, "with-divider": withDivider, view }, className), children: [
+    shouldRenderMenu && /* @__PURE__ */ jsxRuntime.jsxs("div", { className: b("menu", { measured }), ref: menuContainerRef, children: [
+      visibleItems.length > 0 && /* @__PURE__ */ jsxRuntime.jsx(uikit.Menu, { className: b("list"), children: visibleItems.map((item, index) => /* @__PURE__ */ jsxRuntime.jsx(
         MenuItem.MenuItem,
         {
           ...item,
@@ -59,7 +59,7 @@ const Footer = ({
         },
         index
       )) }),
-      dropdownMenuItems.length > 0 && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+      dropdownMenuItems.length > 0 && /* @__PURE__ */ jsxRuntime.jsx(
         uikit.DropdownMenu,
         {
           items: dropdownMenuItems,
@@ -70,9 +70,9 @@ const Footer = ({
         }
       )
     ] }),
-    /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("div", { className: b("right"), children: [
-      /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("small", { className: b("copyright", { small: !menuItems?.length }), children: copyright }),
-      shouldRenderLogo && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: logoWrapperClassName, children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(Logo.Logo, { ...logo }) })
+    /* @__PURE__ */ jsxRuntime.jsxs("div", { className: b("right"), children: [
+      /* @__PURE__ */ jsxRuntime.jsx("small", { className: b("copyright", { small: !menuItems?.length }), children: copyright }),
+      shouldRenderLogo && /* @__PURE__ */ jsxRuntime.jsx("div", { className: logoWrapperClassName, children: /* @__PURE__ */ jsxRuntime.jsx(Logo.Logo, { ...logo }) })
     ] })
   ] });
 };

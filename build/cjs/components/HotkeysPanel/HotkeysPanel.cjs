@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('../../node_modules/react/jsx-runtime.cjs');
+const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const uikit = require('@gravity-ui/uikit');
 const Drawer = require('../Drawer/Drawer.cjs');
@@ -32,15 +32,15 @@ function HotkeysPanel({
     return flattenHotkeyGroups.flattenHotkeyGroups(filteredHotkeys);
   }, [hotkeys, filter]);
   const renderItem = React.useCallback(
-    (item) => /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("div", { className: b("item-content", { group: item.group }), children: [
+    (item) => /* @__PURE__ */ jsxRuntime.jsxs("div", { className: b("item-content", { group: item.group }), children: [
       item.title,
-      item.value && /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Hotkey, { className: b("hotkey"), value: item.value })
+      item.value && /* @__PURE__ */ jsxRuntime.jsx(uikit.Hotkey, { className: b("hotkey"), value: item.value })
     ] }, item.title),
     []
   );
-  const drawerItemContent = /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs(React.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("h2", { className: b("title"), children: title }),
-    /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+  const drawerItemContent = /* @__PURE__ */ jsxRuntime.jsxs(React.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntime.jsx("h2", { className: b("title"), children: title }),
+    /* @__PURE__ */ jsxRuntime.jsx(
       uikit.TextInput,
       {
         value: filter,
@@ -51,7 +51,7 @@ function HotkeysPanel({
         hasClear: true
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+    /* @__PURE__ */ jsxRuntime.jsx(
       uikit.List,
       {
         className: b("list"),
@@ -65,7 +65,7 @@ function HotkeysPanel({
       }
     )
   ] });
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxRuntime.jsx(
     Drawer.Drawer,
     {
       className: b(null, className),
@@ -76,7 +76,7 @@ function HotkeysPanel({
         left: leftOffset,
         top: topOffset
       },
-      children: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+      children: /* @__PURE__ */ jsxRuntime.jsx(
         Drawer.DrawerItem,
         {
           id: "hotkeys",

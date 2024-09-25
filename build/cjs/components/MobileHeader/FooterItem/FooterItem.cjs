@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('../../../node_modules/react/jsx-runtime.cjs');
+const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const uikit = require('@gravity-ui/uikit');
 const cn = require('../../utils/cn.cjs');
@@ -30,9 +30,9 @@ const FooterItem = ({
     },
     [onClick, eventBrokerMeta]
   );
-  return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("div", { className: b(), children: [
-    /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("button", { className: b("button", className), onClick: handleClick, children: icon ? /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(uikit.Icon, { data: icon, size: iconSize, className: b("icon") }) : null }),
-    /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: b(), children: [
+    /* @__PURE__ */ jsxRuntime.jsx("button", { className: b("button", className), onClick: handleClick, children: icon ? /* @__PURE__ */ jsxRuntime.jsx(uikit.Icon, { data: icon, size: iconSize, className: b("icon") }) : null }),
+    /* @__PURE__ */ jsxRuntime.jsx(
       uikit.Sheet,
       {
         id: modalItem.id,

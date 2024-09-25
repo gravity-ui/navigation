@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('../../node_modules/react/jsx-runtime.cjs');
+const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const types = require('./types.cjs');
 const constants = require('../AllPagesPanel/constants.cjs');
@@ -57,7 +57,7 @@ const useAsideHeaderInnerContextValue = (props) => {
       ...panelItems || [],
       {
         id: types.InnerPanels.AllPages,
-        content: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(AllPagesPanel.AllPagesPanel, {}),
+        content: /* @__PURE__ */ jsxRuntime.jsx(AllPagesPanel.AllPagesPanel, {}),
         visible: innerVisiblePanel === types.InnerPanels.AllPages
       }
     ];

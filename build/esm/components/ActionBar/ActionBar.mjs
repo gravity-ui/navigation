@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports } from '../../node_modules/react/jsx-runtime.mjs';
+import { jsx } from 'react/jsx-runtime';
 import { block } from '../utils/cn.mjs';
 import { ActionBarGroup } from './Group/ActionBarGroup.mjs';
 import { ActionBarItem } from './Item/ActionBarItem.mjs';
@@ -8,7 +8,7 @@ import { ActionBarSeparator } from './Separator/ActionBarSeparator.mjs';
 
 const b = block("action-bar");
 const ActionBar = ({ children, className, "aria-label": ariaLabel }) => {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("section", { className: b(null, className), "aria-label": ariaLabel, children });
+  return /* @__PURE__ */ jsx("section", { className: b(null, className), "aria-label": ariaLabel, children });
 };
 ActionBar.displayName = "ActionBar";
 const PublicActionBar = Object.assign(ActionBar, {

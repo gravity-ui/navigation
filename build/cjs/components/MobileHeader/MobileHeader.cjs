@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const jsxRuntime = require('../../node_modules/react/jsx-runtime.cjs');
+const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const useForwardRef = require('../../hooks/useForwardRef.cjs');
 const Drawer = require('../Drawer/Drawer.cjs');
@@ -114,7 +114,7 @@ const MobileHeader = React.forwardRef(
     const burgerPanelItem = React.useMemo(
       () => ({
         id: constants.BURGER_PANEL_ITEM_ID,
-        content: /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+        content: /* @__PURE__ */ jsxRuntime.jsx(
           BurgerMenu.BurgerMenu,
           {
             items: burgerMenu.items,
@@ -171,9 +171,9 @@ const MobileHeader = React.forwardRef(
       onMobilePanelOpen,
       onMobilePanelClose
     ]);
-    return /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("div", { className: b({ compact }, className), ref: targetRef, children: [
-      /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsxs("header", { className: b("header"), style: { height: size }, children: [
-        /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+    return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: b({ compact }, className), ref: targetRef, children: [
+      /* @__PURE__ */ jsxRuntime.jsxs("header", { className: b("header"), style: { height: size }, children: [
+        /* @__PURE__ */ jsxRuntime.jsx(
           Burger.Burger,
           {
             opened: visiblePanel === burgerPanelItem.id,
@@ -183,10 +183,10 @@ const MobileHeader = React.forwardRef(
             openTitle: burgerOpenTitle
           }
         ),
-        /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(MobileLogo.MobileLogo, { ...logo, compact, onClick: onLogoClick }),
-        /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx("div", { className: b("side-item"), children: sideItemRenderContent?.({ size }) })
+        /* @__PURE__ */ jsxRuntime.jsx(MobileLogo.MobileLogo, { ...logo, compact, onClick: onLogoClick }),
+        /* @__PURE__ */ jsxRuntime.jsx("div", { className: b("side-item"), children: sideItemRenderContent?.({ size }) })
       ] }),
-      /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+      /* @__PURE__ */ jsxRuntime.jsx(
         Drawer.Drawer,
         {
           className: b("panels"),
@@ -204,7 +204,7 @@ const MobileHeader = React.forwardRef(
           ))
         }
       ),
-      /* @__PURE__ */ jsxRuntime.jsxRuntimeExports.jsx(
+      /* @__PURE__ */ jsxRuntime.jsx(
         Content.Content,
         {
           size,
