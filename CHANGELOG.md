@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.24.0](https://github.com/gravity-ui/navigation/compare/v2.23.1...v2.24.0) (2024-09-25)
+
+
+### Features
+
+* **HotkeysPanel:** add customization props to hotkeys panel and improve docs ([#311](https://github.com/gravity-ui/navigation/issues/311)) ([eaf3129](https://github.com/gravity-ui/navigation/commit/eaf3129831537c11b899e948631cfd96ddd78b3f))
+* **MobileHeader:** add OverlapPanel ([#309](https://github.com/gravity-ui/navigation/issues/309)) ([7361b25](https://github.com/gravity-ui/navigation/commit/7361b25188736687dafe585b7cd7b403ccbf94d4))
+
 ## [2.23.1](https://github.com/gravity-ui/navigation/compare/v2.23.0...v2.23.1) (2024-09-10)
 
 
