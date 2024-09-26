@@ -1,8 +1,11 @@
 @use '../../variables';
+@use '../../../../styles/mixins';
 
 $block: '.#{variables.$ns}composite-bar-item';
 
 #{$block} {
+    @include mixins.accessibility-button;
+
     $class: &;
     --gn-composite-bar-item-action-size: 36px;
 
@@ -24,6 +27,7 @@ $block: '.#{variables.$ns}composite-bar-item';
     height: 100%;
     align-items: center;
     cursor: pointer;
+    padding: 0;
 
     &__icon {
         color: var(--gn-aside-header-item-icon-color, var(--_--item-icon-color));
@@ -94,6 +98,8 @@ $block: '.#{variables.$ns}composite-bar-item';
     }
 
     &__collapse-item {
+        @include mixins.accessibility-button;
+
         --_--item-icon-color: var(--g-color-text-misc);
 
         display: flex;
