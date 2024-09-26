@@ -3,8 +3,8 @@ import { Icon } from '@gravity-ui/uikit';
 import { ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT, ITEM_HEIGHT } from '../../../constants.mjs';
 import { useAsideHeaderContext } from '../../AsideHeaderContext.mjs';
 import { b } from '../../utils.mjs';
-import headerDividerCollapsedIcon from '../../../../icons/divider-collapsed.svg.mjs';
 
+const headerDividerCollapsedIcon = "/icons/divider-collapsed.svg";
 const AsideFallback = ({ headerDecoration, subheaderItemsCount = 0, qa }) => {
   const { compact } = useAsideHeaderContext();
   const widthVar = compact ? "--gn-aside-header-min-width" : "--gn-aside-header-size";

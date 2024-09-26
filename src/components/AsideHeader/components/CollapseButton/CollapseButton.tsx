@@ -6,11 +6,11 @@ import {block} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
 import i18n from '../../i18n';
 
-import controlMenuButtonIcon from '/icons/control-menu-button.svg';
-
 import './CollapseButton.scss';
 
 const b = block('collapse-button');
+
+const controlMenuButtonIcon = '/icons/control-menu-button.svg';
 
 export interface CollapseButtonProps {
     className?: string;

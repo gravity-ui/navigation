@@ -9,7 +9,7 @@ import {SubheaderMenuItem} from '../../types';
 import {useAsideHeaderContext, useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {b} from '../utils';
 
-import headerDividerCollapsedIcon from '/icons/divider-collapsed.svg';
+const headerDividerCollapsedIcon = '/icons/divider-collapsed.svg';
 
 const DEFAULT_SUBHEADER_ITEMS: SubheaderMenuItem[] = [];
 

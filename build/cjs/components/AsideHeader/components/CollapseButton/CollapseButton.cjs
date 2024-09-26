@@ -8,10 +8,10 @@ const uikit = require('@gravity-ui/uikit');
 const cn = require('../../../utils/cn.cjs');
 const AsideHeaderContext = require('../../AsideHeaderContext.cjs');
 const index = require('../../i18n/index.cjs');
-const controlMenuButton = require('../../../../icons/control-menu-button.svg.cjs');
 ;/* empty css                      */
 
 const b = cn.block("collapse-button");
+const controlMenuButtonIcon = "/icons/control-menu-button.svg";
 const CollapseButton = ({ className }) => {
   const { onChangeCompact, compact, expandTitle, collapseTitle } = AsideHeaderContext.useAsideHeaderInnerContext();
   const onCollapseButtonClick = React.useCallback(() => {
@@ -24,7 +24,7 @@ const CollapseButton = ({ className }) => {
       className: b({ compact }, className),
       onClick: onCollapseButtonClick,
       title: buttonTitle,
-      children: /* @__PURE__ */ jsxRuntime.jsx(uikit.Icon, { data: controlMenuButton.default, className: b("icon"), width: "16", height: "10" })
+      children: /* @__PURE__ */ jsxRuntime.jsx(uikit.Icon, { data: controlMenuButtonIcon, className: b("icon"), width: "16", height: "10" })
     }
   );
 };

@@ -7,8 +7,8 @@ const uikit = require('@gravity-ui/uikit');
 const constants = require('../../../constants.cjs');
 const AsideHeaderContext = require('../../AsideHeaderContext.cjs');
 const utils = require('../../utils.cjs');
-const dividerCollapsed = require('../../../../icons/divider-collapsed.svg.cjs');
 
+const headerDividerCollapsedIcon = "/icons/divider-collapsed.svg";
 const AsideFallback = ({ headerDecoration, subheaderItemsCount = 0, qa }) => {
   const { compact } = AsideHeaderContext.useAsideHeaderContext();
   const widthVar = compact ? "--gn-aside-header-min-width" : "--gn-aside-header-size";
@@ -19,7 +19,7 @@ const AsideFallback = ({ headerDecoration, subheaderItemsCount = 0, qa }) => {
       compact ? /* @__PURE__ */ jsxRuntime.jsx(
         uikit.Icon,
         {
-          data: dividerCollapsed.default,
+          data: headerDividerCollapsedIcon,
           className: utils.b("header-divider"),
           width: constants.ASIDE_HEADER_COMPACT_WIDTH,
           height: constants.HEADER_DIVIDER_HEIGHT

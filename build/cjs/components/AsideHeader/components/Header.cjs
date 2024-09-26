@@ -9,9 +9,9 @@ const CompositeBar = require('../../CompositeBar/CompositeBar.cjs');
 const constants = require('../../constants.cjs');
 const AsideHeaderContext = require('../AsideHeaderContext.cjs');
 const utils = require('../utils.cjs');
-const dividerCollapsed = require('../../../icons/divider-collapsed.svg.cjs');
 const Logo = require('../../Logo/Logo.cjs');
 
+const headerDividerCollapsedIcon = "/icons/divider-collapsed.svg";
 const DEFAULT_SUBHEADER_ITEMS = [];
 const Header = () => {
   const { logo, onItemClick, onClosePanel, headerDecoration, subheaderItems } = AsideHeaderContext.useAsideHeaderInnerContext();
@@ -45,7 +45,7 @@ const Header = () => {
     /* @__PURE__ */ jsxRuntime.jsx(
       uikit.Icon,
       {
-        data: dividerCollapsed.default,
+        data: headerDividerCollapsedIcon,
         className: utils.b("header-divider"),
         width: constants.ASIDE_HEADER_COMPACT_WIDTH,
         height: constants.HEADER_DIVIDER_HEIGHT
