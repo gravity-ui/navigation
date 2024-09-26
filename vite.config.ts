@@ -13,6 +13,7 @@ const outDir = 'build';
 export default defineConfig(({mode}) => {
     const format = mode === 'cjs' ? 'cjs' : 'es';
     const ext = format === 'es' ? 'mjs' : 'cjs';
+    const folder = mode === 'cjs' ? 'cjs' : 'esm';
     return {
         plugins: [
             react(),
@@ -52,7 +53,7 @@ export default defineConfig(({mode}) => {
                         targets: [
                             {
                                 src: 'assets/**/*',
-                                dest: `${outDir}/${format}/assets`,
+                                dest: `${outDir}/${folder}/assets`,
                             },
                         ],
                         hook: 'writeBundle',
@@ -63,7 +64,7 @@ export default defineConfig(({mode}) => {
                 output: {
                     preserveModules: true,
                     preserveModulesRoot: 'src',
-                    dir: `${outDir}/${format === 'cjs' ? 'cjs' : 'esm'}`,
+                    dir: `${outDir}/${folder}`,
                     entryFileNames: `[name].${ext}`,
                     format,
                     exports: 'named',
