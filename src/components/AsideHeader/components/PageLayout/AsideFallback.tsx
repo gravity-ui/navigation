@@ -6,7 +6,7 @@ import {ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT, ITEM_HEIGHT} from '..
 import {useAsideHeaderContext} from '../../AsideHeaderContext';
 import {b} from '../../utils';
 
-import headerDividerCollapsedIcon from '../../../../../assets/icons/divider-collapsed.svg';
+import headerDividerCollapsedIcon from '/icons/divider-collapsed.svg';
 
 export interface Props extends QAProps {
     headerDecoration?: boolean;

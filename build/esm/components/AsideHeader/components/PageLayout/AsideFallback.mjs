@@ -3,7 +3,7 @@ import { Icon } from '@gravity-ui/uikit';
 import { ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT, ITEM_HEIGHT } from '../../../constants.mjs';
 import { useAsideHeaderContext } from '../../AsideHeaderContext.mjs';
 import { b } from '../../utils.mjs';
-import headerDividerCollapsedIcon from '../../../../assets/icons/divider-collapsed.svg.mjs';
+import headerDividerCollapsedIcon from '../../../../icons/divider-collapsed.svg.mjs';
 
 const AsideFallback = ({ headerDecoration, subheaderItemsCount = 0, qa }) => {
   const { compact } = useAsideHeaderContext();

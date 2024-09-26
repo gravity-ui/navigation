@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/gravity-ui/navigation"
   },
-  "dev-mark": "correct svg bundling",
+  "dev-mark": "correct svg bundling 3",
   "main": "build/cjs/index.cjs",
   "module": "build/esm/index.mjs",
   "types": "build/types/index.d.ts",
@@ -101,7 +101,6 @@
     "react-dom": "^18.3.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.75.7",
-    "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",

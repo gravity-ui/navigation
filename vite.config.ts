@@ -1,6 +1,5 @@
 import {nodeResolve} from '@rollup/plugin-node-resolve';
 import react from '@vitejs/plugin-react';
-import copy from 'rollup-plugin-copy';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import {defineConfig} from 'vite';
 import dts from 'vite-plugin-dts';
@@ -24,12 +23,14 @@ export default defineConfig(({mode}) => {
                 entryRoot: 'src',
             }),
         ],
+        publicDir: 'assets',
         build: {
             outDir: `${outDir}/${format}`,
             sourcemap: true,
             target: 'esnext',
             minify: false,
             cssCodeSplit: true,
+
             lib: {
                 entry: 'src/index.ts',
                 name,
@@ -48,17 +49,6 @@ export default defineConfig(({mode}) => {
                     peerDepsExternal(),
                     nodeResolve({
                         extensions: ['.js', '.ts', '.tsx', '.json', '.jsx'],
-                    }),
-                    copy({
-                        targets: [
-                            {
-                                src: 'assets/**/*',
-                                dest: `${outDir}/${folder}/assets`,
-                            },
-                        ],
-                        hook: 'writeBundle',
-                        copyOnce: true,
-                        flatten: false,
                     }),
                 ],
                 output: {

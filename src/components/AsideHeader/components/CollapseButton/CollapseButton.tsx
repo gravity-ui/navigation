@@ -6,7 +6,7 @@ import {block} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
 import i18n from '../../i18n';
 
-import controlMenuButtonIcon from '../../../../../assets/icons/control-menu-button.svg';
+import controlMenuButtonIcon from '/icons/control-menu-button.svg';
 
 import './CollapseButton.scss';
 

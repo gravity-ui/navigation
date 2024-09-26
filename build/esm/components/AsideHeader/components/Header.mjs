@@ -5,7 +5,7 @@ import { CompositeBar } from '../../CompositeBar/CompositeBar.mjs';
 import { ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT } from '../../constants.mjs';
 import { useAsideHeaderInnerContext, useAsideHeaderContext } from '../AsideHeaderContext.mjs';
 import { b } from '../utils.mjs';
-import headerDividerCollapsedIcon from '../../../assets/icons/divider-collapsed.svg.mjs';
+import headerDividerCollapsedIcon from '../../../icons/divider-collapsed.svg.mjs';
 import { Logo } from '../../Logo/Logo.mjs';
 
 const DEFAULT_SUBHEADER_ITEMS = [];

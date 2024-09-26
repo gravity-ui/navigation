@@ -4,7 +4,7 @@ import { Icon } from '@gravity-ui/uikit';
 import { block } from '../../../utils/cn.mjs';
 import { useAsideHeaderInnerContext } from '../../AsideHeaderContext.mjs';
 import i18n from '../../i18n/index.mjs';
-import controlMenuButtonIcon from '../../../../assets/icons/control-menu-button.svg.mjs';
+import controlMenuButtonIcon from '../../../../icons/control-menu-button.svg.mjs';
 /* empty css                     */
 
 const b = block("collapse-button");

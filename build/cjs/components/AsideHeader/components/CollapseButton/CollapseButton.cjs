@@ -8,7 +8,7 @@ const uikit = require('@gravity-ui/uikit');
 const cn = require('../../../utils/cn.cjs');
 const AsideHeaderContext = require('../../AsideHeaderContext.cjs');
 const index = require('../../i18n/index.cjs');
-const controlMenuButton = require('../../../../assets/icons/control-menu-button.svg.cjs');
+const controlMenuButton = require('../../../../icons/control-menu-button.svg.cjs');
 ;/* empty css                      */
 
 const b = cn.block("collapse-button");

@@ -9,7 +9,7 @@ const CompositeBar = require('../../CompositeBar/CompositeBar.cjs');
 const constants = require('../../constants.cjs');
 const AsideHeaderContext = require('../AsideHeaderContext.cjs');
 const utils = require('../utils.cjs');
-const dividerCollapsed = require('../../../assets/icons/divider-collapsed.svg.cjs');
+const dividerCollapsed = require('../../../icons/divider-collapsed.svg.cjs');
 const Logo = require('../../Logo/Logo.cjs');
 
 const DEFAULT_SUBHEADER_ITEMS = [];

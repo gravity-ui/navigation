@@ -7,7 +7,7 @@ const uikit = require('@gravity-ui/uikit');
 const constants = require('../../../constants.cjs');
 const AsideHeaderContext = require('../../AsideHeaderContext.cjs');
 const utils = require('../../utils.cjs');
-const dividerCollapsed = require('../../../../assets/icons/divider-collapsed.svg.cjs');
+const dividerCollapsed = require('../../../../icons/divider-collapsed.svg.cjs');
 
 const AsideFallback = ({ headerDecoration, subheaderItemsCount = 0, qa }) => {
   const { compact } = AsideHeaderContext.useAsideHeaderContext();
