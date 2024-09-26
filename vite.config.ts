@@ -1,5 +1,6 @@
 import {nodeResolve} from '@rollup/plugin-node-resolve';
 import react from '@vitejs/plugin-react';
+import copy from 'rollup-plugin-copy';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import {defineConfig} from 'vite';
 import dts from 'vite-plugin-dts';
@@ -35,19 +36,28 @@ export default defineConfig(({mode}) => {
             },
             rollupOptions: {
                 external: (id) => {
-                    // Treat all dependencies and peerDependencies as external
                     const dependencies = [
                         ...Object.keys(packageJson.dependencies || {}),
                         ...Object.keys(packageJson.peerDependencies || {}),
                     ];
 
-                    // Check if the id matches any dependency or their subpaths
                     return dependencies.some((dep) => id === dep || id.startsWith(`${dep}/`));
                 },
                 plugins: [
                     peerDepsExternal(),
                     nodeResolve({
                         extensions: ['.js', '.ts', '.tsx', '.json', '.jsx'],
+                    }),
+                    copy({
+                        targets: [
+                            {
+                                src: 'assets/**/*',
+                                dest: `${outDir}/${format}/assets`,
+                            },
+                        ],
+                        hook: 'writeBundle',
+                        copyOnce: true,
+                        flatten: false,
                     }),
                 ],
                 output: {
@@ -61,7 +71,7 @@ export default defineConfig(({mode}) => {
                         if (assetInfo.name?.endsWith('.css')) {
                             return '[name][extname]';
                         }
-                        return 'assets/[name][extname]';
+                        return 'assets/[name]-[hash][extname]';
                     },
                 },
             },
