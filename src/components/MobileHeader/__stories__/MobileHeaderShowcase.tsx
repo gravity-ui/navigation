@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Gear} from '@gravity-ui/icons';
+import {Dots9, Gear, Plus} from '@gravity-ui/icons';
 import {Button, Icon, MobileProvider, TextInput} from '@gravity-ui/uikit';
 
 import {MobileHeader, MobileHeaderFooterItem, MobileHeaderProps} from '../';
@@ -27,6 +27,10 @@ export function MobileHeaderShowcase() {
     const toggleSearchModal = React.useCallback(() => setSearchModalVisible((prev) => !prev), []);
     const closeSearchModal = React.useCallback(() => setSearchModalVisible(false), []);
 
+    const openOverlapPanel = React.useCallback(() => {
+        ref?.current?.dispatchEvent(getMobileHeaderCustomEvent('MOBILE_OVERLAP_PANEL_OPEN'));
+    }, []);
+
     const toggleSettingsModal = React.useCallback(
         () => setSettingsModalVisible((prev) => !prev),
         [],
@@ -46,6 +50,15 @@ export function MobileHeaderShowcase() {
                 return <div className={b('item-accent')}>{node}</div>;
             },
             current: true,
+        },
+        {
+            id: 'overlap',
+            title: 'Overlap Panel',
+            icon: Dots9,
+            closeMenuOnClick: false,
+            onItemClick() {
+                openOverlapPanel();
+            },
         },
         {
             id: 'search',
@@ -110,6 +123,15 @@ export function MobileHeaderShowcase() {
                         onClick: () => alert('Click on logo'),
                     }}
                     sideItemRenderContent={() => sideItem}
+                    overlapPanel={{
+                        title: 'Title',
+                        renderContent: () => <TextInput />,
+                        action: {
+                            onClick: () => alert('click on action'),
+                            icon: Plus,
+                            title: 'Create',
+                        },
+                    }}
                     burgerMenu={{
                         items: menuItems,
                         modalItem: {

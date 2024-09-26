@@ -31,6 +31,7 @@ npm install --dev @gravity-ui/uikit@^6.15.0 @gravity-ui/icons@2.2.0 @gravity-ui/
 - MobileLogo
 - Footer
 - MobileFooter
+- [HotkeysPanel](/src/components/HotkeysPanel/README.md)
 
 ## CSS variables
 

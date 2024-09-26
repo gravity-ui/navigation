@@ -6,12 +6,6 @@
     position: relative;
     box-sizing: border-box;
 
-    *,
-    *::before,
-    *::after {
-        box-sizing: inherit;
-    }
-
     &__header {
         width: 100%;
         padding: 20px;

@@ -30,3 +30,6 @@ export default {
 
 const ShowcaseTemplate: StoryFn = () => <HotkeysPanelShowcase />;
 export const Showcase = ShowcaseTemplate.bind({});
+
+const WithoutFilterTemplate: StoryFn = () => <HotkeysPanelShowcase filterable={false} />;
+export const WithoutFilter = WithoutFilterTemplate.bind({});
