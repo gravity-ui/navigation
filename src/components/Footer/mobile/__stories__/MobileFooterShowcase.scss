@@ -5,12 +5,6 @@
     box-sizing: border-box;
     height: 100vh;
 
-    *,
-    *::before,
-    *::after {
-        box-sizing: border-box;
-    }
-
     &__body {
         flex: 1;
     }
