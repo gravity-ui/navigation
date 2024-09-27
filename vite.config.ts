@@ -1,6 +1,7 @@
 import {nodeResolve} from '@rollup/plugin-node-resolve';
 import react from '@vitejs/plugin-react';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
+import postcss from 'rollup-plugin-postcss';
 import {defineConfig} from 'vite';
 import dts from 'vite-plugin-dts';
 
@@ -29,7 +30,7 @@ export default defineConfig(({mode}) => {
             sourcemap: true,
             target: 'esnext',
             minify: false,
-            cssCodeSplit: true,
+            cssCodeSplit: false,
 
             lib: {
                 entry: 'src/index.ts',
@@ -49,6 +50,10 @@ export default defineConfig(({mode}) => {
                     peerDepsExternal(),
                     nodeResolve({
                         extensions: ['.js', '.ts', '.tsx', '.json', '.jsx'],
+                    }),
+                    postcss({
+                        modules: false,
+                        minimize: true,
                     }),
                 ],
                 output: {

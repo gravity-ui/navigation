@@ -1,9 +1,0 @@
-.gn-action-bar-separator {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  margin-left: 6px;
-  margin-right: 6px;
-  border-right: solid 1px var(--g-color-line-generic);
-  height: 40px;
-}

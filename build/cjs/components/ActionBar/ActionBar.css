@@ -1,9 +1,0 @@
-.gn-action-bar {
-  box-sizing: border-box;
-  height: 40px;
-  border-bottom: solid 1px var(--g-color-line-generic);
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: flex-start;
-  align-items: stretch;
-}
