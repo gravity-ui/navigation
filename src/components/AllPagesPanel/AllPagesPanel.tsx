@@ -24,7 +24,14 @@ interface AllPagesPanelProps {
 
 export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     const {startEditIcon, onEditModeChanged, className} = props;
-    const {menuItems, onMenuItemsChanged} = useAsideHeaderInnerContext();
+    const {
+        menuItems,
+        onMenuItemsChanged,
+        onOpenEditMode,
+        onResetSettingsToDefault,
+        onToggleMenuItem,
+    } = useAsideHeaderInnerContext();
+
     const menuItemsRef = useRef(menuItems);
     menuItemsRef.current = menuItems;
 
@@ -37,6 +44,10 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
 
     useEffect(() => {
         onEditModeChanged?.(isEditMode);
+
+        if (isEditMode) {
+            onOpenEditMode?.();
+        }
     }, [isEditMode, onEditModeChanged]);
 
     const onItemClick = useCallback((item: ListItemData<MenuItem>) => {
@@ -54,6 +65,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             const originItems = menuItemsRef.current.filter(
                 (menuItem) => menuItem.id !== ALL_PAGES_ID,
             );
+            onToggleMenuItem?.(changedItem);
             onMenuItemsChanged(
                 originItems.map((menuItem) => {
                     if (menuItem.id !== changedItem.id) {
@@ -81,6 +93,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         if (!onMenuItemsChanged) {
             return;
         }
+        onResetSettingsToDefault?.();
         const originItems = menuItemsRef.current.filter((item) => item.id !== ALL_PAGES_ID);
         onMenuItemsChanged(
             originItems.map((item) => ({
