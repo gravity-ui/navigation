@@ -3,6 +3,12 @@
 
 $block: '.#{variables.$ns}composite-bar-item';
 
+// rewrite default button styles
+
+.g-list__item-content .g-button.g-button_pin_round-round.g-button {
+    border-radius: var(--gn-composite-bar-item-action-size);
+}
+
 #{$block} {
     @include mixins.accessibility-button;
 
@@ -163,6 +169,10 @@ $block: '.#{variables.$ns}composite-bar-item';
         justify-content: center;
     }
 
+    &_type_action + & {
+        border-radius: var(--gn-composite-bar-item-action-size);
+    }
+
     &_type_action {
         justify-content: center;
         height: var(--gn-composite-bar-item-action-size);
@@ -171,7 +181,7 @@ $block: '.#{variables.$ns}composite-bar-item';
         box-shadow:
             0px 0px 0px 1px rgba(0, 0, 0, 0.03),
             0px 5px 6px rgba(0, 0, 0, 0.12);
-        border-radius: var(--gn-composite-bar-item-action-size);
+
         transition:
             transform 0.1s ease-out,
             background-color 0.15s linear;
@@ -193,6 +203,21 @@ $block: '.#{variables.$ns}composite-bar-item';
         & #{$class}__icon-place {
             width: var(--gn-composite-bar-item-action-size);
         }
+<<<<<<< HEAD
+=======
+
+        & #{$class}__title {
+            margin-right: 16px;
+        }
+
+        &::before {
+            content: none;
+        }
+
+        &::after {
+            content: none;
+        }
+>>>>>>> a59feff (feat(AsideHeader): add ui-kit button in aside-header)
     }
 
     &__icon-tooltip_item-type_action {
