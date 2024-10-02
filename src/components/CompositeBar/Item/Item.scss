@@ -169,10 +169,6 @@ $block: '.#{variables.$ns}composite-bar-item';
         justify-content: center;
     }
 
-    &_type_action + & {
-        border-radius: var(--gn-composite-bar-item-action-size);
-    }
-
     &_type_action {
         justify-content: center;
         height: var(--gn-composite-bar-item-action-size);
