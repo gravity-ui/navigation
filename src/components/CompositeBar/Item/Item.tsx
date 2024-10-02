@@ -193,6 +193,11 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         ) => {
             const target = event.currentTarget;
             if (collapsedItem) {
+                /**
+                 * If we call onItemClick for collapsedItem then:
+                 * - User get unexpected item in onItemClick callback
+                 * - onClosePanel calls twice for each popuped item, as result it will prevent opening of panelItems
+                 */
                 toggleOpen(!open);
             } else if (target instanceof HTMLDivElement) {
                 onItemClick?.(item, false, event as React.MouseEvent<HTMLDivElement, MouseEvent>);
