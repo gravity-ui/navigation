@@ -81,6 +81,7 @@ export type AsideHeaderTopAlertProps = {
     view?: AlertProps['view'];
     theme?: AlertProps['theme'];
     actions?: AlertProps['actions'];
+    align?: AlertProps['align'];
     closable?: boolean;
     centered?: boolean;
     dense?: boolean;
