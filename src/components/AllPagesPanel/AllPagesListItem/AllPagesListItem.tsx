@@ -30,38 +30,17 @@ export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
         [onToggle],
     );
 
-    const onItemClick = (e: MouseEvent<HTMLDivElement>) => {
+    const onItemClick = (e: MouseEvent<HTMLElement>) => {
         if (editMode) {
             e.stopPropagation();
             e.preventDefault();
         }
     };
 
-    const onItemDragStart = (e: MouseEvent<HTMLDivElement>) => {
-        if (editMode && onDragStart) {
-            e.stopPropagation();
-            e.preventDefault();
-            onDragStart();
-        }
-    };
-
-    const onItemDragEnd = (e: MouseEvent<HTMLDivElement>) => {
-        if (editMode && onDragEnd) {
-            e.stopPropagation();
-            e.preventDefault();
-            onDragEnd();
-        }
-    };
+    const [Tag, tagProps] = item.link ? ['a' as const, {href: item.link}] : ['button' as const, {}];
 
     return (
-        <div
-            key={item.id}
-            className={b({'edit-mode': editMode && enableSorting})}
-            onClick={onItemClick}
-            draggable={editMode && enableSorting}
-            onMouseDown={onItemDragStart}
-            onMouseUp={onItemDragEnd}
-        >
+        <Tag {...tagProps} className={b()} onClick={onItemClick}>
             {item.icon ? (
                 <Icon className={b('icon')} data={item.icon} size={item.iconSize} />
             ) : null}
@@ -74,6 +53,6 @@ export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
                     <Button.Icon>{item.hidden ? <Pin /> : <PinFill />}</Button.Icon>
                 </Button>
             )}
-        </div>
+        </Tag>
     );
 };
