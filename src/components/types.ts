@@ -26,7 +26,7 @@ export interface MenuItem extends QAProps {
     onItemClick?: (
         item: MenuItem,
         collapsed: boolean,
-        event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+        event: React.MouseEvent<HTMLElement, MouseEvent>,
     ) => void;
     onItemClickCapture?: (event: React.SyntheticEvent) => void;
     onCollapseItemClick?: () => void;

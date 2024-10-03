@@ -182,18 +182,12 @@ $block: '.#{variables.$ns}aside-header';
         }
     }
 
-    &__logo-button-wrapper {
+    &__logo-button &__logo-icon-place {
+        height: var(
+            --gn-aside-header-item-icon-background-size,
+            var(--_--item-icon-background-size)
+        );
         width: var(--gn-aside-header-min-width);
-    }
-
-    &__logo-button[class] {
-        &,
-        .g-button__icon {
-            height: var(
-                --gn-aside-header-item-icon-background-size,
-                var(--_--item-icon-background-size)
-            );
-        }
     }
 
     &__menu-items {
