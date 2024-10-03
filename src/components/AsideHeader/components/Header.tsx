@@ -33,8 +33,8 @@ export const Header = () => {
                     {...logo}
                     onClick={onLogoClick}
                     compact={compact}
-                    buttonWrapperClassName={b('logo-button-wrapper')}
                     buttonClassName={b('logo-button')}
+                    iconPlaceClassName={b('logo-icon-place')}
                 />
             )}
 

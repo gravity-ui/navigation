@@ -13,8 +13,8 @@ build
 pnpm-lock.yaml
 
 #Playwright
-/playwright/playwright/.cache
-/playwright-report
+.cache*
+playwright-report*
 /test-results
 
 # other files

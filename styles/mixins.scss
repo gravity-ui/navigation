@@ -9,3 +9,17 @@
         background-color: var(--g-color-base-selection-hover);
     }
 }
+
+@mixin accessibility-button() {
+    background: none;
+    color: inherit;
+    border: none;
+    font: inherit;
+    outline: inherit;
+    text-decoration: inherit;
+
+    &:focus-visible {
+        outline: solid var(--g-color-line-misc);
+        outline-offset: -2px;
+    }
+}
