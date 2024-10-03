@@ -13,7 +13,7 @@ const b = block('composite-bar-highlighted-item');
 interface ItemInnerProps {
     iconRef: React.RefObject<HTMLDivElement>;
     iconNode: React.ReactNode;
-    onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+    onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
     onClickCapture?: (event: React.SyntheticEvent) => void;
 }
 

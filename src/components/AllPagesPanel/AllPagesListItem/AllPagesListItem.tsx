@@ -27,14 +27,17 @@ export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
         [onToggle],
     );
 
-    const onItemClick = (e: MouseEvent<HTMLDivElement>) => {
+    const onItemClick = (e: MouseEvent<HTMLElement>) => {
         if (editMode) {
             e.stopPropagation();
             e.preventDefault();
         }
     };
+
+    const [Tag, tagProps] = item.link ? ['a' as const, {href: item.link}] : ['button' as const, {}];
+
     return (
-        <div className={b()} onClick={onItemClick}>
+        <Tag {...tagProps} className={b()} onClick={onItemClick}>
             {item.icon ? (
                 <Icon className={b('icon')} data={item.icon} size={item.iconSize} />
             ) : null}
@@ -47,6 +50,6 @@ export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
                     <Button.Icon>{item.hidden ? <Pin /> : <PinFill />}</Button.Icon>
                 </Button>
             )}
-        </div>
+        </Tag>
     );
 };
