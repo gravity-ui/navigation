@@ -41,7 +41,7 @@ export interface AsideHeaderGeneralProps extends QAProps {
         compact: boolean;
         asideRef: React.RefObject<HTMLDivElement>;
     }) => React.ReactNode;
-    editMenuProp?: EditMenuProps;
+    editMenuProps?: EditMenuProps;
     onClosePanel?: () => void;
     onChangeCompact?: (compact: boolean) => void;
     openModalSubscriber?: (subscriber: OpenModalSubscriber) => void;
