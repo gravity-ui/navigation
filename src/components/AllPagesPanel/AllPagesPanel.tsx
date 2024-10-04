@@ -95,7 +95,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                 hidden: false,
             })),
         );
-    }, [onMenuItemsChanged]);
+    }, [onMenuItemsChanged, editMenuProps]);
     return (
         <Flex className={b(null, className)} gap="5" direction="column">
             <Flex gap="4" alignItems="center" justifyContent="space-between">
