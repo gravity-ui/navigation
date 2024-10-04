@@ -24,13 +24,7 @@ interface AllPagesPanelProps {
 
 export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     const {startEditIcon, onEditModeChanged, className} = props;
-    const {
-        menuItems,
-        onMenuItemsChanged,
-        onOpenEditMode,
-        onResetSettingsToDefault,
-        onToggleMenuItem,
-    } = useAsideHeaderInnerContext();
+    const {menuItems, onMenuItemsChanged, editMenuProps} = useAsideHeaderInnerContext();
 
     const menuItemsRef = useRef(menuItems);
     menuItemsRef.current = menuItems;
@@ -46,9 +40,9 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         onEditModeChanged?.(isEditMode);
 
         if (isEditMode) {
-            onOpenEditMode?.();
+            editMenuProps.onOpenEditMode?.();
         }
-    }, [isEditMode, onEditModeChanged, onOpenEditMode]);
+    }, [isEditMode, onEditModeChanged, editMenuProps.onOpenEditMode]);
 
     const onItemClick = useCallback((item: ListItemData<MenuItem>) => {
         //@ts-ignore TODO fix when @gravity-ui/uikit/List will provide event arg on item click
@@ -65,7 +59,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             const originItems = menuItemsRef.current.filter(
                 (menuItem) => menuItem.id !== ALL_PAGES_ID,
             );
-            onToggleMenuItem?.(changedItem);
+            editMenuProps.onToggleMenuItem?.(changedItem);
             onMenuItemsChanged(
                 originItems.map((menuItem) => {
                     if (menuItem.id !== changedItem.id) {
@@ -75,7 +69,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                 }),
             );
         },
-        [onMenuItemsChanged, onToggleMenuItem],
+        [onMenuItemsChanged, editMenuProps.onToggleMenuItem],
     );
 
     const itemRender = useCallback(
@@ -93,7 +87,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         if (!onMenuItemsChanged) {
             return;
         }
-        onResetSettingsToDefault?.();
+        editMenuProps.onResetSettingsToDefault?.();
         const originItems = menuItemsRef.current.filter((item) => item.id !== ALL_PAGES_ID);
         onMenuItemsChanged(
             originItems.map((item) => ({
