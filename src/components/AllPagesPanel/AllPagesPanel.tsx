@@ -42,7 +42,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         if (isEditMode) {
             editMenuProps.onOpenEditMode?.();
         }
-    }, [isEditMode, onEditModeChanged, editMenuProps.onOpenEditMode]);
+    }, [isEditMode, onEditModeChanged, editMenuProps]);
 
     const onItemClick = useCallback((item: ListItemData<MenuItem>) => {
         //@ts-ignore TODO fix when @gravity-ui/uikit/List will provide event arg on item click
@@ -69,7 +69,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                 }),
             );
         },
-        [onMenuItemsChanged, editMenuProps.onToggleMenuItem],
+        [onMenuItemsChanged, editMenuProps],
     );
 
     const itemRender = useCallback(
