@@ -40,7 +40,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         onEditModeChanged?.(isEditMode);
 
         if (isEditMode) {
-            editMenuProps.onOpenEditMode?.();
+            editMenuProps?.onOpenEditMode?.();
         }
     }, [isEditMode, onEditModeChanged, editMenuProps]);
 
@@ -59,7 +59,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             const originItems = menuItemsRef.current.filter(
                 (menuItem) => menuItem.id !== ALL_PAGES_ID,
             );
-            editMenuProps.onToggleMenuItem?.(changedItem);
+            editMenuProps?.onToggleMenuItem?.(changedItem);
             onMenuItemsChanged(
                 originItems.map((menuItem) => {
                     if (menuItem.id !== changedItem.id) {
@@ -87,7 +87,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         if (!onMenuItemsChanged) {
             return;
         }
-        editMenuProps.onResetSettingsToDefault?.();
+        editMenuProps?.onResetSettingsToDefault?.();
         const originItems = menuItemsRef.current.filter((item) => item.id !== ALL_PAGES_ID);
         onMenuItemsChanged(
             originItems.map((item) => ({
