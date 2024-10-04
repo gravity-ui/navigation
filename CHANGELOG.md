@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.24.1](https://github.com/gravity-ui/navigation/compare/v2.24.0...v2.24.1) (2024-10-03)
+
+
+### Bug Fixes
+
+* **MobileFooter:** fix menu items box-sizing ([#313](https://github.com/gravity-ui/navigation/issues/313)) ([8b22e75](https://github.com/gravity-ui/navigation/commit/8b22e75be31a2d04643cfb8c126e2131458d4fbb))
+
 ## [2.24.0](https://github.com/gravity-ui/navigation/compare/v2.23.1...v2.24.0) (2024-09-25)
 
 
