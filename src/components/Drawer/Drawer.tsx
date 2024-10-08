@@ -56,6 +56,9 @@ export interface DrawerItemProps {
 
     /** The maximum width of the resizable drawer item */
     maxResizeWidth?: number;
+
+    /** Keep child element mounted when closed, prioritized over Drawer.keepMounted property */
+    keepMounted?: boolean;
 }
 
 export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
@@ -71,6 +74,7 @@ export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
             minResizeWidth,
             maxResizeWidth,
             onResize,
+            keepMounted = false,
         } = props;
 
         const itemRef = React.useRef<HTMLDivElement>(null);
@@ -95,7 +99,8 @@ export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
             <CSSTransition
                 in={visible}
                 timeout={TIMEOUT}
-                unmountOnExit
+                mountOnEnter={!keepMounted}
+                unmountOnExit={!keepMounted}
                 classNames={b('item-transition', {direction: cssDirection})}
                 nodeRef={itemRef}
             >
@@ -144,6 +149,9 @@ export interface DrawerProps {
 
     /** Optional flag to not use `Portal` for drawer */
     disablePortal?: boolean;
+
+    /** Keep child element mounted when closed */
+    keepMounted?: boolean;
 }
 
 export const Drawer: React.FC<DrawerProps> = ({
@@ -156,6 +164,7 @@ export const Drawer: React.FC<DrawerProps> = ({
     preventScrollBody = true,
     hideVeil,
     disablePortal = true,
+    keepMounted = false,
 }) => {
     let someItemVisible = false;
     React.Children.forEach(children, (child) => {
@@ -190,8 +199,8 @@ export const Drawer: React.FC<DrawerProps> = ({
         <Transition
             in={someItemVisible}
             timeout={{enter: 0, exit: TIMEOUT}}
-            mountOnEnter
-            unmountOnExit
+            mountOnEnter={!keepMounted}
+            unmountOnExit={!keepMounted}
             nodeRef={containerRef}
         >
             {(state) => {
@@ -218,6 +227,7 @@ export const Drawer: React.FC<DrawerProps> = ({
                             ) {
                                 const childVisible = Boolean(child.props.visible);
                                 return React.cloneElement(child, {
+                                    keepMounted,
                                     ...child.props,
                                     visible: childVisible && childrenVisible,
                                 });
