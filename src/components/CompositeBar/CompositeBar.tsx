@@ -251,7 +251,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
 
     if (type === 'menu') {
         const minHeight = getItemsMinHeight(items);
-        const collapseItem = getMoreButtonItem(menuMoreTitle, onMoreClick);
+        const collapseItem = getMoreButtonItem(menuMoreTitle);
         node = (
             <div className={b({autosizer: true})} style={{minHeight}}>
                 {items.length !== 0 && (
