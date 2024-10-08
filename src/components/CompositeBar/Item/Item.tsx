@@ -39,6 +39,7 @@ export interface ItemProps extends ItemPopup {
         event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     ) => void;
     onItemClickCapture?: (event: React.SyntheticEvent) => void;
+    onCollapseItemClick?: () => void;
     bringForward?: boolean;
 }
 
@@ -85,6 +86,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         onClosePopup,
         onItemClick,
         onItemClickCapture,
+        onCollapseItemClick,
         bringForward,
     } = props;
 
@@ -172,6 +174,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                              * - onClosePanel calls twice for each popuped item, as result it will prevent opening of panelItems
                              */
                             toggleOpen(!open);
+                            onCollapseItemClick?.();
                         } else {
                             onItemClick?.(item, false, event);
                         }
