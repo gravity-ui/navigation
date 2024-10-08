@@ -57,7 +57,10 @@ export interface DrawerItemProps {
     /** The maximum width of the resizable drawer item */
     maxResizeWidth?: number;
 
-    /** Keep child element mounted when closed, prioritized over Drawer.keepMounted property */
+    /**
+     * Keep child components mounted when closed, prioritized over Drawer.keepMounted property
+     * @default false
+     * */
     keepMounted?: boolean;
 }
 
@@ -150,7 +153,10 @@ export interface DrawerProps {
     /** Optional flag to not use `Portal` for drawer */
     disablePortal?: boolean;
 
-    /** Keep child element mounted when closed */
+    /**
+     * Keep child components mounted when closed
+     * @default false
+     * */
     keepMounted?: boolean;
 }
 
