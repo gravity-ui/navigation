@@ -78,7 +78,7 @@ $block: '.#{variables.$ns}drawer';
 
     &__item-transition-exit-done,
     &__item-transition_direction_right-exit-done {
-        display: none;
+        visibility: hidden;
     }
 
     &__veil {
