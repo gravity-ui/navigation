@@ -19,6 +19,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         headerDecoration,
         multipleTooltip,
         menuMoreTitle,
+        onMenuMoreClick,
         renderFooter,
         compact,
         customBackground,
@@ -53,6 +54,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             items={visibleMenuItems}
                             menuMoreTitle={menuMoreTitle ?? i18n('label_more')}
                             onItemClick={onItemClick}
+                            onMoreClick={onMenuMoreClick}
                             multipleTooltip={multipleTooltip}
                         />
                     ) : (
