@@ -39,6 +39,7 @@ export interface MenuItem extends QAProps {
             ref: React.RefObject<HTMLElement>;
         },
     ) => React.ReactNode;
+    preventUserRemoving?: boolean;
     rightAdornment?: React.ReactNode;
     type?: MenuItemType;
     afterMoreButton?: boolean;

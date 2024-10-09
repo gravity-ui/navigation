@@ -24,7 +24,8 @@ interface AllPagesPanelProps {
 
 export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     const {startEditIcon, onEditModeChanged, className} = props;
-    const {menuItems, onMenuItemsChanged} = useAsideHeaderInnerContext();
+    const {menuItems, onMenuItemsChanged, editMenuProps} = useAsideHeaderInnerContext();
+
     const menuItemsRef = useRef(menuItems);
     menuItemsRef.current = menuItems;
 
@@ -37,7 +38,11 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
 
     useEffect(() => {
         onEditModeChanged?.(isEditMode);
-    }, [isEditMode, onEditModeChanged]);
+
+        if (isEditMode) {
+            editMenuProps?.onOpenEditMode?.();
+        }
+    }, [isEditMode, onEditModeChanged, editMenuProps]);
 
     const onItemClick = useCallback((item: ListItemData<MenuItem>) => {
         //@ts-ignore TODO fix when @gravity-ui/uikit/List will provide event arg on item click
@@ -54,6 +59,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             const originItems = menuItemsRef.current.filter(
                 (menuItem) => menuItem.id !== ALL_PAGES_ID,
             );
+            editMenuProps?.onToggleMenuItem?.(changedItem);
             onMenuItemsChanged(
                 originItems.map((menuItem) => {
                     if (menuItem.id !== changedItem.id) {
@@ -63,7 +69,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                 }),
             );
         },
-        [onMenuItemsChanged],
+        [onMenuItemsChanged, editMenuProps],
     );
 
     const itemRender = useCallback(
@@ -81,6 +87,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         if (!onMenuItemsChanged) {
             return;
         }
+        editMenuProps?.onResetSettingsToDefault?.();
         const originItems = menuItemsRef.current.filter((item) => item.id !== ALL_PAGES_ID);
         onMenuItemsChanged(
             originItems.map((item) => ({
@@ -88,7 +95,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                 hidden: false,
             })),
         );
-    }, [onMenuItemsChanged]);
+    }, [onMenuItemsChanged, editMenuProps]);
     return (
         <Flex className={b(null, className)} gap="5" direction="column">
             <Flex gap="4" alignItems="center" justifyContent="space-between">
