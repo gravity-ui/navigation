@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.26.0](https://github.com/gravity-ui/navigation/compare/v2.25.0...v2.26.0) (2024-10-09)
+
+
+### Features
+
+* **Drawer:** add keepMounted prop ([#321](https://github.com/gravity-ui/navigation/issues/321)) ([760d063](https://github.com/gravity-ui/navigation/commit/760d063c7ffa9d0dbdbd89a30ccc0c5b8e1b2cdf))
+
 ## [2.25.0](https://github.com/gravity-ui/navigation/compare/v2.24.1...v2.25.0) (2024-10-08)
 
 
