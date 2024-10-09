@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.25.0](https://github.com/gravity-ui/navigation/compare/v2.24.1...v2.25.0) (2024-10-08)
+
+
+### Features
+
+* **AsideHeader:** preventUserRemoving prop for menu item and  callbacks for AsideHeader ([#314](https://github.com/gravity-ui/navigation/issues/314)) ([e3b6da1](https://github.com/gravity-ui/navigation/commit/e3b6da1792f7b322e4d64ba36573a09bbeb089a8))
+
 ## [2.24.1](https://github.com/gravity-ui/navigation/compare/v2.24.0...v2.24.1) (2024-10-03)
 
 
