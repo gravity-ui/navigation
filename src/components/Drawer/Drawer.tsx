@@ -80,8 +80,10 @@ export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
             keepMounted = false,
         } = props;
 
+        const [isInitialRender, setInitialRender] = React.useState(true);
         const itemRef = React.useRef<HTMLDivElement>(null);
         const handleRef = useForkRef(ref, itemRef);
+
         const cssDirection = direction === 'left' ? undefined : direction;
 
         const {resizedWidth, resizerHandlers} = useResizableDrawerItem({
@@ -91,6 +93,10 @@ export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
             maxResizeWidth,
             onResize,
         });
+
+        React.useEffect(() => {
+            setInitialRender(true);
+        }, [direction]);
 
         const resizerElement = resizable ? (
             <div className={b('resizer', {direction})} {...resizerHandlers}>
@@ -106,10 +112,16 @@ export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
                 unmountOnExit={!keepMounted}
                 classNames={b('item-transition', {direction: cssDirection})}
                 nodeRef={itemRef}
+                onEnter={() => setInitialRender(false)}
+                onExit={() => setInitialRender(false)}
             >
                 <div
                     ref={handleRef}
-                    className={b('item', {direction: cssDirection}, className)}
+                    className={b(
+                        'item',
+                        {direction: cssDirection, hidden: isInitialRender && !visible},
+                        [className],
+                    )}
                     style={{width: resizable ? `${resizedWidth}px` : undefined}}
                 >
                     {resizerElement}

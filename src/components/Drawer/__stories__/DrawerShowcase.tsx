@@ -16,8 +16,8 @@ export function DrawerShowcase() {
     const [direction, setDirection] = React.useState<string>('left');
     const [direction2, setDirection2] = React.useState<string>('left');
 
-    const [keepMountedGlobal, setKeepMountedGlobal] = React.useState<boolean>(false);
-    const [keepMounted1, setKeepMounted1] = React.useState<boolean>(false);
+    const [keepMountedGlobal, setKeepMountedGlobal] = React.useState<boolean>(true);
+    const [keepMounted1, setKeepMounted1] = React.useState<boolean>(true);
 
     const hideAll = React.useCallback(() => {
         setVisible1(false);
