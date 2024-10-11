@@ -113,7 +113,6 @@ const AdvancedUsageTemplate: StoryFn = (args) => {
                     'aria-label': 'Service',
                 }}
                 onChangeCompact={setCompact}
-                onMenuMoreClick={() => alert('onMenuMoreClick')}
                 qa={'pl-aside'}
                 {...args}
             />
