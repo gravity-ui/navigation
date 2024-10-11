@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.27.0](https://github.com/gravity-ui/navigation/compare/v2.26.0...v2.27.0) (2024-10-11)
+
+
+### Features
+
+* **AsideHeader:** add onMenuMoreClick ([#320](https://github.com/gravity-ui/navigation/issues/320)) ([d0569a5](https://github.com/gravity-ui/navigation/commit/d0569a5567f857986322b283cc1013fc1b7dd0f8))
+
+
+### Bug Fixes
+
+* **Drawer:** initial hidden state when keepMouted enabled ([#324](https://github.com/gravity-ui/navigation/issues/324)) ([114a0d0](https://github.com/gravity-ui/navigation/commit/114a0d0dcde22b5fe740f2db2dad8a83d29ca83c))
+
 ## [2.26.0](https://github.com/gravity-ui/navigation/compare/v2.25.0...v2.26.0) (2024-10-09)
 
 
