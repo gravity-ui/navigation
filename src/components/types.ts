@@ -29,6 +29,7 @@ export interface MenuItem extends QAProps {
         event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     ) => void;
     onItemClickCapture?: (event: React.SyntheticEvent) => void;
+    onCollapseItemClick?: () => void;
     itemWrapper?: (
         p: MakeItemParams,
         makeItem: (p: MakeItemParams) => React.ReactNode,
@@ -39,6 +40,7 @@ export interface MenuItem extends QAProps {
             ref: React.RefObject<HTMLElement>;
         },
     ) => React.ReactNode;
+    preventUserRemoving?: boolean;
     rightAdornment?: React.ReactNode;
     type?: MenuItemType;
     afterMoreButton?: boolean;

@@ -18,6 +18,12 @@ export interface LayoutProps {
     topAlert?: AsideHeaderTopAlertProps;
 }
 
+export interface EditMenuProps {
+    onOpenEditMode?: () => void;
+    onToggleMenuItem?: (changedItem: MenuItem) => void;
+    onResetSettingsToDefault?: () => void;
+}
+
 export interface AsideHeaderGeneralProps extends QAProps {
     logo?: LogoProps;
     multipleTooltip?: boolean;
@@ -35,8 +41,10 @@ export interface AsideHeaderGeneralProps extends QAProps {
         compact: boolean;
         asideRef: React.RefObject<HTMLDivElement>;
     }) => React.ReactNode;
+    editMenuProps?: EditMenuProps;
     onClosePanel?: () => void;
     onChangeCompact?: (compact: boolean) => void;
+    onMenuMoreClick?: () => void;
     openModalSubscriber?: (subscriber: OpenModalSubscriber) => void;
 }
 

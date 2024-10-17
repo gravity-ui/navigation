@@ -1,5 +1,31 @@
 # Changelog
 
+## [2.27.0](https://github.com/gravity-ui/navigation/compare/v2.26.0...v2.27.0) (2024-10-11)
+
+
+### Features
+
+* **AsideHeader:** add onMenuMoreClick ([#320](https://github.com/gravity-ui/navigation/issues/320)) ([d0569a5](https://github.com/gravity-ui/navigation/commit/d0569a5567f857986322b283cc1013fc1b7dd0f8))
+
+
+### Bug Fixes
+
+* **Drawer:** initial hidden state when keepMouted enabled ([#324](https://github.com/gravity-ui/navigation/issues/324)) ([114a0d0](https://github.com/gravity-ui/navigation/commit/114a0d0dcde22b5fe740f2db2dad8a83d29ca83c))
+
+## [2.26.0](https://github.com/gravity-ui/navigation/compare/v2.25.0...v2.26.0) (2024-10-09)
+
+
+### Features
+
+* **Drawer:** add keepMounted prop ([#321](https://github.com/gravity-ui/navigation/issues/321)) ([760d063](https://github.com/gravity-ui/navigation/commit/760d063c7ffa9d0dbdbd89a30ccc0c5b8e1b2cdf))
+
+## [2.25.0](https://github.com/gravity-ui/navigation/compare/v2.24.1...v2.25.0) (2024-10-08)
+
+
+### Features
+
+* **AsideHeader:** preventUserRemoving prop for menu item and  callbacks for AsideHeader ([#314](https://github.com/gravity-ui/navigation/issues/314)) ([e3b6da1](https://github.com/gravity-ui/navigation/commit/e3b6da1792f7b322e4d64ba36573a09bbeb089a8))
+
 ## [2.24.1](https://github.com/gravity-ui/navigation/compare/v2.24.0...v2.24.1) (2024-10-03)
 
 

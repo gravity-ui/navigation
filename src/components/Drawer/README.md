@@ -76,6 +76,7 @@ The Drawer module consists of two primary components: `Drawer` and `DrawerItem`.
 | onResize       | Callback function called at the end of resizing. Can be used to save the new width.     | `(width: number) => void` |         |
 | minResizeWidth | The minimum width of the resizable drawer item                                          |         `number`          |         |
 | maxResizeWidth | The maximum width of the resizable drawer item                                          |         `number`          |         |
+| keepMounted    | Keep child components mounted when closed, prioritized over Drawer.keepMounted property |         `boolean`         | `false` |
 
 ### `Drawer` Props
 
@@ -90,6 +91,7 @@ The Drawer module consists of two primary components: `Drawer` and `DrawerItem`.
 | onEscape          | Optional callback function that is called when the escape key is pressed, if the drawer is open. |            `() => void`             |         |
 | hideVeil          | Optional flag to hide the background darkening                                                   |              `boolean`              |         |
 | disablePortal     | Optional flag to not render drawer inside `Portal`                                               |              `boolean`              | `true`  |
+| keepMounted       | Keep child components mounted when closed                                                        |              `boolean`              | `false` |
 
 ## CSS API
 

@@ -39,7 +39,7 @@ export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
                 <Icon className={b('icon')} data={item.icon} size={item.iconSize} />
             ) : null}
             <span className={b('text')}>{item.title}</span>
-            {editMode && (
+            {editMode && !item.preventUserRemoving && (
                 <Button
                     onClick={onPinButtonClick}
                     view={item.hidden ? 'flat-secondary' : 'flat-action'}
