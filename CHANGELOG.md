@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.28.0](https://github.com/gravity-ui/navigation/compare/v2.27.0...v2.28.0) (2024-10-18)
+
+
+### Features
+
+* **TopPanel:** add align prop ([#317](https://github.com/gravity-ui/navigation/issues/317)) ([c85b17b](https://github.com/gravity-ui/navigation/commit/c85b17ba41b26cf1a06d429a1e6a93fcc80ad648))
+
 ## [2.27.0](https://github.com/gravity-ui/navigation/compare/v2.26.0...v2.27.0) (2024-10-11)
 
 
