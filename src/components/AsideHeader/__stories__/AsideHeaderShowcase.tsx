@@ -295,6 +295,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                 onChangeCompact={(v) => {
                     setCompact(v);
                 }}
+                onMenuMoreClick={() => console.log('onMenuMoreClick')}
             />
         </div>
     );

@@ -39,6 +39,7 @@ export type CompositeBarProps = CompositeBarItems & {
     ) => void;
     multipleTooltip?: boolean;
     menuMoreTitle?: string;
+    onMoreClick?: () => void;
 };
 
 type CompositeBarViewProps = CompositeBarProps & {
@@ -49,6 +50,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     type,
     items,
     onItemClick,
+    onMoreClick,
     collapseItems,
     multipleTooltip = false,
 }) => {
@@ -215,6 +217,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                                 onMouseEnter={onMouseEnterByIndex(itemIndex)}
                                 onMouseLeave={onMouseLeave}
                                 onItemClick={onItemClickByIndex(itemIndex)}
+                                onCollapseItemClick={onMoreClick}
                                 collapseItems={collapseItems}
                             />
                         );
@@ -238,6 +241,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     items,
     menuMoreTitle,
     onItemClick,
+    onMoreClick,
     multipleTooltip = false,
 }) => {
     if (items.length === 0) {
@@ -267,6 +271,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                                         type="menu"
                                         items={listItems}
                                         onItemClick={onItemClick}
+                                        onMoreClick={onMoreClick}
                                         collapseItems={collapseItems}
                                         multipleTooltip={multipleTooltip}
                                     />

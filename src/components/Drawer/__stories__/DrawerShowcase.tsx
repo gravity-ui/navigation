@@ -16,6 +16,9 @@ export function DrawerShowcase() {
     const [direction, setDirection] = React.useState<string>('left');
     const [direction2, setDirection2] = React.useState<string>('left');
 
+    const [keepMountedGlobal, setKeepMountedGlobal] = React.useState<boolean>(true);
+    const [keepMounted1, setKeepMounted1] = React.useState<boolean>(true);
+
     const hideAll = React.useCallback(() => {
         setVisible1(false);
         setVisible2(false);
@@ -41,9 +44,32 @@ export function DrawerShowcase() {
                     <RadioButton.Option value="left">left</RadioButton.Option>
                     <RadioButton.Option value="right">right</RadioButton.Option>
                 </RadioButton>
+                <br /> Keep Mounted Drawer: &nbsp;
+                <Button
+                    view="action"
+                    size="l"
+                    onClick={() => setKeepMountedGlobal(!keepMountedGlobal)}
+                >
+                    {keepMountedGlobal ? 'On' : 'Off'}
+                </Button>
+                &nbsp;&nbsp; Keep Mounted 1: &nbsp;
+                <Button
+                    disabled={!keepMountedGlobal}
+                    view="action"
+                    size="l"
+                    onClick={() => setKeepMounted1(!keepMounted1)}
+                >
+                    {keepMounted1 ? 'On' : 'Off'}
+                </Button>
             </div>
-            <Drawer className={b('drawer')} onVeilClick={hideAll} onEscape={hideAll}>
+            <Drawer
+                className={b('drawer')}
+                onVeilClick={hideAll}
+                onEscape={hideAll}
+                keepMounted={keepMountedGlobal}
+            >
                 <DrawerItem
+                    keepMounted={keepMounted1}
                     visible={visible1}
                     id="item-1"
                     className={b('item-1')}

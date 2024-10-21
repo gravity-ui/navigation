@@ -41,6 +41,7 @@ export const TopPanel = ({topAlert}: Props) => {
                         })}
                         corners="square"
                         layout="horizontal"
+                        align={topAlert.align}
                         theme={topAlert.theme || 'warning'}
                         view={topAlert.view}
                         icon={topAlert.icon}
