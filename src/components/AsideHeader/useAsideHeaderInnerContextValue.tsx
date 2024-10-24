@@ -63,7 +63,7 @@ export const useAsideHeaderInnerContextValue = (
                       },
                   ]
                 : menuItems || EMPTY_MENU_ITEMS,
-        [allPagesIsAvailable, menuItems, innerVisiblePanel, ALL_PAGES_MENU_ITEM],
+        [allPagesIsAvailable, menuItems, innerVisiblePanel, ALL_PAGES_MENU_ITEM, onAllPagesClick],
     );
 
     const innerPanelItems = useMemo(() => {
