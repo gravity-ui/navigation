@@ -25,7 +25,7 @@ export const AsideFallback: React.FC<Props> = ({headerDecoration, subheaderItems
             <div className={b('aside-content', {'with-decoration': headerDecoration})}>
                 <div className={b('header', {'with-decoration': headerDecoration})}>
                     <div style={{height: subheaderHeight}} />
-                    {compact ? (
+                    {compact && headerDecoration ? (
                         <Icon
                             data={headerDividerCollapsedIcon}
                             className={b('header-divider')}
