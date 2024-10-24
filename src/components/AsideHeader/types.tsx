@@ -45,6 +45,7 @@ export interface AsideHeaderGeneralProps extends QAProps {
     onClosePanel?: () => void;
     onChangeCompact?: (compact: boolean) => void;
     onMenuMoreClick?: () => void;
+    onAllPagesClick?: () => void;
     openModalSubscriber?: (subscriber: OpenModalSubscriber) => void;
 }
 
