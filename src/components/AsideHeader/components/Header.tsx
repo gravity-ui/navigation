@@ -44,12 +44,14 @@ export const Header = () => {
                 onItemClick={onItemClick}
             />
 
-            <Icon
-                data={headerDividerCollapsedIcon}
-                className={b('header-divider')}
-                width={ASIDE_HEADER_COMPACT_WIDTH}
-                height={HEADER_DIVIDER_HEIGHT}
-            />
+            {headerDecoration && (
+                <Icon
+                    data={headerDividerCollapsedIcon}
+                    className={b('header-divider')}
+                    width={ASIDE_HEADER_COMPACT_WIDTH}
+                    height={HEADER_DIVIDER_HEIGHT}
+                />
+            )}
         </div>
     );
 };
