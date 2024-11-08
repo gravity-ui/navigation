@@ -1,0 +1,15 @@
+@use '../variables';
+
+$block: '.#{variables.$ns}top-alert';
+
+#{$block} {
+    &_centered {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    &_dense {
+        padding-top: var(--g-spacing-2);
+        padding-bottom: var(--g-spacing-2);
+    }
+}

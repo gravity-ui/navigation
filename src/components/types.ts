@@ -74,7 +74,7 @@ export interface LogoProps {
     'aria-labelledby'?: string;
 }
 
-export type AsideHeaderTopAlertProps = {
+export interface TopAlertProps {
     message: AlertProps['message'];
     title?: AlertProps['title'];
     icon?: AlertProps['icon'];
@@ -85,4 +85,9 @@ export type AsideHeaderTopAlertProps = {
     centered?: boolean;
     dense?: boolean;
     onCloseTopAlert?: () => void;
-};
+}
+
+/**
+ * @deprecated use TopAlertProps instead
+ */
+export type AsideHeaderTopAlertProps = TopAlertProps;
