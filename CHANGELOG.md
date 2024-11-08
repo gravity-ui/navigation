@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.29.0](https://github.com/gravity-ui/navigation/compare/v2.28.0...v2.29.0) (2024-11-07)
+
+
+### Features
+
+* add russian readme files to landing components ([#332](https://github.com/gravity-ui/navigation/issues/332)) ([f413b38](https://github.com/gravity-ui/navigation/commit/f413b389850336d951167b2738d7835a7a1b6406))
+
+
+### Bug Fixes
+
+* **AsideHeader:** hide decoration node when headerDecoration=false ([#330](https://github.com/gravity-ui/navigation/issues/330)) ([2efe5de](https://github.com/gravity-ui/navigation/commit/2efe5deafa973a695e91bb7d2a1c374df0f5766f))
+* fixed folder structure for ru readme ([#334](https://github.com/gravity-ui/navigation/issues/334)) ([116d58c](https://github.com/gravity-ui/navigation/commit/116d58ce043f94ef0c0e0ca6000f175df37a62c5))
+
 ## [2.28.0](https://github.com/gravity-ui/navigation/compare/v2.27.0...v2.28.0) (2024-10-24)
 
 
