@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {Suspense, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {useForwardRef} from '../../hooks/useForwardRef';
 import {Content, RenderContentType} from '../Content';
@@ -268,7 +268,11 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
         return (
             <div className={b({compact}, className)} ref={targetRef}>
                 <div className={b('top')}>
-                    {topAlert && <TopAlert alert={topAlert} />}
+                    {topAlert && (
+                        <Suspense fallback={null}>
+                            <TopAlert alert={topAlert} />
+                        </Suspense>
+                    )}
                     <header className={b('header')} style={{height: size}}>
                         <Burger
                             opened={visiblePanel === burgerPanelItem.id}
