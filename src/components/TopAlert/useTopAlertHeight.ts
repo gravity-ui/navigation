@@ -22,10 +22,8 @@ export const useTopAlertHeight = ({alert}: {alert?: TopAlertProps}): AsideHeader
     }, []);
 
     const updateTopSize = React.useCallback(() => {
-        if (alertRef.current) {
-            setAsideTopPanelHeight(alertRef.current?.clientHeight || 0);
-        }
-    }, [alertRef, setAsideTopPanelHeight]);
+        setAsideTopPanelHeight(alertRef.current?.clientHeight || 0);
+    }, [setAsideTopPanelHeight]);
 
     React.useLayoutEffect(() => {
         const updateTopSizeDebounce = debounceFn(updateTopSize, 200, {leading: true});

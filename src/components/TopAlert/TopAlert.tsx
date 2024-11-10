@@ -14,9 +14,10 @@ const b = block('top-alert');
 type Props = {
     alert?: TopAlertProps;
     className?: string;
+    withBottomBorder?: boolean;
 };
 
-export const TopAlert = ({alert, className}: Props) => {
+export const TopAlert = ({alert, className, withBottomBorder = false}: Props) => {
     const {alertRef, updateTopSize} = useTopAlertHeight({alert});
 
     const [opened, setOpened] = React.useState(true);
@@ -37,7 +38,10 @@ export const TopAlert = ({alert, className}: Props) => {
     }
 
     return (
-        <div ref={alertRef} className={b('wrapper', className)}>
+        <div
+            ref={alertRef}
+            className={b('wrapper', {'with-bottom-border': withBottomBorder && opened}, className)}
+        >
             {opened && (
                 <Alert
                     className={b('', {

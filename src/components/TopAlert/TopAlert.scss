@@ -12,4 +12,17 @@ $block: '.#{variables.$ns}top-alert';
         padding-top: var(--g-spacing-2);
         padding-bottom: var(--g-spacing-2);
     }
+
+    &__wrapper_with-bottom-border {
+        &::after {
+            display: block;
+            content: '';
+            height: 1px;
+            background-color: var(
+                --gn-aside-header-divider-horizontal-color,
+                var(--_--horizontal-divider-line-color)
+            );
+            margin-top: -1px;
+        }
+    }
 }

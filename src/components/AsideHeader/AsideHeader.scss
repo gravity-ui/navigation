@@ -228,17 +228,6 @@ $block: '.#{variables.$ns}aside-header';
         top: 0;
         background: var(--g-color-base-background);
         width: 100%;
-
-        &::after {
-            display: block;
-            content: '';
-            height: 1px;
-            background-color: var(
-                --gn-aside-header-divider-horizontal-color,
-                var(--_--horizontal-divider-line-color)
-            );
-            margin-top: -1px;
-        }
     }
 
     &__content {

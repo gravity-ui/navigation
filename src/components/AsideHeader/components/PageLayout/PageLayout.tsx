@@ -28,7 +28,7 @@ const Layout = ({compact, className, children, topAlert}: PageLayoutProps) => {
             >
                 {topAlert && (
                     <Suspense fallback={null}>
-                        <TopAlert className={b('top-alert')} alert={topAlert} />
+                        <TopAlert className={b('top-alert')} alert={topAlert} withBottomBorder />
                     </Suspense>
                 )}
                 <div className={b('pane-container')}>{children}</div>
