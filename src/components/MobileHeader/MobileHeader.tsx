@@ -291,7 +291,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                     className={b('panels')}
                     onVeilClick={onCloseDrawer}
                     onEscape={onCloseDrawer}
-                    style={{top: `calc(${size}px + var(--gn-aside-top-panel-height, 0)`}}
+                    style={{top: `calc(${size}px + var(--gn-top-alert-height, 0)`}}
                 >
                     {[burgerPanelItem, ...panelItems].map((item) => (
                         <DrawerItem

@@ -4,21 +4,21 @@ import debounceFn from 'lodash/debounce';
 
 import {TopAlertProps} from '../types';
 
-type AsideHeaderTopPanel = {
+type TopAlertHeightControls = {
     alertRef: React.RefObject<HTMLDivElement>;
     updateTopSize: () => void;
 };
 
 const G_ROOT_CLASS_NAME = 'g-root';
 
-export const useTopAlertHeight = ({alert}: {alert?: TopAlertProps}): AsideHeaderTopPanel => {
+export const useTopAlertHeight = ({alert}: {alert?: TopAlertProps}): TopAlertHeightControls => {
     const alertRef = React.useRef<HTMLDivElement>(null);
 
     const setAsideTopPanelHeight = React.useCallback((clientHeight: number) => {
         const gRootElement = document
             .getElementsByClassName(G_ROOT_CLASS_NAME)
             .item(0) as HTMLElement | null;
-        gRootElement?.style.setProperty('--gn-aside-top-panel-height', clientHeight + 'px');
+        gRootElement?.style.setProperty('--gn-top-alert-height', clientHeight + 'px');
     }, []);
 
     const updateTopSize = React.useCallback(() => {

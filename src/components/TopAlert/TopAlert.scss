@@ -1,5 +1,9 @@
 @use '../variables';
 
+.g-root {
+    --gn-top-alert-height: 0px;
+}
+
 $block: '.#{variables.$ns}top-alert';
 
 #{$block} {

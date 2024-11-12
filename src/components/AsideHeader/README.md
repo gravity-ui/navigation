@@ -173,7 +173,7 @@ export const Aside: FC = () => {
 
 Top Alert can be useful for displaying important information that users need to know. This alert is often appeared in all pages like call to action or warning.
 
-You can customize the inner content, make alert closeable if necessary. For reading top alert height see value from CSS variable `--gn-aside-top-panel-height`.
+You can customize the inner content, make alert closeable if necessary. For reading top alert height see value from CSS variable `--gn-top-alert-height`.
 
 | Name            | Description                                                        |                                                Type                                                |   Default   |
 | :-------------- | :----------------------------------------------------------------- | :------------------------------------------------------------------------------------------------: | :---------: |
@@ -199,7 +199,7 @@ You can customize the inner content, make alert closeable if necessary. For read
 | `--gn-aside-header-expanded-background-color`             | Expanded navigation background color                                      |  `--g-color-base-background`   |
 | `--gn-aside-header-divider-horizontal-color`              | All horizontal divider line color                                         |    `--g-color-line-generic`    |
 | `--gn-aside-header-divider-vertical-color`                | Vertical divider line color between `AsideHeader` and content             |    `--g-color-line-generic`    |
-| `--gn-aside-top-panel-height`                             | **Read only**.`AsideHeader` top alert height                              |              0px               |
+| `--gn-top-alert-height`                                   | **Read only**.`AsideHeader` top alert height                              |              0px               |
 | `--gn-aside-header-padding-top`                           | Navigation top padding. May be helpful when logo and subheader items hide |                                |
 | Item                                                      |                                                                           |                                |
 | `--gn-aside-header-general-item-icon-color`               | Icon color for Subheader and Footer items                                 |    `--g-color-text-primary`    |

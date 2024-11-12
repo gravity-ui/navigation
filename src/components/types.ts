@@ -86,8 +86,3 @@ export interface TopAlertProps {
     dense?: boolean;
     onCloseTopAlert?: () => void;
 }
-
-/**
- * @deprecated use TopAlertProps instead
- */
-export type AsideHeaderTopAlertProps = TopAlertProps;
