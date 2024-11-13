@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Alert} from '@gravity-ui/uikit';
+import {Alert, Text} from '@gravity-ui/uikit';
 
 import {TopAlertProps} from '../types';
 import {block} from '../utils/cn';
@@ -14,10 +14,10 @@ const b = block('top-alert');
 type Props = {
     alert?: TopAlertProps;
     className?: string;
-    withBottomBorder?: boolean;
+    mobileView?: boolean;
 };
 
-export const TopAlert = ({alert, className, withBottomBorder = false}: Props) => {
+export const TopAlert = ({alert, className, mobileView = false}: Props) => {
     const {alertRef, updateTopSize} = useTopAlertHeight({alert});
 
     const [opened, setOpened] = React.useState(true);
@@ -40,7 +40,7 @@ export const TopAlert = ({alert, className, withBottomBorder = false}: Props) =>
     return (
         <div
             ref={alertRef}
-            className={b('wrapper', {'with-bottom-border': withBottomBorder && opened}, className)}
+            className={b('wrapper', {'with-bottom-border': !mobileView && opened}, className)}
         >
             {opened && (
                 <Alert
@@ -55,7 +55,15 @@ export const TopAlert = ({alert, className, withBottomBorder = false}: Props) =>
                     view={alert.view}
                     icon={alert.icon}
                     title={alert.title}
-                    message={alert.message}
+                    message={
+                        mobileView ? (
+                            <Text ellipsisLines={5} variant="body-2">
+                                {alert.message}
+                            </Text>
+                        ) : (
+                            alert.message
+                        )
+                    }
                     actions={alert.actions}
                     onClose={alert.closable ? handleClose : undefined}
                 />
