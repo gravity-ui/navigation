@@ -13,11 +13,12 @@ const b = block('all-pages-list-item');
 interface AllPagesListItemProps {
     item: MenuItem;
     editMode?: boolean;
+    enableSorting?: boolean;
     onToggle: () => void;
 }
 
 export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
-    const {item, editMode, onToggle} = props;
+    const {item, editMode, onToggle, enableSorting} = props;
     const onPinButtonClick = useCallback(
         (e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
             e.stopPropagation();
@@ -33,8 +34,14 @@ export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
             e.preventDefault();
         }
     };
+
     return (
-        <div className={b()} onClick={onItemClick}>
+        <div
+            key={item.id}
+            className={b({'edit-mode': editMode && enableSorting})}
+            onClick={onItemClick}
+            draggable={editMode}
+        >
             {item.icon ? (
                 <Icon className={b('icon')} data={item.icon} size={item.iconSize} />
             ) : null}

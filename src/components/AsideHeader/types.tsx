@@ -22,6 +22,7 @@ export interface EditMenuProps {
     onOpenEditMode?: () => void;
     onToggleMenuItem?: (changedItem: MenuItem) => void;
     onResetSettingsToDefault?: () => void;
+    enableSorting?: boolean;
 }
 
 export interface AsideHeaderGeneralProps extends QAProps {

@@ -20,4 +20,8 @@
     &__discoverable-feature-wrapper {
         display: flex;
     }
+
+    &__item_editMode {
+        padding: 0 var(--g-spacing-6);
+    }
 }
