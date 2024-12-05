@@ -106,6 +106,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             newItems.splice(newIndex, 0, element);
 
             onMenuItemsChanged?.(newItems);
+            editMenuProps?.onChangeItemsOrder?.(element, oldIndex, newIndex);
         },
         [onMenuItemsChanged],
     );
