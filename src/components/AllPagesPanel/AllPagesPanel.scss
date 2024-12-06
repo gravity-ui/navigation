@@ -24,4 +24,11 @@
     &__item_editMode {
         padding: 0 var(--g-spacing-6);
     }
+
+    &__drag-placeholder {
+        padding-left: 88px;
+        padding-right: 68px;
+        text-wrap: nowrap;
+        visibility: hidden;
+    }
 }

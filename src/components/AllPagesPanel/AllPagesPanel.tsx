@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {Gear} from '@gravity-ui/icons';
 import {Button, Flex, Icon, List, ListItemData, Text} from '@gravity-ui/uikit';
@@ -30,6 +30,9 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     menuItemsRef.current = menuItems;
 
     const [isEditMode, setIsEditMode] = useState(false);
+
+    const [dragingItemTitle, setDragingItemTitle] = useState<ReactNode | null>(null);
+
     const toggleEditMode = useCallback(() => {
         setIsEditMode((prev) => !prev);
     }, []);
@@ -72,16 +75,28 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         [onMenuItemsChanged, editMenuProps],
     );
 
+    const onDragEnd = useCallback(() => {
+        setDragingItemTitle(null);
+    }, [onMenuItemsChanged]);
+
     const itemRender = useCallback(
-        (item: ListItemData<MenuItem>, _isActive: boolean, _itemIndex: number) => (
-            <AllPagesListItem
-                item={item}
-                editMode={isEditMode}
-                onToggle={() => togglePageVisibility(item)}
-                enableSorting={editMenuProps?.enableSorting}
-            />
-        ),
-        [isEditMode, togglePageVisibility],
+        (item: ListItemData<MenuItem>, _isActive: boolean, _itemIndex: number) => {
+            const onDragStart = () => {
+                setDragingItemTitle(item.title);
+            };
+
+            return (
+                <AllPagesListItem
+                    item={item}
+                    onDragStart={onDragStart}
+                    onDragEnd={onDragEnd}
+                    editMode={isEditMode}
+                    onToggle={() => togglePageVisibility(item)}
+                    enableSorting={editMenuProps?.enableSorting}
+                />
+            );
+        },
+        [isEditMode, togglePageVisibility, onMenuItemsChanged],
     );
 
     const onResetToDefaultClick = useCallback(() => {
@@ -106,6 +121,8 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             newItems.splice(newIndex, 0, element);
 
             onMenuItemsChanged?.(newItems);
+
+            setDragingItemTitle(null);
             editMenuProps?.onChangeItemsOrder?.(element, oldIndex, newIndex);
         },
         [onMenuItemsChanged],
@@ -141,6 +158,10 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                             onItemClick={onItemClick}
                             renderItem={itemRender}
                         />
+
+                        {dragingItemTitle && (
+                            <div className={b('drag-placeholder')}>{dragingItemTitle}</div>
+                        )}
                     </div>
                 ) : (
                     Object.keys(groupedItems).map((category) => {
