@@ -5,8 +5,9 @@ import svgr from '@svgr/rollup';
 import json from 'rollup-plugin-json';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import postcss from 'rollup-plugin-postcss';
+import ts from 'typescript';
 
-const packageJson = require('./package.json');
+import packageJson from './package.json' assert { type: 'json' };
 
 const input = [
     'src/index.ts',
@@ -31,7 +32,7 @@ const getPlugins = (outDir) => {
         resolve(),
         commonjs(),
         typescript({
-            typescript: require('typescript'),
+            typescript: ts,
             tsconfig: './tsconfig.publish.json',
             outDir,
         }),
@@ -53,6 +54,7 @@ export default [
             },
         ],
         plugins: getPlugins(packageJson.module),
+        strictDeprecations: true,
     },
     {
         input,
@@ -64,5 +66,6 @@ export default [
             },
         ],
         plugins: getPlugins(packageJson.main),
+        strictDeprecations: true,
     },
 ];
