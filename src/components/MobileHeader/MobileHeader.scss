@@ -9,11 +9,14 @@ $block: '.#{variables.$ns}mobile-header';
 
     background-color: var(--g-color-base-background);
 
-    &__header {
-        background-color: var(--g-color-base-background);
-        border-bottom: 1px solid var(--g-color-line-generic);
+    &__top {
         position: sticky;
         top: 0;
+        background-color: var(--g-color-base-background);
+    }
+
+    &__header {
+        border-bottom: 1px solid var(--g-color-line-generic);
         padding: 0 10px;
         box-sizing: border-box;
         display: flex;
