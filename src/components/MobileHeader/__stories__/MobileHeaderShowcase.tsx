@@ -132,6 +132,13 @@ export function MobileHeaderShowcase() {
                             title: 'Create',
                         },
                     }}
+                    topAlert={{
+                        title: 'Maintenance',
+                        view: 'filled',
+                        message:
+                            'Scheduled maintenance is being performed Scheduled maintenance is being performed Scheduled maintenance is being performed Scheduled maintenance is being performed  Scheduled maintenance is being performed Scheduled maintenance is being performed Scheduled mainten',
+                        closable: true,
+                    }}
                     burgerMenu={{
                         items: menuItems,
                         modalItem: {
