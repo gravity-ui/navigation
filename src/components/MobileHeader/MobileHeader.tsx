@@ -1,10 +1,10 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {Suspense, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {useForwardRef} from '../../hooks/useForwardRef';
 import {Content, RenderContentType} from '../Content';
 import {Drawer, DrawerItem, DrawerItemProps} from '../Drawer/Drawer';
 import {MobileLogo} from '../MobileLogo';
-import {LogoProps} from '../types';
+import {LogoProps, TopAlertProps} from '../types';
 import {block} from '../utils/cn';
 
 import {Burger} from './Burger/Burger';
@@ -25,6 +25,10 @@ import {MobileHeaderEvent, MobileHeaderEventOptions, MobileMenuItem} from './typ
 
 import './MobileHeader.scss';
 
+const TopAlert = React.lazy(() =>
+    import('../TopAlert').then((module) => ({default: module.TopAlert})),
+);
+
 const b = block('mobile-header');
 
 type PanelName = DrawerItemProps['id'] | null;
@@ -44,6 +48,7 @@ export interface MobileHeaderProps {
     burgerCloseTitle?: string;
     burgerOpenTitle?: string;
     panelItems?: PanelItem[];
+    topAlert?: TopAlertProps;
     renderContent?: RenderContentType;
     sideItemRenderContent?: RenderContentType;
     onEvent?: (itemName: string, eventName: MobileHeaderEvent) => void;
@@ -67,6 +72,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
             className,
             contentClassName,
             overlapPanel,
+            topAlert,
         },
         ref,
     ): React.ReactElement => {
@@ -261,24 +267,31 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
 
         return (
             <div className={b({compact}, className)} ref={targetRef}>
-                <header className={b('header')} style={{height: size}}>
-                    <Burger
-                        opened={visiblePanel === burgerPanelItem.id}
-                        onClick={() => onPanelToggle(BURGER_PANEL_ITEM_ID)}
-                        className={b('burger')}
-                        closeTitle={burgerCloseTitle}
-                        openTitle={burgerOpenTitle}
-                    />
-                    <MobileLogo {...logo} compact={compact} onClick={onLogoClick} />
+                <div className={b('top')}>
+                    {topAlert && (
+                        <Suspense fallback={null}>
+                            <TopAlert alert={topAlert} mobileView />
+                        </Suspense>
+                    )}
+                    <header className={b('header')} style={{height: size}}>
+                        <Burger
+                            opened={visiblePanel === burgerPanelItem.id}
+                            onClick={() => onPanelToggle(BURGER_PANEL_ITEM_ID)}
+                            className={b('burger')}
+                            closeTitle={burgerCloseTitle}
+                            openTitle={burgerOpenTitle}
+                        />
+                        <MobileLogo {...logo} compact={compact} onClick={onLogoClick} />
 
-                    <div className={b('side-item')}>{sideItemRenderContent?.({size})}</div>
-                </header>
+                        <div className={b('side-item')}>{sideItemRenderContent?.({size})}</div>
+                    </header>
+                </div>
 
                 <Drawer
                     className={b('panels')}
                     onVeilClick={onCloseDrawer}
                     onEscape={onCloseDrawer}
-                    style={{top: size}}
+                    style={{top: `calc(${size}px + var(--gn-top-alert-height, 0)`}}
                 >
                     {[burgerPanelItem, ...panelItems].map((item) => (
                         <DrawerItem

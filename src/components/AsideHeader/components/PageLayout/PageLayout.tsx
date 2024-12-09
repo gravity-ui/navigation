@@ -8,8 +8,8 @@ import {b} from '../../utils';
 
 import '../../AsideHeader.scss';
 
-const TopPanel = React.lazy(() =>
-    import('../TopPanel').then((module) => ({default: module.TopPanel})),
+const TopAlert = React.lazy(() =>
+    import('../../../TopAlert').then((module) => ({default: module.TopAlert})),
 );
 
 export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {}
@@ -28,7 +28,7 @@ const Layout = ({compact, className, children, topAlert}: PageLayoutProps) => {
             >
                 {topAlert && (
                     <Suspense fallback={null}>
-                        <TopPanel topAlert={topAlert} />
+                        <TopAlert className={b('top-alert')} alert={topAlert} />
                     </Suspense>
                 )}
                 <div className={b('pane-container')}>{children}</div>
