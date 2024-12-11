@@ -18,20 +18,20 @@ npm install --dev @gravity-ui/uikit@^6.15.0 @gravity-ui/icons@2.2.0 @gravity-ui/
 
 ## Components
 
-- [AsideHeader](/src/components/AsideHeader/README.md)
+- [AsideHeader](https://github.com/gravity-ui/navigation/tree/main/src/components/AsideHeader/README.md)
 - MobileHeader
 - FooterItem
 - MobileHeaderFooterItem
-- [Drawer](/src/components/Drawer/README.md)
+- [Drawer](https://github.com/gravity-ui/navigation/tree/main/src/components/Drawer/README.md)
 - DrawerItem
 - PageLayout
 - PageLayoutAside
 - AsideFallback
-- [Logo](/src/components/Logo/Readme.md)
+- [Logo](https://github.com/gravity-ui/navigation/tree/main/src/components/Logo/Readme.md)
 - MobileLogo
 - Footer
 - MobileFooter
-- [HotkeysPanel](/src/components/HotkeysPanel/README.md)
+- [HotkeysPanel](https://github.com/gravity-ui/navigation/tree/main/src/components/HotkeysPanel/README.md)
 
 ## CSS variables
 
