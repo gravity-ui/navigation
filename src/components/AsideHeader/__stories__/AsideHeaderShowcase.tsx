@@ -297,6 +297,9 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                 }}
                 onMenuMoreClick={() => console.log('onMenuMoreClick')}
                 onAllPagesClick={() => console.log('onAllPagesClick')}
+                editMenuProps={{
+                    enableSorting: true,
+                }}
             />
         </div>
     );
