@@ -125,14 +125,14 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             setDragingItemTitle(null);
             editMenuProps?.onChangeItemsOrder?.(element, oldIndex, newIndex);
         },
-        [onMenuItemsChanged],
+        [onMenuItemsChanged, editMenuProps],
     );
 
     const sortableItems = useMemo(() => {
         return menuItemsRef.current.filter(
             (item) => item.id !== ALL_PAGES_ID && !item.afterMoreButton,
         );
-    }, [menuItemsRef.current]);
+    }, []);
 
     return (
         <Flex className={b(null, className)} gap="5" direction="column">
