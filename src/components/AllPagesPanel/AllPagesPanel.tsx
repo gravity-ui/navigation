@@ -77,7 +77,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
 
     const onDragEnd = useCallback(() => {
         setDragingItemTitle(null);
-    }, []);
+    }, [setDragingItemTitle]);
 
     const itemRender = useCallback(
         (item: ListItemData<MenuItem>, _isActive: boolean, _itemIndex: number) => {
