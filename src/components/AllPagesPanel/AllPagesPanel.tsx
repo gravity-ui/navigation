@@ -77,7 +77,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
 
     const onDragEnd = useCallback(() => {
         setDragingItemTitle(null);
-    }, [onMenuItemsChanged]);
+    }, []);
 
     const itemRender = useCallback(
         (item: ListItemData<MenuItem>, _isActive: boolean, _itemIndex: number) => {
@@ -96,7 +96,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                 />
             );
         },
-        [isEditMode, togglePageVisibility, onMenuItemsChanged],
+        [isEditMode, togglePageVisibility, onDragEnd, setDragingItemTitle, editMenuProps],
     );
 
     const onResetToDefaultClick = useCallback(() => {
