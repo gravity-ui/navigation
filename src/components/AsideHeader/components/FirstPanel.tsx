@@ -39,13 +39,12 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         <React.Fragment>
             <div className={b('aside', className)} style={{width: size}} data-qa={qa}>
                 <div className={b('aside-popup-anchor')} ref={asideRef} />
-
+                {customBackground && (
+                    <div className={b('aside-custom-background', customBackgroundClassName)}>
+                        {customBackground}
+                    </div>
+                )}
                 <div className={b('aside-content', {['with-decoration']: headerDecoration})}>
-                    {customBackground && (
-                        <div className={b('aside-custom-background', customBackgroundClassName)}>
-                            {customBackground}
-                        </div>
-                    )}
                     <Header />
                     {visibleMenuItems?.length ? (
                         <CompositeBar
