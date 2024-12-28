@@ -9,7 +9,7 @@ import {PageLayout} from '../components/PageLayout/PageLayout';
 import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
 
 import {AsideHeaderShowcase} from './AsideHeaderShowcase';
-import {menuItemsShowcase} from './moc';
+import {menuItemsClamped, menuItemsShowcase} from './moc';
 
 import logoIcon from '../../../../.storybook/assets/logo.svg';
 
@@ -181,3 +181,18 @@ const FallbackTemplate: StoryFn<typeof fallbackArgs> = ({
 
 export const Fallback = FallbackTemplate.bind({});
 Fallback.args = fallbackArgs;
+
+/** @type {StoryFn} */
+export function LineClamp() {
+    const [compact, setCompact] = React.useState(false);
+    return (
+        <PageLayout compact={compact}>
+            <PageLayoutAside
+                logo={{icon: logoIcon, text: 'Line clamp', 'aria-label': 'Line clamp'}}
+                menuItems={menuItemsClamped}
+                onChangeCompact={setCompact}
+                headerDecoration
+            />
+        </PageLayout>
+    );
+}
