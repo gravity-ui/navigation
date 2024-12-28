@@ -73,6 +73,7 @@ $block: '.#{variables.$ns}composite-bar-item';
     &__title {
         display: flex;
         overflow: hidden;
+        margin-right: 16px;
     }
 
     &__title-text {
@@ -180,10 +181,6 @@ $block: '.#{variables.$ns}composite-bar-item';
 
         & #{$class}__icon-place {
             width: var(--gn-composite-bar-item-action-size);
-        }
-
-        & #{$class}__title {
-            margin-right: 16px;
         }
     }
 
