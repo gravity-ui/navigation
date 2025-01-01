@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.29.1](https://github.com/gravity-ui/navigation/compare/v2.29.0...v2.29.1) (2025-01-01)
+
+
+### Bug Fixes
+
+* **Item:** fixed item min width to 0 [[#343](https://github.com/gravity-ui/navigation/issues/343)] ([#344](https://github.com/gravity-ui/navigation/issues/344)) ([943d022](https://github.com/gravity-ui/navigation/commit/943d022f9fed44b844d01f52d8d6c906f4d93526))
+
 ## [2.29.0](https://github.com/gravity-ui/navigation/compare/v2.28.0...v2.29.0) (2024-11-07)
 
 
