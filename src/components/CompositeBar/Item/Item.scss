@@ -72,13 +72,17 @@ $block: '.#{variables.$ns}composite-bar-item';
 
     &__title {
         display: flex;
+        align-items: center;
         overflow: hidden;
         margin-right: 16px;
     }
 
     &__title-text {
-        white-space: nowrap;
-        text-overflow: ellipsis;
+        /* stylelint-disable-next-line value-no-vendor-prefix */
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        /* NOTE @vladimir-kuba: 2 lines fits in container height, more lines leads overflow container */
+        -webkit-line-clamp: 2;
         overflow: hidden;
 
         color: var(--gn-aside-header-item-text-color, var(--_--item-text-color));
