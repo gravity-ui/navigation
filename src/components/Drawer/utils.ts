@@ -140,7 +140,7 @@ export function useResizableDrawerItem(params: UseResizableDrawerItemParams) {
             setInternalWidth(newWidth);
             onResize?.(newWidth);
         },
-        [setIsResizing, setInternalWidth, getResizedWidth, onResize],
+        [getResizedWidth, onResize],
     );
 
     const displayWidth = isResizing
