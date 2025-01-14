@@ -85,4 +85,13 @@ test.describe('AsideHeader', () => {
 
         await expectScreenshot();
     });
+
+    test('render story: <LineClamp>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.LineClamp />, undefined, {
+            width: 1200,
+            height: 720,
+        });
+
+        await expectScreenshot();
+    });
 });
