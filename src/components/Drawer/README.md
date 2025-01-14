@@ -73,6 +73,7 @@ The Drawer module consists of two primary components: `Drawer` and `DrawerItem`.
 | className      | HTML `class` attribute                                                                  |         `string`          |         |
 | resizable      | Determines whether the drawer item can be resized                                       |         `boolean`         |         |
 | width          | The width of the resizable drawer item                                                  |         `number`          |         |
+| onResizeStart  | Callback function called at the start of resizing.                                      |       `() => void`        |         |
 | onResize       | Callback function called at the end of resizing. Can be used to save the new width.     | `(width: number) => void` |         |
 | minResizeWidth | The minimum width of the resizable drawer item                                          |         `number`          |         |
 | maxResizeWidth | The maximum width of the resizable drawer item                                          |         `number`          |         |

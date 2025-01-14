@@ -45,6 +45,9 @@ export interface DrawerItemProps {
      */
     width?: number;
 
+    /** Called at the start of resizing. */
+    onResizeStart?: VoidFunction;
+
     /**
      * Called at the end of resizing. Can be used to save the new width.
      * @param width The new width of the drawer item
@@ -76,6 +79,7 @@ export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
             width,
             minResizeWidth,
             maxResizeWidth,
+            onResizeStart,
             onResize,
             keepMounted = false,
         } = props;
@@ -91,6 +95,7 @@ export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
             width,
             minResizeWidth,
             maxResizeWidth,
+            onResizeStart,
             onResize,
         });
 
