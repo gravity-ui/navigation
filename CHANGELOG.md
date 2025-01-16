@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.31.0](https://github.com/gravity-ui/navigation/compare/v2.30.0...v2.31.0) (2025-01-16)
+
+
+### Features
+
+* **Item:** clamp composite bar item ([#342](https://github.com/gravity-ui/navigation/issues/342)) ([9e71cad](https://github.com/gravity-ui/navigation/commit/9e71cad872be4ffe285b3aecfe26ddb462a4b17a))
+
 ## [2.30.0](https://github.com/gravity-ui/navigation/compare/v2.29.0...v2.30.0) (2025-01-14)
 
 
