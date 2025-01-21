@@ -170,8 +170,8 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
         const [Tag, tagProps] = item.link
-        ? ['a' as const, {href: item.link}]
-        : ['button' as const, {}];
+            ? ['a' as const, {href: item.link}]
+            : ['button' as const, {}];
 
         const handleMouseEnter = () => {
             if (!compact) {
@@ -205,66 +205,72 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         };
 
         const renderActionButton = () => (
-            <Button
-                onClick={handleClick}
+            <div className={compact ? b('action-container-compact') : b('action-container')}>
+                <Button
+                    onClick={handleClick}
+                    className={b('action', {compact, collapse: !compact}, className)}
+                    ref={ref}
+                    data-qa={item.qa}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    size="l"
+                    view="raised"
+                    type="button"
+                    pin="circle-circle"
+                >
+                    {makeIconNode(iconEl)}
+                    {!compact && titleEl}
+                </Button>
+            </div>
+        );
+
+        const renderTagContainer = () => (
+            <Tag
+                {...tagProps}
                 className={b({type, current, compact}, className)}
                 ref={ref}
                 data-qa={item.qa}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
+                onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+                    if (collapsedItem) {
+                        /**
+                         * If we call onItemClick for collapsedItem then:
+                         * - User get unexpected item in onItemClick callback
+                         * - onClosePanel calls twice for each popuped item, as result it will prevent opening of panelItems
+                         */
+                        toggleOpen(!open);
+                        onCollapseItemClick?.();
+                    } else {
+                        onItemClick?.(item, false, event);
+                    }
+                }}
+                onClickCapture={onItemClickCapture}
+                onMouseEnter={() => {
+                    if (!compact) {
+                        onMouseEnter?.();
+                    }
+                }}
+                onMouseLeave={() => {
+                    if (!compact) {
+                        onMouseLeave?.();
+                    }
+                }}
             >
-                {makeIconNode(iconEl)}
-                {!compact && titleEl}
-            </Button>
-        );
+                <div className={b('icon-place')} ref={highlightedRef}>
+                    {makeIconNode(iconEl)}
+                </div>
 
-        const renderDivContainer = () => (
-        <Tag
-            {...tagProps}
-            className={b({type, current, compact}, className)}
-            ref={ref}
-            data-qa={item.qa}
-            onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-                if (collapsedItem) {
-                    /**
-                     * If we call onItemClick for collapsedItem then:
-                     * - User get unexpected item in onItemClick callback
-                     * - onClosePanel calls twice for each popuped item, as result it will prevent opening of panelItems
-                     */
-                    toggleOpen(!open);
-                    onCollapseItemClick?.();
-                } else {
-                    onItemClick?.(item, false, event);
-                }
-            }}
-            onClickCapture={onItemClickCapture}
-            onMouseEnter={() => {
-                if (!compact) {
-                    onMouseEnter?.();
-                }
-            }}
-            onMouseLeave={() => {
-                if (!compact) {
-                    onMouseLeave?.();
-                }
-            }}
-        >
-            <div className={b('icon-place')} ref={highlightedRef}>
-                {makeIconNode(iconEl)}
-            </div>
-
-            <div
-                className={b('title')}
-                title={typeof item.title === 'string' ? item.title : undefined}
-            >
-                {titleEl}
-            </div>
-        </Tag>
+                <div
+                    className={b('title')}
+                    title={typeof item.title === 'string' ? item.title : undefined}
+                >
+                    {titleEl}
+                </div>
+            </Tag>
         );
 
         const createdNode = (
             <React.Fragment>
-                {type === 'action' ? renderActionButton() : renderDivContainer()}
+                {type === 'action' ? renderActionButton() : renderTagContainer()}
                 {renderPopupContent && anchorRef?.current && (
                     <Popup
                         open={popupVisible}
