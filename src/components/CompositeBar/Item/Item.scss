@@ -88,6 +88,7 @@ $block: '.#{variables.$ns}composite-bar-item';
         /* NOTE @vladimir-kuba: 2 lines fits in container height, more lines leads overflow container */
         -webkit-line-clamp: 2;
         overflow: hidden;
+        text-align: start;
 
         color: var(--gn-aside-header-item-text-color, var(--_--item-text-color));
 
