@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {ComponentMeta, ComponentStory} from '@storybook/react';
+import type {Meta, StoryFn} from '@storybook/react';
 
 import {getAsideHeaderWrapper} from '../../AsideHeader/__stories__/getAsideHeaderWrapper';
 import {ActionBar} from '../ActionBar';
@@ -28,10 +28,10 @@ export default {
             },
         },
     },
-} as ComponentMeta<typeof ActionBar>;
+} as Meta<typeof ActionBar>;
 
-const ShowcaseTemplate: ComponentStory<typeof ActionBar> = () => <ActionBarShowcase />;
+const ShowcaseTemplate: StoryFn<typeof ActionBar> = () => <ActionBarShowcase />;
 export const Showcase = ShowcaseTemplate.bind({});
 
-const SingleSectionTemplate: ComponentStory<typeof ActionBar> = () => <ActionBarSingleSection />;
+const SingleSectionTemplate: StoryFn<typeof ActionBar> = () => <ActionBarSingleSection />;
 export const SingleSection = SingleSectionTemplate.bind({});
