@@ -8,7 +8,7 @@ export type DrawerDirection = 'right' | 'left';
 export type OnResizeHandler = (width: number) => void;
 
 function getEventClientX(e: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent) {
-    return 'touches' in e ? e.touches[0]?.clientX ?? 0 : e.clientX;
+    return 'touches' in e ? (e.touches[0]?.clientX ?? 0) : e.clientX;
 }
 
 export interface UseResizeHandlersParams {
