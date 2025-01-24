@@ -8,16 +8,16 @@ export function ActionBarSingleSection() {
     return (
         <ActionBar>
             <ActionBar.Section type="primary">
-                <ActionBar.Group>
-                    <ActionBar.Item>
-                        <Breadcrumbs
-                            lastDisplayedItemsCount={1}
-                            items={[
-                                {text: 'Devtools Support', action() {}},
-                                {text: 'DEVTOOLSSUPPORT-21001', action() {}},
-                            ]}
-                            firstDisplayedItemsCount={1}
-                        />
+                <ActionBar.Group pull="left">
+                    <ActionBar.Item pull="left-grow">
+                        <Breadcrumbs showRoot={true} onAction={(id) => alert(id)}>
+                            <Breadcrumbs.Item href="/" key="1">
+                                Devtools Support
+                            </Breadcrumbs.Item>
+                            <Breadcrumbs.Item href="/" key="2">
+                                DEVTOOLSSUPPORT-21001
+                            </Breadcrumbs.Item>
+                        </Breadcrumbs>
                     </ActionBar.Item>
 
                     <ActionBar.Item spacing={false}>

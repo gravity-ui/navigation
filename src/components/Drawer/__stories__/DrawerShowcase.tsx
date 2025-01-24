@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Button, RadioButton} from '@gravity-ui/uikit';
+import {Button, SegmentedRadioGroup} from '@gravity-ui/uikit';
 
 import {cn} from '../../utils/cn';
 import {Drawer, DrawerItem, DrawerItemProps} from '../Drawer';
@@ -35,15 +35,15 @@ export function DrawerShowcase() {
                     {visible2 ? 'Hide 2' : 'Show 2'}
                 </Button>
                 &nbsp;&nbsp; Direction: &nbsp;
-                <RadioButton value={direction} onUpdate={setDirection}>
-                    <RadioButton.Option value="left">left</RadioButton.Option>
-                    <RadioButton.Option value="right">right</RadioButton.Option>
-                </RadioButton>
+                <SegmentedRadioGroup value={direction} onUpdate={setDirection}>
+                    <SegmentedRadioGroup.Option value="left">left</SegmentedRadioGroup.Option>
+                    <SegmentedRadioGroup.Option value="right">right</SegmentedRadioGroup.Option>
+                </SegmentedRadioGroup>
                 &nbsp;&nbsp; Direction2: &nbsp;
-                <RadioButton value={direction2} onUpdate={setDirection2}>
-                    <RadioButton.Option value="left">left</RadioButton.Option>
-                    <RadioButton.Option value="right">right</RadioButton.Option>
-                </RadioButton>
+                <SegmentedRadioGroup value={direction2} onUpdate={setDirection2}>
+                    <SegmentedRadioGroup.Option value="left">left</SegmentedRadioGroup.Option>
+                    <SegmentedRadioGroup.Option value="right">right</SegmentedRadioGroup.Option>
+                </SegmentedRadioGroup>
                 <br /> Keep Mounted Drawer: &nbsp;
                 <Button
                     view="action"

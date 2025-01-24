@@ -7,7 +7,7 @@ import {
     Icon,
     Modal,
     Radio,
-    RadioButton,
+    SegmentedRadioGroup,
     eventBroker,
 } from '@gravity-ui/uikit';
 
@@ -127,10 +127,9 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                         },
                         popupAnchor: ref,
                         popupPlacement: ['right-start'],
-                        popupOffset: [10, 10],
+                        popupOffset: {mainAxis: 10, crossAxis: 10},
                         popupVisible: subheaderPopupVisible,
                         onClosePopup: () => setSubheaderPopupVisible(false),
-                        popupContentClassName: b('popup-content-class-name'),
                         renderPopupContent: () => {
                             return (
                                 <div className={b('settings')}>
@@ -189,7 +188,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                             popupVisible={popupVisible}
                             popupAnchor={asideRef}
                             popupPlacement={['right-end']}
-                            popupOffset={[-20, 10]}
+                            popupOffset={{mainAxis: -20, crossAxis: 10}}
                             onClosePopup={() => setPopupVisible(false)}
                             popupKeepMounted={true}
                             renderPopupContent={() => {
@@ -254,7 +253,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                     return (
                         <div className={b('content')}>
                             <pre>{placeholderText}</pre>
-                            <RadioButton
+                            <SegmentedRadioGroup
                                 value={addonHeaderDecoration}
                                 onChange={(event) => {
                                     setHeaderDecoration(event.target.value);
@@ -262,7 +261,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                             >
                                 <Radio value={BOOLEAN_OPTIONS.No}>No</Radio>
                                 <Radio value={BOOLEAN_OPTIONS.Yes}>Yes</Radio>
-                            </RadioButton>
+                            </SegmentedRadioGroup>
                             <br />
                             <br />
                             <Button onClick={() => setIsModalOpen(true)}>Open Modal</Button>

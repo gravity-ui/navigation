@@ -12,13 +12,13 @@ import './MultipleTooltip.scss';
 
 const b = block('multiple-tooltip');
 
-const POPUP_OFFSET: PopupProps['offset'] = [-32, 4];
-const POPUP_MODIFIERS: PopupProps['modifiers'] = [
-    {
-        name: 'preventOverflow',
-        enabled: false,
-    },
-];
+const POPUP_OFFSET: PopupProps['offset'] = {mainAxis: -32, crossAxis: 4};
+// const POPUP_MODIFIERS: PopupProps['modifiers'] = [
+//     {
+//         name: 'preventOverflow',
+//         enabled: false,
+//     },
+// ];
 
 export type MultipleTooltipProps = Pick<PopupProps, 'open' | 'anchorRef' | 'placement'> & {
     items: MenuItem[];
@@ -39,9 +39,8 @@ export const MultipleTooltip: React.FC<MultipleTooltipProps> = ({
             anchorRef={anchorRef}
             placement={placement}
             offset={POPUP_OFFSET}
-            contentClassName={b(null)}
-            modifiers={POPUP_MODIFIERS}
-            disableLayer
+            // className={b()}
+            // modifiers={POPUP_MODIFIERS}
         >
             <div className={b('items-container')}>
                 {items

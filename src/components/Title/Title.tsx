@@ -30,14 +30,7 @@ export const Title: React.FC<React.PropsWithChildren<TitleProps>> = ({
                 {children}
             </Text>
             {onClose && (
-                <Button
-                    onClick={onClose}
-                    view="flat"
-                    size="l"
-                    extraProps={{
-                        'aria-label': closeTitle,
-                    }}
-                >
+                <Button onClick={onClose} view="flat" size="l" aria-label={closeTitle}>
                     <Icon data={Xmark} size={closeIconSize} />
                 </Button>
             )}
