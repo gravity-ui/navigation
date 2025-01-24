@@ -1,0 +1,32 @@
+@use '../variables';
+
+.g-root {
+    --gn-top-alert-height: 0px;
+}
+
+$block: '.#{variables.$ns}top-alert';
+
+#{$block} {
+    &_centered {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    &_dense {
+        padding-top: var(--g-spacing-2);
+        padding-bottom: var(--g-spacing-2);
+    }
+
+    &__wrapper_with-bottom-border {
+        &::after {
+            display: block;
+            content: '';
+            height: 1px;
+            background-color: var(
+                --gn-aside-header-divider-horizontal-color,
+                var(--_--horizontal-divider-line-color)
+            );
+            margin-top: -1px;
+        }
+    }
+}

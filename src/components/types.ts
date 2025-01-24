@@ -26,7 +26,7 @@ export interface MenuItem extends QAProps {
     onItemClick?: (
         item: MenuItem,
         collapsed: boolean,
-        event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+        event: React.MouseEvent<HTMLElement, MouseEvent>,
     ) => void;
     onItemClickCapture?: (event: React.SyntheticEvent) => void;
     onCollapseItemClick?: () => void;
@@ -76,16 +76,16 @@ export interface LogoProps {
     'aria-labelledby'?: string;
 }
 
-export type AsideHeaderTopAlertProps = {
+export interface TopAlertProps {
+    align?: AlertProps['align'];
     message: AlertProps['message'];
     title?: AlertProps['title'];
     icon?: AlertProps['icon'];
     view?: AlertProps['view'];
     theme?: AlertProps['theme'];
     actions?: AlertProps['actions'];
-    align?: AlertProps['align'];
     closable?: boolean;
     centered?: boolean;
     dense?: boolean;
     onCloseTopAlert?: () => void;
-};
+}

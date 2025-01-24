@@ -10,7 +10,7 @@ export interface AsideHeaderInnerContextType extends AsideHeaderInnerProps {
     onItemClick: (
         item: MenuItem,
         collapsed: boolean,
-        event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+        event: React.MouseEvent<HTMLElement, MouseEvent>,
     ) => void;
 }
 

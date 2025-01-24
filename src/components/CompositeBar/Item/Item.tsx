@@ -21,13 +21,26 @@ const b = block('composite-bar-item');
 
 interface ItemPopup {
     popupVisible?: PopupProps['open'];
+    /**
+     * floating element anchor ref object
+     *
+     * @deprecated Use `popupAnchorElement` instead
+     * */
     popupAnchor?: PopupProps['anchorRef'];
+    popupAnchorElement?: PopupProps['anchorElement'];
     popupPlacement?: PopupProps['placement'];
     popupOffset?: PopupProps['offset'];
     popupKeepMounted?: PopupProps['keepMounted'];
-    popupContentClassName?: PopupProps['contentClassName'];
     renderPopupContent?: () => React.ReactNode;
+    /**
+     * This callback will be called when Escape key pressed on keyboard, or click outside was made
+     * This behaviour could be disabled with `disableEscapeKeyDown`
+     * and `disableOutsideClick` options
+     *
+     * @deprecated Use `onOpenChangePopup` instead
+     */
     onClosePopup?: () => void;
+    onOpenChangePopup?: PopupProps['onOpenChange'];
 }
 
 export interface ItemProps extends ItemPopup {
@@ -36,7 +49,7 @@ export interface ItemProps extends ItemPopup {
     onItemClick?: (
         item: MenuItem,
         collapsed: boolean,
-        event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+        event: React.MouseEvent<HTMLElement, MouseEvent>,
     ) => void;
     onItemClickCapture?: (event: React.SyntheticEvent) => void;
     onCollapseItemClick?: () => void;
@@ -66,7 +79,7 @@ function renderItemTitle(item: MenuItem) {
 }
 
 export const defaultPopupPlacement: PopupPlacement = ['right-end'];
-export const defaultPopupOffset: NonNullable<PopupProps['offset']> = [-20, 8];
+export const defaultPopupOffset: NonNullable<PopupProps['offset']> = {mainAxis: -20, crossAxis: 8};
 
 export const Item: React.FC<ItemInnerProps> = (props) => {
     const {
@@ -78,12 +91,13 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         enableTooltip = true,
         popupVisible = false,
         popupAnchor,
+        popupAnchorElement,
         popupPlacement = defaultPopupPlacement,
         popupOffset = defaultPopupOffset,
         popupKeepMounted,
-        popupContentClassName,
         renderPopupContent,
         onClosePopup,
+        onOpenChangePopup,
         onItemClick,
         onItemClickCapture,
         onCollapseItemClick,
@@ -94,8 +108,8 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const [open, toggleOpen] = React.useState<boolean>(false);
 
-    const ref = React.useRef<HTMLDivElement>(null);
-    const anchorRef = popupAnchor || ref;
+    const ref = React.useRef<HTMLAnchorElement & HTMLButtonElement>(null);
+    const anchorRef = popupAnchorElement ? {current: popupAnchorElement} : popupAnchor || ref;
     const highlightedRef = React.useRef<HTMLDivElement>(null);
 
     const type = item.type || ITEM_TYPE_REGULAR;
@@ -106,20 +120,20 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const iconQa = item.iconQa;
     const collapsedItem = item.id === COLLAPSE_ITEM_ID;
 
-    const modifiers: Required<PopupProps>['modifiers'] = React.useMemo(
-        () => [
-            {
-                name: 'compact',
-                enabled: true,
-                options: {compact},
-                phase: 'main',
-                fn() {},
-            },
-        ],
-        [compact],
-    );
+    // const modifiers: Required<PopupProps>['modifiers'] = React.useMemo(
+    //     () => [
+    //         {
+    //             name: 'compact',
+    //             enabled: true,
+    //             options: {compact},
+    //             phase: 'main',
+    //             fn() {},
+    //         },
+    //     ],
+    //     [compact],
+    // );
 
-    const onClose = React.useCallback(
+    const handleClosePopup = React.useCallback(
         (event: MouseEvent | KeyboardEvent) => {
             if (
                 event instanceof MouseEvent &&
@@ -160,13 +174,18 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     };
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
+        const [Tag, tagProps] = item.link
+            ? ['a' as const, {href: item.link}]
+            : ['button' as const, {}];
+
         const createdNode = (
             <React.Fragment>
-                <div
+                <Tag
+                    {...tagProps}
                     className={b({type, current, compact}, className)}
                     ref={ref}
                     data-qa={item.qa}
-                    onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                    onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
                         if (collapsedItem) {
                             /**
                              * If we call onItemClick for collapsedItem then:
@@ -201,17 +220,17 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     >
                         {titleEl}
                     </div>
-                </div>
+                </Tag>
                 {renderPopupContent && Boolean(anchorRef?.current) && (
                     <Popup
-                        contentClassName={b('popup', popupContentClassName)}
                         open={popupVisible}
                         keepMounted={popupKeepMounted}
                         placement={popupPlacement}
                         offset={popupOffset}
                         anchorRef={anchorRef}
-                        onClose={onClose}
-                        modifiers={modifiers}
+                        onClose={handleClosePopup}
+                        onOpenChange={onOpenChangePopup}
+                        // modifiers={modifiers}
                     >
                         {renderPopupContent()}
                     </Popup>
@@ -219,13 +238,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             </React.Fragment>
         );
 
-        return item.link ? (
-            <a href={item.link} className={b('link')}>
-                {createdNode}
-            </a>
-        ) : (
-            createdNode
-        );
+        return createdNode;
     };
 
     const iconNode = icon ? (
@@ -258,7 +271,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 <HighlightedItem
                     iconNode={highlightedNode}
                     iconRef={highlightedRef}
-                    onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
+                    onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) =>
                         onItemClick?.(item, false, event)
                     }
                     onClickCapture={onItemClickCapture}
@@ -304,26 +317,21 @@ function CollapsedPopup({
                             title: titleEl,
                             icon: iconEl,
                         }: MakeItemParams) => {
-                            const res = (
-                                <div
+                            const [Tag, tagProps] = collapseItem.link
+                                ? ['a' as const, {href: collapseItem.link}]
+                                : ['button' as const, {}];
+
+                            return (
+                                <Tag
+                                    {...tagProps}
                                     className={b('collapse-item')}
-                                    onClick={(
-                                        event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-                                    ) => {
+                                    onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
                                         onItemClick?.(collapseItem, true, event);
                                     }}
                                 >
                                     {iconEl}
                                     {titleEl}
-                                </div>
-                            );
-
-                            return collapseItem.link ? (
-                                <a href={collapseItem.link} className={b('link')}>
-                                    {res}
-                                </a>
-                            ) : (
-                                res
+                                </Tag>
                             );
                         };
 

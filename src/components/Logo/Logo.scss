@@ -7,28 +7,14 @@ $block: '.#{variables.$ns}logo';
 #{$block} {
     display: flex;
     align-items: center;
-    flex-shrink: 0;
     height: 40px;
 
-    &__logo-btn-place {
-        flex-shrink: 0;
+    &__btn-logo {
         display: flex;
         align-items: center;
+        flex-shrink: 0;
         justify-content: center;
-        cursor: pointer;
 
-        & .g-button::before {
-            background-color: transparent;
-        }
-    }
-
-    &__logo {
-        @include text-body-2;
-        vertical-align: middle;
-        cursor: pointer;
-    }
-
-    &__logo-link {
         &,
         &:hover,
         &:active,
@@ -38,9 +24,17 @@ $block: '.#{variables.$ns}logo';
             outline: none;
             color: inherit;
         }
+        &:focus-visible {
+            outline: solid var(--g-color-line-misc);
+            outline-offset: -2px;
+        }
     }
 
-    .g-root &__btn-logo.button2_theme_flat.button2_hovered_yes::before {
-        background-color: transparent;
+    &__logo-icon-place {
+        width: 36px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }

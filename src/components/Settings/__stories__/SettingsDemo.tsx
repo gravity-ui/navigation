@@ -1,12 +1,12 @@
 import React, {useReducer} from 'react';
 
-import {HelpPopover} from '@gravity-ui/components';
 import {
     Button,
     Checkbox,
+    HelpMark,
     Link,
     Radio,
-    RadioButton,
+    SegmentedRadioGroup,
     Select,
     Switch,
     useUniqId,
@@ -86,17 +86,17 @@ export const SettingsComponent = React.memo(
                 }}
                 onClose={onClose}
                 renderRightAdornment={({title}) => (
-                    <HelpPopover
+                    <HelpMark
                         content={`Some text for ${title}`}
-                        buttonProps={{
+                        popoverProps={{
                             'aria-label': 'Note',
                         }}
                     />
                 )}
                 renderSectionRightAdornment={({title}) => (
-                    <HelpPopover
+                    <HelpMark
                         content={`Some text for ${title}`}
-                        buttonProps={{
+                        popoverProps={{
                             'aria-label': 'Note',
                         }}
                     />
@@ -166,7 +166,7 @@ export const SettingsComponent = React.memo(
                                     </div>
                                 }
                             >
-                                <RadioButton
+                                <SegmentedRadioGroup
                                     value={settings.vcs}
                                     onChange={(event) => {
                                         handleChange('vcs', event.target.value);
@@ -174,7 +174,7 @@ export const SettingsComponent = React.memo(
                                 >
                                     <Radio value="arc">{'Arc'}</Radio>
                                     <Radio value="svn">{'SVN'}</Radio>
-                                </RadioButton>
+                                </SegmentedRadioGroup>
                             </Settings.Item>
                             <Settings.Item
                                 title="Start from dashboard page"
@@ -214,7 +214,7 @@ export const SettingsComponent = React.memo(
                                     </div>
                                 )}
                             >
-                                <RadioButton
+                                <SegmentedRadioGroup
                                     value={settings.arcanumTheme ?? 'light'}
                                     onChange={(event) => {
                                         handleChange('arcanumTheme', event.target.value);
@@ -224,7 +224,7 @@ export const SettingsComponent = React.memo(
                                     <Radio value="dark">{'Dark'}</Radio>
                                     <Radio value="special">{'Special'}</Radio>
                                     <Radio value="general">{'Inherit from General'}</Radio>
-                                </RadioButton>
+                                </SegmentedRadioGroup>
                             </Settings.Item>
                             <Settings.Item title="Code theme">
                                 <Select
@@ -278,7 +278,7 @@ function renderGeneralSettings(
             <Settings.Page id="appearance" title="Appearance" icon={{data: featureIcon}}>
                 <Settings.Section title="Appearance" onlyChild={true}>
                     <Settings.Item title="Interface language">
-                        <RadioButton
+                        <SegmentedRadioGroup
                             value={settings.lang ?? 'ru'}
                             onChange={(event) => {
                                 handleChange('lang', event.target.value);
@@ -286,10 +286,10 @@ function renderGeneralSettings(
                         >
                             <Radio value="ru">{'Русский'}</Radio>
                             <Radio value="en">{'English'}</Radio>
-                        </RadioButton>
+                        </SegmentedRadioGroup>
                     </Settings.Item>
                     <Settings.Item title="Theme">
-                        <RadioButton
+                        <SegmentedRadioGroup
                             value={settings.theme ?? 'light'}
                             onChange={(event) => {
                                 handleChange('theme', event.target.value);
@@ -297,7 +297,7 @@ function renderGeneralSettings(
                         >
                             <Radio value="light">{'Light'}</Radio>
                             <Radio value="dark">{'Dark'}</Radio>
-                        </RadioButton>
+                        </SegmentedRadioGroup>
                     </Settings.Item>
                 </Settings.Section>
             </Settings.Page>

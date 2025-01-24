@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Button, Icon} from '@gravity-ui/uikit';
+import {Icon} from '@gravity-ui/uikit';
 
 import {LogoProps} from '../types';
 import {block} from '../utils/cn';
@@ -10,12 +10,13 @@ import './Logo.scss';
 const b = block('logo');
 
 export const Logo: React.FC<
-    LogoProps & {compact?: boolean; buttonClassName?: string; buttonWrapperClassName?: string}
+    LogoProps & {compact?: boolean; buttonClassName?: string; iconPlaceClassName?: string}
 > = ({
     text,
     icon,
     iconSrc,
     iconClassName,
+    iconPlaceClassName,
     iconSize = 24,
     textSize = 15,
     href,
@@ -24,7 +25,6 @@ export const Logo: React.FC<
     onClick,
     compact,
     className,
-    buttonWrapperClassName,
     buttonClassName,
     'aria-label': ariaLabel,
     'aria-labelledby': ariaLabelledby,
@@ -35,32 +35,13 @@ export const Logo: React.FC<
 
     if (iconSrc) {
         buttonIcon = (
-            <Button.Icon className={iconClassName}>
+            <span className={iconClassName}>
                 <img alt="logo icon" src={iconSrc} width={iconSize} height={iconSize} />
-            </Button.Icon>
+            </span>
         );
     } else if (icon) {
         buttonIcon = <Icon data={icon} size={iconSize} className={iconClassName} />;
     }
-
-    const button = (
-        <Button
-            view="flat"
-            size="l"
-            className={b('btn-logo', buttonClassName)}
-            component={hasWrapper ? 'span' : undefined}
-            onClick={onClick}
-            target={target}
-            rel={target === '_self' ? undefined : 'noreferrer'}
-            href={href}
-            extraProps={{
-                'aria-label': ariaLabel,
-                'aria-labelledby': ariaLabelledby,
-            }}
-        >
-            {buttonIcon}
-        </Button>
-    );
 
     let logo: React.ReactNode;
 
@@ -74,25 +55,24 @@ export const Logo: React.FC<
         );
     }
 
+    const button = (
+        <a
+            className={b('btn-logo', buttonClassName)}
+            onClick={onClick}
+            target={target}
+            rel={target === '_self' ? undefined : 'noreferrer'}
+            href={href}
+            aria-label={href && ariaLabel}
+            aria-labelledby={href && ariaLabelledby}
+        >
+            <span className={b('logo-icon-place', iconPlaceClassName)}>{buttonIcon}</span>
+            {!compact && logo}
+        </a>
+    );
+
     return (
         <div className={b(null, className)}>
-            <div className={b('logo-btn-place', buttonWrapperClassName)}>
-                {hasWrapper ? wrapper(button, Boolean(compact)) : button}
-            </div>
-            {!compact &&
-                (hasWrapper ? (
-                    <div onClick={onClick}>{wrapper(logo, Boolean(compact))}</div>
-                ) : (
-                    <a
-                        href={href ?? '/'}
-                        target={target}
-                        rel={target === '_self' ? undefined : 'noreferrer'}
-                        className={b('logo-link')}
-                        onClick={onClick}
-                    >
-                        {logo}
-                    </a>
-                ))}
+            {hasWrapper ? wrapper(button, Boolean(compact)) : button}
         </div>
     );
 };

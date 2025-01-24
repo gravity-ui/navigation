@@ -25,17 +25,15 @@ export function ActionBarShowcase() {
                 </ActionBar.Group>
             </ActionBar.Section>
             <ActionBar.Section type="primary">
-                <ActionBar.Group pull="left">
-                    <ActionBar.Item>
-                        <Breadcrumbs
-                            lastDisplayedItemsCount={1}
-                            items={[
-                                {text: 'Projects', action() {}},
-                                {text: '@gravity-ui', action() {}},
-                                {text: 'navigation', action() {}},
-                            ]}
-                            firstDisplayedItemsCount={1}
-                        />
+                <ActionBar.Group pull="left-grow">
+                    <ActionBar.Item pull="left-grow">
+                        <Breadcrumbs showRoot={true} onAction={(id) => alert(id)}>
+                            <Breadcrumbs.Item href="/" key="1">
+                                Projects
+                            </Breadcrumbs.Item>
+                            <Breadcrumbs.Item key="2">@gravity-ui</Breadcrumbs.Item>
+                            <Breadcrumbs.Item key="3">navigation</Breadcrumbs.Item>
+                        </Breadcrumbs>
                     </ActionBar.Item>
                 </ActionBar.Group>
 
