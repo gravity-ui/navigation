@@ -57,9 +57,7 @@ export const OverlapPanel = ({
                         view="flat"
                         className={b('close')}
                         onClick={onClose}
-                        extraProps={{
-                            'aria-label': closeTitle,
-                        }}
+                        aria-label={closeTitle}
                     >
                         <Icon
                             className={b('icon')}
@@ -83,9 +81,7 @@ export const OverlapPanel = ({
                             view="flat"
                             onClick={action.onClick}
                             className={b('action')}
-                            extraProps={{
-                                'aria-label': action.title,
-                            }}
+                            aria-label={action.title}
                         >
                             <Icon data={action.icon} size={MOBILE_HEADER_ICON_SIZE} />
                         </Button>
