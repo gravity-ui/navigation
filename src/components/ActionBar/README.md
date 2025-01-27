@@ -12,13 +12,13 @@ function Page() {
   return (
     <ActionBar aria-label="Actions bar">
       <ActionBar.Section>
-        <ActionBar.Group>
+        <ActionBar.Group pull="left">
           <ActionBar.Item>
-            <Breadcrumbs
-              lastDisplayedItemsCount={1}
-              firstDisplayedItemsCount={1}
-              items={[{text: 'Root Item', action() {}}]}
-            />
+            <Breadcrumbs showRoot={true} onAction={(id) => alert(id)}>
+              <Breadcrumbs.Item href="/" key="1">
+                Root Item
+              </Breadcrumbs.Item>
+            </Breadcrumbs>
           </ActionBar.Item>
         </ActionBar.Group>
 
@@ -74,14 +74,14 @@ import {ActionBar} from '@gravity-ui/navigation';
   <ActionBar.Section type="primary">
     <ActionBar.Group>
       <ActionBar.Item>
-        <Breadcrumbs
-          lastDisplayedItemsCount={1}
-          firstDisplayedItemsCount={1}
-          items={[
-            {text: 'Wiki Main Page', action() {}},
-            {text: 'Wiki Article', action() {}},
-          ]}
-        />
+        <Breadcrumbs onAction={(id) => alert(id)}>
+          <Breadcrumbs.Item href="/" key="1">
+            Wiki Main Page
+          </Breadcrumbs.Item>
+          <Breadcrumbs.Item href="/" key="2">
+            Wiki Article
+          </Breadcrumbs.Item>
+        </Breadcrumbs>
       </ActionBar.Item>
     </ActionBar.Group>
   </ActionBar.Section>
@@ -106,7 +106,7 @@ Group few `ActionBar.Item`.
 
 #### `pull`
 
-Move group to `left`, `right` or `center`.
+Move group to `left`, `left-grow`, `right`, `right-grow` or `center`, `center-grow`.
 
 #### `className`
 

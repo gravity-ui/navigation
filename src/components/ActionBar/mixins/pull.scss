@@ -3,6 +3,7 @@
         left: 0;
         right: auto;
     }
+    justify-content: flex-start;
 }
 
 @mixin right {
@@ -10,6 +11,7 @@
         left: auto;
         right: 0;
     }
+    justify-content: flex-end;
 }
 
 @mixin center {
@@ -17,18 +19,31 @@
         left: auto;
         right: auto;
     }
+    justify-content: center;
 }
 
 @mixin modifiers {
     &_pull_left {
         @include left;
+
+        &-grow {
+            flex-grow: 1;
+        }
     }
 
     &_pull_right {
         @include right;
+
+        &-grow {
+            flex-grow: 1;
+        }
     }
 
     &_pull_center {
         @include center;
+
+        &-grow {
+            flex-grow: 1;
+        }
     }
 }
