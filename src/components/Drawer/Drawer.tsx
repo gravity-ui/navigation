@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Portal, useBodyScrollLock, useForkRef} from '@gravity-ui/uikit';
+import {Portal, useForkRef} from '@gravity-ui/uikit';
 import {CSSTransition, Transition} from 'react-transition-group';
 
 import {block} from '../utils/cn';
@@ -188,7 +188,7 @@ export const Drawer: React.FC<DrawerProps> = ({
     style,
     onVeilClick,
     onEscape,
-    preventScrollBody = true,
+    // preventScrollBody = true,
     hideVeil,
     disablePortal = true,
     keepMounted = false,
@@ -217,7 +217,7 @@ export const Drawer: React.FC<DrawerProps> = ({
         };
     }, [onEscape, someItemVisible]);
 
-    useBodyScrollLock({enabled: preventScrollBody && someItemVisible});
+    // useBodyScrollLock({enabled: preventScrollBody && someItemVisible});
 
     const containerRef = React.useRef<HTMLDivElement>(null);
     const veilRef = React.useRef<HTMLDivElement>(null);
