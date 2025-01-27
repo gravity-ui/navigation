@@ -11,16 +11,16 @@ $block: '.#{variables.$ns}composite-bar-item';
 
     --_--horizontal-divider-line-color: var(--g-color-line-generic);
 
-    --_--item-background-color-hover: var(--g-color-base-simple-hover);
+    --_--item-background-color-hover: var(--gn-ah-hovered-item-background-color);
 
     --_--item-general-icon-color: var(--g-color-text-primary);
-    --_--item-icon-color: var(--g-color-text-misc);
+    --_--item-icon-color: var(--g-color-text-complementary);
     --_--item-text-color: var(--g-color-text-primary);
     --_--item-collapsed-radius: 7px;
 
     // selected item
     --_--item-selected-text-color: var(--g-color-text-primary);
-    --_--item-selected-background-color-active: var(--g-color-base-selection);
+    --_--item-selected-background-color: var(--gn-ah-selected-item-background-color);
 
     display: flex;
     min-width: 0;
@@ -204,7 +204,7 @@ $block: '.#{variables.$ns}composite-bar-item';
             &#{$class}_type_regular {
                 background-color: var(
                     --gn-aside-header-item-current-background-color,
-                    var(--_--item-selected-background-color-active)
+                    var(--_--item-selected-background-color)
                 );
 
                 border-radius: var(--gn-aside-header-item-expanded-radius);
@@ -217,7 +217,7 @@ $block: '.#{variables.$ns}composite-bar-item';
                     --gn-aside-header-item-current-background-color-hover,
                     var(
                         --gn-aside-header-item-current-background-color,
-                        var(--_--item-selected-background-color-active)
+                        var(--_--item-selected-background-color)
                     )
                 );
 
@@ -281,7 +281,7 @@ $block: '.#{variables.$ns}composite-bar-item';
                     &::before {
                         background-color: var(
                             --gn-aside-header-item-current-background-color,
-                            var(--_--item-selected-background-color-active)
+                            var(--_--item-selected-background-color)
                         );
                     }
                 }
@@ -298,7 +298,7 @@ $block: '.#{variables.$ns}composite-bar-item';
                             --gn-aside-header-item-current-background-color-hover,
                             var(
                                 --gn-aside-header-item-current-background-color,
-                                var(--_--item-selected-background-color-active)
+                                var(--_--item-selected-background-color)
                             )
                         );
                     }
