@@ -33,6 +33,6 @@ npm install --dev @gravity-ui/uikit@^6.15.0 @gravity-ui/icons@2.2.0 @gravity-ui/
 - MobileFooter
 - [HotkeysPanel](https://github.com/gravity-ui/navigation/tree/main/src/components/HotkeysPanel/README.md)
 
-## CSS variables
+## CSS API
 
 Used for themization Navigation's components
