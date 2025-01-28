@@ -1,7 +1,7 @@
 import React, {ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {Gear} from '@gravity-ui/icons';
-import {Button, Flex, Icon, List, ListItemData, Text} from '@gravity-ui/uikit';
+import {Button, Flex, Icon, List, ListItemData, Text, Tooltip} from '@gravity-ui/uikit';
 
 import {useAsideHeaderInnerContext} from '../AsideHeader/AsideHeaderContext';
 import {MenuItem} from '../types';
@@ -24,7 +24,8 @@ interface AllPagesPanelProps {
 
 export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     const {startEditIcon, onEditModeChanged, className} = props;
-    const {menuItems, onMenuItemsChanged, editMenuProps} = useAsideHeaderInnerContext();
+    const {menuItems, defaultMenuItems, onMenuItemsChanged, editMenuProps} =
+        useAsideHeaderInnerContext();
 
     const menuItemsRef = useRef(menuItems);
     menuItemsRef.current = menuItems;
@@ -104,14 +105,10 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             return;
         }
         editMenuProps?.onResetSettingsToDefault?.();
-        const originItems = menuItemsRef.current.filter((item) => item.id !== ALL_PAGES_ID);
-        onMenuItemsChanged(
-            originItems.map((item) => ({
-                ...item,
-                hidden: false,
-            })),
-        );
-    }, [onMenuItemsChanged, editMenuProps]);
+        const originItems = defaultMenuItems.filter((item) => item.id !== ALL_PAGES_ID);
+
+        onMenuItemsChanged(originItems);
+    }, [onMenuItemsChanged, editMenuProps, defaultMenuItems]);
 
     const changeItemsOrder = useCallback(
         ({oldIndex, newIndex}: {oldIndex: number; newIndex: number}) => {
@@ -120,7 +117,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             const element = newItems.splice(oldIndex, 1)[0];
             newItems.splice(newIndex, 0, element);
 
-            onMenuItemsChanged?.(newItems);
+            onMenuItemsChanged?.(newItems.filter((item) => item.type !== 'divider'));
 
             setDragingItemTitle(null);
             editMenuProps?.onChangeItemsOrder?.(element, oldIndex, newIndex);
@@ -130,9 +127,9 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
 
     const sortableItems = useMemo(() => {
         return menuItemsRef.current.filter(
-            (item) => item.id !== ALL_PAGES_ID && !item.afterMoreButton,
+            (item) => item.id !== ALL_PAGES_ID && !item.afterMoreButton && item.type !== 'divider',
         );
-    }, []);
+    }, [menuItems]);
 
     return (
         <Flex className={b(null, className)} gap="5" direction="column">
@@ -140,9 +137,11 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                 <Text variant="subheader-2">
                     {isEditMode ? i18n('all-panel.title.editing') : i18n('all-panel.title.main')}
                 </Text>
-                <Button selected={isEditMode} view="normal" onClick={toggleEditMode}>
-                    {startEditIcon ? startEditIcon : <Icon data={Gear} />}
-                </Button>
+                <Tooltip content={i18n('all-panel.title.editing')}>
+                    <Button selected={isEditMode} view="normal" onClick={toggleEditMode}>
+                        {startEditIcon ? startEditIcon : <Icon data={Gear} />}
+                    </Button>
+                </Tooltip>
             </Flex>
             <Flex className={b('content')} gap="5" direction="column">
                 {isEditMode && editMenuProps?.enableSorting ? (

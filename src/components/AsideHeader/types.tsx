@@ -55,6 +55,7 @@ export interface AsideHeaderDefaultProps {
     panelItems?: DrawerItemProps[];
     subheaderItems?: SubheaderMenuItem[];
     menuItems?: MenuItem[];
+    defaultMenuItems?: MenuItem[];
     onMenuItemsChanged?: (items: MenuItem[]) => void;
     headerDecoration?: boolean;
 }
