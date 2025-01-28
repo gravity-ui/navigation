@@ -105,9 +105,11 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             return;
         }
         editMenuProps?.onResetSettingsToDefault?.();
-        const originItems = defaultMenuItems.filter((item) => item.id !== ALL_PAGES_ID);
+        const originItems = defaultMenuItems?.filter((item) => item.id !== ALL_PAGES_ID);
 
-        onMenuItemsChanged(originItems);
+        if (originItems) {
+            onMenuItemsChanged(originItems);
+        }
     }, [onMenuItemsChanged, editMenuProps, defaultMenuItems]);
 
     const changeItemsOrder = useCallback(
