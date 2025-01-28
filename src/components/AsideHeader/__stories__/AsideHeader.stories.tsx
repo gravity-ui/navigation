@@ -79,6 +79,9 @@ const CustomThemeTemplate: StoryFn = (args) => (
     </React.Fragment>
 );
 export const CustomTheme = CustomThemeTemplate.bind({});
+CustomTheme.args = {
+    headerDecoration: true,
+};
 
 const CustomBackgroundTemplate: StoryFn = (args) => (
     <React.Fragment>
