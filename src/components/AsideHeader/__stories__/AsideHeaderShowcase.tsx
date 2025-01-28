@@ -107,7 +107,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                 }}
                 headerDecoration={
                     headerDecoration === undefined
-                        ? addonHeaderDecoration === BOOLEAN_OPTIONS.Yes
+                        ? addonHeaderDecoration === BOOLEAN_OPTIONS.No
                         : headerDecoration
                 }
                 onMenuItemsChanged={setMenuItems}
@@ -188,7 +188,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                             popupVisible={popupVisible}
                             popupAnchor={asideRef}
                             popupPlacement={['right-end']}
-                            popupOffset={{mainAxis: -20, crossAxis: 10}}
+                            popupOffset={{mainAxis: 10, crossAxis: 10}}
                             onClosePopup={() => setPopupVisible(false)}
                             popupKeepMounted={true}
                             renderPopupContent={() => {
