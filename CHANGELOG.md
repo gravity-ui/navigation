@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.31.0](https://github.com/gravity-ui/navigation/compare/v2.30.0...v2.31.0) (2025-01-16)
+
+
+### Features
+
+* **Item:** clamp composite bar item ([#342](https://github.com/gravity-ui/navigation/issues/342)) ([9e71cad](https://github.com/gravity-ui/navigation/commit/9e71cad872be4ffe285b3aecfe26ddb462a4b17a))
+
+## [2.30.0](https://github.com/gravity-ui/navigation/compare/v2.29.0...v2.30.0) (2025-01-14)
+
+
+### Features
+
+* add `onResizeStart` prop ([#347](https://github.com/gravity-ui/navigation/issues/347)) ([f9a9230](https://github.com/gravity-ui/navigation/commit/f9a92307d6b92984e104143e306e9d22b8f520a0))
+
+
+### Bug Fixes
+
+* **Item:** fixed item min width to 0 [[#343](https://github.com/gravity-ui/navigation/issues/343)] ([#344](https://github.com/gravity-ui/navigation/issues/344)) ([943d022](https://github.com/gravity-ui/navigation/commit/943d022f9fed44b844d01f52d8d6c906f4d93526))
+
 ## [2.29.0](https://github.com/gravity-ui/navigation/compare/v2.28.0...v2.29.0) (2024-11-07)
 
 

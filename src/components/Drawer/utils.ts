@@ -89,6 +89,7 @@ export interface UseResizableDrawerItemParams {
     width?: number;
     minResizeWidth?: number;
     maxResizeWidth?: number;
+    onResizeStart?: VoidFunction;
     onResize?: OnResizeHandler;
 }
 
@@ -98,6 +99,7 @@ export function useResizableDrawerItem(params: UseResizableDrawerItemParams) {
         width,
         minResizeWidth = DRAWER_ITEM_MIN_RESIZE_WIDTH,
         maxResizeWidth = DRAWER_ITEM_MAX_RESIZE_WIDTH,
+        onResizeStart,
         onResize,
     } = params;
 
@@ -124,7 +126,8 @@ export function useResizableDrawerItem(params: UseResizableDrawerItemParams) {
     const onStart = React.useCallback(() => {
         setIsResizing(true);
         setResizeDelta(0);
-    }, [setIsResizing, setResizeDelta]);
+        onResizeStart?.();
+    }, [onResizeStart]);
 
     const onMove = React.useCallback((delta: number) => {
         setResizeDelta(delta);
@@ -137,7 +140,7 @@ export function useResizableDrawerItem(params: UseResizableDrawerItemParams) {
             setInternalWidth(newWidth);
             onResize?.(newWidth);
         },
-        [setIsResizing, setInternalWidth, getResizedWidth, onResize],
+        [getResizedWidth, onResize],
     );
 
     const displayWidth = isResizing

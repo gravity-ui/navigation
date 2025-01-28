@@ -112,3 +112,44 @@ When in the woods you saw the young man, sole,
 And met the look of his extinguished eyes,
 Then did you sigh?
 `;
+
+const MENU_ITEMS_CLAMPED_TITLE = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit';
+
+const MENU_ITEMS_CLAMPED: MenuItem[] = [
+    {
+        id: 'text',
+        title: MENU_ITEMS_CLAMPED_TITLE,
+        icon: Gear,
+    },
+    {
+        id: 'text-action',
+        title: MENU_ITEMS_CLAMPED_TITLE,
+        icon: Gear,
+        type: 'action',
+    },
+    {
+        id: 'text-link',
+        title: MENU_ITEMS_CLAMPED_TITLE,
+        icon: Gear,
+        link: 'about:blank',
+    },
+    {
+        id: 'text-link-action',
+        title: MENU_ITEMS_CLAMPED_TITLE,
+        icon: Gear,
+        link: 'about:blank',
+        type: 'action',
+    },
+];
+
+export const menuItemsClamped = MENU_ITEMS_CLAMPED.concat({
+    id: 'divider',
+    title: undefined,
+    type: 'divider',
+}).concat(
+    MENU_ITEMS_CLAMPED.map((item) => ({
+        ...item,
+        id: item.id.concat('-new'),
+        rightAdornment: renderTag('new'),
+    })),
+);
