@@ -185,7 +185,7 @@ export const SettingsMobileComponent = React.memo(
                                 )}
                             >
                                 <Select
-                                    value={[settings.arcanumTheme] ?? ['light']}
+                                    value={[settings.arcanumTheme ?? 'light']}
                                     size="xl"
                                     onUpdate={(value) => {
                                         handleChange('arcanumTheme', value[0]);
