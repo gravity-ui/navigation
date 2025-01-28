@@ -77,6 +77,7 @@ export interface LogoProps {
 }
 
 export interface TopAlertProps {
+    align?: AlertProps['align'];
     message: AlertProps['message'];
     title?: AlertProps['title'];
     icon?: AlertProps['icon'];

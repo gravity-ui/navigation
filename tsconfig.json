@@ -3,6 +3,7 @@
   "compilerOptions": {
     "jsx": "react",
     "module": "esnext",
+    "moduleResolution": "Bundler",
     "baseUrl": ".",
     "resolveJsonModule": true,
     "outDir": "build",
