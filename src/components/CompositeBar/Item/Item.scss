@@ -40,6 +40,11 @@ $block: '.#{variables.$ns}composite-bar-item';
     }
 
     &__action_collapse {
+        .g-button__text {
+            display: flex;
+            align-items: center;
+        }
+
         width: 216px;
     }
 
@@ -85,6 +90,15 @@ $block: '.#{variables.$ns}composite-bar-item';
         align-items: center;
         justify-content: center;
         height: 100%;
+    }
+
+    &__action-icon {
+        color: var(--gn-aside-header-item-icon-color, var(--_--item-icon-color));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: var(--gn-composite-bar-item-action-size, 36px);
     }
 
     &__title {
