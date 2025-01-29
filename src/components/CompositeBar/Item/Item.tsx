@@ -218,18 +218,18 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     type="button"
                     pin="circle-circle"
                 >
-                    <div className={b('action-icon')} ref={highlightedRef}>
-                        {makeIconNode(iconEl)}
-                    </div>
+                    <div className={b('action-btn-container')}>
+                        <div className={b('action-icon')}>{makeIconNode(iconEl)}</div>
 
-                    {!compact && (
-                        <div
-                            className={b('title')}
-                            title={typeof item.title === 'string' ? item.title : undefined}
-                        >
-                            {titleEl}
-                        </div>
-                    )}
+                        {!compact && (
+                            <div
+                                className={b('title')}
+                                title={typeof item.title === 'string' ? item.title : undefined}
+                            >
+                                {titleEl}
+                            </div>
+                        )}
+                    </div>
                 </Button>
             </div>
         );

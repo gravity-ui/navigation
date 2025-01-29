@@ -40,12 +40,12 @@ $block: '.#{variables.$ns}composite-bar-item';
     }
 
     &__action_collapse {
-        .g-button__text {
-            display: flex;
-            align-items: center;
-        }
-
+        display: flex;
         width: 216px;
+    }
+
+    &__action-btn-container {
+        display: flex;
     }
 
     &__icon {
@@ -93,11 +93,11 @@ $block: '.#{variables.$ns}composite-bar-item';
     }
 
     &__action-icon {
-        color: var(--gn-aside-header-item-icon-color, var(--_--item-icon-color));
-        display: flex;
+        color: var(--gn-aside-header-item-icon-color, var(--g-color-text-complementary));
         align-items: center;
+        display: flex;
+        flex-shrink: 0;
         justify-content: center;
-        height: 100%;
         width: var(--gn-composite-bar-item-action-size, 36px);
     }
 
