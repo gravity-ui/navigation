@@ -32,7 +32,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
 
     const [isEditMode, setIsEditMode] = useState(false);
 
-    const [dragingItemTitle, setDragingItemTitle] = useState<ReactNode | null>(null);
+    const [draggingItemTitle, setDraggingItemTitle] = useState<ReactNode | null>(null);
 
     const toggleEditMode = useCallback(() => {
         setIsEditMode((prev) => !prev);
@@ -77,13 +77,13 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     );
 
     const onDragEnd = useCallback(() => {
-        setDragingItemTitle(null);
-    }, [setDragingItemTitle]);
+        setDraggingItemTitle(null);
+    }, [setDraggingItemTitle]);
 
     const itemRender = useCallback(
         (item: ListItemData<MenuItem>, _isActive: boolean, _itemIndex: number) => {
             const onDragStart = () => {
-                setDragingItemTitle(item.title);
+                setDraggingItemTitle(item.title);
             };
 
             return (
@@ -97,7 +97,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                 />
             );
         },
-        [isEditMode, togglePageVisibility, onDragEnd, setDragingItemTitle, editMenuProps],
+        [isEditMode, togglePageVisibility, onDragEnd, setDraggingItemTitle, editMenuProps],
     );
 
     const onResetToDefaultClick = useCallback(() => {
@@ -121,7 +121,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
 
             onMenuItemsChanged?.(newItems.filter((item) => item.type !== 'divider'));
 
-            setDragingItemTitle(null);
+            setDraggingItemTitle(null);
             editMenuProps?.onChangeItemsOrder?.(element, oldIndex, newIndex);
         },
         [onMenuItemsChanged, editMenuProps],
@@ -160,8 +160,8 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                             renderItem={itemRender}
                         />
 
-                        {dragingItemTitle && (
-                            <div className={b('drag-placeholder')}>{dragingItemTitle}</div>
+                        {draggingItemTitle && (
+                            <div className={b('drag-placeholder')}>{draggingItemTitle}</div>
                         )}
                     </div>
                 ) : (

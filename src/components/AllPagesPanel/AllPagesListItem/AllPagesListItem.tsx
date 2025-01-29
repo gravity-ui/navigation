@@ -37,7 +37,7 @@ export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
         }
     };
 
-    const onItemDrugStart = (e: MouseEvent<HTMLDivElement>) => {
+    const onItemDragStart = (e: MouseEvent<HTMLDivElement>) => {
         if (editMode && onDragStart) {
             e.stopPropagation();
             e.preventDefault();
@@ -45,7 +45,7 @@ export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
         }
     };
 
-    const onItemDrugEnd = (e: MouseEvent<HTMLDivElement>) => {
+    const onItemDragEnd = (e: MouseEvent<HTMLDivElement>) => {
         if (editMode && onDragEnd) {
             e.stopPropagation();
             e.preventDefault();
@@ -58,9 +58,9 @@ export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
             key={item.id}
             className={b({'edit-mode': editMode && enableSorting})}
             onClick={onItemClick}
-            draggable={editMode}
-            onMouseDown={onItemDrugStart}
-            onMouseUp={onItemDrugEnd}
+            draggable={editMode && enableSorting}
+            onMouseDown={onItemDragStart}
+            onMouseUp={onItemDragEnd}
         >
             {item.icon ? (
                 <Icon className={b('icon')} data={item.icon} size={item.iconSize} />
