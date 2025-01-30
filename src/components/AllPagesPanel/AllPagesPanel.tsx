@@ -1,7 +1,7 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {Gear} from '@gravity-ui/icons';
-import {Button, Flex, Icon, List, ListItemData, Text} from '@gravity-ui/uikit';
+import {Button, Flex, Icon, List, ListItemData, Text, Tooltip} from '@gravity-ui/uikit';
 
 import {useAsideHeaderInnerContext} from '../AsideHeader/AsideHeaderContext';
 import {MenuItem} from '../types';
@@ -24,12 +24,16 @@ interface AllPagesPanelProps {
 
 export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     const {startEditIcon, onEditModeChanged, className} = props;
-    const {menuItems, onMenuItemsChanged, editMenuProps} = useAsideHeaderInnerContext();
+    const {menuItems, defaultMenuItems, onMenuItemsChanged, editMenuProps} =
+        useAsideHeaderInnerContext();
 
     const menuItemsRef = useRef(menuItems);
     menuItemsRef.current = menuItems;
 
     const [isEditMode, setIsEditMode] = useState(false);
+
+    const [draggingItemTitle, setDraggingItemTitle] = useState<ReactNode | null>(null);
+
     const toggleEditMode = useCallback(() => {
         setIsEditMode((prev) => !prev);
     }, []);
@@ -72,15 +76,28 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         [onMenuItemsChanged, editMenuProps],
     );
 
+    const onDragEnd = useCallback(() => {
+        setDraggingItemTitle(null);
+    }, [setDraggingItemTitle]);
+
     const itemRender = useCallback(
-        (item: ListItemData<MenuItem>, _isActive: boolean, _itemIndex: number) => (
-            <AllPagesListItem
-                item={item}
-                editMode={isEditMode}
-                onToggle={() => togglePageVisibility(item)}
-            />
-        ),
-        [isEditMode, togglePageVisibility],
+        (item: ListItemData<MenuItem>, _isActive: boolean, _itemIndex: number) => {
+            const onDragStart = () => {
+                setDraggingItemTitle(item.title);
+            };
+
+            return (
+                <AllPagesListItem
+                    item={item}
+                    onDragStart={onDragStart}
+                    onDragEnd={onDragEnd}
+                    editMode={isEditMode}
+                    onToggle={() => togglePageVisibility(item)}
+                    enableSorting={editMenuProps?.enableSorting}
+                />
+            );
+        },
+        [isEditMode, togglePageVisibility, onDragEnd, setDraggingItemTitle, editMenuProps],
     );
 
     const onResetToDefaultClick = useCallback(() => {
@@ -88,41 +105,83 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             return;
         }
         editMenuProps?.onResetSettingsToDefault?.();
-        const originItems = menuItemsRef.current.filter((item) => item.id !== ALL_PAGES_ID);
-        onMenuItemsChanged(
-            originItems.map((item) => ({
-                ...item,
-                hidden: false,
-            })),
+        const originItems = defaultMenuItems?.filter((item) => item.id !== ALL_PAGES_ID);
+
+        if (originItems) {
+            onMenuItemsChanged(originItems);
+        }
+    }, [onMenuItemsChanged, editMenuProps, defaultMenuItems]);
+
+    const changeItemsOrder = useCallback(
+        ({oldIndex, newIndex}: {oldIndex: number; newIndex: number}) => {
+            const newItems = menuItemsRef.current.filter((item) => item.id !== ALL_PAGES_ID);
+
+            const element = newItems.splice(oldIndex, 1)[0];
+            newItems.splice(newIndex, 0, element);
+
+            onMenuItemsChanged?.(newItems.filter((item) => item.type !== 'divider'));
+
+            setDraggingItemTitle(null);
+            editMenuProps?.onChangeItemsOrder?.(element, oldIndex, newIndex);
+        },
+        [onMenuItemsChanged, editMenuProps],
+    );
+
+    const sortableItems = useMemo(() => {
+        return menuItemsRef.current.filter(
+            (item) => item.id !== ALL_PAGES_ID && !item.afterMoreButton && item.type !== 'divider',
         );
-    }, [onMenuItemsChanged, editMenuProps]);
+    }, [menuItems]);
+
     return (
         <Flex className={b(null, className)} gap="5" direction="column">
             <Flex gap="4" alignItems="center" justifyContent="space-between">
                 <Text variant="subheader-2">
                     {isEditMode ? i18n('all-panel.title.editing') : i18n('all-panel.title.main')}
                 </Text>
-                <Button selected={isEditMode} view="normal" onClick={toggleEditMode}>
-                    {startEditIcon ? startEditIcon : <Icon data={Gear} />}
-                </Button>
+                <Tooltip content={i18n('all-panel.title.editing')}>
+                    <Button selected={isEditMode} view="normal" onClick={toggleEditMode}>
+                        {startEditIcon ? startEditIcon : <Icon data={Gear} />}
+                    </Button>
+                </Tooltip>
             </Flex>
             <Flex className={b('content')} gap="5" direction="column">
-                {Object.keys(groupedItems).map((category) => {
-                    return (
-                        <Flex key={category} direction="column" gap="3">
-                            <Text className={b('category')} variant="body-1" color="secondary">
-                                {category}
-                            </Text>
-                            <List
-                                virtualized={false}
-                                filterable={false}
-                                items={groupedItems[category]}
-                                onItemClick={onItemClick}
-                                renderItem={itemRender}
-                            />
-                        </Flex>
-                    );
-                })}
+                {isEditMode && editMenuProps?.enableSorting ? (
+                    <div>
+                        <List
+                            itemClassName={b('item', {editMode: true})}
+                            itemHeight={40}
+                            onSortEnd={changeItemsOrder}
+                            sortable
+                            virtualized={false}
+                            filterable={false}
+                            items={sortableItems}
+                            onItemClick={onItemClick}
+                            renderItem={itemRender}
+                        />
+
+                        {draggingItemTitle && (
+                            <div className={b('drag-placeholder')}>{draggingItemTitle}</div>
+                        )}
+                    </div>
+                ) : (
+                    Object.keys(groupedItems).map((category) => {
+                        return (
+                            <Flex key={category} direction="column" gap="3">
+                                <Text className={b('category')} variant="body-1" color="secondary">
+                                    {category}
+                                </Text>
+                                <List
+                                    virtualized={false}
+                                    filterable={false}
+                                    items={groupedItems[category]}
+                                    onItemClick={onItemClick}
+                                    renderItem={itemRender}
+                                />
+                            </Flex>
+                        );
+                    })
+                )}
             </Flex>
             {isEditMode && (
                 <Button onClick={onResetToDefaultClick}>{i18n('all-panel.resetToDefault')}</Button>

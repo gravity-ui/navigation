@@ -77,17 +77,8 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
         });
     };
 
-    const [menuItems, setMenuItems] = React.useState<MenuItem[]>([
-        ...menuItemsShowcase,
-        {
-            id: 'components',
-            title: 'Components',
-            icon: Gear,
-            current: visiblePanel === Panel.Components,
-            onItemClick: () =>
-                setVisiblePanel(visiblePanel === Panel.Components ? undefined : Panel.Components),
-        },
-    ]);
+    const [menuItems, setMenuItems] = React.useState<MenuItem[]>([...menuItemsShowcase]);
+
     return (
         <div className={b()}>
             <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
@@ -112,6 +103,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                 }
                 onMenuItemsChanged={setMenuItems}
                 menuItems={menuItems}
+                defaultMenuItems={menuItemsShowcase}
                 customBackground={customBackground}
                 customBackgroundClassName={customBackgroundClassName}
                 subheaderItems={[
@@ -297,6 +289,9 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                 }}
                 onMenuMoreClick={() => console.log('onMenuMoreClick')}
                 onAllPagesClick={() => console.log('onAllPagesClick')}
+                editMenuProps={{
+                    enableSorting: true,
+                }}
             />
         </div>
     );
