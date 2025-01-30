@@ -112,6 +112,7 @@ $block: '.#{variables.$ns}aside-header';
             bottom: 0;
 
             display: flex;
+            width: var(--gn-aside-header-size);
 
             z-index: -1;
         }
