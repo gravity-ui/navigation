@@ -1,12 +1,12 @@
 @mixin gn-theme-light {
-    --gn-ah-background-color: var(--g-color-base-neutral-light);
+    --gn-ah-background-color: var(--g-color-private-black-50-solid);
     --gn-ah-decoration-background-color: var(--g-color-private-yellow-200);
     --gn-ah-selected-item-background-color: var(--g-color-private-orange-200);
     --gn-ah-hovered-item-background-color: var(--g-color-private-black-50);
 }
 
 @mixin gn-theme-light-hc {
-    --gn-ah-background-color: var(--g-color-base-neutral-light);
+    --gn-ah-background-color: var(--g-color-private-black-50-solid);
     --gn-ah-decoration-background-color: var(--g-color-private-yellow-300);
     --gn-ah-selected-item-background-color: var(--g-color-private-orange-300);
     --gn-ah-hovered-item-background-color: var(--g-color-private-black-150);
