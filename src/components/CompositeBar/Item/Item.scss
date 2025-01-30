@@ -30,6 +30,24 @@ $block: '.#{variables.$ns}composite-bar-item';
     cursor: pointer;
     padding: 0;
 
+    &__action {
+        display: flex;
+        min-width: 0;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    &__action_collapse {
+        display: flex;
+        width: 216px;
+    }
+
+    &__action-btn-container {
+        display: flex;
+    }
+
     &__icon {
         color: var(--gn-aside-header-item-icon-color, var(--_--item-icon-color));
 
@@ -72,6 +90,15 @@ $block: '.#{variables.$ns}composite-bar-item';
         align-items: center;
         justify-content: center;
         height: 100%;
+    }
+
+    &__action-icon {
+        color: var(--gn-aside-header-item-icon-color, var(--g-color-text-complementary));
+        align-items: center;
+        display: flex;
+        flex-shrink: 0;
+        justify-content: center;
+        width: var(--gn-composite-bar-item-action-size, 36px);
     }
 
     &__title {
@@ -163,36 +190,15 @@ $block: '.#{variables.$ns}composite-bar-item';
         justify-content: center;
     }
 
-    &_type_action {
-        justify-content: center;
-        height: var(--gn-composite-bar-item-action-size);
+    &__action-container {
+        width: 100%;
         margin: 0 10px 8px;
-        background: var(--g-color-base-float);
-        box-shadow:
-            0px 0px 0px 1px rgba(0, 0, 0, 0.03),
-            0px 5px 6px rgba(0, 0, 0, 0.12);
-        border-radius: var(--gn-composite-bar-item-action-size);
-        transition:
-            transform 0.1s ease-out,
-            background-color 0.15s linear;
+    }
 
-        &:focus-visible {
-            box-shadow: 0 0 0 2px var(--g-color-line-misc);
-        }
-
-        &:hover {
-            background-color: var(--g-color-base-float-hover);
-        }
-
-        &:active {
-            box-shadow: 0 1px 2px var(--g-color-sfx-shadow);
-            transition: none;
-            transform: scale(0.96);
-        }
-
-        & #{$class}__icon-place {
-            width: var(--gn-composite-bar-item-action-size);
-        }
+    &__action-container-compact {
+        width: var(--gn-composite-bar-item-action-size, 36px);
+        height: var(--gn-composite-bar-item-action-size, 36px);
+        margin: 0 10px 8px;
     }
 
     &__icon-tooltip_item-type_action {
