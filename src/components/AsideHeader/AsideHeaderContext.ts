@@ -6,6 +6,7 @@ import {AsideHeaderInnerProps} from './types';
 
 export interface AsideHeaderInnerContextType extends AsideHeaderInnerProps {
     menuItems: MenuItem[];
+    defaultMenuItems?: MenuItem[];
     allPagesIsAvailable: boolean;
     onItemClick: (
         item: MenuItem,

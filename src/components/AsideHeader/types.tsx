@@ -22,6 +22,8 @@ export interface EditMenuProps {
     onOpenEditMode?: () => void;
     onToggleMenuItem?: (changedItem: MenuItem) => void;
     onResetSettingsToDefault?: () => void;
+    enableSorting?: boolean;
+    onChangeItemsOrder?: (changedItem: MenuItem, oldIndex: number, newIndex: number) => void;
 }
 
 export interface AsideHeaderGeneralProps extends QAProps {
@@ -53,6 +55,7 @@ export interface AsideHeaderDefaultProps {
     panelItems?: DrawerItemProps[];
     subheaderItems?: SubheaderMenuItem[];
     menuItems?: MenuItem[];
+    defaultMenuItems?: MenuItem[];
     onMenuItemsChanged?: (items: MenuItem[]) => void;
     headerDecoration?: boolean;
 }
