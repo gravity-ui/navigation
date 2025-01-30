@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.32.0](https://github.com/gravity-ui/navigation/compare/v2.31.0...v2.32.0) (2025-01-30)
+
+
+### Features
+
+* **AsideHeadser:** Sort elements in AsideHeader ([#337](https://github.com/gravity-ui/navigation/issues/337)) ([b7d3547](https://github.com/gravity-ui/navigation/commit/b7d3547840b4f7d2ecc7f3895e2c6164865b791e))
+
+
+### Bug Fixes
+
+* playwright report ([#359](https://github.com/gravity-ui/navigation/issues/359)) ([422698f](https://github.com/gravity-ui/navigation/commit/422698fc0add5a5a7414bff3452616fd64e1e2ae))
+
 ## [2.31.0](https://github.com/gravity-ui/navigation/compare/v2.30.0...v2.31.0) (2025-01-16)
 
 
