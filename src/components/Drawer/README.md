@@ -81,18 +81,17 @@ The Drawer module consists of two primary components: `Drawer` and `DrawerItem`.
 
 ### `Drawer` Props
 
-| Name              | Description                                                                                      |                Type                 | Default |
-| :---------------- | :----------------------------------------------------------------------------------------------- | :---------------------------------: | :-----: |
-| children          | Child components to be rendered within the drawer.                                               |   `'DrawerChild' 'DrawerChild[]'`   |         |
-| preventScrollBody | Optional flag to prevent the body from scrolling when the drawer is open.                        |              `boolean`              | `true`  |
-| className         | Optional additional class names to style the drawer component.                                   |              `string`               |         |
-| veilClassName     | Optional additional class names to style the veil (overlay) element.                             |              `string`               |         |
-| style             | Optional inline styles to be applied to the drawer component.                                    |        `React.CSSProperties`        |         |
-| onVeilClick       | Optional callback function that is called when the veil (overlay) is clicked.                    | `(event: React.MouseEvent) => void` |         |
-| onEscape          | Optional callback function that is called when the escape key is pressed, if the drawer is open. |            `() => void`             |         |
-| hideVeil          | Optional flag to hide the background darkening                                                   |              `boolean`              |         |
-| disablePortal     | Optional flag to not render drawer inside `Portal`                                               |              `boolean`              | `true`  |
-| keepMounted       | Keep child components mounted when closed                                                        |              `boolean`              | `false` |
+| Name          | Description                                                                                      |                Type                 | Default |
+| :------------ | :----------------------------------------------------------------------------------------------- | :---------------------------------: | :-----: |
+| children      | Child components to be rendered within the drawer.                                               |   `'DrawerChild' 'DrawerChild[]'`   |         |
+| className     | Optional additional class names to style the drawer component.                                   |              `string`               |         |
+| veilClassName | Optional additional class names to style the veil (overlay) element.                             |              `string`               |         |
+| style         | Optional inline styles to be applied to the drawer component.                                    |        `React.CSSProperties`        |         |
+| onVeilClick   | Optional callback function that is called when the veil (overlay) is clicked.                    | `(event: React.MouseEvent) => void` |         |
+| onEscape      | Optional callback function that is called when the escape key is pressed, if the drawer is open. |            `() => void`             |         |
+| hideVeil      | Optional flag to hide the background darkening                                                   |              `boolean`              |         |
+| disablePortal | Optional flag to not render drawer inside `Portal`                                               |              `boolean`              | `true`  |
+| keepMounted   | Keep child components mounted when closed                                                        |              `boolean`              | `false` |
 
 ## CSS API
 
