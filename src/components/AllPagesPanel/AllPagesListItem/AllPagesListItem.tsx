@@ -20,7 +20,7 @@ interface AllPagesListItemProps {
 }
 
 export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
-    const {item, editMode, onToggle, enableSorting, onDragStart, onDragEnd} = props;
+    const {item, editMode, onToggle} = props;
     const onPinButtonClick = useCallback(
         (e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
             e.stopPropagation();
