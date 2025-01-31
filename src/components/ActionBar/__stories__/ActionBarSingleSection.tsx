@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Breadcrumbs, Button, ClipboardButton, DropdownMenu} from '@gravity-ui/uikit';
+import {Breadcrumbs, Button, DropdownMenu} from '@gravity-ui/uikit';
 
 import {ActionBar} from '../ActionBar';
 
@@ -18,10 +18,6 @@ export function ActionBarSingleSection() {
                                 DEVTOOLSSUPPORT-21001
                             </Breadcrumbs.Item>
                         </Breadcrumbs>
-                    </ActionBar.Item>
-
-                    <ActionBar.Item spacing={false}>
-                        <ClipboardButton size="m" text={'DEVTOOLSSUPPORT-21001'} />
                     </ActionBar.Item>
                 </ActionBar.Group>
 
