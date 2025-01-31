@@ -56,7 +56,7 @@ export interface SettingsGroupProps {
 
 export interface SettingsPageProps {
     id?: string;
-    title: string;
+    title?: string;
     icon?: IconProps;
     children: React.ReactNode;
 }
@@ -67,8 +67,6 @@ export interface SettingsSectionProps {
     header?: React.ReactNode;
     children: React.ReactNode;
     withBadge?: boolean;
-    showTitle?: boolean;
-    onlyChild?: boolean;
 }
 
 export interface SettingsItemProps {
@@ -233,10 +231,10 @@ function SettingsContent({
         return (
             <div
                 key={section.title}
-                className={b('section', {selected: isSelected, 'only-child': section.onlyChild})}
+                className={b('section', {selected: isSelected})}
                 ref={isSelected ? selected.selectedRef : undefined}
             >
-                {section.showTitle && (
+                {section.title && (
                     <h3 className={b('section-heading')}>
                         {renderSectionRightAdornment ? (
                             <Flex gap={2} alignItems={'center'}>
