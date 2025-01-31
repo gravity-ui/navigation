@@ -143,12 +143,6 @@ export interface DrawerProps {
     /** Child components to be rendered within the drawer. This can be a single child or an array of children. */
     children: DrawerChild | DrawerChild[];
 
-    /**
-     * Optional flag to prevent the body from scrolling when the drawer is open, `true` by default.
-     * @default true
-     */
-    preventScrollBody?: boolean;
-
     /** Optional additional class names to style the drawer component. */
     className?: string;
 
@@ -184,7 +178,6 @@ export const Drawer: React.FC<DrawerProps> = ({
     style,
     onVeilClick,
     onEscape,
-    // preventScrollBody = true,
     hideVeil,
     disablePortal = true,
     keepMounted = false,
@@ -212,8 +205,6 @@ export const Drawer: React.FC<DrawerProps> = ({
             window.removeEventListener('keydown', onKeyDown);
         };
     }, [onEscape, someItemVisible]);
-
-    // useBodyScrollLock({enabled: preventScrollBody && someItemVisible});
 
     const containerRef = React.useRef<HTMLDivElement>(null);
     const veilRef = React.useRef<HTMLDivElement>(null);
