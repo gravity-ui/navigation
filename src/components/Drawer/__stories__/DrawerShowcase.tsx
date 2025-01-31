@@ -73,7 +73,6 @@ export function DrawerShowcase() {
                     visible={visible1}
                     id="item-1"
                     className={b('item-1')}
-                    content=""
                     direction={direction as DrawerItemProps['direction']}
                 />
                 <DrawerItem

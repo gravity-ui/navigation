@@ -99,6 +99,7 @@ The Drawer module consists of two primary components: `Drawer` and `DrawerItem`.
 | Name                                          | Description                                                 |                 Default                 |
 | :-------------------------------------------- | :---------------------------------------------------------- | :-------------------------------------: |
 | DrawerItem                                    |                                                             |                                         |
+| `--gn-drawer-item-position`                   | The position of the drawer item on page                     |                 `fixed`                 |
 | `--gn-drawer-item-shadow`                     | The box-shadow of the drawer item when veil is hidden       | `0 1px 5px 0 var(--g-color-sfx-shadow)` |
 | Veil                                          |                                                             |                                         |
 | `--gn-drawer-veil-background-color`           | The color of the veil element                               |          `--g-color-sfx-veil`           |
