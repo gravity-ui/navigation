@@ -1,5 +1,5 @@
 import type {TestRunnerConfig} from '@storybook/test-runner';
-import {getStoryContext} from '@storybook/test-runner';
+import {getStoryContext, waitForPageReady} from '@storybook/test-runner';
 import {checkA11y, configureAxe, injectAxe} from 'axe-playwright';
 
 /*
@@ -20,6 +20,8 @@ const config: TestRunnerConfig = {
             reporter: 'no-passes',
         });
 
+        // hack for prevent error "Axe is already running"
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         await checkA11y(page, '#storybook-root', {
             verbose: false,
             detailedReport: true,

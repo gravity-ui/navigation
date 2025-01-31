@@ -7,13 +7,13 @@ import {
     Icon,
     Modal,
     Radio,
-    RadioButton,
+    SegmentedRadioGroup,
     eventBroker,
 } from '@gravity-ui/uikit';
 
-import {AsideHeader, AsideHeaderTopAlertProps, FooterItem} from '../..';
+import {AsideHeader, AsideHeaderProps, FooterItem, TopAlertProps} from '../..';
 import {ASIDE_HEADER_ICON_SIZE} from '../../constants';
-import {MenuItem, OpenModalSubscriber} from '../../types';
+import {OpenModalSubscriber} from '../../types';
 import {cn} from '../../utils/cn';
 
 import {menuItemsShowcase, text as placeholderText} from './moc';
@@ -39,7 +39,7 @@ enum Panel {
 interface AsideHeaderShowcaseProps {
     multipleTooltip?: boolean;
     initialCompact?: boolean;
-    topAlert?: AsideHeaderTopAlertProps;
+    topAlert?: TopAlertProps;
     customBackground?: React.ReactNode;
     customBackgroundClassName?: string;
     headerDecoration?: boolean;
@@ -77,7 +77,8 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
         });
     };
 
-    const [menuItems, setMenuItems] = React.useState<MenuItem[]>([...menuItemsShowcase]);
+    const [menuItems, setMenuItems] =
+        React.useState<AsideHeaderProps['menuItems']>(menuItemsShowcase);
 
     return (
         <div className={b()}>
@@ -98,7 +99,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                 }}
                 headerDecoration={
                     headerDecoration === undefined
-                        ? addonHeaderDecoration === BOOLEAN_OPTIONS.Yes
+                        ? addonHeaderDecoration === BOOLEAN_OPTIONS.No
                         : headerDecoration
                 }
                 onMenuItemsChanged={setMenuItems}
@@ -119,10 +120,9 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                         },
                         popupAnchor: ref,
                         popupPlacement: ['right-start'],
-                        popupOffset: [10, 10],
+                        popupOffset: {mainAxis: 10, crossAxis: 10},
                         popupVisible: subheaderPopupVisible,
                         onClosePopup: () => setSubheaderPopupVisible(false),
-                        popupContentClassName: b('popup-content-class-name'),
                         renderPopupContent: () => {
                             return (
                                 <div className={b('settings')}>
@@ -181,7 +181,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                             popupVisible={popupVisible}
                             popupAnchor={asideRef}
                             popupPlacement={['right-end']}
-                            popupOffset={[-20, 10]}
+                            popupOffset={{mainAxis: 10, crossAxis: 10}}
                             onClosePopup={() => setPopupVisible(false)}
                             popupKeepMounted={true}
                             renderPopupContent={() => {
@@ -246,7 +246,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                     return (
                         <div className={b('content')}>
                             <pre>{placeholderText}</pre>
-                            <RadioButton
+                            <SegmentedRadioGroup
                                 value={addonHeaderDecoration}
                                 onChange={(event) => {
                                     setHeaderDecoration(event.target.value);
@@ -254,7 +254,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                             >
                                 <Radio value={BOOLEAN_OPTIONS.No}>No</Radio>
                                 <Radio value={BOOLEAN_OPTIONS.Yes}>Yes</Radio>
-                            </RadioButton>
+                            </SegmentedRadioGroup>
                             <br />
                             <br />
                             <Button onClick={() => setIsModalOpen(true)}>Open Modal</Button>

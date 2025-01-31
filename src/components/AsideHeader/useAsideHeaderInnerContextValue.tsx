@@ -33,11 +33,7 @@ export const useAsideHeaderInnerContextValue = (
     }, [onClosePanel]);
 
     const onItemClick = useCallback(
-        (
-            item: MenuItem,
-            collapsed: boolean,
-            event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-        ) => {
+        (item: MenuItem, collapsed: boolean, event: React.MouseEvent<HTMLElement, MouseEvent>) => {
             if (item.id === ALL_PAGES_MENU_ITEM.id) {
                 onClosePanel?.();
                 setInnerVisiblePanel((prev) =>

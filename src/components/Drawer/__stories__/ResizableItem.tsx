@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Button, Checkbox, RadioButton} from '@gravity-ui/uikit';
+import {Button, Checkbox, SegmentedRadioGroup} from '@gravity-ui/uikit';
 
 import {cn} from '../../utils/cn';
 import {Drawer, DrawerItem} from '../Drawer';
@@ -23,7 +23,7 @@ export function ResizableItemShowcase() {
                 <Button view="action" onClick={() => setVisible((v) => !v)}>
                     {visible ? 'Hide' : 'Show'}
                 </Button>
-                <RadioButton
+                <SegmentedRadioGroup
                     value={direction}
                     options={[
                         {value: 'left', content: 'Left'},

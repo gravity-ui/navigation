@@ -35,7 +35,7 @@ export type CompositeBarProps = CompositeBarItems & {
     onItemClick?: (
         item: MenuItem,
         collapsed: boolean,
-        event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+        event: React.MouseEvent<HTMLElement, MouseEvent>,
     ) => void;
     multipleTooltip?: boolean;
     menuMoreTitle?: string;

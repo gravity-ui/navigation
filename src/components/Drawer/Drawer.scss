@@ -6,6 +6,7 @@ $block: '.#{variables.$ns}drawer';
     pointer-events: none;
 
     --_--item-shadow-default: 0 1px 5px 0 var(--g-color-sfx-shadow);
+    --_--item-position: fixed;
 
     --_--resizer-width: 8px;
     --_--resizer-color: var(--g-color-base-generic);
@@ -20,8 +21,8 @@ $block: '.#{variables.$ns}drawer';
     }
 
     &__item {
-        position: absolute;
-        left: 0;
+        position: var(--gn-drawer-item-position, var(--_--item-position));
+        left: var(--gn-aside-header-size);
         top: 0;
         bottom: 0;
         height: 100%;
