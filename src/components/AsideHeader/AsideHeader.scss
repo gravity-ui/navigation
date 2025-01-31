@@ -6,7 +6,7 @@ $block: '.#{variables.$ns}aside-header';
 
 .g-root {
     --gn-aside-top-panel-height: 0px;
-    overflow-x: hidden;
+
     &_theme_light {
         @include gn-theme-light();
     }
