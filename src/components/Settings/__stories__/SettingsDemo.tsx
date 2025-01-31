@@ -276,7 +276,7 @@ function renderGeneralSettings(
     return (
         <Settings.Group id="general" groupTitle="General">
             <Settings.Page id="appearance" title="Appearance" icon={{data: featureIcon}}>
-                <Settings.Section title="Appearance" onlyChild={true}>
+                <Settings.Section title="Appearance">
                     <Settings.Item title="Interface language">
                         <SegmentedRadioGroup
                             value={settings.lang ?? 'ru'}

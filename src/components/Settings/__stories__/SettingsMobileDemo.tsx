@@ -174,7 +174,6 @@ export const SettingsMobileComponent = React.memo(
                                     These settings affect the appearance
                                 </div>
                             }
-                            showTitle={false}
                         >
                             <Settings.Item
                                 title="Theme"
@@ -235,7 +234,7 @@ function renderGeneralSettings(
     return (
         <Settings.Group id="general" groupTitle="General">
             <Settings.Page id="appearance" title="General Appearance" icon={{data: featureIcon}}>
-                <Settings.Section title="Appearance" showTitle={false}>
+                <Settings.Section title="Appearance">
                     <Settings.Item title="Interface language">
                         <SegmentedRadioGroup
                             value={settings.lang ?? 'ru'}

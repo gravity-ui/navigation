@@ -35,8 +35,6 @@ export interface SettingsPageSection {
     items: SettingsItem[];
     hidden?: boolean;
     withBadge?: boolean;
-    showTitle?: boolean;
-    onlyChild?: boolean;
 }
 
 export type SettingBreadcrumbs = string[];
@@ -177,7 +175,7 @@ function getSettingsPageFromChildren(children: React.ReactNode, filterRe: RegExp
             page.withBadge = withBadge || page.withBadge;
             page.hidden = hidden && page.hidden;
         } else {
-            const {withBadge, showTitle = true} = element.props;
+            const {withBadge} = element.props;
             const {items, hidden} = getSettingsItemsFromChildren(element.props.children, filterRe);
             page.withBadge = withBadge || page.withBadge;
             page.hidden = hidden && page.hidden;
@@ -186,7 +184,6 @@ function getSettingsPageFromChildren(children: React.ReactNode, filterRe: RegExp
                 withBadge,
                 items,
                 hidden,
-                showTitle,
             });
         }
     });
