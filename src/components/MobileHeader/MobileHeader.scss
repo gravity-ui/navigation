@@ -9,7 +9,7 @@ $block: '.#{variables.$ns}mobile-header';
 
     background-color: var(--g-color-base-background);
 
-    &__top {
+    &__top-alert {
         position: sticky;
         top: 0;
         background-color: var(--g-color-base-background);

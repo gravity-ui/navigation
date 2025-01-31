@@ -5,7 +5,6 @@ import {Hotkey, List, TextInput} from '@gravity-ui/uikit';
 import type {ListProps} from '@gravity-ui/uikit';
 
 import {Drawer, DrawerItem} from '../Drawer/Drawer';
-import type {DrawerProps} from '../Drawer/Drawer';
 import {block} from '../utils/cn';
 
 import type {HotkeysGroup, HotkeysListItem} from './types';
@@ -32,7 +31,6 @@ export type HotkeysPanelProps<T> = {
     listClassName?: string;
     leftOffset?: number | string;
     topOffset?: number | string;
-    preventScrollBody?: DrawerProps['preventScrollBody'];
 } & Omit<
     ListProps<HotkeysListItem>,
     | 'items'
@@ -61,7 +59,6 @@ export function HotkeysPanel<T = {}>({
     titleClassName,
     listClassName,
     itemContentClassName,
-    preventScrollBody,
     hotkeys,
     itemClassName,
     filterable = true,
@@ -121,7 +118,6 @@ export function HotkeysPanel<T = {}>({
             className={b(null, className)}
             onVeilClick={onClose}
             onEscape={onClose}
-            preventScrollBody={preventScrollBody}
             style={{
                 left: leftOffset,
                 top: topOffset,

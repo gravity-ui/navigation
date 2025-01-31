@@ -45,7 +45,6 @@ export const OverlapPanel = ({
             className={b('', {action: Boolean(action)}, className)}
             onVeilClick={onClose}
             onEscape={onClose}
-            preventScrollBody
             style={{
                 top: topOffset,
             }}

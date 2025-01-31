@@ -267,7 +267,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
 
         return (
             <div className={b({compact}, className)} ref={targetRef}>
-                <div className={b('top')}>
+                <div className={b('top-alert')}>
                     {topAlert && (
                         <Suspense fallback={null}>
                             <TopAlert alert={topAlert} mobileView />
