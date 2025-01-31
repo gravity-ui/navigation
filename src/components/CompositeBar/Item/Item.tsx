@@ -217,6 +217,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     view="raised"
                     type="button"
                     pin="circle-circle"
+                    {...item.extraButtonProps}
                 >
                     <div className={b('action-btn-container')}>
                         <div className={b('action-icon')}>{makeIconNode(iconEl)}</div>

@@ -3,8 +3,8 @@ import React from 'react';
 import {Gear, Plus} from '@gravity-ui/icons';
 
 import {ASIDE_HEADER_EXPANDED_WIDTH} from '../../constants';
-import {MenuItem} from '../../types';
 import {AsideHeaderContextType} from '../AsideHeaderContext';
+import {AsideHeaderProps} from '../types';
 
 function renderTag(tag: string) {
     return <div className="composite-bar-showcase__tag">{tag.toUpperCase()}</div>;
@@ -15,7 +15,7 @@ export const EMPTY_CONTEXT_VALUE: AsideHeaderContextType = {
     compact: true,
 };
 
-export const menuItemsShowcase: MenuItem[] = [
+export const menuItemsShowcase: AsideHeaderProps['menuItems'] = [
     {
         id: 'overview',
         title: 'Overview',
@@ -87,6 +87,10 @@ export const menuItemsShowcase: MenuItem[] = [
         type: 'action',
         icon: Plus,
         afterMoreButton: true,
+        extraButtonProps: {
+            'aria-label': 'action2',
+            'aria-labelledby': 'action2',
+        },
         onItemClick({id, title, current}) {
             alert(JSON.stringify({id, title, current}));
         },
@@ -115,7 +119,7 @@ Then did you sigh?
 
 const MENU_ITEMS_CLAMPED_TITLE = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit';
 
-const MENU_ITEMS_CLAMPED: MenuItem[] = [
+const MENU_ITEMS_CLAMPED: AsideHeaderProps['menuItems'] = [
     {
         id: 'text',
         title: MENU_ITEMS_CLAMPED_TITLE,
@@ -126,6 +130,10 @@ const MENU_ITEMS_CLAMPED: MenuItem[] = [
         title: MENU_ITEMS_CLAMPED_TITLE,
         icon: Gear,
         type: 'action',
+        extraButtonProps: {
+            'aria-label': 'action',
+            'aria-labelledby': 'action',
+        },
     },
     {
         id: 'text-link',
@@ -139,6 +147,10 @@ const MENU_ITEMS_CLAMPED: MenuItem[] = [
         icon: Gear,
         link: 'about:blank',
         type: 'action',
+        extraButtonProps: {
+            'aria-label': 'text-link-action',
+            'aria-labelledby': 'text-link-action',
+        },
     },
 ];
 
