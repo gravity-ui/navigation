@@ -8,13 +8,11 @@ import {checkA11y, configureAxe, injectAxe} from 'axe-playwright';
  */
 const config: TestRunnerConfig = {
     async preVisit(page) {
-        await waitForPageReady(page);
         await injectAxe(page);
     },
     async postVisit(page, context) {
         // Get the entire context of a story, including parameters, args, argTypes, etc.
         const storyContext = await getStoryContext(page, context);
-        await waitForPageReady(page);
 
         // Apply story-level a11y rules
         await configureAxe(page, {
@@ -23,7 +21,7 @@ const config: TestRunnerConfig = {
         });
 
         // hack for prevent error "Axe is already running"
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         await checkA11y(page, '#storybook-root', {
             verbose: false,
             detailedReport: true,

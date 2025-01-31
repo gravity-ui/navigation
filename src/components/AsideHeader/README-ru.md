@@ -169,6 +169,7 @@ export const Aside: FC = () => {
 | tooltipText        | Содержимое тултипа.                                                                                                             |                                                            `React.ReactNode`                                                            |                             |
 | type               | Тип элемента меню, определяющий его внешний вид: `"regular"`, `"action"` или `"divider"`.                                       |                                                                `string`                                                                 |         `"regular"`         |
 | qa                 | Значение, которое будет передано в атрибут `data-qa`.                                                                           |                                                                `string`                                                                 |                             |
+| extraButtonProps   | Значения, переданные в UIKit `Button` для `type=action` item                                                                    |                                                                `string`                                                                 |                             |
 
 ### `TopAlert`
 
