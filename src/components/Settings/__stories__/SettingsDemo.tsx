@@ -88,6 +88,7 @@ export const SettingsComponent = React.memo(
                 renderRightAdornment={({title}) => (
                     <HelpMark
                         content={`Some text for ${title}`}
+                        aria-label="mark"
                         popoverProps={{
                             'aria-label': 'Note',
                         }}
@@ -96,6 +97,7 @@ export const SettingsComponent = React.memo(
                 renderSectionRightAdornment={({title}) => (
                     <HelpMark
                         content={`Some text for ${title}`}
+                        aria-label="mark"
                         popoverProps={{
                             'aria-label': 'Note',
                         }}
@@ -135,6 +137,7 @@ export const SettingsComponent = React.memo(
                             <Settings.Item title="Go to setting">
                                 <Link
                                     href=""
+                                    aria-label="settings"
                                     onClick={() =>
                                         setSelection({settingId: 'arcanum-theme-setting'})
                                     }
@@ -145,6 +148,7 @@ export const SettingsComponent = React.memo(
                             <Settings.Item title="Go to section">
                                 <Link
                                     href=""
+                                    aria-label="settings"
                                     onClick={() =>
                                         setSelection({section: {id: 'arcanum-common-section'}})
                                     }
@@ -243,7 +247,9 @@ export const SettingsComponent = React.memo(
                                     title="Use triggerEvent method"
                                     withBadge={withBadge}
                                 >
-                                    <Button onClick={() => onClose?.()}>Save and close</Button>
+                                    <Button aria-label="close" onClick={() => onClose?.()}>
+                                        Save and close
+                                    </Button>
                                 </Settings.Item>
                             )}
                         </Settings.Section>
