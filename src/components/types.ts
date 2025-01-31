@@ -1,6 +1,6 @@
 import React, {HTMLAttributeAnchorTarget} from 'react';
 
-import {AlertProps, IconProps, QAProps} from '@gravity-ui/uikit';
+import {AlertProps, ButtonProps, IconProps, QAProps} from '@gravity-ui/uikit';
 
 import {ItemProps} from 'src/components/CompositeBar/Item/Item';
 
@@ -56,6 +56,10 @@ export interface MenuItem extends QAProps {
      * The category to which the menu item belongs. Need for grouping in the display/editing mode of all pages
      */
     category?: string;
+    /**
+     * Pass extra props to UIKit Button for action type item
+     */
+    extraButtonProps?: ButtonProps;
 }
 
 export type SubheaderMenuItem = Omit<ItemProps, 'onItemClick' | 'onItemClickCapture'>;
