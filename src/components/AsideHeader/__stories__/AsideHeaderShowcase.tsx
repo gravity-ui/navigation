@@ -11,9 +11,9 @@ import {
     eventBroker,
 } from '@gravity-ui/uikit';
 
-import {AsideHeader, FooterItem, TopAlertProps} from '../..';
+import {AsideHeader, AsideHeaderProps, FooterItem, TopAlertProps} from '../..';
 import {ASIDE_HEADER_ICON_SIZE} from '../../constants';
-import {MenuItem, OpenModalSubscriber} from '../../types';
+import {OpenModalSubscriber} from '../../types';
 import {cn} from '../../utils/cn';
 
 import {menuItemsShowcase, text as placeholderText} from './moc';
@@ -77,7 +77,8 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
         });
     };
 
-    const [menuItems, setMenuItems] = React.useState<MenuItem[]>([...menuItemsShowcase]);
+    const [menuItems, setMenuItems] =
+        React.useState<AsideHeaderProps['menuItems']>(menuItemsShowcase);
 
     return (
         <div className={b()}>
