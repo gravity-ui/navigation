@@ -51,6 +51,8 @@ export default [
                 dir: packageJson.module,
                 format: 'esm',
                 sourcemap: true,
+                preserveModules: true,
+                preserveModulesRoot: 'src'
             },
         ],
         plugins: getPlugins(packageJson.module),
@@ -63,6 +65,8 @@ export default [
                 dir: packageJson.main,
                 format: 'cjs',
                 sourcemap: true,
+                preserveModules: true,
+                preserveModulesRoot: 'src'
             },
         ],
         plugins: getPlugins(packageJson.main),
