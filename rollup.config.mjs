@@ -11,18 +11,6 @@ import packageJson from './package.json' assert { type: 'json' };
 
 const input = [
     'src/index.ts',
-    'src/components/ActionBar/index.ts',
-    'src/components/Title/index.ts',
-    'src/components/HotkeysPanel/index.ts',
-    'src/components/Settings/index.ts',
-    'src/components/MobileHeader/index.ts',
-    'src/components/AsideHeader/AsideHeader.tsx',
-    'src/components/AsideHeader/AsideHeaderContext.ts',
-    'src/components/Drawer/Drawer.tsx',
-    'src/components/FooterItem/FooterItem.tsx',
-    'src/components/AsideHeader/components/PageLayout/PageLayout.tsx',
-    'src/components/AsideHeader/components/PageLayout/PageLayoutAside.tsx',
-    'src/components/AsideHeader/components/PageLayout/AsideFallback.tsx',
 ];
 
 const getPlugins = (outDir) => {
@@ -51,8 +39,6 @@ export default [
                 dir: packageJson.module,
                 format: 'esm',
                 sourcemap: true,
-                preserveModules: true,
-                preserveModulesRoot: 'src'
             },
         ],
         plugins: getPlugins(packageJson.module),
@@ -65,8 +51,6 @@ export default [
                 dir: packageJson.main,
                 format: 'cjs',
                 sourcemap: true,
-                preserveModules: true,
-                preserveModulesRoot: 'src'
             },
         ],
         plugins: getPlugins(packageJson.main),
