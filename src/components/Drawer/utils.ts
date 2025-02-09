@@ -149,5 +149,5 @@ export function useResizableDrawerItem(params: UseResizableDrawerItemParams) {
 
     const handlers = useResizeHandlers({onStart, onMove, onEnd});
 
-    return {resizedWidth: displayWidth, resizerHandlers: handlers};
+    return {resizedWidth: displayWidth, resizerHandlers: handlers, isResizing};
 }
