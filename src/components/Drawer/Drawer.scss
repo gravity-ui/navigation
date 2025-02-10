@@ -22,7 +22,7 @@ $block: '.#{variables.$ns}drawer';
 
     &__item {
         position: var(--gn-drawer-item-position, var(--_--item-position));
-        left: var(--gn-aside-header-size);
+        left: var(--gn-aside-header-size, 0);
         top: 0;
         bottom: 0;
         height: 100%;
