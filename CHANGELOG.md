@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.33.0](https://github.com/gravity-ui/navigation/compare/v2.32.0...v2.33.0) (2025-02-10)
+
+
+### Features
+
+* **Drawer:** add resize classname ([#374](https://github.com/gravity-ui/navigation/issues/374)) ([b0c059a](https://github.com/gravity-ui/navigation/commit/b0c059ab1c26a8130067c53ec5cf654fe4006e05))
+
 ## [2.32.0](https://github.com/gravity-ui/navigation/compare/v2.31.0...v2.32.0) (2025-01-30)
 
 
