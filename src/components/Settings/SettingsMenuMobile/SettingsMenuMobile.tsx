@@ -1,6 +1,9 @@
 import React from 'react';
 
-import {Tabs, TabsItemProps} from '@gravity-ui/uikit';
+import {
+    Tabs as LegacyTabs,
+    type TabsItemProps as LegacyTabsItemProps,
+} from '@gravity-ui/uikit/legacy';
 
 import {block} from '../../utils/cn';
 import {SettingsMenuProps} from '../types';
@@ -18,7 +21,7 @@ export const SettingsMenuMobile = ({
     const ref = React.useRef<HTMLDivElement>(null);
 
     const tabItems = React.useMemo(() => {
-        const tabItems: TabsItemProps[] = [];
+        const tabItems: LegacyTabsItemProps[] = [];
 
         items.forEach((firstLevelItem) => {
             if ('groupTitle' in firstLevelItem) {
@@ -44,7 +47,7 @@ export const SettingsMenuMobile = ({
 
     return (
         <div ref={ref} onTouchMove={handleTouchMove}>
-            <Tabs
+            <LegacyTabs
                 items={tabItems}
                 className={b(null, className)}
                 size="l"
