@@ -87,7 +87,7 @@ function renderItemTitle(item: MenuItem) {
 }
 
 export const defaultPopupPlacement: PopupPlacement = ['right-end'];
-export const defaultPopupOffset: NonNullable<PopupProps['offset']> = {mainAxis: -20, crossAxis: 8};
+export const defaultPopupOffset: NonNullable<PopupProps['offset']> = {mainAxis: 8, crossAxis: -20};
 
 export const Item: React.FC<ItemInnerProps> = (props) => {
     const {
