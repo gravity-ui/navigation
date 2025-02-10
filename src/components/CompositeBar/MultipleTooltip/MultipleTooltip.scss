@@ -40,11 +40,6 @@ $block: '.#{variables.$ns}multiple-tooltip';
 }
 
 #{$block} {
-    &#{&} {
-        background-color: transparent;
-        box-shadow: none;
-    }
-
     &::before {
         content: '';
         box-shadow: none;
@@ -55,6 +50,15 @@ $block: '.#{variables.$ns}multiple-tooltip';
         opacity: 0.7;
         background: var(--multiple-tooltip-backdrop-background);
         filter: var(--multiple-tooltip-backdrop-filter);
+    }
+
+    &__popup {
+        --g-popup-background-color: transparent;
+        --g-popup-border-color: transparent;
+        --g-popup-border-width: 0;
+
+        box-shadow: none;
+        background-color: transparent;
     }
 
     &__items-container {
