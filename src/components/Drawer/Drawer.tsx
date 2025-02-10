@@ -90,7 +90,7 @@ export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
 
         const cssDirection = direction === 'left' ? undefined : direction;
 
-        const {resizedWidth, resizerHandlers} = useResizableDrawerItem({
+        const {resizedWidth, resizerHandlers, isResizing} = useResizableDrawerItem({
             direction,
             width,
             minResizeWidth,
@@ -124,7 +124,11 @@ export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
                     ref={handleRef}
                     className={b(
                         'item',
-                        {direction: cssDirection, hidden: isInitialRender && !visible},
+                        {
+                            direction: cssDirection,
+                            hidden: isInitialRender && !visible,
+                            resize: isResizing,
+                        },
                         [className],
                     )}
                     style={{width: resizable ? `${resizedWidth}px` : undefined}}
