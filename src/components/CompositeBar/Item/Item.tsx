@@ -284,6 +284,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 {type === 'action' ? renderActionButton() : renderTagContainer()}
                 {renderPopupContent && anchorRef?.current && (
                     <Popup
+                        strategy="fixed"
                         open={popupVisible}
                         keepMounted={popupKeepMounted}
                         placement={popupPlacement}
@@ -369,7 +370,13 @@ function CollapsedPopup({
 }: ItemInnerProps & CollapsedPopupProps) {
     const {compact} = useAsideHeaderContext();
     return collapseItems?.length ? (
-        <Popup placement={POPUP_PLACEMENT} open={true} anchorRef={anchorRef} onClose={onClose}>
+        <Popup
+            strategy="fixed"
+            placement={POPUP_PLACEMENT}
+            open={true}
+            anchorRef={anchorRef}
+            onClose={onClose}
+        >
             <div className={b('collapse-items-popup-content')}>
                 <List
                     itemClassName={b('root-collapse-item')}
