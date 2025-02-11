@@ -1,15 +1,23 @@
 import React from 'react';
 
-import {MobileProvider, ThemeProvider, ToasterComponent, ToasterProvider} from '@gravity-ui/uikit';
+import {
+    MobileProvider,
+    ThemeProvider,
+    Toaster,
+    ToasterComponent,
+    ToasterProvider,
+} from '@gravity-ui/uikit';
 import {beforeMount} from '@playwright/experimental-ct-react/hooks';
 
 import './index.scss';
+
+const toaster = new Toaster();
 
 beforeMount(async ({App}) => {
     return (
         <ThemeProvider>
             <MobileProvider>
-                <ToasterProvider>
+                <ToasterProvider toaster={toaster}>
                     <App />
                     <ToasterComponent />
                 </ToasterProvider>
