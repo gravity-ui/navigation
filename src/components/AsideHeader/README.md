@@ -60,13 +60,13 @@ The `onMenuItemsChanged` callback is required for adding extra component `All Pa
 
 The Footer improves user experience by offering easy access to the elements and supplementary resources. It gives opportunity to connect with support add custom information to be sure that user will not get lost.
 
-There can be both their own components inside, or also you can use `AsideHeaderFooterItem`.
+There can be both their own components inside, or also you can use `FooterItem`.
 
 #### Highlighting element
 
 Highlighting an element over modal windows can be useful when a user wants to report an error via a feedback form, and the form with bug is opened in a modal window.
 
-In the `AsideHeaderFooterItem` component, you can pass a `bringForward` prop, which renders the icon above modal windows. Additionally, you need to pass a function to `AsideHeader` that will notify about the opening of modal windows.
+In the `FooterItem` component, you can pass a `bringForward` prop, which renders the icon above modal windows. Additionally, you need to pass a function to `AsideHeader` that will notify about the opening of modal windows.
 
 ## Rendering Content
 
