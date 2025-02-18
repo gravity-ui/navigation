@@ -8,23 +8,18 @@
 * **Settings:** remove showTitle, onlyChild prop ([#364](https://github.com/gravity-ui/navigation/issues/364))
 * **Drawer:** change default item drawer position ([#363](https://github.com/gravity-ui/navigation/issues/363))
 * **AsideHeader/CustomBackground:** fix stretching background ([#362](https://github.com/gravity-ui/navigation/issues/362))
-* **AsideHeader:** add ui-kit button in aside-header ([#315](https://github.com/gravity-ui/navigation/issues/315))
 * update uikit@7, components@3 ([#355](https://github.com/gravity-ui/navigation/issues/355))
 * **AsideHeader, Logo:** make actions accessible with keyboard ([#305](https://github.com/gravity-ui/navigation/issues/305))
 
 ### Features
 
-* **ActionBar:** removed copy block ([#366](https://github.com/gravity-ui/navigation/issues/366)) ([7388d2b](https://github.com/gravity-ui/navigation/commit/7388d2bedfc94c165a9e962c9afc17311127be1c))
 * add top alert to MobileHeader component ([#335](https://github.com/gravity-ui/navigation/issues/335)) ([c480df6](https://github.com/gravity-ui/navigation/commit/c480df6173ac5121f90289fd9ae0215817fdcad7))
 * **AsideHeader, Logo:** make actions accessible with keyboard ([#305](https://github.com/gravity-ui/navigation/issues/305)) ([dfac590](https://github.com/gravity-ui/navigation/commit/dfac590ceeb000e49783260301973749209ed90b))
-* **AsideHeader:** add ui-kit button in aside-header ([#315](https://github.com/gravity-ui/navigation/issues/315)) ([884df3c](https://github.com/gravity-ui/navigation/commit/884df3ca55106d47dbcbb2291f31b344db9ce004))
 * change default color theme for AsideHeader ([#357](https://github.com/gravity-ui/navigation/issues/357)) ([0f4104d](https://github.com/gravity-ui/navigation/commit/0f4104ddd681f0eba9d987838014699e3ba4ab0b))
 * **Drawer:** change default item drawer position ([#363](https://github.com/gravity-ui/navigation/issues/363)) ([eaa327a](https://github.com/gravity-ui/navigation/commit/eaa327aadecf11a3d1b0dc8ed3293b35567fde3a))
-* **FooterItem:** update docs ([#381](https://github.com/gravity-ui/navigation/issues/381)) ([8bfc810](https://github.com/gravity-ui/navigation/commit/8bfc81037808df6f6b2e1d72d60e99b9736c9c3f))
 * **Popup:** set fixed strategy ([#380](https://github.com/gravity-ui/navigation/issues/380)) ([f778273](https://github.com/gravity-ui/navigation/commit/f778273d0406cc12b9c9f99bcc8238a3520e27c9))
 * rollup v4 ([#319](https://github.com/gravity-ui/navigation/issues/319)) ([6c34ae7](https://github.com/gravity-ui/navigation/commit/6c34ae7909cedb7490626211dd735959461ab2bc))
 * **Settings:** remove showTitle, onlyChild prop ([#364](https://github.com/gravity-ui/navigation/issues/364)) ([b375035](https://github.com/gravity-ui/navigation/commit/b3750357f304dec7a67d0fa57fc60c62e58d7078))
-* up packages ([#353](https://github.com/gravity-ui/navigation/issues/353)) ([4a27963](https://github.com/gravity-ui/navigation/commit/4a279637bc0c899395ac557cf37d833a7c6e31b3))
 * update uikit@7, components@3 ([#355](https://github.com/gravity-ui/navigation/issues/355)) ([5c79038](https://github.com/gravity-ui/navigation/commit/5c790385158d35857a8c1f0d5c99d4727f42d568))
 
 
@@ -33,18 +28,9 @@
 * **AsideHeader/CustomBackground:** fix stretching background ([#362](https://github.com/gravity-ui/navigation/issues/362)) ([3e73dd2](https://github.com/gravity-ui/navigation/commit/3e73dd23a8e10de677c86234438ed0bdcf279c37))
 * **AsideHeader:** change default background color ([#361](https://github.com/gravity-ui/navigation/issues/361)) ([6f2fbf8](https://github.com/gravity-ui/navigation/commit/6f2fbf86e6a6a6f50b16dea3e02943d0b4f0e8cd))
 * **Asideheader:** scroll position fix ([#369](https://github.com/gravity-ui/navigation/issues/369)) ([238821c](https://github.com/gravity-ui/navigation/commit/238821cfaaceaf7a7076cdc10bbaf2a77bb2a941))
-* fix Rollup bundling ([#371](https://github.com/gravity-ui/navigation/issues/371)) ([596066c](https://github.com/gravity-ui/navigation/commit/596066ca825874659d054f9ce7efdd425241d3a1))
 * fix toaster after update uikit@7 ([#379](https://github.com/gravity-ui/navigation/issues/379)) ([e6a2e2e](https://github.com/gravity-ui/navigation/commit/e6a2e2e7a4ba9521f5bc717bce973435c5dc68af))
 * **Item:** correct text alignment for multiline title ([#354](https://github.com/gravity-ui/navigation/issues/354)) ([48d50cc](https://github.com/gravity-ui/navigation/commit/48d50cc3218b42016b72c23bc8695993aee24b9f))
-* lint ([2567ee9](https://github.com/gravity-ui/navigation/commit/2567ee9ddfb0c2f0ebc857ef2e8e665de3d4e2fd))
 * mini fixes after breaking changes ([#365](https://github.com/gravity-ui/navigation/issues/365)) ([22fb9b3](https://github.com/gravity-ui/navigation/commit/22fb9b3cda30e0a3de09067afd02f200ec273d22))
-* **MobileHeader:** calc top ([#384](https://github.com/gravity-ui/navigation/issues/384)) ([418c747](https://github.com/gravity-ui/navigation/commit/418c747e3c995f9fffb186646d50c616d2418d82))
-* **MobileHeader:** fix panel position ([#378](https://github.com/gravity-ui/navigation/issues/378)) ([9731bca](https://github.com/gravity-ui/navigation/commit/9731bcaa2f6b50f435899d59ce59fddc1829cfa3))
-* **MultipleTooltip:** fix popup styles and offset ([#377](https://github.com/gravity-ui/navigation/issues/377)) ([f978bc6](https://github.com/gravity-ui/navigation/commit/f978bc6d08407eaf797bc277c7fa9e68b6856eac))
-* storybook-test ([#370](https://github.com/gravity-ui/navigation/issues/370)) ([93d402c](https://github.com/gravity-ui/navigation/commit/93d402c3c1616534ddf679c407ef9a8e18419094))
-* uikit 7.1.0 ([#375](https://github.com/gravity-ui/navigation/issues/375)) ([d2fb293](https://github.com/gravity-ui/navigation/commit/d2fb2937c44a3c84966e0c459d098e58e797d930))
-* up typescript to 5.7.3 ([#358](https://github.com/gravity-ui/navigation/issues/358)) ([d97b398](https://github.com/gravity-ui/navigation/commit/d97b398f99c6138ac9a8fe816001ebfece331dcc))
-* update rollup config ([#373](https://github.com/gravity-ui/navigation/issues/373)) ([dffc596](https://github.com/gravity-ui/navigation/commit/dffc5964535299a2b6b4125f8ecde8a87fba5109))
 
 ## [2.33.0](https://github.com/gravity-ui/navigation/compare/v2.32.0...v2.33.0) (2025-02-10)
 
