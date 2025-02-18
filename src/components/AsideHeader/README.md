@@ -170,7 +170,6 @@ export const Aside: FC = () => {
 | tooltipText        | Tooltip content                                                                                         |                                                            `React.ReactNode`                                                            |                             |
 | type               | The menu item type changes appearance: `"regular"`, `"action"`, `"divider"`                             |                                                                `string`                                                                 |         `"regular"`         |
 | qa                 | The value to be passed to `data-qa` attribute                                                           |                                                                `string`                                                                 |                             |
-| extraButtonProps   | Properties passing to UIKit `Button` for `type=action`                                                  |                                                                `string`                                                                 |                             |
 
 ### `TopAlert`
 
