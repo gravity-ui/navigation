@@ -87,10 +87,6 @@ export const menuItemsShowcase: AsideHeaderProps['menuItems'] = [
         type: 'action',
         icon: Plus,
         afterMoreButton: true,
-        extraButtonProps: {
-            'aria-label': 'action2',
-            'aria-labelledby': 'action2',
-        },
         onItemClick({id, title, current}) {
             alert(JSON.stringify({id, title, current}));
         },
@@ -130,10 +126,6 @@ const MENU_ITEMS_CLAMPED: AsideHeaderProps['menuItems'] = [
         title: MENU_ITEMS_CLAMPED_TITLE,
         icon: Gear,
         type: 'action',
-        extraButtonProps: {
-            'aria-label': 'action',
-            'aria-labelledby': 'action',
-        },
     },
     {
         id: 'text-link',
@@ -147,10 +139,6 @@ const MENU_ITEMS_CLAMPED: AsideHeaderProps['menuItems'] = [
         icon: Gear,
         link: 'about:blank',
         type: 'action',
-        extraButtonProps: {
-            'aria-label': 'text-link-action',
-            'aria-labelledby': 'text-link-action',
-        },
     },
 ];
 
