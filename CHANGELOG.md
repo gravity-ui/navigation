@@ -1,5 +1,37 @@
 # Changelog
 
+## [3.0.0](https://github.com/gravity-ui/navigation/compare/v2.33.0...v3.0.0) (2025-02-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* **Settings:** remove showTitle, onlyChild prop ([#364](https://github.com/gravity-ui/navigation/issues/364))
+* **Drawer:** change default item drawer position ([#363](https://github.com/gravity-ui/navigation/issues/363))
+* **AsideHeader/CustomBackground:** fix stretching background ([#362](https://github.com/gravity-ui/navigation/issues/362))
+* update uikit@7, components@3 ([#355](https://github.com/gravity-ui/navigation/issues/355))
+* **AsideHeader, Logo:** make actions accessible with keyboard ([#305](https://github.com/gravity-ui/navigation/issues/305))
+
+### Features
+
+* add top alert to MobileHeader component ([#335](https://github.com/gravity-ui/navigation/issues/335)) ([c480df6](https://github.com/gravity-ui/navigation/commit/c480df6173ac5121f90289fd9ae0215817fdcad7))
+* **AsideHeader, Logo:** make actions accessible with keyboard ([#305](https://github.com/gravity-ui/navigation/issues/305)) ([dfac590](https://github.com/gravity-ui/navigation/commit/dfac590ceeb000e49783260301973749209ed90b))
+* change default color theme for AsideHeader ([#357](https://github.com/gravity-ui/navigation/issues/357)) ([0f4104d](https://github.com/gravity-ui/navigation/commit/0f4104ddd681f0eba9d987838014699e3ba4ab0b))
+* **Drawer:** change default item drawer position ([#363](https://github.com/gravity-ui/navigation/issues/363)) ([eaa327a](https://github.com/gravity-ui/navigation/commit/eaa327aadecf11a3d1b0dc8ed3293b35567fde3a))
+* **Popup:** set fixed strategy ([#380](https://github.com/gravity-ui/navigation/issues/380)) ([f778273](https://github.com/gravity-ui/navigation/commit/f778273d0406cc12b9c9f99bcc8238a3520e27c9))
+* rollup v4 ([#319](https://github.com/gravity-ui/navigation/issues/319)) ([6c34ae7](https://github.com/gravity-ui/navigation/commit/6c34ae7909cedb7490626211dd735959461ab2bc))
+* **Settings:** remove showTitle, onlyChild prop ([#364](https://github.com/gravity-ui/navigation/issues/364)) ([b375035](https://github.com/gravity-ui/navigation/commit/b3750357f304dec7a67d0fa57fc60c62e58d7078))
+* update uikit@7, components@3 ([#355](https://github.com/gravity-ui/navigation/issues/355)) ([5c79038](https://github.com/gravity-ui/navigation/commit/5c790385158d35857a8c1f0d5c99d4727f42d568))
+
+
+### Bug Fixes
+
+* **AsideHeader/CustomBackground:** fix stretching background ([#362](https://github.com/gravity-ui/navigation/issues/362)) ([3e73dd2](https://github.com/gravity-ui/navigation/commit/3e73dd23a8e10de677c86234438ed0bdcf279c37))
+* **AsideHeader:** change default background color ([#361](https://github.com/gravity-ui/navigation/issues/361)) ([6f2fbf8](https://github.com/gravity-ui/navigation/commit/6f2fbf86e6a6a6f50b16dea3e02943d0b4f0e8cd))
+* **Asideheader:** scroll position fix ([#369](https://github.com/gravity-ui/navigation/issues/369)) ([238821c](https://github.com/gravity-ui/navigation/commit/238821cfaaceaf7a7076cdc10bbaf2a77bb2a941))
+* fix toaster after update uikit@7 ([#379](https://github.com/gravity-ui/navigation/issues/379)) ([e6a2e2e](https://github.com/gravity-ui/navigation/commit/e6a2e2e7a4ba9521f5bc717bce973435c5dc68af))
+* **Item:** correct text alignment for multiline title ([#354](https://github.com/gravity-ui/navigation/issues/354)) ([48d50cc](https://github.com/gravity-ui/navigation/commit/48d50cc3218b42016b72c23bc8695993aee24b9f))
+* mini fixes after breaking changes ([#365](https://github.com/gravity-ui/navigation/issues/365)) ([22fb9b3](https://github.com/gravity-ui/navigation/commit/22fb9b3cda30e0a3de09067afd02f200ec273d22))
+
 ## [2.33.0](https://github.com/gravity-ui/navigation/compare/v2.32.0...v2.33.0) (2025-02-10)
 
 
