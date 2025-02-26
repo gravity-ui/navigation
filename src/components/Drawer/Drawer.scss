@@ -169,6 +169,7 @@ $block: '.#{variables.$ns}drawer';
 
     &__resizer {
         position: absolute;
+        top: 0;
         z-index: var(--gn-drawer-item-resizer-z-index, var(--_--resizer-z-index));
 
         display: flex;
@@ -192,10 +193,13 @@ $block: '.#{variables.$ns}drawer';
         }
 
         &_direction_top {
+            top: unset;
+            left: 0;
             bottom: 0;
         }
 
         &_direction_bottom {
+            left: 0;
             top: 0;
         }
 
