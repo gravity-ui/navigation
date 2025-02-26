@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/gravity-ui/navigation/compare/v3.0.0...v3.1.0) (2025-02-26)
+
+
+### Features
+
+* **Drawer:** added vertical directions ([#386](https://github.com/gravity-ui/navigation/issues/386)) ([f84714b](https://github.com/gravity-ui/navigation/commit/f84714b85f1d9ded504d70f91a3f55bf561cfb86))
+
 ## [3.0.0](https://github.com/gravity-ui/navigation/compare/v2.33.0...v3.0.0) (2025-02-18)
 
 
