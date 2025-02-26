@@ -4,6 +4,7 @@ import {Button, Checkbox, RadioButton} from '@gravity-ui/uikit';
 
 import {cn} from '../../utils/cn';
 import {Drawer, DrawerItem} from '../Drawer';
+import {DrawerDirection} from '../utils';
 
 import {PlaceholderText} from './moc';
 
@@ -13,7 +14,7 @@ const b = cn('disable-portal');
 
 export function DisablePortalShowcase() {
     const [visible, setVisible] = React.useState(true);
-    const [direction, setDirection] = React.useState<'left' | 'right'>('right');
+    const [direction, setDirection] = React.useState<DrawerDirection>('right');
     const [disablePortal, setDisablePortal] = React.useState(true);
 
     return (
@@ -27,6 +28,8 @@ export function DisablePortalShowcase() {
                     options={[
                         {value: 'left', content: 'Left'},
                         {value: 'right', content: 'Right'},
+                        {value: 'top', content: 'Top'},
+                        {value: 'bottom', content: 'Bottom'},
                     ]}
                     onUpdate={setDirection}
                 />
@@ -46,7 +49,7 @@ export function DisablePortalShowcase() {
                     <DrawerItem
                         id="item"
                         direction={direction}
-                        className={b('item')}
+                        className={b('item', {vertical: ['top', 'bottom'].includes(direction)})}
                         visible={visible}
                     >
                         <div className={b('item-content')} tabIndex={0}>

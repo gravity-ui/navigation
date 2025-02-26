@@ -13,7 +13,7 @@ export function DrawerShowcase() {
     const [visible1, setVisible1] = React.useState<boolean>(true);
     const [visible2, setVisible2] = React.useState<boolean>(false);
 
-    const [direction, setDirection] = React.useState<string>('left');
+    const [direction1, setDirection1] = React.useState<string>('left');
     const [direction2, setDirection2] = React.useState<string>('left');
 
     const [keepMountedGlobal, setKeepMountedGlobal] = React.useState<boolean>(true);
@@ -35,14 +35,18 @@ export function DrawerShowcase() {
                     {visible2 ? 'Hide 2' : 'Show 2'}
                 </Button>
                 &nbsp;&nbsp; Direction: &nbsp;
-                <RadioButton value={direction} onUpdate={setDirection}>
-                    <RadioButton.Option value="left">left</RadioButton.Option>
-                    <RadioButton.Option value="right">right</RadioButton.Option>
+                <RadioButton value={direction1} onUpdate={setDirection1}>
+                    <RadioButton.Option value="left">Left</RadioButton.Option>
+                    <RadioButton.Option value="right">Right</RadioButton.Option>
+                    <RadioButton.Option value="top">Top</RadioButton.Option>
+                    <RadioButton.Option value="bottom">Bottom</RadioButton.Option>
                 </RadioButton>
                 &nbsp;&nbsp; Direction2: &nbsp;
                 <RadioButton value={direction2} onUpdate={setDirection2}>
-                    <RadioButton.Option value="left">left</RadioButton.Option>
-                    <RadioButton.Option value="right">right</RadioButton.Option>
+                    <RadioButton.Option value="left">Left</RadioButton.Option>
+                    <RadioButton.Option value="right">Right</RadioButton.Option>
+                    <RadioButton.Option value="top">Top</RadioButton.Option>
+                    <RadioButton.Option value="bottom">Bottom</RadioButton.Option>
                 </RadioButton>
                 <br /> Keep Mounted Drawer: &nbsp;
                 <Button
@@ -72,14 +76,14 @@ export function DrawerShowcase() {
                     keepMounted={keepMounted1}
                     visible={visible1}
                     id="item-1"
-                    className={b('item-1')}
+                    className={b('item-1', {vertical: ['top', 'bottom'].includes(direction1)})}
                     content=""
-                    direction={direction as DrawerItemProps['direction']}
+                    direction={direction1 as DrawerItemProps['direction']}
                 />
                 <DrawerItem
                     visible={visible2}
                     id="item-2"
-                    className={b('item-2')}
+                    className={b('item-2', {vertical: ['top', 'bottom'].includes(direction2)})}
                     content=""
                     direction={direction2 as DrawerItemProps['direction']}
                 />
