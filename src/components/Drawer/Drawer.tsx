@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {CSSProperties} from 'react';
 
 import {Portal, useBodyScrollLock, useForkRef} from '@gravity-ui/uikit';
 import {CSSTransition, Transition} from 'react-transition-group';
@@ -99,13 +99,22 @@ export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
             onResize,
         });
 
+        const style: CSSProperties = {};
+        if (resizable) {
+            if (['left', 'right'].includes(direction)) {
+                style.width = `${resizedWidth}px`;
+            } else {
+                style.height = `${resizedWidth}px`;
+            }
+        }
+
         React.useEffect(() => {
             setInitialRender(true);
         }, [direction]);
 
         const resizerElement = resizable ? (
             <div className={b('resizer', {direction})} {...resizerHandlers}>
-                <div className={b('resizer-handle')} />
+                <div className={b('resizer-handle', {direction})} />
             </div>
         ) : null;
 
@@ -131,7 +140,7 @@ export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
                         },
                         [className],
                     )}
-                    style={{width: resizable ? `${resizedWidth}px` : undefined}}
+                    style={style}
                 >
                     {resizerElement}
                     {children ?? content}

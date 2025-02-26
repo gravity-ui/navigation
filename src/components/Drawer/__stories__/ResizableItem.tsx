@@ -4,6 +4,7 @@ import {Button, Checkbox, RadioButton} from '@gravity-ui/uikit';
 
 import {cn} from '../../utils/cn';
 import {Drawer, DrawerItem} from '../Drawer';
+import {DrawerDirection} from '../utils';
 
 import {PlaceholderText} from './moc';
 
@@ -13,7 +14,7 @@ const b = cn('resizable-item');
 
 export function ResizableItemShowcase() {
     const [visible, setVisible] = React.useState(true);
-    const [direction, setDirection] = React.useState<'left' | 'right'>('right');
+    const [direction, setDirection] = React.useState<DrawerDirection>('right');
     const [resizable, setResizable] = React.useState(true);
     const [width, setWidth] = React.useState(400);
 
@@ -28,6 +29,8 @@ export function ResizableItemShowcase() {
                     options={[
                         {value: 'left', content: 'Left'},
                         {value: 'right', content: 'Right'},
+                        {value: 'top', content: 'Top'},
+                        {value: 'bottom', content: 'Bottom'},
                     ]}
                     onUpdate={setDirection}
                 />
@@ -39,7 +42,9 @@ export function ResizableItemShowcase() {
                     <DrawerItem
                         id="item"
                         direction={direction}
-                        className={b('item')}
+                        className={b('item', {
+                            vertical: ['top', 'bottom'].includes(direction),
+                        })}
                         visible={visible}
                         resizable={resizable}
                         width={width}
