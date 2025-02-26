@@ -13,7 +13,7 @@ export function DrawerShowcase() {
     const [visible1, setVisible1] = React.useState<boolean>(true);
     const [visible2, setVisible2] = React.useState<boolean>(false);
 
-    const [direction, setDirection] = React.useState<string>('left');
+    const [direction1, setDirection1] = React.useState<string>('left');
     const [direction2, setDirection2] = React.useState<string>('left');
 
     const [keepMountedGlobal, setKeepMountedGlobal] = React.useState<boolean>(true);
@@ -35,14 +35,18 @@ export function DrawerShowcase() {
                     {visible2 ? 'Hide 2' : 'Show 2'}
                 </Button>
                 &nbsp;&nbsp; Direction: &nbsp;
-                <SegmentedRadioGroup value={direction} onUpdate={setDirection}>
-                    <SegmentedRadioGroup.Option value="left">left</SegmentedRadioGroup.Option>
-                    <SegmentedRadioGroup.Option value="right">right</SegmentedRadioGroup.Option>
+                <SegmentedRadioGroup value={direction1} onUpdate={setDirection1}>
+                    <SegmentedRadioGroup.Option value="left">Left</SegmentedRadioGroup.Option>
+                    <SegmentedRadioGroup.Option value="right">Right</SegmentedRadioGroup.Option>
+                    <SegmentedRadioGroup.Option value="top">Top</SegmentedRadioGroup.Option>
+                    <SegmentedRadioGroup.Option value="bottom">Bottom</SegmentedRadioGroup.Option>
                 </SegmentedRadioGroup>
                 &nbsp;&nbsp; Direction2: &nbsp;
                 <SegmentedRadioGroup value={direction2} onUpdate={setDirection2}>
-                    <SegmentedRadioGroup.Option value="left">left</SegmentedRadioGroup.Option>
-                    <SegmentedRadioGroup.Option value="right">right</SegmentedRadioGroup.Option>
+                    <SegmentedRadioGroup.Option value="left">Left</SegmentedRadioGroup.Option>
+                    <SegmentedRadioGroup.Option value="right">Right</SegmentedRadioGroup.Option>
+                    <SegmentedRadioGroup.Option value="top">Top</SegmentedRadioGroup.Option>
+                    <SegmentedRadioGroup.Option value="bottom">Bottom</SegmentedRadioGroup.Option>
                 </SegmentedRadioGroup>
                 <br /> Keep Mounted Drawer: &nbsp;
                 <Button
@@ -72,13 +76,13 @@ export function DrawerShowcase() {
                     keepMounted={keepMounted1}
                     visible={visible1}
                     id="item-1"
-                    className={b('item-1')}
-                    direction={direction as DrawerItemProps['direction']}
+                    className={b('item-1', {vertical: ['top', 'bottom'].includes(direction1)})}
+                    direction={direction1 as DrawerItemProps['direction']}
                 />
                 <DrawerItem
                     visible={visible2}
                     id="item-2"
-                    className={b('item-2')}
+                    className={b('item-2', {vertical: ['top', 'bottom'].includes(direction2)})}
                     content=""
                     direction={direction2 as DrawerItemProps['direction']}
                 />
