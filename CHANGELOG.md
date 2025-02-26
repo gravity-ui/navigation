@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.1](https://github.com/gravity-ui/navigation/compare/v3.1.0...v3.1.1) (2025-02-26)
+
+
+### Bug Fixes
+
+* **AsideHeader:** return brand colors by default  ([#389](https://github.com/gravity-ui/navigation/issues/389)) ([f953e26](https://github.com/gravity-ui/navigation/commit/f953e261116735dcd0b85421f3af4e3979284d3c))
+
 ## [3.1.0](https://github.com/gravity-ui/navigation/compare/v3.0.0...v3.1.0) (2025-02-26)
 
 
