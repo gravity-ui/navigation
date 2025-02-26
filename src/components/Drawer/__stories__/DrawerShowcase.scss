@@ -23,9 +23,19 @@
         background-color: var(--g-color-base-info-heavy);
     }
 
+    &__item-1_vertical {
+        height: 72px;
+        width: 100%;
+    }
+
     &__item-2 {
         height: 100%;
         width: 100px;
         background-color: var(--g-color-base-positive-heavy);
+    }
+
+    &__item-2_vertical {
+        height: 56px;
+        width: 100%;
     }
 }
