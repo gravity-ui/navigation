@@ -35,16 +35,11 @@ export function useAllResultsPage({
     return {
         isAllSearchPage: (page: string | undefined) => page === allSearchResultsId,
         renderBreadcrumbs: (breadcrumbs: SettingBreadcrumbs) => (
-            <Breadcrumbs
-                lastDisplayedItemsCount={1}
-                items={breadcrumbs.map((breadcrumb) => ({
-                    text: breadcrumb,
-                    action: () => {
-                        console.log('HOBA BOBA!', {breadcrumbs, breadcrumb});
-                    },
-                }))}
-                firstDisplayedItemsCount={1}
-            />
+            <Breadcrumbs>
+                {breadcrumbs.map((breadcrumb) => (
+                    <Breadcrumbs.Item key={breadcrumb}>{breadcrumb}</Breadcrumbs.Item>
+                ))}
+            </Breadcrumbs>
         ),
     };
 }
@@ -94,12 +89,7 @@ function createAllResultsPage(pages: SettingsPage[], menu: SettingsMenu): Settin
                     items: section.items.map((setting) => {
                         const breadcrumbs = breadcrumbsMap[page.id] ?? [];
 
-                        return {
-                            ...setting,
-                            breadcrumbs: section.showTitle
-                                ? [...breadcrumbs, section.title]
-                                : breadcrumbs,
-                        };
+                        return {...setting, breadcrumbs};
                     }),
                 }));
             })
