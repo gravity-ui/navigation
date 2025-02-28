@@ -56,6 +56,7 @@ export interface DrawerItemProps {
 
     /**
      * Callback function called each time when the drawer item is resizing.
+     * Do not use it to store the new width for DrawerItem `width` prop. Use `onResize` instead.
      * @param width The new width of the drawer item
      */
     onResizeContinue?: (width: number) => void;
