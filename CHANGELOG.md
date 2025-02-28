@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.2](https://github.com/gravity-ui/navigation/compare/v3.1.1...v3.1.2) (2025-02-28)
+
+
+### Bug Fixes
+
+* **Drawer:** fixed vertical drawer and styles ([#394](https://github.com/gravity-ui/navigation/issues/394)) ([36b1d16](https://github.com/gravity-ui/navigation/commit/36b1d161a189e8818b43f41411070857ad905d40))
+
 ## [3.1.1](https://github.com/gravity-ui/navigation/compare/v3.1.0...v3.1.1) (2025-02-26)
 
 
