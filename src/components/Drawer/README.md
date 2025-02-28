@@ -63,21 +63,22 @@ The Drawer module consists of two primary components: `Drawer` and `DrawerItem`.
 
 ### `DrawerItem` Props
 
-| Name           | Description                                                                               |           Type            | Default |
-| :------------- | :---------------------------------------------------------------------------------------- | :-----------------------: | :-----: |
-| id             | Unique identifier for the drawer item.                                                    |         `string`          |         |
-| children       | Content to be displayed within the drawer item, preferable over the deprecated content.   |     `React.ReactNode`     |         |
-| content        | (deprecated) use children. Content to be displayed within the drawer item.                |     `React.ReactNode`     |         |
-| visible        | Determines whether the drawer item is visible or hidden.                                  |         `boolean`         |         |
-| direction      | Specifies the direction from which the drawer should slide in (left, right, top, bottom). |     `DrawerDirection`     | `left`  |
-| className      | HTML `class` attribute                                                                    |         `string`          |         |
-| resizable      | Determines whether the drawer item can be resized                                         |         `boolean`         |         |
-| width          | The width of the resizable drawer item                                                    |         `number`          |         |
-| onResizeStart  | Callback function called at the start of resizing.                                        |       `() => void`        |         |
-| onResize       | Callback function called at the end of resizing. Can be used to save the new width.       | `(width: number) => void` |         |
-| minResizeWidth | The minimum width of the resizable drawer item                                            |         `number`          |         |
-| maxResizeWidth | The maximum width of the resizable drawer item                                            |         `number`          |         |
-| keepMounted    | Keep child components mounted when closed, prioritized over Drawer.keepMounted property   |         `boolean`         | `false` |
+| Name             | Description                                                                               |           Type            | Default |
+| :--------------- | :---------------------------------------------------------------------------------------- | :-----------------------: | :-----: |
+| id               | Unique identifier for the drawer item.                                                    |         `string`          |         |
+| children         | Content to be displayed within the drawer item, preferable over the deprecated content.   |     `React.ReactNode`     |         |
+| content          | (deprecated) use children. Content to be displayed within the drawer item.                |     `React.ReactNode`     |         |
+| visible          | Determines whether the drawer item is visible or hidden.                                  |         `boolean`         |         |
+| direction        | Specifies the direction from which the drawer should slide in (left, right, top, bottom). |     `DrawerDirection`     | `left`  |
+| className        | HTML `class` attribute                                                                    |         `string`          |         |
+| resizable        | Determines whether the drawer item can be resized                                         |         `boolean`         |         |
+| width            | The width of the resizable drawer item                                                    |         `number`          |         |
+| onResizeStart    | Callback function called at the start of resizing.                                        |       `() => void`        |         |
+| onResize         | Callback function called at the end of resizing. Can be used to save the new width.       | `(width: number) => void` |         |
+| onResizeContinue | Callback function called each time when the drawer item is resizing.                      | `(width: number) => void` |         |
+| minResizeWidth   | The minimum width of the resizable drawer item                                            |         `number`          |         |
+| maxResizeWidth   | The maximum width of the resizable drawer item                                            |         `number`          |         |
+| keepMounted      | Keep child components mounted when closed, prioritized over Drawer.keepMounted property   |         `boolean`         | `false` |
 
 ### `Drawer` Props
 
