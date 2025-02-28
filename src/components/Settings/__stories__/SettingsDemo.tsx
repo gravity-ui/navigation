@@ -4,7 +4,6 @@ import {
     Button,
     Checkbox,
     HelpMark,
-    Link,
     Radio,
     SegmentedRadioGroup,
     Select,
@@ -137,26 +136,26 @@ export const SettingsComponent = React.memo(
                                 />
                             </Settings.Item>
                             <Settings.Item title="Go to setting">
-                                <Link
-                                    href="#"
+                                <Button
+                                    view="flat-info"
                                     aria-label="settings"
                                     onClick={() =>
                                         setSelection({settingId: 'arcanum-theme-setting'})
                                     }
                                 >
                                     Go to «Arcanum/Appearance/Appearance/Theme»
-                                </Link>
+                                </Button>
                             </Settings.Item>
                             <Settings.Item title="Go to section">
-                                <Link
-                                    href="#"
+                                <Button
+                                    view="flat-info"
                                     aria-label="settings"
                                     onClick={() =>
                                         setSelection({section: {id: 'arcanum-common-section'}})
                                     }
                                 >
                                     Go to «Arcanum/Features/Common»
-                                </Link>
+                                </Button>
                             </Settings.Item>
                         </Settings.Section>
                         <Settings.Section
