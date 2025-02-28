@@ -204,6 +204,7 @@ $block: '.#{variables.$ns}drawer';
 
         &_direction_top,
         &_direction_bottom {
+            cursor: row-resize;
             width: 100%;
             height: var(--gn-drawer-item-resizer-width, var(--_--resizer-width));
         }
