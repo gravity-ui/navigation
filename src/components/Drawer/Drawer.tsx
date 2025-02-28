@@ -54,6 +54,12 @@ export interface DrawerItemProps {
      */
     onResize?: (width: number) => void;
 
+    /**
+     * Callback function called each time when the drawer item is resizing.
+     * @param width The new width of the drawer item
+     */
+    onResizeContinue?: (width: number) => void;
+
     /** The minimum width of the resizable drawer item */
     minResizeWidth?: number;
 
@@ -80,6 +86,7 @@ export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
             minResizeWidth,
             maxResizeWidth,
             onResizeStart,
+            onResizeContinue,
             onResize,
             keepMounted = false,
         } = props;
@@ -97,6 +104,7 @@ export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
             maxResizeWidth,
             onResizeStart,
             onResize,
+            onResizeContinue,
         });
 
         const style: CSSProperties = {};
