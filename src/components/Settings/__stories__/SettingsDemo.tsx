@@ -87,21 +87,23 @@ export const SettingsComponent = React.memo(
                 onClose={onClose}
                 renderRightAdornment={({title}) => (
                     <HelpMark
-                        content={`Some text for ${title}`}
                         aria-label="mark"
                         popoverProps={{
                             'aria-label': 'Note',
                         }}
-                    />
+                    >
+                        Some text for ${title}
+                    </HelpMark>
                 )}
                 renderSectionRightAdornment={({title}) => (
                     <HelpMark
-                        content={`Some text for ${title}`}
                         aria-label="mark"
                         popoverProps={{
                             'aria-label': 'Note',
                         }}
-                    />
+                    >
+                        Some text for ${title}
+                    </HelpMark>
                 )}
                 showRightAdornmentOnHover={true} // true by default
                 selection={selection}
