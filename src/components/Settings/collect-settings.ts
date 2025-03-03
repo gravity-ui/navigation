@@ -3,7 +3,7 @@ import React from 'react';
 import {IconProps} from '@gravity-ui/uikit';
 
 import {SettingsSelection} from './Selection/types';
-import {getSettingsDesceriptionWithAllResultsPage} from './SettingsSearch/AllResultsPage';
+import {getSettingsDescriptionWithAllResultsPage} from './SettingsSearch/AllResultsPage';
 import {escapeStringForRegExp, invariant} from './helpers';
 
 export type SettingsMenu = (SettingsMenuGroup | SettingsMenuItem)[];
@@ -71,7 +71,7 @@ export function getSettingsFromChildren(
     const result = getSettingsFromChildrenRecursive(children, '', filterRe);
 
     if (Boolean(preparedFilter) && result.menu.length > 0) {
-        return getSettingsDesceriptionWithAllResultsPage(result);
+        return getSettingsDescriptionWithAllResultsPage(result);
     } else {
         return result;
     }

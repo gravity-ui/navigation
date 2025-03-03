@@ -9,6 +9,7 @@ import type {
     SettingsMenu,
     SettingsMenuItem,
     SettingsPage,
+    SettingsPageSection,
 } from '../collect-settings';
 import i18n from '../i18n';
 
@@ -44,7 +45,7 @@ export function useAllResultsPage({
     };
 }
 
-export function getSettingsDesceriptionWithAllResultsPage(
+export function getSettingsDescriptionWithAllResultsPage(
     settingsDescription: SettingsDescription,
 ): SettingsDescription {
     const {menu, pages} = settingsDescription;
@@ -66,32 +67,36 @@ function getMenuWithoutAllResults(menu: SettingsMenu) {
 }
 
 function createAllResultsPage(pages: SettingsPage[], menu: SettingsMenu): SettingsPage {
-    const breadcrumbsMap: Record<string, string[]> = {};
+    const breadcrumbsMap: Record<string, string> = {};
 
     for (const menuItem of menu) {
         if ('items' in menuItem) {
             for (const pageItem of menuItem.items) {
-                breadcrumbsMap[pageItem.id] = [`${menuItem.groupTitle} / ${pageItem.title}`];
+                breadcrumbsMap[pageItem.id] = `${menuItem.groupTitle} / ${pageItem.title}`;
             }
         } else {
-            breadcrumbsMap[menuItem.id] = [menuItem.title];
+            breadcrumbsMap[menuItem.id] = menuItem.title;
         }
     }
 
     return {
         id: allSearchResultsId,
         sections: Object.values(pages)
-            .map((page, i) => {
-                return page.sections.map((section) => ({
-                    ...section,
-                    showTitle: false,
-                    title: `${i}/${section.title}`,
-                    items: section.items.map((setting) => {
-                        const breadcrumbs = breadcrumbsMap[page.id] ?? [];
+            .map((page) => {
+                return page.sections.map((section): SettingsPageSection => {
+                    const breadcrumbs = breadcrumbsMap[page.id];
 
-                        return {...setting, breadcrumbs};
-                    }),
-                }));
+                    return {
+                        ...section,
+                        title: breadcrumbs ? `${breadcrumbs} / ${section.title}` : section.title,
+
+                        // .map((setting) => {
+                        //     // const breadcrumbs = breadcrumbsMap[page.id] ?? [];
+
+                        //     return {...setting};
+                        // })
+                    };
+                });
             })
             .flat(),
         hidden: false,
