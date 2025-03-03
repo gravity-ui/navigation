@@ -53,13 +53,17 @@ export function useResizeHandlers({
         [onMove, direction],
     );
 
+    const disableSelect = React.useCallback((e: Event) => {
+        e.preventDefault();
+    }, []);
+
     const handleEnd = React.useCallback(
         (e: MouseEvent | TouchEvent) => {
             window.removeEventListener('mousemove', handleMove);
             window.removeEventListener('touchmove', handleMove);
 
-            document.body.style.removeProperty('user-select');
-            document.body.style.removeProperty('-webkit-user-select');
+            window.removeEventListener('selectstart', disableSelect);
+
             document.body.style.removeProperty('cursor');
 
             const current = getEventClientPosition(e, direction);
@@ -67,7 +71,7 @@ export function useResizeHandlers({
 
             onEnd(delta);
         },
-        [handleMove, onEnd, direction],
+        [handleMove, disableSelect, direction, onEnd],
     );
 
     const handleStart = React.useCallback(
@@ -84,9 +88,13 @@ export function useResizeHandlers({
             window.addEventListener('mousemove', handleMove);
             window.addEventListener('touchmove', handleMove);
 
-            document.body.style.setProperty('user-select', 'none');
-            document.body.style.setProperty('-webkit-user-select', 'none');
-            document.body.style.setProperty('cursor', 'col-resize');
+            // Prevents user from selecting text. Similar to `user-select: none` but with no override issue.
+            window.addEventListener('selectstart', disableSelect, {passive: false});
+
+            document.body.style.setProperty(
+                'cursor',
+                direction === 'horizontal' ? 'col-resize' : 'row-resize',
+            );
 
             onStart();
         },
@@ -106,6 +114,7 @@ export interface UseResizableDrawerItemParams {
     maxResizeWidth?: number;
     onResizeStart?: VoidFunction;
     onResize?: OnResizeHandler;
+    onResizeContinue?: OnResizeHandler;
 }
 
 export function useResizableDrawerItem(params: UseResizableDrawerItemParams) {
@@ -116,6 +125,7 @@ export function useResizableDrawerItem(params: UseResizableDrawerItemParams) {
         maxResizeWidth = DRAWER_ITEM_MAX_RESIZE_WIDTH,
         onResizeStart,
         onResize,
+        onResizeContinue,
     } = params;
 
     const [isResizing, setIsResizing] = React.useState(false);
@@ -144,9 +154,13 @@ export function useResizableDrawerItem(params: UseResizableDrawerItemParams) {
         onResizeStart?.();
     }, [onResizeStart]);
 
-    const onMove = React.useCallback((delta: number) => {
-        setResizeDelta(delta);
-    }, []);
+    const onMove = React.useCallback(
+        (delta: number) => {
+            setResizeDelta(delta);
+            onResizeContinue?.(getResizedWidth(delta));
+        },
+        [getResizedWidth, onResizeContinue],
+    );
 
     const onEnd = React.useCallback(
         (delta: number) => {

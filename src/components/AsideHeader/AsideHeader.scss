@@ -232,7 +232,6 @@ $block: '.#{variables.$ns}aside-header';
     }
 
     &__content {
-        overflow-x: auto;
         width: calc(100% - var(--gn-aside-header-size));
         z-index: var(--gn-aside-header-content-z-index, 95);
         margin-top: var(--gn-top-alert-height, 0);
