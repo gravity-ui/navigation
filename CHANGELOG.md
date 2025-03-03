@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.3](https://github.com/gravity-ui/navigation/compare/v3.1.2...v3.1.3) (2025-03-03)
+
+
+### Bug Fixes
+
+* **AsideHeader:** content style remove ([#397](https://github.com/gravity-ui/navigation/issues/397)) ([8528b11](https://github.com/gravity-ui/navigation/commit/8528b11de110a68401783894b7c96b8f1c64947b))
+
 ## [3.1.2](https://github.com/gravity-ui/navigation/compare/v3.1.1...v3.1.2) (2025-02-28)
 
 
