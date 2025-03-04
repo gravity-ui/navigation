@@ -3,16 +3,17 @@ import React from 'react';
 import {IconProps} from '@gravity-ui/uikit';
 
 import {SettingsSelection} from './Selection/types';
+import {getSettingsDescriptionWithAllResultsPage} from './SettingsSearch/AllResultsPage';
 import {escapeStringForRegExp, invariant} from './helpers';
 
 export type SettingsMenu = (SettingsMenuGroup | SettingsMenuItem)[];
 
-interface SettingsMenuGroup {
+export interface SettingsMenuGroup {
     groupTitle: string;
     items: SettingsMenuItem[];
 }
 
-interface SettingsMenuItem {
+export interface SettingsMenuItem {
     id: string;
     title: string;
     icon?: IconProps;
@@ -51,10 +52,11 @@ export interface SelectedSettingsPart {
     setting?: SettingsItem;
 }
 
-interface SettingsDescription {
+export interface SettingsDescription {
     menu: SettingsMenu;
     pages: Record<string, SettingsPage>;
 }
+
 export function getSettingsFromChildren(
     children: React.ReactNode,
     searchText = '',
@@ -63,7 +65,13 @@ export function getSettingsFromChildren(
     const preparedFilter = escapeStringForRegExp(searchText).replace(/\s+/g, '.*?');
     const filterRe = new RegExp(preparedFilter, 'i');
 
-    return getSettingsFromChildrenRecursive(children, '', filterRe);
+    const result = getSettingsFromChildrenRecursive(children, '', filterRe);
+
+    if (Boolean(preparedFilter) && result.menu.length > 0) {
+        return getSettingsDescriptionWithAllResultsPage(result);
+    } else {
+        return result;
+    }
 }
 
 function getSettingsFromChildrenRecursive(
@@ -111,11 +119,14 @@ function getSettingsFromChildrenRecursive(
                 );
             }
 
-            menu.push({
-                groupTitle: element.props.groupTitle,
-                // @ts-ignore
-                items: menuFragment,
-            });
+            if (menuFragment.length > 0) {
+                menu.push({
+                    groupTitle: element.props.groupTitle,
+                    // @ts-ignore
+                    items: menuFragment,
+                });
+            }
+
             Object.assign(pages, pagesFragment);
         } else {
             hasItems = true;
@@ -129,13 +140,16 @@ function getSettingsFromChildrenRecursive(
 
             pages[pageId] = getSettingsPageFromChildren(element.props.children, filterRe);
             pages[pageId].id = pageId;
-            menu.push({
-                id: pageId,
-                title: element.props.title,
-                icon: element.props.icon,
-                withBadge: pages[pageId].withBadge,
-                disabled: pages[pageId].hidden,
-            });
+
+            if (!pages[pageId].hidden) {
+                menu.push({
+                    id: pageId,
+                    title: element.props.title,
+                    icon: element.props.icon,
+                    withBadge: pages[pageId].withBadge,
+                    disabled: pages[pageId].hidden,
+                });
+            }
         }
     });
     return {menu, pages};
@@ -176,6 +190,7 @@ function getSettingsPageFromChildren(children: React.ReactNode, filterRe: RegExp
 function getSettingsItemsFromChildren(children: React.ReactNode, filterRe: RegExp) {
     let hidden = true;
     const items: SettingsItem[] = [];
+
     React.Children.forEach(children, (element) => {
         if (!React.isValidElement(element)) {
             // Ignore non-elements.
