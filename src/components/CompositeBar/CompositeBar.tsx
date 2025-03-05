@@ -1,6 +1,7 @@
 import React, {FC, ReactNode, useCallback, useContext, useRef} from 'react';
 
 import {List} from '@gravity-ui/uikit';
+import debounce from 'lodash/debounce';
 import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
 
 import {useAsideHeaderContext} from '../AsideHeader/AsideHeaderContext';
@@ -22,6 +23,8 @@ import {
 } from './utils';
 
 import './CompositeBar.scss';
+
+const DEFAULT_DEBOUNCE_INTERVAL = 10;
 
 const b = block('composite-bar');
 
@@ -80,20 +83,28 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     }, [multipleTooltip, multipleTooltipActive, setMultipleTooltipContextValue]);
 
     const onTooltipMouseEnter = useCallback(
-        (e: {clientX: number}) => {
-            if (
-                multipleTooltip &&
-                compact &&
-                !multipleTooltipActive &&
-                document.hasFocus() &&
-                activeIndex !== lastClickedItemIndex &&
-                e.clientX <= ASIDE_HEADER_COMPACT_WIDTH
-            ) {
-                setMultipleTooltipContextValue?.({
-                    active: true,
-                });
-            }
-        },
+        debounce(
+            (e: {clientX: number}) => {
+                if (
+                    multipleTooltip &&
+                    compact &&
+                    !multipleTooltipActive &&
+                    document.hasFocus() &&
+                    activeIndex !== lastClickedItemIndex &&
+                    e.clientX <= ASIDE_HEADER_COMPACT_WIDTH
+                ) {
+                    console.log(`onTooltipMouseEnter: active=true`);
+                    setMultipleTooltipContextValue?.({
+                        active: true,
+                    });
+                }
+            },
+            DEFAULT_DEBOUNCE_INTERVAL,
+            {
+                leading: true,
+                trailing: false,
+            },
+        ),
         [
             multipleTooltip,
             compact,
@@ -104,34 +115,56 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
         ],
     );
 
-    const onTooltipMouseLeave = useCallback(() => {
-        if (multipleTooltip && multipleTooltipActive && document.hasFocus()) {
-            setMultipleTooltipContextValue?.({
-                active: false,
-                lastClickedItemIndex: undefined,
-            });
-        }
-    }, [multipleTooltip, multipleTooltipActive, setMultipleTooltipContextValue]);
+    const onTooltipMouseLeave = useCallback(
+        debounce(
+            () => {
+                if (multipleTooltip && multipleTooltipActive && document.hasFocus()) {
+                    console.log(`onTooltipMouseLeave: active=false`);
+                    setMultipleTooltipContextValue?.({
+                        active: false,
+                        lastClickedItemIndex: undefined,
+                    });
+                }
+            },
+            DEFAULT_DEBOUNCE_INTERVAL,
+            {
+                leading: true,
+                trailing: false,
+            },
+        ),
+        [multipleTooltip, multipleTooltipActive, setMultipleTooltipContextValue],
+    );
 
     const onMouseEnterByIndex = useCallback(
-        (itemIndex: number) => () => {
-            if (multipleTooltip && document.hasFocus()) {
-                let multipleTooltipActiveValue = multipleTooltipActive;
-                if (!multipleTooltipActive && itemIndex !== lastClickedItemIndex) {
-                    multipleTooltipActiveValue = true;
-                }
-                if (
-                    activeIndex === itemIndex &&
-                    multipleTooltipActive === multipleTooltipActiveValue
-                ) {
-                    return;
-                }
-                setMultipleTooltipContextValue({
-                    activeIndex: itemIndex,
-                    active: multipleTooltipActiveValue,
-                });
-            }
-        },
+        (itemIndex: number) =>
+            debounce(
+                () => {
+                    console.log(`onMouseEnterByIndex: itemIndex=${itemIndex}`);
+                    if (multipleTooltip && document.hasFocus()) {
+                        let multipleTooltipActiveValue = multipleTooltipActive;
+                        if (!multipleTooltipActive && itemIndex !== lastClickedItemIndex) {
+                            multipleTooltipActiveValue = true;
+                        }
+                        if (
+                            activeIndex === itemIndex &&
+                            multipleTooltipActive === multipleTooltipActiveValue
+                        ) {
+                            console.log('onMouseEnterByIndex: skip change');
+                            return;
+                        }
+                        console.log(`onMouseEnterByIndex: set active=${itemIndex}`);
+                        setMultipleTooltipContextValue({
+                            activeIndex: itemIndex,
+                            active: multipleTooltipActiveValue,
+                        });
+                    }
+                },
+                DEFAULT_DEBOUNCE_INTERVAL,
+                {
+                    leading: true,
+                    trailing: false,
+                },
+            ),
         [
             multipleTooltip,
             multipleTooltipActive,
@@ -141,26 +174,37 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
         ],
     );
 
-    const onMouseLeave = useCallback(() => {
-        if (compact && document.hasFocus()) {
-            ref.current?.activateItem(undefined as unknown as number);
-            if (
-                multipleTooltip &&
-                (activeIndex !== undefined || lastClickedItemIndex !== undefined)
-            ) {
-                setMultipleTooltipContextValue({
-                    activeIndex: undefined,
-                    lastClickedItemIndex: undefined,
-                });
-            }
-        }
-    }, [
-        activeIndex,
-        compact,
-        lastClickedItemIndex,
-        multipleTooltip,
-        setMultipleTooltipContextValue,
-    ]);
+    const onMouseLeave = useCallback(
+        debounce(
+            () => {
+                if (compact && document.hasFocus()) {
+                    ref.current?.activateItem(undefined as unknown as number);
+                    if (
+                        multipleTooltip &&
+                        (activeIndex !== undefined || lastClickedItemIndex !== undefined)
+                    ) {
+                        console.log('onMouseLeave: deactivate tooltip');
+                        setMultipleTooltipContextValue({
+                            activeIndex: undefined,
+                            lastClickedItemIndex: undefined,
+                        });
+                    }
+                }
+            },
+            DEFAULT_DEBOUNCE_INTERVAL,
+            {
+                leading: true,
+                trailing: false,
+            },
+        ),
+        [
+            activeIndex,
+            compact,
+            lastClickedItemIndex,
+            multipleTooltip,
+            setMultipleTooltipContextValue,
+        ],
+    );
 
     const onItemClickByIndex = useCallback(
         (itemIndex: number): ItemProps['onItemClick'] =>
@@ -205,6 +249,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                     filterable={false}
                     sortable={false}
                     renderItem={(item, _isItemActive, itemIndex) => {
+                        // console.log('renderItem: ', itemIndex);
                         const itemExtraProps = isMenuItem(item) ? {item} : item;
                         const enableTooltip = isMenuItem(item)
                             ? !multipleTooltip
