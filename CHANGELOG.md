@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.4](https://github.com/gravity-ui/navigation/compare/v3.1.3...v3.1.4) (2025-03-05)
+
+
+### Bug Fixes
+
+* fixed "Go to ..." links in storybook ([#393](https://github.com/gravity-ui/navigation/issues/393)) ([503c19d](https://github.com/gravity-ui/navigation/commit/503c19d6e67aeb53460d99b1540dfcfe1076bd87))
+
 ## [3.1.3](https://github.com/gravity-ui/navigation/compare/v3.1.2...v3.1.3) (2025-03-03)
 
 
