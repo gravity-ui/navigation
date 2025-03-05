@@ -49,6 +49,17 @@ type CompositeBarViewProps = CompositeBarProps & {
     collapseItems?: MenuItem[];
 };
 
+function getTime() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
+
+    const formattedTime = `${hours}:${minutes}:${seconds}.${milliseconds}`;
+    return formattedTime;
+}
+
 const CompositeBarView: FC<CompositeBarViewProps> = ({
     type,
     items,
@@ -65,8 +76,41 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
         active: multipleTooltipActive,
         activeIndex,
         lastClickedItemIndex,
+        hoverState,
     } = useContext(MultipleTooltipContext);
     const {compact} = useAsideHeaderContext();
+
+    const handleTransitionRun = React.useCallback<(e: TransitionEvent) => void>(
+        (e) => {
+            if (e.target) {
+                const computedStyle = getComputedStyle(e.target as HTMLElement);
+                const isHovered = computedStyle.transform !== 'none';
+                console.log('isHovered=', isHovered, getTime());
+                if (hoverState !== isHovered) {
+                    setMultipleTooltipContextValue({hoverState: isHovered});
+                }
+            }
+        },
+        [multipleTooltip, multipleTooltipActive],
+    );
+
+    React.useEffect(() => {
+        if (ref.current?.refContainer.current?.node) {
+            const listNode = ref.current.refContainer.current.node as HTMLElement;
+            // this hack allow to detect hover events on element like browser css engine
+            listNode.style.setProperty('transition', 'transform 0.001ms step-start');
+            listNode.style.setProperty('transition-behavior', 'allow-discrete');
+            listNode.addEventListener('transitionrun', handleTransitionRun);
+
+            return () => {
+                listNode.removeEventListener('transitionrun', handleTransitionRun);
+                listNode.style.removeProperty('transition-behavior');
+                listNode.style.removeProperty('transition');
+            };
+        }
+
+        return;
+    }, []);
 
     React.useEffect(() => {
         function handleBlurWindow() {
@@ -91,9 +135,9 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                     !multipleTooltipActive &&
                     document.hasFocus() &&
                     activeIndex !== lastClickedItemIndex &&
-                    e.clientX <= ASIDE_HEADER_COMPACT_WIDTH
+                    e.clientX <= ASIDE_HEADER_COMPACT_WIDTH &&
+                    hoverState
                 ) {
-                    console.log(`onTooltipMouseEnter: active=true`);
                     setMultipleTooltipContextValue?.({
                         active: true,
                     });
@@ -112,16 +156,21 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
             activeIndex,
             lastClickedItemIndex,
             setMultipleTooltipContextValue,
+            hoverState,
         ],
     );
 
     const onTooltipMouseLeave = useCallback(
         debounce(
             () => {
-                if (multipleTooltip && multipleTooltipActive && document.hasFocus()) {
-                    console.log(`onTooltipMouseLeave: active=false`);
+                if (
+                    multipleTooltip &&
+                    (multipleTooltipActive || !hoverState) &&
+                    document.hasFocus()
+                ) {
                     setMultipleTooltipContextValue?.({
                         active: false,
+                        activeIndex: undefined,
                         lastClickedItemIndex: undefined,
                     });
                 }
@@ -132,15 +181,21 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                 trailing: false,
             },
         ),
-        [multipleTooltip, multipleTooltipActive, setMultipleTooltipContextValue],
+        [multipleTooltip, multipleTooltipActive, setMultipleTooltipContextValue, hoverState],
     );
 
     const onMouseEnterByIndex = useCallback(
         (itemIndex: number) =>
             debounce(
                 () => {
-                    console.log(`onMouseEnterByIndex: itemIndex=${itemIndex}`);
                     if (multipleTooltip && document.hasFocus()) {
+                        if (multipleTooltipActive && !hoverState) {
+                            setMultipleTooltipContextValue({
+                                active: false,
+                                activeIndex: undefined,
+                            });
+                            return;
+                        }
                         let multipleTooltipActiveValue = multipleTooltipActive;
                         if (!multipleTooltipActive && itemIndex !== lastClickedItemIndex) {
                             multipleTooltipActiveValue = true;
@@ -149,10 +204,8 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                             activeIndex === itemIndex &&
                             multipleTooltipActive === multipleTooltipActiveValue
                         ) {
-                            console.log('onMouseEnterByIndex: skip change');
                             return;
                         }
-                        console.log(`onMouseEnterByIndex: set active=${itemIndex}`);
                         setMultipleTooltipContextValue({
                             activeIndex: itemIndex,
                             active: multipleTooltipActiveValue,
@@ -171,6 +224,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
             lastClickedItemIndex,
             activeIndex,
             setMultipleTooltipContextValue,
+            hoverState,
         ],
     );
 
@@ -181,9 +235,10 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                     ref.current?.activateItem(undefined as unknown as number);
                     if (
                         multipleTooltip &&
-                        (activeIndex !== undefined || lastClickedItemIndex !== undefined)
+                        (activeIndex !== undefined ||
+                            lastClickedItemIndex !== undefined ||
+                            !hoverState)
                     ) {
-                        console.log('onMouseLeave: deactivate tooltip');
                         setMultipleTooltipContextValue({
                             activeIndex: undefined,
                             lastClickedItemIndex: undefined,
@@ -203,6 +258,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
             lastClickedItemIndex,
             multipleTooltip,
             setMultipleTooltipContextValue,
+            hoverState,
         ],
     );
 
@@ -239,6 +295,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                 onMouseLeave={onTooltipMouseLeave}
             >
                 <List<CompositeBarItem>
+                    className={b('list', {hover: hoverState})}
                     ref={ref}
                     items={items}
                     selectedItemIndex={type === 'menu' ? getSelectedItemIndex(items) : undefined}
@@ -249,7 +306,6 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                     filterable={false}
                     sortable={false}
                     renderItem={(item, _isItemActive, itemIndex) => {
-                        // console.log('renderItem: ', itemIndex);
                         const itemExtraProps = isMenuItem(item) ? {item} : item;
                         const enableTooltip = isMenuItem(item)
                             ? !multipleTooltip

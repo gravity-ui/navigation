@@ -5,6 +5,7 @@ interface MultipleTooltipContextProps {
     activeIndex: number | undefined;
     hideCollapseItemTooltip: boolean;
     lastClickedItemIndex: number | undefined;
+    hoverState: boolean | undefined;
     setValue<K extends keyof Omit<MultipleTooltipContextProps, 'setValue'>>(
         value:
             | Pick<Omit<MultipleTooltipContextProps, 'setValue'>, K>
@@ -17,6 +18,7 @@ const multipleTooltipContextDefaults = {
     activeIndex: undefined,
     hideCollapseItemTooltip: false,
     lastClickedItemIndex: undefined,
+    hoverState: undefined,
     setValue: () => {},
 };
 
