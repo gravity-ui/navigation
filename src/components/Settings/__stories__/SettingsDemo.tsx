@@ -1,5 +1,6 @@
 import React, {useReducer} from 'react';
 
+import {Gear} from '@gravity-ui/icons';
 import {
     Button,
     Checkbox,
@@ -14,8 +15,6 @@ import {
 import {cn} from '../../utils/cn';
 import {SettingsSelection} from '../Selection/types';
 import {Settings} from '../index';
-
-import featureIcon from '../../../../assets/icons/gear.svg';
 
 import './SettingsDemo.scss';
 
@@ -108,7 +107,7 @@ export const SettingsComponent = React.memo(
                 selection={selection}
             >
                 <Settings.Group id="arcanum" groupTitle="Arcanum">
-                    <Settings.Page id="features" title="Features" icon={{data: featureIcon}}>
+                    <Settings.Page id="features" title="Features" icon={{data: Gear}}>
                         <Settings.Section title="Beta functionality">
                             <Settings.Item
                                 title="YFM markdown in md. files"
@@ -201,7 +200,7 @@ export const SettingsComponent = React.memo(
                             </Settings.Item>
                         </Settings.Section>
                     </Settings.Page>
-                    <Settings.Page id="appearance" title="Appearance" icon={{data: featureIcon}}>
+                    <Settings.Page id="appearance" title="Appearance" icon={{data: Gear}}>
                         <Settings.Section
                             title="Appearance"
                             header={
@@ -282,7 +281,7 @@ function renderGeneralSettings(
 ) {
     return (
         <Settings.Group id="general" groupTitle="General">
-            <Settings.Page id="appearance" title="Appearance" icon={{data: featureIcon}}>
+            <Settings.Page id="appearance" title="Appearance" icon={{data: Gear}}>
                 <Settings.Section title="Appearance">
                     <Settings.Item title="Interface language">
                         <SegmentedRadioGroup
@@ -308,7 +307,7 @@ function renderGeneralSettings(
                     </Settings.Item>
                 </Settings.Section>
             </Settings.Page>
-            <Settings.Page id="communication" title="Communication" icon={{data: featureIcon}}>
+            <Settings.Page id="communication" title="Communication" icon={{data: Gear}}>
                 <Settings.Section title="Phone settings" withBadge={withBadge}>
                     <Settings.Item
                         title="Send notifications"

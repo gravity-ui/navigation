@@ -1,11 +1,10 @@
 import React, {useReducer} from 'react';
 
+import {Gear} from '@gravity-ui/icons';
 import {Button, Radio, SegmentedRadioGroup, Select, Switch, useUniqId} from '@gravity-ui/uikit';
 
 import {Settings} from '../../..';
 import {cn} from '../../utils/cn';
-
-import featureIcon from '../../../../assets/icons/gear.svg';
 
 import './SettingsMobileDemo.scss';
 
@@ -233,7 +232,7 @@ function renderGeneralSettings(
 ) {
     return (
         <Settings.Group id="general" groupTitle="General">
-            <Settings.Page id="appearance" title="General Appearance" icon={{data: featureIcon}}>
+            <Settings.Page id="appearance" title="General Appearance" icon={{data: Gear}}>
                 <Settings.Section title="Appearance">
                     <Settings.Item title="Interface language">
                         <SegmentedRadioGroup
@@ -261,7 +260,7 @@ function renderGeneralSettings(
                     </Settings.Item>
                 </Settings.Section>
             </Settings.Page>
-            <Settings.Page id="communication" title="Communication" icon={{data: featureIcon}}>
+            <Settings.Page id="communication" title="Communication" icon={{data: Gear}}>
                 <Settings.Section title="Send notifications" withBadge={withBadge}>
                     <Settings.Item
                         title="Monitoring"
