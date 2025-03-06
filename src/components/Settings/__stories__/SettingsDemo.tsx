@@ -136,26 +136,26 @@ export const SettingsComponent = React.memo(
                                 />
                             </Settings.Item>
                             <Settings.Item title="Go to setting">
-                                <Button
-                                    view="flat-info"
-                                    aria-label="settings"
+                                <button
                                     onClick={() =>
                                         setSelection({settingId: 'arcanum-theme-setting'})
                                     }
+                                    aria-label="settings"
+                                    className={b('item-button')}
                                 >
                                     Go to «Arcanum/Appearance/Appearance/Theme»
-                                </Button>
+                                </button>
                             </Settings.Item>
                             <Settings.Item title="Go to section">
-                                <Button
-                                    view="flat-info"
-                                    aria-label="settings"
+                                <button
                                     onClick={() =>
                                         setSelection({section: {id: 'arcanum-common-section'}})
                                     }
+                                    aria-label="settings"
+                                    className={b('item-button')}
                                 >
                                     Go to «Arcanum/Features/Common»
-                                </Button>
+                                </button>
                             </Settings.Item>
                         </Settings.Section>
                         <Settings.Section

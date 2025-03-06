@@ -1,3 +1,5 @@
+@use '~@gravity-ui/uikit/styles/mixins';
+
 .settings-demo {
     height: 100%;
 
@@ -13,5 +15,15 @@
 
     &__appearance-header {
         margin-top: 10px;
+    }
+
+    &__item-button {
+        @include mixins.button-reset();
+
+        color: var(--g-color-text-link);
+
+        &:hover {
+            color: var(--g-color-text-link-hover);
+        }
     }
 }
