@@ -224,7 +224,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                     }}
                 />
             </div>
-            {type === 'menu' && multipleTooltip && (
+            {type === 'menu' && multipleTooltip && multipleTooltipActive && (
                 <MultipleTooltip
                     open={compact && multipleTooltipActive}
                     anchorRef={tooltipRef}

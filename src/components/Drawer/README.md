@@ -12,6 +12,7 @@ Here is a simple example of how to use the Drawer component:
 
 ```tsx
 import React from 'react';
+
 import {Drawer, DrawerItem} from '@gravity-ui/navigation';
 
 const App = () => {
