@@ -19,6 +19,10 @@ $block: '.#{variables.$ns}settings-menu';
         }
     }
 
+    &__item + &__group {
+        margin-top: 8px;
+    }
+
     &__item {
         $item: &;
         display: flex;
