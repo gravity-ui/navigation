@@ -13,13 +13,6 @@ $block: '.#{variables.$ns}composite-bar';
         background-color: transparent;
     }
 
-    &__list_hover::after{
-        content: '';
-        position: absolute;
-        inset: 0;
-        border: solid 1px red;
-    }
-
     &__list:hover > div > div:first-child {
         transform: translateY(0);
         outline: solid 2px var(--g-color-line-info);
