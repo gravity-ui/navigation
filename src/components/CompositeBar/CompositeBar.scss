@@ -12,4 +12,9 @@ $block: '.#{variables.$ns}composite-bar';
     & &__root-menu-item[class] {
         background-color: transparent;
     }
+
+    &__list:hover > div > div:first-child {
+        transform: translateY(0);
+        outline: solid 2px var(--g-color-line-info);
+    }
 }
