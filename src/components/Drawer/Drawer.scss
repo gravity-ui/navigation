@@ -23,7 +23,7 @@ $block: '.#{variables.$ns}drawer';
     &__item {
         position: var(--gn-drawer-item-position, var(--_--item-position));
         left: var(--gn-aside-header-size, 0);
-        top: 0;
+        top: var(--gn-top-alert-height, 0);
         bottom: 0;
         height: 100%;
         will-change: transform;
@@ -186,10 +186,12 @@ $block: '.#{variables.$ns}drawer';
 
         &_direction_right {
             left: 0;
+            top: var(--gn-top-alert-height, 0);
         }
 
         &_direction_left {
             right: 0;
+            top: var(--gn-top-alert-height, 0);
         }
 
         &_direction_top {
