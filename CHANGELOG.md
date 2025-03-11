@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.0](https://github.com/gravity-ui/navigation/compare/v3.1.4...v3.2.0) (2025-03-11)
+
+
+### Features
+
+* **Settings/Section:** add hideTitle prop ([#405](https://github.com/gravity-ui/navigation/issues/405)) ([d3d4bdd](https://github.com/gravity-ui/navigation/commit/d3d4bdd8e0d8a47951958c7d0293e93f846513da))
+
 ## [3.1.4](https://github.com/gravity-ui/navigation/compare/v3.1.3...v3.1.4) (2025-03-09)
 
 
