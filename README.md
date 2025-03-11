@@ -19,19 +19,19 @@ npm install --dev @gravity-ui/uikit@^6.15.0 @gravity-ui/icons@2.2.0 @gravity-ui/
 ## Components
 
 - [AsideHeader](https://github.com/gravity-ui/navigation/tree/main/src/components/AsideHeader/README.md)
-- MobileHeader
-- FooterItem
-- MobileHeaderFooterItem
-- [Drawer](https://github.com/gravity-ui/navigation/tree/main/src/components/Drawer/README.md)
-- DrawerItem
 - PageLayout
-- PageLayoutAside
+- [PageLayoutAside](https://github.com/gravity-ui/navigation/tree/main/src/components/AsideHeader/README.md)
 - AsideFallback
+- FooterItem
 - [Logo](https://github.com/gravity-ui/navigation/tree/main/src/components/Logo/Readme.md)
+- [Drawer](https://github.com/gravity-ui/navigation/tree/main/src/components/Drawer/README.md)
+- [DrawerItem](https://github.com/gravity-ui/navigation/blob/main/src/components/Drawer/README.md#draweritem-props)
+- [MobileHeader](https://github.com/gravity-ui/navigation/tree/main/src/components/MobileHeader/README.md)
+- MobileHeaderFooterItem
 - MobileLogo
-- Footer
-- MobileFooter
 - [HotkeysPanel](https://github.com/gravity-ui/navigation/tree/main/src/components/HotkeysPanel/README.md)
+- [Footer](https://github.com/gravity-ui/navigation/tree/main/src/components/Footer/README.md)
+- [MobileFooter](https://github.com/gravity-ui/navigation/tree/main/src/components/Footer/README.md)
 
 ## CSS API
 
