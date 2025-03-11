@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.0](https://github.com/gravity-ui/navigation/compare/v3.1.4...v3.2.0) (2025-03-11)
+
+
+### Features
+
+* **Settings/Section:** add hideTitle prop ([#405](https://github.com/gravity-ui/navigation/issues/405)) ([d3d4bdd](https://github.com/gravity-ui/navigation/commit/d3d4bdd8e0d8a47951958c7d0293e93f846513da))
+
 ## [3.1.4](https://github.com/gravity-ui/navigation/compare/v3.1.3...v3.1.4) (2025-03-09)
 
 
@@ -55,7 +62,7 @@
 * **Drawer:** change default item drawer position ([#363](https://github.com/gravity-ui/navigation/issues/363)) ([eaa327a](https://github.com/gravity-ui/navigation/commit/eaa327aadecf11a3d1b0dc8ed3293b35567fde3a))
 * **Popup:** set fixed strategy ([#380](https://github.com/gravity-ui/navigation/issues/380)) ([f778273](https://github.com/gravity-ui/navigation/commit/f778273d0406cc12b9c9f99bcc8238a3520e27c9))
 * rollup v4 ([#319](https://github.com/gravity-ui/navigation/issues/319)) ([6c34ae7](https://github.com/gravity-ui/navigation/commit/6c34ae7909cedb7490626211dd735959461ab2bc))
-* **Settings:** remove showTitle, onlyChild prop ([#364](https://github.com/gravity-ui/navigation/issues/364)) ([b375035](https://github.com/gravity-ui/navigation/commit/b3750357f304dec7a67d0fa57fc60c62e58d7078))
+* **Settings:** remove showTitle, onlyChild prop. Use `hideTitle` prop instead ([#364](https://github.com/gravity-ui/navigation/issues/364)) ([d3d4bdd8e0d8a47951958c7d0293e93f846513da](https://github.com/gravity-ui/navigation/commit/d3d4bdd8e0d8a47951958c7d0293e93f846513da)),
 * update uikit@7, components@3 ([#355](https://github.com/gravity-ui/navigation/issues/355)) ([5c79038](https://github.com/gravity-ui/navigation/commit/5c790385158d35857a8c1f0d5c99d4727f42d568))
 
 
