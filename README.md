@@ -32,6 +32,8 @@ npm install --dev @gravity-ui/uikit@^6.15.0 @gravity-ui/icons@2.2.0 @gravity-ui/
 - [HotkeysPanel](https://github.com/gravity-ui/navigation/tree/main/src/components/HotkeysPanel/README.md)
 - [Footer](https://github.com/gravity-ui/navigation/tree/main/src/components/Footer/README.md)
 - [MobileFooter](https://github.com/gravity-ui/navigation/tree/main/src/components/Footer/README.md)
+- [ActionBar](https://github.com/gravity-ui/navigation/tree/main/src/components/ActionBar/README.md)
+- [Settings](https://github.com/gravity-ui/navigation/tree/main/src/components/Settings/README.md)
 
 ## CSS API
 
