@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.3.0](https://github.com/gravity-ui/navigation/compare/v3.2.1...v3.3.0) (2025-03-13)
+
+
+### Features
+
+* **Search:** added All results page for search + hide pages without search results ([#399](https://github.com/gravity-ui/navigation/issues/399)) ([f371daa](https://github.com/gravity-ui/navigation/commit/f371daab55b3407dd42aa95a6073126103fd0619))
+
+
+### Bug Fixes
+
+* **MobileHeader:** move z-index to header container ([#411](https://github.com/gravity-ui/navigation/issues/411)) ([a6e80e3](https://github.com/gravity-ui/navigation/commit/a6e80e3c53a82f4199de6e2185cbbf2878f21bc8))
+
 ## [3.2.1](https://github.com/gravity-ui/navigation/compare/v3.2.0...v3.2.1) (2025-03-13)
 
 
