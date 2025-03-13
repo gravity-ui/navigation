@@ -9,10 +9,11 @@ $block: '.#{variables.$ns}mobile-header';
 
     background-color: var(--g-color-base-background);
 
-    &__top-alert {
+    &__header-container {
         position: sticky;
         top: 0;
         background-color: var(--g-color-base-background);
+        z-index: var(--gn-mobile-header-z-index, 100);
     }
 
     &__header {
@@ -22,7 +23,6 @@ $block: '.#{variables.$ns}mobile-header';
         display: flex;
         justify-content: space-between;
         align-items: center;
-        z-index: var(--gn-mobile-header-z-index, 100);
     }
 
     &__burger {
