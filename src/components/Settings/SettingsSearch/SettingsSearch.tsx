@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {TextInput, TextInputSize} from '@gravity-ui/uikit';
 import debounceFn from 'lodash/debounce';
 
 import {block} from '../../utils/cn';
+import {SettingsSelection} from '../Selection/types';
 import {useStableCallback} from '../helpers';
 import i18n from '../i18n';
 
@@ -18,6 +19,7 @@ interface SettingsSearchProps {
     inputSize?: TextInputSize;
     placeholder?: string;
     autoFocus?: boolean;
+    selection?: SettingsSelection;
 }
 
 export function SettingsSearch({
@@ -29,14 +31,26 @@ export function SettingsSearch({
     inputSize,
     placeholder,
     autoFocus = true,
+    selection,
 }: SettingsSearchProps) {
     const [value, setValue] = React.useState(initialValue ?? '');
 
-    const onChangeDebounced = useStableCallback(debounceFn(onChange, debounce));
+    const onChangeDebounced = debounceFn(onChange, debounce);
+
     const handleUpdate = useStableCallback((updated: string) => {
         setValue(updated);
         onChangeDebounced(updated);
     });
+
+    useEffect(() => {
+        if (value && selection) {
+            onChangeDebounced.cancel();
+            setValue('');
+            onChange('');
+        }
+        // Remove any search, if selection is passed
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selection]);
 
     return (
         <div className={b(null, className)}>

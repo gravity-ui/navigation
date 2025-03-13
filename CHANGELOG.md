@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.1](https://github.com/gravity-ui/navigation/compare/v3.2.0...v3.2.1) (2025-03-13)
+
+
+### Bug Fixes
+
+* **MobileHeader:** fix top for drawer item ([#408](https://github.com/gravity-ui/navigation/issues/408)) ([a3c21fd](https://github.com/gravity-ui/navigation/commit/a3c21fd52374086f3c3047b7b11e3820d00b7bda))
+
 ## [3.2.0](https://github.com/gravity-ui/navigation/compare/v3.1.4...v3.2.0) (2025-03-11)
 
 

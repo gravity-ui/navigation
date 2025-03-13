@@ -15,6 +15,7 @@ import {
 import {isSectionSelected} from './Selection/utils';
 import {SettingsMenu, SettingsMenuInstance} from './SettingsMenu/SettingsMenu';
 import {SettingsMenuMobile} from './SettingsMenuMobile/SettingsMenuMobile';
+import {useAllResultsPage} from './SettingsSearch/AllResultsPage';
 import {SettingsSearch} from './SettingsSearch/SettingsSearch';
 import type {
     SettingsItem,
@@ -184,18 +185,25 @@ function SettingsContent({
     }, []);
 
     let activePage = selectedPage;
-    if (!activePage || pages[activePage]?.hidden) {
+
+    if (!activePage || !pages[activePage] || pages[activePage].hidden) {
         activePage = Object.values(pages).find(({hidden}) => !hidden)?.id;
     }
 
     const handlePageChange = (newPage: string | undefined) => {
         setCurrentPage((prevPage) => {
-            if (prevPage !== newPage) {
+            if (prevPage !== newPage && !isFakePage(newPage)) {
                 onPageChange?.(newPage);
             }
             return newPage;
         });
     };
+
+    const {isAllSearchPage} = useAllResultsPage({pages, handlePageChange});
+
+    function isFakePage(page: string | undefined) {
+        return isAllSearchPage(page);
+    }
 
     React.useEffect(() => {
         if (activePage !== selectedPage) {
@@ -301,6 +309,7 @@ function SettingsContent({
                             inputRef={searchInputRef}
                             className={b('search')}
                             initialValue={initialSearch}
+                            selection={selection}
                             onChange={setSearch}
                             autoFocus={false}
                             inputSize={'xl'}
@@ -333,6 +342,7 @@ function SettingsContent({
                             inputRef={searchInputRef}
                             className={b('search')}
                             initialValue={initialSearch}
+                            selection={selection}
                             onChange={setSearch}
                             placeholder={filterPlaceholder}
                             autoFocus
