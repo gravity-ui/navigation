@@ -308,6 +308,7 @@ function SettingsContent({
                             inputRef={searchInputRef}
                             className={b('search')}
                             initialValue={initialSearch}
+                            selection={selection}
                             onChange={setSearch}
                             autoFocus={false}
                             inputSize={'xl'}
@@ -340,6 +341,7 @@ function SettingsContent({
                             inputRef={searchInputRef}
                             className={b('search')}
                             initialValue={initialSearch}
+                            selection={selection}
                             onChange={setSearch}
                             placeholder={filterPlaceholder}
                             autoFocus

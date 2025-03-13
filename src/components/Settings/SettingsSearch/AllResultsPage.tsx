@@ -13,7 +13,7 @@ import type {
 import i18n from '../i18n';
 
 const allSearchResultsId = 'allSearchResults';
-const allSearchResultsLabel = i18n('all_results');
+const allSearchResultsLabel = i18n('label_all-results');
 
 export function useAllResultsPage({
     pages,
