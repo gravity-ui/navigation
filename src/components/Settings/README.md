@@ -40,15 +40,16 @@ The components provides layouting functionality of settings panel with the follo
 
 #### Settings.Section
 
-| Property  | Type      | Required | Default | Description                      |
-| :-------- | :-------- | :------: | :------ | :------------------------------- |
-| title     | string    |   true   |         | Title of section                 |
-| header    | ReactNode |          |         | Header of section                |
-| withBadge | boolean   |          |         | Show badge on a section and menu |
+| Property  | Type      | Required | Default | Description                                                                   |
+| :-------- | :-------- | :------: | :------ | :---------------------------------------------------------------------------- |
+| title     | string    |   true   |         | Title of section                                                              |
+| header    | ReactNode |          |         | Header of section                                                             |
+| withBadge | boolean   |          |         | Show badge on a section and menu                                              |
+| hideTitle | boolean   |          |         | Hide section title. Prop is needed to hide title in simple settings on Mobile |
 
 #### Settings.Item
 
-In case with only one `Settings.Item` in `Settings.Section` the title is not shown.
+⚠️ In case with only one `Settings.Item` in `Settings.Section` the title is not shown.
 
 | Property             | Type            | Required | Default  | Description                                                |
 | :------------------- | :-------------- | :------: | :------- | :--------------------------------------------------------- |

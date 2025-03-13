@@ -68,6 +68,7 @@ export interface SettingsSectionProps {
     header?: React.ReactNode;
     children: React.ReactNode;
     withBadge?: boolean;
+    hideTitle?: boolean;
 }
 
 export interface SettingsItemProps {
@@ -242,7 +243,7 @@ function SettingsContent({
                 className={b('section', {selected: isSelected})}
                 ref={isSelected ? selected.selectedRef : undefined}
             >
-                {section.title && (
+                {section.title && !section.hideTitle && (
                     <h3 className={b('section-heading')}>
                         {renderSectionRightAdornment ? (
                             <Flex gap={2} alignItems={'center'}>

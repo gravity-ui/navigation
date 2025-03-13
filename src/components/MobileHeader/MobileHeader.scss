@@ -56,6 +56,10 @@ $block: '.#{variables.$ns}mobile-header';
         overflow: hidden;
     }
 
+    &__panel-item {
+        top: unset;
+    }
+
     &__content {
         overflow: auto;
     }
