@@ -10,4 +10,10 @@ test.describe('Logo', () => {
 
         await expectScreenshot();
     });
+
+    test('render story: <NoAnchor>', async ({mount, expectScreenshot}) => {
+        await mount(<LogoStories.NoAnchor />);
+
+        await expectScreenshot();
+    });
 });
