@@ -55,19 +55,22 @@ export const Logo: React.FC<
         );
     }
 
+    const {tag: Button, ...buttonProps} = href
+        ? ({
+              tag: 'a',
+              target,
+              rel: target === '_self' ? undefined : 'noreferrer',
+              href,
+              'aria-label': ariaLabel,
+              'aria-labelledby': ariaLabelledby,
+          } as const)
+        : ({tag: 'span'} as const);
+
     const button = (
-        <a
-            className={b('btn-logo', buttonClassName)}
-            onClick={onClick}
-            target={target}
-            rel={target === '_self' ? undefined : 'noreferrer'}
-            href={href}
-            aria-label={href && ariaLabel}
-            aria-labelledby={href && ariaLabelledby}
-        >
+        <Button {...buttonProps} className={b('btn-logo', buttonClassName)} onClick={onClick}>
             <span className={b('logo-icon-place', iconPlaceClassName)}>{buttonIcon}</span>
             {!compact && logo}
-        </a>
+        </Button>
     );
 
     return (

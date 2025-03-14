@@ -21,3 +21,12 @@ export default {
 
 const ShowcaseTemplate: StoryFn<LogoProps> = (args) => <Logo {...args} />;
 export const Showcase = ShowcaseTemplate.bind({});
+
+export const NoAnchor = ShowcaseTemplate.bind(
+    {},
+    {
+        href: undefined,
+        text: 'Service',
+        icon: logoIcon,
+    },
+);
