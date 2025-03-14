@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.1](https://github.com/gravity-ui/navigation/compare/v3.3.0...v3.3.1) (2025-03-14)
+
+
+### Bug Fixes
+
+* **Logo:** made button anchor like ([#412](https://github.com/gravity-ui/navigation/issues/412)) ([911bc89](https://github.com/gravity-ui/navigation/commit/911bc89c080838896d72bec88b7d84d5856a6e32))
+
 ## [3.3.0](https://github.com/gravity-ui/navigation/compare/v3.2.1...v3.3.0) (2025-03-13)
 
 
