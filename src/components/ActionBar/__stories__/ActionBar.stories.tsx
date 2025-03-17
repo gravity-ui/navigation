@@ -7,6 +7,7 @@ import {ActionBar} from '../ActionBar';
 
 import {ActionBarShowcase} from './ActionBarShowcase';
 import {ActionBarSingleSection} from './ActionBarSingleSection';
+import {ActionBarStretchGroupShowcase} from './ActionBarStretchGroupShowcase';
 
 export default {
     title: 'components/ActionBar',
@@ -35,3 +36,8 @@ export const Showcase = ShowcaseTemplate.bind({});
 
 const SingleSectionTemplate: StoryFn<typeof ActionBar> = () => <ActionBarSingleSection />;
 export const SingleSection = SingleSectionTemplate.bind({});
+
+const ActionBarStretchGroupTemplate: StoryFn<typeof ActionBar> = () => (
+    <ActionBarStretchGroupShowcase />
+);
+export const StretchGroup = ActionBarStretchGroupTemplate.bind({});

@@ -114,6 +114,10 @@ Move group to `left`, `left-grow`, `right`, `right-grow` or `center`, `center-gr
 
 Custom class name for component.
 
+#### `stretchContainer`
+
+Set `flex-grow: 1` for Group. Need to support UIKit@7 Breadcrumbs
+
 ### ActionBar.Separator
 
 Horizontal separator between `<ActionBar.Item/>`.
