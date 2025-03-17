@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.2](https://github.com/gravity-ui/navigation/compare/v3.3.1...v3.3.2) (2025-03-17)
+
+
+### Bug Fixes
+
+* **ActionBar:** support legacy breadcrumbs ([#415](https://github.com/gravity-ui/navigation/issues/415)) ([e4e237f](https://github.com/gravity-ui/navigation/commit/e4e237f1353d1892637e03009c8469d637b1c21d))
+
 ## [3.3.1](https://github.com/gravity-ui/navigation/compare/v3.3.0...v3.3.1) (2025-03-14)
 
 
