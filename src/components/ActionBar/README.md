@@ -5,20 +5,21 @@ Horizontal bar with navigation items.
 ## Example
 
 ```typescript jsx
-import {Breadcrumbs, Button} from '@gravity-ui/uikit';
+import {Button} from '@gravity-ui/uikit';
+import {Breadcrumbs as LegacyBreadcrumbs} from '@gravity-ui/uikit/legacy';
 import {ActionBar} from '@gravity-ui/navigation';
 
 function Page() {
   return (
     <ActionBar aria-label="Actions bar">
       <ActionBar.Section>
-        <ActionBar.Group pull="left">
+        <ActionBar.Group>
           <ActionBar.Item>
-            <Breadcrumbs showRoot={true} onAction={(id) => alert(id)}>
-              <Breadcrumbs.Item href="/" key="1">
-                Root Item
-              </Breadcrumbs.Item>
-            </Breadcrumbs>
+            <LegacyBreadcrumbs
+              lastDisplayedItemsCount={1}
+              firstDisplayedItemsCount={1}
+              items={[{text: 'Root Item', action() {}}]}
+            />
           </ActionBar.Item>
         </ActionBar.Group>
 
@@ -59,7 +60,8 @@ section. `secondary` could be used for app specific controls, that should be acc
 horizontal separator from `primary` section.
 
 ```jsx
-import {Button, Breadcrumbs} from '@gravity-ui/uikit';
+import {Button} from '@gravity-ui/uikit';
+import {Breadcrumbs as LegacyBreadcrumbs} from '@gravity-ui/uikit/legacy';
 import {ActionBar} from '@gravity-ui/navigation';
 
 <ActionBar aria-label="Actions bar">
@@ -74,14 +76,14 @@ import {ActionBar} from '@gravity-ui/navigation';
   <ActionBar.Section type="primary">
     <ActionBar.Group>
       <ActionBar.Item>
-        <Breadcrumbs onAction={(id) => alert(id)}>
-          <Breadcrumbs.Item href="/" key="1">
-            Wiki Main Page
-          </Breadcrumbs.Item>
-          <Breadcrumbs.Item href="/" key="2">
-            Wiki Article
-          </Breadcrumbs.Item>
-        </Breadcrumbs>
+        <LegacyBreadcrumbs
+          lastDisplayedItemsCount={1}
+          firstDisplayedItemsCount={1}
+          items={[
+            {text: 'Wiki Main Page', action() {}},
+            {text: 'Wiki Article', action() {}},
+          ]}
+        />
       </ActionBar.Item>
     </ActionBar.Group>
   </ActionBar.Section>
