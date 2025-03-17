@@ -8,14 +8,15 @@ import './ActionBarGroup.scss';
 export type Props = PropsWithChildren<
     PropsWithPull<{
         className?: string;
+        stretchContainer?: boolean;
     }>
 >;
 
 const b = block('action-bar-group');
 
-export const ActionBarGroup = ({children, className, pull}: Props) => {
+export const ActionBarGroup = ({children, className, pull, stretchContainer}: Props) => {
     return (
-        <ul className={b({pull}, className)} role="group">
+        <ul className={b({pull, 'stretch-container': stretchContainer}, className)} role="group">
             {children}
         </ul>
     );

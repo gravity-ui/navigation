@@ -24,4 +24,14 @@ test.describe('ActionBar', () => {
 
         await expectScreenshot();
     });
+
+    test('render story: <StretchGroup>', async ({mount, expectScreenshot}) => {
+        await mount(<ActionBarStories.StretchGroup />, undefined, {
+            padding: 20,
+            width: 1200,
+            height: 720,
+        });
+
+        await expectScreenshot();
+    });
 });

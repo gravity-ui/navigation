@@ -1,11 +1,10 @@
 import React from 'react';
 
-import {Button, DropdownMenu, Select} from '@gravity-ui/uikit';
-import {Breadcrumbs as LegacyBreadcrumbs} from '@gravity-ui/uikit/legacy';
+import {Breadcrumbs, Button, DropdownMenu, Select} from '@gravity-ui/uikit';
 
 import {ActionBar} from '../ActionBar';
 
-export function ActionBarShowcase() {
+export function ActionBarStretchGroupShowcase() {
     return (
         <ActionBar aria-label="Actions bar">
             <ActionBar.Section type="secondary">
@@ -26,17 +25,16 @@ export function ActionBarShowcase() {
                 </ActionBar.Group>
             </ActionBar.Section>
             <ActionBar.Section type="primary">
-                <ActionBar.Group pull="left">
-                    <ActionBar.Item>
-                        <LegacyBreadcrumbs
-                            lastDisplayedItemsCount={1}
-                            items={[
-                                {text: 'Projects', action() {}},
-                                {text: '@gravity-ui', action() {}},
-                                {text: 'navigation', action() {}},
-                            ]}
-                            firstDisplayedItemsCount={1}
-                        />
+                <ActionBar.Group pull="left" stretchContainer={true}>
+                    <ActionBar.Item pull="left-grow">
+                        <Breadcrumbs onAction={(id) => alert(id)}>
+                            <Breadcrumbs.Item href="/" key="1">
+                                Wiki Main Page
+                            </Breadcrumbs.Item>
+                            <Breadcrumbs.Item href="/" key="2">
+                                Wiki Article
+                            </Breadcrumbs.Item>
+                        </Breadcrumbs>
                     </ActionBar.Item>
                 </ActionBar.Group>
 
