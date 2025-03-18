@@ -16,6 +16,21 @@ Ensure that peer dependencies are installed in your project
 npm install --dev @gravity-ui/uikit@^6.15.0 @gravity-ui/icons@2.2.0 @gravity-ui/components@3.0.0 @bem-react/classname@1.6.0 react@^18.0.0 react-dom@18.0.0
 ```
 
+## Sandboxes
+
+Basic
+https://codesandbox.io/p/devbox/navigation-demo-simple-x9k5sd
+
+Advanced
+https://codesandbox.io/p/devbox/recursing-dawn-6kc9vh
+
+## Roadmap 2025
+
+1. Support SSR
+2. Add more docs, examples to [Gravity UI](https://gravity-ui.com/ru/components/navigation/aside-header)
+3. Support Navigation at UIKit themer
+4. Unify subheaderItem, menuItem, footerItem API
+
 ## Components
 
 - [AsideHeader](https://github.com/gravity-ui/navigation/tree/main/src/components/AsideHeader/README.md)
