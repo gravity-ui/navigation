@@ -134,6 +134,20 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         [onClosePopup],
     );
 
+    const handleOpenChangePopup = React.useCallback<NonNullable<ItemProps['onOpenChangePopup']>>(
+        (open, event, reason) => {
+            if (
+                event instanceof MouseEvent &&
+                event.target &&
+                ref.current?.contains(event.target as Node)
+            ) {
+                return;
+            }
+            onOpenChangePopup?.(open, event, reason);
+        },
+        [onClosePopup],
+    );
+
     if (item.type === 'divider') {
         return <div className={b('menu-divider')} />;
     }
@@ -217,7 +231,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                         offset={popupOffset}
                         anchorRef={anchorRef}
                         onClose={handleClosePopup}
-                        onOpenChange={onOpenChangePopup}
+                        onOpenChange={handleOpenChangePopup}
                     >
                         {renderPopupContent()}
                     </Popup>
