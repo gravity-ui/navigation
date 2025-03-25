@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.3](https://github.com/gravity-ui/navigation/compare/v3.3.2...v3.3.3) (2025-03-25)
+
+
+### Bug Fixes
+
+* **Item/Popup:** add handleOpenChangePopup for skipping item click ([#418](https://github.com/gravity-ui/navigation/issues/418)) ([c286476](https://github.com/gravity-ui/navigation/commit/c2864765c44ee3203598e8fcc13ae706c87b0801))
+
 ## [3.3.2](https://github.com/gravity-ui/navigation/compare/v3.3.1...v3.3.2) (2025-03-17)
 
 
