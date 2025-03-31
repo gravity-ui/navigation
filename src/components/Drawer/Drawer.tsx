@@ -1,3 +1,5 @@
+import {FloatingOverlay} from '@floating-ui/react';
+
 import React, {CSSProperties} from 'react';
 
 import {Portal, useForkRef} from '@gravity-ui/uikit';
@@ -280,5 +282,9 @@ export const Drawer: React.FC<DrawerProps> = ({
         return drawer;
     }
 
-    return <Portal>{drawer}</Portal>;
+    return (
+        <Portal>
+            {someItemVisible ? <FloatingOverlay lockScroll>{drawer}</FloatingOverlay> : drawer}
+        </Portal>
+    );
 };
