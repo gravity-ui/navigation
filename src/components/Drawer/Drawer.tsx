@@ -180,7 +180,7 @@ export interface DrawerProps {
     onVeilClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 
     /** Optional callback function that is called when the escape key is pressed, if the drawer is open. */
-    onEscape?: () => void;
+    onEscape?: (event: KeyboardEvent) => void;
 
     /** Optional flag to hide the background darkening */
     hideVeil?: boolean;
@@ -219,7 +219,7 @@ export const Drawer: React.FC<DrawerProps> = ({
     React.useEffect(() => {
         function onKeyDown(event: KeyboardEvent) {
             if (event.key === 'Escape') {
-                onEscape?.();
+                onEscape?.(event);
             }
         }
         if (someItemVisible) {
