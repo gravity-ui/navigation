@@ -2,7 +2,7 @@ import React, {HTMLAttributeAnchorTarget} from 'react';
 
 import {AlertProps, IconProps, QAProps} from '@gravity-ui/uikit';
 
-import {ItemProps} from 'src/components/CompositeBar/Item/Item';
+import {ItemProps} from './CompositeBar/Item/Item';
 
 export type MenuItemType = 'regular' | 'action' | 'divider';
 
