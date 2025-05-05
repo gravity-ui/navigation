@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.5](https://github.com/gravity-ui/navigation/compare/v3.3.4...v3.3.5) (2025-05-05)
+
+
+### Bug Fixes
+
+* **Drawer:** added event to onEscape prop in Drawer ([#424](https://github.com/gravity-ui/navigation/issues/424)) ([ac7cbf7](https://github.com/gravity-ui/navigation/commit/ac7cbf7f56454cd82b2f200c4f21824551a6b640))
+
 ## [3.3.4](https://github.com/gravity-ui/navigation/compare/v3.3.3...v3.3.4) (2025-03-31)
 
 
