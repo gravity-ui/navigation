@@ -1,4 +1,8 @@
-### Settings
+<!--GITHUB_BLOCK-->
+
+## Settings
+
+<!--/GITHUB_BLOCK-->
 
 The components provides layouting functionality of settings panel with the following features:
 
@@ -6,68 +10,13 @@ The components provides layouting functionality of settings panel with the follo
 - filtering of the panel's content by headers of items
 - displaying of loading status and content
 
-### PropTypes
+<!--GITHUB_BLOCK-->
 
-#### Settings
-
-| Property          | Type               | Required | Default            | Description                                |
-| :---------------- | :----------------- | :------: | :----------------- | :----------------------------------------- |
-| loading           | boolean            |          |                    | Flag of loading status                     |
-| renderLoading     | Function           |          |                    | content for loading status                 |
-| renderNotFound    | Function           |          |                    | Empty panel content                        |
-| initialPage       | string             |          |                    | Inititial page in `/groupId/pageId` format |
-| view              | 'normal', 'mobile' |          | 'normal'           | Change view for Mobile                     |
-| onPageChange      | Function           |          |                    | Page change handler                        |
-| onClose           | Function           |          |                    | Settings close handler                     |
-| title             | string             |          | 'Settings'         | Page title                                 |
-| filterPlaceholder | string             |          | 'Search settings'  | Filter placeholder text                    |
-| emptyPlaceholder  | string             |          | 'No results found' | Filter empty text                          |
-
-#### Settings.Group
-
-| Property   | Type   | Required | Default | Description        |
-| :--------- | :----- | :------: | :------ | :----------------- |
-| id         | string |          |         | Unique id of group |
-| groupTitle | string |   true   |         | Header of group    |
-
-#### Settings.Page
-
-| Property | Type      | Required | Default | Description                  |
-| :------- | :-------- | :------: | :------ | :--------------------------- |
-| id       | string    |          |         | Unique id of page in a group |
-| title    | string    |   true   |         | Title of page                |
-| icon     | IconProps |   true   |         | Properties of icon of page   |
-
-#### Settings.Section
-
-| Property  | Type      | Required | Default | Description                                                                   |
-| :-------- | :-------- | :------: | :------ | :---------------------------------------------------------------------------- |
-| title     | string    |   true   |         | Title of section                                                              |
-| header    | ReactNode |          |         | Header of section                                                             |
-| withBadge | boolean   |          |         | Show badge on a section and menu                                              |
-| hideTitle | boolean   |          |         | Hide section title. Prop is needed to hide title in simple settings on Mobile |
-
-#### Settings.Item
-
-⚠️ In case with only one `Settings.Item` in `Settings.Section` the title is not shown.
-
-| Property             | Type            | Required | Default  | Description                                                |
-| :------------------- | :-------------- | :------: | :------- | :--------------------------------------------------------- |
-| title                | string          |   true   |          | Title of item                                              |
-| renderTitleComponent | Function        |          |          | Cusomt header of                                           |
-| align                | 'top', 'center' |          | 'center' | Item alignment                                             |
-| mode                 | 'row'           |          |          | Layout for mobile. Title and control will be placed in row |
-| description          | ReactNode       |          |          | Description of item                                        |
-
-### Usage
-
-See storybook example `src/components/Settings/__stories__/SettingsDemo` for desktop and `src/components/Settings/__stories__/SettingsMobileDemo` for mobile.
-
-### Examples
+## Usage
 
 One-level settings example:
 
-```jsx
+```tsx
 <Settings>
   <Settings.Page title="Appearance">...</Settings.Page>
   <Settings.Page title="Notifications">...</Settings.Page>
@@ -77,7 +26,7 @@ One-level settings example:
 Two-level settings example:
 _Note:_ `Settings` with `view=mobile` groups `Settings.Group` are ignored.
 
-```jsx
+```tsx
 <Settings>
   <Settings.Group groupTitle="My service">
     <Settings.Page title="Appearance">...</Settings.Page>
@@ -92,7 +41,7 @@ _Note:_ `Settings` with `view=mobile` groups `Settings.Group` are ignored.
 
 Pages with sections example:
 
-```jsx
+```tsx
 <Settings.Page title="Features" icon={'...'}>
   <Settings.Section title="Common">
     <Settings.Item title="Default VCS">...</Settings.Item>
@@ -101,3 +50,71 @@ Pages with sections example:
   <Settings.Section title="Beta functionality">...</Settings.Section>
 </Settings.Page>
 ```
+
+<!--/GITHUB_BLOCK-->
+
+## Properties
+
+| Name              | Description                                | Type                         | Default            |
+| :---------------- | :----------------------------------------- | :--------------------------- | :----------------- |
+| loading           | Flag of loading status                     | `boolean`                    |                    |
+| renderLoading     | content for loading status                 | `() => React.ReactNode`      |                    |
+| renderNotFound    | Empty panel content                        | `() => React.ReactNode`      |                    |
+| initialPage       | Inititial page in `/groupId/pageId` format | `string`                     |                    |
+| view              | Change view for Mobile                     | `"normal"`, `"mobile"`       | `"normal"`         |
+| onPageChange      | Page change handler                        | `(newPage?: string) => void` |                    |
+| onClose           | Settings close handler                     | `() => void`                 |                    |
+| title             | Page title                                 | `string`                     | 'Settings'         |
+| filterPlaceholder | Filter placeholder text                    | `string`                     | 'Search settings'  |
+| emptyPlaceholder  | Filter empty text                          | `string`                     | 'No results found' |
+
+## Settings.Group
+
+Optional level for organizing related pages, e.g. "General" vs "Application specific".
+
+### Properties
+
+| Name       | Description        | Type     | Default |
+| :--------- | :----------------- | :------- | :------ |
+| id         | Unique id of group | `string` |         |
+| groupTitle | Header of group    | `string` |         |
+
+## Settings.Page
+
+Collection of related settings sections, e.g. "Appearance" in General group.
+
+### Properties
+
+| Name  | Description                  | Type                                                                                        | Default |
+| :---- | :--------------------------- | :------------------------------------------------------------------------------------------ | :------ |
+| id    | Unique id of page in a group | `string`                                                                                    |         |
+| title | Title of page                | `string`                                                                                    |         |
+| icon  | Properties of icon of page   | [`IconProps`](https://github.com/gravity-ui/uikit/tree/main/src/components/Icon#properties) |         |
+
+## Settings.Section
+
+Category of related settings, e.g. "Theme settings" in Appearance page.
+
+### Properties
+
+| Name      | Description                                                                   | Type              | Default |
+| :-------- | :---------------------------------------------------------------------------- | :---------------- | :------ |
+| title     | Title of section                                                              | `string`          |         |
+| header    | Header of section                                                             | `React.ReactNode` |         |
+| withBadge | Show badge on a section and menu                                              | `boolean`         |         |
+| hideTitle | Hide section title. Prop is needed to hide title in simple settings on Mobile | `boolean`         |         |
+
+## Settings.Item
+
+Individual setting with a title and control component.
+⚠️ In case with only one `Settings.Item` in `Settings.Section` the title is not shown.
+
+### Properties
+
+| Name                 | Description                                                | Type                                                      | Default    |
+| :------------------- | :--------------------------------------------------------- | :-------------------------------------------------------- | :--------- |
+| title                | Title of item                                              | `string`                                                  |            |
+| renderTitleComponent | Cusomt header of                                           | `(highlightedTitle?: React.ReactNode) => React.ReactNode` |
+| align                | Item alignment                                             | `"top"`, `"center"`                                       | `"center"` |
+| mode                 | Layout for mobile. Title and control will be placed in row | `"row"`                                                   |            |
+| description          | Description of item                                        | `React.ReactNode`                                         |            |

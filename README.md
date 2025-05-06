@@ -34,7 +34,8 @@ https://codesandbox.io/p/devbox/recursing-dawn-6kc9vh
 ## Components
 
 - [AsideHeader](https://github.com/gravity-ui/navigation/tree/main/src/components/AsideHeader/README.md)
-- PageLayout
+  - [AllPagesPanel](https://github.com/gravity-ui/navigation/tree/main/src/components/AllPagesPanel/README.md)
+  - PageLayout
 - [PageLayoutAside](https://github.com/gravity-ui/navigation/tree/main/src/components/AsideHeader/README.md)
 - AsideFallback
 - FooterItem
