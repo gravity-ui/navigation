@@ -1,8 +1,14 @@
+<!--GITHUB_BLOCK-->
+
 # ActionBar
 
-Horizontal bar with navigation items.
+<!--/GITHUB_BLOCK-->
 
-## Example
+The component is a flexible horizontal bar that provides a standardized layout for arranging navigation elements, actions, and informational content within an application. It serves as a container for organizing UI elements like breadcrumbs, buttons, and dropdown menus into defined sections and groups.
+
+<!--GITHUB_BLOCK-->
+
+## Usage
 
 ```typescript jsx
 import {Button} from '@gravity-ui/uikit';
@@ -34,32 +40,33 @@ function Page() {
 }
 ```
 
-## Components
+<!--/GITHUB_BLOCK-->
 
-### ActionBar
+The `ActionBar` provides several nested components that work together to create a structured layout: `ActionBar.Section`, `ActionBar.Group`, `ActionBar.Item`, `ActionBar.Separator`.
 
-Root container for `<ActionBar.Group/>`s.
+## Properties
 
-#### `aria-label`
+| Name       | Description                 |   Type   | Default |
+| :--------- | :-------------------------- | :------: | :-----: |
+| aria-label | HTML `aria-label` attribute | `string` |         |
+| className  | HTML `class` attribute      | `string` |         |
 
-`string`. It is recommended to add `aria-label` to have screen readers recognize component as
-[landmark](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/).
-
-#### `className`
-
-Custom class name for component.
-
-### ActionBar.Section
+## ActionBar.Section
 
 Decorative component to visually separate different kinds of navigation.
-
-#### `type`
-
-There is two kinds of sections presented -- `primary` and `secondary`. We recommend an app to have at least `primary`
+There is two kinds of sections presented — `primary` and `secondary`. We recommend an app to have at least `primary`
 section. `secondary` could be used for app specific controls, that should be accented with smaller paddings and
 horizontal separator from `primary` section.
 
-```jsx
+### Properties
+
+| Name | Description                                      |            Type            |   Default   |
+| :--- | :----------------------------------------------- | :------------------------: | :---------: |
+| type | Type specifies the visual styling of the section | `"primary"`, `"secondary"` | `"primary"` |
+
+<!--GITHUB_BLOCK-->
+
+```tsx
 import {Button} from '@gravity-ui/uikit';
 import {Breadcrumbs as LegacyBreadcrumbs} from '@gravity-ui/uikit/legacy';
 import {ActionBar} from '@gravity-ui/navigation';
@@ -90,34 +97,63 @@ import {ActionBar} from '@gravity-ui/navigation';
 </ActionBar>;
 ```
 
-### ActionBar.Item
+<!--/GITHUB_BLOCK-->
 
-**Must** be children of `<ActionBar.Group/>`. Container for bar item. This component adds margins between items.
+## ActionBar.Group
 
-#### `spacing`
+Groups organize `ActionBar.Item` within a section and control their alignment.
 
-`true` by default. When `false` switch off spacing with previous item.
+### Properties
 
-#### `className`
+| Name             | Description                                                       |                                      Type                                       | Default |
+| :--------------- | :---------------------------------------------------------------- | :-----------------------------------------------------------------------------: | :-----: |
+| className        | HTML `class` attribute                                            |                                    `string`                                     |         |
+| pull             | Controls the alignment of the group                               | `"left"`, `"left-grow"`, `"right"`, `"right-grow"`, `"center"`, `"center-grow"` |         |
+| stretchContainer | Set `flex-grow: 1` for Group. Need to support UIKit@7 Breadcrumbs |                                    `boolean`                                    |         |
 
-Custom class name for component.
+## ActionBar.Item
 
-### ActionBar.Group
+Container for UI elements like buttons, breadcrumbs or other components must be in `ActionBar.Group`. The component adds margins between items.
 
-Group few `ActionBar.Item`.
+### Properties
 
-#### `pull`
+| Name      | Description                       |   Type    | Default |
+| :-------- | :-------------------------------- | :-------: | :-----: |
+| className | HTML `class` attribute            | `string`  |         |
+| spacing   | Enable spacing with previous item | `boolean` | `true`  |
 
-Move group to `left`, `left-grow`, `right`, `right-grow` or `center`, `center-grow`.
+## ActionBar.Separator
 
-#### `className`
+Visual divider that can be placed between items in a group to separate them visually.
 
-Custom class name for component.
+<!--GITHUB_BLOCK-->
 
-#### `stretchContainer`
+### Example
 
-Set `flex-grow: 1` for Group. Need to support UIKit@7 Breadcrumbs
+```typescript jsx
+import {Button} from '@gravity-ui/uikit';
+import {Breadcrumbs as LegacyBreadcrumbs} from '@gravity-ui/uikit/legacy';
+import {ActionBar} from '@gravity-ui/navigation';
 
-### ActionBar.Separator
+function Page() {
+  return (
+    <ActionBar aria-label="Actions bar">
+      <ActionBar.Section>
+        <ActionBar.Group pull="right">
+          <ActionBar.Item>
+            <Button>Do something</Button>
+          </ActionBar.Item>
 
-Horizontal separator between `<ActionBar.Item/>`.
+          <ActionBar.Separator />
+
+          <ActionBar.Item>
+            <Button>Do something</Button>
+          </ActionBar.Item>
+        </ActionBar.Group>
+      </ActionBar.Section>
+    </ActionBar>
+  );
+}
+```
+
+<!--/GITHUB_BLOCK-->
