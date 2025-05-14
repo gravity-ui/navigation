@@ -46,10 +46,12 @@ The `ActionBar` provides several nested components that work together to create 
 
 ## Properties
 
-| Name       | Description                 |   Type   | Default |
-| :--------- | :-------------------------- | :------: | :-----: |
-| aria-label | HTML `aria-label` attribute | `string` |         |
-| className  | HTML `class` attribute      | `string` |         |
+| Name       | Description                                |         Type          | Default |
+| :--------- | :----------------------------------------- | :-------------------: | :-----: |
+| aria-label | HTML `aria-label` attribute                |       `string`        |         |
+| className  | HTML `class` attribute                     |       `string`        |         |
+| style      | HTML `style` attribute                     | `React.CSSProperties` |         |
+| qa         | `data-qa` HTML attribute, used for testing |       `string`        |         |
 
 ## ActionBar.Section
 
@@ -60,9 +62,12 @@ horizontal separator from `primary` section.
 
 ### Properties
 
-| Name | Description                                      |            Type            |   Default   |
-| :--- | :----------------------------------------------- | :------------------------: | :---------: |
-| type | Type specifies the visual styling of the section | `"primary"`, `"secondary"` | `"primary"` |
+| Name      | Description                                      |            Type            |   Default   |
+| :-------- | :----------------------------------------------- | :------------------------: | :---------: |
+| type      | Type specifies the visual styling of the section | `"primary"`, `"secondary"` | `"primary"` |
+| className | HTML `class` attribute                           |          `string`          |             |
+| style     | HTML `style` attribute                           |   `React.CSSProperties`    |             |
+| qa        | `data-qa` HTML attribute, used for testing       |          `string`          |             |
 
 <!--GITHUB_BLOCK-->
 
@@ -107,9 +112,11 @@ Groups organize `ActionBar.Item` within a section and control their alignment.
 
 | Name             | Description                                                       |                                      Type                                       | Default |
 | :--------------- | :---------------------------------------------------------------- | :-----------------------------------------------------------------------------: | :-----: |
-| className        | HTML `class` attribute                                            |                                    `string`                                     |         |
 | pull             | Controls the alignment of the group                               | `"left"`, `"left-grow"`, `"right"`, `"right-grow"`, `"center"`, `"center-grow"` |         |
 | stretchContainer | Set `flex-grow: 1` for Group. Need to support UIKit@7 Breadcrumbs |                                    `boolean`                                    |         |
+| className        | HTML `class` attribute                                            |                                    `string`                                     |         |
+| style            | HTML `style` attribute                                            |                              `React.CSSProperties`                              |         |
+| qa               | `data-qa` HTML attribute, used for testing                        |                                    `string`                                     |         |
 
 ## ActionBar.Item
 
@@ -117,10 +124,12 @@ Container for UI elements like buttons, breadcrumbs or other components must be 
 
 ### Properties
 
-| Name      | Description                       |   Type    | Default |
-| :-------- | :-------------------------------- | :-------: | :-----: |
-| className | HTML `class` attribute            | `string`  |         |
-| spacing   | Enable spacing with previous item | `boolean` | `true`  |
+| Name      | Description                                |         Type          | Default |
+| :-------- | :----------------------------------------- | :-------------------: | :-----: |
+| spacing   | Enable spacing with previous item          |       `boolean`       | `true`  |
+| className | HTML `class` attribute                     |       `string`        |         |
+| style     | HTML `style` attribute                     | `React.CSSProperties` |         |
+| qa        | `data-qa` HTML attribute, used for testing |       `string`        |         |
 
 ## ActionBar.Separator
 
