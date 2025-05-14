@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.6](https://github.com/gravity-ui/navigation/compare/v3.3.5...v3.3.6) (2025-05-14)
+
+
+### Bug Fixes
+
+* added DOMProps & QAProps to ActionBar components ([#430](https://github.com/gravity-ui/navigation/issues/430)) ([a5ad94b](https://github.com/gravity-ui/navigation/commit/a5ad94b230e1b49f2f50e0fc771f2e78fe4af36e))
+
 ## [3.3.5](https://github.com/gravity-ui/navigation/compare/v3.3.4...v3.3.5) (2025-05-05)
 
 
