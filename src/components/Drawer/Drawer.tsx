@@ -9,8 +9,8 @@ import {block} from '../utils/cn';
 
 import {
     type DrawerDirection,
-    OnResizeContinueHandler,
-    OnResizeHandler,
+    type OnResizeContinueHandler,
+    type OnResizeHandler,
     useResizableDrawerItem,
 } from './utils';
 
