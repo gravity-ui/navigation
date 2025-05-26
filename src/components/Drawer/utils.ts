@@ -5,7 +5,8 @@ export const DRAWER_ITEM_MAX_RESIZE_WIDTH = 800;
 export const DRAWER_ITEM_INITIAL_RESIZE_WIDTH = 400;
 
 export type DrawerDirection = 'right' | 'left' | 'top' | 'bottom';
-export type OnResizeHandler = (width: number) => void;
+export type OnResizeHandler = (width: number, event: MouseEvent | TouchEvent) => void;
+export type OnResizeContinueHandler = (width: number) => void;
 
 function getEventClientPosition(
     e: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent,
@@ -23,7 +24,7 @@ function getEventClientPosition(
 export interface UseResizeHandlersParams {
     onStart: () => void;
     onMove: (delta: number) => void;
-    onEnd: (delta: number) => void;
+    onEnd: (delta: number, event: MouseEvent | TouchEvent) => void;
     direction?: 'horizontal' | 'vertical';
 }
 
@@ -69,7 +70,7 @@ export function useResizeHandlers({
             const current = getEventClientPosition(e, direction);
             const delta = initialPosition.current - current;
 
-            onEnd(delta);
+            onEnd(delta, e);
         },
         [handleMove, disableSelect, direction, onEnd],
     );
@@ -114,7 +115,7 @@ export interface UseResizableDrawerItemParams {
     maxResizeWidth?: number;
     onResizeStart?: VoidFunction;
     onResize?: OnResizeHandler;
-    onResizeContinue?: OnResizeHandler;
+    onResizeContinue?: OnResizeContinueHandler;
 }
 
 export function useResizableDrawerItem(params: UseResizableDrawerItemParams) {
@@ -163,11 +164,11 @@ export function useResizableDrawerItem(params: UseResizableDrawerItemParams) {
     );
 
     const onEnd = React.useCallback(
-        (delta: number) => {
+        (delta: number, event: MouseEvent | TouchEvent) => {
             const newWidth = getResizedWidth(delta);
             setIsResizing(false);
             setInternalWidth(newWidth);
-            onResize?.(newWidth);
+            onResize?.(newWidth, event);
         },
         [getResizedWidth, onResize],
     );

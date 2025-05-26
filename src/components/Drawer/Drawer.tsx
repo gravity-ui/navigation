@@ -7,7 +7,12 @@ import {CSSTransition, Transition} from 'react-transition-group';
 
 import {block} from '../utils/cn';
 
-import {type DrawerDirection, useResizableDrawerItem} from './utils';
+import {
+    type DrawerDirection,
+    type OnResizeContinueHandler,
+    type OnResizeHandler,
+    useResizableDrawerItem,
+} from './utils';
 
 import './Drawer.scss';
 
@@ -53,15 +58,16 @@ export interface DrawerItemProps {
     /**
      * Called at the end of resizing. Can be used to save the new width.
      * @param width The new width of the drawer item
+     * @param event The original event
      */
-    onResize?: (width: number) => void;
+    onResize?: OnResizeHandler;
 
     /**
      * Callback function called each time when the drawer item is resizing.
      * Do not use it to store the new width for DrawerItem `width` prop. Use `onResize` instead.
      * @param width The new width of the drawer item
      */
-    onResizeContinue?: (width: number) => void;
+    onResizeContinue?: OnResizeContinueHandler;
 
     /** The minimum width of the resizable drawer item */
     minResizeWidth?: number;
