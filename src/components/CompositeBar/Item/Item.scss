@@ -3,6 +3,8 @@
 
 $block: '.#{variables.$ns}composite-bar-item';
 
+$actionLeftRightMargin: 10px;
+
 #{$block} {
     @include mixins.accessibility-button;
 
@@ -166,7 +168,7 @@ $block: '.#{variables.$ns}composite-bar-item';
     &_type_action {
         justify-content: center;
         height: var(--gn-composite-bar-item-action-size);
-        margin: 0 10px 8px;
+        margin: 0 $actionLeftRightMargin 8px;
         background: var(--g-color-base-float);
         box-shadow:
             0px 0px 0px 1px rgba(0, 0, 0, 0.03),
@@ -192,6 +194,10 @@ $block: '.#{variables.$ns}composite-bar-item';
 
         & #{$class}__icon-place {
             width: var(--gn-composite-bar-item-action-size);
+        }
+
+        &.#{variables.$ns}footer-item {
+            width: calc(100% - 2 * $actionLeftRightMargin);
         }
     }
 
