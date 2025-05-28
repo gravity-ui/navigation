@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.7](https://github.com/gravity-ui/navigation/compare/v3.3.6...v3.3.7) (2025-05-28)
+
+
+### Bug Fixes
+
+* **FooterItem:** adjust width for action buttons ([#435](https://github.com/gravity-ui/navigation/issues/435)) ([6b8e584](https://github.com/gravity-ui/navigation/commit/6b8e584cbf4f218ddab501352c13c1adf571a4e1))
+
 ## [3.3.6](https://github.com/gravity-ui/navigation/compare/v3.3.5...v3.3.6) (2025-05-14)
 
 
