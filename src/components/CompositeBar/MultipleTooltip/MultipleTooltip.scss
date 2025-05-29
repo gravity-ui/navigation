@@ -52,7 +52,8 @@ $block: '.#{variables.$ns}multiple-tooltip';
         filter: var(--multiple-tooltip-backdrop-filter);
     }
 
-    &__popup {
+    @at-root .g-popup#{&}__popup,
+        &__popup {
         --g-popup-background-color: transparent;
         --g-popup-border-color: transparent;
         --g-popup-border-width: 0;
