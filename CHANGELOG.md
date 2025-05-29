@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.8](https://github.com/gravity-ui/navigation/compare/v3.3.7...v3.3.8) (2025-05-29)
+
+
+### Bug Fixes
+
+* popup override multiply tooltip styles ([#437](https://github.com/gravity-ui/navigation/issues/437)) ([779287d](https://github.com/gravity-ui/navigation/commit/779287da2fa4bfe1ea0d9b38db5081c8683f4b64))
+
 ## [3.3.7](https://github.com/gravity-ui/navigation/compare/v3.3.6...v3.3.7) (2025-05-28)
 
 
