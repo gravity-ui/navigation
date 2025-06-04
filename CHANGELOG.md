@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.9](https://github.com/gravity-ui/navigation/compare/v3.3.8...v3.3.9) (2025-06-04)
+
+
+### Bug Fixes
+
+* fixed All results label (i18n) ([#439](https://github.com/gravity-ui/navigation/issues/439)) ([9bdee5f](https://github.com/gravity-ui/navigation/commit/9bdee5f36404500516922420b3f778d56df47a1a))
+
 ## [3.3.8](https://github.com/gravity-ui/navigation/compare/v3.3.7...v3.3.8) (2025-05-29)
 
 
