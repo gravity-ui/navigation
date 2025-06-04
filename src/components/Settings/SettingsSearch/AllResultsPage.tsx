@@ -13,7 +13,6 @@ import type {
 import i18n from '../i18n';
 
 const allSearchResultsId = 'allSearchResults';
-const allSearchResultsLabel = i18n('label_all-results');
 
 export function useAllResultsPage({
     pages,
@@ -96,7 +95,7 @@ function createAllResultsPage(pages: SettingsPage[], menu: SettingsMenu): Settin
 function createAllResultsMenuItem(): SettingsMenuItem {
     return {
         id: allSearchResultsId,
-        title: allSearchResultsLabel,
+        title: i18n('label_all-results'),
         icon: {data: ListUl},
     };
 }
