@@ -6,6 +6,7 @@ WARN No story files found for the specified pattern: src/**/*.stories.mdx
 info => Starting preview..
 info Addon-docs: using MDX3
 info => Using implicit CSS loaders
+Added CSS modules rule for SCSS files
 info => Using default Webpack5 setup
 <i> [webpack-dev-middleware] wait until bundle finished
 <s> [webpack.Progress] 3% setup watch run
@@ -102,13 +103,13 @@ info => Using default Webpack5 setup
 <s> [webpack.Progress] 10% building 0/2 entries 3/6 dependencies 0/2 modules
 info Using tsconfig paths for react-docgen
 <s> [webpack.Progress] 10% building import loader ./node_modules/babel-loader/lib/index.js
-<s> [webpack.Progress] 10% building 0/2 entries 46/53 dependencies 4/27 modules
-<s> [webpack.Progress] 37% building 1/2 entries 72/87 dependencies 16/43 modules
-<s> [webpack.Progress] 37% building 1/2 entries 95/104 dependencies 22/53 modules
+<s> [webpack.Progress] 10% building 0/2 entries 49/61 dependencies 5/27 modules
+<s> [webpack.Progress] 37% building 1/2 entries 69/86 dependencies 16/42 modules
+<s> [webpack.Progress] 37% building 1/2 entries 105/118 dependencies 24/54 modules
 <s> [webpack.Progress] 37% building import loader ./node_modules/style-loader/dist/cjs.js
 <s> [webpack.Progress] 37% building import loader ./node_modules/css-loader/dist/cjs.js
 <s> [webpack.Progress] 37% building import loader ./node_modules/sass-loader/dist/cjs.js
-<s> [webpack.Progress] 37% building 1/2 entries 115/151 dependencies 32/60 modules
+<s> [webpack.Progress] 37% building 1/2 entries 116/151 dependencies 32/61 modules
 DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
 
 More info: https://sass-lang.com/d/legacy-js-api
@@ -125,27 +126,14 @@ More info and automated migrator: https://sass-lang.com/d/import
 
 <s> [webpack.Progress] 37% building import loader ./node_modules/@storybook/builder-webpack5/node_modules/style-loader/dist/cjs.js
 <s> [webpack.Progress] 37% building import loader ./node_modules/@storybook/builder-webpack5/node_modules/css-loader/dist/cjs.js
-<s> [webpack.Progress] 37% building 1/2 entries 144/181 dependencies 42/74 modules
+<s> [webpack.Progress] 37% building 1/2 entries 144/180 dependencies 40/74 modules
 <s> [webpack.Progress] 37% building import loader ./node_modules/@storybook/csf-plugin/dist/webpack-loader.js
 <s> [webpack.Progress] 37% building import loader ./node_modules/@storybook/builder-webpack5/dist/loaders/export-order-loader.js
-<s> [webpack.Progress] 37% building 1/2 entries 193/289 dependencies 49/106 modules
-<s> [webpack.Progress] 37% building 1/2 entries 802/1000 dependencies 89/480 modules
+<s> [webpack.Progress] 37% building 1/2 entries 197/289 dependencies 47/110 modules
+<s> [webpack.Progress] 37% building 1/2 entries 418/500 dependencies 69/315 modules
+<s> [webpack.Progress] 37% building 1/2 entries 1200/1264 dependencies 149/580 modules
 <s> [webpack.Progress] 37% building import loader ./node_modules/svg-inline-loader/index.js
-<s> [webpack.Progress] 37% building 1/2 entries 1557/1604 dependencies 176/656 modules
-DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
-
-More info: https://sass-lang.com/d/legacy-js-api
-
-DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-
-More info and automated migrator: https://sass-lang.com/d/import
-
-  ╷
-1 │ @import '../../../../styles/mixins';
-  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  ╵
-    src/components/FooterItem/__stories__/FooterItemShowcase.scss 1:9  root stylesheet
-
+<s> [webpack.Progress] 37% building 1/2 entries 1470/1518 dependencies 172/645 modules
 DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
 
 More info: https://sass-lang.com/d/legacy-js-api
@@ -172,7 +160,21 @@ More info and automated migrator: https://sass-lang.com/d/import
 1 │ @import '~@gravity-ui/uikit/styles/mixins';
   │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   ╵
-    styles/mixins.scss 1:9                                             @import
+    styles/mixins.scss 1:9                                                          @import
+    src/components/MobileHeader/BurgerMenu/__stories__/BurgerMenuShowcase.scss 1:9  root stylesheet
+
+DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+1 │ @import '../../../../styles/mixins';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
     src/components/FooterItem/__stories__/FooterItemShowcase.scss 1:9  root stylesheet
 
 DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
@@ -183,55 +185,12 @@ More info and automated migrator: https://sass-lang.com/d/import
 1 │ @import '~@gravity-ui/uikit/styles/mixins';
   │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   ╵
-    styles/mixins.scss 1:9                                                          @import
-    src/components/MobileHeader/BurgerMenu/__stories__/BurgerMenuShowcase.scss 1:9  root stylesheet
+    styles/mixins.scss 1:9                                             @import
+    src/components/FooterItem/__stories__/FooterItemShowcase.scss 1:9  root stylesheet
 
-<s> [webpack.Progress] 37% building 1/2 entries 2960/3100 dependencies 241/1505 modules
-<s> [webpack.Progress] 37% building 1/2 entries 3370/3400 dependencies 369/1590 modules
-DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
-
-More info: https://sass-lang.com/d/legacy-js-api
-
-DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
-
-More info: https://sass-lang.com/d/legacy-js-api
-
-DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
-
-More info: https://sass-lang.com/d/legacy-js-api
-
-DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-
-More info and automated migrator: https://sass-lang.com/d/import
-
-  ╷
-1 │ @import '../../../../styles/mixins';
-  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  ╵
-    src/components/HotkeysPanel/__stories__/HotkeysPanelShowcase.scss 1:9  root stylesheet
-
-DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
-
-More info: https://sass-lang.com/d/legacy-js-api
-
-DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
-
-More info: https://sass-lang.com/d/legacy-js-api
-
-DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
-
-More info: https://sass-lang.com/d/legacy-js-api
-
-DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-
-More info and automated migrator: https://sass-lang.com/d/import
-
-  ╷
-1 │ @import '../../../../styles/mixins';
-  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  ╵
-    src/components/MobileHeader/__stories__/MobileHeaderShowcase.scss 1:9  root stylesheet
-
+<s> [webpack.Progress] 37% building 1/2 entries 2300/3120 dependencies 233/898 modules
+<s> [webpack.Progress] 37% building 1/2 entries 3300/3367 dependencies 344/1563 modules
+<s> [webpack.Progress] 48% building 1/2 entries 4498/4510 dependencies 1200/1710 modules
 DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
 
 More info: https://sass-lang.com/d/legacy-js-api
@@ -246,28 +205,53 @@ More info and automated migrator: https://sass-lang.com/d/import
   ╵
     src/components/Settings/__stories__/SettingsMobileDemo.scss 1:9  root stylesheet
 
-<s> [webpack.Progress] 48% building 1/2 entries 4500/4582 dependencies 1184/1695 modules
+DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
 DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
 
 More info and automated migrator: https://sass-lang.com/d/import
 
   ╷
-1 │ @import '~@gravity-ui/uikit/styles/mixins';
-  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1 │ @import '../../../../styles/mixins';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
   ╵
-    styles/mixins.scss 1:9                                                 @import
+    src/components/MobileHeader/__stories__/MobileHeaderShowcase.scss 1:9  root stylesheet
+
+DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+1 │ @import '../../../../styles/mixins';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
     src/components/HotkeysPanel/__stories__/HotkeysPanelShowcase.scss 1:9  root stylesheet
 
-DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
 
-More info and automated migrator: https://sass-lang.com/d/import
+More info: https://sass-lang.com/d/legacy-js-api
 
-  ╷
-1 │ @import '~@gravity-ui/uikit/styles/mixins';
-  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  ╵
-    styles/mixins.scss 1:9                                                 @import
-    src/components/MobileHeader/__stories__/MobileHeaderShowcase.scss 1:9  root stylesheet
+DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
 
 DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
 
@@ -280,9 +264,27 @@ More info and automated migrator: https://sass-lang.com/d/import
     styles/mixins.scss 1:9                                           @import
     src/components/Settings/__stories__/SettingsMobileDemo.scss 1:9  root stylesheet
 
-DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
 
-More info: https://sass-lang.com/d/legacy-js-api
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+1 │ @import '~@gravity-ui/uikit/styles/mixins';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    styles/mixins.scss 1:9                                                 @import
+    src/components/MobileHeader/__stories__/MobileHeaderShowcase.scss 1:9  root stylesheet
+
+DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+1 │ @import '~@gravity-ui/uikit/styles/mixins';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    styles/mixins.scss 1:9                                                 @import
+    src/components/HotkeysPanel/__stories__/HotkeysPanelShowcase.scss 1:9  root stylesheet
 
 DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
 
@@ -345,6 +347,38 @@ DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be
 
 More info: https://sass-lang.com/d/legacy-js-api
 
+DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+3 │ @import '../../../styles/mixins';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    src/components/MobileLogo/MobileLogo.scss 3:9  root stylesheet
+
+DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+3 │ @import '../../../styles/mixins';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    src/components/Logo/Logo.scss 3:9  root stylesheet
+
+DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
 DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
 
 More info: https://sass-lang.com/d/legacy-js-api
@@ -366,10 +400,10 @@ DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be remo
 More info and automated migrator: https://sass-lang.com/d/import
 
   ╷
-3 │ @import '../../../../styles/mixins';
-  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+3 │ @import '../../../styles/mixins';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^
   ╵
-    src/components/Footer/desktop/Footer.scss 3:9  root stylesheet
+    src/components/Settings/Settings.scss 3:9  root stylesheet
 
 DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
 
@@ -394,11 +428,85 @@ DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be remo
 More info and automated migrator: https://sass-lang.com/d/import
 
   ╷
+3 │ @import '~@gravity-ui/uikit/styles/mixins';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    src/components/MobileHeader/FooterItem/FooterItem.scss 3:9  root stylesheet
+
+DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+3 │ @import '../../../../styles/mixins';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    src/components/Footer/desktop/Footer.scss 3:9  root stylesheet
+
+DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+3 │ @import '~@gravity-ui/uikit/styles/mixins';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    src/components/MobileHeader/BurgerMenu/BurgerCompositeBar/BurgerCompositeBar.scss 3:9  root stylesheet
+
+DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+4 │ @import '../../../../../styles/mixins';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    src/components/MobileHeader/BurgerMenu/BurgerCompositeBar/BurgerCompositeBar.scss 4:9  root stylesheet
+
+DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
 1 │ @import '~@gravity-ui/uikit/styles/mixins';
   │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   ╵
     styles/mixins.scss 1:9                         @import
-    src/components/Footer/desktop/Footer.scss 3:9  root stylesheet
+    src/components/MobileLogo/MobileLogo.scss 3:9  root stylesheet
+
+DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+1 │ @import '~@gravity-ui/uikit/styles/mixins';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    styles/mixins.scss 1:9             @import
+    src/components/Logo/Logo.scss 3:9  root stylesheet
+
+DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+1 │ @import '~@gravity-ui/uikit/styles/mixins';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    styles/mixins.scss 1:9                     @import
+    src/components/Settings/Settings.scss 3:9  root stylesheet
 
 DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
 
@@ -421,6 +529,17 @@ More info and automated migrator: https://sass-lang.com/d/import
   ╵
     styles/mixins.scss 1:9                          @use
     src/components/CompositeBar/Item/Item.scss 2:1  root stylesheet
+
+DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+1 │ @import '~@gravity-ui/uikit/styles/mixins';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    styles/mixins.scss 1:9                         @import
+    src/components/Footer/desktop/Footer.scss 3:9  root stylesheet
 
 DEPRECATION WARNING [mixed-decls]: Sass's behavior for declarations that appear after nested
 rules will be changing to match the behavior specified by CSS in an upcoming
@@ -531,28 +650,16 @@ More info: https://sass-lang.com/d/mixed-decls
 
 WARNING: 31 repetitive deprecation warnings omitted.
 
-DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
-
-More info: https://sass-lang.com/d/legacy-js-api
-
+<s> [webpack.Progress] 52% building 1/2 entries 5000/5074 dependencies 1389/1815 modules
 DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
 
 More info and automated migrator: https://sass-lang.com/d/import
 
   ╷
-3 │ @import '~@gravity-ui/uikit/styles/mixins';
+1 │ @import '~@gravity-ui/uikit/styles/mixins';
   │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   ╵
-    src/components/MobileHeader/BurgerMenu/BurgerCompositeBar/BurgerCompositeBar.scss 3:9  root stylesheet
-
-DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-
-More info and automated migrator: https://sass-lang.com/d/import
-
-  ╷
-4 │ @import '../../../../../styles/mixins';
-  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  ╵
+    styles/mixins.scss 1:9                                                                 @import
     src/components/MobileHeader/BurgerMenu/BurgerCompositeBar/BurgerCompositeBar.scss 4:9  root stylesheet
 
 DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
@@ -571,90 +678,7 @@ More info and automated migrator: https://sass-lang.com/d/import
 3 │ @import '../../../styles/mixins';
   │         ^^^^^^^^^^^^^^^^^^^^^^^^
   ╵
-    src/components/MobileLogo/MobileLogo.scss 3:9  root stylesheet
-
-DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
-
-More info: https://sass-lang.com/d/legacy-js-api
-
-DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-
-More info and automated migrator: https://sass-lang.com/d/import
-
-  ╷
-3 │ @import '../../../styles/mixins';
-  │         ^^^^^^^^^^^^^^^^^^^^^^^^
-  ╵
-    src/components/Logo/Logo.scss 3:9  root stylesheet
-
-DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
-
-More info: https://sass-lang.com/d/legacy-js-api
-
-DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-
-More info and automated migrator: https://sass-lang.com/d/import
-
-  ╷
-3 │ @import '../../../styles/mixins';
-  │         ^^^^^^^^^^^^^^^^^^^^^^^^
-  ╵
     src/components/HotkeysPanel/HotkeysPanel.scss 3:9  root stylesheet
-
-DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
-
-More info: https://sass-lang.com/d/legacy-js-api
-
-DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
-
-More info: https://sass-lang.com/d/legacy-js-api
-
-DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-
-More info and automated migrator: https://sass-lang.com/d/import
-
-  ╷
-3 │ @import '~@gravity-ui/uikit/styles/mixins';
-  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  ╵
-    src/components/MobileHeader/FooterItem/FooterItem.scss 3:9  root stylesheet
-
-DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
-
-More info: https://sass-lang.com/d/legacy-js-api
-
-DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-
-More info and automated migrator: https://sass-lang.com/d/import
-
-  ╷
-3 │ @import '../../../styles/mixins';
-  │         ^^^^^^^^^^^^^^^^^^^^^^^^
-  ╵
-    src/components/Settings/Settings.scss 3:9  root stylesheet
-
-<s> [webpack.Progress] 53% building 1/2 entries 5147/5200 dependencies 1455/1848 modules
-DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-
-More info and automated migrator: https://sass-lang.com/d/import
-
-  ╷
-1 │ @import '~@gravity-ui/uikit/styles/mixins';
-  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  ╵
-    styles/mixins.scss 1:9                         @import
-    src/components/MobileLogo/MobileLogo.scss 3:9  root stylesheet
-
-DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-
-More info and automated migrator: https://sass-lang.com/d/import
-
-  ╷
-1 │ @import '~@gravity-ui/uikit/styles/mixins';
-  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  ╵
-    styles/mixins.scss 1:9             @import
-    src/components/Logo/Logo.scss 3:9  root stylesheet
 
 DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
 
@@ -666,28 +690,6 @@ More info and automated migrator: https://sass-lang.com/d/import
   ╵
     styles/mixins.scss 1:9                             @import
     src/components/HotkeysPanel/HotkeysPanel.scss 3:9  root stylesheet
-
-DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-
-More info and automated migrator: https://sass-lang.com/d/import
-
-  ╷
-1 │ @import '~@gravity-ui/uikit/styles/mixins';
-  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  ╵
-    styles/mixins.scss 1:9                     @import
-    src/components/Settings/Settings.scss 3:9  root stylesheet
-
-DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-
-More info and automated migrator: https://sass-lang.com/d/import
-
-  ╷
-1 │ @import '~@gravity-ui/uikit/styles/mixins';
-  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  ╵
-    styles/mixins.scss 1:9                                                                 @import
-    src/components/MobileHeader/BurgerMenu/BurgerCompositeBar/BurgerCompositeBar.scss 4:9  root stylesheet
 
 DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
 
@@ -727,39 +729,10 @@ DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be remo
 More info and automated migrator: https://sass-lang.com/d/import
 
   ╷
-3 │ @import '../../../../styles/mixins';
-  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  ╵
-    src/components/Settings/SettingsMenu/SettingsMenu.scss 3:9  root stylesheet
-
-DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
-
-More info: https://sass-lang.com/d/legacy-js-api
-
-DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-
-More info and automated migrator: https://sass-lang.com/d/import
-
-  ╷
 3 │ @import '~@gravity-ui/uikit/styles/mixins';
   │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   ╵
     src/components/MobileHeader/Burger/Burger.scss 3:9  root stylesheet
-
-DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-
-More info and automated migrator: https://sass-lang.com/d/import
-
-  ╷
-1 │ @import '~@gravity-ui/uikit/styles/mixins';
-  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  ╵
-    styles/mixins.scss 1:9                                      @import
-    src/components/Settings/SettingsMenu/SettingsMenu.scss 3:9  root stylesheet
-
-DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
-
-More info: https://sass-lang.com/d/legacy-js-api
 
 DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
 
@@ -774,6 +747,24 @@ More info and automated migrator: https://sass-lang.com/d/import
   │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
   ╵
     src/components/Settings/SettingsMenuMobile/SettingsMenuMobile.scss 3:9  root stylesheet
+
+DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+3 │ @import '../../../../styles/mixins';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    src/components/Settings/SettingsMenu/SettingsMenu.scss 3:9  root stylesheet
 
 DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
 
@@ -786,6 +777,18 @@ More info and automated migrator: https://sass-lang.com/d/import
     styles/mixins.scss 1:9                                                  @import
     src/components/Settings/SettingsMenuMobile/SettingsMenuMobile.scss 3:9  root stylesheet
 
+DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+1 │ @import '~@gravity-ui/uikit/styles/mixins';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    styles/mixins.scss 1:9                                      @import
+    src/components/Settings/SettingsMenu/SettingsMenu.scss 3:9  root stylesheet
+
+<s> [webpack.Progress] 54% building 1/2 entries 5661/5696 dependencies 1617/2000 modules
 DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
 
 More info: https://sass-lang.com/d/legacy-js-api
@@ -808,10 +811,6 @@ DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be
 
 More info: https://sass-lang.com/d/legacy-js-api
 
-DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
-
-More info: https://sass-lang.com/d/legacy-js-api
-
 DEPRECATION WARNING [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
 
 More info and automated migrator: https://sass-lang.com/d/import
@@ -823,7 +822,10 @@ More info and automated migrator: https://sass-lang.com/d/import
     styles/mixins.scss 1:9               @import
     src/components/Title/Title.scss 3:9  root stylesheet
 
-<s> [webpack.Progress] 58% building 1/2 entries 6200/6223 dependencies 1878/2122 modules
+DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
 DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
 
 More info: https://sass-lang.com/d/legacy-js-api
@@ -951,6 +953,7 @@ More info: https://sass-lang.com/d/legacy-js-api
 <s> [webpack.Progress] 95% emitting emit
 <s> [webpack.Progress] 95% emitting emit DevMiddleware
 <s> [webpack.Progress] 95% emitting emit
+<i> [webpack-dev-middleware] wait until bundle finished: /__webpack_hmr
 <s> [webpack.Progress] 98% emitting after emit
 <s> [webpack.Progress] 98% emitting after emit SizeLimitsPlugin
 <s> [webpack.Progress] 98% emitting after emit
@@ -970,7 +973,7 @@ More info: https://sass-lang.com/d/legacy-js-api
 ╭─────────────────────────────────────────────────────────────────────╮
 │                                                                     │
 │   [38;2;162;224;94mStorybook 8.5.0 for react-webpack5 started[39m                        │
-│   702 ms for manager and 11 s for preview                           │
+│   849 ms for manager and 12 s for preview                           │
 │                                                                     │
 │   Local:            http://localhost:7008/                          │
 │   On your network:  http://10.2.75.17:7008/                         │
@@ -1077,8 +1080,232 @@ More info: https://sass-lang.com/d/legacy-js-api
 <s> [webpack.Progress] 9% setup compilation
 <s> [webpack.Progress] 10% building
 <s> [webpack.Progress] 10% building 0/1 entries 0/0 dependencies 0/0 modules
-<s> [webpack.Progress] 10% building 1/2 entries 39/39 dependencies 38/17 modules
+<i> [webpack-dev-middleware] wait until bundle finished: /runtime~main.iframe.bundle.js
+<i> [webpack-dev-middleware] wait until bundle finished: /vendors-node_modules_gravity-ui_uikit_build_esm_index_js-node_modules_storybook_addon-a11y_di-116455.iframe.bundle.js
+<i> [webpack-dev-middleware] wait until bundle finished: /main.iframe.bundle.js
+<s> [webpack.Progress] 10% building 1/2 entries 39/41 dependencies 38/17 modules
 <s> [webpack.Progress] 64% building 2/2 entries 523/523 dependencies 2153/265 modules
+<s> [webpack.Progress] 65% building
+<s> [webpack.Progress] 69% building finish
+<s> [webpack.Progress] 69% building finish
+<s> [webpack.Progress] 70% sealing finish module graph
+<s> [webpack.Progress] 70% sealing finish module graph ResolverCachePlugin
+<s> [webpack.Progress] 70% sealing finish module graph InferAsyncModulesPlugin
+<s> [webpack.Progress] 70% sealing finish module graph FlagDependencyExportsPlugin
+<s> [webpack.Progress] 70% sealing finish module graph
+<s> [webpack.Progress] 70% sealing plugins
+<s> [webpack.Progress] 70% sealing plugins DocGenPlugin
+<s> [webpack.Progress] 70% sealing plugins WarnCaseSensitiveModulesPlugin
+<s> [webpack.Progress] 70% sealing plugins
+<s> [webpack.Progress] 71% sealing dependencies optimization
+<s> [webpack.Progress] 71% sealing dependencies optimization SideEffectsFlagPlugin
+<s> [webpack.Progress] 71% sealing dependencies optimization
+<s> [webpack.Progress] 71% sealing after dependencies optimization
+<s> [webpack.Progress] 71% sealing after dependencies optimization
+<s> [webpack.Progress] 72% sealing chunk graph
+<s> [webpack.Progress] 72% sealing chunk graph
+<s> [webpack.Progress] 73% sealing after chunk graph
+<s> [webpack.Progress] 73% sealing after chunk graph
+<s> [webpack.Progress] 73% sealing optimizing
+<s> [webpack.Progress] 73% sealing optimizing
+<s> [webpack.Progress] 74% sealing module optimization
+<s> [webpack.Progress] 74% sealing module optimization
+<s> [webpack.Progress] 75% sealing after module optimization
+<s> [webpack.Progress] 75% sealing after module optimization
+<s> [webpack.Progress] 75% sealing chunk optimization
+<s> [webpack.Progress] 75% sealing chunk optimization EnsureChunkConditionsPlugin
+<s> [webpack.Progress] 75% sealing chunk optimization RemoveEmptyChunksPlugin
+<s> [webpack.Progress] 75% sealing chunk optimization MergeDuplicateChunksPlugin
+<s> [webpack.Progress] 75% sealing chunk optimization SplitChunksPlugin
+<s> [webpack.Progress] 75% sealing chunk optimization RemoveEmptyChunksPlugin
+<s> [webpack.Progress] 75% sealing chunk optimization
+<s> [webpack.Progress] 76% sealing after chunk optimization
+<s> [webpack.Progress] 76% sealing after chunk optimization
+<s> [webpack.Progress] 77% sealing module and chunk tree optimization
+<s> [webpack.Progress] 77% sealing module and chunk tree optimization PersistentChildCompilerSingletonPlugin
+<s> [webpack.Progress] 77% sealing module and chunk tree optimization
+<s> [webpack.Progress] 77% sealing after module and chunk tree optimization
+<s> [webpack.Progress] 77% sealing after module and chunk tree optimization
+<s> [webpack.Progress] 78% sealing chunk modules optimization
+<s> [webpack.Progress] 78% sealing chunk modules optimization
+<s> [webpack.Progress] 78% sealing after chunk modules optimization
+<s> [webpack.Progress] 78% sealing after chunk modules optimization
+<s> [webpack.Progress] 79% sealing module reviving
+<s> [webpack.Progress] 79% sealing module reviving RecordIdsPlugin
+<s> [webpack.Progress] 79% sealing module reviving
+<s> [webpack.Progress] 80% sealing before module ids
+<s> [webpack.Progress] 80% sealing before module ids
+<s> [webpack.Progress] 80% sealing module ids
+<s> [webpack.Progress] 80% sealing module ids NamedModuleIdsPlugin
+<s> [webpack.Progress] 80% sealing module ids
+<s> [webpack.Progress] 81% sealing module id optimization
+<s> [webpack.Progress] 81% sealing module id optimization
+<s> [webpack.Progress] 82% sealing module id optimization
+<s> [webpack.Progress] 82% sealing module id optimization
+<s> [webpack.Progress] 82% sealing chunk reviving
+<s> [webpack.Progress] 82% sealing chunk reviving RecordIdsPlugin
+<s> [webpack.Progress] 82% sealing chunk reviving
+<s> [webpack.Progress] 83% sealing before chunk ids
+<s> [webpack.Progress] 83% sealing before chunk ids
+<s> [webpack.Progress] 84% sealing chunk ids
+<s> [webpack.Progress] 84% sealing chunk ids NamedChunkIdsPlugin
+<s> [webpack.Progress] 84% sealing chunk ids
+<s> [webpack.Progress] 84% sealing chunk id optimization
+<s> [webpack.Progress] 84% sealing chunk id optimization
+<s> [webpack.Progress] 85% sealing after chunk id optimization
+<s> [webpack.Progress] 85% sealing after chunk id optimization
+<s> [webpack.Progress] 86% sealing record modules
+<s> [webpack.Progress] 86% sealing record modules RecordIdsPlugin
+<s> [webpack.Progress] 86% sealing record modules
+<s> [webpack.Progress] 86% sealing record chunks
+<s> [webpack.Progress] 86% sealing record chunks RecordIdsPlugin
+<s> [webpack.Progress] 86% sealing record chunks
+<s> [webpack.Progress] 87% sealing module hashing
+<s> [webpack.Progress] 87% sealing module hashing
+<s> [webpack.Progress] 87% sealing code generation
+<s> [webpack.Progress] 87% sealing code generation
+<s> [webpack.Progress] 88% sealing runtime requirements
+<s> [webpack.Progress] 88% sealing runtime requirements
+<s> [webpack.Progress] 89% sealing hashing
+<s> [webpack.Progress] 89% sealing hashing
+<s> [webpack.Progress] 89% sealing after hashing
+<s> [webpack.Progress] 89% sealing after hashing
+<s> [webpack.Progress] 90% sealing record hash
+<s> [webpack.Progress] 90% sealing record hash
+<s> [webpack.Progress] 91% sealing module assets processing
+<s> [webpack.Progress] 91% sealing module assets processing
+<s> [webpack.Progress] 91% sealing chunk assets processing
+<s> [webpack.Progress] 91% sealing chunk assets processing
+<s> [webpack.Progress] 92% sealing asset processing
+<s> [webpack.Progress] 92% sealing asset processing HotModuleReplacementPlugin
+<s> [webpack.Progress] 92% sealing asset processing PersistentChildCompilerSingletonPlugin
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin
+<s> [webpack.Progress] 92% sealing asset processing HtmlWebpackPlugin
+<s> [webpack.Progress] 92% sealing asset processing
+<s> [webpack.Progress] 93% sealing after asset optimization
+<s> [webpack.Progress] 93% sealing after asset optimization
+<s> [webpack.Progress] 93% sealing recording
+<s> [webpack.Progress] 93% sealing recording HotModuleReplacementPlugin
+<s> [webpack.Progress] 93% sealing recording
+<s> [webpack.Progress] 94% sealing after seal
+<s> [webpack.Progress] 94% sealing after seal
+<s> [webpack.Progress] 95% emitting emit
+<s> [webpack.Progress] 95% emitting emit DevMiddleware
+<s> [webpack.Progress] 95% emitting emit
+<s> [webpack.Progress] 98% emitting after emit
+<s> [webpack.Progress] 98% emitting after emit SizeLimitsPlugin
+<s> [webpack.Progress] 98% emitting after emit
+<s> [webpack.Progress] 99% done plugins
+<s> [webpack.Progress] 99% done plugins CaseSensitivePathsPlugin
+<s> [webpack.Progress] 99% done plugins webpack-dev-middleware
+<s> [webpack.Progress] 99% done plugins webpack-hot-middleware
+<s> [webpack.Progress] 99% done plugins
+<s> [webpack.Progress] 99% 
+
+<s> [webpack.Progress] 99% cache store build dependencies
+<s> [webpack.Progress] 99% cache store build dependencies
+<s> [webpack.Progress] 99% cache begin idle
+<s> [webpack.Progress] 99% cache begin idle
+<s> [webpack.Progress] 100% 
+
+<s> [webpack.Progress] 0% 
+
+<s> [webpack.Progress] 1% cache end idle
+<s> [webpack.Progress] 1% cache end idle
+<s> [webpack.Progress] 3% setup watch run
+<s> [webpack.Progress] 3% setup watch run VirtualModulesPlugin
+<s> [webpack.Progress] 3% setup watch run webpack-dev-middleware
+<s> [webpack.Progress] 3% setup watch run
+<s> [webpack.Progress] 4% setup normal module factory
+<s> [webpack.Progress] 4% setup normal module factory CaseSensitivePathsPlugin
+<s> [webpack.Progress] 4% setup normal module factory
+<s> [webpack.Progress] 5% setup context module factory
+<s> [webpack.Progress] 5% setup context module factory
+<s> [webpack.Progress] 6% setup before compile
+<s> [webpack.Progress] 6% setup before compile ProgressPlugin
+<s> [webpack.Progress] 6% setup before compile ProgressPlugin
+<s> [webpack.Progress] 6% setup before compile
+<s> [webpack.Progress] 7% setup compile
+<s> [webpack.Progress] 7% setup compile ExternalsPlugin
+<s> [webpack.Progress] 7% setup compile ExternalsPlugin
+<s> [webpack.Progress] 7% setup compile
+<s> [webpack.Progress] 8% setup compilation
+<s> [webpack.Progress] 8% setup compilation HtmlWebpackPlugin
+<s> [webpack.Progress] 8% setup compilation unplugin-csf
+<s> [webpack.Progress] 8% setup compilation ArrayPushCallbackChunkFormatPlugin
+<s> [webpack.Progress] 8% setup compilation JsonpChunkLoadingPlugin
+<s> [webpack.Progress] 8% setup compilation StartupChunkDependenciesPlugin
+<s> [webpack.Progress] 8% setup compilation ImportScriptsChunkLoadingPlugin
+<s> [webpack.Progress] 8% setup compilation FetchCompileWasmPlugin
+<s> [webpack.Progress] 8% setup compilation FetchCompileAsyncWasmPlugin
+<s> [webpack.Progress] 8% setup compilation WorkerPlugin
+<s> [webpack.Progress] 8% setup compilation SplitChunksPlugin
+<s> [webpack.Progress] 8% setup compilation RuntimeChunkPlugin
+<s> [webpack.Progress] 8% setup compilation ResolverCachePlugin
+<s> [webpack.Progress] 8% setup compilation
+<s> [webpack.Progress] 9% setup compilation
+<s> [webpack.Progress] 9% setup compilation DefinePlugin
+<s> [webpack.Progress] 9% setup compilation ProvidePlugin
+<s> [webpack.Progress] 9% setup compilation HotModuleReplacementPlugin
+<s> [webpack.Progress] 9% setup compilation ProgressPlugin
+<s> [webpack.Progress] 9% setup compilation DocGenPlugin
+<s> [webpack.Progress] 9% setup compilation ChunkPrefetchPreloadPlugin
+<s> [webpack.Progress] 9% setup compilation ModuleInfoHeaderPlugin
+<s> [webpack.Progress] 9% setup compilation SourceMapDevToolPlugin
+<s> [webpack.Progress] 9% setup compilation JavascriptModulesPlugin
+<s> [webpack.Progress] 9% setup compilation JsonModulesPlugin
+<s> [webpack.Progress] 9% setup compilation AssetModulesPlugin
+<s> [webpack.Progress] 9% setup compilation EntryPlugin
+<s> [webpack.Progress] 9% setup compilation EntryPlugin
+<s> [webpack.Progress] 9% setup compilation RuntimePlugin
+<s> [webpack.Progress] 9% setup compilation InferAsyncModulesPlugin
+<s> [webpack.Progress] 9% setup compilation DataUriPlugin
+<s> [webpack.Progress] 9% setup compilation FileUriPlugin
+<s> [webpack.Progress] 9% setup compilation CompatibilityPlugin
+<s> [webpack.Progress] 9% setup compilation HarmonyModulesPlugin
+<s> [webpack.Progress] 9% setup compilation AMDPlugin
+<s> [webpack.Progress] 9% setup compilation RequireJsStuffPlugin
+<s> [webpack.Progress] 9% setup compilation CommonJsPlugin
+<s> [webpack.Progress] 9% setup compilation LoaderPlugin
+<s> [webpack.Progress] 9% setup compilation LoaderPlugin
+<s> [webpack.Progress] 9% setup compilation NodeStuffPlugin
+<s> [webpack.Progress] 9% setup compilation APIPlugin
+<s> [webpack.Progress] 9% setup compilation ExportsInfoApiPlugin
+<s> [webpack.Progress] 9% setup compilation WebpackIsIncludedPlugin
+<s> [webpack.Progress] 9% setup compilation ConstPlugin
+<s> [webpack.Progress] 9% setup compilation UseStrictPlugin
+<s> [webpack.Progress] 9% setup compilation RequireIncludePlugin
+<s> [webpack.Progress] 9% setup compilation RequireEnsurePlugin
+<s> [webpack.Progress] 9% setup compilation RequireContextPlugin
+<s> [webpack.Progress] 9% setup compilation ImportPlugin
+<s> [webpack.Progress] 9% setup compilation ImportMetaContextPlugin
+<s> [webpack.Progress] 9% setup compilation SystemPlugin
+<s> [webpack.Progress] 9% setup compilation ImportMetaPlugin
+<s> [webpack.Progress] 9% setup compilation URLPlugin
+<s> [webpack.Progress] 9% setup compilation DefaultStatsFactoryPlugin
+<s> [webpack.Progress] 9% setup compilation DefaultStatsPresetPlugin
+<s> [webpack.Progress] 9% setup compilation DefaultStatsPrinterPlugin
+<s> [webpack.Progress] 9% setup compilation JavascriptMetaInfoPlugin
+<s> [webpack.Progress] 9% setup compilation EnsureChunkConditionsPlugin
+<s> [webpack.Progress] 9% setup compilation RemoveEmptyChunksPlugin
+<s> [webpack.Progress] 9% setup compilation MergeDuplicateChunksPlugin
+<s> [webpack.Progress] 9% setup compilation SideEffectsFlagPlugin
+<s> [webpack.Progress] 9% setup compilation FlagDependencyExportsPlugin
+<s> [webpack.Progress] 9% setup compilation NamedModuleIdsPlugin
+<s> [webpack.Progress] 9% setup compilation NamedChunkIdsPlugin
+<s> [webpack.Progress] 9% setup compilation DefinePlugin
+<s> [webpack.Progress] 9% setup compilation TemplatedPathPlugin
+<s> [webpack.Progress] 9% setup compilation RecordIdsPlugin
+<s> [webpack.Progress] 9% setup compilation WarnCaseSensitiveModulesPlugin
+<s> [webpack.Progress] 9% setup compilation IgnoreWarningsPlugin
+<s> [webpack.Progress] 9% setup compilation ProgressPlugin
+<s> [webpack.Progress] 9% setup compilation
+<s> [webpack.Progress] 10% building
+<s> [webpack.Progress] 10% building 0/1 entries 0/0 dependencies 0/0 modules
+<s> [webpack.Progress] 17% building 1/2 entries 39/43 dependencies 38/17 modules
+<s> [webpack.Progress] 64% building import loader ./node_modules/babel-loader/lib/index.js
+<s> [webpack.Progress] 64% building 1/2 entries 523/523 dependencies 2066/265 modules
+<s> [webpack.Progress] 65% building 2/2 entries 524/524 dependencies 2153/266 modules
 <s> [webpack.Progress] 65% building
 <s> [webpack.Progress] 69% building finish
 <s> [webpack.Progress] 69% building finish

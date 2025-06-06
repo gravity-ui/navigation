@@ -35,7 +35,7 @@ export const createBlock = (blockName: string, styles: Record<string, string>) =
         const className = blockFn(elemOrMods as any, elemModsOrBlockMix as any, elemMix as any);
 
         // Handle case where styles object is undefined (e.g., in Storybook without CSS modules)
-        if (!styles) {
+        if (!styles || typeof styles !== 'object') {
             return className;
         }
 
