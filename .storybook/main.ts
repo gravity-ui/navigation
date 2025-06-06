@@ -64,8 +64,6 @@ const config: StorybookConfig = {
             ...config.module,
             rules: [...filteredRules, newRule],
         };
-
-        console.log('Added CSS modules rule for SCSS files');
         
         return config;
     }

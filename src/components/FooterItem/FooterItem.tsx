@@ -6,9 +6,6 @@ import {createBlock} from '../utils/cn';
 
 import styles from './FooterItem.scss';
 
-console.log('FooterItem styles object:', styles);
-console.log('FooterItem styles keys:', Object.keys(styles || {}));
-
 const b = createBlock('footer-item', styles);
 
 export interface FooterItemProps extends Omit<ItemProps, 'onItemClick' | 'onItemClickCapture'> {
