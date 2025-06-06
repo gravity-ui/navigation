@@ -5,7 +5,7 @@ import {Icon} from '@gravity-ui/uikit';
 import {LogoProps} from '../types';
 import {createBlock} from '../utils/cn';
 
-import styles from './Logo.scss';
+import styles from './Logo.module.scss';
 
 const b = createBlock('logo', styles);
 

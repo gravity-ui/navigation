@@ -34,6 +34,14 @@ const getPlugins = (outDir) => {
             },
             extract: false,
             inject: true,
+            include: /\.module\.(css|scss|sass)$/,
+        }),
+        postcss({
+            minimize: true,
+            extract: false,
+            inject: true,
+            include: /\.(css|scss|sass)$/,
+            exclude: /\.module\.(css|scss|sass)$/,
         }),
         svgr(),
     ];

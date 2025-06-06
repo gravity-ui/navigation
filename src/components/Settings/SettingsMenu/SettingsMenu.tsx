@@ -6,7 +6,7 @@ import {createBlock} from '../../utils/cn';
 import {useCurrent, useStableCallback} from '../helpers';
 import {Item, SettingsMenuProps} from '../types';
 
-import styles from './SettingsMenu.scss';
+import styles from './SettingsMenu.module.scss';
 
 const b = createBlock('settings-menu', styles);
 

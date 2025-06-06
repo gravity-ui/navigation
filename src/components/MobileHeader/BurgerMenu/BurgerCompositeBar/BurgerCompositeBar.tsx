@@ -7,7 +7,7 @@ import {MOBILE_HEADER_ICON_SIZE} from '../../constants';
 import {MobileMenuItem} from '../../types';
 import {getItemHeight, getSelectedItemIndex} from '../../utils';
 
-import styles from './BurgerCompositeBar.scss';
+import styles from './BurgerCompositeBar.module.scss';
 
 const b = createBlock('burger-composite-bar', styles);
 

@@ -12,7 +12,7 @@ import {ALL_PAGES_ID} from './constants';
 import i18n from './i18n';
 import {useGroupedMenuItems} from './useGroupedMenuItems';
 
-import styles from './AllPagesPanel.scss';
+import styles from './AllPagesPanel.module.scss';
 
 const b = createBlock('all-pages-panel', styles);
 

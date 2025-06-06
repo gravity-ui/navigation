@@ -11,7 +11,7 @@ import type {HotkeysGroup, HotkeysListItem} from './types';
 import {filterHotkeys} from './utils/filterHotkeys';
 import {flattenHotkeyGroups} from './utils/flattenHotkeyGroups';
 
-import styles from './HotkeysPanel.scss';
+import styles from './HotkeysPanel.module.scss';
 
 const b = createBlock('hotkeys-panel', styles);
 

@@ -6,7 +6,7 @@ import {Button, Icon} from '@gravity-ui/uikit';
 import {MenuItem} from '../../types';
 import {createBlock} from '../../utils/cn';
 
-import styles from './AllPagesListItem.scss';
+import styles from './AllPagesListItem.module.scss';
 
 const b = createBlock('all-pages-list-item', styles);
 

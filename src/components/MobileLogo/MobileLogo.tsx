@@ -5,7 +5,7 @@ import {Icon} from '@gravity-ui/uikit';
 import {LogoProps} from '../types';
 import {createBlock} from '../utils/cn';
 
-import styles from './MobileLogo.scss';
+import styles from './MobileLogo.module.scss';
 
 const b = createBlock('mobile-logo', styles);
 

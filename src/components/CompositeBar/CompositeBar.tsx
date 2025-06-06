@@ -21,7 +21,7 @@ import {
     isMenuItem,
 } from './utils';
 
-import styles from './CompositeBar.scss';
+import styles from './CompositeBar.module.scss';
 
 const b = createBlock('composite-bar', styles);
 

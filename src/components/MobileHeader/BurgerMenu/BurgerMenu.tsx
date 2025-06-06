@@ -7,7 +7,7 @@ import {MobileMenuItem, ModalItem} from '../types';
 
 import {BurgerCompositeBar} from './BurgerCompositeBar/BurgerCompositeBar';
 
-import styles from './BurgerMenu.scss';
+import styles from './BurgerMenu.module.scss';
 
 const b = createBlock('mobile-header-burger-menu', styles);
 

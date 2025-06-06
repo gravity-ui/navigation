@@ -15,7 +15,7 @@ import {
     useScrollLock,
 } from './utils';
 
-import styles from './Drawer.scss';
+import styles from './Drawer.module.scss';
 
 const b = createBlock('drawer', styles);
 const TIMEOUT = 300;

@@ -8,7 +8,7 @@ import {
 import {createBlock} from '../../utils/cn';
 import {SettingsMenuProps} from '../types';
 
-import styles from './SettingsMenuMobile.scss';
+import styles from './SettingsMenuMobile.module.scss';
 
 const b = createBlock('settings-menu-mobile', styles);
 

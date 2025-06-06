@@ -6,7 +6,7 @@ import {createBlock} from '../../utils/cn';
 import {MOBILE_HEADER_ICON_SIZE} from '../constants';
 import {ModalItem} from '../types';
 
-import styles from './FooterItem.scss';
+import styles from './FooterItem.module.scss';
 
 const b = createBlock('mobile-header-footer-item', styles);
 

@@ -4,7 +4,7 @@ import {Item, ItemProps} from '../CompositeBar/Item/Item';
 import {ASIDE_HEADER_ICON_SIZE} from '../constants';
 import {createBlock} from '../utils/cn';
 
-import styles from './FooterItem.scss';
+import styles from './FooterItem.module.scss';
 
 const b = createBlock('footer-item', styles);
 

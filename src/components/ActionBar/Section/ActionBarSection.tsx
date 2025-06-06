@@ -4,7 +4,7 @@ import {DOMProps, QAProps} from '@gravity-ui/uikit';
 
 import {createBlock} from '../../utils/cn';
 
-import styles from './ActionBarSection.scss';
+import styles from './ActionBarSection.module.scss';
 
 export type Props = DOMProps & QAProps & PropsWithChildren<{type?: 'primary' | 'secondary'}>;
 

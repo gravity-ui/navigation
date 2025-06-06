@@ -8,7 +8,7 @@ import {createBlock} from '../../utils/cn';
 import {MOBILE_HEADER_ICON_SIZE} from '../constants';
 import i18n from '../i18n';
 
-import styles from './OverlapPanel.scss';
+import styles from './OverlapPanel.module.scss';
 
 const b = createBlock('mobile-overlap-panel', styles);
 

@@ -12,7 +12,7 @@ import {FooterProps} from '../types';
 
 import {moreItemsPopupProps} from './constants/moreItemsPopupProps';
 
-import styles from './Footer.scss';
+import styles from './Footer.module.scss';
 
 const b = createBlock('footer', styles);
 

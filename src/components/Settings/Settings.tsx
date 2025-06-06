@@ -26,7 +26,7 @@ import {getSettingsFromChildren} from './collect-settings';
 import {escapeStringForRegExp} from './helpers';
 import i18n from './i18n';
 
-import styles from './Settings.scss';
+import styles from './Settings.module.scss';
 
 const b = createBlock('settings', styles);
 
