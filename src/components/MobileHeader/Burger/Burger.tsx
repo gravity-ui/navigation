@@ -2,7 +2,7 @@ import React from 'react';
 
 import {createBlock} from '../../utils/cn';
 
-import styles from './Burger.scss';
+import styles from './Burger.module.scss';
 
 const b = createBlock('mobile-header-burger', styles);
 

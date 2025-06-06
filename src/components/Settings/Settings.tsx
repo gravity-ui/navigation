@@ -29,7 +29,7 @@ import type {
     SettingsSectionProps,
 } from './types';
 
-import styles from './Settings.scss';
+import styles from './Settings.module.scss';
 
 export function Settings({
     loading,

@@ -7,7 +7,7 @@ import {createBlock} from '../utils/cn';
 
 import i18n from './i18n';
 
-import styles from './Title.scss';
+import styles from './Title.module.scss';
 
 const b = createBlock('title', styles);
 

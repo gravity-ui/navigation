@@ -9,7 +9,7 @@ import {ActionBarItem} from './Item/ActionBarItem';
 import {ActionBarSection} from './Section/ActionBarSection';
 import {ActionBarSeparator} from './Separator/ActionBarSeparator';
 
-import styles from './ActionBar.scss';
+import styles from './ActionBar.module.scss';
 
 export type Props = DOMProps &
     QAProps &

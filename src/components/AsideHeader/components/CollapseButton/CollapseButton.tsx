@@ -8,7 +8,7 @@ import i18n from '../../i18n';
 
 import controlMenuButtonIcon from '../../../../../assets/icons/control-menu-button.svg';
 
-import styles from './CollapseButton.scss';
+import styles from './CollapseButton.module.scss';
 
 const b = createBlock('collapse-button', styles);
 

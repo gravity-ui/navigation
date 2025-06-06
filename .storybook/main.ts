@@ -33,9 +33,9 @@ const config: StorybookConfig = {
     },
 
     webpackFinal: async (config) => {
-        // Add a new rule specifically for SCSS CSS modules
-        const newRule = {
-            test: /\.scss$/,
+        // Add rules for both CSS modules and regular SCSS files
+        const cssModulesRule = {
+            test: /\.module\.scss$/,
             use: [
                 'style-loader',
                 {
@@ -51,7 +51,17 @@ const config: StorybookConfig = {
             ],
         };
 
-        // Remove existing SCSS rules and add our new one
+        const regularScssRule = {
+            test: /\.scss$/,
+            exclude: /\.module\.scss$/,
+            use: [
+                'style-loader',
+                'css-loader',
+                'sass-loader',
+            ],
+        };
+
+        // Remove existing SCSS rules and add our new rules
         const rules = config.module?.rules || [];
         const filteredRules = rules.filter((rule: any) => {
             if (rule && typeof rule === 'object' && 'test' in rule) {
@@ -62,7 +72,7 @@ const config: StorybookConfig = {
 
         config.module = {
             ...config.module,
-            rules: [...filteredRules, newRule],
+            rules: [...filteredRules, cssModulesRule, regularScssRule],
         };
         
         return config;

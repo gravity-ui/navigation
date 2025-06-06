@@ -9,7 +9,7 @@ import {COLLAPSE_ITEM_ID} from '../constants';
 
 import {MultipleTooltipContext} from './MultipleTooltipContext';
 
-import styles from './MultipleTooltip.scss';
+import styles from './MultipleTooltip.module.scss';
 
 const b = createBlock('multiple-tooltip', styles);
 

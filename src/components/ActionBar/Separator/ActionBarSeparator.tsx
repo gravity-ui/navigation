@@ -2,7 +2,7 @@ import React from 'react';
 
 import {createBlock} from '../../utils/cn';
 
-import styles from './ActionBarSeparator.scss';
+import styles from './ActionBarSeparator.module.scss';
 
 const b = createBlock('action-bar-separator', styles);
 

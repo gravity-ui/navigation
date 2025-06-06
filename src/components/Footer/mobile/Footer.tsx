@@ -10,7 +10,7 @@ import {createBlock} from '../../utils/cn';
 import {MenuItem} from '../MenuItem/MenuItem';
 import {FooterMenuItem, FooterProps} from '../types';
 
-import styles from './Footer.scss';
+import styles from './Footer.module.scss';
 
 const b = createBlock('footer', styles);
 

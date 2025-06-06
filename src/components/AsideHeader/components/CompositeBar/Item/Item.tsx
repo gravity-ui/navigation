@@ -17,7 +17,7 @@ import {
 } from '../constants';
 import {getSelectedItemIndex} from '../utils';
 
-import styles from './Item.scss';
+import styles from './Item.module.scss';
 
 const b = createBlock('composite-bar-item', styles);
 

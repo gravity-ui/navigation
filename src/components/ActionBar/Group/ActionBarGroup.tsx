@@ -5,7 +5,7 @@ import {DOMProps, QAProps} from '@gravity-ui/uikit';
 import {createBlock} from '../../utils/cn';
 import {PropsWithPull} from '../types';
 
-import styles from './ActionBarGroup.scss';
+import styles from './ActionBarGroup.module.scss';
 
 export type Props = DOMProps &
     QAProps &

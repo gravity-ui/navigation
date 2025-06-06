@@ -7,7 +7,7 @@ import {createBlock} from '../utils/cn';
 
 import {useTopAlertHeight} from './useTopAlertHeight';
 
-import styles from './TopAlert.scss';
+import styles from './TopAlert.module.scss';
 
 const b = createBlock('top-alert', styles);
 

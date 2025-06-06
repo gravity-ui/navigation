@@ -23,7 +23,7 @@ import {
 import i18n from './i18n';
 import {MobileHeaderEvent, MobileHeaderEventOptions, MobileMenuItem} from './types';
 
-import styles from './MobileHeader.scss';
+import styles from './MobileHeader.module.scss';
 
 const TopAlert = React.lazy(() =>
     import('../TopAlert').then((module) => ({default: module.TopAlert})),

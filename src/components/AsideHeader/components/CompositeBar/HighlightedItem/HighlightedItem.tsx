@@ -6,7 +6,7 @@ import debounceFn from 'lodash/debounce';
 import {createBlock} from '../../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../../AsideHeaderContext';
 
-import styles from './HighlightedItem.scss';
+import styles from './HighlightedItem.module.scss';
 
 const b = createBlock('composite-bar-highlighted-item', styles);
 

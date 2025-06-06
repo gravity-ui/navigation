@@ -6,7 +6,7 @@ import {Menu} from '@gravity-ui/uikit';
 import {createBlock} from '../../utils/cn';
 import {FooterMenuItem} from '../types';
 
-import styles from './MenuItem.scss';
+import styles from './MenuItem.module.scss';
 
 const b = createBlock('footer-menu-item', styles);
 
