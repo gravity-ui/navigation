@@ -17,5 +17,6 @@ pnpm-lock.yaml
 playwright-report*
 /test-results
 
-# Storybook logs
+# Storybook logs and build output
 storybook.log
+storybook-static
