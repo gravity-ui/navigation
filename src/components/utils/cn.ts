@@ -34,6 +34,11 @@ export const createBlock = (blockName: string, styles: Record<string, string>) =
         // Call the original block function with the same arguments
         const className = blockFn(elemOrMods as any, elemModsOrBlockMix as any, elemMix as any);
 
+        // Handle case where styles object is undefined (e.g., in Storybook without CSS modules)
+        if (!styles) {
+            return className;
+        }
+
         // For CSS modules, we need to map the generated class name to the actual CSS module class
         // Since we're using [local] as the generateScopedName, the class names should match
         return styles[className] || className;
