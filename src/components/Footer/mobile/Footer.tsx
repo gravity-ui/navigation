@@ -6,13 +6,13 @@ import {Button, Icon, Menu, Sheet} from '@gravity-ui/uikit';
 
 import {useOverflowingHorizontalListItems} from '../../../hooks/useOverflowingHorizontalListItems';
 import {Logo} from '../../Logo';
-import {block} from '../../utils/cn';
+import {createBlock} from '../../utils/cn';
 import {MenuItem} from '../MenuItem/MenuItem';
 import {FooterMenuItem, FooterProps} from '../types';
 
-import './Footer.scss';
+import styles from './Footer.scss';
 
-const b = block('footer');
+const b = createBlock('footer', styles);
 
 const modalId = 'footer-more-items';
 

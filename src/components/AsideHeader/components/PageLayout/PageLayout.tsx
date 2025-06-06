@@ -6,8 +6,6 @@ import {AsideHeaderContextProvider, useAsideHeaderContext} from '../../AsideHead
 import {LayoutProps} from '../../types';
 import {b} from '../../utils';
 
-import '../../AsideHeader.scss';
-
 const TopAlert = React.lazy(() =>
     import('../../../TopAlert').then((module) => ({default: module.TopAlert})),
 );

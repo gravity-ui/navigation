@@ -5,12 +5,12 @@ import {
     type TabsItemProps as LegacyTabsItemProps,
 } from '@gravity-ui/uikit/legacy';
 
-import {block} from '../../utils/cn';
+import {createBlock} from '../../utils/cn';
 import {SettingsMenuProps} from '../types';
 
-import './SettingsMenuMobile.scss';
+import styles from './SettingsMenuMobile.scss';
 
-const b = block('settings-menu-mobile');
+const b = createBlock('settings-menu-mobile', styles);
 
 export const SettingsMenuMobile = ({
     items,

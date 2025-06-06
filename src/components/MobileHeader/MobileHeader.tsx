@@ -5,7 +5,7 @@ import {Content, RenderContentType} from '../Content';
 import {Drawer, DrawerItem, DrawerItemProps} from '../Drawer/Drawer';
 import {MobileLogo} from '../MobileLogo';
 import {LogoProps, TopAlertProps} from '../types';
-import {block} from '../utils/cn';
+import {createBlock} from '../utils/cn';
 
 import {Burger} from './Burger/Burger';
 import {BurgerMenu, BurgerMenuInnerProps} from './BurgerMenu/BurgerMenu';
@@ -23,13 +23,13 @@ import {
 import i18n from './i18n';
 import {MobileHeaderEvent, MobileHeaderEventOptions, MobileMenuItem} from './types';
 
-import './MobileHeader.scss';
+import styles from './MobileHeader.scss';
 
 const TopAlert = React.lazy(() =>
     import('../TopAlert').then((module) => ({default: module.TopAlert})),
 );
 
-const b = block('mobile-header');
+const b = createBlock('mobile-header', styles);
 
 type PanelName = DrawerItemProps['id'] | null;
 

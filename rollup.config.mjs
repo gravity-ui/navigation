@@ -7,7 +7,9 @@ import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import postcss from 'rollup-plugin-postcss';
 import ts from 'typescript';
 
-import packageJson from './package.json' with { type: 'json' };
+import {readFileSync} from 'fs';
+
+const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'));
 
 const input = [
     'src/index.ts',
@@ -26,14 +28,12 @@ const getPlugins = (outDir) => {
         }),
         postcss({
             minimize: true,
-            use: [
-                [
-                    'sass',
-                    {
-                        silenceDeprecations: ['legacy-js-api', 'mixed-decls'],
-                    },
-                ],
-            ],
+            modules: {
+                generateScopedName: '[local]',
+                localsConvention: 'camelCase',
+            },
+            extract: false,
+            inject: true,
         }),
         svgr(),
     ];

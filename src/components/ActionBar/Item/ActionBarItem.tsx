@@ -2,10 +2,10 @@ import React, {PropsWithChildren} from 'react';
 
 import {DOMProps, QAProps} from '@gravity-ui/uikit';
 
-import {block} from '../../utils/cn';
+import {createBlock} from '../../utils/cn';
 import {PropsWithPull} from '../types';
 
-import './ActionBarItem.scss';
+import styles from './ActionBarItem.scss';
 
 export type Props = DOMProps &
     QAProps &
@@ -15,7 +15,7 @@ export type Props = DOMProps &
         }>
     >;
 
-const b = block('action-bar-item');
+const b = createBlock('action-bar-item', styles);
 
 export const ActionBarItem = ({children, className, style, qa, pull, spacing = true}: Props) => {
     return (

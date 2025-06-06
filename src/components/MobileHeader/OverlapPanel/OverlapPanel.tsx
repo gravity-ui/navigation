@@ -4,13 +4,13 @@ import {ArrowLeft as CloseIcon} from '@gravity-ui/icons';
 import {Button, Icon, IconProps, Text} from '@gravity-ui/uikit';
 
 import {Drawer, DrawerItem} from '../../Drawer/Drawer';
-import {block} from '../../utils/cn';
+import {createBlock} from '../../utils/cn';
 import {MOBILE_HEADER_ICON_SIZE} from '../constants';
 import i18n from '../i18n';
 
-import './OverlapPanel.scss';
+import styles from './OverlapPanel.scss';
 
-const b = block('mobile-overlap-panel');
+const b = createBlock('mobile-overlap-panel', styles);
 
 interface OverlapPanelActionProps {
     icon: IconProps['data'];

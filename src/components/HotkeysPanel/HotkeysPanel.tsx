@@ -5,15 +5,15 @@ import {HelpMark, Hotkey, List, Text, TextInput} from '@gravity-ui/uikit';
 import type {ListProps} from '@gravity-ui/uikit';
 
 import {Drawer, DrawerItem} from '../Drawer/Drawer';
-import {block} from '../utils/cn';
+import {createBlock} from '../utils/cn';
 
 import type {HotkeysGroup, HotkeysListItem} from './types';
 import {filterHotkeys} from './utils/filterHotkeys';
 import {flattenHotkeyGroups} from './utils/flattenHotkeyGroups';
 
-import './HotkeysPanel.scss';
+import styles from './HotkeysPanel.scss';
 
-const b = block('hotkeys-panel');
+const b = createBlock('hotkeys-panel', styles);
 
 export type HotkeysPanelProps<T> = {
     hotkeys: HotkeysGroup<T>[];

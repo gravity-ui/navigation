@@ -3,18 +3,18 @@ import React, {ReactNode, useCallback, useEffect, useMemo, useRef, useState} fro
 import {Gear} from '@gravity-ui/icons';
 import {Button, Flex, Icon, List, ListItemData, ListProps, Text, Tooltip} from '@gravity-ui/uikit';
 
-import {block} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
 import {AsideHeaderItem} from '../../types';
+import {createBlock} from '../utils/cn';
 
 import {AllPagesListItem} from './AllPagesListItem';
 import {ALL_PAGES_ID} from './constants';
 import i18n from './i18n';
 import {useGroupedMenuItems} from './useGroupedMenuItems';
 
-import './AllPagesPanel.scss';
+import styles from './AllPagesPanel.scss';
 
-const b = block('all-pages-panel');
+const b = createBlock('all-pages-panel', styles);
 
 interface AllPagesPanelProps {
     className?: string;

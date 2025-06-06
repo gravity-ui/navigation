@@ -6,15 +6,15 @@ import type {DropdownMenuItem} from '@gravity-ui/uikit';
 
 import {useOverflowingHorizontalListItems} from '../../../hooks/useOverflowingHorizontalListItems';
 import {Logo} from '../../Logo';
-import {block} from '../../utils/cn';
+import {createBlock} from '../../utils/cn';
 import {MenuItem} from '../MenuItem/MenuItem';
 import {FooterProps} from '../types';
 
 import {moreItemsPopupProps} from './constants/moreItemsPopupProps';
 
-import './Footer.scss';
+import styles from './Footer.scss';
 
-const b = block('footer');
+const b = createBlock('footer', styles);
 
 export const Footer: FC<FooterProps> = ({
     className,

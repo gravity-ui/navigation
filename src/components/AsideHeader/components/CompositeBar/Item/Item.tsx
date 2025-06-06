@@ -6,7 +6,7 @@ import {AsideHeaderItem} from 'src/components/AsideHeader/types';
 
 import {ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
 import {MakeItemParams} from '../../../../types';
-import {block} from '../../../../utils/cn';
+import {createBlock} from '../../../../utils/cn';
 import {useAsideHeaderContext} from '../../../AsideHeaderContext';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {
@@ -17,9 +17,9 @@ import {
 } from '../constants';
 import {getSelectedItemIndex} from '../utils';
 
-import './Item.scss';
+import styles from './Item.scss';
 
-const b = block('composite-bar-item');
+const b = createBlock('composite-bar-item', styles);
 
 export interface ItemProps extends AsideHeaderItem {}
 
