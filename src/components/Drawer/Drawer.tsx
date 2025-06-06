@@ -5,7 +5,7 @@ import React from 'react';
 import {Portal, useForkRef} from '@gravity-ui/uikit';
 import {CSSTransition, Transition} from 'react-transition-group';
 
-import {block} from '../utils/cn';
+import {createBlock} from '../utils/cn';
 
 import {
     type DrawerDirection,
@@ -15,9 +15,9 @@ import {
     useScrollLock,
 } from './utils';
 
-import './Drawer.scss';
+import styles from './Drawer.scss';
 
-const b = block('drawer');
+const b = createBlock('drawer', styles);
 const TIMEOUT = 300;
 
 export interface DrawerItemProps {
@@ -164,7 +164,7 @@ export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
                             hidden: isInitialRender && !visible,
                             resize: isResizing,
                         },
-                        [className],
+                        className ? [className] : undefined,
                     )}
                     style={innerStyle}
                 >

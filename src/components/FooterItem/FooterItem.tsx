@@ -2,11 +2,11 @@ import React from 'react';
 
 import {Item, ItemProps} from '../CompositeBar/Item/Item';
 import {ASIDE_HEADER_ICON_SIZE} from '../constants';
-import {block} from '../utils/cn';
+import {createBlock} from '../utils/cn';
 
-import './FooterItem.scss';
+import styles from './FooterItem.scss';
 
-const b = block('footer-item');
+const b = createBlock('footer-item', styles);
 
 export interface FooterItemProps extends Omit<ItemProps, 'onItemClick' | 'onItemClickCapture'> {
     compact: boolean;

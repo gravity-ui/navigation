@@ -1,10 +1,10 @@
 import React from 'react';
 
-import {block} from '../../utils/cn';
+import {createBlock} from '../../utils/cn';
 
-import './Burger.scss';
+import styles from './Burger.scss';
 
-const b = block('mobile-header-burger');
+const b = createBlock('mobile-header-burger', styles);
 
 interface BurgerProps {
     closeTitle: string;

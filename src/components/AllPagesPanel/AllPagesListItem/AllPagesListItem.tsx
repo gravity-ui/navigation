@@ -4,11 +4,11 @@ import {Pin, PinFill} from '@gravity-ui/icons';
 import {Button, Icon} from '@gravity-ui/uikit';
 
 import {MenuItem} from '../../types';
-import {block} from '../../utils/cn';
+import {createBlock} from '../../utils/cn';
 
-import './AllPagesListItem.scss';
+import styles from './AllPagesListItem.scss';
 
-const b = block('all-pages-list-item');
+const b = createBlock('all-pages-list-item', styles);
 
 interface AllPagesListItemProps {
     item: MenuItem;

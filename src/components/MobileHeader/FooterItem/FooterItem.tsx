@@ -2,13 +2,13 @@ import React from 'react';
 
 import {Icon, IconProps, Sheet, eventBroker} from '@gravity-ui/uikit';
 
-import {block} from '../../utils/cn';
+import {createBlock} from '../../utils/cn';
 import {MOBILE_HEADER_ICON_SIZE} from '../constants';
 import {ModalItem} from '../types';
 
-import './FooterItem.scss';
+import styles from './FooterItem.scss';
 
-const b = block('mobile-header-footer-item');
+const b = createBlock('mobile-header-footer-item', styles);
 
 export interface FooterItemProps {
     icon?: IconProps['data'];

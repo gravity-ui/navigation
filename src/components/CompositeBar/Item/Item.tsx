@@ -5,7 +5,7 @@ import {ActionTooltip, Icon, List, Popup, PopupPlacement, PopupProps} from '@gra
 import {useAsideHeaderContext} from '../../AsideHeader/AsideHeaderContext';
 import {ASIDE_HEADER_ICON_SIZE} from '../../constants';
 import {MakeItemParams, MenuItem} from '../../types';
-import {block} from '../../utils/cn';
+import {createBlock} from '../../utils/cn';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {
     COLLAPSE_ITEM_ID,
@@ -15,9 +15,9 @@ import {
 } from '../constants';
 import {getSelectedItemIndex} from '../utils';
 
-import './Item.scss';
+import styles from './Item.scss';
 
-const b = block('composite-bar-item');
+const b = createBlock('composite-bar-item', styles);
 
 interface ItemPopup {
     popupVisible?: PopupProps['open'];

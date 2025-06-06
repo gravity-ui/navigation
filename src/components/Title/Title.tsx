@@ -3,13 +3,13 @@ import React from 'react';
 import {Xmark} from '@gravity-ui/icons';
 import {Button, Icon, Text} from '@gravity-ui/uikit';
 
-import {block} from '../utils/cn';
+import {createBlock} from '../utils/cn';
 
 import i18n from './i18n';
 
-import './Title.scss';
+import styles from './Title.scss';
 
-const b = block('title');
+const b = createBlock('title', styles);
 
 interface TitleProps {
     hasSeparator?: boolean;

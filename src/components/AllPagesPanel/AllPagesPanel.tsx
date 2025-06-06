@@ -5,16 +5,16 @@ import {Button, Flex, Icon, List, ListItemData, Text, Tooltip} from '@gravity-ui
 
 import {useAsideHeaderInnerContext} from '../AsideHeader/AsideHeaderContext';
 import {MenuItem} from '../types';
-import {block} from '../utils/cn';
+import {createBlock} from '../utils/cn';
 
 import {AllPagesListItem} from './AllPagesListItem';
 import {ALL_PAGES_ID} from './constants';
 import i18n from './i18n';
 import {useGroupedMenuItems} from './useGroupedMenuItems';
 
-import './AllPagesPanel.scss';
+import styles from './AllPagesPanel.scss';
 
-const b = block('all-pages-panel');
+const b = createBlock('all-pages-panel', styles);
 
 interface AllPagesPanelProps {
     className?: string;

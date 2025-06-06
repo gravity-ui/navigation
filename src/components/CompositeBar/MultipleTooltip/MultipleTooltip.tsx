@@ -3,14 +3,14 @@ import React from 'react';
 import {Popup, PopupProps} from '@gravity-ui/uikit';
 
 import {MenuItem} from '../../types';
-import {block} from '../../utils/cn';
+import {createBlock} from '../../utils/cn';
 import {COLLAPSE_ITEM_ID} from '../constants';
 
 import {MultipleTooltipContext} from './MultipleTooltipContext';
 
-import './MultipleTooltip.scss';
+import styles from './MultipleTooltip.scss';
 
-const b = block('multiple-tooltip');
+const b = createBlock('multiple-tooltip', styles);
 
 const POPUP_OFFSET: PopupProps['offset'] = {mainAxis: 4, crossAxis: -32};
 

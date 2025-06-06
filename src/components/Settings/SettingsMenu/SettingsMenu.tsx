@@ -2,13 +2,13 @@ import React from 'react';
 
 import {Icon} from '@gravity-ui/uikit';
 
-import {block} from '../../utils/cn';
+import {createBlock} from '../../utils/cn';
 import {useCurrent, useStableCallback} from '../helpers';
 import {Item, SettingsMenuProps} from '../types';
 
-import './SettingsMenu.scss';
+import styles from './SettingsMenu.scss';
 
-const b = block('settings-menu');
+const b = createBlock('settings-menu', styles);
 
 export interface SettingsMenuInstance {
     handleKeyDown(event: React.KeyboardEvent): boolean;
