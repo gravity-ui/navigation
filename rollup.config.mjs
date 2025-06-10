@@ -11,9 +11,8 @@ import {readFileSync} from 'fs';
 
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'));
 
-const input = [
-    'src/index.ts',
-];
+// Single input file - Rollup will automatically detect and split components
+const input = 'src/index.ts';
 
 const getPlugins = (outDir) => {
     return [
@@ -32,14 +31,14 @@ const getPlugins = (outDir) => {
                 generateScopedName: '[local]',
                 localsConvention: 'camelCase',
             },
-            extract: false,
-            inject: true,
+            extract: true,
+            inject: false,
             include: /\.module\.(css|scss|sass)$/,
         }),
         postcss({
             minimize: true,
-            extract: false,
-            inject: true,
+            extract: true,
+            inject: false,
             include: /\.(css|scss|sass)$/,
             exclude: /\.module\.(css|scss|sass)$/,
         }),
@@ -48,28 +47,38 @@ const getPlugins = (outDir) => {
 };
 
 export default [
+    // ESM build with automatic component splitting using preserveModules
     {
         input,
-        output: [
-            {
-                dir: packageJson.module,
-                format: 'esm',
-                sourcemap: true,
-            },
-        ],
+        output: {
+            dir: packageJson.module,
+            format: 'esm',
+            sourcemap: true,
+            preserveModules: true, // This automatically creates separate files for each module
+            preserveModulesRoot: 'src',
+        },
         plugins: getPlugins(packageJson.module),
         strictDeprecations: true,
+        external: (id) => {
+            // Mark peer dependencies as external
+            return ['react', 'react-dom', '@bem-react/classname', '@gravity-ui/components', '@gravity-ui/icons', '@gravity-ui/uikit'].some(dep => id.startsWith(dep));
+        },
     },
+    // CJS build with automatic component splitting using preserveModules
     {
         input,
-        output: [
-            {
-                dir: packageJson.main,
-                format: 'cjs',
-                sourcemap: true,
-            },
-        ],
+        output: {
+            dir: packageJson.main,
+            format: 'cjs',
+            sourcemap: true,
+            preserveModules: true, // This automatically creates separate files for each module
+            preserveModulesRoot: 'src',
+        },
         plugins: getPlugins(packageJson.main),
         strictDeprecations: true,
+        external: (id) => {
+            // Mark peer dependencies as external
+            return ['react', 'react-dom', '@bem-react/classname', '@gravity-ui/components', '@gravity-ui/icons', '@gravity-ui/uikit'].some(dep => id.startsWith(dep));
+        },
     },
 ];
