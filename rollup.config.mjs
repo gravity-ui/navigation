@@ -28,7 +28,7 @@ const getPlugins = (outDir) => {
         postcss({
             minimize: true,
             modules: {
-                generateScopedName: '[local]',
+                generateScopedName: '[name]__[local]___[hash:base64:5]',
                 localsConvention: 'camelCase',
             },
             extract: true,
