@@ -12,6 +12,7 @@ import {
     type OnResizeContinueHandler,
     type OnResizeHandler,
     useResizableDrawerItem,
+    useScrollLock,
 } from './utils';
 
 import './Drawer.scss';
@@ -199,6 +200,13 @@ export interface DrawerProps {
      * @default false
      * */
     keepMounted?: boolean;
+
+    /**
+     * Whether to lock page scroll when drawer is open.
+     * Applied only when hideVeil=true and disablePortal=false.
+     * @default false
+     */
+    scrollLock?: boolean;
 }
 
 export const Drawer: React.FC<DrawerProps> = ({
@@ -211,6 +219,7 @@ export const Drawer: React.FC<DrawerProps> = ({
     hideVeil,
     disablePortal = true,
     keepMounted = false,
+    scrollLock = false,
 }) => {
     let someItemVisible = false;
     React.Children.forEach(children, (child) => {
@@ -239,7 +248,10 @@ export const Drawer: React.FC<DrawerProps> = ({
     const containerRef = React.useRef<HTMLDivElement>(null);
     const veilRef = React.useRef<HTMLDivElement>(null);
 
-    const drawer = (
+    const shouldApplyScrollLock = scrollLock && someItemVisible && !disablePortal;
+    useScrollLock(shouldApplyScrollLock);
+
+    return (
         <Transition
             in={someItemVisible}
             timeout={{enter: 0, exit: TIMEOUT}}
@@ -249,7 +261,8 @@ export const Drawer: React.FC<DrawerProps> = ({
         >
             {(state) => {
                 const childrenVisible = someItemVisible && state === 'entered';
-                return (
+
+                const content = (
                     <div ref={containerRef} className={b({hideVeil}, className)} style={style}>
                         <CSSTransition
                             in={childrenVisible}
@@ -280,17 +293,22 @@ export const Drawer: React.FC<DrawerProps> = ({
                         })}
                     </div>
                 );
+
+                if (disablePortal) {
+                    return content;
+                }
+
+                // When hideVeil=true, we don't use FloatingOverlay to avoid blocking mouse events
+                if (hideVeil) {
+                    return <Portal>{content}</Portal>;
+                }
+
+                return (
+                    <Portal>
+                        <FloatingOverlay lockScroll={true}>{content}</FloatingOverlay>
+                    </Portal>
+                );
             }}
         </Transition>
-    );
-
-    if (disablePortal) {
-        return drawer;
-    }
-
-    return (
-        <Portal>
-            {someItemVisible ? <FloatingOverlay lockScroll>{drawer}</FloatingOverlay> : drawer}
-        </Portal>
     );
 };

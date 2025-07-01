@@ -21,6 +21,19 @@ function getEventClientPosition(
     return direction === 'horizontal' ? e.clientX : e.clientY;
 }
 
+export function useScrollLock(enabled: boolean) {
+    React.useEffect(() => {
+        if (!enabled) return;
+
+        const originalStyle = window.getComputedStyle(document.body).overflow;
+        document.body.style.overflow = 'hidden';
+
+        return () => {
+            document.body.style.overflow = originalStyle;
+        };
+    }, [enabled]);
+}
+
 export interface UseResizeHandlersParams {
     onStart: () => void;
     onMove: (delta: number) => void;
@@ -99,7 +112,7 @@ export function useResizeHandlers({
 
             onStart();
         },
-        [handleEnd, handleMove, onStart, direction],
+        [handleEnd, handleMove, onStart, direction, disableSelect],
     );
 
     return {
