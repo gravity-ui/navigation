@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.4.0](https://github.com/gravity-ui/navigation/compare/v3.3.9...v3.4.0) (2025-07-02)
+
+
+### Features
+
+* **Drawer:** add scrollLock props ([#441](https://github.com/gravity-ui/navigation/issues/441)) ([7f6a08e](https://github.com/gravity-ui/navigation/commit/7f6a08ea68384a48862b0cee15298343806fa243))
+
 ## [3.3.9](https://github.com/gravity-ui/navigation/compare/v3.3.8...v3.3.9) (2025-06-04)
 
 
