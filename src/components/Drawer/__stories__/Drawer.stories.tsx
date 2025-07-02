@@ -6,6 +6,7 @@ import {DisablePortalShowcase} from './DisablePortal';
 import {DrawerShowcase} from './DrawerShowcase';
 import {HideVeilShowcase} from './HideVeil';
 import {ResizableItemShowcase} from './ResizableItem';
+import {ScrollLockShowcase} from './ScrollLock';
 import {UsePortalShowcase} from './UsePortal';
 
 export default {
@@ -24,6 +25,9 @@ export const DisablePortal = DisablePortalTemplate.bind({});
 
 const HideVeilTemplate: StoryFn = () => <HideVeilShowcase />;
 export const HideVeil = HideVeilTemplate.bind({});
+
+const ScrollLockTemplate: StoryFn = () => <ScrollLockShowcase />;
+export const ScrollLock = ScrollLockTemplate.bind({});
 
 const UsePortalTemplate: StoryFn = () => <UsePortalShowcase />;
 export const UsePortal = UsePortalTemplate.bind({});
