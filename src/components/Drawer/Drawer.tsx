@@ -248,7 +248,7 @@ export const Drawer: React.FC<DrawerProps> = ({
     const containerRef = React.useRef<HTMLDivElement>(null);
     const veilRef = React.useRef<HTMLDivElement>(null);
 
-    const shouldApplyScrollLock = scrollLock && someItemVisible && !disablePortal;
+    const shouldApplyScrollLock = scrollLock && someItemVisible && hideVeil && !disablePortal;
     useScrollLock(shouldApplyScrollLock);
 
     return (
