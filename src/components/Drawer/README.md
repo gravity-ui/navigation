@@ -79,6 +79,7 @@ The Drawer module consists of two primary components: `Drawer` and `DrawerItem`.
 | minResizeWidth   | The minimum width of the resizable drawer item                                            |         `number`          |         |
 | maxResizeWidth   | The maximum width of the resizable drawer item                                            |         `number`          |         |
 | keepMounted      | Keep child components mounted when closed, prioritized over Drawer.keepMounted property   |         `boolean`         | `false` |
+| style            | Optional inline styles to be applied to the DrawerItem component.                         |   `React.CSSProperties`   |         |
 
 ### `Drawer` Props
 

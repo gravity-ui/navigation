@@ -40,16 +40,25 @@ export const OverlapPanel = ({
     visible,
     topOffset,
 }: OverlapPanelProps) => {
+    const topOffsetValue = typeof topOffset === 'number' ? `${topOffset}px` : topOffset;
+    const innerStyle = React.useMemo(
+        () => ({top: `calc(${topOffsetValue} + var(--gn-top-alert-height, 0px)`}),
+        [topOffsetValue],
+    );
+
     return (
         <Drawer
             className={b('', {action: Boolean(action)}, className)}
             onVeilClick={onClose}
             onEscape={onClose}
-            style={{
-                top: topOffset,
-            }}
+            style={innerStyle}
         >
-            <DrawerItem id="overlap" visible={visible} className={b('drawer-item')}>
+            <DrawerItem
+                id="overlap"
+                visible={visible}
+                className={b('drawer-item')}
+                style={innerStyle}
+            >
                 <div className={b('header')}>
                     <Button
                         size="l"
