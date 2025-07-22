@@ -1,6 +1,6 @@
 import {FloatingOverlay} from '@floating-ui/react';
 
-import React, {CSSProperties} from 'react';
+import React from 'react';
 
 import {Portal, useForkRef} from '@gravity-ui/uikit';
 import {CSSTransition, Transition} from 'react-transition-group';
@@ -81,6 +81,9 @@ export interface DrawerItemProps {
      * @default false
      * */
     keepMounted?: boolean;
+
+    /** Optional inline styles to be applied to the DrawerItem component. */
+    style?: React.CSSProperties;
 }
 
 export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
@@ -99,6 +102,7 @@ export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
             onResizeContinue,
             onResize,
             keepMounted = false,
+            style = {},
         } = props;
 
         const [isInitialRender, setInitialRender] = React.useState(true);
@@ -117,14 +121,18 @@ export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
             onResizeContinue,
         });
 
-        const style: CSSProperties = {};
-        if (resizable) {
-            if (['left', 'right'].includes(direction)) {
-                style.width = `${resizedWidth}px`;
-            } else {
-                style.height = `${resizedWidth}px`;
+        const innerStyle = React.useMemo(() => {
+            const css = {...style};
+            if (resizable) {
+                if (['left', 'right'].includes(direction)) {
+                    css.width = `${resizedWidth}px`;
+                } else {
+                    css.height = `${resizedWidth}px`;
+                }
             }
-        }
+
+            return css;
+        }, [direction, resizable, resizedWidth, style]);
 
         React.useEffect(() => {
             setInitialRender(true);
@@ -158,7 +166,7 @@ export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
                         },
                         [className],
                     )}
-                    style={style}
+                    style={innerStyle}
                 >
                     {resizerElement}
                     {children ?? content}
@@ -186,13 +194,13 @@ export interface DrawerProps {
     /** Optional callback function that is called when the veil (overlay) is clicked. */
     onVeilClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 
-    /** Optional callback function that is called when the escape key is pressed, if the drawer is open. */
+    /** Optional callback function that is called when the escape key is pressed if the drawer is open. */
     onEscape?: (event: KeyboardEvent) => void;
 
     /** Optional flag to hide the background darkening */
     hideVeil?: boolean;
 
-    /** Optional flag to not use `Portal` for drawer */
+    /** Optional flag to doesn't use `Portal` for drawer */
     disablePortal?: boolean;
 
     /**
