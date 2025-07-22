@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.4.1](https://github.com/gravity-ui/navigation/compare/v3.4.0...v3.4.1) (2025-07-22)
+
+
+### Bug Fixes
+
+* **OverlapPanel:** fix OverlapPanel top position ([#445](https://github.com/gravity-ui/navigation/issues/445)) ([725f125](https://github.com/gravity-ui/navigation/commit/725f1253a68d83314f3f84ae1ad286782d8a7856))
+
 ## [3.4.0](https://github.com/gravity-ui/navigation/compare/v3.3.9...v3.4.0) (2025-07-02)
 
 
