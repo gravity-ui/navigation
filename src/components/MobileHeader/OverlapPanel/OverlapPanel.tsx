@@ -41,23 +41,45 @@ export const OverlapPanel = ({
     topOffset,
 }: OverlapPanelProps) => {
     const topOffsetValue = typeof topOffset === 'number' ? `${topOffset}px` : topOffset;
-    const innerStyle = React.useMemo(
-        () => ({top: `calc(${topOffsetValue} + var(--gn-top-alert-height, 0px)`}),
+    const [itemPosition, setItemPosition] = React.useState<React.CSSProperties['position']>();
+
+    const drawerStyle = React.useMemo(
+        () => ({top: `calc(${topOffsetValue} + var(--gn-top-alert-height, 0px))`}),
         [topOffsetValue],
     );
+
+    const drawerItemStyle = React.useMemo(
+        () =>
+            itemPosition === 'absolute'
+                ? {}
+                : {top: `calc(${topOffsetValue} + var(--gn-top-alert-height, 0px))`},
+        [topOffsetValue, itemPosition],
+    );
+
+    const itemRef = React.useRef<HTMLDivElement>(null);
+
+    // It is necessary to determine the position of the DrawerItem in order to correctly set the top offset
+    React.useLayoutEffect(() => {
+        if (itemRef.current) {
+            const style = getComputedStyle(itemRef.current);
+            const position = style.position as React.CSSProperties['position'];
+            setItemPosition(position);
+        }
+    }, []);
 
     return (
         <Drawer
             className={b('', {action: Boolean(action)}, className)}
             onVeilClick={onClose}
             onEscape={onClose}
-            style={innerStyle}
+            style={drawerStyle}
         >
             <DrawerItem
                 id="overlap"
+                ref={itemRef}
                 visible={visible}
                 className={b('drawer-item')}
-                style={innerStyle}
+                style={drawerItemStyle}
             >
                 <div className={b('header')}>
                     <Button
