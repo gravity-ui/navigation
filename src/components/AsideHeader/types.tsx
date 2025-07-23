@@ -37,6 +37,13 @@ export interface AsideHeaderGeneralProps extends QAProps {
         compact: boolean;
         asideRef: React.RefObject<HTMLDivElement>;
     }) => React.ReactNode;
+    collapseButtonWrapper?: (
+        defaultButton: React.ReactNode,
+        data: {
+            compact: boolean;
+            onChangeCompact?: (compact: boolean) => void;
+        },
+    ) => React.ReactNode;
     editMenuProps?: EditMenuProps;
     onClosePanel?: () => void;
     onChangeCompact?: (compact: boolean) => void;
