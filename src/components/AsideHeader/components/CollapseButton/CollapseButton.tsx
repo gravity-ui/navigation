@@ -17,7 +17,8 @@ export interface CollapseButtonProps {
 }
 
 export const CollapseButton = ({className}: CollapseButtonProps) => {
-    const {onChangeCompact, compact, expandTitle, collapseTitle} = useAsideHeaderInnerContext();
+    const {onChangeCompact, compact, expandTitle, collapseTitle, collapseButtonWrapper} =
+        useAsideHeaderInnerContext();
 
     const onCollapseButtonClick = useCallback(() => {
         onChangeCompact?.(!compact);
@@ -26,7 +27,8 @@ export const CollapseButton = ({className}: CollapseButtonProps) => {
     const buttonTitle = compact
         ? expandTitle || i18n('button_expand')
         : collapseTitle || i18n('button_collapse');
-    return (
+
+    const defaultButton = (
         <button
             className={b({compact}, className)}
             onClick={onCollapseButtonClick}
@@ -35,4 +37,10 @@ export const CollapseButton = ({className}: CollapseButtonProps) => {
             <Icon data={controlMenuButtonIcon} className={b('icon')} width="16" height="10" />
         </button>
     );
+
+    if (collapseButtonWrapper) {
+        return collapseButtonWrapper(defaultButton, {compact, onChangeCompact});
+    }
+
+    return defaultButton;
 };

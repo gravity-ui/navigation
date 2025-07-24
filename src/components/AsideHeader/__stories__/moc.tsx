@@ -6,6 +6,8 @@ import {ASIDE_HEADER_EXPANDED_WIDTH} from '../../constants';
 import {AsideHeaderContextType} from '../AsideHeaderContext';
 import {AsideHeaderProps} from '../types';
 
+import logoIcon from '../../../../.storybook/assets/logo.svg';
+
 function renderTag(tag: string) {
     return <div className="composite-bar-showcase__tag">{tag.toUpperCase()}</div>;
 }
@@ -141,6 +143,14 @@ const MENU_ITEMS_CLAMPED: AsideHeaderProps['menuItems'] = [
         type: 'action',
     },
 ];
+
+export const DEFAULT_LOGO = {
+    text: 'Service',
+    icon: logoIcon,
+    href: '#',
+    onClick: () => alert('click on logo'),
+    'aria-label': 'Service',
+};
 
 export const menuItemsClamped = MENU_ITEMS_CLAMPED.concat({
     id: 'divider',

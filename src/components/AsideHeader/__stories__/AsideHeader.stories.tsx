@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Button} from '@gravity-ui/uikit';
+import {Button, Flex, Icon, Text, spacing} from '@gravity-ui/uikit';
 import type {Meta, StoryFn} from '@storybook/react';
 
 import {AsideHeader} from '../AsideHeader';
@@ -9,7 +9,7 @@ import {PageLayout} from '../components/PageLayout/PageLayout';
 import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
 
 import {AsideHeaderShowcase} from './AsideHeaderShowcase';
-import {menuItemsClamped, menuItemsShowcase} from './moc';
+import {DEFAULT_LOGO, menuItemsClamped, menuItemsShowcase} from './moc';
 
 import logoIcon from '../../../../.storybook/assets/logo.svg';
 
@@ -108,13 +108,7 @@ const AdvancedUsageTemplate: StoryFn = (args) => {
             <PageLayoutAside
                 headerDecoration
                 menuItems={menuItemsShowcase}
-                logo={{
-                    text: 'Service',
-                    icon: logoIcon,
-                    href: '#',
-                    onClick: () => alert('click on logo'),
-                    'aria-label': 'Service',
-                }}
+                logo={DEFAULT_LOGO}
                 onChangeCompact={setCompact}
                 qa={'pl-aside'}
                 {...args}
@@ -199,3 +193,47 @@ export function LineClamp() {
         </PageLayout>
     );
 }
+
+const CollapseButtonWrapperTemplate: StoryFn = (args) => {
+    const [compact, setCompact] = React.useState(args.initialCompact);
+
+    return (
+        <PageLayout compact={compact}>
+            <PageLayoutAside
+                headerDecoration
+                menuItems={menuItemsShowcase}
+                logo={DEFAULT_LOGO}
+                onChangeCompact={setCompact}
+                collapseButtonWrapper={(defaultButton, {compact}) => (
+                    <React.Fragment>
+                        {defaultButton}
+                        <div
+                            style={{
+                                backgroundColor: 'var(--g-color-base-generic)',
+                                padding: '5px',
+                            }}
+                        >
+                            <Flex justifyContent="center" alignItems="center">
+                                {
+                                    <Icon
+                                        size={14}
+                                        data={logoIcon}
+                                        className={compact ? undefined : spacing({mr: 1})}
+                                    />
+                                }
+                                {compact ? null : <Text color="secondary">{'Gravity UI'}</Text>}
+                            </Flex>
+                        </div>
+                    </React.Fragment>
+                )}
+                qa={'pl-aside-collapse-wrapper'}
+                {...args}
+            />
+        </PageLayout>
+    );
+};
+
+export const CollapseButtonWrapper = CollapseButtonWrapperTemplate.bind({});
+CollapseButtonWrapper.args = {
+    initialCompact: false,
+};
