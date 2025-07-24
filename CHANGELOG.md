@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.5.0](https://github.com/gravity-ui/navigation/compare/v3.4.1...v3.5.0) (2025-07-24)
+
+
+### Features
+
+* **AsideHeader:** add collapseButtonWrapper prop ([#448](https://github.com/gravity-ui/navigation/issues/448)) ([6c80ca8](https://github.com/gravity-ui/navigation/commit/6c80ca893167c4b64a8c7ace4856320639587cf0))
+
 ## [3.4.1](https://github.com/gravity-ui/navigation/compare/v3.4.0...v3.4.1) (2025-07-22)
 
 
