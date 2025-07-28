@@ -14,12 +14,6 @@
         border-bottom: 1px solid var(--g-color-line-generic);
     }
 
-    &__title {
-        display: flex;
-        gap: 8px;
-        align-items: baseline;
-    }
-
     &__body {
         position: absolute;
         top: 77px;

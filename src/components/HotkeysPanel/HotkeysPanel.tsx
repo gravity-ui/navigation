@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import type {ReactNode} from 'react';
 
-import {Hotkey, List, TextInput} from '@gravity-ui/uikit';
+import {HelpMark, Hotkey, List, Text, TextInput} from '@gravity-ui/uikit';
 import type {ListProps} from '@gravity-ui/uikit';
 
 import {Drawer, DrawerItem} from '../Drawer/Drawer';
@@ -18,6 +18,7 @@ const b = block('hotkeys-panel');
 export type HotkeysPanelProps<T> = {
     hotkeys: HotkeysGroup<T>[];
     title?: ReactNode;
+    hotkey?: string;
     filterable?: boolean;
     filterPlaceholder?: string;
     emptyState?: ReactNode;
@@ -64,6 +65,7 @@ export function HotkeysPanel<T = {}>({
     filterable = true,
     filterPlaceholder,
     title,
+    hotkey,
     emptyState,
     ...listProps
 }: HotkeysPanelProps<T>) {
@@ -76,20 +78,40 @@ export function HotkeysPanel<T = {}>({
 
     const renderItem = useCallback(
         (item: HotkeysListItem) => (
-            <div
-                className={b('item-content', {group: item.group}, itemContentClassName)}
+            <Text
+                as={item.group ? ('h3' as const) : ('p' as const)}
+                variant={item.group ? 'subheader-2' : 'body-1'}
+                className={b(
+                    'item-content',
+                    {type: item.group ? 'group' : 'item'},
+                    itemContentClassName,
+                )}
                 key={item.title}
             >
-                {item.title}
+                <span>
+                    {item.title}
+                    {item.hint && (
+                        <HelpMark
+                            aria-hidden
+                            popoverProps={{className: b('item-hint-tooltip')}}
+                            className={b('item-hint')}
+                        >
+                            {item.hint}
+                        </HelpMark>
+                    )}
+                </span>
                 {item.value && <Hotkey className={b('hotkey')} value={item.value} />}
-            </div>
+            </Text>
         ),
-        [],
+        [itemContentClassName],
     );
 
     const drawerItemContent = (
         <React.Fragment>
-            <h2 className={b('title', titleClassName)}>{title}</h2>
+            <Text variant="subheader-3" as={'h2' as const} className={b('title', titleClassName)}>
+                {title}
+                {hotkey && <Hotkey value={hotkey} />}
+            </Text>
             {filterable && (
                 <TextInput
                     value={filter}
@@ -107,7 +129,7 @@ export function HotkeysPanel<T = {}>({
                 items={hotkeysList}
                 renderItem={renderItem}
                 itemClassName={b('item', itemClassName)}
-                emptyPlaceholder={emptyState as string}
+                emptyPlaceholder={emptyState}
                 {...listProps}
             />
         </React.Fragment>
@@ -127,8 +149,9 @@ export function HotkeysPanel<T = {}>({
                 id="hotkeys"
                 visible={visible}
                 className={b('drawer-item', drawerItemClassName)}
-                content={drawerItemContent}
-            />
+            >
+                {drawerItemContent}
+            </DrawerItem>
         </Drawer>
     );
 }

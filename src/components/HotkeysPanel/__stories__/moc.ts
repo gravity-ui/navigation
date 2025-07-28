@@ -24,6 +24,7 @@ export const hotkeys: HotkeysGroup[] = [
             {
                 title: 'Go to history',
                 value: 'shift+h',
+                hint: 'Go to issue history tab',
             },
             {
                 title: 'Go to attachments',

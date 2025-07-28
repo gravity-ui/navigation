@@ -16,7 +16,8 @@ import {HotkeysPanel} from '@gravity-ui/navigation';
 | Property             | Type            | Required | Default | Description                      |
 | :------------------- | :-------------- | :------: | :------ | :------------------------------- |
 | hotkeys              | `Array`         |   yes    |         | List of hotkey groups            |
-| title                | `Array`         |          |         | The panel title                  |
+| title                | `ReactNode`     |          |         | The panel title                  |
+| hotkey               | `String`        |          |         | The panel open hotkey            |
 | visible              | `Boolean`       |   yes    |         | Whether drawer visible or not    |
 | onClose              | `Function`      |          |         | Close drawer handler             |
 | filterable           | `Boolean`       |          | true    | Whether show search input or not |

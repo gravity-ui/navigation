@@ -10,7 +10,7 @@ $block: '.#{variables.$ns}hotkeys-panel';
 
     --hotkeys-panel-width: 400px;
     --hotkeys-panel-vertical-padding: 18px;
-    --hotkeys-panel-horizontal-padding: 24px;
+    --hotkeys-panel-horizontal-padding: var(--g-spacing-6);
 
     &__drawer-item {
         width: var(--hotkeys-panel-width);
@@ -21,13 +21,17 @@ $block: '.#{variables.$ns}hotkeys-panel';
     }
 
     &__title {
-        margin: 0 var(--hotkeys-panel-horizontal-padding) 16px
+        margin: 0 var(--hotkeys-panel-horizontal-padding) var(--g-spacing-4)
             var(--hotkeys-panel-horizontal-padding);
+        display: flex;
+        gap: var(--g-spacing-2);
+        align-items: baseline;
+        justify-content: space-between;
     }
 
     &__search {
         padding: 0 var(--hotkeys-panel-horizontal-padding);
-        margin-bottom: 14px;
+        margin-bottom: var(--g-spacing-4);
         box-sizing: border-box;
     }
 
@@ -38,10 +42,17 @@ $block: '.#{variables.$ns}hotkeys-panel';
 
     &__item {
         height: auto;
-        padding: 8px var(--hotkeys-panel-horizontal-padding);
+        padding: var(--g-spacing-2) 0;
+        margin: 0 var(--hotkeys-panel-horizontal-padding);
 
         &.g-list__item_active {
             background: inherit;
+        }
+
+        &:not(:first-child):has(#{$block}__item-content_type_group) {
+            border-top: 1px solid var(--g-color-line-generic);
+            margin-top: var(--g-spacing-3);
+            padding-top: var(--g-spacing-4);
         }
     }
 
@@ -49,19 +60,19 @@ $block: '.#{variables.$ns}hotkeys-panel';
         display: flex;
         align-items: baseline;
         justify-content: space-between;
+        margin: 0;
 
         width: 100%;
 
-        font-size: var(--g-text-body-1-font-size);
-        line-height: var(--g-text-body-1-line-height);
-
         color: var(--g-color-text-primary);
+    }
 
-        &_group {
-            font-size: var(--g-text-body-2-font-size);
-            font-weight: 500;
-            line-height: var(--g-text-body-2-line-height);
-        }
+    &__item-hint {
+        margin-left: var(--g-spacing-1);
+    }
+
+    &__item-hint-tooltip {
+        max-width: 217px;
     }
 
     &__hotkey {
