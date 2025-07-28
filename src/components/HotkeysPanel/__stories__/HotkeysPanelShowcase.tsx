@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Button, Hotkey} from '@gravity-ui/uikit';
+import {Button} from '@gravity-ui/uikit';
 
 import {HotkeysGroup, HotkeysPanel, HotkeysPanelProps} from '../../../components/HotkeysPanel';
 import {cn} from '../../utils/cn';
@@ -33,12 +33,8 @@ export function HotkeysPanelShowcase({filterable}: HotkeysPanelShowcaseProps) {
                 visible={visible}
                 onClose={handleClose}
                 topOffset={77}
-                title={
-                    <span className={b('title')}>
-                        Hotkeys
-                        <Hotkey value="shift+K" />
-                    </span>
-                }
+                title="Hotkeys"
+                hotkey="shift+K"
                 filterable={filterable}
                 filterPlaceholder="Search"
                 emptyState={<div className={b('empty')}>No hotkeys found</div>}
