@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.6.1](https://github.com/gravity-ui/navigation/compare/v3.6.0...v3.6.1) (2025-07-28)
+
+
+### Bug Fixes
+
+* **Logo:** correct display of the logo for long titles ([#451](https://github.com/gravity-ui/navigation/issues/451)) ([a269372](https://github.com/gravity-ui/navigation/commit/a2693725e4a004e29d2fff8ad754336c331e33e3))
+
 ## [3.6.0](https://github.com/gravity-ui/navigation/compare/v3.5.0...v3.6.0) (2025-07-28)
 
 
