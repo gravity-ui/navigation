@@ -13,8 +13,11 @@ $block: '.#{variables.$ns}logo';
         display: flex;
         align-items: center;
         flex-shrink: 0;
-        justify-content: center;
+        justify-content: flex-start;
         cursor: pointer;
+        width: 100%;
+        word-break: break-word;
+        overflow-wrap: break-word;
 
         &,
         &:hover,
@@ -37,5 +40,6 @@ $block: '.#{variables.$ns}logo';
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-shrink: 0;
     }
 }
