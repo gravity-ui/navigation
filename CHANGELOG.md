@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.6.0](https://github.com/gravity-ui/navigation/compare/v3.5.0...v3.6.0) (2025-07-28)
+
+
+### Features
+
+* **HotkeysPanel:** hotkeys panel redesign ([#443](https://github.com/gravity-ui/navigation/issues/443)) ([b8e6fd6](https://github.com/gravity-ui/navigation/commit/b8e6fd6c22c59121b96a2f2c8877f729cb93e824))
+
 ## [3.5.0](https://github.com/gravity-ui/navigation/compare/v3.4.1...v3.5.0) (2025-07-24)
 
 
