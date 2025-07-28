@@ -13,8 +13,9 @@ $block: '.#{variables.$ns}logo';
         display: flex;
         align-items: center;
         flex-shrink: 0;
-        justify-content: center;
+        justify-content: flex-start;
         cursor: pointer;
+        width: 100%;
 
         &,
         &:hover,
