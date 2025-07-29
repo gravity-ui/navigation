@@ -34,7 +34,7 @@ export function HotkeysPanelShowcase({filterable}: HotkeysPanelShowcaseProps) {
                 onClose={handleClose}
                 topOffset={77}
                 title="Hotkeys"
-                hotkey="shift+K"
+                togglePanelHotkey="shift+K"
                 filterable={filterable}
                 filterPlaceholder="Search"
                 emptyState={<div className={b('empty')}>No hotkeys found</div>}

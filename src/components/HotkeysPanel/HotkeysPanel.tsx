@@ -18,7 +18,7 @@ const b = block('hotkeys-panel');
 export type HotkeysPanelProps<T> = {
     hotkeys: HotkeysGroup<T>[];
     title?: ReactNode;
-    hotkey?: string;
+    togglePanelHotkey?: string;
     filterable?: boolean;
     filterPlaceholder?: string;
     emptyState?: ReactNode;
@@ -65,7 +65,7 @@ export function HotkeysPanel<T = {}>({
     filterable = true,
     filterPlaceholder,
     title,
-    hotkey,
+    togglePanelHotkey,
     emptyState,
     ...listProps
 }: HotkeysPanelProps<T>) {
@@ -110,7 +110,7 @@ export function HotkeysPanel<T = {}>({
         <React.Fragment>
             <Text variant="subheader-3" as={'h2' as const} className={b('title', titleClassName)}>
                 {title}
-                {hotkey && <Hotkey value={hotkey} />}
+                {togglePanelHotkey && <Hotkey value={togglePanelHotkey} />}
             </Text>
             {filterable && (
                 <TextInput
