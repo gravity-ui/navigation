@@ -3,12 +3,12 @@ import React, {useRef} from 'react';
 import {setRef} from '@gravity-ui/uikit';
 
 import {useVisibleMenuItems} from '../../AllPagesPanel';
-import {CompositeBar} from '../../CompositeBar/CompositeBar';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import i18n from '../i18n';
 import {b} from '../utils';
 
 import {CollapseButton} from './CollapseButton/CollapseButton';
+import {CompositeBar} from './CompositeBar';
 import {Header} from './Header';
 import {Panels} from './Panels';
 
@@ -51,6 +51,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     {visibleMenuItems?.length ? (
                         <CompositeBar
                             type="menu"
+                            compact={compact}
                             items={visibleMenuItems}
                             menuMoreTitle={menuMoreTitle ?? i18n('label_more')}
                             onItemClick={onItemClick}

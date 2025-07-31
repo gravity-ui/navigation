@@ -2,8 +2,6 @@ import React, {HTMLAttributeAnchorTarget} from 'react';
 
 import {AlertProps, IconProps, QAProps} from '@gravity-ui/uikit';
 
-import {ItemProps} from './CompositeBar/Item/Item';
-
 export type MenuItemType = 'regular' | 'action' | 'divider';
 
 export type OpenModalSubscriber = (open: boolean) => void;
@@ -57,8 +55,6 @@ export interface MenuItem extends QAProps {
      */
     category?: string;
 }
-
-export type SubheaderMenuItem = Omit<ItemProps, 'onItemClick' | 'onItemClickCapture'>;
 
 export interface LogoProps {
     text: (() => React.ReactNode) | string;

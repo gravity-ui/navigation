@@ -2,9 +2,9 @@ import React from 'react';
 
 import {Popup, PopupProps} from '@gravity-ui/uikit';
 
-import {MenuItem} from '../../types';
-import {block} from '../../utils/cn';
+import {block} from '../../../../utils/cn';
 import {COLLAPSE_ITEM_ID} from '../constants';
+import {CompositeBarItem} from '../types';
 
 import {MultipleTooltipContext} from './MultipleTooltipContext';
 
@@ -15,7 +15,7 @@ const b = block('multiple-tooltip');
 const POPUP_OFFSET: PopupProps['offset'] = {mainAxis: 4, crossAxis: -32};
 
 export type MultipleTooltipProps = Pick<PopupProps, 'open' | 'anchorRef' | 'placement'> & {
-    items: MenuItem[];
+    items: CompositeBarItem[];
 };
 
 export const MultipleTooltip: React.FC<MultipleTooltipProps> = ({
@@ -40,27 +40,27 @@ export const MultipleTooltip: React.FC<MultipleTooltipProps> = ({
                 <div className={b('items-container')}>
                     {items
                         .filter(
-                            ({type = 'regular', id}) =>
+                            ({item: {type = 'regular', id}}) =>
                                 !hideCollapseItemTooltip ||
                                 (id !== COLLAPSE_ITEM_ID && type !== 'action'),
                         )
-                        .map((item, idx) => {
-                            switch (item.type) {
+                        .map((currentItem, idx) => {
+                            switch (currentItem.item.type) {
                                 case 'divider':
                                     return (
                                         <div className={b('item', {divider: true})} key={idx}>
-                                            {item.title}
+                                            {currentItem.item.title}
                                         </div>
                                     );
                                 default:
                                     return (
                                         <div
                                             className={b('item', {
-                                                active: item === activeItem,
+                                                active: currentItem === activeItem,
                                             })}
                                             key={idx}
                                         >
-                                            {item.title}
+                                            {currentItem.item.title}
                                         </div>
                                     );
                             }

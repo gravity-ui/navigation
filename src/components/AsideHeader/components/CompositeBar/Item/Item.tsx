@@ -2,10 +2,12 @@ import React from 'react';
 
 import {ActionTooltip, Icon, List, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
 
-import {useAsideHeaderContext} from '../../AsideHeader/AsideHeaderContext';
-import {ASIDE_HEADER_ICON_SIZE} from '../../constants';
-import {MakeItemParams, MenuItem} from '../../types';
-import {block} from '../../utils/cn';
+import {AsideHeaderItem} from 'src/components/AsideHeader/types';
+
+import {ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
+import {MakeItemParams, MenuItem} from '../../../../types';
+import {block} from '../../../../utils/cn';
+import {useAsideHeaderContext} from '../../../AsideHeaderContext';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {
     COLLAPSE_ITEM_ID,
@@ -19,46 +21,18 @@ import './Item.scss';
 
 const b = block('composite-bar-item');
 
-interface ItemPopup {
-    popupVisible?: PopupProps['open'];
-    /**
-     * floating element anchor ref object
-     *
-     * @deprecated Use `popupAnchorElement` instead
-     * */
-    popupAnchor?: PopupProps['anchorRef'];
-    popupAnchorElement?: PopupProps['anchorElement'];
-    popupPlacement?: PopupProps['placement'];
-    popupOffset?: PopupProps['offset'];
-    popupKeepMounted?: PopupProps['keepMounted'];
-    renderPopupContent?: () => React.ReactNode;
-    /**
-     * This callback will be called when Escape key pressed on keyboard, or click outside was made
-     * This behaviour could be disabled with `disableEscapeKeyDown`
-     * and `disableOutsideClick` options
-     *
-     * @deprecated Use `onOpenChangePopup` instead
-     */
-    onClosePopup?: () => void;
-    onOpenChangePopup?: PopupProps['onOpenChange'];
-}
-
-export interface ItemProps extends ItemPopup {
-    item: MenuItem;
-    enableTooltip?: boolean;
+export interface ItemProps extends AsideHeaderItem {
     onItemClick?: (
         item: MenuItem,
         collapsed: boolean,
         event: React.MouseEvent<HTMLElement, MouseEvent>,
     ) => void;
     onItemClickCapture?: (event: React.SyntheticEvent) => void;
-    onCollapseItemClick?: () => void;
-    bringForward?: boolean;
 }
 
 interface ItemInnerProps extends ItemProps {
     className?: string;
-    collapseItems?: MenuItem[];
+    collapseItems?: AsideHeaderItem[];
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
 }
@@ -86,6 +60,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         item,
         className,
         collapseItems,
+        compact,
         onMouseLeave,
         onMouseEnter,
         enableTooltip = true,
@@ -103,8 +78,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         onCollapseItemClick,
         bringForward,
     } = props;
-
-    const {compact} = useAsideHeaderContext();
 
     const [open, toggleOpen] = React.useState<boolean>(false);
 
@@ -319,13 +292,13 @@ function CollapsedPopup({
                     filterable={false}
                     sortable={false}
                     onItemClick={onClose}
-                    renderItem={(collapseItem) => {
+                    renderItem={({item}) => {
                         const makeCollapseNode = ({
                             title: titleEl,
                             icon: iconEl,
                         }: MakeItemParams) => {
-                            const [Tag, tagProps] = collapseItem.link
-                                ? ['a' as const, {href: collapseItem.link}]
+                            const [Tag, tagProps] = item.link
+                                ? ['a' as const, {href: item.link}]
                                 : ['button' as const, {}];
 
                             return (
@@ -333,7 +306,7 @@ function CollapsedPopup({
                                     {...tagProps}
                                     className={b('collapse-item')}
                                     onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-                                        onItemClick?.(collapseItem, true, event);
+                                        onItemClick?.(item, true, event);
                                     }}
                                 >
                                     {iconEl}
@@ -342,24 +315,20 @@ function CollapsedPopup({
                             );
                         };
 
-                        const titleNode = renderItemTitle(collapseItem);
-                        const iconNode = collapseItem.icon && (
-                            <Icon
-                                data={collapseItem.icon}
-                                size={14}
-                                className={b('collapse-item-icon')}
-                            />
+                        const titleNode = renderItemTitle(item);
+                        const iconNode = item.icon && (
+                            <Icon data={item.icon} size={14} className={b('collapse-item-icon')} />
                         );
 
                         const params = {title: titleNode, icon: iconNode};
                         const opts = {
                             compact: Boolean(compact),
                             collapsed: true,
-                            item: collapseItem,
+                            item,
                             ref: anchorRef,
                         };
-                        if (typeof collapseItem.itemWrapper === 'function') {
-                            return collapseItem.itemWrapper(params, makeCollapseNode, opts);
+                        if (typeof item.itemWrapper === 'function') {
+                            return item.itemWrapper(params, makeCollapseNode, opts);
                         } else {
                             return makeCollapseNode(params);
                         }

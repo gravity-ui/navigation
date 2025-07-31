@@ -3,8 +3,8 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Portal} from '@gravity-ui/uikit';
 import debounceFn from 'lodash/debounce';
 
-import {useAsideHeaderInnerContext} from '../../AsideHeader/AsideHeaderContext';
-import {block} from '../../utils/cn';
+import {block} from '../../../../utils/cn';
+import {useAsideHeaderInnerContext} from '../../../AsideHeaderContext';
 
 import './HighlightedItem.scss';
 
