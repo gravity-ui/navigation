@@ -78,4 +78,10 @@ $block: '.#{variables.$ns}hotkeys-panel';
     &__hotkey {
         color: var(--g-color-text-complementary);
     }
+
+    &__empty-screen {
+        color: var(--g-color-text-primary);
+        width: 282px;
+        margin: auto;
+    }
 }

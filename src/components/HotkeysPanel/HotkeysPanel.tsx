@@ -1,15 +1,26 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import type {ReactNode} from 'react';
 
-import {HelpMark, Hotkey, List, Text, TextInput} from '@gravity-ui/uikit';
-import type {ListProps} from '@gravity-ui/uikit';
+import {
+    HelpMark,
+    Hotkey,
+    Icon,
+    List,
+    PlaceholderContainer,
+    Text,
+    TextInput,
+} from '@gravity-ui/uikit';
+import type {ListProps, PlaceholderContainerProps} from '@gravity-ui/uikit';
 
 import {Drawer, DrawerItem} from '../Drawer/Drawer';
 import {block} from '../utils/cn';
 
+import i18n from './i18n';
 import type {HotkeysGroup, HotkeysListItem} from './types';
 import {filterHotkeys} from './utils/filterHotkeys';
 import {flattenHotkeyGroups} from './utils/flattenHotkeyGroups';
+
+import hotkeysEmptyScreen from '../../../assets/icons/hotkeys-empty-screen.svg';
 
 import './HotkeysPanel.scss';
 
@@ -21,7 +32,13 @@ export type HotkeysPanelProps<T> = {
     togglePanelHotkey?: string;
     filterable?: boolean;
     filterPlaceholder?: string;
+    /**
+     * hotkeys panel custom empty state if no search results
+     *
+     * @deprecated Use `emptyScreenProps` instead
+     * */
     emptyState?: ReactNode;
+    emptyScreenProps?: Partial<PlaceholderContainerProps>;
     visible: boolean;
     onClose?: () => void;
     className?: string;
@@ -66,7 +83,8 @@ export function HotkeysPanel<T = {}>({
     filterPlaceholder,
     title,
     togglePanelHotkey,
-    emptyState,
+    emptyState: providedEmptyState,
+    emptyScreenProps,
     ...listProps
 }: HotkeysPanelProps<T>) {
     const [filter, setFilter] = useState('');
@@ -105,6 +123,25 @@ export function HotkeysPanel<T = {}>({
         ),
         [itemContentClassName],
     );
+
+    const emptyState = useMemo(() => {
+        if (providedEmptyState) {
+            return providedEmptyState;
+        }
+
+        return (
+            <PlaceholderContainer
+                title={i18n('empty-screen-title')}
+                description={i18n('empty-screen-description')}
+                size="m"
+                align="center"
+                direction="column"
+                image={<Icon data={hotkeysEmptyScreen} />}
+                {...emptyScreenProps}
+                className={b('empty-screen', emptyScreenProps?.className)}
+            />
+        );
+    }, [providedEmptyState, emptyScreenProps]);
 
     const drawerItemContent = (
         <React.Fragment>

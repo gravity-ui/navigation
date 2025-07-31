@@ -2,7 +2,8 @@ import React from 'react';
 
 import {Button} from '@gravity-ui/uikit';
 
-import {HotkeysGroup, HotkeysPanel, HotkeysPanelProps} from '../../../components/HotkeysPanel';
+import {HotkeysPanel} from '../../../components/HotkeysPanel';
+import type {HotkeysGroup, HotkeysPanelProps} from '../../../components/HotkeysPanel';
 import {cn} from '../../utils/cn';
 
 import {hotkeys} from './moc';
@@ -10,6 +11,16 @@ import {hotkeys} from './moc';
 import './HotkeysPanelShowcase.scss';
 
 const b = cn('hotkeys-panel-showcase');
+
+const emptyScreenProps: HotkeysPanelProps<{}>['emptyScreenProps'] = {
+    title: 'Nothing found',
+    description: 'Change the search terms or leave a request to add a new hotkey',
+    actions: [
+        {
+            text: 'Request Hotkey',
+        },
+    ],
+};
 
 type HotkeysPanelShowcaseProps = Pick<HotkeysPanelProps<HotkeysGroup>, 'filterable'>;
 
@@ -37,7 +48,7 @@ export function HotkeysPanelShowcase({filterable}: HotkeysPanelShowcaseProps) {
                 togglePanelHotkey="shift+K"
                 filterable={filterable}
                 filterPlaceholder="Search"
-                emptyState={<div className={b('empty')}>No hotkeys found</div>}
+                emptyScreenProps={emptyScreenProps}
             />
         </div>
     );
