@@ -12,7 +12,7 @@ import {CollapseButton} from './CollapseButton/CollapseButton';
 import {Header} from './Header';
 import {Panels} from './Panels';
 
-const MENU_ITEMS_COMPOSITE_ID = 'gravity-ui/navigation-menu-items-compoiste-bar';
+const MENU_ITEMS_COMPOSITE_ID = 'gravity-ui/navigation-menu-items-composite-bar';
 
 export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
     const {
