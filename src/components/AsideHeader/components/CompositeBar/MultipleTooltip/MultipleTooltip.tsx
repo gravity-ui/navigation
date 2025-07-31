@@ -2,9 +2,10 @@ import React from 'react';
 
 import {Popup, PopupProps} from '@gravity-ui/uikit';
 
+import {AsideHeaderItem} from 'src/components/AsideHeader/types';
+
 import {block} from '../../../../utils/cn';
 import {COLLAPSE_ITEM_ID} from '../constants';
-import {CompositeBarItem} from '../types';
 
 import {MultipleTooltipContext} from './MultipleTooltipContext';
 
@@ -15,7 +16,7 @@ const b = block('multiple-tooltip');
 const POPUP_OFFSET: PopupProps['offset'] = {mainAxis: 4, crossAxis: -32};
 
 export type MultipleTooltipProps = Pick<PopupProps, 'open' | 'anchorRef' | 'placement'> & {
-    items: CompositeBarItem[];
+    items: AsideHeaderItem[];
 };
 
 export const MultipleTooltip: React.FC<MultipleTooltipProps> = ({

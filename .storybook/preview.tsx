@@ -5,7 +5,7 @@ import {withMobile} from './decorators/withMobile';
 import {withLang} from './decorators/withLang';
 
 import './styles.scss';
-import '@doc-tools/transform/dist/css/yfm.css'
+
 import '@gravity-ui/uikit/styles/styles.css';
 
 uiKitConfigure({
