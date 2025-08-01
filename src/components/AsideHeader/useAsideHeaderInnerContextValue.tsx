@@ -4,9 +4,9 @@ import {AllPagesPanel, getAllPagesMenuItem} from '../AllPagesPanel';
 import {MenuItem} from '../types';
 
 import {AsideHeaderInnerContextType} from './AsideHeaderContext';
-import {AsideHeaderProps, InnerPanels} from './types';
+import {AsideHeaderItem, AsideHeaderProps, InnerPanels} from './types';
 
-const EMPTY_MENU_ITEMS: MenuItem[] = [];
+const EMPTY_MENU_ITEMS: AsideHeaderItem[] = [];
 
 export const useAsideHeaderInnerContextValue = (
     props: AsideHeaderProps & {size: number},
@@ -53,9 +53,11 @@ export const useAsideHeaderInnerContextValue = (
                 ? [
                       ...(menuItems || EMPTY_MENU_ITEMS),
                       {
-                          ...ALL_PAGES_MENU_ITEM,
-                          current: innerVisiblePanel === InnerPanels.AllPages,
-                          onItemClick: onAllPagesClick,
+                          item: {
+                              ...ALL_PAGES_MENU_ITEM,
+                              current: innerVisiblePanel === InnerPanels.AllPages,
+                              onItemClick: onAllPagesClick,
+                          },
                       },
                   ]
                 : menuItems || EMPTY_MENU_ITEMS,

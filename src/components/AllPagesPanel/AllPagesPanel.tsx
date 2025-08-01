@@ -1,10 +1,10 @@
 import React, {ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {Gear} from '@gravity-ui/icons';
-import {Button, Flex, Icon, List, ListItemData, Text, Tooltip} from '@gravity-ui/uikit';
+import {Button, Flex, Icon, List, ListItemData, ListProps, Text, Tooltip} from '@gravity-ui/uikit';
 
 import {useAsideHeaderInnerContext} from '../AsideHeader/AsideHeaderContext';
-import {MenuItem} from '../types';
+import {AsideHeaderItem} from '../AsideHeader/types';
 import {block} from '../utils/cn';
 
 import {AllPagesListItem} from './AllPagesListItem';
@@ -48,25 +48,31 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         }
     }, [isEditMode, onEditModeChanged, editMenuProps]);
 
-    const onItemClick = useCallback((item: ListItemData<MenuItem>) => {
-        //@ts-ignore TODO fix when @gravity-ui/uikit/List will provide event arg on item click
-        item.onItemClick?.(item, false);
-    }, []);
+    const onItemClick = useCallback<NonNullable<ListProps<AsideHeaderItem>['onItemClick']>>(
+        ({item}, _index, _forwardKey, event) => {
+            // TODO: make event an optional argument
+            item.onItemClick?.(item, false, event as React.MouseEvent<HTMLElement, MouseEvent>);
+        },
+        [],
+    );
 
     const togglePageVisibility = useCallback(
-        (item: MenuItem) => {
+        (item: AsideHeaderItem) => {
             if (!onMenuItemsChanged) {
                 return;
             }
-            const changedItem: MenuItem = {...item, hidden: !item.hidden};
+            const changedItem: AsideHeaderItem = {
+                ...item,
+                item: {...item.item, hidden: !item.item.hidden},
+            };
 
             const originItems = menuItemsRef.current.filter(
-                (menuItem) => menuItem.id !== ALL_PAGES_ID,
+                (menuItem) => menuItem.item.id !== ALL_PAGES_ID,
             );
             editMenuProps?.onToggleMenuItem?.(changedItem);
             onMenuItemsChanged(
                 originItems.map((menuItem) => {
-                    if (menuItem.id !== changedItem.id) {
+                    if (menuItem.item.id !== changedItem.item.id) {
                         return menuItem;
                     }
                     return changedItem;
@@ -81,18 +87,22 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     }, [setDraggingItemTitle]);
 
     const itemRender = useCallback(
-        (item: ListItemData<MenuItem>, _isActive: boolean, _itemIndex: number) => {
+        (
+            asideHeaderItem: ListItemData<AsideHeaderItem>,
+            _isActive: boolean,
+            _itemIndex: number,
+        ) => {
             const onDragStart = () => {
-                setDraggingItemTitle(item.title);
+                setDraggingItemTitle(asideHeaderItem.item.title);
             };
 
             return (
                 <AllPagesListItem
-                    item={item}
+                    item={asideHeaderItem.item}
                     onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
                     editMode={isEditMode}
-                    onToggle={() => togglePageVisibility(item)}
+                    onToggle={() => togglePageVisibility(asideHeaderItem)}
                     enableSorting={editMenuProps?.enableSorting}
                 />
             );
@@ -105,7 +115,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             return;
         }
         editMenuProps?.onResetSettingsToDefault?.();
-        const originItems = defaultMenuItems?.filter((item) => item.id !== ALL_PAGES_ID);
+        const originItems = defaultMenuItems?.filter(({item}) => item.id !== ALL_PAGES_ID);
 
         if (originItems) {
             onMenuItemsChanged(originItems);
@@ -114,12 +124,12 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
 
     const changeItemsOrder = useCallback(
         ({oldIndex, newIndex}: {oldIndex: number; newIndex: number}) => {
-            const newItems = menuItemsRef.current.filter((item) => item.id !== ALL_PAGES_ID);
+            const newItems = menuItemsRef.current.filter(({item}) => item.id !== ALL_PAGES_ID);
 
             const element = newItems.splice(oldIndex, 1)[0];
             newItems.splice(newIndex, 0, element);
 
-            onMenuItemsChanged?.(newItems.filter((item) => item.type !== 'divider'));
+            onMenuItemsChanged?.(newItems.filter(({item}) => item.type !== 'divider'));
 
             setDraggingItemTitle(null);
             editMenuProps?.onChangeItemsOrder?.(element, oldIndex, newIndex);
@@ -129,7 +139,8 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
 
     const sortableItems = useMemo(() => {
         return menuItemsRef.current.filter(
-            (item) => item.id !== ALL_PAGES_ID && !item.afterMoreButton && item.type !== 'divider',
+            ({item}) =>
+                item.id !== ALL_PAGES_ID && !item.afterMoreButton && item.type !== 'divider',
         );
     }, [menuItems]);
 

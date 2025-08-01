@@ -41,8 +41,6 @@ Navigation includes 3 parts: the top, the middle and the bottom. These sections 
 
 The section usually contains general elements for all site pages and includes the logo and the elements below it. Clickable logo can be useful for a quick navigation to the home page, if necessary the element (e.g. search, catalogue) is placed under it.
 
-The elements have access to tooltip, popup, drawers, it is enough to select the desired behavior when configuring this section.
-
 ### The Middle (menuItems)
 
 The main section usually depends on context of the page — one of examples using navigation on the multipage sites.
@@ -56,17 +54,23 @@ The `onMenuItemsChanged` callback is required for adding extra component `All Pa
 
 **Important note**: A user manages a modified list of the menu items that they receive from the callback and provides the new state of items to `AsideHeader`.
 
+The elements of this block can have multiple tooltips.
+
 ### The Bottom
 
 The Footer improves user experience by offering easy access to the elements and supplementary resources. It gives opportunity to connect with support add custom information to be sure that user will not get lost.
 
 There can be both their own components inside, or also you can use `FooterItem`.
 
+## Elements
+
+The elements have access to tooltip, popup, drawers, it is enough to select the desired behavior when configuring this section.
+
 #### Highlighting element
 
 Highlighting an element over modal windows can be useful when a user wants to report an error via a feedback form, and the form with bug is opened in a modal window.
 
-In the `FooterItem` component, you can pass a `bringForward` prop, which renders the icon above modal windows. Additionally, you need to pass a function to `AsideHeader` that will notify about the opening of modal windows.
+In the `FooterItem` component and in the configuration of the `menuItems` and `subheaderItems` elements, you can pass the `bringForward` property, which displays an icon on top of the modal windows. Additionally, in the `AsideHeader`, you need to pass a function that will notify you when the modal windows are opened.
 
 ## Rendering Content
 
@@ -131,12 +135,12 @@ export const Aside: FC = () => {
 | headerDecoration          | Color background of the top section with logo and subheader items                    |                                                           `boolean`                                                           |          `false`          |
 | hideCollapseButton        | Hiding `CollapseButton`. Use `compact` prop for setting default navigation state     |                                                           `boolean`                                                           |          `false`          |
 | logo                      | Logo container includes icon, title, handling clicks                                 |                [`Logo`](https://github.com/gravity-ui/navigation/blob/main/src/components/Logo/Readme.md#logo)                |                           |
-| menuItems                 | Items in the navigation middle section                                               |                                                       `Array<MenuItem>`                                                       |           `[]`            |
+| menuItems                 | Items in the navigation middle section                                               |                                                   `Array<AsideHeaderItem>`                                                    |           `[]`            |
 | menuMoreTitle             | Additional element title of menuItems if elements don't fit                          |                                                           `string`                                                            |     `"Ещё"` `"More"`      |
 | multipleTooltip           | Show the multiple tooltip by hovering elements of menuItems in collapsed state       |                                                           `boolean`                                                           |          `false`          |
 | onChangeCompact           | Callback will be called when changing navigation visual state                        |                                                 `(compact: boolean) => void;`                                                 |                           |
 | onClosePanel              | Callback will be called when closing panel. You can add panels via `PanelItems` prop |                                                         `() => void;`                                                         |                           |
-| onMenuItemsChanged        | Callback will be called when updating list of the menuItems in `AllPagesPanel`       |                                              `(items: Array<MenuItem>) => void`                                               |                           |
+| onMenuItemsChanged        | Callback will be called when updating list of the menuItems in `AllPagesPanel`       |                                           `(items: Array<AsideHeaderItem>) => void`                                           |                           |
 | onMenuMoreClick           | Callback will be called when some items don't fit and "more" button is clicked       |                                                         `() => void;`                                                         |                           |
 | onAllPagesClick           | Callback will be called when "All pages" button is clicked                           |                                                         `() => void;`                                                         |                           |
 | openModalSubscriber       | Function notifies `AsideHeader` about Modals visibility changes                      |                                             `( (open: boolean) => void) => void`                                              |                           |
@@ -144,9 +148,26 @@ export const Aside: FC = () => {
 | renderContent             | Function rendering the main content at the right of the `AsideHeader`                |                                          `(data: {size: number}) => React.ReactNode`                                          |                           |
 | renderFooter              | Function rendering the navigation bottom section                                     |                                          `(data: {size: number}) => React.ReactNode`                                          |                           |
 | ref                       | `ref` to target popup anchor                                                         |                                    `React.ForwardedRef<HTMLDivElement, AsideHeaderProps>`                                     |                           |
-| subheaderItems            | Items in the navigation top section under Logo                                       |                          `Array<{item: MenuItem; enableTooltip?: boolean; bringForward?: boolean}>`                           |           `[]`            |
+| subheaderItems            | Items in the navigation top section under Logo                                       |                                                   `Array<AsideHeaderItem>`                                                    |           `[]`            |
 | topAlert                  | The container above the navigation based on the uikit `Alert` component              |                                                          `TopAlert`                                                           |                           |
 | qa                        | The value to be passed to `data-qa` attribute of the `AsideHeader` container         |                                                           `string`                                                            |                           |
+
+### `AsideHeaderItem`
+
+| Name                | Description                                                                   |                                                                         Type                                                                          |             Default             |
+| :------------------ | :---------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------: |
+| item                | The configuration of the element.                                             |                                                                      `MenuItem`                                                                       |                                 |
+| enableTooltip       | Whether to display a tooltip.                                                 |                                                                `boolean \| undefined`                                                                 |             `true`              |
+| onCollapseItemClick | A callback that is triggered when you click on a collapsed element.           |                                                              ` () => void \| undefined`                                                               |                                 |
+| bringForward        | Whether to display the icon on top of modal windows.                          |                                                                `boolean \| undefined`                                                                 |                                 |
+| compact             | The flag responsible for displaying the menu item in a compact form.          |                                                                `boolean \| undefined`                                                                 |                                 |
+| popupVisible        | The flag responsible for displaying the pop-up window.                        |                                                                `boolean \| undefined`                                                                 |             `false`             |
+| popupAnchorElement  | The component to which the pop-up window is attached.                         | [`PopupProps['anchorElement']`](https://github.com/gravity-ui/uikit/blob/7748aaeec8dc7414487f7c06c899f16b275b25ef/src/components/Popup/Popup.tsx#L73) |                                 |
+| popupPlacement      | The location of the pop-up window relative to the anchor component.           |   [`PopupProps['placement']`](https://github.com/gravity-ui/uikit/blob/7748aaeec8dc7414487f7c06c899f16b275b25ef/src/components/Popup/Popup.tsx#L69)   |                                 |
+| popupOffset         | The offset of the pop-up window relative to the anchor component.             |    [`PopupProps['offset']`](https://github.com/gravity-ui/uikit/blob/7748aaeec8dc7414487f7c06c899f16b275b25ef/src/components/Popup/Popup.tsx#L71)     | `{mainAxis: 8, crossAxis: -20}` |
+| popupKeepMounted    | The pop-up window will not be removed from the DOM when it is opened.         |                                                                `boolean \| undefined`                                                                 |             `false`             |
+| renderPopupContent  | This function is responsible for rendering content in a pop-up window.        |                                                        `(() => React.ReactNode) \| undefined`                                                         |                                 |
+| onOpenChangePopup   | A callback for changing the popupVisible state, such as when it is dismissed. | [`PopupProps['onOpenChange']`](https://github.com/gravity-ui/uikit/blob/7748aaeec8dc7414487f7c06c899f16b275b25ef/src/components/Popup/Popup.tsx#L61)  |                                 |
 
 ### `MenuItem`
 

@@ -3,10 +3,10 @@ import React, {FC, ReactNode, useCallback, useContext, useRef} from 'react';
 import {List} from '@gravity-ui/uikit';
 import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
 
-import {useAsideHeaderContext} from '../AsideHeader/AsideHeaderContext';
-import {ASIDE_HEADER_COMPACT_WIDTH} from '../constants';
-import {MenuItem, SubheaderMenuItem} from '../types';
-import {block} from '../utils/cn';
+import {ASIDE_HEADER_COMPACT_WIDTH} from '../../../constants';
+import {MenuItem} from '../../../types';
+import {block} from '../../../utils/cn';
+import {AsideHeaderItem} from '../../types';
 
 import {Item, ItemProps} from './Item/Item';
 import {MultipleTooltip, MultipleTooltipContext, MultipleTooltipProvider} from './MultipleTooltip';
@@ -18,20 +18,15 @@ import {
     getItemsMinHeight,
     getMoreButtonItem,
     getSelectedItemIndex,
-    isMenuItem,
 } from './utils';
 
 import './CompositeBar.scss';
 
 const b = block('composite-bar');
 
-export type CompositeBarItem = MenuItem | SubheaderMenuItem;
-
-type CompositeBarItems =
-    | {type: 'menu'; items: MenuItem[]}
-    | {type: 'subheader'; items: SubheaderMenuItem[]};
-
-export type CompositeBarProps = CompositeBarItems & {
+export type CompositeBarProps = {
+    type: 'menu' | 'subheader';
+    items: AsideHeaderItem[];
     onItemClick?: (
         item: MenuItem,
         collapsed: boolean,
@@ -40,10 +35,11 @@ export type CompositeBarProps = CompositeBarItems & {
     multipleTooltip?: boolean;
     menuMoreTitle?: string;
     onMoreClick?: () => void;
+    compact: boolean;
 };
 
 type CompositeBarViewProps = CompositeBarProps & {
-    collapseItems?: MenuItem[];
+    collapseItems?: AsideHeaderItem[];
 };
 
 const CompositeBarView: FC<CompositeBarViewProps> = ({
@@ -53,8 +49,9 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     onMoreClick,
     collapseItems,
     multipleTooltip = false,
+    compact,
 }) => {
-    const ref = useRef<List<CompositeBarItem>>(null);
+    const ref = useRef<List<AsideHeaderItem>>(null);
     const tooltipRef = useRef<HTMLDivElement>(null);
 
     const {
@@ -63,7 +60,6 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
         activeIndex,
         lastClickedItemIndex,
     } = useContext(MultipleTooltipContext);
-    const {compact} = useAsideHeaderContext();
 
     React.useEffect(() => {
         function handleBlurWindow() {
@@ -194,7 +190,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                 onMouseEnter={onTooltipMouseEnter}
                 onMouseLeave={onTooltipMouseLeave}
             >
-                <List<CompositeBarItem>
+                <List<AsideHeaderItem>
                     ref={ref}
                     items={items}
                     selectedItemIndex={type === 'menu' ? getSelectedItemIndex(items) : undefined}
@@ -204,24 +200,17 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                     virtualized={false}
                     filterable={false}
                     sortable={false}
-                    renderItem={(item, _isItemActive, itemIndex) => {
-                        const itemExtraProps = isMenuItem(item) ? {item} : item;
-                        const enableTooltip = isMenuItem(item)
-                            ? !multipleTooltip
-                            : item.enableTooltip;
-
-                        return (
-                            <Item
-                                {...itemExtraProps}
-                                enableTooltip={enableTooltip}
-                                onMouseEnter={onMouseEnterByIndex(itemIndex)}
-                                onMouseLeave={onMouseLeave}
-                                onItemClick={onItemClickByIndex(itemIndex)}
-                                onCollapseItemClick={onMoreClick}
-                                collapseItems={collapseItems}
-                            />
-                        );
-                    }}
+                    renderItem={(item, _isItemActive, itemIndex) => (
+                        <Item
+                            {...item}
+                            compact={compact}
+                            onMouseEnter={onMouseEnterByIndex(itemIndex)}
+                            onMouseLeave={onMouseLeave}
+                            onItemClick={onItemClickByIndex(itemIndex)}
+                            onCollapseItemClick={onMoreClick}
+                            collapseItems={collapseItems}
+                        />
+                    )}
                 />
             </div>
             {type === 'menu' && multipleTooltip && (
@@ -243,6 +232,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     onItemClick,
     onMoreClick,
     multipleTooltip = false,
+    compact,
 }) => {
     if (items.length === 0) {
         return null;
@@ -269,6 +259,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                                 <div style={{width, height}}>
                                     <CompositeBarView
                                         type="menu"
+                                        compact={compact}
                                         items={listItems}
                                         onItemClick={onItemClick}
                                         onMoreClick={onMoreClick}
@@ -285,7 +276,12 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     } else {
         node = (
             <div className={b({subheader: true})}>
-                <CompositeBarView type="subheader" items={items} onItemClick={onItemClick} />
+                <CompositeBarView
+                    type="subheader"
+                    compact={compact}
+                    items={items}
+                    onItemClick={onItemClick}
+                />
             </div>
         );
     }

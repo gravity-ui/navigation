@@ -3,9 +3,9 @@ import React from 'react';
 import {Gear} from '@gravity-ui/icons';
 import type {Meta, StoryFn} from '@storybook/react';
 
-import {AsideHeaderContextProvider} from '../../AsideHeader/AsideHeaderContext';
-import {EMPTY_CONTEXT_VALUE} from '../../AsideHeader/__stories__/moc';
-import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../constants';
+import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../../../constants';
+import {AsideHeaderContextProvider} from '../../../AsideHeaderContext';
+import {EMPTY_CONTEXT_VALUE} from '../../../__stories__/moc';
 import {FooterItem, FooterItemProps} from '../FooterItem';
 
 import './FooterItemShowcase.scss';
