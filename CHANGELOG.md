@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.6.3](https://github.com/gravity-ui/navigation/compare/v3.6.2...v3.6.3) (2025-07-31)
+
+
+### Bug Fixes
+
+* **HotkeysPanel:** fix styles priority ([#457](https://github.com/gravity-ui/navigation/issues/457)) ([cd4da86](https://github.com/gravity-ui/navigation/commit/cd4da86553a6517f412c46f8f0c5fdc701f5b0b0))
+
+## [3.6.2](https://github.com/gravity-ui/navigation/compare/v3.6.1...v3.6.2) (2025-07-29)
+
+
+### Bug Fixes
+
+* **HotkeysPanel:** rename toggle panel hotkey prop ([#453](https://github.com/gravity-ui/navigation/issues/453)) ([d7a2f63](https://github.com/gravity-ui/navigation/commit/d7a2f63b1e60e0573c5dedd58d6846059b8dac02))
+
 ## [3.6.1](https://github.com/gravity-ui/navigation/compare/v3.6.0...v3.6.1) (2025-07-28)
 
 
