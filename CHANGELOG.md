@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.6.4](https://github.com/gravity-ui/navigation/compare/v3.6.3...v3.6.4) (2025-08-11)
+
+
+### Bug Fixes
+
+* **dataui-3175:** hydration error in AsideHeader ([#455](https://github.com/gravity-ui/navigation/issues/455)) ([58cc7d1](https://github.com/gravity-ui/navigation/commit/58cc7d1ab3e5c33652e37988f04272eceaa75147))
+
 ## [3.6.3](https://github.com/gravity-ui/navigation/compare/v3.6.2...v3.6.3) (2025-07-31)
 
 
