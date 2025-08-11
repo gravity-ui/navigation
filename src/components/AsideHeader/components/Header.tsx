@@ -12,6 +12,7 @@ import {b} from '../utils';
 import headerDividerCollapsedIcon from '../../../../assets/icons/divider-collapsed.svg';
 
 const DEFAULT_SUBHEADER_ITEMS: SubheaderMenuItem[] = [];
+const HEADER_COMPOSITE_ID = 'gravity-ui/navigation-header-composite-bar';
 
 export const Header = () => {
     const {logo, onItemClick, onClosePanel, headerDecoration, subheaderItems} =
@@ -39,6 +40,7 @@ export const Header = () => {
             )}
 
             <CompositeBar
+                compositeId={HEADER_COMPOSITE_ID}
                 type="subheader"
                 items={subheaderItems || DEFAULT_SUBHEADER_ITEMS}
                 onItemClick={onItemClick}
