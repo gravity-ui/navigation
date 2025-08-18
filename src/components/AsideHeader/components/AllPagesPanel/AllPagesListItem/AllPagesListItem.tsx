@@ -3,15 +3,16 @@ import React, {MouseEvent, useCallback} from 'react';
 import {Pin, PinFill} from '@gravity-ui/icons';
 import {Button, Icon} from '@gravity-ui/uikit';
 
-import {MenuItem} from '../../types';
-import {block} from '../../utils/cn';
+import {AsideHeaderItem} from 'src/components/AsideHeader/types';
+
+import {block} from '../../../../utils/cn';
 
 import './AllPagesListItem.scss';
 
 const b = block('all-pages-list-item');
 
 interface AllPagesListItemProps {
-    item: MenuItem;
+    item: AsideHeaderItem;
     editMode?: boolean;
     enableSorting?: boolean;
     onToggle: () => void;

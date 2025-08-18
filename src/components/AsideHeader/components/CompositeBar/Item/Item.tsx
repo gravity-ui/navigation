@@ -5,7 +5,7 @@ import {ActionTooltip, Icon, List, Popup, PopupPlacement, PopupProps} from '@gra
 import {AsideHeaderItem} from 'src/components/AsideHeader/types';
 
 import {ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
-import {MakeItemParams, MenuItem} from '../../../../types';
+import {MakeItemParams} from '../../../../types';
 import {block} from '../../../../utils/cn';
 import {useAsideHeaderContext} from '../../../AsideHeaderContext';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
@@ -21,14 +21,7 @@ import './Item.scss';
 
 const b = block('composite-bar-item');
 
-export interface ItemProps extends AsideHeaderItem {
-    onItemClick?: (
-        item: MenuItem,
-        collapsed: boolean,
-        event: React.MouseEvent<HTMLElement, MouseEvent>,
-    ) => void;
-    onItemClickCapture?: (event: React.SyntheticEvent) => void;
-}
+export interface ItemProps extends AsideHeaderItem {}
 
 interface ItemInnerProps extends ItemProps {
     className?: string;
@@ -37,14 +30,14 @@ interface ItemInnerProps extends ItemProps {
     onMouseLeave?: () => void;
 }
 
-function renderItemTitle(item: MenuItem) {
-    let titleNode = <div className={b('title-text')}>{item.title}</div>;
+function renderItemTitle(params: Pick<AsideHeaderItem, 'title' | 'rightAdornment'>) {
+    let titleNode = <div className={b('title-text')}>{params.title}</div>;
 
-    if (item.rightAdornment) {
+    if (params.rightAdornment) {
         titleNode = (
             <React.Fragment>
                 {titleNode}
-                <div className={b('title-adornment')}>{item.rightAdornment}</div>
+                <div className={b('title-adornment')}>{params.rightAdornment}</div>
             </React.Fragment>
         );
     }
@@ -57,7 +50,6 @@ export const defaultPopupOffset: NonNullable<PopupProps['offset']> = {mainAxis: 
 
 export const Item: React.FC<ItemInnerProps> = (props) => {
     const {
-        item,
         className,
         collapseItems,
         compact,
@@ -65,50 +57,39 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         onMouseEnter,
         enableTooltip = true,
         popupVisible = false,
-        popupAnchor,
-        popupAnchorElement,
+        popupRef: anchoreRefProp,
         popupPlacement = defaultPopupPlacement,
         popupOffset = defaultPopupOffset,
         popupKeepMounted,
         renderPopupContent,
-        onClosePopup,
         onOpenChangePopup,
         onItemClick,
         onItemClickCapture,
         onCollapseItemClick,
+        itemWrapper,
         bringForward,
+        rightAdornment,
+        title,
+        link,
+        qa,
     } = props;
 
     const [open, toggleOpen] = React.useState<boolean>(false);
 
     const ref = React.useRef<HTMLAnchorElement & HTMLButtonElement>(null);
-    const anchorRef = popupAnchorElement ? {current: popupAnchorElement} : popupAnchor || ref;
+    const anchorRef = anchoreRefProp?.current ? anchoreRefProp : ref;
     const highlightedRef = React.useRef<HTMLDivElement>(null);
 
-    const type = item.type || ITEM_TYPE_REGULAR;
-    const current = item.current || false;
-    const tooltipText = item.tooltipText || item.title;
-    const icon = item.icon;
-    const iconSize = item.iconSize || ASIDE_HEADER_ICON_SIZE;
-    const iconQa = item.iconQa;
-    const collapsedItem = item.id === COLLAPSE_ITEM_ID;
-
-    const handleClosePopup = React.useCallback(
-        (event: MouseEvent | KeyboardEvent) => {
-            if (
-                event instanceof MouseEvent &&
-                event.target &&
-                ref.current?.contains(event.target as Node)
-            ) {
-                return;
-            }
-            onClosePopup?.();
-        },
-        [onClosePopup],
-    );
+    const type = props.type || ITEM_TYPE_REGULAR;
+    const current = props.current || false;
+    const tooltipText = props.tooltipText || props.title;
+    const icon = props.icon;
+    const iconSize = props.iconSize || ASIDE_HEADER_ICON_SIZE;
+    const iconQa = props.iconQa;
+    const collapsedItem = props.id === COLLAPSE_ITEM_ID;
 
     const handleOpenChangePopup = React.useCallback<NonNullable<ItemProps['onOpenChangePopup']>>(
-        (open, event, reason) => {
+        (newOpen, event, reason) => {
             if (
                 event instanceof MouseEvent &&
                 event.target &&
@@ -116,12 +97,12 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             ) {
                 return;
             }
-            onOpenChangePopup?.(open, event, reason);
+            onOpenChangePopup?.(newOpen, event, reason);
         },
-        [onClosePopup],
+        [onOpenChangePopup],
     );
 
-    if (item.type === 'divider') {
+    if (type === 'divider') {
         return <div className={b('menu-divider')} />;
     }
 
@@ -148,9 +129,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     };
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
-        const [Tag, tagProps] = item.link
-            ? ['a' as const, {href: item.link}]
-            : ['button' as const, {}];
+        const [Tag, tagProps] = link ? ['a' as const, {href: link}] : ['button' as const, {}];
 
         const createdNode = (
             <React.Fragment>
@@ -158,7 +137,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     {...tagProps}
                     className={b({type, current, compact}, className)}
                     ref={ref}
-                    data-qa={item.qa}
+                    data-qa={qa}
                     onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
                         if (collapsedItem) {
                             /**
@@ -169,7 +148,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                             toggleOpen(!open);
                             onCollapseItemClick?.();
                         } else {
-                            onItemClick?.(item, false, event);
+                            onItemClick?.(props, false, event);
                         }
                     }}
                     onClickCapture={onItemClickCapture}
@@ -190,7 +169,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
                     <div
                         className={b('title')}
-                        title={typeof item.title === 'string' ? item.title : undefined}
+                        title={typeof title === 'string' ? title : undefined}
                     >
                         {titleEl}
                     </div>
@@ -202,8 +181,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                         keepMounted={popupKeepMounted}
                         placement={popupPlacement}
                         offset={popupOffset}
-                        anchorRef={anchorRef}
-                        onClose={handleClosePopup}
+                        anchorElement={anchorRef.current}
                         onOpenChange={handleOpenChangePopup}
                     >
                         {renderPopupContent()}
@@ -218,18 +196,18 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const iconNode = icon ? (
         <Icon qa={iconQa} data={icon} size={iconSize} className={b('icon')} />
     ) : null;
-    const titleNode = renderItemTitle(item);
+    const titleNode = renderItemTitle({title, rightAdornment});
     const params = {icon: iconNode, title: titleNode};
     let highlightedNode = null;
     let node;
 
-    const opts = {compact: Boolean(compact), collapsed: false, item, ref};
+    const opts = {compact: Boolean(compact), collapsed: false, item: props, ref};
 
-    if (typeof item.itemWrapper === 'function') {
-        node = item.itemWrapper(params, makeNode, opts) as React.ReactElement;
+    if (typeof itemWrapper === 'function') {
+        node = itemWrapper(params, makeNode, opts) as React.ReactElement;
         highlightedNode =
             bringForward &&
-            (item.itemWrapper(
+            (itemWrapper(
                 params,
                 ({icon: iconEl}) => makeIconNode(iconEl),
                 opts,
@@ -246,14 +224,18 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     iconNode={highlightedNode}
                     iconRef={highlightedRef}
                     onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) =>
-                        onItemClick?.(item, false, event)
+                        onItemClick?.(props, false, event)
                     }
                     onClickCapture={onItemClickCapture}
                 />
             )}
             {node}
             {open && collapsedItem && collapseItems?.length && Boolean(anchorRef?.current) && (
-                <CollapsedPopup {...props} anchorRef={ref} onClose={() => toggleOpen(false)} />
+                <CollapsedPopup
+                    {...props}
+                    anchorRef={anchorRef}
+                    onOpenChange={() => toggleOpen(false)}
+                />
             )}
         </React.Fragment>
     );
@@ -263,14 +245,14 @@ Item.displayName = 'Item';
 
 interface CollapsedPopupProps {
     anchorRef: React.RefObject<HTMLElement>;
-    onClose: () => void;
+    onOpenChange: () => void;
 }
 
 function CollapsedPopup({
     onItemClick,
     collapseItems,
     anchorRef,
-    onClose,
+    onOpenChange,
 }: ItemInnerProps & CollapsedPopupProps) {
     const {compact} = useAsideHeaderContext();
     return collapseItems?.length ? (
@@ -278,8 +260,8 @@ function CollapsedPopup({
             strategy="fixed"
             placement={POPUP_PLACEMENT}
             open={true}
-            anchorRef={anchorRef}
-            onClose={onClose}
+            anchorElement={anchorRef.current}
+            onOpenChange={onOpenChange}
         >
             <div className={b('collapse-items-popup-content')}>
                 <List
@@ -291,8 +273,8 @@ function CollapsedPopup({
                     virtualized={false}
                     filterable={false}
                     sortable={false}
-                    onItemClick={onClose}
-                    renderItem={({item}) => {
+                    onItemClick={onOpenChange}
+                    renderItem={(item) => {
                         const makeCollapseNode = ({
                             title: titleEl,
                             icon: iconEl,

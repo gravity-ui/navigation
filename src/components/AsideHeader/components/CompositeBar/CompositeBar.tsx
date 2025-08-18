@@ -4,7 +4,6 @@ import {List} from '@gravity-ui/uikit';
 import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
 
 import {ASIDE_HEADER_COMPACT_WIDTH} from '../../../constants';
-import {MenuItem} from '../../../types';
 import {block} from '../../../utils/cn';
 import {AsideHeaderItem} from '../../types';
 
@@ -28,7 +27,7 @@ export type CompositeBarProps = {
     type: 'menu' | 'subheader';
     items: AsideHeaderItem[];
     onItemClick?: (
-        item: MenuItem,
+        item: AsideHeaderItem,
         collapsed: boolean,
         event: React.MouseEvent<HTMLElement, MouseEvent>,
     ) => void;
@@ -159,7 +158,10 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     ]);
 
     const onItemClickByIndex = useCallback(
-        (itemIndex: number): ItemProps['onItemClick'] =>
+        (
+            itemIndex: number,
+            orginalItemClick: AsideHeaderItem['onItemClick'],
+        ): ItemProps['onItemClick'] =>
             (item, collapsed, event) => {
                 if (
                     compact &&
@@ -172,7 +174,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                         active: false,
                     });
                 }
-                onItemClick?.(item, collapsed, event);
+                onItemClick?.({...item, onItemClick: orginalItemClick}, collapsed, event);
             },
         [
             compact,
@@ -206,7 +208,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                             compact={compact}
                             onMouseEnter={onMouseEnterByIndex(itemIndex)}
                             onMouseLeave={onMouseLeave}
-                            onItemClick={onItemClickByIndex(itemIndex)}
+                            onItemClick={onItemClickByIndex(itemIndex, item.onItemClick)}
                             onCollapseItemClick={onMoreClick}
                             collapseItems={collapseItems}
                         />

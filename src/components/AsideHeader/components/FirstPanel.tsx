@@ -2,11 +2,11 @@ import React, {useRef} from 'react';
 
 import {setRef} from '@gravity-ui/uikit';
 
-import {useVisibleMenuItems} from '../../AllPagesPanel';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import i18n from '../i18n';
 import {b} from '../utils';
 
+import {useVisibleMenuItems} from './AllPagesPanel';
 import {CollapseButton} from './CollapseButton/CollapseButton';
 import {CompositeBar} from './CompositeBar';
 import {Header} from './Header';

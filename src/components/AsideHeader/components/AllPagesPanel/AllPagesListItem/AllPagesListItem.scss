@@ -1,5 +1,5 @@
-@use '../../variables';
-@use '../../../../styles/mixins';
+@use '../../../../variables';
+@use '../../../../../../styles/mixins';
 
 .#{variables.$ns}all-pages-list-item {
     @include mixins.accessibility-button;

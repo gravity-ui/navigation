@@ -1,6 +1,6 @@
 import {useMemo} from 'react';
 
-import {AsideHeaderItem} from '../AsideHeader/types';
+import {AsideHeaderItem} from '../../types';
 
 import {ALL_PAGES_ID} from './constants';
 import i18n from './i18n';
@@ -8,9 +8,9 @@ import i18n from './i18n';
 export const useGroupedMenuItems = (asideHeaderItems: AsideHeaderItem[]) => {
     const allPagesMenuItems = useMemo(() => {
         const filteredItems = asideHeaderItems.filter(
-            ({item}) => item.type !== 'divider' && item.id !== ALL_PAGES_ID,
+            ({id, type}) => type !== 'divider' && id !== ALL_PAGES_ID,
         );
-        filteredItems.sort(({item: {type: typeA}}, {item: {type: typeB}}) => {
+        filteredItems.sort(({type: typeA}, {type: typeB}) => {
             if (typeA === 'action') {
                 return 1;
             }
@@ -22,7 +22,7 @@ export const useGroupedMenuItems = (asideHeaderItems: AsideHeaderItem[]) => {
         const groupedItems = filteredItems.reduce(
             (acc, asideHeaderItem) => {
                 const category =
-                    asideHeaderItem.item.category || i18n('all-panel.menu.category.allOther');
+                    asideHeaderItem.category || i18n('all-panel.menu.category.allOther');
                 if (!acc[category]) {
                     acc[category] = [];
                 }

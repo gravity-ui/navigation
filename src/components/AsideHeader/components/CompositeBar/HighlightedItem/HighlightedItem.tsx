@@ -26,7 +26,7 @@ export const HighlightedItem: React.FC<ItemInnerProps> = ({
     onClickCapture,
 }: ItemInnerProps) => {
     const {openModalSubscriber} = useAsideHeaderInnerContext();
-    const [{top, left, width, height}, setPosition] = useState({
+    const [position, setPosition] = useState({
         top: 0,
         left: 0,
         width: 0,
@@ -62,13 +62,16 @@ export const HighlightedItem: React.FC<ItemInnerProps> = ({
 
     useEffect(() => {
         if (!isModalOpen) {
-            return;
+            return undefined;
         }
 
         handleResize();
 
         window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
     }, [handleResize, isModalOpen]);
 
     openModalSubscriber?.((open: boolean) => {
@@ -83,7 +86,7 @@ export const HighlightedItem: React.FC<ItemInnerProps> = ({
         <Portal>
             <div
                 className={b()}
-                style={{left, top, width, height}}
+                style={position}
                 onClick={onClick}
                 onClickCapture={onClickCapture}
                 data-toast

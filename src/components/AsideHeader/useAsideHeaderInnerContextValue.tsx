@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {AllPagesPanel, getAllPagesMenuItem} from '../AllPagesPanel';
 import {MenuItem} from '../types';
 
 import {AsideHeaderInnerContextType} from './AsideHeaderContext';
+import {AllPagesPanel, getAllPagesMenuItem} from './components/AllPagesPanel';
 import {AsideHeaderItem, AsideHeaderProps, InnerPanels} from './types';
 
 const EMPTY_MENU_ITEMS: AsideHeaderItem[] = [];
@@ -53,11 +53,9 @@ export const useAsideHeaderInnerContextValue = (
                 ? [
                       ...(menuItems || EMPTY_MENU_ITEMS),
                       {
-                          item: {
-                              ...ALL_PAGES_MENU_ITEM,
-                              current: innerVisiblePanel === InnerPanels.AllPages,
-                              onItemClick: onAllPagesClick,
-                          },
+                          ...ALL_PAGES_MENU_ITEM,
+                          current: innerVisiblePanel === InnerPanels.AllPages,
+                          onItemClick: onAllPagesClick,
                       },
                   ]
                 : menuItems || EMPTY_MENU_ITEMS,

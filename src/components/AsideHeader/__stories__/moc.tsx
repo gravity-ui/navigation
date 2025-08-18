@@ -19,79 +19,78 @@ export const EMPTY_CONTEXT_VALUE: AsideHeaderContextType = {
 
 export const menuItemsShowcase: AsideHeaderProps['menuItems'] = [
     {
-        item: {
-            id: 'overview',
-            title: 'Overview',
-            icon: Gear,
-            qa: 'menu-item-gear',
-            iconQa: 'menu-item-icon-gear',
+        id: 'overview',
+        title: 'Overview',
+        icon: Gear,
+        qa: 'menu-item-gear',
+        iconQa: 'menu-item-icon-gear',
+    },
+    {
+        id: 'operations',
+        title: 'Operations',
+        icon: Gear,
+        rightAdornment: renderTag('New'),
+    },
+    {
+        id: 'templates',
+        title: 'Main notifications long menu title',
+        icon: Gear,
+    },
+    {
+        id: 'divider',
+        title: '-',
+        type: 'divider',
+    },
+    {
+        id: 'notifications',
+        title: 'Main notifications long long long long menu title',
+        icon: Gear,
+        current: true,
+        onItemClick({id, title, current}) {
+            alert(JSON.stringify({id, title, current}));
         },
     },
     {
-        item: {id: 'operations', title: 'Operations', icon: Gear, rightAdornment: renderTag('New')},
-    },
-    {
-        item: {id: 'templates', title: 'Main notifications long menu title', icon: Gear},
-    },
-    {
-        item: {id: 'divider', title: '-', type: 'divider'},
-    },
-    {
-        item: {
-            id: 'notifications',
-            title: 'Main notifications long long long long menu title',
-            icon: Gear,
-            current: true,
-            onItemClick({id, title, current}) {
-                alert(JSON.stringify({id, title, current}));
-            },
+        id: 'dashboard',
+        title: 'Dashboard',
+        icon: Gear,
+        rightAdornment: renderTag('New'),
+        onItemClick({id, title, current}) {
+            alert(JSON.stringify({id, title, current}));
         },
     },
     {
-        item: {
-            id: 'dashboard',
-            title: 'Dashboard',
-            icon: Gear,
-            rightAdornment: renderTag('New'),
-            onItemClick({id, title, current}) {
-                alert(JSON.stringify({id, title, current}));
-            },
+        id: 'divider2',
+        title: '-',
+        type: 'divider',
+    },
+    {
+        id: 'id1',
+        title: 'Objects',
+        tooltipText: 'Custom tooltip text',
+        icon: Gear,
+        pinned: true,
+        onItemClick({id, title, current}) {
+            alert(JSON.stringify({id, title, current}));
+        },
+        itemWrapper(params, makeItem, {collapsed, compact}) {
+            return !collapsed && !compact ? (
+                <div className="composite-bar-showcase__item-accent aside-header-showcase__item-accent">
+                    {makeItem(params)}
+                </div>
+            ) : (
+                makeItem(params)
+            );
         },
     },
     {
-        item: {id: 'divider2', title: '-', type: 'divider'},
-    },
-    {
-        item: {
-            id: 'id1',
-            title: 'Objects',
-            tooltipText: 'Custom tooltip text',
-            icon: Gear,
-            pinned: true,
-            onItemClick({id, title, current}) {
-                alert(JSON.stringify({id, title, current}));
-            },
-            itemWrapper(params, makeItem, {collapsed, compact}) {
-                return !collapsed && !compact ? (
-                    <div className="composite-bar-showcase__item-accent aside-header-showcase__item-accent">
-                        {makeItem(params)}
-                    </div>
-                ) : (
-                    makeItem(params)
-                );
-            },
-        },
-    },
-    {
-        item: {
-            id: 'action2',
-            title: 'Create smth',
-            type: 'action',
-            icon: Plus,
-            afterMoreButton: true,
-            onItemClick({id, title, current}) {
-                alert(JSON.stringify({id, title, current}));
-            },
+        id: 'action2',
+        title: 'Create smth',
+        type: 'action',
+        icon: Plus,
+        afterMoreButton: true,
+        onItemClick({id, title, current}) {
+            alert(JSON.stringify({id, title, current}));
         },
     },
 ];
@@ -120,22 +119,23 @@ const MENU_ITEMS_CLAMPED_TITLE = 'Lorem ipsum dolor sit amet, consectetur adipis
 
 const MENU_ITEMS_CLAMPED: AsideHeaderProps['menuItems'] = [
     {
-        item: {id: 'text', title: MENU_ITEMS_CLAMPED_TITLE, icon: Gear},
+        id: 'text',
+        title: MENU_ITEMS_CLAMPED_TITLE,
+        icon: Gear,
+    },
+    {id: 'text-action', title: MENU_ITEMS_CLAMPED_TITLE, icon: Gear, type: 'action'},
+    {
+        id: 'text-link',
+        title: MENU_ITEMS_CLAMPED_TITLE,
+        icon: Gear,
+        link: 'about:blank',
     },
     {
-        item: {id: 'text-action', title: MENU_ITEMS_CLAMPED_TITLE, icon: Gear, type: 'action'},
-    },
-    {
-        item: {id: 'text-link', title: MENU_ITEMS_CLAMPED_TITLE, icon: Gear, link: 'about:blank'},
-    },
-    {
-        item: {
-            id: 'text-link-action',
-            title: MENU_ITEMS_CLAMPED_TITLE,
-            icon: Gear,
-            link: 'about:blank',
-            type: 'action',
-        },
+        id: 'text-link-action',
+        title: MENU_ITEMS_CLAMPED_TITLE,
+        icon: Gear,
+        link: 'about:blank',
+        type: 'action',
     },
 ];
 
@@ -148,18 +148,13 @@ export const DEFAULT_LOGO = {
 };
 
 export const menuItemsClamped = MENU_ITEMS_CLAMPED.concat({
-    item: {
-        id: 'divider',
-        title: undefined,
-        type: 'divider',
-    },
+    id: 'divider',
+    title: undefined,
+    type: 'divider',
 }).concat(
     MENU_ITEMS_CLAMPED.map((item) => ({
         ...item,
-        item: {
-            ...item.item,
-            id: item.item.id.concat('-new'),
-            rightAdornment: renderTag('new'),
-        },
+        id: item.id.concat('-new'),
+        rightAdornment: renderTag('new'),
     })),
 );

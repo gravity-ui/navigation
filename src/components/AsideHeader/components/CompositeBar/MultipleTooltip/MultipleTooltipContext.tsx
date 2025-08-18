@@ -34,10 +34,6 @@ export class MultipleTooltipProvider extends React.PureComponent<
         ...multipleTooltipContextDefaults,
     };
 
-    setValue: MultipleTooltipContextProps['setValue'] = (value) => {
-        this.setState({...value});
-    };
-
     render() {
         const {children} = this.props;
 
@@ -47,4 +43,8 @@ export class MultipleTooltipProvider extends React.PureComponent<
             </MultipleTooltipContext.Provider>
         );
     }
+
+    setValue: MultipleTooltipContextProps['setValue'] = (value) => {
+        this.setState({...value});
+    };
 }

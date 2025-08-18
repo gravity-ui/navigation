@@ -3,9 +3,9 @@ import React, {ReactNode, useCallback, useEffect, useMemo, useRef, useState} fro
 import {Gear} from '@gravity-ui/icons';
 import {Button, Flex, Icon, List, ListItemData, ListProps, Text, Tooltip} from '@gravity-ui/uikit';
 
-import {useAsideHeaderInnerContext} from '../AsideHeader/AsideHeaderContext';
-import {AsideHeaderItem} from '../AsideHeader/types';
-import {block} from '../utils/cn';
+import {block} from '../../../utils/cn';
+import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
+import {AsideHeaderItem} from '../../types';
 
 import {AllPagesListItem} from './AllPagesListItem';
 import {ALL_PAGES_ID} from './constants';
@@ -49,7 +49,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     }, [isEditMode, onEditModeChanged, editMenuProps]);
 
     const onItemClick = useCallback<NonNullable<ListProps<AsideHeaderItem>['onItemClick']>>(
-        ({item}, _index, _forwardKey, event) => {
+        (item, _index, _forwardKey, event) => {
             // TODO: make event an optional argument
             item.onItemClick?.(item, false, event as React.MouseEvent<HTMLElement, MouseEvent>);
         },
@@ -63,16 +63,16 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             }
             const changedItem: AsideHeaderItem = {
                 ...item,
-                item: {...item.item, hidden: !item.item.hidden},
+                hidden: !item.hidden,
             };
 
             const originItems = menuItemsRef.current.filter(
-                (menuItem) => menuItem.item.id !== ALL_PAGES_ID,
+                (menuItem) => menuItem.id !== ALL_PAGES_ID,
             );
             editMenuProps?.onToggleMenuItem?.(changedItem);
             onMenuItemsChanged(
                 originItems.map((menuItem) => {
-                    if (menuItem.item.id !== changedItem.item.id) {
+                    if (menuItem.id !== changedItem.id) {
                         return menuItem;
                     }
                     return changedItem;
@@ -93,12 +93,12 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             _itemIndex: number,
         ) => {
             const onDragStart = () => {
-                setDraggingItemTitle(asideHeaderItem.item.title);
+                setDraggingItemTitle(asideHeaderItem.title);
             };
 
             return (
                 <AllPagesListItem
-                    item={asideHeaderItem.item}
+                    item={asideHeaderItem}
                     onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
                     editMode={isEditMode}
@@ -115,7 +115,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             return;
         }
         editMenuProps?.onResetSettingsToDefault?.();
-        const originItems = defaultMenuItems?.filter(({item}) => item.id !== ALL_PAGES_ID);
+        const originItems = defaultMenuItems?.filter(({id}) => id !== ALL_PAGES_ID);
 
         if (originItems) {
             onMenuItemsChanged(originItems);
@@ -124,12 +124,12 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
 
     const changeItemsOrder = useCallback(
         ({oldIndex, newIndex}: {oldIndex: number; newIndex: number}) => {
-            const newItems = menuItemsRef.current.filter(({item}) => item.id !== ALL_PAGES_ID);
+            const newItems = menuItemsRef.current.filter(({id}) => id !== ALL_PAGES_ID);
 
             const element = newItems.splice(oldIndex, 1)[0];
             newItems.splice(newIndex, 0, element);
 
-            onMenuItemsChanged?.(newItems.filter(({item}) => item.type !== 'divider'));
+            onMenuItemsChanged?.(newItems.filter(({type}) => type !== 'divider'));
 
             setDraggingItemTitle(null);
             editMenuProps?.onChangeItemsOrder?.(element, oldIndex, newIndex);
@@ -138,9 +138,9 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     );
 
     const sortableItems = useMemo(() => {
-        return menuItemsRef.current.filter(
-            ({item}) =>
-                item.id !== ALL_PAGES_ID && !item.afterMoreButton && item.type !== 'divider',
+        return menuItems.filter(
+            ({id, afterMoreButton, type}) =>
+                id !== ALL_PAGES_ID && !afterMoreButton && type !== 'divider',
         );
     }, [menuItems]);
 

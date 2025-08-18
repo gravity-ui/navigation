@@ -78,11 +78,8 @@ interface ItemPopup {
     popupVisible?: PopupProps['open'];
     /**
      * floating element anchor ref object
-     *
-     * @deprecated Use `popupAnchorElement` instead
      * */
-    popupAnchor?: PopupProps['anchorRef'];
-    popupAnchorElement?: PopupProps['anchorElement'];
+    popupRef?: React.RefObject<HTMLElement>;
     popupPlacement?: PopupProps['placement'];
     popupOffset?: PopupProps['offset'];
     popupKeepMounted?: PopupProps['keepMounted'];
@@ -91,16 +88,17 @@ interface ItemPopup {
      * This callback will be called when Escape key pressed on keyboard, or click outside was made
      * This behaviour could be disabled with `disableEscapeKeyDown`
      * and `disableOutsideClick` options
-     *
-     * @deprecated Use `onOpenChangePopup` instead
      */
-    onClosePopup?: () => void;
     onOpenChangePopup?: PopupProps['onOpenChange'];
 }
 
-export interface AsideHeaderItem extends ItemPopup {
-    item: MenuItem;
+export interface AsideHeaderItem extends ItemPopup, MenuItem {
     enableTooltip?: boolean;
+    onItemClick?: (
+        item: AsideHeaderItem,
+        collapsed: boolean,
+        event: React.MouseEvent<HTMLElement, MouseEvent>,
+    ) => void;
     onCollapseItemClick?: () => void;
     bringForward?: boolean;
     compact?: boolean;

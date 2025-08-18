@@ -11,14 +11,12 @@ const b = block('footer-item');
 
 export interface FooterItemProps extends AsideHeaderItem {}
 
-export const FooterItem: React.FC<FooterItemProps> = ({item, ...props}) => {
+export function FooterItem(props: FooterItemProps) {
     return (
         <Item
             {...props}
-            item={{iconSize: ASIDE_HEADER_ICON_SIZE, ...item}}
+            iconSize={ASIDE_HEADER_ICON_SIZE}
             className={b({compact: props.compact})}
-            onItemClick={item.onItemClick}
-            onItemClickCapture={item.onItemClickCapture}
         />
     );
-};
+}

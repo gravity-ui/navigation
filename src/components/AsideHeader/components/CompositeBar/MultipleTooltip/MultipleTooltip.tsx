@@ -15,7 +15,8 @@ const b = block('multiple-tooltip');
 
 const POPUP_OFFSET: PopupProps['offset'] = {mainAxis: 4, crossAxis: -32};
 
-export type MultipleTooltipProps = Pick<PopupProps, 'open' | 'anchorRef' | 'placement'> & {
+export type MultipleTooltipProps = Pick<PopupProps, 'open' | 'placement'> & {
+    anchorRef: React.RefObject<HTMLElement>;
     items: AsideHeaderItem[];
 };
 
@@ -32,7 +33,7 @@ export const MultipleTooltip: React.FC<MultipleTooltipProps> = ({
         <Popup
             open={open}
             className={b('popup')}
-            anchorRef={anchorRef}
+            anchorElement={anchorRef.current}
             strategy="fixed"
             placement={placement}
             offset={POPUP_OFFSET}
@@ -41,16 +42,16 @@ export const MultipleTooltip: React.FC<MultipleTooltipProps> = ({
                 <div className={b('items-container')}>
                     {items
                         .filter(
-                            ({item: {type = 'regular', id}}) =>
+                            ({type = 'regular', id}) =>
                                 !hideCollapseItemTooltip ||
                                 (id !== COLLAPSE_ITEM_ID && type !== 'action'),
                         )
                         .map((currentItem, idx) => {
-                            switch (currentItem.item.type) {
+                            switch (currentItem.type) {
                                 case 'divider':
                                     return (
                                         <div className={b('item', {divider: true})} key={idx}>
-                                            {currentItem.item.title}
+                                            {currentItem.title}
                                         </div>
                                     );
                                 default:
@@ -61,7 +62,7 @@ export const MultipleTooltip: React.FC<MultipleTooltipProps> = ({
                                             })}
                                             key={idx}
                                         >
-                                            {currentItem.item.title}
+                                            {currentItem.title}
                                         </div>
                                     );
                             }

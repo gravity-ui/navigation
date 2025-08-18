@@ -6,7 +6,7 @@ import {AsideHeaderItem} from '../../types';
 import {COLLAPSE_ITEM_ID} from './constants';
 
 export function getItemHeight(compositeItem: AsideHeaderItem) {
-    switch (compositeItem.item.type) {
+    switch (compositeItem.type) {
         case 'action':
             return 50;
         case 'divider':
@@ -22,20 +22,17 @@ export function getItemsHeight<T extends AsideHeaderItem>(items: T[]) {
 }
 
 export function getSelectedItemIndex(compositeItems: AsideHeaderItem[]) {
-    const index = compositeItems.findIndex(({item: {current}}) => Boolean(current));
+    const index = compositeItems.findIndex(({current}) => Boolean(current));
     return index === -1 ? undefined : index;
 }
 
 export function getPinnedItems(compositeItems: AsideHeaderItem[]) {
     const pinnedItems: AsideHeaderItem[] = [];
     for (const compositeItem of compositeItems) {
-        if (compositeItem.item.pinned) {
+        if (compositeItem.pinned) {
             pinnedItems.push(compositeItem);
-        } else if (compositeItem.item.type === 'divider') {
-            if (
-                pinnedItems.length > 0 &&
-                pinnedItems[pinnedItems.length - 1].item.type !== 'divider'
-            ) {
+        } else if (compositeItem.type === 'divider') {
+            if (pinnedItems.length > 0 && pinnedItems[pinnedItems.length - 1].type !== 'divider') {
                 pinnedItems.push(compositeItem);
             }
         }
@@ -45,7 +42,7 @@ export function getPinnedItems(compositeItems: AsideHeaderItem[]) {
 
 export function getItemsMinHeight(compositeItems: AsideHeaderItem[]) {
     const pinnedItems = getPinnedItems(compositeItems);
-    const afterMoreButtonItems = compositeItems.filter(({item}) => item.afterMoreButton);
+    const afterMoreButtonItems = compositeItems.filter(({afterMoreButton}) => afterMoreButton);
 
     return (
         getItemsHeight(pinnedItems) +
@@ -56,12 +53,10 @@ export function getItemsMinHeight(compositeItems: AsideHeaderItem[]) {
 
 export function getMoreButtonItem(menuMoreTitle?: string): AsideHeaderItem {
     return {
-        item: {
-            id: COLLAPSE_ITEM_ID,
-            title: menuMoreTitle,
-            icon: Ellipsis,
-            iconSize: 18,
-        },
+        id: COLLAPSE_ITEM_ID,
+        title: menuMoreTitle,
+        icon: Ellipsis,
+        iconSize: 18,
     };
 }
 
@@ -73,8 +68,8 @@ export function getAutosizeListItems(
     listItems: AsideHeaderItem[];
     collapseItems: AsideHeaderItem[];
 } {
-    const afterMoreButtonItems = compositeItems.filter(({item}) => item.afterMoreButton);
-    const regularItems = compositeItems.filter(({item}) => !item.afterMoreButton);
+    const afterMoreButtonItems = compositeItems.filter(({afterMoreButton}) => afterMoreButton);
+    const regularItems = compositeItems.filter(({afterMoreButton}) => !afterMoreButton);
     const listItems = [...regularItems, ...afterMoreButtonItems];
 
     const allItemsHeight = getItemsHeight(listItems);
@@ -97,14 +92,14 @@ export function getAutosizeListItems(
 
         const compositeItem = listItems[index];
         if (
-            compositeItem.item.pinned ||
-            compositeItem.item.id === COLLAPSE_ITEM_ID ||
-            compositeItem.item.afterMoreButton
+            compositeItem.pinned ||
+            compositeItem.id === COLLAPSE_ITEM_ID ||
+            compositeItem.afterMoreButton
         ) {
             continue;
         }
-        if (compositeItem.item.type === 'divider') {
-            if (index + 1 < listItems.length && listItems[index + 1]?.item.type === 'divider') {
+        if (compositeItem.type === 'divider') {
+            if (index + 1 < listItems.length && listItems[index + 1]?.type === 'divider') {
                 listHeight -= getItemHeight(compositeItem);
                 listItems.splice(index, 1);
             }
@@ -114,8 +109,8 @@ export function getAutosizeListItems(
         collapseItems.unshift(...listItems.splice(index, 1));
     }
     if (
-        listItems[index]?.item.type === 'divider' &&
-        (index === 0 || listItems[index - 1]?.item.type === 'divider')
+        listItems[index]?.type === 'divider' &&
+        (index === 0 || listItems[index - 1]?.type === 'divider')
     ) {
         listItems.splice(index, 1);
     }
