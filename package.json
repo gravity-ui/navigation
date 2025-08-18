@@ -12,7 +12,9 @@
   "types": "build/esm/index.d.ts",
   "sideEffects": [
     "*.css",
-    "*.scss"
+    "*.scss",
+    "**/*.css",
+    "**/*.scss"
   ],
   "files": [
     "build",

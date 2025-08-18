@@ -144,13 +144,29 @@ export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
             </div>
         ) : null;
 
+        const withDir = (phase: string) =>
+            cssDirection
+                ? `${b('item-transition-' + phase)} ${b(
+                        `item-transition_direction_${cssDirection}-${phase}`,
+                    )}`
+                : b('item-transition-' + phase);
+
+        const itemTransitionClassNames = {
+            enter: withDir('enter'),
+            enterActive: withDir('enter-active'),
+            enterDone: withDir('enter-done'),
+            exit: withDir('exit'),
+            exitActive: withDir('exit-active'),
+            exitDone: withDir('exit-done'),
+        } as const;
+
         return (
             <CSSTransition
                 in={visible}
                 timeout={TIMEOUT}
                 mountOnEnter={!keepMounted}
                 unmountOnExit={!keepMounted}
-                classNames={b('item-transition', {direction: cssDirection})}
+                classNames={itemTransitionClassNames}
                 nodeRef={itemRef}
                 onEnter={() => setInitialRender(false)}
                 onExit={() => setInitialRender(false)}
@@ -256,6 +272,14 @@ export const Drawer: React.FC<DrawerProps> = ({
     const containerRef = React.useRef<HTMLDivElement>(null);
     const veilRef = React.useRef<HTMLDivElement>(null);
 
+    const veilTransitionClassNames = {
+        enter: b('veil-transition-enter'),
+        enterActive: b('veil-transition-enter-active'),
+        exit: b('veil-transition-exit'),
+        exitActive: b('veil-transition-exit-active'),
+        exitDone: b('veil-transition-exit-done'),
+    } as const;
+
     const shouldApplyScrollLock = scrollLock && someItemVisible && hideVeil && !disablePortal;
     useScrollLock(shouldApplyScrollLock);
 
@@ -276,7 +300,7 @@ export const Drawer: React.FC<DrawerProps> = ({
                             in={childrenVisible}
                             timeout={TIMEOUT}
                             unmountOnExit
-                            classNames={b('veil-transition')}
+                            classNames={veilTransitionClassNames}
                             nodeRef={veilRef}
                         >
                             <div
