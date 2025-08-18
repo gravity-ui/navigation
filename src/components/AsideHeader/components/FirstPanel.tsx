@@ -12,6 +12,8 @@ import {CompositeBar} from './CompositeBar';
 import {Header} from './Header';
 import {Panels} from './Panels';
 
+const MENU_ITEMS_COMPOSITE_ID = 'gravity-ui/navigation-menu-items-composite-bar';
+
 export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
     const {
         size,
@@ -50,6 +52,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     <Header />
                     {visibleMenuItems?.length ? (
                         <CompositeBar
+                            compositeId={MENU_ITEMS_COMPOSITE_ID}
                             type="menu"
                             compact={compact}
                             items={visibleMenuItems}

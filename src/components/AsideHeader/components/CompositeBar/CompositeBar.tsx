@@ -35,10 +35,12 @@ export type CompositeBarProps = {
     menuMoreTitle?: string;
     onMoreClick?: () => void;
     compact: boolean;
+    compositeId?: string;
 };
 
 type CompositeBarViewProps = CompositeBarProps & {
     collapseItems?: AsideHeaderItem[];
+    compositeId?: string;
 };
 
 const CompositeBarView: FC<CompositeBarViewProps> = ({
@@ -49,6 +51,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     collapseItems,
     multipleTooltip = false,
     compact,
+    compositeId,
 }) => {
     const ref = useRef<List<AsideHeaderItem>>(null);
     const tooltipRef = useRef<HTMLDivElement>(null);
@@ -193,6 +196,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                 onMouseLeave={onTooltipMouseLeave}
             >
                 <List<AsideHeaderItem>
+                    id={compositeId}
                     ref={ref}
                     items={items}
                     selectedItemIndex={type === 'menu' ? getSelectedItemIndex(items) : undefined}
@@ -235,6 +239,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     onMoreClick,
     multipleTooltip = false,
     compact,
+    compositeId,
 }) => {
     if (items.length === 0) {
         return null;
@@ -260,6 +265,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                             return (
                                 <div style={{width, height}}>
                                     <CompositeBarView
+                                        compositeId={compositeId}
                                         type="menu"
                                         compact={compact}
                                         items={listItems}

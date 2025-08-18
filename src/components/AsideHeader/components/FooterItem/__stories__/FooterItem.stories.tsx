@@ -38,9 +38,7 @@ const Template: StoryFn<FooterItemProps> = (args) => <FooterItem {...args} />;
 export const Default = Template.bind({});
 Default.args = {
     compact: false,
-    item: {
-        id: 'settings',
-        title: 'Settings',
-        icon: Gear,
-    },
+    id: 'settings',
+    title: 'Settings',
+    icon: Gear,
 };
