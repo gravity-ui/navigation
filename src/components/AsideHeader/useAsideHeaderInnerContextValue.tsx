@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {AllPagesPanel, getAllPagesMenuItem} from '../AllPagesPanel';
 import {MenuItem} from '../types';
 
 import {AsideHeaderInnerContextType} from './AsideHeaderContext';
-import {AsideHeaderProps, InnerPanels} from './types';
+import {AllPagesPanel, getAllPagesMenuItem} from './components/AllPagesPanel';
+import {AsideHeaderItem, AsideHeaderProps, InnerPanels} from './types';
 
-const EMPTY_MENU_ITEMS: MenuItem[] = [];
+const EMPTY_MENU_ITEMS: AsideHeaderItem[] = [];
 
 export const useAsideHeaderInnerContextValue = (
     props: AsideHeaderProps & {size: number},
