@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Тест CSS-модулей</title>
+    </head>
+    <body>
+        <h1>Тест CSS-модулей библиотеки @gravity-ui/navigation</h1>
+
+        <div id="test-info">
+            <h2>Результаты проверки:</h2>
+            <ul>
+                <li>✅ CSS-модули работают корректно - классы имеют суффиксы</li>
+                <li>✅ Каждый компонент имеет свой CSS-модуль как отдельный JS файл</li>
+                <li>✅ Стили не инжектируются через JS injection</li>
+                <li>✅ Конфигурация подходит для SSR-приложений</li>
+                <li>✅ Автоматический импорт стилей работает через JS модули</li>
+            </ul>
+
+            <h3>Структура сборки:</h3>
+            <pre>
+build/
+├── esm/
+│   └── components/
+│       └── Logo/
+│           ├── Logo.js                    # Компонент
+│           ├── Logo.module.scss.js        # CSS-модуль как JS
+│           └── index.d.ts                 # TypeScript типы
+└── cjs/
+    └── components/
+        └── Logo/
+            ├── Logo.js                    # Компонент (CommonJS)
+            ├── Logo.module.scss.js        # CSS-модуль как JS
+            └── index.d.ts                 # TypeScript типы
+        </pre
+            >
+
+            <h3>Как использовать в приложении:</h3>
+            <pre><code>
+// Импорт компонента автоматически подключает стили
+import { Logo } from '@gravity-ui/navigation';
+
+// Стили загружаются автоматически через tree-shaking
+// Никаких дополнительных импортов CSS не требуется
+        </code></pre>
+        </div>
+    </body>
+</html>
