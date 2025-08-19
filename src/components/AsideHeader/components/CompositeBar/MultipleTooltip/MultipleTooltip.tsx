@@ -32,15 +32,13 @@ export const MultipleTooltip: React.FC<MultipleTooltipProps> = ({
     return (
         <Popup
             open={open}
-            floatingClassName={b('popup')}
+            className={b('popup')}
             anchorElement={anchorRef.current}
             strategy="fixed"
             placement={placement}
             offset={POPUP_OFFSET}
         >
-            <div className={b()}
-                data-theme-root={typeof window !== 'undefined' ? document.body.className : undefined}
-            >
+            <div className={b()}>
                 <div className={b('items-container')}>
                     {items
                         .filter(

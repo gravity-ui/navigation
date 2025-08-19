@@ -2,10 +2,8 @@
 
 $block: '.#{variables.$ns}multiple-tooltip';
 
-.g-root_theme_dark #{$block},
-.g-root_theme_dark #{$block}__popup,
-.g-root_theme_dark-hc #{$block},
-.g-root_theme_dark-hc #{$block}__popup {
+:global(.g-root_theme_dark) #{$block},
+:global(.g-root_theme_dark-hc) #{$block} {
     --multiple-tooltip-item-bg-color: var(
         --g-color-base-float-medium,
         var(--g-color-private-white-100-solid)
@@ -19,18 +17,15 @@ $block: '.#{variables.$ns}multiple-tooltip';
     --multiple-tooltip-backdrop-filter: blur(16px);
 }
 
-.g-root_theme_dark-hc #{$block},
-.g-root_theme_dark-hc #{$block}__popup {
+:global(.g-root_theme_dark-hc) #{$block} {
     --multiple-tooltip-item-bg-color: var(
         --g-color-base-float-medium,
         var(--g-color-private-white-150-solid)
     );
 }
 
-.g-root_theme_light #{$block},
-.g-root_theme_light #{$block}__popup,
-.g-root_theme_light-hc #{$block},
-.g-root_theme_light-hc #{$block}__popup {
+:global(.g-root_theme_light) #{$block},
+:global(.g-root_theme_light-hc) #{$block} {
     --multiple-tooltip-item-bg-color: var(
         --g-color-base-float-medium,
         var(--g-color-private-black-550-solid)
@@ -45,28 +40,26 @@ $block: '.#{variables.$ns}multiple-tooltip';
 }
 
 #{$block} {
-    position: relative;
-
-    // Класс навешивается прямо на .g-popup через floatingClassName — убираем фон/рамки детерминированно
-    // Стили навешиваются непосредственно на контент попапа через contentClassName
-    &__popup {
-        --g-popup-background-color: transparent;
-        --g-popup-border-color: transparent;
-        --g-popup-border-width: 0;
-        background-color: transparent !important;
-        border: 0 !important;
-        box-shadow: none !important;
-        outline: none;
-        position: relative;
-    }
-    &__popup::before {
+    &::before {
         content: '';
+        box-shadow: none;
         position: absolute;
-        inset: 0;
+        width: 100%;
+        height: 100%;
         z-index: -1;
         opacity: 0.7;
         background: var(--multiple-tooltip-backdrop-background);
         filter: var(--multiple-tooltip-backdrop-filter);
+    }
+
+    @at-root :global(.g-popup)#{&}__popup,
+        &__popup {
+        --g-popup-background-color: transparent;
+        --g-popup-border-color: transparent;
+        --g-popup-border-width: 0;
+
+        box-shadow: none;
+        background-color: transparent;
     }
 
     &__items-container {
@@ -81,7 +74,7 @@ $block: '.#{variables.$ns}multiple-tooltip';
         box-sizing: border-box;
         height: 30px;
         padding: 8px 12px;
-        background-color: var(--multiple-tooltip-item-bg-color, var(--g-color-base-float-medium));
+        background-color: var(--multiple-tooltip-item-bg-color);
         position: relative;
         border-radius: 5px;
         align-items: center;
@@ -99,7 +92,7 @@ $block: '.#{variables.$ns}multiple-tooltip';
         }
 
         &_active {
-            background-color: var(--multiple-tooltip-item-active-bg-color, var(--g-color-base-float-heavy));
+            background-color: var(--multiple-tooltip-item-active-bg-color);
             transform: translateX(-12px);
         }
 
