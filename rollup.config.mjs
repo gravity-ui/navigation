@@ -20,39 +20,44 @@ const extractComponentCSS = () => {
     const parseComponentCSS = (cssContent) => {
         const root = postcssLib.parse(String(cssContent));
 
+        // Key by "ComponentName::local-block" to avoid collisions of same-named components in different dirs
         const componentToRoot = new Map();
-        const ensureRoot = (name) => {
-            if (!componentToRoot.has(name)) {
-                componentToRoot.set(name, postcssLib.root());
+        const ensureRoot = (key) => {
+            if (!componentToRoot.has(key)) {
+                componentToRoot.set(key, postcssLib.root());
             }
-            return componentToRoot.get(name);
+            return componentToRoot.get(key);
         };
 
-        const getComponentNameFromSelector = (selector) => {
-            const m = selector && selector.match(/\.([A-Z][a-zA-Z]+)-module__/);
-            return m ? m[1] : null;
+        // .FooterItem-module__gn-footer-item___HASH  → {name: 'FooterItem', local: 'gn-footer-item'}
+        const getComponentKeyFromSelector = (selector) => {
+            if (!selector) return null;
+            const m = selector.match(/\.([A-Z][a-zA-Z0-9]*)-module__([a-zA-Z0-9-]+)/);
+            if (!m) return null;
+            const [, name, local] = m;
+            return {name, local};
         };
 
         const bucketize = (node) => {
             const buckets = new Map();
             if (node.type === 'rule') {
                 const selectors = String(node.selector || '').split(',');
-                let name = null;
+                let key = null;
                 for (const s of selectors) {
-                    const n = getComponentNameFromSelector(s.trim());
-                    if (n) { name = n; break; }
+                    const info = getComponentKeyFromSelector(s.trim());
+                    if (info) { key = `${info.name}::${info.local}`; break; }
                 }
-                if (name) {
-                    buckets.set(name, [node.clone()]);
+                if (key) {
+                    buckets.set(key, [node.clone()]);
                 }
             } else if (node.type === 'atrule') {
                 for (const child of node.nodes || []) {
                     const childBuckets = bucketize(child);
-                    for (const [name, nodes] of childBuckets) {
+                    for (const [key, nodes] of childBuckets) {
                         const atClone = postcssLib.atRule({name: node.name, params: node.params});
                         nodes.forEach((n) => atClone.append(n));
-                        if (!buckets.has(name)) buckets.set(name, []);
-                        buckets.get(name).push(atClone);
+                        if (!buckets.has(key)) buckets.set(key, []);
+                        buckets.get(key).push(atClone);
                     }
                 }
             }
@@ -61,15 +66,15 @@ const extractComponentCSS = () => {
 
         for (const n of root.nodes || []) {
             const buckets = bucketize(n);
-            for (const [name, nodes] of buckets) {
-                const r = ensureRoot(name);
+            for (const [key, nodes] of buckets) {
+                const r = ensureRoot(key);
                 nodes.forEach((cn) => r.append(cn));
             }
         }
 
         const result = new Map();
-        for (const [name, compRoot] of componentToRoot) {
-            result.set(name, compRoot.toString());
+        for (const [key, compRoot] of componentToRoot) {
+            result.set(key, compRoot.toString());
         }
         return result;
     };
@@ -92,7 +97,7 @@ const extractComponentCSS = () => {
 
             if (!mainCSSContent) return;
 
-            // Parse CSS and group by component
+            // Parse CSS and group by component (ComponentName::local-block)
             const componentCSS = parseComponentCSS(mainCSSContent);
 
             // Second pass: add CSS imports to components and create individual CSS files
@@ -108,8 +113,27 @@ const extractComponentCSS = () => {
                         const componentName = componentMatch[1];
                         const cssFileName = fileName.replace('.js', '.css');
 
-                        // Get CSS for this component
-                        const componentCSSContent = componentCSS.get(componentName);
+                        // Try to disambiguate by local block derived from path, e.g. components/MobileHeader/FooterItem/FooterItem.js
+                        // → local "gn-mobile-header-footer-item"; components/FooterItem/FooterItem.js → "gn-footer-item"
+                        const pathWithinComponents = fileName
+                            .replace(/^components\//, '')
+                            .replace(/\\/g, '/');
+                        const dirs = pathWithinComponents.split('/');
+                        // Drop the last element (filename)
+                        dirs.pop();
+                        const camelToKebab = (s) => s.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+                        const localBlock = 'gn-' + (dirs.length ? dirs.map(camelToKebab).join('-') : camelToKebab(componentName));
+
+                        const keyed = `${componentName}::${localBlock}`;
+                        const componentCSSContent =
+                            componentCSS.get(keyed) ||
+                            // fallback to single-bucket name if no disambiguated bucket exists
+                            componentCSS.get(componentName) ||
+                            // also attempt any bucket that starts with `${componentName}::`
+                            Array.from(componentCSS.keys())
+                                .filter((k) => k.startsWith(componentName + '::'))
+                                .map((k) => componentCSS.get(k))
+                                .join('\n');
                         if (componentCSSContent) {
                             // Add CSS import to the beginning of the component
                             const cssImport = `import './${componentName}.css';\n`;

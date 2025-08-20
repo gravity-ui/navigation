@@ -156,7 +156,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                     </Button>
                 </Tooltip>
             </Flex>
-            <Flex className={b('content')} gap="5" direction="column">
+            <Flex className={b('content', {editMode: isEditMode})} gap="5" direction="column">
                 {isEditMode && editMenuProps?.enableSorting ? (
                     <div>
                         <List
