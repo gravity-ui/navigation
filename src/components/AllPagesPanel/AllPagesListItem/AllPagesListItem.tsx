@@ -37,7 +37,7 @@ export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
         }
     };
 
-    const [Tag, tagProps] = item.link ? ['a' as const, {href: item.link}] : ['button' as const, {}];
+    const [Tag, tagProps] = item.link ? ['a' as const, {href: item.link}] : ['div' as const, {}];
 
     return (
         <Tag {...tagProps} className={b()} onClick={onItemClick}>
