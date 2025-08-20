@@ -29,7 +29,7 @@
   "scripts": {
     "prepare": "husky",
     "typecheck": "tsc --noEmit",
-    "test": "jest --passWithNoTests",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --passWithNoTests",
     "test-storybook": "test-storybook --url ${PR_PREVIEW_URL:-http://localhost:7008}",
     "build": "rimraf build && rollup -c",
     "lint:js": "eslint src --ext .js,.jsx,.ts,.tsx",
