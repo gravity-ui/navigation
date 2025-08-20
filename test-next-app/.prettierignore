@@ -1,0 +1,8 @@
+node_modules
+.next
+build
+coverage
+**/*.png
+**/*.svg
+**/*.map
+package-lock.json
