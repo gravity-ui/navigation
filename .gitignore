@@ -20,6 +20,3 @@ playwright-report*
 # Storybook logs and build output
 storybook.log
 storybook-static
-
-# Next.js
-.next
