@@ -1,4 +1,4 @@
-import type {StorybookConfig} from '@storybook/react-webpack5';
+import type { StorybookConfig } from '@storybook/react-webpack5';
 
 const config: StorybookConfig = {
     staticDirs: ['./assets'],
@@ -6,9 +6,8 @@ const config: StorybookConfig = {
 
     addons: [
         '@storybook/addon-links',
-        {name: '@storybook/addon-essentials', options: {backgrounds: false}},
+        { name: '@storybook/addon-essentials', options: { backgrounds: false } },
         '@storybook/addon-interactions',
-        '@storybook/preset-scss',
         'storybook-preset-inline-svg',
         './theme-addon/register.tsx',
         './focus-addon/register.tsx',
@@ -33,48 +32,81 @@ const config: StorybookConfig = {
     },
 
     webpackFinal: async (config) => {
-        // Add rules for both CSS modules and regular SCSS files
-        const cssModulesRule = {
-            test: /\.module\.scss$/,
-            use: [
-                'style-loader',
-                {
-                    loader: 'css-loader',
-                    options: {
-                        modules: {
-                            localIdentName: '[local]',
-                            exportGlobals: true,
+        // Удаляем существующие правила для CSS/SCSS из Storybook по умолчанию
+        config.module = config.module || { rules: [] };
+        config.module.rules = config.module.rules?.filter(
+            (rule) => {
+                if (typeof rule === 'object' && rule !== null && 'test' in rule) {
+                    const test = rule.test;
+                    if (test instanceof RegExp) {
+                        return !test.test('.css') && !test.test('.scss');
+                    }
+                }
+                return true;
+            }
+        ) || [];
+
+        // Добавляем наши правила для CSS Modules и обычных стилей в начало
+        config.module.rules.unshift(
+            // Правило для CSS модулей (*.module.scss)
+            {
+                test: /\.module\.scss$/,
+                use: [
+                    'style-loader',
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            modules: {
+                                auto: true,
+                                localIdentName: '[name]__[local]___[hash:base64:5]',
+                                exportLocalsConvention: 'asIs', // Changed to 'asIs' to avoid duplicate exports and preserve original names
+                                namedExport: false, // Disable named exports to avoid conflicts
+                            },
+                            esModule: false, // Use CommonJS exports to avoid duplicate export issues
+                            importLoaders: 1,
                         },
                     },
-                },
-                'sass-loader',
-            ],
-        };
-
-        const regularScssRule = {
-            test: /\.scss$/,
-            exclude: /\.module\.scss$/,
-            use: [
-                'style-loader',
-                'css-loader',
-                'sass-loader',
-            ],
-        };
-
-        // Remove existing SCSS rules and add our new rules
-        const rules = config.module?.rules || [];
-        const filteredRules = rules.filter((rule: any) => {
-            if (rule && typeof rule === 'object' && 'test' in rule) {
-                return !(rule.test && (rule.test.toString().includes('scss') || rule.test.toString().includes('s[ca]ss')));
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            implementation: require('sass'),
+                            sassOptions: {
+                                includePaths: ['node_modules'],
+                                silenceDeprecations: ['legacy-js-api'],
+                            },
+                        },
+                    },
+                ],
+            },
+            // Правило для обычных SCSS файлов
+            {
+                test: /\.scss$/,
+                exclude: /\.module\.scss$/,
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            implementation: require('sass'),
+                            sassOptions: {
+                                includePaths: ['node_modules'],
+                                silenceDeprecations: ['legacy-js-api'],
+                            },
+                        },
+                    },
+                ],
+            },
+            // Правило для обычных CSS файлов (включая @gravity-ui/uikit)
+            {
+                test: /\.css$/,
+                use: [
+                    'style-loader',
+                    'css-loader',
+                ],
             }
-            return true;
-        });
+        );
 
-        config.module = {
-            ...config.module,
-            rules: [...filteredRules, cssModulesRule, regularScssRule],
-        };
-        
         return config;
     }
 
