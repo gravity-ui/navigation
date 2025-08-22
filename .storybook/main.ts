@@ -32,7 +32,7 @@ const config: StorybookConfig = {
     },
 
     webpackFinal: async (config) => {
-        // Удаляем существующие правила для CSS/SCSS из Storybook по умолчанию
+        // Remove default CSS/SCSS rules provided by Storybook
         config.module = config.module || { rules: [] };
         config.module.rules = config.module.rules?.filter(
             (rule) => {
@@ -46,9 +46,9 @@ const config: StorybookConfig = {
             }
         ) || [];
 
-        // Добавляем наши правила для CSS Modules и обычных стилей в начало
+        // Add our rules for CSS Modules and regular styles at the beginning
         config.module.rules.unshift(
-            // Правило для CSS модулей (*.module.scss)
+            // Rule for CSS Modules (*.module.scss)
             {
                 test: /\.module\.scss$/,
                 use: [
@@ -78,7 +78,7 @@ const config: StorybookConfig = {
                     },
                 ],
             },
-            // Правило для обычных SCSS файлов
+            // Rule for regular SCSS files
             {
                 test: /\.scss$/,
                 exclude: /\.module\.scss$/,
@@ -97,7 +97,7 @@ const config: StorybookConfig = {
                     },
                 ],
             },
-            // Правило для обычных CSS файлов (включая @gravity-ui/uikit)
+            // Rule for regular CSS files (including @gravity-ui/uikit)
             {
                 test: /\.css$/,
                 use: [
