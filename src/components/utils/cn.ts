@@ -1,9 +1,9 @@
-import { withNaming } from '@bem-react/classname';
+import {withNaming} from '@bem-react/classname';
 
 export const NAMESPACE = 'gn-';
 
-export const cn = withNaming({ e: '__', m: '_' });
-export const block = withNaming({ n: NAMESPACE, e: '__', m: '_' });
+export const cn = withNaming({e: '__', m: '_'});
+export const block = withNaming({n: NAMESPACE, e: '__', m: '_'});
 
 export type CnBlock = ReturnType<typeof cn>;
 
@@ -14,7 +14,7 @@ export type CnBlock = ReturnType<typeof cn>;
  * @returns A function that generates class names from the CSS modules object
  */
 export const createBlock = (blockName: string, styles: Record<string, string>) => {
-    const bemBlock = withNaming({ n: NAMESPACE, e: '__', m: '_' });
+    const bemBlock = withNaming({n: NAMESPACE, e: '__', m: '_'});
     const blockFn = bemBlock(blockName);
 
     // Create a function with the same signature as the original block function
@@ -39,8 +39,8 @@ export const createBlock = (blockName: string, styles: Record<string, string>) =
             return className;
         }
 
-        // Для CSS‑модулей нужно замапить КАЖДЫЙ токен класса отдельно,
-        // так как blockFn может вернуть несколько классов одной строкой
+        // For CSS modules, we need to map EACH class token separately,
+        // since blockFn can return multiple classes in a single string
         return className
             .split(/\s+/)
             .filter(Boolean)
