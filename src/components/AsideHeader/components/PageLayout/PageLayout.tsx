@@ -27,8 +27,8 @@ const Layout = ({compact, className, children, topAlert}: PageLayoutProps) => {
 
     const estimatedTopAlertHeight = calcEstimatedTopAlertHeight(topAlert);
 
-    // Резервируем отступ сразу на серверном рендере через инлайновую переменную на контейнере.
-    // После маунта TopAlert точная высота будет проставлена хуком.
+    // Reserve margin immediately on server render through inline variable on container.
+    // After TopAlert mount, the exact height will be set by hook.
     const preloadHeightValue =
         topAlert && typeof topAlert.preloadHeight !== 'undefined'
             ? topAlert.preloadHeight === true
