@@ -19,14 +19,24 @@ const parseComponentCSS = (cssContent) => {
 	const bucketize = (node) => {
 		const buckets = new Map();
 		if (node.type === 'rule') {
-			const selectors = String(node.selector || '').split(',');
-			let key = null;
-			for (const s of selectors) {
-				const info = getComponentKeyFromSelector(s.trim());
-				if (info) { key = `${info.name}::${info.local}`; break; }
+			const rawSelectors = String(node.selector || '').split(',');
+			// Build a map: componentKey -> selectors belonging to that component only
+			const selectorsByKey = new Map();
+			for (const raw of rawSelectors) {
+				const sel = raw.trim();
+				const info = getComponentKeyFromSelector(sel);
+				if (!info) continue;
+				const key = `${info.name}::${info.local}`;
+				if (!selectorsByKey.has(key)) selectorsByKey.set(key, []);
+				selectorsByKey.get(key).push(sel);
 			}
-			if (key) {
-				buckets.set(key, [node.clone()]);
+			// For each component key create a cloned rule that contains ONLY its selectors
+			for (const [key, sels] of selectorsByKey) {
+				if (!sels.length) continue; // nothing to emit for this key
+				const cloned = node.clone();
+				cloned.selector = sels.join(', ');
+				if (!buckets.has(key)) buckets.set(key, []);
+				buckets.get(key).push(cloned);
 			}
 		} else if (node.type === 'atrule') {
 			for (const child of node.nodes || []) {
