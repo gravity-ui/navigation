@@ -36,9 +36,6 @@ export function useOverflowingHorizontalListItems<ItemType>({
 
     useLayoutEffect(() => {
         const footerMenu = containerRef.current;
-        if (!footerMenu) {
-            return;
-        }
 
         const updateContainerSize = (entries: ResizeObserverEntry[]) => {
             if (entries.length > 0 && footerMenu) {
@@ -49,7 +46,14 @@ export function useOverflowingHorizontalListItems<ItemType>({
         const updateContainerSizeDebounced = debounceFn(updateContainerSize, 100);
         const footerMenuResizeObserver = new ResizeObserver(updateContainerSizeDebounced);
 
-        footerMenuResizeObserver.observe(footerMenu);
+        if (footerMenu) {
+            footerMenuResizeObserver.observe(footerMenu);
+        }
+
+        return () => {
+            updateContainerSizeDebounced.cancel();
+            footerMenuResizeObserver.disconnect();
+        };
     }, [containerRef]);
 
     const isMeasured = containerWidth > 0;
