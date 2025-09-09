@@ -56,6 +56,7 @@ export interface MenuItem extends QAProps {
      * The category to which the menu item belongs. Need for grouping in the display/editing mode of all pages
      */
     category?: string;
+    className?: string;
 }
 
 export type SubheaderMenuItem = Omit<ItemProps, 'onItemClick' | 'onItemClickCapture'>;
