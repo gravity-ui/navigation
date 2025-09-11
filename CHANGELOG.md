@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.0](https://github.com/gravity-ui/navigation/compare/v3.6.4...v3.7.0) (2025-09-11)
+
+
+### Features
+
+* **AsideHeader:** add possibility to provide className to the AsideHeaderItem ([#464](https://github.com/gravity-ui/navigation/issues/464)) ([d52b43d](https://github.com/gravity-ui/navigation/commit/d52b43d453ec147e7c1f1e156cfa6ea51125454d))
+
 ## [3.6.4](https://github.com/gravity-ui/navigation/compare/v3.6.3...v3.6.4) (2025-08-11)
 
 
