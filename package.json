@@ -52,6 +52,7 @@
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
     "@doc-tools/transform": "^3.11.0",
+    "@figma/code-connect": "1.3.5",
     "@gravity-ui/components": "^4.0.1",
     "@gravity-ui/eslint-config": "^3.3.0",
     "@gravity-ui/icons": "^2.8.1",
