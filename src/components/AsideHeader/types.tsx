@@ -74,25 +74,7 @@ export enum InnerPanels {
     AllPages = 'all-pages',
 }
 
-interface ItemPopup {
-    popupVisible?: PopupProps['open'];
-    /**
-     * floating element anchor ref object
-     * */
-    popupRef?: React.RefObject<HTMLElement>;
-    popupPlacement?: PopupProps['placement'];
-    popupOffset?: PopupProps['offset'];
-    popupKeepMounted?: PopupProps['keepMounted'];
-    renderPopupContent?: () => React.ReactNode;
-    /**
-     * This callback will be called when Escape key pressed on keyboard, or click outside was made
-     * This behaviour could be disabled with `disableEscapeKeyDown`
-     * and `disableOutsideClick` options
-     */
-    onOpenChangePopup?: PopupProps['onOpenChange'];
-}
-
-export interface AsideHeaderItem extends ItemPopup, MenuItem {
+export interface AsideHeaderItem extends MenuItem {
     enableTooltip?: boolean;
     onItemClick?: (
         item: AsideHeaderItem,
@@ -102,4 +84,39 @@ export interface AsideHeaderItem extends ItemPopup, MenuItem {
     onCollapseItemClick?: () => void;
     bringForward?: boolean;
     compact?: boolean;
+
+    /**
+     * @deprecated Use itemWrapper instead for popup functionality
+     */
+    popupVisible?: PopupProps['open'];
+    /**
+     * Floating element anchor ref object
+     *
+     * @deprecated Use itemWrapper instead for popup functionality
+     */
+    popupRef?: React.RefObject<HTMLElement>;
+    /**
+     * @deprecated Use itemWrapper instead for popup functionality
+     */
+    popupPlacement?: PopupProps['placement'];
+    /**
+     * @deprecated Use itemWrapper instead for popup functionality
+     */
+    popupOffset?: PopupProps['offset'];
+    /**
+     * @deprecated Use itemWrapper instead for popup functionality
+     */
+    popupKeepMounted?: PopupProps['keepMounted'];
+    /**
+     * @deprecated Use itemWrapper instead for popup functionality
+     */
+    renderPopupContent?: () => React.ReactNode;
+    /**
+     * This callback will be called when Escape key pressed on keyboard, or click outside was made
+     * This behaviour could be disabled with `disableEscapeKeyDown`
+     * and `disableOutsideClick` options
+     *
+     * @deprecated Use itemWrapper instead for popup functionality
+     */
+    onOpenChangePopup?: PopupProps['onOpenChange'];
 }
