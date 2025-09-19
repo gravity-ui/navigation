@@ -128,13 +128,13 @@ const MENU_ITEMS_CLAMPED: AsideHeaderProps['menuItems'] = [
         id: 'text-link',
         title: MENU_ITEMS_CLAMPED_TITLE,
         icon: Gear,
-        link: 'about:blank',
+        href: 'about:blank',
     },
     {
         id: 'text-link-action',
         title: MENU_ITEMS_CLAMPED_TITLE,
         icon: Gear,
-        link: 'about:blank',
+        href: 'about:blank',
         type: 'action',
     },
 ];

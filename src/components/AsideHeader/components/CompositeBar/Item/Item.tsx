@@ -70,7 +70,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         bringForward,
         rightAdornment,
         title,
-        link,
+        href,
         qa,
     } = props;
 
@@ -129,7 +129,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     };
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
-        const [Tag, tagProps] = link ? ['a' as const, {href: link}] : ['button' as const, {}];
+        const [Tag, tagProps] = href ? ['a' as const, {href}] : ['button' as const, {}];
 
         const createdNode = (
             <React.Fragment>
@@ -279,8 +279,8 @@ function CollapsedPopup({
                             title: titleEl,
                             icon: iconEl,
                         }: MakeItemParams) => {
-                            const [Tag, tagProps] = item.link
-                                ? ['a' as const, {href: item.link}]
+                            const [Tag, tagProps] = item.href
+                                ? ['a' as const, {href: item.href}]
                                 : ['button' as const, {}];
 
                             return (

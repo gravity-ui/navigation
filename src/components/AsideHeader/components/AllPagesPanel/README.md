@@ -56,7 +56,7 @@ const useMenuItems = () => {
 
     return {
       ...item,
-      current: (item.link || '') === location.pathname,
+      current: (item.href || '') === location.pathname,
     };
   });
 

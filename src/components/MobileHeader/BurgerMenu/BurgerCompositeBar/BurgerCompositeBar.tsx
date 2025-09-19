@@ -47,8 +47,8 @@ const Item = ({item, onItemClick}: ItemProps) => {
         return item.itemWrapper(node, item) as React.ReactElement;
     }
 
-    return item.link ? (
-        <a href={item.link} className={b('link')}>
+    return item.href ? (
+        <a href={item.href} className={b('link')}>
             {node}
         </a>
     ) : (

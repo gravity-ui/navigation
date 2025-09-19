@@ -18,7 +18,7 @@ export interface MenuItem extends QAProps {
     icon?: IconProps['data'];
     iconSize?: number | string;
     iconQa?: string;
-    link?: string;
+    href?: string;
     current?: boolean;
     pinned?: boolean;
     onItemClick?: (
