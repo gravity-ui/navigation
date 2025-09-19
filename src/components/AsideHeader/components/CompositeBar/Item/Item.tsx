@@ -65,7 +65,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         onOpenChangePopup,
         onItemClick,
         onItemClickCapture,
-        onCollapseItemClick,
         itemWrapper,
         bringForward,
         rightAdornment,
@@ -141,12 +140,11 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
                         if (collapsedItem) {
                             /**
-                             * If we call onItemClick for collapsedItem then:
-                             * - User get unexpected item in onItemClick callback
-                             * - onClosePanel calls twice for each popuped item, as result it will prevent opening of panelItems
+                             * This is the "more" button (three dots) that shows additional menu items in a popup.
+                             * We call onItemClick with collapsed=true to indicate this is a collapse action.
                              */
                             toggleOpen(!open);
-                            onCollapseItemClick?.();
+                            onItemClick?.(props, true, event);
                         } else {
                             onItemClick?.(props, false, event);
                         }

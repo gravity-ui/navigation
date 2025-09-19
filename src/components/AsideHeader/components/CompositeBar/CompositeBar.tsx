@@ -177,13 +177,20 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                         active: false,
                     });
                 }
-                onItemClick?.({...item, onItemClick: orginalItemClick}, collapsed, event);
+
+                // Handle clicks on the "more" button (collapse item)
+                if (item.id === COLLAPSE_ITEM_ID && collapsed) {
+                    onMoreClick?.();
+                } else {
+                    onItemClick?.({...item, onItemClick: orginalItemClick}, collapsed, event);
+                }
             },
         [
             compact,
             lastClickedItemIndex,
             multipleTooltip,
             onItemClick,
+            onMoreClick,
             setMultipleTooltipContextValue,
         ],
     );
@@ -213,7 +220,6 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                             onMouseEnter={onMouseEnterByIndex(itemIndex)}
                             onMouseLeave={onMouseLeave}
                             onItemClick={onItemClickByIndex(itemIndex, item.onItemClick)}
-                            onCollapseItemClick={onMoreClick}
                             collapseItems={collapseItems}
                         />
                     )}

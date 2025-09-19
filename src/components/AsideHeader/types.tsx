@@ -81,7 +81,6 @@ export interface AsideHeaderItem extends MenuItem {
         collapsed: boolean,
         event: React.MouseEvent<HTMLElement, MouseEvent>,
     ) => void;
-    onCollapseItemClick?: () => void;
     bringForward?: boolean;
     compact?: boolean;
 
