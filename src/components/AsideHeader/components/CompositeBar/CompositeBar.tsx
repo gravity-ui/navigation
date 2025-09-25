@@ -40,7 +40,6 @@ export type CompositeBarProps = {
 
 type CompositeBarViewProps = CompositeBarProps & {
     collapseItems?: AsideHeaderItem[];
-    compositeId?: string;
 };
 
 const CompositeBarView: FC<CompositeBarViewProps> = ({

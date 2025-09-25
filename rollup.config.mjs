@@ -8,11 +8,27 @@ import json from 'rollup-plugin-json';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import postcss from 'rollup-plugin-postcss';
 import ts from 'typescript';
+
 import {extractComponentCSS} from './plugins/extractComponentCss.mjs';
 
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'));
 
 // extractComponentCSS now imported from dedicated file
+
+// External dependency checker - shared between ESM and CJS builds
+const peerDeps = [
+    'react',
+    'react-dom',
+    '@bem-react/classname',
+    '@gravity-ui/components',
+    '@gravity-ui/icons',
+    '@gravity-ui/uikit',
+];
+
+const isExternal = (id) => {
+    // Mark peer dependencies as external
+    return peerDeps.some((dep) => id.startsWith(dep));
+};
 
 // Single input file - Rollup will automatically detect and split components
 const input = 'src/index.ts';
@@ -63,17 +79,7 @@ export default [
         },
         plugins: getPlugins(packageJson.module),
         strictDeprecations: true,
-        external: (id) => {
-            // Mark peer dependencies as external
-            return [
-                'react',
-                'react-dom',
-                '@bem-react/classname',
-                '@gravity-ui/components',
-                '@gravity-ui/icons',
-                '@gravity-ui/uikit',
-            ].some((dep) => id.startsWith(dep));
-        },
+        external: isExternal,
     },
     // CJS build with automatic component splitting using preserveModules
     {
@@ -87,16 +93,6 @@ export default [
         },
         plugins: getPlugins(packageJson.main),
         strictDeprecations: true,
-        external: (id) => {
-            // Mark peer dependencies as external
-            return [
-                'react',
-                'react-dom',
-                '@bem-react/classname',
-                '@gravity-ui/components',
-                '@gravity-ui/icons',
-                '@gravity-ui/uikit',
-            ].some((dep) => id.startsWith(dep));
-        },
+        external: isExternal,
     },
 ];
