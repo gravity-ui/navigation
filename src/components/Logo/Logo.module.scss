@@ -1,4 +1,5 @@
 @use '../variables';
+@use '../../../styles/mixins' as *;
 
 $block: '.#{variables.$ns}logo';
 

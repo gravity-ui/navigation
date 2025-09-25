@@ -50,16 +50,37 @@ const getPlugins = (outDir) => {
                 generateScopedName: '[name]__[local]___[hash:base64:5]',
                 localsConvention: 'camelCase',
             },
-            extract: 'index.css', // Extract all CSS to one file
+            extract: 'index.css',
             inject: false,
             include: /\.module\.(css|scss|sass)$/,
+            extensions: ['.css', '.scss', '.sass'],
+            use: [
+                [
+                    'sass',
+                    {
+                        // Allow package-style imports like "@gravity-ui/uikit/..."
+                        includePaths: ['node_modules', 'src', 'styles'],
+                        silenceDeprecations: ['legacy-js-api'],
+                    },
+                ],
+            ],
         }),
         postcss({
             minimize: true,
-            extract: 'index.css', // Extract all CSS to one file
+            extract: 'index.css',
             inject: false,
             include: /\.(css|scss|sass)$/,
             exclude: /\.module\.(css|scss|sass)$/,
+            extensions: ['.css', '.scss', '.sass'],
+            use: [
+                [
+                    'sass',
+                    {
+                        includePaths: ['node_modules', 'src', 'styles'],
+                        silenceDeprecations: ['legacy-js-api'],
+                    },
+                ],
+            ],
         }),
         svgr(),
         extractComponentCSS(),
@@ -76,6 +97,7 @@ export default [
             sourcemap: true,
             preserveModules: true, // This automatically creates separate files for each module
             preserveModulesRoot: 'src',
+            exports: 'named',
         },
         plugins: getPlugins(packageJson.module),
         strictDeprecations: true,
@@ -90,6 +112,7 @@ export default [
             sourcemap: true,
             preserveModules: true, // This automatically creates separate files for each module
             preserveModulesRoot: 'src',
+            exports: 'named',
         },
         plugins: getPlugins(packageJson.main),
         strictDeprecations: true,

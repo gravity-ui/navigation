@@ -1,5 +1,6 @@
 @use '~@gravity-ui/uikit/styles/mixins';
 @use '../../variables';
+@use '../../../../styles/mixins' as mixins;
 
 $block: '.#{variables.$ns}footer-menu-item';
 

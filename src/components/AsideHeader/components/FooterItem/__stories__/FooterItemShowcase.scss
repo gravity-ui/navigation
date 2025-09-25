@@ -1,4 +1,4 @@
-@use '~@gravity-ui/uikit/styles/mixins';
+@use '../../../../styles/mixins' as *;
 
 .footer-item-showcase {
     --gn-aside-header-min-width: 56px;

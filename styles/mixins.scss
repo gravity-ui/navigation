@@ -1,3 +1,29 @@
+@forward '@gravity-ui/uikit/styles/mixins';
+
+@mixin aside-header-button() {
+    &_current::before {
+        background-color: var(--g-color-base-selection);
+    }
+
+    .g-root &_current.g-button_view_flat:hover::before {
+        background-color: var(--g-color-base-selection-hover);
+    }
+}
+
+@mixin accessibility-button() {
+    background: none;
+    color: inherit;
+    border: none;
+    font: inherit;
+    outline: inherit;
+    text-decoration: inherit;
+
+    &:focus-visible {
+        outline: solid var(--g-color-line-misc);
+        outline-offset: -2px;
+    }
+}
+
 @mixin aside-header-button() {
     &_current::before {
         background-color: var(--g-color-base-selection);
