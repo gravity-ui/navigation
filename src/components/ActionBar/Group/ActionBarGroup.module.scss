@@ -4,8 +4,6 @@
 $block: '.#{variables.$ns}action-bar-group';
 
 #{$block} {
-    @include pull.modifiers;
-
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
@@ -13,6 +11,8 @@ $block: '.#{variables.$ns}action-bar-group';
 
     margin: 0;
     padding: 0;
+
+    @include pull.modifiers;
 
     &_stretch-container {
         flex-grow: 1;

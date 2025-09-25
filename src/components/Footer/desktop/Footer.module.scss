@@ -1,6 +1,5 @@
 @use '../../variables';
-
-@import '../../../../styles/mixins';
+@use '../../../../styles/mixins' as *;
 
 $block: '.#{variables.$ns}footer';
 

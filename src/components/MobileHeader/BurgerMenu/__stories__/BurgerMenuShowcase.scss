@@ -1,4 +1,4 @@
-@import '../../../../../styles/mixins';
+@use '../../../../../styles/mixins' as *;
 
 .burger-menu-showcase {
     --gn-aside-header-min-width: 56px;
