@@ -11,12 +11,21 @@ const TopAlert = React.lazy(() =>
     import('../../../TopAlert').then((module) => ({default: module.TopAlert})),
 );
 
+// Constants for TopAlert height calculation (in pixels)
+const BASE_ALERT_HEIGHT = 60; // Base height of the alert component
+const TITLE_HEIGHT_BONUS = 14; // Additional height when title is present
+const DENSE_HEIGHT_REDUCTION = 16; // Height reduction when dense mode is enabled
+
 function calcEstimatedTopAlertHeight(topAlert?: TopAlertProps) {
     if (!topAlert) {
         return 0;
     }
 
-    return 60 + (topAlert.title ? 14 : 0) - (topAlert.dense ? 16 : 0);
+    return (
+        BASE_ALERT_HEIGHT +
+        (topAlert.title ? TITLE_HEIGHT_BONUS : 0) -
+        (topAlert.dense ? DENSE_HEIGHT_REDUCTION : 0)
+    );
 }
 
 export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {}
@@ -29,14 +38,23 @@ const Layout = ({compact, className, children, topAlert}: PageLayoutProps) => {
 
     // Reserve margin immediately on server render through inline variable on container.
     // After TopAlert mount, the exact height will be set by hook.
-    const preloadHeightValue =
-        topAlert && typeof topAlert.preloadHeight !== 'undefined'
-            ? topAlert.preloadHeight === true
-                ? estimatedTopAlertHeight
-                : typeof topAlert.preloadHeight === 'number'
-                  ? topAlert.preloadHeight
-                  : undefined
-            : undefined;
+    const getPreloadHeightValue = (): number | undefined => {
+        if (!topAlert || typeof topAlert.preloadHeight === 'undefined') {
+            return undefined;
+        }
+
+        if (topAlert.preloadHeight === true) {
+            return estimatedTopAlertHeight;
+        }
+
+        if (typeof topAlert.preloadHeight === 'number') {
+            return topAlert.preloadHeight;
+        }
+
+        return undefined;
+    };
+
+    const preloadHeightValue = getPreloadHeightValue();
 
     return (
         <AsideHeaderContextProvider value={asideHeaderContextValue}>

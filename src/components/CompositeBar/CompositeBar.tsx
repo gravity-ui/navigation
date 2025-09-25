@@ -45,7 +45,6 @@ export type CompositeBarProps = CompositeBarItems & {
 
 type CompositeBarViewProps = CompositeBarProps & {
     collapseItems?: MenuItem[];
-    compositeId?: string;
 };
 
 const CompositeBarView: FC<CompositeBarViewProps> = ({
