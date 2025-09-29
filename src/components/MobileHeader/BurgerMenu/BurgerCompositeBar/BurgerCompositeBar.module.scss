@@ -1,7 +1,6 @@
 @use '../../../variables';
-
-@import '~@gravity-ui/uikit/styles/mixins';
-@import '../../../../../styles/mixins';
+@use '~@gravity-ui/uikit/styles/mixins' as *;
+@use '../../../../../styles/mixins' as *;
 
 $block: '.#{variables.$ns}burger-composite-bar';
 

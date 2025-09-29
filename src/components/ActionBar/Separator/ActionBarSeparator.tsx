@@ -1,10 +1,10 @@
 import React from 'react';
 
-import {block} from '../../utils/cn';
+import {createBlock} from '../../utils/cn';
 
-import './ActionBarSeparator.scss';
+import styles from './ActionBarSeparator.module.scss';
 
-const b = block('action-bar-separator');
+const b = createBlock('action-bar-separator', styles);
 
 export const ActionBarSeparator = () => {
     return <li role="separator" className={b()} aria-hidden />;

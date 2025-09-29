@@ -6,7 +6,7 @@ import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
 import {useAsideHeaderContext} from '../AsideHeader/AsideHeaderContext';
 import {ASIDE_HEADER_COMPACT_WIDTH} from '../constants';
 import {MenuItem, SubheaderMenuItem} from '../types';
-import {block} from '../utils/cn';
+import {createBlock} from '../utils/cn';
 
 import {Item, ItemProps} from './Item/Item';
 import {MultipleTooltip, MultipleTooltipContext, MultipleTooltipProvider} from './MultipleTooltip';
@@ -21,9 +21,9 @@ import {
     isMenuItem,
 } from './utils';
 
-import './CompositeBar.scss';
+import styles from './CompositeBar.module.scss';
 
-const b = block('composite-bar');
+const b = createBlock('composite-bar', styles);
 
 export type CompositeBarItem = MenuItem | SubheaderMenuItem;
 
@@ -45,7 +45,6 @@ export type CompositeBarProps = CompositeBarItems & {
 
 type CompositeBarViewProps = CompositeBarProps & {
     collapseItems?: MenuItem[];
-    compositeId?: string;
 };
 
 const CompositeBarView: FC<CompositeBarViewProps> = ({

@@ -22,7 +22,8 @@ export const useTopAlertHeight = ({alert}: {alert?: TopAlertProps}): TopAlertHei
     }, []);
 
     const updateTopSize = React.useCallback(() => {
-        setAsideTopPanelHeight(alertRef.current?.clientHeight || 0);
+        const height = alertRef.current?.clientHeight ?? 0;
+        setAsideTopPanelHeight(height);
     }, [setAsideTopPanelHeight]);
 
     React.useLayoutEffect(() => {

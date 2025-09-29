@@ -4,7 +4,7 @@ import {Flex, IconProps, Loader} from '@gravity-ui/uikit';
 import identity from 'lodash/identity';
 
 import {Title} from '../Title';
-import {block} from '../utils/cn';
+import {createBlock} from '../utils/cn';
 
 import {SettingsSelection} from './Selection';
 import {
@@ -26,9 +26,9 @@ import {getSettingsFromChildren} from './collect-settings';
 import {escapeStringForRegExp} from './helpers';
 import i18n from './i18n';
 
-import './Settings.scss';
+import styles from './Settings.module.scss';
 
-const b = block('settings');
+const b = createBlock('settings', styles);
 
 export interface SettingsProps {
     children: React.ReactNode;

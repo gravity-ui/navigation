@@ -4,11 +4,11 @@ import {Pin, PinFill} from '@gravity-ui/icons';
 import {Button, Icon} from '@gravity-ui/uikit';
 
 import {MenuItem} from '../../types';
-import {block} from '../../utils/cn';
+import {createBlock} from '../../utils/cn';
 
-import './AllPagesListItem.scss';
+import styles from './AllPagesListItem.module.scss';
 
-const b = block('all-pages-list-item');
+const b = createBlock('all-pages-list-item', styles);
 
 interface AllPagesListItemProps {
     item: MenuItem;
@@ -37,7 +37,7 @@ export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
         }
     };
 
-    const [Tag, tagProps] = item.link ? ['a' as const, {href: item.link}] : ['button' as const, {}];
+    const [Tag, tagProps] = item.link ? ['a' as const, {href: item.link}] : ['div' as const, {}];
 
     return (
         <Tag {...tagProps} className={b()} onClick={onItemClick}>

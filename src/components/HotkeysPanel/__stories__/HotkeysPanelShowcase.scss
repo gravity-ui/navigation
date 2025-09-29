@@ -1,4 +1,4 @@
-@import '../../../../styles/mixins';
+@use '../../../../styles/mixins' as *;
 
 .hotkeys-panel-showcase {
     --gn-drawer-item-position: absolute;

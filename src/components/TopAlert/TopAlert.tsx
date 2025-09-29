@@ -3,13 +3,13 @@ import React from 'react';
 import {Alert, Text} from '@gravity-ui/uikit';
 
 import {TopAlertProps} from '../types';
-import {block} from '../utils/cn';
+import {createBlock} from '../utils/cn';
 
 import {useTopAlertHeight} from './useTopAlertHeight';
 
-import './TopAlert.scss';
+import styles from './TopAlert.module.scss';
 
-const b = block('top-alert');
+const b = createBlock('top-alert', styles);
 
 type Props = {
     alert?: TopAlertProps;

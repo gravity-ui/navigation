@@ -2,14 +2,14 @@ import React from 'react';
 
 import {Icon, List} from '@gravity-ui/uikit';
 
-import {block} from '../../../utils/cn';
+import {createBlock} from '../../../utils/cn';
 import {MOBILE_HEADER_ICON_SIZE} from '../../constants';
 import {MobileMenuItem} from '../../types';
 import {getItemHeight, getSelectedItemIndex} from '../../utils';
 
-import './BurgerCompositeBar.scss';
+import styles from './BurgerCompositeBar.module.scss';
 
-const b = block('burger-composite-bar');
+const b = createBlock('burger-composite-bar', styles);
 
 interface ItemProps {
     item: MobileMenuItem;

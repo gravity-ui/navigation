@@ -2,14 +2,14 @@ import React from 'react';
 
 import {Sheet} from '@gravity-ui/uikit';
 
-import {block} from '../../utils/cn';
+import {createBlock} from '../../utils/cn';
 import {MobileMenuItem, ModalItem} from '../types';
 
 import {BurgerCompositeBar} from './BurgerCompositeBar/BurgerCompositeBar';
 
-import './BurgerMenu.scss';
+import styles from './BurgerMenu.module.scss';
 
-const b = block('mobile-header-burger-menu');
+const b = createBlock('mobile-header-burger-menu', styles);
 
 export interface BurgerMenuInnerProps {
     items?: MobileMenuItem[];

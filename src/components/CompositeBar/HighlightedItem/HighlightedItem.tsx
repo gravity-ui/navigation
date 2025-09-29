@@ -4,11 +4,11 @@ import {Portal} from '@gravity-ui/uikit';
 import debounceFn from 'lodash/debounce';
 
 import {useAsideHeaderInnerContext} from '../../AsideHeader/AsideHeaderContext';
-import {block} from '../../utils/cn';
+import {createBlock} from '../../utils/cn';
 
-import './HighlightedItem.scss';
+import styles from './HighlightedItem.module.scss';
 
-const b = block('composite-bar-highlighted-item');
+const b = createBlock('composite-bar-highlighted-item', styles);
 
 interface ItemInnerProps {
     iconRef: React.RefObject<HTMLDivElement>;

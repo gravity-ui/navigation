@@ -1,3 +1,5 @@
-import {block} from '../utils/cn';
+import {createBlock} from '../utils/cn';
 
-export const b = block('aside-header');
+import styles from './AsideHeader.module.scss';
+
+export const b = createBlock('aside-header', styles);

@@ -12,7 +12,9 @@
   "types": "build/esm/index.d.ts",
   "sideEffects": [
     "*.css",
-    "*.scss"
+    "*.scss",
+    "**/*.css",
+    "**/*.scss"
   ],
   "files": [
     "build"
@@ -20,7 +22,7 @@
   "scripts": {
     "prepare": "husky",
     "typecheck": "tsc --noEmit",
-    "test": "jest --passWithNoTests",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --passWithNoTests",
     "test-storybook": "test-storybook --url ${PR_PREVIEW_URL:-http://localhost:7008}",
     "build": "rimraf build && rollup -c",
     "lint:js": "eslint src --ext .js,.jsx,.ts,.tsx",
@@ -28,7 +30,7 @@
     "lint:prettier": "prettier --check '**/*.md'",
     "lint": "run-p lint:*",
     "build-storybook": "storybook build",
-    "start": "TS_NODE_PROJECT=.storybook/tsconfig.json storybook dev -p 7008",
+    "start": "cross-env TS_NODE_PROJECT=.storybook/tsconfig.json storybook dev -p 7008",
     "prepublishOnly": "npm run build",
     "playwright:install": "playwright install --with-deps",
     "playwright": "playwright test --config=playwright/playwright.config.ts",
@@ -59,6 +61,7 @@
     "@gravity-ui/stylelint-config": "^4.0.1",
     "@gravity-ui/tsconfig": "^1.0.0",
     "@gravity-ui/uikit": "^7.5.1",
+    "@jest/globals": "^30.0.5",
     "@playwright/experimental-ct-react": "^1.49.1",
     "@playwright/test": "^1.49.1",
     "@rollup/plugin-commonjs": "^28.0.2",
@@ -83,6 +86,7 @@
     "@types/react-virtualized-auto-sizer": "^1.0.4",
     "@vitejs/plugin-react": "^4.3.4",
     "axe-playwright": "^2.0.3",
+    "cross-env": "^10.0.0",
     "eslint": "^8.57.1",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-testing-library": "^6.5.0",
@@ -98,7 +102,7 @@
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
-    "sass": "^1.83.4",
+    "sass": "^1.93.2",
     "sass-loader": "^10.5.2",
     "storybook": "^8.5.0",
     "storybook-preset-inline-svg": "^1.0.1",
