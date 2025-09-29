@@ -183,7 +183,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             <React.Fragment>
                 <Tag
                     {...tagProps}
-                    className={b({type, current, compact}, className)}
+                    className={b({type, current, compact}, [className, item.className])}
                     ref={ref}
                     data-qa={item.qa}
                     onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
