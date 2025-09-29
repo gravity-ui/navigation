@@ -7,10 +7,12 @@ import {Footer} from '../Footer';
 import {FooterStories} from './helpersPlaywright';
 
 test.describe('Footer', () => {
-    test('render story: <ClearView>', async ({mount, expectScreenshot}) => {
+    test('render story: <ClearView>', async ({mount, expectScreenshot, defaultDelay}) => {
         await mount(
             <Footer copyright={`@ ${new Date().getFullYear()} "My Service"`} view="clear" />,
         );
+
+        await defaultDelay();
 
         await expectScreenshot();
     });

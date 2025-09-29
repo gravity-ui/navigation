@@ -7,9 +7,10 @@ const runPlugin = async (css, jsEntries) => {
         bundle[fileName] = {type: 'chunk', code};
     }
     const emitted = [];
-    plugin.emitFile = (a) => emitted.push(a);
-    plugin.buildStart();
-    await plugin.generateBundle({}, bundle);
+    const context = {
+        emitFile: (a) => emitted.push(a),
+    };
+    await plugin.generateBundle.call(context, {}, bundle);
     return {bundle, emitted};
 };
 
@@ -17,9 +18,10 @@ const runPluginWithBundle = async (bundle) => {
     const {extractComponentCSS} = await import('../extractComponentCss.mjs');
     const plugin = extractComponentCSS();
     const emitted = [];
-    plugin.emitFile = (a) => emitted.push(a);
-    plugin.buildStart();
-    await plugin.generateBundle({}, bundle);
+    const context = {
+        emitFile: (a) => emitted.push(a),
+    };
+    await plugin.generateBundle.call(context, {}, bundle);
     return {bundle, emitted};
 };
 
