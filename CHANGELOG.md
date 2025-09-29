@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.1](https://github.com/gravity-ui/navigation/compare/v3.7.0...v3.7.1) (2025-09-29)
+
+
+### Bug Fixes
+
+* clean up resize observer ([#461](https://github.com/gravity-ui/navigation/issues/461)) ([72ff021](https://github.com/gravity-ui/navigation/commit/72ff0214644e6a947ff3e91a67f9c316d7cb74b7))
+
 ## [3.7.0](https://github.com/gravity-ui/navigation/compare/v3.6.4...v3.7.0) (2025-09-11)
 
 
