@@ -12,7 +12,7 @@ $block: '.#{variables.$ns}footer-menu-item';
 
     height: 100%;
 
-    .g-menu__item-content {
+    :global(.g-menu__item-content) {
         @include mixins.overflow-ellipsis(ellipsis);
 
         @include mixins.text-body-1;
@@ -22,7 +22,7 @@ $block: '.#{variables.$ns}footer-menu-item';
     &[class]:hover {
         background-color: inherit;
 
-        &[href] .g-menu__item-content {
+        &[href] :global(.g-menu__item-content) {
             color: var(--g-color-text-link-hover);
         }
     }
