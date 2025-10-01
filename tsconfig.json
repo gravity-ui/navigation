@@ -12,6 +12,6 @@
       "~playwright/*": ["playwright/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "exclude": ["node_modules", "build", "**/__stories__", "**/*.test.ts", "**/*.test.tsx"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "codemods/**/*.ts"],
+  "exclude": ["node_modules", "build", "**/__stories__", "**/*.test.ts", "**/*.test.tsx", "**/__testfixtures__"]
 }
