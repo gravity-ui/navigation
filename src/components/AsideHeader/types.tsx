@@ -1,8 +1,8 @@
-import {QAProps} from '@gravity-ui/uikit';
+import {PopupProps, QAProps} from '@gravity-ui/uikit';
 
 import {RenderContentType} from '../Content';
 import {DrawerItemProps} from '../Drawer/Drawer';
-import {LogoProps, MenuItem, OpenModalSubscriber, SubheaderMenuItem, TopAlertProps} from '../types';
+import {LogoProps, MenuItem, OpenModalSubscriber, TopAlertProps} from '../types';
 
 import {AsideHeaderContextType} from './AsideHeaderContext';
 
@@ -14,10 +14,10 @@ export interface LayoutProps {
 
 export interface EditMenuProps {
     onOpenEditMode?: () => void;
-    onToggleMenuItem?: (changedItem: MenuItem) => void;
+    onToggleMenuItem?: (changedItem: AsideHeaderItem) => void;
     onResetSettingsToDefault?: () => void;
     enableSorting?: boolean;
-    onChangeItemsOrder?: (changedItem: MenuItem, oldIndex: number, newIndex: number) => void;
+    onChangeItemsOrder?: (changedItem: AsideHeaderItem, oldIndex: number, newIndex: number) => void;
 }
 
 export interface AsideHeaderGeneralProps extends QAProps {
@@ -54,10 +54,10 @@ export interface AsideHeaderGeneralProps extends QAProps {
 
 export interface AsideHeaderDefaultProps {
     panelItems?: DrawerItemProps[];
-    subheaderItems?: SubheaderMenuItem[];
-    menuItems?: MenuItem[];
-    defaultMenuItems?: MenuItem[];
-    onMenuItemsChanged?: (items: MenuItem[]) => void;
+    subheaderItems?: AsideHeaderItem[];
+    menuItems?: AsideHeaderItem[];
+    defaultMenuItems?: AsideHeaderItem[];
+    onMenuItemsChanged?: (items: AsideHeaderItem[]) => void;
     headerDecoration?: boolean;
 }
 
@@ -72,4 +72,50 @@ export interface AsideHeaderProps
 
 export enum InnerPanels {
     AllPages = 'all-pages',
+}
+
+export interface AsideHeaderItem extends MenuItem {
+    enableTooltip?: boolean;
+    onItemClick?: (
+        item: AsideHeaderItem,
+        collapsed: boolean,
+        event: React.MouseEvent<HTMLElement, MouseEvent>,
+    ) => void;
+    bringForward?: boolean;
+    compact?: boolean;
+
+    /**
+     * @deprecated Use itemWrapper instead for popup functionality
+     */
+    popupVisible?: PopupProps['open'];
+    /**
+     * Floating element anchor ref object
+     *
+     * @deprecated Use itemWrapper instead for popup functionality
+     */
+    popupRef?: React.RefObject<HTMLElement>;
+    /**
+     * @deprecated Use itemWrapper instead for popup functionality
+     */
+    popupPlacement?: PopupProps['placement'];
+    /**
+     * @deprecated Use itemWrapper instead for popup functionality
+     */
+    popupOffset?: PopupProps['offset'];
+    /**
+     * @deprecated Use itemWrapper instead for popup functionality
+     */
+    popupKeepMounted?: PopupProps['keepMounted'];
+    /**
+     * @deprecated Use itemWrapper instead for popup functionality
+     */
+    renderPopupContent?: () => React.ReactNode;
+    /**
+     * This callback will be called when Escape key pressed on keyboard, or click outside was made
+     * This behaviour could be disabled with `disableEscapeKeyDown`
+     * and `disableOutsideClick` options
+     *
+     * @deprecated Use itemWrapper instead for popup functionality
+     */
+    onOpenChangePopup?: PopupProps['onOpenChange'];
 }
