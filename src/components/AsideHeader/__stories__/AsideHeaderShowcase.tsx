@@ -109,20 +109,18 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                 customBackgroundClassName={customBackgroundClassName}
                 subheaderItems={[
                     {
-                        item: {
-                            id: 'services',
-                            title: 'Services',
-                            icon: Gear,
-                            onItemClick: () => {
-                                setVisiblePanel(undefined);
-                                setSubheaderPopupVisible(!subheaderPopupVisible);
-                            },
+                        id: 'services',
+                        title: 'Services',
+                        icon: Gear,
+                        onItemClick: () => {
+                            setVisiblePanel(undefined);
+                            setSubheaderPopupVisible(!subheaderPopupVisible);
                         },
-                        popupAnchor: ref,
+                        popupRef: ref,
                         popupPlacement: ['right-start'],
                         popupOffset: {mainAxis: 10, crossAxis: 10},
                         popupVisible: subheaderPopupVisible,
-                        onClosePopup: () => setSubheaderPopupVisible(false),
+                        onOpenChangePopup: () => setSubheaderPopupVisible(false),
                         renderPopupContent: () => {
                             return (
                                 <div className={b('settings')}>
@@ -137,17 +135,15 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                         },
                     },
                     {
-                        item: {
-                            id: 'search',
-                            title: 'Search',
-                            qa: 'subheader-item-search',
-                            icon: Magnifier,
-                            current: visiblePanel === Panel.Search,
-                            onItemClick: () =>
-                                setVisiblePanel(
-                                    visiblePanel === Panel.Search ? undefined : Panel.Search,
-                                ),
-                        },
+                        id: 'search',
+                        title: 'Search',
+                        qa: 'subheader-item-search',
+                        icon: Magnifier,
+                        current: visiblePanel === Panel.Search,
+                        onItemClick: () =>
+                            setVisiblePanel(
+                                visiblePanel === Panel.Search ? undefined : Panel.Search,
+                            ),
                     },
                 ]}
                 compact={compact}
@@ -159,30 +155,28 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                     <React.Fragment>
                         <FooterItem
                             compact={compact}
-                            item={{
-                                id: 'infra',
-                                icon: Gear,
-                                current: popupVisible,
-                                qa: 'footer-item-gear',
-                                iconQa: 'footer-item-icon-gear',
-                                title: (
-                                    <div className={b('infra-text')}>
-                                        <span className={b('infra-label')}>Minor issue</span>
-                                        <span className={b('infra-period')}>Now</span>
-                                    </div>
-                                ),
-                                tooltipText: 'Minor issue (Now)',
-                                onItemClick: () => {
-                                    setVisiblePanel(undefined);
-                                    setPopupVisible(!popupVisible);
-                                },
+                            id={'infra'}
+                            icon={Gear}
+                            current={popupVisible}
+                            qa={'footer-item-gear'}
+                            iconQa={'footer-item-icon-gear'}
+                            title={
+                                <div className={b('infra-text')}>
+                                    <span className={b('infra-label')}>Minor issue</span>
+                                    <span className={b('infra-period')}>Now</span>
+                                </div>
+                            }
+                            tooltipText={'Minor issue (Now)'}
+                            onItemClick={() => {
+                                setVisiblePanel(undefined);
+                                setPopupVisible(!popupVisible);
                             }}
                             enableTooltip={false}
                             popupVisible={popupVisible}
-                            popupAnchor={asideRef}
+                            popupRef={asideRef}
                             popupPlacement={['right-end']}
                             popupOffset={{mainAxis: 10, crossAxis: 10}}
-                            onClosePopup={() => setPopupVisible(false)}
+                            onOpenChangePopup={() => setPopupVisible(false)}
                             popupKeepMounted={true}
                             renderPopupContent={() => {
                                 return (
@@ -198,45 +192,42 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                             }}
                         />
                         <FooterItem
-                            item={{
-                                id: 'project-settings',
-                                title: 'Settings with panel',
-                                tooltipText: (
-                                    <div>
-                                        <b>Settings with panel</b>
-                                    </div>
-                                ),
-                                current: visiblePanel === Panel.ProjectSettings,
-                                itemWrapper: (params, makeItem) =>
-                                    makeItem({
-                                        ...params,
-                                        icon: <Icon data={Bug} size={ASIDE_HEADER_ICON_SIZE} />,
-                                    }),
-                                onItemClick: () => {
-                                    setVisiblePanel(
-                                        visiblePanel === Panel.ProjectSettings
-                                            ? undefined
-                                            : Panel.ProjectSettings,
-                                    );
-                                },
+                            id={'project-settings'}
+                            title={'Settings with panel'}
+                            tooltipText={
+                                <div>
+                                    <b>Settings with panel</b>
+                                </div>
+                            }
+                            current={visiblePanel === Panel.ProjectSettings}
+                            itemWrapper={(params, makeItem) =>
+                                makeItem({
+                                    ...params,
+                                    icon: <Icon data={Bug} size={ASIDE_HEADER_ICON_SIZE} />,
+                                })
+                            }
+                            onItemClick={() => {
+                                setVisiblePanel(
+                                    visiblePanel === Panel.ProjectSettings
+                                        ? undefined
+                                        : Panel.ProjectSettings,
+                                );
                             }}
                             bringForward
                             compact={compact}
                         />
                         <FooterItem
-                            item={{
-                                id: 'user-settings',
-                                icon: Gear,
-                                title: 'User Settings with panel',
-                                tooltipText: 'User Settings with panel',
-                                current: visiblePanel === Panel.UserSettings,
-                                onItemClick: () => {
-                                    setVisiblePanel(
-                                        visiblePanel === Panel.UserSettings
-                                            ? undefined
-                                            : Panel.UserSettings,
-                                    );
-                                },
+                            id={'user-settings'}
+                            icon={Gear}
+                            title={'User Settings with panel'}
+                            tooltipText={'User Settings with panel'}
+                            current={visiblePanel === Panel.UserSettings}
+                            onItemClick={() => {
+                                setVisiblePanel(
+                                    visiblePanel === Panel.UserSettings
+                                        ? undefined
+                                        : Panel.UserSettings,
+                                );
                             }}
                             compact={compact}
                         />

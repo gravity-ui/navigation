@@ -1,4 +1,4 @@
-@import '~@gravity-ui/uikit/styles/mixins';
+@use '../../../../styles/mixins';
 
 body {
     margin: 0;
@@ -6,7 +6,7 @@ body {
 
 .aside-header-showcase {
     &__content {
-        @include text-body-3;
+        @include mixins.text-body-3;
         padding: 40px;
     }
 
@@ -71,7 +71,7 @@ body {
     }
 
     &__item-accent {
-        @include text-accent;
+        @include mixins.text-accent;
         width: 100%;
         height: 100%;
     }
