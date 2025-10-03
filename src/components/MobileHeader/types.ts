@@ -22,9 +22,11 @@ export interface MobileMenuItem
         | 'afterMoreButton'
         | 'itemWrapper'
         | 'onItemClick'
+        | 'href'
     > {
     type?: MobileMenuItemType;
     closeMenuOnClick?: boolean;
+    link?: string;
     onItemClick?: (item: MobileMenuItem) => void;
     itemWrapper?: (node: React.ReactNode, item: MobileMenuItem) => React.ReactNode;
 }

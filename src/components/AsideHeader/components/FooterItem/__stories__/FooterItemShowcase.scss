@@ -1,0 +1,10 @@
+@use '../../../../../../styles/mixins';
+
+.footer-item-showcase {
+    --gn-aside-header-min-width: 56px;
+
+    &__content {
+        @include mixins.text-body-3;
+        padding: 40px;
+    }
+}
