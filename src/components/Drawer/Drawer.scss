@@ -4,6 +4,7 @@ $block: '.#{variables.$ns}drawer';
 
 #{$block} {
     pointer-events: none;
+    z-index: var(--gn-drawer-z-index);
 
     --_--item-shadow-default: 0 1px 5px 0 var(--g-color-sfx-shadow);
     --_--item-position: fixed;
