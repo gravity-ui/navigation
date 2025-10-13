@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.2](https://github.com/gravity-ui/navigation/compare/v3.7.1...v3.7.2) (2025-10-09)
+
+
+### Bug Fixes
+
+* resolve [#472](https://github.com/gravity-ui/navigation/issues/472) — add z-index to Drawer root element ([#473](https://github.com/gravity-ui/navigation/issues/473)) ([9fab3f9](https://github.com/gravity-ui/navigation/commit/9fab3f9d842da32e2b4e4fcf1fdb09d0ca0d56b5))
+
 ## [3.7.1](https://github.com/gravity-ui/navigation/compare/v3.7.0...v3.7.1) (2025-09-29)
 
 
