@@ -1,4 +1,4 @@
-import React, {forwardRef} from 'react';
+import React from 'react';
 
 import {Flex, Loader} from '@gravity-ui/uikit';
 import identity from 'lodash/identity';
@@ -103,7 +103,7 @@ const SettingItem = ({
     );
 };
 
-const SectionItem = forwardRef<
+const SectionItem = React.forwardRef<
     HTMLDivElement,
     SettingsPageSection & {
         search: string;
