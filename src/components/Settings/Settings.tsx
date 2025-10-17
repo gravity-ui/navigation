@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {forwardRef} from 'react';
 
 import {Flex, Loader} from '@gravity-ui/uikit';
 import identity from 'lodash/identity';
@@ -8,6 +8,7 @@ import {block} from '../utils/cn';
 
 import {
     SettingsSelectionContextProvider,
+    SettingsSelectionProviderContextValue,
     useSettingsSelectionContext,
     useSettingsSelectionProviderValue,
 } from './Selection/context';
@@ -23,7 +24,11 @@ import type {
     SettingsMenu as SettingsMenuType,
     SettingsPageSection,
 } from './collect-settings';
-import {getSettingsFromChildren} from './collect-settings';
+import {
+    SettingsMenu as CollectSettingsSettingsMenu,
+    SettingsPage,
+    getSettingsFromChildren,
+} from './collect-settings';
 import {escapeStringForRegExp} from './helpers';
 import i18n from './i18n';
 import type {
@@ -82,6 +87,129 @@ const getPageTitleById = (menu: SettingsMenuType, activePage: string) => {
     return '';
 };
 
+const SettingItem = ({
+    title: settingTitle,
+    element,
+    search,
+}: SettingsItem & {search: string}): React.ReactElement => {
+    return (
+        <div className={b('section-item')}>
+            {React.cloneElement(element, {
+                ...element.props,
+                highlightedTitle:
+                    search && settingTitle ? prepareTitle(settingTitle, search) : settingTitle,
+            })}
+        </div>
+    );
+};
+
+const SectionItem = forwardRef<
+    HTMLDivElement,
+    SettingsPageSection & {
+        search: string;
+        isMobile: boolean;
+        isSelected: boolean;
+    }
+>(({search, isMobile, isSelected, ...section}, ref) => {
+    const {renderSectionRightAdornment, showRightAdornmentOnHover} = useSettingsContext();
+
+    return (
+        <div className={b('section', {selected: isSelected})} ref={isSelected ? ref : undefined}>
+            {section.title && !section.hideTitle && (
+                <h3 className={b('section-heading')}>
+                    {renderSectionRightAdornment ? (
+                        <Flex gap={2} alignItems={'center'}>
+                            {section.title}
+                            <div
+                                className={b('section-right-adornment', {
+                                    hidden: showRightAdornmentOnHover,
+                                })}
+                            >
+                                {renderSectionRightAdornment(section)}
+                            </div>
+                        </Flex>
+                    ) : (
+                        section.title
+                    )}
+                </h3>
+            )}
+
+            {section.header &&
+                (isMobile ? (
+                    <div className={b('section-subheader')}>{section.header}</div>
+                ) : (
+                    section.header
+                ))}
+
+            {section.items.map((setting) =>
+                setting.hidden ? null : (
+                    <SettingItem {...setting} key={setting.title} search={search} />
+                ),
+            )}
+        </div>
+    );
+});
+
+SectionItem.displayName = 'SectionItem';
+
+const PageContentComponent = ({
+    menu,
+    pages,
+    selected,
+    isMobile,
+    search,
+    page,
+    renderNotFound,
+    emptyPlaceholder,
+    onClose,
+}: {
+    menu: CollectSettingsSettingsMenu;
+    pages: Record<string, SettingsPage>;
+    page: string | undefined;
+    isMobile: boolean;
+    search: string;
+    selected: SettingsSelectionProviderContextValue;
+} & Pick<
+    SettingsContentProps,
+    'renderNotFound' | 'emptyPlaceholder' | 'onClose'
+>): React.ReactElement => {
+    if (!page) {
+        return typeof renderNotFound === 'function' ? (
+            <>{renderNotFound()}</>
+        ) : (
+            <div className={b('not-found')}>{emptyPlaceholder}</div>
+        );
+    }
+
+    const filteredSections = pages[page].sections.filter((section) => !section.hidden);
+
+    return (
+        <React.Fragment>
+            {!isMobile && (
+                <Title hasSeparator onClose={onClose}>
+                    {getPageTitleById(menu, page)}
+                </Title>
+            )}
+
+            <div className={b('content')}>
+                {filteredSections.map((section) => {
+                    const isSelected = isSectionSelected(selected, page, section);
+
+                    return (
+                        <SectionItem
+                            isSelected={isSelected}
+                            isMobile={isMobile}
+                            search={search}
+                            {...section}
+                            key={section.title}
+                        />
+                    );
+                })}
+            </div>
+        </React.Fragment>
+    );
+};
+
 type SettingsContentProps = Omit<SettingsProps, 'loading' | 'renderLoading'>;
 function SettingsContent({
     initialPage,
@@ -96,8 +224,6 @@ function SettingsContent({
     onPageChange,
     onClose,
 }: SettingsContentProps) {
-    const {renderSectionRightAdornment, showRightAdornmentOnHover} = useSettingsContext();
-
     const [search, setSearch] = React.useState(initialSearch ?? '');
     const {menu, pages} = getSettingsFromChildren(children, search);
 
@@ -166,84 +292,6 @@ function SettingsContent({
         }
     }, [selected.selectedRef]);
 
-    const renderSetting = ({title: settingTitle, element}: SettingsItem) => {
-        return (
-            <div key={settingTitle} className={b('section-item')}>
-                {React.cloneElement(element, {
-                    ...element.props,
-                    highlightedTitle:
-                        search && settingTitle ? prepareTitle(settingTitle, search) : settingTitle,
-                })}
-            </div>
-        );
-    };
-
-    const renderSection = (page: string, section: SettingsPageSection) => {
-        const isSelected = isSectionSelected(selected, page, section);
-
-        return (
-            <div
-                key={section.title}
-                className={b('section', {selected: isSelected})}
-                ref={isSelected ? selected.selectedRef : undefined}
-            >
-                {section.title && !section.hideTitle && (
-                    <h3 className={b('section-heading')}>
-                        {renderSectionRightAdornment ? (
-                            <Flex gap={2} alignItems={'center'}>
-                                {section.title}
-                                <div
-                                    className={b('section-right-adornment', {
-                                        hidden: showRightAdornmentOnHover,
-                                    })}
-                                >
-                                    {renderSectionRightAdornment(section)}
-                                </div>
-                            </Flex>
-                        ) : (
-                            section.title
-                        )}
-                    </h3>
-                )}
-
-                {section.header &&
-                    (isMobile ? (
-                        <div className={b('section-subheader')}>{section.header}</div>
-                    ) : (
-                        section.header
-                    ))}
-
-                {section.items.map((setting) => (setting.hidden ? null : renderSetting(setting)))}
-            </div>
-        );
-    };
-
-    const renderPageContent = (page: string | undefined) => {
-        if (!page) {
-            return typeof renderNotFound === 'function' ? (
-                renderNotFound()
-            ) : (
-                <div className={b('not-found')}>{emptyPlaceholder}</div>
-            );
-        }
-
-        const filteredSections = pages[page].sections.filter((section) => !section.hidden);
-
-        return (
-            <React.Fragment>
-                {!isMobile && (
-                    <Title hasSeparator onClose={onClose}>
-                        {getPageTitleById(menu, page)}
-                    </Title>
-                )}
-
-                <div className={b('content')}>
-                    {filteredSections.map((section) => renderSection(page, section))}
-                </div>
-            </React.Fragment>
-        );
-    };
-
     return (
         <SettingsSelectionContextProvider value={selected}>
             <div className={b({view})}>
@@ -299,7 +347,19 @@ function SettingsContent({
                         />
                     </div>
                 )}
-                <div className={b('page')}>{renderPageContent(activePage)}</div>
+                <div className={b('page')}>
+                    <PageContentComponent
+                        menu={menu}
+                        pages={pages}
+                        selected={selected}
+                        search={search}
+                        isMobile={isMobile}
+                        page={activePage}
+                        emptyPlaceholder={emptyPlaceholder}
+                        renderNotFound={renderNotFound}
+                        onClose={onClose}
+                    />
+                </div>
             </div>
         </SettingsSelectionContextProvider>
     );

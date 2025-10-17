@@ -4,11 +4,11 @@ import {SelectedSettingsPart, SettingsPage, getSelectedSettingsPart} from '../co
 
 import {SettingsSelection} from './types';
 
-interface ContextValue extends SelectedSettingsPart {
+export interface SettingsSelectionProviderContextValue extends SelectedSettingsPart {
     selectedRef?: React.RefObject<HTMLDivElement>;
 }
 
-const defaultValue: ContextValue = {};
+const defaultValue: SettingsSelectionProviderContextValue = {};
 
 const context = React.createContext(defaultValue);
 context.displayName = 'SettingsSelectionContext';
@@ -16,10 +16,10 @@ context.displayName = 'SettingsSelectionContext';
 export function useSettingsSelectionProviderValue(
     pages: Record<string, SettingsPage>,
     selection: SettingsSelection | undefined,
-): ContextValue {
+): SettingsSelectionProviderContextValue {
     const selectedRef = React.useRef<HTMLDivElement>(null);
 
-    const contextValue: ContextValue = React.useMemo(() => {
+    const contextValue: SettingsSelectionProviderContextValue = React.useMemo(() => {
         if (!selection) return {selectedRef};
 
         return {selectedRef, ...getSelectedSettingsPart(pages, selection)};
@@ -30,6 +30,6 @@ export function useSettingsSelectionProviderValue(
 
 export const SettingsSelectionContextProvider = context.Provider;
 
-export function useSettingsSelectionContext(): ContextValue {
+export function useSettingsSelectionContext(): SettingsSelectionProviderContextValue {
     return React.useContext(context);
 }
