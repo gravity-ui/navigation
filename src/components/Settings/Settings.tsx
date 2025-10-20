@@ -4,7 +4,6 @@ import {Flex, Loader} from '@gravity-ui/uikit';
 import identity from 'lodash/identity';
 
 import {Title} from '../Title';
-import {block} from '../utils/cn';
 
 import {
     SettingsSelectionContextProvider,
@@ -17,8 +16,10 @@ import {SettingsContext} from './SettingsContext/SettingsContext';
 import {useSettingsContext} from './SettingsContext/useSettingsContext';
 import {SettingsMenu, SettingsMenuInstance} from './SettingsMenu/SettingsMenu';
 import {SettingsMenuMobile} from './SettingsMenuMobile/SettingsMenuMobile';
+import {prepareTitle} from './SettingsRow/prepareTitle';
 import {useAllResultsPage} from './SettingsSearch/AllResultsPage';
 import {SettingsSearch} from './SettingsSearch/SettingsSearch';
+import {b} from './b';
 import type {
     SettingsItem,
     SettingsMenu as SettingsMenuType,
@@ -29,7 +30,6 @@ import {
     SettingsPage,
     getSettingsFromChildren,
 } from './collect-settings';
-import {escapeStringForRegExp} from './helpers';
 import i18n from './i18n';
 import type {
     SettingsGroupProps,
@@ -40,8 +40,6 @@ import type {
 } from './types';
 
 import './Settings.scss';
-
-const b = block('settings');
 
 export function Settings({
     loading,
@@ -425,31 +423,3 @@ Settings.Item = function SettingsItem(setting: SettingsItemProps) {
         </div>
     );
 };
-
-function prepareTitle(string: string, search: string) {
-    let temp = string.slice(0);
-    const title: React.ReactNode[] = [];
-    const parts = escapeStringForRegExp(search).split(' ').filter(Boolean);
-    let key = 0;
-    for (const part of parts) {
-        const regex = new RegExp(part, 'ig');
-        const match = regex.exec(temp);
-        if (match) {
-            const m = match[0];
-            const i = match.index;
-            if (i > 0) {
-                title.push(temp.slice(0, i));
-            }
-            title.push(
-                <strong key={key++} className={b('found')}>
-                    {m}
-                </strong>,
-            );
-            temp = temp.slice(i + m.length);
-        }
-    }
-    if (temp) {
-        title.push(temp);
-    }
-    return title;
-}
