@@ -7,27 +7,21 @@ import {Title} from '../Title';
 
 import {
     SettingsSelectionContextProvider,
-    SettingsSelectionProviderContextValue,
     useSettingsSelectionContext,
     useSettingsSelectionProviderValue,
 } from './Selection/context';
-import {isSectionSelected} from './Selection/utils';
 import {SettingsContext} from './SettingsContext/SettingsContext';
 import {useSettingsContext} from './SettingsContext/useSettingsContext';
 import {SettingsMenu, SettingsMenuInstance} from './SettingsMenu/SettingsMenu';
 import {SettingsMenuMobile} from './SettingsMenuMobile/SettingsMenuMobile';
+import {SettingsPageComponent} from './SettingsPage/SettingsPageComponent';
 import {useAllResultsPage} from './SettingsSearch/AllResultsPage';
 import {SettingsSearch} from './SettingsSearch/SettingsSearch';
-import {SettingsSection} from './SettingsSection';
 import {b} from './b';
-import type {SettingsMenu as SettingsMenuType} from './collect-settings';
-import {
-    SettingsMenu as CollectSettingsSettingsMenu,
-    SettingsPage,
-    getSettingsFromChildren,
-} from './collect-settings';
+import {getSettingsFromChildren} from './collect-settings';
 import i18n from './i18n';
 import type {
+    SettingsContentProps,
     SettingsGroupProps,
     SettingsItemProps,
     SettingsPageProps,
@@ -70,76 +64,6 @@ export function Settings({
     );
 }
 
-const getPageTitleById = (menu: SettingsMenuType, activePage: string) => {
-    for (const firstLevel of menu) {
-        if ('groupTitle' in firstLevel) {
-            for (const secondLevel of firstLevel.items)
-                if (secondLevel.id === activePage) return secondLevel.title;
-        } else if (firstLevel.id === activePage) return firstLevel.title;
-    }
-
-    return '';
-};
-
-const PageContentComponent = ({
-    menu,
-    pages,
-    selected,
-    isMobile,
-    search,
-    page,
-    renderNotFound,
-    emptyPlaceholder,
-    onClose,
-}: {
-    menu: CollectSettingsSettingsMenu;
-    pages: Record<string, SettingsPage>;
-    page: string | undefined;
-    isMobile: boolean;
-    search: string;
-    selected: SettingsSelectionProviderContextValue;
-} & Pick<
-    SettingsContentProps,
-    'renderNotFound' | 'emptyPlaceholder' | 'onClose'
->): React.ReactElement => {
-    if (!page) {
-        return typeof renderNotFound === 'function' ? (
-            <>{renderNotFound()}</>
-        ) : (
-            <div className={b('not-found')}>{emptyPlaceholder}</div>
-        );
-    }
-
-    const filteredSections = pages[page].sections.filter((section) => !section.hidden);
-
-    return (
-        <React.Fragment>
-            {!isMobile && (
-                <Title hasSeparator onClose={onClose}>
-                    {getPageTitleById(menu, page)}
-                </Title>
-            )}
-
-            <div className={b('content')}>
-                {filteredSections.map((section) => {
-                    const isSelected = isSectionSelected(selected, page, section);
-
-                    return (
-                        <SettingsSection
-                            isSelected={isSelected}
-                            isMobile={isMobile}
-                            search={search}
-                            {...section}
-                            key={section.title}
-                        />
-                    );
-                })}
-            </div>
-        </React.Fragment>
-    );
-};
-
-type SettingsContentProps = Omit<SettingsProps, 'loading' | 'renderLoading'>;
 function SettingsContent({
     initialPage,
     initialSearch,
@@ -277,7 +201,7 @@ function SettingsContent({
                     </div>
                 )}
                 <div className={b('page')}>
-                    <PageContentComponent
+                    <SettingsPageComponent
                         menu={menu}
                         pages={pages}
                         selected={selected}
