@@ -1,5 +1,5 @@
 import React from 'react';
 
-import type {SettingsContext} from './SettingsContext';
+import {SettingsContext} from './SettingsContext';
 
 export const useSettingsContext = () => React.useContext(SettingsContext);
