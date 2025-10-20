@@ -4,29 +4,24 @@ import {Flex, Loader} from '@gravity-ui/uikit';
 import identity from 'lodash/identity';
 
 import {Title} from '../Title';
-import {block} from '../utils/cn';
 
 import {
     SettingsSelectionContextProvider,
     useSettingsSelectionContext,
     useSettingsSelectionProviderValue,
 } from './Selection/context';
-import {isSectionSelected} from './Selection/utils';
 import {SettingsContext} from './SettingsContext/SettingsContext';
 import {useSettingsContext} from './SettingsContext/useSettingsContext';
 import {SettingsMenu, SettingsMenuInstance} from './SettingsMenu/SettingsMenu';
 import {SettingsMenuMobile} from './SettingsMenuMobile/SettingsMenuMobile';
+import {SettingsPageComponent} from './SettingsPage/SettingsPageComponent';
 import {useAllResultsPage} from './SettingsSearch/AllResultsPage';
 import {SettingsSearch} from './SettingsSearch/SettingsSearch';
-import type {
-    SettingsItem,
-    SettingsMenu as SettingsMenuType,
-    SettingsPageSection,
-} from './collect-settings';
+import {b} from './b';
 import {getSettingsFromChildren} from './collect-settings';
-import {escapeStringForRegExp} from './helpers';
 import i18n from './i18n';
 import type {
+    SettingsContentProps,
     SettingsGroupProps,
     SettingsItemProps,
     SettingsPageProps,
@@ -35,8 +30,6 @@ import type {
 } from './types';
 
 import './Settings.scss';
-
-const b = block('settings');
 
 export function Settings({
     loading,
@@ -71,18 +64,6 @@ export function Settings({
     );
 }
 
-const getPageTitleById = (menu: SettingsMenuType, activePage: string) => {
-    for (const firstLevel of menu) {
-        if ('groupTitle' in firstLevel) {
-            for (const secondLevel of firstLevel.items)
-                if (secondLevel.id === activePage) return secondLevel.title;
-        } else if (firstLevel.id === activePage) return firstLevel.title;
-    }
-
-    return '';
-};
-
-type SettingsContentProps = Omit<SettingsProps, 'loading' | 'renderLoading'>;
 function SettingsContent({
     initialPage,
     initialSearch,
@@ -96,8 +77,6 @@ function SettingsContent({
     onPageChange,
     onClose,
 }: SettingsContentProps) {
-    const {renderSectionRightAdornment, showRightAdornmentOnHover} = useSettingsContext();
-
     const [search, setSearch] = React.useState(initialSearch ?? '');
     const {menu, pages} = getSettingsFromChildren(children, search);
 
@@ -166,84 +145,6 @@ function SettingsContent({
         }
     }, [selected.selectedRef]);
 
-    const renderSetting = ({title: settingTitle, element}: SettingsItem) => {
-        return (
-            <div key={settingTitle} className={b('section-item')}>
-                {React.cloneElement(element, {
-                    ...element.props,
-                    highlightedTitle:
-                        search && settingTitle ? prepareTitle(settingTitle, search) : settingTitle,
-                })}
-            </div>
-        );
-    };
-
-    const renderSection = (page: string, section: SettingsPageSection) => {
-        const isSelected = isSectionSelected(selected, page, section);
-
-        return (
-            <div
-                key={section.title}
-                className={b('section', {selected: isSelected})}
-                ref={isSelected ? selected.selectedRef : undefined}
-            >
-                {section.title && !section.hideTitle && (
-                    <h3 className={b('section-heading')}>
-                        {renderSectionRightAdornment ? (
-                            <Flex gap={2} alignItems={'center'}>
-                                {section.title}
-                                <div
-                                    className={b('section-right-adornment', {
-                                        hidden: showRightAdornmentOnHover,
-                                    })}
-                                >
-                                    {renderSectionRightAdornment(section)}
-                                </div>
-                            </Flex>
-                        ) : (
-                            section.title
-                        )}
-                    </h3>
-                )}
-
-                {section.header &&
-                    (isMobile ? (
-                        <div className={b('section-subheader')}>{section.header}</div>
-                    ) : (
-                        section.header
-                    ))}
-
-                {section.items.map((setting) => (setting.hidden ? null : renderSetting(setting)))}
-            </div>
-        );
-    };
-
-    const renderPageContent = (page: string | undefined) => {
-        if (!page) {
-            return typeof renderNotFound === 'function' ? (
-                renderNotFound()
-            ) : (
-                <div className={b('not-found')}>{emptyPlaceholder}</div>
-            );
-        }
-
-        const filteredSections = pages[page].sections.filter((section) => !section.hidden);
-
-        return (
-            <React.Fragment>
-                {!isMobile && (
-                    <Title hasSeparator onClose={onClose}>
-                        {getPageTitleById(menu, page)}
-                    </Title>
-                )}
-
-                <div className={b('content')}>
-                    {filteredSections.map((section) => renderSection(page, section))}
-                </div>
-            </React.Fragment>
-        );
-    };
-
     return (
         <SettingsSelectionContextProvider value={selected}>
             <div className={b({view})}>
@@ -299,7 +200,19 @@ function SettingsContent({
                         />
                     </div>
                 )}
-                <div className={b('page')}>{renderPageContent(activePage)}</div>
+                <div className={b('page')}>
+                    <SettingsPageComponent
+                        menu={menu}
+                        pages={pages}
+                        selected={selected}
+                        search={search}
+                        isMobile={isMobile}
+                        page={activePage}
+                        emptyPlaceholder={emptyPlaceholder}
+                        renderNotFound={renderNotFound}
+                        onClose={onClose}
+                    />
+                </div>
             </div>
         </SettingsSelectionContextProvider>
     );
@@ -365,31 +278,3 @@ Settings.Item = function SettingsItem(setting: SettingsItemProps) {
         </div>
     );
 };
-
-function prepareTitle(string: string, search: string) {
-    let temp = string.slice(0);
-    const title: React.ReactNode[] = [];
-    const parts = escapeStringForRegExp(search).split(' ').filter(Boolean);
-    let key = 0;
-    for (const part of parts) {
-        const regex = new RegExp(part, 'ig');
-        const match = regex.exec(temp);
-        if (match) {
-            const m = match[0];
-            const i = match.index;
-            if (i > 0) {
-                title.push(temp.slice(0, i));
-            }
-            title.push(
-                <strong key={key++} className={b('found')}>
-                    {m}
-                </strong>,
-            );
-            temp = temp.slice(i + m.length);
-        }
-    }
-    if (temp) {
-        title.push(temp);
-    }
-    return title;
-}
