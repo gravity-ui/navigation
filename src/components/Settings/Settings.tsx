@@ -1,18 +1,19 @@
 import React from 'react';
 
-import {Flex, IconProps, Loader} from '@gravity-ui/uikit';
+import {Flex, Loader} from '@gravity-ui/uikit';
 import identity from 'lodash/identity';
 
 import {Title} from '../Title';
 import {block} from '../utils/cn';
 
-import {SettingsSelection} from './Selection';
 import {
     SettingsSelectionContextProvider,
     useSettingsSelectionContext,
     useSettingsSelectionProviderValue,
 } from './Selection/context';
 import {isSectionSelected} from './Selection/utils';
+import {SettingsContext} from './SettingsContext/SettingsContext';
+import {useSettingsContext} from './SettingsContext/useSettingsContext';
 import {SettingsMenu, SettingsMenuInstance} from './SettingsMenu/SettingsMenu';
 import {SettingsMenuMobile} from './SettingsMenuMobile/SettingsMenuMobile';
 import {useAllResultsPage} from './SettingsSearch/AllResultsPage';
@@ -25,74 +26,17 @@ import type {
 import {getSettingsFromChildren} from './collect-settings';
 import {escapeStringForRegExp} from './helpers';
 import i18n from './i18n';
+import type {
+    SettingsGroupProps,
+    SettingsItemProps,
+    SettingsPageProps,
+    SettingsProps,
+    SettingsSectionProps,
+} from './types';
 
 import './Settings.scss';
 
 const b = block('settings');
-
-export interface SettingsProps {
-    children: React.ReactNode;
-    title?: string;
-    filterPlaceholder?: string;
-    emptyPlaceholder?: string;
-    initialPage?: string;
-    initialSearch?: string;
-    selection?: SettingsSelection;
-    onPageChange?: (page: string | undefined) => void;
-    renderNotFound?: () => React.ReactNode;
-    renderLoading?: () => React.ReactNode;
-    loading?: boolean;
-    view?: 'normal' | 'mobile';
-    onClose?: () => void;
-    renderRightAdornment?: (item: SettingsItemProps) => React.ReactNode;
-    renderSectionRightAdornment?: (section: SettingsPageSection) => React.ReactNode;
-    showRightAdornmentOnHover?: boolean;
-}
-
-export interface SettingsGroupProps {
-    id?: string;
-    groupTitle: string;
-    children: React.ReactNode;
-}
-
-export interface SettingsPageProps {
-    id?: string;
-    title?: string;
-    icon?: IconProps;
-    children: React.ReactNode;
-}
-
-export interface SettingsSectionProps {
-    id?: string;
-    title: string;
-    header?: React.ReactNode;
-    children: React.ReactNode;
-    withBadge?: boolean;
-    hideTitle?: boolean;
-}
-
-export interface SettingsItemProps {
-    id?: string;
-    labelId?: string;
-    title: string;
-    highlightedTitle?: React.ReactNode | null;
-    renderTitleComponent?: (highlightedTitle: React.ReactNode | null) => React.ReactNode;
-    align?: 'top' | 'center';
-    children: React.ReactNode;
-    withBadge?: boolean;
-    mode?: 'row';
-    description?: React.ReactNode;
-}
-
-export interface SettingsContextType
-    extends Pick<
-        SettingsProps,
-        'renderRightAdornment' | 'renderSectionRightAdornment' | 'showRightAdornmentOnHover'
-    > {}
-
-const SettingsContext = React.createContext<SettingsContextType>({});
-
-export const useSettingsContext = () => React.useContext(SettingsContext);
 
 export function Settings({
     loading,
