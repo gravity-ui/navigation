@@ -71,8 +71,7 @@ const config: PlaywrightTestConfig = {
                 alias: {
                     '~playwright': resolve(__dirname),
                     '~@gravity-ui/uikit/styles/mixins': '@gravity-ui/uikit/styles/mixins',
-                    '~@doc-tools/transform/dist/css/yfm.css':
-                        '@doc-tools/transform/dist/css/yfm.css',
+                    '~@doc-tools/transform/dist/css/yfm': '@doc-tools/transform/dist/css/yfm.css',
                     '~@gravity-ui/uikit/styles/fonts.scss': '@gravity-ui/uikit/styles/fonts.scss',
                 },
             },
