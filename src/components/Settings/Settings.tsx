@@ -16,15 +16,11 @@ import {SettingsContext} from './SettingsContext/SettingsContext';
 import {useSettingsContext} from './SettingsContext/useSettingsContext';
 import {SettingsMenu, SettingsMenuInstance} from './SettingsMenu/SettingsMenu';
 import {SettingsMenuMobile} from './SettingsMenuMobile/SettingsMenuMobile';
-import {prepareTitle} from './SettingsRow/prepareTitle';
+import {SettingRow} from './SettingsRow/SettingsRow';
 import {useAllResultsPage} from './SettingsSearch/AllResultsPage';
 import {SettingsSearch} from './SettingsSearch/SettingsSearch';
 import {b} from './b';
-import type {
-    SettingsItem,
-    SettingsMenu as SettingsMenuType,
-    SettingsPageSection,
-} from './collect-settings';
+import type {SettingsMenu as SettingsMenuType, SettingsPageSection} from './collect-settings';
 import {
     SettingsMenu as CollectSettingsSettingsMenu,
     SettingsPage,
@@ -85,22 +81,6 @@ const getPageTitleById = (menu: SettingsMenuType, activePage: string) => {
     return '';
 };
 
-const SettingItem = ({
-    title: settingTitle,
-    element,
-    search,
-}: SettingsItem & {search: string}): React.ReactElement => {
-    return (
-        <div className={b('section-item')}>
-            {React.cloneElement(element, {
-                ...element.props,
-                highlightedTitle:
-                    search && settingTitle ? prepareTitle(settingTitle, search) : settingTitle,
-            })}
-        </div>
-    );
-};
-
 const SectionItem = React.forwardRef<
     HTMLDivElement,
     SettingsPageSection & {
@@ -141,7 +121,7 @@ const SectionItem = React.forwardRef<
 
             {section.items.map((setting) =>
                 setting.hidden ? null : (
-                    <SettingItem {...setting} key={setting.title} search={search} />
+                    <SettingRow {...setting} key={setting.title} search={search} />
                 ),
             )}
         </div>
