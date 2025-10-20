@@ -16,11 +16,11 @@ import {SettingsContext} from './SettingsContext/SettingsContext';
 import {useSettingsContext} from './SettingsContext/useSettingsContext';
 import {SettingsMenu, SettingsMenuInstance} from './SettingsMenu/SettingsMenu';
 import {SettingsMenuMobile} from './SettingsMenuMobile/SettingsMenuMobile';
-import {SettingRow} from './SettingsRow/SettingsRow';
 import {useAllResultsPage} from './SettingsSearch/AllResultsPage';
 import {SettingsSearch} from './SettingsSearch/SettingsSearch';
+import {SettingsSection} from './SettingsSection';
 import {b} from './b';
-import type {SettingsMenu as SettingsMenuType, SettingsPageSection} from './collect-settings';
+import type {SettingsMenu as SettingsMenuType} from './collect-settings';
 import {
     SettingsMenu as CollectSettingsSettingsMenu,
     SettingsPage,
@@ -81,55 +81,6 @@ const getPageTitleById = (menu: SettingsMenuType, activePage: string) => {
     return '';
 };
 
-const SectionItem = React.forwardRef<
-    HTMLDivElement,
-    SettingsPageSection & {
-        search: string;
-        isMobile: boolean;
-        isSelected: boolean;
-    }
->(({search, isMobile, isSelected, ...section}, ref) => {
-    const {renderSectionRightAdornment, showRightAdornmentOnHover} = useSettingsContext();
-
-    return (
-        <div className={b('section', {selected: isSelected})} ref={isSelected ? ref : undefined}>
-            {section.title && !section.hideTitle && (
-                <h3 className={b('section-heading')}>
-                    {renderSectionRightAdornment ? (
-                        <Flex gap={2} alignItems={'center'}>
-                            {section.title}
-                            <div
-                                className={b('section-right-adornment', {
-                                    hidden: showRightAdornmentOnHover,
-                                })}
-                            >
-                                {renderSectionRightAdornment(section)}
-                            </div>
-                        </Flex>
-                    ) : (
-                        section.title
-                    )}
-                </h3>
-            )}
-
-            {section.header &&
-                (isMobile ? (
-                    <div className={b('section-subheader')}>{section.header}</div>
-                ) : (
-                    section.header
-                ))}
-
-            {section.items.map((setting) =>
-                setting.hidden ? null : (
-                    <SettingRow {...setting} key={setting.title} search={search} />
-                ),
-            )}
-        </div>
-    );
-});
-
-SectionItem.displayName = 'SectionItem';
-
 const PageContentComponent = ({
     menu,
     pages,
@@ -174,7 +125,7 @@ const PageContentComponent = ({
                     const isSelected = isSectionSelected(selected, page, section);
 
                     return (
-                        <SectionItem
+                        <SettingsSection
                             isSelected={isSelected}
                             isMobile={isMobile}
                             search={search}
