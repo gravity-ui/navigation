@@ -81,9 +81,3 @@ export interface SettingsItemProps {
     mode?: 'row';
     description?: React.ReactNode;
 }
-
-export interface SettingsContextType
-    extends Pick<
-        SettingsProps,
-        'renderRightAdornment' | 'renderSectionRightAdornment' | 'showRightAdornmentOnHover'
-    > {}

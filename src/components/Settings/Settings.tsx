@@ -12,6 +12,8 @@ import {
     useSettingsSelectionProviderValue,
 } from './Selection/context';
 import {isSectionSelected} from './Selection/utils';
+import {SettingsContext} from './SettingsContext/SettingsContext';
+import {useSettingsContext} from './SettingsContext/useSettingsContext';
 import {SettingsMenu, SettingsMenuInstance} from './SettingsMenu/SettingsMenu';
 import {SettingsMenuMobile} from './SettingsMenuMobile/SettingsMenuMobile';
 import {useAllResultsPage} from './SettingsSearch/AllResultsPage';
@@ -25,7 +27,6 @@ import {getSettingsFromChildren} from './collect-settings';
 import {escapeStringForRegExp} from './helpers';
 import i18n from './i18n';
 import type {
-    SettingsContextType,
     SettingsGroupProps,
     SettingsItemProps,
     SettingsPageProps,
@@ -36,10 +37,6 @@ import type {
 import './Settings.scss';
 
 const b = block('settings');
-
-const SettingsContext = React.createContext<SettingsContextType>({});
-
-export const useSettingsContext = () => React.useContext(SettingsContext);
 
 export function Settings({
     loading,
