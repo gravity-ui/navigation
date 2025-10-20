@@ -81,3 +81,5 @@ export interface SettingsItemProps {
     mode?: 'row';
     description?: React.ReactNode;
 }
+
+export type SettingsContentProps = Omit<SettingsProps, 'loading' | 'renderLoading'>;
