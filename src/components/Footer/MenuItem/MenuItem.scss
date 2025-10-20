@@ -1,6 +1,5 @@
+@use '~@gravity-ui/uikit/styles/mixins';
 @use '../../variables';
-
-@import '../../../../styles/mixins';
 
 $block: '.#{variables.$ns}footer-menu-item';
 
@@ -13,9 +12,9 @@ $block: '.#{variables.$ns}footer-menu-item';
     height: 100%;
 
     .g-menu__item-content {
-        @include overflow-ellipsis(ellipsis);
+        @include mixins.overflow-ellipsis(ellipsis);
 
-        @include text-body-1;
+        @include mixins.text-body-1;
         color: var(--g-color-text-secondary);
     }
 
