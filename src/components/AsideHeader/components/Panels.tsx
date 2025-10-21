@@ -15,7 +15,7 @@ export const Panels = () => {
             style={{left: size}}
         >
             {panelItems.map((item) => (
-                <DrawerItem key={item.id} {...item} />
+                <DrawerItem key={item.id} className={b('panel')} {...item} />
             ))}
         </Drawer>
     ) : null;
