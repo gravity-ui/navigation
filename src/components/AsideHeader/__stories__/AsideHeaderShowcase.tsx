@@ -265,7 +265,11 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                     },
                     {
                         id: 'user-settings',
-                        content: <div className={b('settings-panel')}>User Settings</div>,
+                        content: (
+                            <div className={b('settings-panel')}>
+                                <div className={b('user-settings-content')}>User Settings</div>
+                            </div>
+                        ),
                         visible: visiblePanel === Panel.UserSettings,
                     },
                     {

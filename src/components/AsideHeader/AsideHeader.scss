@@ -204,15 +204,19 @@ $block: '.#{variables.$ns}aside-header';
     }
 
     &__panels {
-        z-index: var(--gn-aside-header-panel-z-index, 98);
+        --gn-drawer-z-index: var(--gn-aside-header-panel-z-index, 98);
+
         position: fixed;
         inset: var(--gn-top-alert-height, 0) 0 0;
         overflow: auto;
+        display: flex;
+        flex-direction: column;
         max-height: calc(100vh - var(--gn-top-alert-height, 0));
     }
 
     &__panel {
-        height: 100%;
+        flex-grow: 1;
+        height: auto;
     }
 
     &__pane-container {
