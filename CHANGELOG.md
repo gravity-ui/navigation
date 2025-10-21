@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.3](https://github.com/gravity-ui/navigation/compare/v3.7.2...v3.7.3) (2025-10-21)
+
+
+### Bug Fixes
+
+* **AsiderHeader:** fix scroll height for panel with header alert ([#478](https://github.com/gravity-ui/navigation/issues/478)) ([0bf0af4](https://github.com/gravity-ui/navigation/commit/0bf0af44a5d416d756e524964b6dff5aa1ef7798))
+
 ## [3.7.2](https://github.com/gravity-ui/navigation/compare/v3.7.1...v3.7.2) (2025-10-09)
 
 
