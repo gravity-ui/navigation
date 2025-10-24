@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.4](https://github.com/gravity-ui/navigation/compare/v3.7.3...v3.7.4) (2025-10-24)
+
+
+### Bug Fixes
+
+* **Drawer:** fix Drawer height ([#480](https://github.com/gravity-ui/navigation/issues/480)) ([a72b55e](https://github.com/gravity-ui/navigation/commit/a72b55ea4aed2744c6d6731142048d0e15de99c5))
+
 ## [3.7.3](https://github.com/gravity-ui/navigation/compare/v3.7.2...v3.7.3) (2025-10-21)
 
 
