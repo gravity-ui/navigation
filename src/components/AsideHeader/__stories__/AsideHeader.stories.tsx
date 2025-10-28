@@ -10,7 +10,7 @@ import {PageLayout} from '../components/PageLayout/PageLayout';
 import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
 
 import {AsideHeaderShowcase, AsideHeaderShowcaseProps} from './AsideHeaderShowcase';
-import {DEFAULT_LOGO, menuItemsClamped, menuItemsShowcase} from './moc';
+import {DEFAULT_LOGO, menuItemsClamped, menuItemsMany, menuItemsShowcase} from './moc';
 
 import logoIcon from '../../../../.storybook/assets/logo.svg';
 
@@ -277,4 +277,49 @@ const CollapseButtonWrapperTemplate: StoryFn = (args) => {
 export const CollapseButtonWrapper = CollapseButtonWrapperTemplate.bind({});
 CollapseButtonWrapper.args = {
     initialCompact: false,
+};
+
+const ManyItemsTemplate: StoryFn = (args) => {
+    const [compact, setCompact] = React.useState<boolean>(args.initialCompact);
+
+    return (
+        <PageLayout compact={compact}>
+            <PageLayoutAside
+                headerDecoration
+                menuItems={menuItemsMany}
+                logo={DEFAULT_LOGO}
+                onChangeCompact={setCompact}
+                {...args}
+            />
+
+            <PageLayout.Content>
+                <div style={{padding: 16}}>
+                    <Button onClick={() => setCompact((prev) => !prev)}>Toggle compact</Button>
+                    <div style={{marginTop: 16}}>
+                        <Text variant="subheader-2">
+                            Scroll demonstration with many navigation items
+                        </Text>
+                        <Text color="secondary" style={{marginTop: 8}}>
+                            Total items: {menuItemsMany?.length || 0}. On low screens, items scroll
+                            with invisible scrollbar instead of collapsing into &quot;...&quot;
+                        </Text>
+                    </div>
+                </div>
+            </PageLayout.Content>
+        </PageLayout>
+    );
+};
+
+export const ManyItems = ManyItemsTemplate.bind({});
+ManyItems.args = {
+    initialCompact: false,
+};
+ManyItems.parameters = {
+    docs: {
+        description: {
+            story:
+                'Demonstration of scroll functionality with many navigation items. ' +
+                'On low screens, all items remain accessible through scrolling with invisible scrollbar.',
+        },
+    },
 };

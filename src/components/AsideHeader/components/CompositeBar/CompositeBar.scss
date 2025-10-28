@@ -5,11 +5,24 @@ $block: '.#{variables.$ns}composite-bar';
 #{$block} {
     $class: &;
 
-    flex: 1 0 auto;
+    flex: 1 1 auto;
     width: 100%;
     min-height: 40px;
+    display: flex;
+    flex-direction: column;
 
     & &__root-menu-item[class] {
         background-color: transparent;
+    }
+
+    &_scrollable {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
 }

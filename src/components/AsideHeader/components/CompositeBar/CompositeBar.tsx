@@ -1,7 +1,6 @@
 import React, {FC, ReactNode, useCallback, useContext, useRef} from 'react';
 
 import {List} from '@gravity-ui/uikit';
-import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
 
 import {ASIDE_HEADER_COMPACT_WIDTH} from '../../../constants';
 import {block} from '../../../utils/cn';
@@ -11,12 +10,10 @@ import {Item, ItemProps} from './Item/Item';
 import {MultipleTooltip, MultipleTooltipContext, MultipleTooltipProvider} from './MultipleTooltip';
 import {COLLAPSE_ITEM_ID} from './constants';
 import {
-    getAutosizeListItems,
     getItemHeight,
     getItemsHeight,
-    getItemsMinHeight,
-    getMoreButtonItem,
     getSelectedItemIndex,
+    sortItemsByAfterMoreButton,
 } from './utils';
 
 import './CompositeBar.scss';
@@ -39,7 +36,6 @@ export type CompositeBarProps = {
 };
 
 type CompositeBarViewProps = CompositeBarProps & {
-    collapseItems?: AsideHeaderItem[];
     compositeId?: string;
 };
 
@@ -48,7 +44,6 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     items,
     onItemClick,
     onMoreClick,
-    collapseItems,
     multipleTooltip = false,
     compact,
     compositeId,
@@ -220,7 +215,6 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                             onMouseEnter={onMouseEnterByIndex(itemIndex)}
                             onMouseLeave={onMouseLeave}
                             onItemClick={onItemClickByIndex(itemIndex, item.onItemClick)}
-                            collapseItems={collapseItems}
                         />
                     )}
                 />
@@ -240,7 +234,6 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
 export const CompositeBar: FC<CompositeBarProps> = ({
     type,
     items,
-    menuMoreTitle,
     onItemClick,
     onMoreClick,
     multipleTooltip = false,
@@ -252,39 +245,20 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     }
     let node: ReactNode;
 
-    if (type === 'menu') {
-        const minHeight = getItemsMinHeight(items);
-        const collapseItem = getMoreButtonItem(menuMoreTitle);
-        node = (
-            <div className={b({autosizer: true})} style={{minHeight}}>
-                {items.length !== 0 && (
-                    <AutoSizer>
-                        {(size: Size) => {
-                            const width = Number.isNaN(size.width) ? 0 : size.width;
-                            const height = Number.isNaN(size.height) ? 0 : size.height;
+    const sortedItems = sortItemsByAfterMoreButton(items);
 
-                            const {listItems, collapseItems} = getAutosizeListItems(
-                                items,
-                                height,
-                                collapseItem,
-                            );
-                            return (
-                                <div style={{width, height}}>
-                                    <CompositeBarView
-                                        compositeId={compositeId}
-                                        type="menu"
-                                        compact={compact}
-                                        items={listItems}
-                                        onItemClick={onItemClick}
-                                        onMoreClick={onMoreClick}
-                                        collapseItems={collapseItems}
-                                        multipleTooltip={multipleTooltip}
-                                    />
-                                </div>
-                            );
-                        }}
-                    </AutoSizer>
-                )}
+    if (type === 'menu') {
+        node = (
+            <div className={b({scrollable: true})}>
+                <CompositeBarView
+                    compositeId={compositeId}
+                    type="menu"
+                    compact={compact}
+                    items={sortedItems}
+                    onItemClick={onItemClick}
+                    onMoreClick={onMoreClick}
+                    multipleTooltip={multipleTooltip}
+                />
             </div>
         );
     } else {
@@ -293,7 +267,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                 <CompositeBarView
                     type="subheader"
                     compact={compact}
-                    items={items}
+                    items={sortedItems}
                     onItemClick={onItemClick}
                 />
             </div>
