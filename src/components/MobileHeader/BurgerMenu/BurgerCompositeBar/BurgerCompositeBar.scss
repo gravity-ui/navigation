@@ -1,7 +1,5 @@
+@use '~@gravity-ui/uikit/styles/mixins';
 @use '../../../variables';
-
-@import '~@gravity-ui/uikit/styles/mixins';
-@import '../../../../../styles/mixins';
 
 $block: '.#{variables.$ns}burger-composite-bar';
 
@@ -33,8 +31,8 @@ $block: '.#{variables.$ns}burger-composite-bar';
     }
 
     &__item-title {
-        @include overflow-ellipsis();
-        @include text-body-2();
+        @include mixins.overflow-ellipsis();
+        @include mixins.text-body-2();
     }
 
     &__link {

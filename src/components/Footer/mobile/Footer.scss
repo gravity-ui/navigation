@@ -1,6 +1,5 @@
+@use '~@gravity-ui/uikit/styles/mixins';
 @use '../../variables';
-
-@import '../../../../styles/mixins';
 
 $block: '.#{variables.$ns}footer';
 
@@ -46,7 +45,7 @@ $block: '.#{variables.$ns}footer';
         }
 
         &__copyright {
-            @include text-caption-2;
+            @include mixins.text-caption-2;
             color: var(--g-color-text-secondary);
             white-space: nowrap;
             padding: 0 var(--g-spacing-3);
@@ -59,7 +58,7 @@ $block: '.#{variables.$ns}footer';
         &__menu-item {
             height: 48px;
 
-            @include text-body-2;
+            @include mixins.text-body-2;
             color: var(--g-color-text-primary);
         }
     }
