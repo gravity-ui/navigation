@@ -8,7 +8,7 @@ import {escapeStringForRegExp, invariant} from './helpers';
 
 export type SettingsMenu = (SettingsMenuGroup | SettingsMenuItem)[];
 
-export interface SettingsMenuGroup {
+interface SettingsMenuGroup {
     groupTitle: string;
     items: SettingsMenuItem[];
 }

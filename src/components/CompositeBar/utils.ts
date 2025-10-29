@@ -31,7 +31,7 @@ export function getSelectedItemIndex(items: MenuItem[]) {
     return index === -1 ? undefined : index;
 }
 
-export function getPinnedItems(items: MenuItem[]) {
+function getPinnedItems(items: MenuItem[]) {
     const pinnedItems: MenuItem[] = [];
     for (const item of items) {
         if (item.pinned) {

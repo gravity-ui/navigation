@@ -31,7 +31,7 @@ type CompositeBarItems =
     | {type: 'menu'; items: MenuItem[]}
     | {type: 'subheader'; items: SubheaderMenuItem[]};
 
-export type CompositeBarProps = CompositeBarItems & {
+type CompositeBarProps = CompositeBarItems & {
     onItemClick?: (
         item: MenuItem,
         collapsed: boolean,
