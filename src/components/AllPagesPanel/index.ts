@@ -1,3 +1,3 @@
 export {AllPagesPanel} from './AllPagesPanel';
-export {getAllPagesMenuItem, ALL_PAGES_ID} from './constants';
+export {getAllPagesMenuItem} from './constants';
 export {useVisibleMenuItems} from './useVisibleMenuItems';
