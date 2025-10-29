@@ -1,6 +1,6 @@
 import {create} from '@storybook/theming';
 
-export const CloudThemeLight = create({
+const CloudThemeLight = create({
     base: 'light',
 
     colorPrimary: '#027bf3',
@@ -31,7 +31,7 @@ export const CloudThemeLight = create({
                 <div style="font-size: 14px;color: #7d7d7d;font-weight: 400;">Navigation</div>`,
 });
 
-export const CloudThemeDark = create({
+const CloudThemeDark = create({
     base: 'dark',
 });
 

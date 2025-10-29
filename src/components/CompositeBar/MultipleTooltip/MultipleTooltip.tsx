@@ -14,7 +14,7 @@ const b = block('multiple-tooltip');
 
 const POPUP_OFFSET: PopupProps['offset'] = {mainAxis: 4, crossAxis: -32};
 
-export type MultipleTooltipProps = Pick<PopupProps, 'open' | 'anchorRef' | 'placement'> & {
+type MultipleTooltipProps = Pick<PopupProps, 'open' | 'anchorRef' | 'placement'> & {
     items: MenuItem[];
 };
 

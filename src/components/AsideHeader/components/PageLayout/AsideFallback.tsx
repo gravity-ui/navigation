@@ -8,7 +8,7 @@ import {b} from '../../utils';
 
 import headerDividerCollapsedIcon from '../../../../../assets/icons/divider-collapsed.svg';
 
-export interface Props extends QAProps {
+interface Props extends QAProps {
     headerDecoration?: boolean;
     subheaderItemsCount?: number;
 }

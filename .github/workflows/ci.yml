@@ -26,9 +26,8 @@ jobs:
         run: npm run lint
       - name: Typecheck
         run: npm run typecheck
-      # Temporarily disabled due to errors in dependencies
-      # - name: Check Packages
-      #   run: npm run packages:check
+      - name: Check Packages
+        run: npm run packages:check
 
   tests:
     name: Tests
