@@ -10,7 +10,7 @@ import './MenuItem.scss';
 
 const b = block('footer-menu-item');
 
-export type MenuItemProps = FooterMenuItem;
+type MenuItemProps = FooterMenuItem;
 
 export const MenuItem: FC<MenuItemProps> = ({text, className, ...menuItemProps}) => {
     return (

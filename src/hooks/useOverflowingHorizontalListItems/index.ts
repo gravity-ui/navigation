@@ -1,1 +1,1 @@
-export * from './useOverflowingHorizontalListItems';
+export {useOverflowingHorizontalListItems} from './useOverflowingHorizontalListItems';

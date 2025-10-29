@@ -15,7 +15,7 @@ const b = block('multiple-tooltip');
 
 const POPUP_OFFSET: PopupProps['offset'] = {mainAxis: 4, crossAxis: -32};
 
-export type MultipleTooltipProps = Pick<PopupProps, 'open' | 'placement'> & {
+type MultipleTooltipProps = Pick<PopupProps, 'open' | 'placement'> & {
     anchorRef: React.RefObject<HTMLElement>;
     items: AsideHeaderItem[];
 };

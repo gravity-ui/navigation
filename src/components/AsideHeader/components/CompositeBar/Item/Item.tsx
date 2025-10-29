@@ -45,8 +45,8 @@ function renderItemTitle(params: Pick<AsideHeaderItem, 'title' | 'rightAdornment
     return titleNode;
 }
 
-export const defaultPopupPlacement: PopupPlacement = ['right-end'];
-export const defaultPopupOffset: NonNullable<PopupProps['offset']> = {mainAxis: 8, crossAxis: -20};
+const defaultPopupPlacement: PopupPlacement = ['right-end'];
+const defaultPopupOffset: NonNullable<PopupProps['offset']> = {mainAxis: 8, crossAxis: -20};
 
 export const Item: React.FC<ItemInnerProps> = (props) => {
     const {

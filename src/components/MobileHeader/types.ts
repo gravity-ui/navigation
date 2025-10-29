@@ -11,7 +11,7 @@ export interface ModalItem {
     onClose?: () => void;
 }
 
-export type MobileMenuItemType = 'regular' | 'divider';
+type MobileMenuItemType = 'regular' | 'divider';
 
 export interface MobileMenuItem
     extends Omit<

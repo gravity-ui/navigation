@@ -12,7 +12,7 @@ export interface LayoutProps {
     topAlert?: TopAlertProps;
 }
 
-export interface EditMenuProps {
+interface EditMenuProps {
     onOpenEditMode?: () => void;
     onToggleMenuItem?: (changedItem: AsideHeaderItem) => void;
     onResetSettingsToDefault?: () => void;
@@ -20,7 +20,7 @@ export interface EditMenuProps {
     onChangeItemsOrder?: (changedItem: AsideHeaderItem, oldIndex: number, newIndex: number) => void;
 }
 
-export interface AsideHeaderGeneralProps extends QAProps {
+interface AsideHeaderGeneralProps extends QAProps {
     logo?: LogoProps;
     multipleTooltip?: boolean;
     className?: string;
@@ -52,7 +52,7 @@ export interface AsideHeaderGeneralProps extends QAProps {
     openModalSubscriber?: (subscriber: OpenModalSubscriber) => void;
 }
 
-export interface AsideHeaderDefaultProps {
+interface AsideHeaderDefaultProps {
     panelItems?: DrawerItemProps[];
     subheaderItems?: AsideHeaderItem[];
     menuItems?: AsideHeaderItem[];

@@ -13,7 +13,7 @@ export interface AsideHeaderInnerContextType extends AsideHeaderInnerProps {
     ) => void;
 }
 
-export const AsideHeaderInnerContext = React.createContext<AsideHeaderInnerContextType | undefined>(
+const AsideHeaderInnerContext = React.createContext<AsideHeaderInnerContextType | undefined>(
     undefined,
 );
 AsideHeaderInnerContext.displayName = 'AsideHeaderInnerContext';
@@ -34,7 +34,7 @@ export interface AsideHeaderContextType {
     size: number;
 }
 
-export const AsideHeaderContext = React.createContext<AsideHeaderContextType | undefined>({
+const AsideHeaderContext = React.createContext<AsideHeaderContextType | undefined>({
     compact: false,
     size: 0,
 });

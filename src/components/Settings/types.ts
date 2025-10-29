@@ -5,7 +5,7 @@ import type {IconProps} from '@gravity-ui/uikit';
 import type {SettingsSelection} from './Selection';
 import type {SettingsPageSection} from './collect-settings';
 
-export interface GroupItem {
+interface GroupItem {
     groupTitle: string;
     items: Item[];
 }
