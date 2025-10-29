@@ -3,6 +3,7 @@ import React, {useRef} from 'react';
 import {setRef} from '@gravity-ui/uikit';
 
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
+import {useHoverExpand} from '../hooks/useHoverExpand';
 import i18n from '../i18n';
 import {b} from '../utils';
 
@@ -29,10 +30,17 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         className,
         hideCollapseButton,
         qa,
+        onChangeCompact,
+        isPinned,
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
 
     const asideRef = useRef<HTMLDivElement>(null);
+    const {handleMouseEnter, handleMouseLeave} = useHoverExpand({
+        compact,
+        onChangeCompact,
+        isPinned,
+    });
 
     React.useEffect(() => {
         setRef<HTMLDivElement>(ref, asideRef.current);
@@ -40,7 +48,13 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
     return (
         <React.Fragment>
-            <div className={b('aside', className)} style={{width: size}} data-qa={qa}>
+            <div
+                className={b('aside', className)}
+                style={{width: size}}
+                data-qa={qa}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+            >
                 <div className={b('aside-popup-anchor')} ref={asideRef} />
                 {customBackground && (
                     <div className={b('aside-custom-background', customBackgroundClassName)}>

@@ -6,6 +6,9 @@ export interface AsideHeaderInnerContextType extends AsideHeaderInnerProps {
     menuItems: AsideHeaderItem[];
     defaultMenuItems?: AsideHeaderItem[];
     allPagesIsAvailable: boolean;
+    isPinned: boolean;
+    pin: () => void;
+    unpin: () => void;
     onItemClick: (
         item: AsideHeaderItem,
         collapsed: boolean,

@@ -17,14 +17,26 @@ export interface CollapseButtonProps {
 }
 
 export const CollapseButton = ({className}: CollapseButtonProps) => {
-    const {onChangeCompact, compact, expandTitle, collapseTitle, collapseButtonWrapper} =
-        useAsideHeaderInnerContext();
+    const {
+        onChangeCompact,
+        compact,
+        expandTitle,
+        collapseTitle,
+        collapseButtonWrapper,
+        isPinned,
+        pin,
+        unpin,
+    } = useAsideHeaderInnerContext();
 
     const onCollapseButtonClick = useCallback(() => {
-        onChangeCompact?.(!compact);
-    }, [compact, onChangeCompact]);
+        if (isPinned) {
+            unpin();
+        } else {
+            pin();
+        }
+    }, [isPinned, unpin, pin]);
 
-    const buttonTitle = compact
+    const buttonTitle = isPinned
         ? expandTitle || i18n('button_expand')
         : collapseTitle || i18n('button_collapse');
 

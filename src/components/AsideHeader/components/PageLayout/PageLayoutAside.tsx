@@ -2,8 +2,8 @@ import React from 'react';
 
 import {FirstPanel} from '..';
 import {AsideHeaderInnerContextProvider, useAsideHeaderContext} from '../../AsideHeaderContext';
+import {useAsideHeaderInnerContextValue} from '../../hooks/useAsideHeaderInnerContextValue';
 import {AsideHeaderProps} from '../../types';
-import {useAsideHeaderInnerContextValue} from '../../useAsideHeaderInnerContextValue';
 
 type Props = Omit<AsideHeaderProps, 'compact' | 'size'>;
 

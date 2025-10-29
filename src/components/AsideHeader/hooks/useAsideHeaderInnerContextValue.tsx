@@ -1,10 +1,9 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {MenuItem} from '../types';
-
-import {AsideHeaderInnerContextType} from './AsideHeaderContext';
-import {AllPagesPanel, getAllPagesMenuItem} from './components/AllPagesPanel';
-import {AsideHeaderItem, AsideHeaderProps, InnerPanels} from './types';
+import {MenuItem} from '../../types';
+import {AsideHeaderInnerContextType} from '../AsideHeaderContext';
+import {AllPagesPanel, getAllPagesMenuItem} from '../components/AllPagesPanel';
+import {AsideHeaderItem, AsideHeaderProps, InnerPanels} from '../types';
 
 const EMPTY_MENU_ITEMS: AsideHeaderItem[] = [];
 
@@ -13,6 +12,7 @@ export const useAsideHeaderInnerContextValue = (
 ): AsideHeaderInnerContextType => {
     const {size, onClosePanel, menuItems, panelItems, onMenuItemsChanged, onAllPagesClick} = props;
     const [innerVisiblePanel, setInnerVisiblePanel] = useState<InnerPanels | undefined>();
+    const [isPinned, setIsPinned] = useState(false);
     const ALL_PAGES_MENU_ITEM = React.useMemo(() => {
         return getAllPagesMenuItem();
     }, []);
@@ -26,6 +26,14 @@ export const useAsideHeaderInnerContextValue = (
             setInnerVisiblePanel(undefined);
         }
     }, [panelItems]);
+
+    const pin = useCallback(() => {
+        setIsPinned(true);
+    }, []);
+
+    const unpin = useCallback(() => {
+        setIsPinned(false);
+    }, []);
 
     const innerOnClosePanel = useCallback(() => {
         setInnerVisiblePanel(undefined);
@@ -84,5 +92,8 @@ export const useAsideHeaderInnerContextValue = (
         panelItems: innerPanelItems,
         size,
         onItemClick,
+        isPinned,
+        pin,
+        unpin,
     };
 };
