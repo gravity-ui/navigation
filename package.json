@@ -40,6 +40,7 @@
     "playwright:docker:clear-cache": "./scripts/playwright-docker.sh clear-cache"
   },
   "dependencies": {
+    "@floating-ui/react": "^0.27.4",
     "react-transition-group": "^4.4.5",
     "tslib": "^2.8.1"
   },
@@ -53,7 +54,6 @@
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
     "@doc-tools/transform": "^3.11.0",
-    "@gravity-ui/components": "^4.0.1",
     "@gravity-ui/eslint-config": "^3.3.0",
     "@gravity-ui/icons": "^2.8.1",
     "@gravity-ui/prettier-config": "^1.0.0",
@@ -66,11 +66,11 @@
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-typescript": "^12.1.2",
     "@storybook/addon-a11y": "^8.5.0",
-    "@storybook/addon-actions": "^8.5.0",
     "@storybook/addon-essentials": "^8.5.0",
     "@storybook/addon-interactions": "^8.5.0",
     "@storybook/addon-links": "^8.5.0",
     "@storybook/addon-webpack5-compiler-babel": "^3.0.5",
+    "@storybook/manager-api": "^8.5.0",
     "@storybook/preset-scss": "^1.0.3",
     "@storybook/react": "^8.5.0",
     "@storybook/react-webpack5": "^8.5.0",
@@ -112,7 +112,6 @@
   },
   "peerDependencies": {
     "@bem-react/classname": "^1.6.0",
-    "@gravity-ui/components": "^4.0.1",
     "@gravity-ui/icons": "^2.2.0",
     "@gravity-ui/uikit": "^7.2.0",
     "react": "^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
