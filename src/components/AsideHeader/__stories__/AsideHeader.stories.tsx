@@ -9,7 +9,14 @@ import {PageLayout} from '../components/PageLayout/PageLayout';
 import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
 
 import {AsideHeaderShowcase} from './AsideHeaderShowcase';
-import {DEFAULT_LOGO, menuItemsClamped, menuItemsShowcase} from './moc';
+import {
+    DEFAULT_LOGO,
+    menuGroups,
+    menuGroupsWithIcons,
+    menuItemsClamped,
+    menuItemsShowcase,
+    menuItemsWithGroups,
+} from './moc';
 
 import logoIcon from '../../../../.storybook/assets/logo.svg';
 
@@ -235,5 +242,58 @@ const CollapseButtonWrapperTemplate: StoryFn = (args) => {
 
 export const CollapseButtonWrapper = CollapseButtonWrapperTemplate.bind({});
 CollapseButtonWrapper.args = {
+    initialCompact: false,
+};
+
+const GroupedMenuTemplate: StoryFn = (args) => {
+    const [compact, setCompact] = React.useState(false);
+
+    return (
+        <PageLayout compact={compact}>
+            <PageLayoutAside
+                headerDecoration
+                logo={DEFAULT_LOGO}
+                menuItems={menuItemsWithGroups}
+                menuGroups={menuGroups}
+                onChangeCompact={setCompact}
+                qa={'pl-aside-grouped'}
+                {...args}
+            />
+
+            <PageLayout.Content>PageContent</PageLayout.Content>
+        </PageLayout>
+    );
+};
+
+export const GroupedMenu = GroupedMenuTemplate.bind({});
+GroupedMenu.args = {
+    multipleTooltip: false,
+    initialCompact: false,
+};
+
+// Collapsible Groups + Icons story
+const GroupedMenuCollapsibleTemplate: StoryFn = (args) => {
+    const [compact, setCompact] = React.useState(false);
+
+    return (
+        <PageLayout compact={compact}>
+            <PageLayoutAside
+                headerDecoration
+                logo={DEFAULT_LOGO}
+                menuItems={menuItemsWithGroups}
+                menuGroups={menuGroupsWithIcons}
+                onChangeCompact={setCompact}
+                qa={'pl-aside-grouped-collapsible'}
+                {...args}
+            />
+
+            <PageLayout.Content>PageContent</PageLayout.Content>
+        </PageLayout>
+    );
+};
+
+export const GroupedMenuCollapsible = GroupedMenuCollapsibleTemplate.bind({});
+GroupedMenuCollapsible.args = {
+    multipleTooltip: false,
     initialCompact: false,
 };

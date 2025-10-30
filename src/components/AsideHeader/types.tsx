@@ -2,7 +2,14 @@ import {QAProps} from '@gravity-ui/uikit';
 
 import {RenderContentType} from '../Content';
 import {DrawerItemProps} from '../Drawer/Drawer';
-import {LogoProps, MenuItem, OpenModalSubscriber, SubheaderMenuItem, TopAlertProps} from '../types';
+import {
+    LogoProps,
+    MenuGroup,
+    MenuItem,
+    OpenModalSubscriber,
+    SubheaderMenuItem,
+    TopAlertProps,
+} from '../types';
 
 import {AsideHeaderContextType} from './AsideHeaderContext';
 
@@ -55,6 +62,7 @@ interface AsideHeaderGeneralProps extends QAProps {
 interface AsideHeaderDefaultProps {
     panelItems?: DrawerItemProps[];
     subheaderItems?: SubheaderMenuItem[];
+    menuGroups?: MenuGroup[];
     menuItems?: MenuItem[];
     defaultMenuItems?: MenuItem[];
     onMenuItemsChanged?: (items: MenuItem[]) => void;

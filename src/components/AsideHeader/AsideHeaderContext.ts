@@ -1,12 +1,13 @@
 import React from 'react';
 
-import {MenuItem} from '../types';
+import {MenuGroup, MenuItem} from '../types';
 
 import {AsideHeaderInnerProps} from './types';
 
 export interface AsideHeaderInnerContextType extends AsideHeaderInnerProps {
     menuItems: MenuItem[];
     defaultMenuItems?: MenuItem[];
+    menuGroups?: MenuGroup[];
     allPagesIsAvailable: boolean;
     onItemClick: (
         item: MenuItem,

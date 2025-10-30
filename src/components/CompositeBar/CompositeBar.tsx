@@ -32,6 +32,7 @@ type CompositeBarItems =
     | {type: 'subheader'; items: SubheaderMenuItem[]};
 
 type CompositeBarProps = CompositeBarItems & {
+    className?: string;
     onItemClick?: (
         item: MenuItem,
         collapsed: boolean,
@@ -248,6 +249,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     onMoreClick,
     multipleTooltip = false,
     compositeId,
+    className,
 }) => {
     if (items.length === 0) {
         return null;
@@ -258,7 +260,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
         const minHeight = getItemsMinHeight(items);
         const collapseItem = getMoreButtonItem(menuMoreTitle);
         node = (
-            <div className={b({autosizer: true})} style={{minHeight}}>
+            <div className={b({autosizer: true}, className)} style={{minHeight}}>
                 {items.length !== 0 && (
                     <AutoSizer>
                         {(size: Size) => {

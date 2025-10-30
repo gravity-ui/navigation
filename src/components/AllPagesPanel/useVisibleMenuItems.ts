@@ -5,11 +5,14 @@ import {MenuItem} from '../types';
 
 export const useVisibleMenuItems = (): MenuItem[] => {
     const {menuItems, allPagesIsAvailable} = useAsideHeaderInnerContext();
+
     return useMemo(() => {
         if (!allPagesIsAvailable) {
             return menuItems;
         }
+
         let lastVisibleIndex = 0;
+
         return menuItems.filter((item: MenuItem, index: number, items: MenuItem[]): boolean => {
             if (item.hidden) {
                 return false;
@@ -22,7 +25,9 @@ export const useVisibleMenuItems = (): MenuItem[] => {
             ) {
                 return false;
             }
+
             lastVisibleIndex = index;
+
             return true;
         });
     }, [allPagesIsAvailable, menuItems]);
