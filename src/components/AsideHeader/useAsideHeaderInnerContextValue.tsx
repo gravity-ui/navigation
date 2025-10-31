@@ -9,9 +9,24 @@ import {AsideHeaderItem, AsideHeaderProps, InnerPanels} from './types';
 const EMPTY_MENU_ITEMS: AsideHeaderItem[] = [];
 
 export const useAsideHeaderInnerContextValue = (
-    props: AsideHeaderProps & {size: number},
+    props: AsideHeaderProps & {
+        size: number;
+        compact: boolean;
+        isExpanded: boolean;
+        setIsExpanded: (isExpanded: boolean) => void;
+    },
 ): AsideHeaderInnerContextType => {
-    const {size, onClosePanel, menuItems, panelItems, onMenuItemsChanged, onAllPagesClick} = props;
+    const {
+        size,
+        compact: _externalCompact,
+        isExpanded,
+        setIsExpanded,
+        onClosePanel,
+        menuItems,
+        panelItems,
+        onMenuItemsChanged,
+        onAllPagesClick,
+    } = props;
     const [innerVisiblePanel, setInnerVisiblePanel] = useState<InnerPanels | undefined>();
     const ALL_PAGES_MENU_ITEM = React.useMemo(() => {
         return getAllPagesMenuItem();
@@ -76,8 +91,12 @@ export const useAsideHeaderInnerContextValue = (
         ];
     }, [allPagesIsAvailable, panelItems, innerVisiblePanel]);
 
+    const {isExpanded: _isExpanded, setIsExpanded: _setIsExpanded, ...restProps} = props;
+
     return {
-        ...props,
+        ...restProps,
+        compact: !isExpanded, // Используем внутреннее состояние для внутреннего контекста (isExpanded = !compact)
+        setCompact: (compact: boolean) => setIsExpanded(!compact),
         onClosePanel: innerOnClosePanel,
         allPagesIsAvailable,
         menuItems: innerMenuItems,

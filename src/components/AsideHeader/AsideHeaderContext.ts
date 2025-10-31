@@ -32,11 +32,13 @@ export const useAsideHeaderInnerContext = (): AsideHeaderInnerContextType => {
 export interface AsideHeaderContextType {
     compact: boolean;
     size: number;
+    setCompact: (compact: boolean) => void;
 }
 
 const AsideHeaderContext = React.createContext<AsideHeaderContextType | undefined>({
     compact: false,
     size: 0,
+    setCompact: () => {},
 });
 
 AsideHeaderContext.displayName = 'AsideHeaderContext';
