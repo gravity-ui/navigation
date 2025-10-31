@@ -12,16 +12,34 @@ const TopAlert = React.lazy(() =>
     import('../../../TopAlert').then((module) => ({default: module.TopAlert})),
 );
 
-export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {}
+export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {
+    isExpanded: boolean;
+    setIsExpanded: (isExpanded: boolean) => void;
+}
 
-const Layout = ({compact, className, children, topAlert}: PageLayoutProps) => {
-    const size = compact ? ASIDE_HEADER_COMPACT_WIDTH : ASIDE_HEADER_EXPANDED_WIDTH;
-    const asideHeaderContextValue = useMemo(() => ({size, compact}), [compact, size]);
+const Layout = ({
+    compact,
+    isExpanded,
+    setIsExpanded,
+    className,
+    children,
+    topAlert,
+}: PageLayoutProps) => {
+    const size = isExpanded ? ASIDE_HEADER_EXPANDED_WIDTH : ASIDE_HEADER_COMPACT_WIDTH;
+
+    const asideHeaderContextValue = useMemo(
+        () => ({
+            size,
+            compact,
+            setCompact: (compact: boolean) => setIsExpanded(!compact),
+        }),
+        [compact, size, setIsExpanded],
+    );
 
     return (
         <AsideHeaderContextProvider value={asideHeaderContextValue}>
             <div
-                className={b({compact}, className)}
+                className={b({compact: !isExpanded}, className)}
                 style={{
                     ...({'--gn-aside-header-size': `${size}px`} as React.CSSProperties),
                 }}
