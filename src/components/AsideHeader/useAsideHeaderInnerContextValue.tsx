@@ -14,13 +14,16 @@ export const useAsideHeaderInnerContextValue = (
         compact: boolean;
         isExpanded: boolean;
         setIsExpanded: (isExpanded: boolean) => void;
+        handleMouseEnter: () => void;
+        handleMouseLeave: () => void;
     },
 ): AsideHeaderInnerContextType => {
     const {
         size,
         compact: _externalCompact,
         isExpanded,
-        setIsExpanded,
+        handleMouseEnter,
+        handleMouseLeave,
         onClosePanel,
         menuItems,
         panelItems,
@@ -91,17 +94,29 @@ export const useAsideHeaderInnerContextValue = (
         ];
     }, [allPagesIsAvailable, panelItems, innerVisiblePanel]);
 
-    const {isExpanded: _isExpanded, setIsExpanded: _setIsExpanded, ...restProps} = props;
+    const {
+        isExpanded: _isExpanded,
+        setIsExpanded: _setIsExpanded,
+        handleMouseEnter: _handleMouseEnter,
+        handleMouseLeave: _handleMouseLeave,
+        ...restProps
+    } = props;
 
     return {
         ...restProps,
-        compact: !isExpanded, // Используем внутреннее состояние для внутреннего контекста (isExpanded = !compact)
-        setCompact: (compact: boolean) => setIsExpanded(!compact),
+        compact: !isExpanded,
+        setCompact: (compact: boolean) => {
+            const {setIsExpanded} = props;
+            setIsExpanded(!compact);
+        },
         onClosePanel: innerOnClosePanel,
         allPagesIsAvailable,
         menuItems: innerMenuItems,
         panelItems: innerPanelItems,
         size,
         onItemClick,
+        handleMouseEnter,
+        handleMouseLeave,
+        isExpanded,
     };
 };

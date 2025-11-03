@@ -7,7 +7,10 @@ import {AsideHeaderProps} from './types';
 
 export const AsideHeader = React.forwardRef<HTMLDivElement, AsideHeaderProps>(
     ({compact, className, topAlert, ...props}, ref) => {
-        const [isExpanded, setIsExpanded] = useIsExpanded(compact, props.onChangeCompact);
+        const {isExpanded, setIsExpanded, handleMouseEnter, handleMouseLeave} = useIsExpanded(
+            compact,
+            props.onChangeCompact,
+        );
 
         return (
             <PageLayout
@@ -21,6 +24,8 @@ export const AsideHeader = React.forwardRef<HTMLDivElement, AsideHeaderProps>(
                     ref={ref}
                     isExpanded={isExpanded}
                     setIsExpanded={setIsExpanded}
+                    handleMouseEnter={handleMouseEnter}
+                    handleMouseLeave={handleMouseLeave}
                     {...props}
                 />
                 <PageLayout.Content renderContent={props.renderContent} />

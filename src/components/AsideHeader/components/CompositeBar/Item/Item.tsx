@@ -7,7 +7,7 @@ import {AsideHeaderItem} from 'src/components/AsideHeader/types';
 import {ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
 import {MakeItemParams} from '../../../../types';
 import {block} from '../../../../utils/cn';
-import {useAsideHeaderContext} from '../../../AsideHeaderContext';
+import {useAsideHeaderContext, useAsideHeaderInnerContext} from '../../../AsideHeaderContext';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {
     COLLAPSE_ITEM_ID,
@@ -52,7 +52,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const {
         className,
         collapseItems,
-        compact,
         onMouseLeave,
         onMouseEnter,
         enableTooltip = true,
@@ -72,6 +71,9 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         href,
         qa,
     } = props;
+
+    const {isExpanded} = useAsideHeaderInnerContext();
+    const compact = !isExpanded;
 
     const [open, toggleOpen] = React.useState<boolean>(false);
 
