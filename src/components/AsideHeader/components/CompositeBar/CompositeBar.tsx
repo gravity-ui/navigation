@@ -1,10 +1,12 @@
 import React, {FC, ReactNode, useCallback, useContext, useRef} from 'react';
 
-import {List} from '@gravity-ui/uikit';
+import {ChevronDown, ChevronUp} from '@gravity-ui/icons';
+import {Button, Icon, List, Text} from '@gravity-ui/uikit';
 
 import {ASIDE_HEADER_COMPACT_WIDTH} from '../../../constants';
 import {block} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
+import {MenuGroupWithItems} from '../../hooks/useGroupedMenuItems';
 import {AsideHeaderItem} from '../../types';
 
 import {Item, ItemProps} from './Item/Item';
@@ -23,7 +25,8 @@ const b = block('composite-bar');
 
 export type CompositeBarProps = {
     type: 'menu' | 'subheader';
-    items: AsideHeaderItem[];
+    items?: AsideHeaderItem[];
+    groupedItems?: MenuGroupWithItems[];
     onItemClick?: (
         item: AsideHeaderItem,
         collapsed: boolean,
@@ -34,6 +37,7 @@ export type CompositeBarProps = {
     onMoreClick?: () => void;
     compact: boolean;
     compositeId?: string;
+    className?: string;
 };
 
 type CompositeBarViewProps = CompositeBarProps & {
@@ -192,6 +196,10 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
         ],
     );
 
+    if (!items || items.length === 0) {
+        return null;
+    }
+
     return (
         <React.Fragment>
             <div
@@ -236,18 +244,114 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
 export const CompositeBar: FC<CompositeBarProps> = ({
     type,
     items,
+    groupedItems,
     onItemClick,
     onMoreClick,
     multipleTooltip = false,
     compact,
     compositeId,
+    className,
 }) => {
-    if (items.length === 0) {
+    const [collapsedIds, setCollapsedIds] = React.useState<Record<string, boolean>>(() => {
+        const initial: Record<string, boolean> = {};
+        if (groupedItems) {
+            groupedItems.forEach((g) => {
+                if (g.collapsible && g.collapsedByDefault) {
+                    initial[g.id] = true;
+                }
+            });
+        }
+        return initial;
+    });
+
+    const toggleGroup = useCallback((groupId: string) => {
+        setCollapsedIds((prev) => ({...prev, [groupId]: !prev[groupId]}));
+    }, []);
+
+    // Fallback to original logic with items
+    if (!items || items.length === 0) {
         return null;
     }
-    let node: ReactNode;
 
     const sortedItems = sortItemsByAfterMoreButton(items);
+
+    // If groupedItems is provided, use it; otherwise fall back to items
+    if (groupedItems && groupedItems.length > 0) {
+        if (type !== 'menu') {
+            // Groups are only supported for menu type
+            return null;
+        }
+
+        const node = (
+            <div className={b({autosizer: true, className})}>
+                {groupedItems.map((group) => {
+                    const isCollapsible = Boolean(group.collapsible);
+                    const isCollapsed = Boolean(collapsedIds[group.id]);
+                    const showItems = !isCollapsible || !isCollapsed;
+                    const hasHeader = group.title || group.icon || isCollapsible;
+
+                    // Calculate items for this group
+                    const groupListItems: AsideHeaderItem[] = group.items;
+
+                    return (
+                        <div key={group.id} className={b('menu-group')}>
+                            {hasHeader && (
+                                <div className={b('menu-group-header')}>
+                                    {group.icon ? (
+                                        <Icon
+                                            data={group.icon}
+                                            size={16}
+                                            className={b('menu-group-icon')}
+                                        />
+                                    ) : null}
+
+                                    <Text variant="body-1">{group.title}</Text>
+
+                                    {isCollapsible ? (
+                                        <Button
+                                            view="flat-secondary"
+                                            size="s"
+                                            className={b('menu-group-toggle')}
+                                            onClick={() => toggleGroup(group.id)}
+                                            aria-label={
+                                                isCollapsed ? 'Expand group' : 'Collapse group'
+                                            }
+                                        >
+                                            <Icon
+                                                data={isCollapsed ? ChevronUp : ChevronDown}
+                                                size={14}
+                                            />
+                                        </Button>
+                                    ) : (
+                                        <span className={b('menu-group-toggle-placeholder')} />
+                                    )}
+                                </div>
+                            )}
+
+                            {showItems && groupListItems.length > 0 && (
+                                <CompositeBarView
+                                    className={b()}
+                                    compositeId={
+                                        compositeId ? `${compositeId}-${group.id}` : undefined
+                                    }
+                                    type="menu"
+                                    compact={compact}
+                                    items={groupListItems}
+                                    onItemClick={onItemClick}
+                                    onMoreClick={onMoreClick}
+                                    multipleTooltip={multipleTooltip}
+                                />
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+        );
+
+        return <MultipleTooltipProvider>{node}</MultipleTooltipProvider>;
+    }
+
+    let node: ReactNode;
 
     if (type === 'menu') {
         node = (
@@ -265,7 +369,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
         );
     } else {
         node = (
-            <div className={b({subheader: true})}>
+            <div className={b({subheader: true}, className)}>
                 <CompositeBarView
                     type="subheader"
                     compact={compact}

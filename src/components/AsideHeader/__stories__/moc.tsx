@@ -224,3 +224,98 @@ export const generateManyMenuItems = (count = 20): AsideHeaderProps['menuItems']
 };
 
 export const menuItemsMany = generateManyMenuItems(25);
+export const menuItemsWithGroups: AsideHeaderProps['menuItems'] = [
+    {
+        id: 'overview',
+        title: 'Overview',
+        icon: Gear,
+        groupId: 'main',
+    },
+    {
+        id: 'dashboard',
+        title: 'Dashboard',
+        icon: Gear,
+        groupId: 'main',
+        current: true,
+    },
+    {
+        id: 'divider1',
+        title: '-',
+        type: 'divider',
+    },
+    {
+        id: 'settings',
+        title: 'Settings',
+        icon: Gear,
+        groupId: 'admin',
+    },
+    {
+        id: 'users',
+        title: 'Users',
+        icon: Gear,
+        groupId: 'admin',
+    },
+    {
+        id: 'divider2',
+        title: '-',
+        type: 'divider',
+    },
+    {
+        id: 'help',
+        title: 'Help',
+        icon: Gear,
+        groupId: 'support',
+    },
+    {
+        id: 'feedback',
+        title: 'Feedback',
+        icon: Gear,
+        groupId: 'support',
+    },
+];
+
+export const menuGroups: AsideHeaderProps['menuGroups'] = [
+    {
+        id: 'main',
+        title: 'Main',
+        order: 1,
+    },
+    {
+        id: 'admin',
+        title: 'Administration',
+        order: 2,
+    },
+    {
+        id: 'support',
+        title: 'Support',
+        order: 3,
+    },
+];
+
+// Groups with icons and collapsible behavior
+export const menuGroupsWithIcons: AsideHeaderProps['menuGroups'] = [
+    {
+        id: 'main',
+        title: 'Main',
+        icon: Gear,
+        order: 1,
+        collapsible: true,
+        collapsedByDefault: false,
+    },
+    {
+        id: 'admin',
+        title: 'Administration',
+        icon: Gear,
+        order: 2,
+        collapsible: true,
+        collapsedByDefault: true,
+    },
+    {
+        id: 'support',
+        title: 'Support',
+        icon: Gear,
+        order: 3,
+        collapsible: true,
+        collapsedByDefault: false,
+    },
+];

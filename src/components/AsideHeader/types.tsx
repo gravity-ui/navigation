@@ -4,7 +4,7 @@ import {PopupProps, QAProps} from '@gravity-ui/uikit';
 
 import {RenderContentType} from '../Content';
 import {DrawerItemProps} from '../Drawer/Drawer';
-import {LogoProps, MenuItem, OpenModalSubscriber, TopAlertProps} from '../types';
+import {LogoProps, MenuGroup, MenuItem, OpenModalSubscriber, TopAlertProps} from '../types';
 
 import {AsideHeaderContextType} from './AsideHeaderContext';
 
@@ -59,6 +59,7 @@ interface AsideHeaderDefaultProps {
     subheaderItems?: AsideHeaderItem[];
     menuItems?: AsideHeaderItem[];
     defaultMenuItems?: AsideHeaderItem[];
+    menuGroups?: MenuGroup[];
     onMenuItemsChanged?: (items: AsideHeaderItem[]) => void;
     headerDecoration?: boolean;
 }

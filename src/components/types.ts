@@ -53,7 +53,22 @@ export interface MenuItem extends QAProps {
      * The category to which the menu item belongs. Need for grouping in the display/editing mode of all pages
      */
     category?: string;
-    className?: string;
+    /**
+     * The group ID to which the menu item belongs. Used for grouping menu items
+     */
+    groupId?: string;
+}
+
+export interface MenuGroup {
+    id: string;
+    title: string;
+    icon?: IconProps['data'];
+    order?: number;
+    visible?: boolean;
+    /** Allow collapsing the group via UI */
+    collapsible?: boolean;
+    /** Initial collapsed state when collapsible is true */
+    collapsedByDefault?: boolean;
 }
 
 export interface LogoProps {

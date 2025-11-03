@@ -3,13 +3,13 @@ import React, {useRef} from 'react';
 import {setRef} from '@gravity-ui/uikit';
 
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
-import i18n from '../i18n';
+import {useGroupedMenuItems} from '../hooks/useGroupedMenuItems';
 import {b} from '../utils';
 
 import {useVisibleMenuItems} from './AllPagesPanel';
 import {CollapseButton} from './CollapseButton/CollapseButton';
-import {CompositeBar} from './CompositeBar';
 import {Header} from './Header';
+import {MenuItems} from './MenuItems';
 import {Panels} from './Panels';
 
 const MENU_ITEMS_COMPOSITE_ID = 'gravity-ui/navigation-menu-items-composite-bar';
@@ -20,7 +20,6 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         onItemClick,
         headerDecoration,
         multipleTooltip,
-        menuMoreTitle,
         onMenuMoreClick,
         renderFooter,
         compact,
@@ -34,6 +33,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         isExpanded,
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
+    const groupedMenuItems = useGroupedMenuItems();
 
     const asideRef = useRef<HTMLDivElement>(null);
 
@@ -61,20 +61,17 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
                 <div className={b('aside-content', {['with-decoration']: headerDecoration})}>
                     <Header />
-                    {visibleMenuItems?.length ? (
-                        <CompositeBar
-                            compositeId={MENU_ITEMS_COMPOSITE_ID}
-                            type="menu"
-                            compact={compact}
-                            items={visibleMenuItems}
-                            menuMoreTitle={menuMoreTitle ?? i18n('label_more')}
-                            onItemClick={onItemClick}
-                            onMoreClick={onMenuMoreClick}
-                            multipleTooltip={multipleTooltip}
-                        />
-                    ) : (
-                        <div className={b('menu-items')} />
-                    )}
+
+                    <MenuItems
+                        compact={compact}
+                        compositeIdBase={MENU_ITEMS_COMPOSITE_ID}
+                        groupedMenuItems={groupedMenuItems}
+                        visibleMenuItems={visibleMenuItems}
+                        multipleTooltip={multipleTooltip}
+                        onItemClick={onItemClick}
+                        onMoreClick={onMenuMoreClick}
+                    />
+
                     <div className={b('footer')}>
                         {renderFooter?.({
                             size,
