@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Icon, List, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
+import {Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
 
 import {AsideHeaderItem} from 'src/components/AsideHeader/types';
 
@@ -17,6 +17,7 @@ const b = block('composite-bar-item');
 export interface ItemProps extends AsideHeaderItem {}
 
 interface ItemInnerProps extends ItemProps {
+    compact: boolean;
     className?: string;
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
@@ -43,7 +44,6 @@ const defaultPopupOffset: NonNullable<PopupProps['offset']> = {mainAxis: 8, cros
 export const Item: React.FC<ItemInnerProps> = (props) => {
     const {
         className,
-        compact,
         onMouseLeave,
         onMouseEnter,
         popupVisible = false,
@@ -61,6 +61,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         title,
         href,
         qa,
+        compact,
     } = props;
 
     const ref = React.useRef<HTMLAnchorElement & HTMLButtonElement>(null);
