@@ -18,7 +18,7 @@ export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {
 }
 
 const Layout = ({compact, className, children, topAlert, onChangeCompact}: PageLayoutProps) => {
-    const {isExpanded, handleMouseEnter, handleMouseLeave} = useIsExpanded(compact);
+    const {isExpanded, onMouseEnter, onMouseLeave} = useIsExpanded(compact);
 
     const size = isExpanded ? ASIDE_HEADER_EXPANDED_WIDTH : ASIDE_HEADER_COMPACT_WIDTH;
 
@@ -28,10 +28,10 @@ const Layout = ({compact, className, children, topAlert, onChangeCompact}: PageL
             compact,
             isExpanded,
             onChangeCompact,
-            handleMouseEnter,
-            handleMouseLeave,
+            onMouseEnter,
+            onMouseLeave,
         }),
-        [size, compact, isExpanded, onChangeCompact, handleMouseEnter, handleMouseLeave],
+        [size, compact, isExpanded, onChangeCompact, onMouseEnter, onMouseLeave],
     );
 
     return (
@@ -57,10 +57,15 @@ const ConnectedContent: React.FC<PropsWithChildren<Pick<ContentProps, 'renderCon
     children,
     renderContent,
 }) => {
-    const {size} = useAsideHeaderContext();
+    const {size, compact, isExpanded} = useAsideHeaderContext();
+    const isExpandedByHover = compact && isExpanded;
 
     return (
-        <Content size={size} className={b('content')} renderContent={renderContent}>
+        <Content
+            size={size}
+            className={b('content', {'expanded-by-hover': isExpandedByHover})}
+            renderContent={renderContent}
+        >
             {children}
         </Content>
     );

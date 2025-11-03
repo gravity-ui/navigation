@@ -114,6 +114,12 @@ $block: '.#{variables.$ns}aside-header';
         }
     }
 
+    &__aside_expanded-by-hover {
+        position: fixed;
+        top: 0;
+        left: 0;
+    }
+
     &__header {
         --gn-aside-header-header-divider-height: 29px;
 
@@ -239,5 +245,9 @@ $block: '.#{variables.$ns}aside-header';
         width: calc(100% - var(--gn-aside-header-size));
         z-index: var(--gn-aside-header-content-z-index, 95);
         margin-top: var(--gn-top-alert-height, 0);
+
+        &_expanded-by-hover {
+            padding-left: var(--gn-aside-header-min-width);
+        }
     }
 }

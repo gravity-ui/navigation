@@ -13,8 +13,8 @@ export const useAsideHeaderInnerContextValue = (
         size: number;
         compact: boolean;
         isExpanded: boolean;
-        handleMouseEnter?: () => void;
-        handleMouseLeave?: () => void;
+        onMouseEnter?: () => void;
+        onMouseLeave?: () => void;
     },
 ): AsideHeaderInnerContextType => {
     const {size, onClosePanel, menuItems, panelItems, onMenuItemsChanged, onAllPagesClick} = props;

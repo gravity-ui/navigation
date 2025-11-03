@@ -6,8 +6,8 @@ const HOVER_DELAY = 150;
 
 export interface UseIsExpandedResult {
     isExpanded: boolean;
-    handleMouseEnter: () => void;
-    handleMouseLeave: () => void;
+    onMouseEnter: () => void;
+    onMouseLeave: () => void;
 }
 
 export const useIsExpanded = (externalCompact: boolean): UseIsExpandedResult => {
@@ -49,7 +49,7 @@ export const useIsExpanded = (externalCompact: boolean): UseIsExpandedResult => 
 
     return {
         isExpanded,
-        handleMouseEnter,
-        handleMouseLeave,
+        onMouseEnter: handleMouseEnter,
+        onMouseLeave: handleMouseLeave,
     };
 };
