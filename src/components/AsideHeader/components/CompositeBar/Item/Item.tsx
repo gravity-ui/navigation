@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {ActionTooltip, Icon, List, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
+import {Icon, List, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
 
 import {AsideHeaderItem} from 'src/components/AsideHeader/types';
 
@@ -54,7 +54,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         collapseItems,
         onMouseLeave,
         onMouseEnter,
-        enableTooltip = true,
         popupVisible = false,
         popupRef: anchoreRefProp,
         popupPlacement = defaultPopupPlacement,
@@ -108,25 +107,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     }
 
     const makeIconNode = (iconEl: React.ReactNode): React.ReactNode => {
-        return compact ? (
-            <ActionTooltip
-                title=""
-                description={tooltipText}
-                disabled={!enableTooltip || (collapsedItem && open) || popupVisible}
-                placement="right"
-                className={b('icon-tooltip', {'item-type': type})}
-            >
-                <div
-                    onMouseEnter={() => onMouseEnter?.()}
-                    onMouseLeave={() => onMouseLeave?.()}
-                    className={b('btn-icon')}
-                >
-                    {iconEl}
-                </div>
-            </ActionTooltip>
-        ) : (
-            iconEl
-        );
+        return compact ? <div className={b('btn-icon')}>{iconEl}</div> : iconEl;
     };
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
@@ -240,8 +221,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         </React.Fragment>
     );
 };
-
-Item.displayName = 'Item';
 
 interface CollapsedPopupProps {
     anchorRef: React.RefObject<HTMLElement>;
