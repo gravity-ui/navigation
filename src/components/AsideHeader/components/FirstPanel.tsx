@@ -29,8 +29,9 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         className,
         hideCollapseButton,
         qa,
-        handleMouseEnter,
-        handleMouseLeave,
+        onMouseEnter,
+        onMouseLeave,
+        isExpanded,
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
 
@@ -40,8 +41,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         setRef<HTMLDivElement>(ref, asideRef.current);
     }, [ref]);
 
-    // Определяем, была ли навигация раскрыта по ховеру (для стилей)
-    const isExpandedByHover = handleMouseEnter !== undefined && !compact;
+    const isExpandedByHover = compact && isExpanded;
 
     return (
         <React.Fragment>
@@ -49,8 +49,8 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 className={b('aside', {'expanded-by-hover': isExpandedByHover}, className)}
                 style={{width: size}}
                 data-qa={qa}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
             >
                 <div className={b('aside-popup-anchor')} ref={asideRef} />
                 {customBackground && (
