@@ -8,7 +8,6 @@ import {AsideHeader} from '../AsideHeader';
 import {AsideFallback} from '../components/PageLayout/AsideFallback';
 import {PageLayout} from '../components/PageLayout/PageLayout';
 import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
-import {useIsExpanded} from '../hooks/useIsExpanded';
 
 import {AsideHeaderShowcase, AsideHeaderShowcaseProps} from './AsideHeaderShowcase';
 import {DEFAULT_LOGO, menuItemsClamped, menuItemsMany, menuItemsShowcase} from './moc';
@@ -104,19 +103,14 @@ CustomBackground.args = {
 
 const AdvancedUsageTemplate: StoryFn = (args) => {
     const [compact, setCompact] = React.useState(args.initialCompact);
-    const {isExpanded, setIsExpanded, handleMouseEnter, handleMouseLeave} = useIsExpanded(compact);
 
     return (
-        <PageLayout compact={compact} isExpanded={isExpanded} setIsExpanded={setIsExpanded}>
+        <PageLayout compact={compact} onChangeCompact={setCompact}>
             <PageLayoutAside
                 headerDecoration
                 menuItems={menuItemsShowcase}
                 logo={DEFAULT_LOGO}
                 onChangeCompact={setCompact}
-                isExpanded={isExpanded}
-                setIsExpanded={setIsExpanded}
-                handleMouseEnter={handleMouseEnter}
-                handleMouseLeave={handleMouseLeave}
                 qa={'pl-aside'}
                 {...args}
             />
@@ -205,10 +199,9 @@ const FallbackTemplate: StoryFn<typeof fallbackArgs> = ({
     subheaderItemsCount,
 }) => {
     const [compact, setCompact] = React.useState(false);
-    const {isExpanded, setIsExpanded} = useIsExpanded(compact);
 
     return (
-        <PageLayout compact={compact} isExpanded={isExpanded} setIsExpanded={setIsExpanded}>
+        <PageLayout compact={compact} onChangeCompact={setCompact}>
             <AsideFallback
                 headerDecoration={headerDecoration}
                 subheaderItemsCount={subheaderItemsCount}
@@ -230,17 +223,13 @@ Fallback.args = fallbackArgs;
 /** @type {StoryFn} */
 export function LineClamp() {
     const [compact, setCompact] = React.useState(false);
-    const {isExpanded, setIsExpanded, handleMouseEnter, handleMouseLeave} = useIsExpanded(compact);
+
     return (
-        <PageLayout compact={compact} isExpanded={isExpanded} setIsExpanded={setIsExpanded}>
+        <PageLayout compact={compact} onChangeCompact={setCompact}>
             <PageLayoutAside
                 logo={{icon: logoIcon, text: 'Line clamp', 'aria-label': 'Line clamp'}}
                 menuItems={menuItemsClamped}
                 onChangeCompact={setCompact}
-                isExpanded={isExpanded}
-                setIsExpanded={setIsExpanded}
-                handleMouseEnter={handleMouseEnter}
-                handleMouseLeave={handleMouseLeave}
                 headerDecoration
             />
         </PageLayout>
@@ -249,19 +238,14 @@ export function LineClamp() {
 
 const CollapseButtonWrapperTemplate: StoryFn = (args) => {
     const [compact, setCompact] = React.useState(args.initialCompact);
-    const {isExpanded, setIsExpanded, handleMouseEnter, handleMouseLeave} = useIsExpanded(compact);
 
     return (
-        <PageLayout compact={compact} isExpanded={isExpanded} setIsExpanded={setIsExpanded}>
+        <PageLayout compact={compact} onChangeCompact={setCompact}>
             <PageLayoutAside
                 headerDecoration
                 menuItems={menuItemsShowcase}
                 logo={DEFAULT_LOGO}
                 onChangeCompact={setCompact}
-                isExpanded={isExpanded}
-                setIsExpanded={setIsExpanded}
-                handleMouseEnter={handleMouseEnter}
-                handleMouseLeave={handleMouseLeave}
                 collapseButtonWrapper={(defaultButton, {compact}) => (
                     <React.Fragment>
                         {defaultButton}

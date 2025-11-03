@@ -35,13 +35,19 @@ export const useAsideHeaderInnerContext = (): AsideHeaderInnerContextType => {
 export interface AsideHeaderContextType {
     compact: boolean;
     size: number;
-    setCompact: (compact: boolean) => void;
+    isExpanded: boolean;
+    onChangeCompact?: (compact: boolean) => void;
+    handleMouseEnter?: () => void;
+    handleMouseLeave?: () => void;
 }
 
 const AsideHeaderContext = React.createContext<AsideHeaderContextType | undefined>({
     compact: false,
     size: 0,
-    setCompact: () => {},
+    isExpanded: false,
+    onChangeCompact: () => {},
+    handleMouseEnter: () => {},
+    handleMouseLeave: () => {},
 });
 
 AsideHeaderContext.displayName = 'AsideHeaderContext';

@@ -5,33 +5,25 @@ import {AsideHeaderInnerContextProvider, useAsideHeaderContext} from '../../Asid
 import {AsideHeaderProps} from '../../types';
 import {useAsideHeaderInnerContextValue} from '../../useAsideHeaderInnerContextValue';
 
-type Props = Omit<AsideHeaderProps, 'compact' | 'size'> & {
-    isExpanded: boolean;
-    setIsExpanded: (isExpanded: boolean) => void;
-    handleMouseEnter: () => void;
-    handleMouseLeave: () => void;
-};
+type Props = Omit<AsideHeaderProps, 'compact' | 'size'>;
 
-export const PageLayoutAside = React.forwardRef<HTMLDivElement, Props>(
-    ({isExpanded, setIsExpanded, handleMouseEnter, handleMouseLeave, ...props}, ref) => {
-        const {size, compact} = useAsideHeaderContext();
+export const PageLayoutAside = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
+    const {size, compact, isExpanded, handleMouseEnter, handleMouseLeave} = useAsideHeaderContext();
 
-        const asideHeaderInnerContextValue = useAsideHeaderInnerContextValue({
-            size,
-            compact,
-            isExpanded,
-            setIsExpanded,
-            handleMouseEnter,
-            handleMouseLeave,
-            ...props,
-        });
+    const asideHeaderInnerContextValue = useAsideHeaderInnerContextValue({
+        size,
+        compact,
+        isExpanded,
+        handleMouseEnter,
+        handleMouseLeave,
+        ...props,
+    });
 
-        return (
-            <AsideHeaderInnerContextProvider value={asideHeaderInnerContextValue}>
-                <FirstPanel ref={ref} />
-            </AsideHeaderInnerContextProvider>
-        );
-    },
-);
+    return (
+        <AsideHeaderInnerContextProvider value={asideHeaderInnerContextValue}>
+            <FirstPanel ref={ref} />
+        </AsideHeaderInnerContextProvider>
+    );
+});
 
 PageLayoutAside.displayName = 'PageLayoutAside';

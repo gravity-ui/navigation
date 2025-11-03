@@ -3,6 +3,7 @@ import React, {PropsWithChildren, Suspense, useMemo} from 'react';
 import {Content, ContentProps} from '../../../Content';
 import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../../constants';
 import {AsideHeaderContextProvider, useAsideHeaderContext} from '../../AsideHeaderContext';
+import {useIsExpanded} from '../../hooks/useIsExpanded';
 import {LayoutProps} from '../../types';
 import {b} from '../../utils';
 
@@ -13,27 +14,24 @@ const TopAlert = React.lazy(() =>
 );
 
 export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {
-    isExpanded: boolean;
-    setIsExpanded: (isExpanded: boolean) => void;
+    onChangeCompact?: (compact: boolean) => void;
 }
 
-const Layout = ({
-    compact,
-    isExpanded,
-    setIsExpanded,
-    className,
-    children,
-    topAlert,
-}: PageLayoutProps) => {
+const Layout = ({compact, className, children, topAlert, onChangeCompact}: PageLayoutProps) => {
+    const {isExpanded, handleMouseEnter, handleMouseLeave} = useIsExpanded(compact);
+
     const size = isExpanded ? ASIDE_HEADER_EXPANDED_WIDTH : ASIDE_HEADER_COMPACT_WIDTH;
 
     const asideHeaderContextValue = useMemo(
         () => ({
             size,
             compact,
-            setCompact: (compact: boolean) => setIsExpanded(!compact),
+            isExpanded,
+            onChangeCompact,
+            handleMouseEnter,
+            handleMouseLeave,
         }),
-        [compact, size, setIsExpanded],
+        [size, compact, isExpanded, onChangeCompact, handleMouseEnter, handleMouseLeave],
     );
 
     return (

@@ -17,17 +17,14 @@ interface CollapseButtonProps {
 }
 
 export const CollapseButton = ({className}: CollapseButtonProps) => {
-    const {compact, setCompact} = useAsideHeaderContext();
-    const {onChangeCompact, expandTitle, collapseTitle, collapseButtonWrapper} =
-        useAsideHeaderInnerContext();
+    const {compact, onChangeCompact} = useAsideHeaderContext();
+    const {expandTitle, collapseTitle, collapseButtonWrapper} = useAsideHeaderInnerContext();
 
     const onCollapseButtonClick = useCallback(() => {
         const newCompact = !compact;
 
-        setCompact(newCompact);
-
         onChangeCompact?.(newCompact);
-    }, [compact, setCompact, onChangeCompact]);
+    }, [compact, onChangeCompact]);
 
     const buttonTitle = compact
         ? expandTitle || i18n('button_expand')
