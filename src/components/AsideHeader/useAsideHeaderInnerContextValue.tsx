@@ -13,23 +13,11 @@ export const useAsideHeaderInnerContextValue = (
         size: number;
         compact: boolean;
         isExpanded: boolean;
-        setIsExpanded: (isExpanded: boolean) => void;
-        handleMouseEnter: () => void;
-        handleMouseLeave: () => void;
+        handleMouseEnter?: () => void;
+        handleMouseLeave?: () => void;
     },
 ): AsideHeaderInnerContextType => {
-    const {
-        size,
-        compact: _externalCompact,
-        isExpanded,
-        handleMouseEnter,
-        handleMouseLeave,
-        onClosePanel,
-        menuItems,
-        panelItems,
-        onMenuItemsChanged,
-        onAllPagesClick,
-    } = props;
+    const {size, onClosePanel, menuItems, panelItems, onMenuItemsChanged, onAllPagesClick} = props;
     const [innerVisiblePanel, setInnerVisiblePanel] = useState<InnerPanels | undefined>();
     const ALL_PAGES_MENU_ITEM = React.useMemo(() => {
         return getAllPagesMenuItem();
@@ -94,29 +82,13 @@ export const useAsideHeaderInnerContextValue = (
         ];
     }, [allPagesIsAvailable, panelItems, innerVisiblePanel]);
 
-    const {
-        isExpanded: _isExpanded,
-        setIsExpanded: _setIsExpanded,
-        handleMouseEnter: _handleMouseEnter,
-        handleMouseLeave: _handleMouseLeave,
-        ...restProps
-    } = props;
-
     return {
-        ...restProps,
-        compact: !isExpanded,
-        setCompact: (compact: boolean) => {
-            const {setIsExpanded} = props;
-            setIsExpanded(!compact);
-        },
+        ...props,
         onClosePanel: innerOnClosePanel,
         allPagesIsAvailable,
         menuItems: innerMenuItems,
         panelItems: innerPanelItems,
         size,
         onItemClick,
-        handleMouseEnter,
-        handleMouseLeave,
-        isExpanded,
     };
 };
