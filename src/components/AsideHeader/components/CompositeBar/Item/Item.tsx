@@ -7,7 +7,7 @@ import {AsideHeaderItem} from 'src/components/AsideHeader/types';
 import {ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
 import {MakeItemParams} from '../../../../types';
 import {block} from '../../../../utils/cn';
-import {useAsideHeaderContext, useAsideHeaderInnerContext} from '../../../AsideHeaderContext';
+import {useAsideHeaderContext} from '../../../AsideHeaderContext';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {
     COLLAPSE_ITEM_ID,
@@ -24,6 +24,7 @@ const b = block('composite-bar-item');
 export interface ItemProps extends AsideHeaderItem {}
 
 interface ItemInnerProps extends ItemProps {
+    compact: boolean;
     className?: string;
     collapseItems?: AsideHeaderItem[];
     onMouseEnter?: () => void;
@@ -69,10 +70,8 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         title,
         href,
         qa,
+        compact,
     } = props;
-
-    const {isExpanded} = useAsideHeaderInnerContext();
-    const compact = !isExpanded;
 
     const [open, toggleOpen] = React.useState<boolean>(false);
 
@@ -82,7 +81,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const type = props.type || ITEM_TYPE_REGULAR;
     const current = props.current || false;
-    const tooltipText = props.tooltipText || props.title;
     const icon = props.icon;
     const iconSize = props.iconSize || ASIDE_HEADER_ICON_SIZE;
     const iconQa = props.iconQa;
