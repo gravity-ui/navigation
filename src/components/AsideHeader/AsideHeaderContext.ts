@@ -11,6 +11,9 @@ export interface AsideHeaderInnerContextType extends AsideHeaderInnerProps {
         collapsed: boolean,
         event: React.MouseEvent<HTMLElement, MouseEvent>,
     ) => void;
+    handleMouseEnter?: () => void;
+    handleMouseLeave?: () => void;
+    isExpanded: boolean;
 }
 
 const AsideHeaderInnerContext = React.createContext<AsideHeaderInnerContextType | undefined>(

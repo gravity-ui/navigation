@@ -104,7 +104,7 @@ CustomBackground.args = {
 
 const AdvancedUsageTemplate: StoryFn = (args) => {
     const [compact, setCompact] = React.useState(args.initialCompact);
-    const [isExpanded, setIsExpanded] = useIsExpanded(compact);
+    const {isExpanded, setIsExpanded, handleMouseEnter, handleMouseLeave} = useIsExpanded(compact);
 
     return (
         <PageLayout compact={compact} isExpanded={isExpanded} setIsExpanded={setIsExpanded}>
@@ -115,6 +115,8 @@ const AdvancedUsageTemplate: StoryFn = (args) => {
                 onChangeCompact={setCompact}
                 isExpanded={isExpanded}
                 setIsExpanded={setIsExpanded}
+                handleMouseEnter={handleMouseEnter}
+                handleMouseLeave={handleMouseLeave}
                 qa={'pl-aside'}
                 {...args}
             />
@@ -203,7 +205,7 @@ const FallbackTemplate: StoryFn<typeof fallbackArgs> = ({
     subheaderItemsCount,
 }) => {
     const [compact, setCompact] = React.useState(false);
-    const [isExpanded, setIsExpanded] = useIsExpanded(compact);
+    const {isExpanded, setIsExpanded} = useIsExpanded(compact);
 
     return (
         <PageLayout compact={compact} isExpanded={isExpanded} setIsExpanded={setIsExpanded}>
@@ -228,7 +230,7 @@ Fallback.args = fallbackArgs;
 /** @type {StoryFn} */
 export function LineClamp() {
     const [compact, setCompact] = React.useState(false);
-    const [isExpanded, setIsExpanded] = useIsExpanded(compact);
+    const {isExpanded, setIsExpanded, handleMouseEnter, handleMouseLeave} = useIsExpanded(compact);
     return (
         <PageLayout compact={compact} isExpanded={isExpanded} setIsExpanded={setIsExpanded}>
             <PageLayoutAside
@@ -237,6 +239,8 @@ export function LineClamp() {
                 onChangeCompact={setCompact}
                 isExpanded={isExpanded}
                 setIsExpanded={setIsExpanded}
+                handleMouseEnter={handleMouseEnter}
+                handleMouseLeave={handleMouseLeave}
                 headerDecoration
             />
         </PageLayout>
@@ -245,7 +249,7 @@ export function LineClamp() {
 
 const CollapseButtonWrapperTemplate: StoryFn = (args) => {
     const [compact, setCompact] = React.useState(args.initialCompact);
-    const [isExpanded, setIsExpanded] = useIsExpanded(compact);
+    const {isExpanded, setIsExpanded, handleMouseEnter, handleMouseLeave} = useIsExpanded(compact);
 
     return (
         <PageLayout compact={compact} isExpanded={isExpanded} setIsExpanded={setIsExpanded}>
@@ -256,6 +260,8 @@ const CollapseButtonWrapperTemplate: StoryFn = (args) => {
                 onChangeCompact={setCompact}
                 isExpanded={isExpanded}
                 setIsExpanded={setIsExpanded}
+                handleMouseEnter={handleMouseEnter}
+                handleMouseLeave={handleMouseLeave}
                 collapseButtonWrapper={(defaultButton, {compact}) => (
                     <React.Fragment>
                         {defaultButton}

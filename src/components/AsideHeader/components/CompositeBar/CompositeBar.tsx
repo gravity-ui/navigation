@@ -4,6 +4,7 @@ import {List} from '@gravity-ui/uikit';
 
 import {ASIDE_HEADER_COMPACT_WIDTH} from '../../../constants';
 import {block} from '../../../utils/cn';
+import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
 import {AsideHeaderItem} from '../../types';
 
 import {Item, ItemProps} from './Item/Item';
@@ -45,7 +46,6 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     onItemClick,
     onMoreClick,
     multipleTooltip = false,
-    compact,
     compositeId,
 }) => {
     const ref = useRef<List<AsideHeaderItem>>(null);
@@ -57,6 +57,8 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
         activeIndex,
         lastClickedItemIndex,
     } = useContext(MultipleTooltipContext);
+    const {isExpanded} = useAsideHeaderInnerContext();
+    const compact = !isExpanded;
 
     React.useEffect(() => {
         function handleBlurWindow() {
