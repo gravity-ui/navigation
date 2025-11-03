@@ -11,7 +11,16 @@ const EMPTY_MENU_ITEMS: AsideHeaderItem[] = [];
 export const useAsideHeaderInnerContextValue = (
     props: AsideHeaderProps & {size: number},
 ): AsideHeaderInnerContextType => {
-    const {size, onClosePanel, menuItems, panelItems, onMenuItemsChanged, onAllPagesClick} = props;
+    const {
+        size,
+        onClosePanel,
+        menuItems,
+        menuGroups,
+        panelItems,
+        onMenuItemsChanged,
+        onAllPagesClick,
+    } = props;
+
     const [innerVisiblePanel, setInnerVisiblePanel] = useState<InnerPanels | undefined>();
     const ALL_PAGES_MENU_ITEM = React.useMemo(() => {
         return getAllPagesMenuItem();
@@ -81,6 +90,7 @@ export const useAsideHeaderInnerContextValue = (
         onClosePanel: innerOnClosePanel,
         allPagesIsAvailable,
         menuItems: innerMenuItems,
+        menuGroups,
         panelItems: innerPanelItems,
         size,
         onItemClick,
