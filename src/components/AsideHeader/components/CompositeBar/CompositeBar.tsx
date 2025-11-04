@@ -282,10 +282,10 @@ export const CompositeBar: FC<CompositeBarProps> = ({
 
     let node: ReactNode;
 
-    if (visibleGroupedItems && visibleGroupedItems.length > 0 && type === 'menu') {
+    if (type === 'menu') {
         node = (
-            <div className={b({autosizer: true, className})}>
-                {visibleGroupedItems.map((group) => {
+            <div className={b({scrollable: true}, className)}>
+                {visibleGroupedItems?.map((group) => {
                     const isCollapsible = Boolean(group.collapsible);
                     const isCollapsed = Boolean(collapsedIds[group.id]);
                     const showItems = !isCollapsible || !isCollapsed;
