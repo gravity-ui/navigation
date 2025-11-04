@@ -26,7 +26,6 @@ interface AllPagesPanelProps {
 export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     const {startEditIcon, onEditModeChanged, className} = props;
     const {
-        menuItems,
         defaultMenuItems,
         onMenuItemsChanged,
         editMenuProps,
@@ -34,6 +33,9 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         defaultMenuGroups,
         onMenuGroupsChanged,
     } = useAsideHeaderInnerContext();
+
+    const groupedItems = useGroupedMenuItems(false);
+    const menuItems = groupedItems.flatMap((group) => group.items);
 
     const menuItemsRef = useRef(menuItems);
     menuItemsRef.current = menuItems;
@@ -48,8 +50,6 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     const toggleEditMode = useCallback(() => {
         setIsEditMode((prev) => !prev);
     }, []);
-
-    const groupedItems = useGroupedMenuItems(menuItems);
 
     useEffect(() => {
         onEditModeChanged?.(isEditMode);
@@ -80,6 +80,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             const originItems = menuItemsRef.current.filter(
                 (menuItem) => menuItem.id !== ALL_PAGES_ID,
             );
+
             editMenuProps?.onToggleMenuItem?.(changedItem);
             onMenuItemsChanged(
                 originItems.map((menuItem) => {
@@ -166,84 +167,34 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         [onMenuGroupsChanged],
     );
 
-    const createChangeItemsOrderHandler = useCallback(
-        (groupId: string, groupItems: AsideHeaderItem[]) => {
-            return ({oldIndex, newIndex}: {oldIndex: number; newIndex: number}) => {
-                // Check if indices are within group bounds
-                if (
-                    oldIndex < 0 ||
-                    oldIndex >= groupItems.length ||
-                    newIndex < 0 ||
-                    newIndex >= groupItems.length
-                ) {
-                    return;
-                }
+    const changeItemsOrder = useCallback(
+        ({oldIndex, newIndex}: {oldIndex: number; newIndex: number}) => {
+            const newItems = menuItemsRef.current.filter(({id}) => id !== ALL_PAGES_ID);
 
-                // Get item being moved
-                const element = groupItems[oldIndex];
+            const element = newItems.splice(oldIndex, 1)[0];
+            newItems.splice(newIndex, 0, element);
 
-                // Check that element belongs to this group
-                if (element.groupId !== groupId) {
-                    return;
-                }
+            onMenuItemsChanged?.(newItems.filter(({type}) => type !== 'divider'));
 
-                // Reorder within group
-                const newGroupItems = [...groupItems];
-                const [removed] = newGroupItems.splice(oldIndex, 1);
-                newGroupItems.splice(newIndex, 0, removed);
-
-                // Update order property
-                const updatedGroupItems = newGroupItems.map((item, index) => ({
-                    ...item,
-                    order: index,
-                }));
-
-                // Rebuild all items with updated group
-                const allItems = menuItemsRef.current.filter(({id}) => id !== ALL_PAGES_ID);
-                const otherItems = allItems.filter((item) => item.groupId !== groupId);
-
-                const updatedItems = [...otherItems, ...updatedGroupItems].sort((itemA, itemB) => {
-                    // Maintain group order, then item order within group
-                    const aGroupId = itemA.groupId || 'ungrouped';
-                    const bGroupId = itemB.groupId || 'ungrouped';
-
-                    if (aGroupId !== bGroupId) {
-                        const aGroup = menuGroupsRef.current?.find((g) => g.id === aGroupId);
-                        const bGroup = menuGroupsRef.current?.find((g) => g.id === bGroupId);
-                        const aOrder = aGroup?.order || 0;
-                        const bOrder = bGroup?.order || 0;
-                        if (aOrder !== bOrder) {
-                            return aOrder - bOrder;
-                        }
-                        return aGroupId.localeCompare(bGroupId);
-                    }
-                    return (itemA.order || 0) - (itemB.order || 0);
-                });
-
-                onMenuItemsChanged?.(updatedItems.filter(({type}) => type !== 'divider'));
-
-                setDraggingItemTitle(null);
-                editMenuProps?.onChangeItemsOrder?.(element, oldIndex, newIndex);
-            };
+            setDraggingItemTitle(null);
+            editMenuProps?.onChangeItemsOrder?.(element, oldIndex, newIndex);
         },
         [onMenuItemsChanged, editMenuProps],
     );
 
     const groupedItemsForEdit = useMemo(() => {
         return groupedItems.map((groupWithItems) => {
-            const originalGroup = menuGroups?.find((g) => g.id === groupWithItems.group.id);
+            const originalGroup = menuGroups?.find((g) => g.id === groupWithItems.id);
+
             return {
                 ...groupWithItems,
-                group: {
-                    ...groupWithItems.group,
-                    hidden: originalGroup?.hidden || false,
-                },
+                hidden: originalGroup?.hidden || false,
             };
         });
     }, [groupedItems, menuGroups]);
 
     const groupedItemsForDisplay = useMemo(() => {
-        return groupedItemsForEdit.filter((groupWithItems) => !groupWithItems.group.hidden);
+        return groupedItemsForEdit.filter((groupWithItems) => !groupWithItems.hidden);
     }, [groupedItemsForEdit]);
 
     return (
@@ -268,16 +219,18 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                                 ({afterMoreButton, type}) => !afterMoreButton && type !== 'divider',
                             );
 
-                            // In edit mode, show all groups (including hidden ones and empty ones)
                             return (
                                 <Flex
                                     className={b('groups-container')}
-                                    key={groupWithItems.group.id}
+                                    key={groupWithItems.id}
                                     direction="column"
                                     gap="3"
                                 >
                                     <AllPagesGroupHeader
-                                        group={groupWithItems.group}
+                                        id={groupWithItems.id}
+                                        icon={groupWithItems.icon}
+                                        title={groupWithItems.title}
+                                        hidden={groupWithItems.hidden}
                                         onToggleHidden={toggleGroupHidden}
                                         editMode={isEditMode}
                                     />
@@ -285,10 +238,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                                         <List
                                             itemClassName={b('item', {editMode: true})}
                                             itemHeight={40}
-                                            onSortEnd={createChangeItemsOrderHandler(
-                                                groupWithItems.group.id,
-                                                sortableGroupItems,
-                                            )}
+                                            onSortEnd={changeItemsOrder}
                                             sortable
                                             virtualized={false}
                                             filterable={false}
@@ -313,14 +263,17 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
 
                         return (
                             <Flex
-                                key={groupWithItems.group.id}
+                                key={groupWithItems.id}
                                 direction="column"
                                 gap="3"
                                 className={b('groups-container')}
                             >
-                                {groupWithItems.group.title && (
+                                {groupWithItems.title && (
                                     <AllPagesGroupHeader
-                                        group={groupWithItems.group}
+                                        id={groupWithItems.id}
+                                        icon={groupWithItems.icon}
+                                        title={groupWithItems.title}
+                                        hidden={groupWithItems.hidden}
                                         onToggleHidden={toggleGroupHidden}
                                         editMode={isEditMode}
                                     />
