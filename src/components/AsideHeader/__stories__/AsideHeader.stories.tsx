@@ -362,20 +362,22 @@ GroupedMenu.args = {
 // Collapsible Groups + Icons story
 const GroupedMenuCollapsibleTemplate: StoryFn = (args) => {
     const [compact, setCompact] = React.useState(false);
+    const [menuItems, setMenuItems] = React.useState(menuItemsWithGroups);
 
     return (
         <PageLayout compact={compact}>
             <PageLayoutAside
                 headerDecoration
                 logo={DEFAULT_LOGO}
-                menuItems={menuItemsWithGroups}
+                menuItems={menuItems}
+                defaultMenuItems={menuItemsWithGroups}
+                editMenuProps={{enableSorting: true}}
                 menuGroups={menuGroupsWithIcons}
+                onMenuItemsChanged={setMenuItems}
                 onChangeCompact={setCompact}
                 qa={'pl-aside-grouped-collapsible'}
                 {...args}
             />
-
-            <PageLayout.Content>PageContent</PageLayout.Content>
         </PageLayout>
     );
 };
