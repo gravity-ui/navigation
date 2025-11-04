@@ -5,7 +5,6 @@ import {setRef} from '@gravity-ui/uikit';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {b} from '../utils';
 
-import {useVisibleMenuItems} from './AllPagesPanel';
 import {useGroupedMenuItems} from './AllPagesPanel/useGroupedMenuItems';
 import {CollapseButton} from './CollapseButton/CollapseButton';
 import {CompositeBar} from './CompositeBar';
@@ -32,7 +31,6 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         onMouseLeave,
         isExpanded,
     } = useAsideHeaderInnerContext();
-    const visibleMenuItems = useVisibleMenuItems();
     const groupedMenuItems = useGroupedMenuItems();
 
     const asideRef = useRef<HTMLDivElement>(null);
@@ -68,7 +66,6 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         compact={compact}
                         type="menu"
                         groupedItems={groupedMenuItems}
-                        items={visibleMenuItems}
                         onItemClick={onItemClick}
                         onMoreClick={onMenuMoreClick}
                         multipleTooltip={multipleTooltip}

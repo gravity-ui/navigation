@@ -198,10 +198,7 @@ $block: '.#{variables.$ns}aside-header';
     }
 
     &__menu-items {
-        left: var(--g-spacing-7);
         flex-grow: 1;
-        position: relative;
-        border-left: 1px solid var(--g-color-line-generic);
     }
 
     &__footer {
