@@ -58,7 +58,9 @@ export interface AsideHeaderDefaultProps {
     menuItems?: AsideHeaderItem[];
     defaultMenuItems?: AsideHeaderItem[];
     menuGroups?: MenuGroup[];
+    defaultMenuGroups?: MenuGroup[];
     onMenuItemsChanged?: (items: AsideHeaderItem[]) => void;
+    onMenuGroupsChanged?: (groups: MenuGroup[]) => void;
     headerDecoration?: boolean;
 }
 

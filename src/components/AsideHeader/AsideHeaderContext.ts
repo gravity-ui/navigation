@@ -8,6 +8,8 @@ export interface AsideHeaderInnerContextType extends AsideHeaderInnerProps {
     menuItems: AsideHeaderItem[];
     menuGroups?: MenuGroup[];
     defaultMenuItems?: AsideHeaderItem[];
+    defaultMenuGroups?: MenuGroup[];
+    onMenuGroupsChanged?: (groups: MenuGroup[]) => void;
     allPagesIsAvailable: boolean;
     onItemClick: (
         item: AsideHeaderItem,

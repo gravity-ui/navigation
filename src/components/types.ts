@@ -64,7 +64,8 @@ export interface MenuGroup {
     title: string;
     icon?: IconProps['data'];
     order?: number;
-    visible?: boolean;
+    /** Hide the group from display */
+    hidden?: boolean;
     /** Allow collapsing the group via UI */
     collapsible?: boolean;
     /** Initial collapsed state when collapsible is true */

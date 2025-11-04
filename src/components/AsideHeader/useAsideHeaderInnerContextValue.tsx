@@ -16,8 +16,10 @@ export const useAsideHeaderInnerContextValue = (
         onClosePanel,
         menuItems,
         menuGroups,
+        defaultMenuGroups,
         panelItems,
         onMenuItemsChanged,
+        onMenuGroupsChanged,
         onAllPagesClick,
     } = props;
 
@@ -91,6 +93,8 @@ export const useAsideHeaderInnerContextValue = (
         allPagesIsAvailable,
         menuItems: innerMenuItems,
         menuGroups,
+        defaultMenuGroups,
+        onMenuGroupsChanged,
         panelItems: innerPanelItems,
         size,
         onItemClick,
