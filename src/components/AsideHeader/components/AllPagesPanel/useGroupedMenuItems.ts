@@ -59,10 +59,12 @@ export const useGroupedMenuItems = (isAllPagesAvailable = true): MenuGroupWithIt
             ?.sort((a, b) => (a.order || 0) - (b.order || 0))
             .forEach((group) => {
                 const items = groupedItems.get(group.id) || [];
+                const itemsWithVisible = items.filter((item) => !item.hidden);
 
                 if (items.length > 0) {
                     groupsWithItems.push({
                         ...group,
+                        hidden: itemsWithVisible.length === 0 ? true : group.hidden,
                         items: items.sort((a, b) => (a.order || 0) - (b.order || 0)),
                     });
                 }
