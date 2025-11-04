@@ -6,6 +6,7 @@ import {Button, Flex, Icon, List, Text} from '@gravity-ui/uikit';
 import {ASIDE_HEADER_COMPACT_WIDTH} from '../../../constants';
 import {block} from '../../../utils/cn';
 import {AsideHeaderItem} from '../../types';
+import {UNGROUPED_ID} from '../AllPagesPanel/constants';
 import {MenuGroupWithItems} from '../AllPagesPanel/useGroupedMenuItems';
 
 import {Item, ItemProps} from './Item/Item';
@@ -24,7 +25,7 @@ const b = block('composite-bar');
 
 export type CompositeBarProps = {
     type: 'menu' | 'subheader';
-    items?: AsideHeaderItem[];
+
     groupedItems?: MenuGroupWithItems[];
     onItemClick?: (
         item: AsideHeaderItem,
@@ -41,6 +42,7 @@ export type CompositeBarProps = {
 
 type CompositeBarViewProps = CompositeBarProps & {
     compositeId?: string;
+    items?: AsideHeaderItem[];
 };
 
 const CompositeBarView: FC<CompositeBarViewProps> = ({
@@ -243,7 +245,6 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
 
 export const CompositeBar: FC<CompositeBarProps> = ({
     type,
-    items,
     groupedItems,
     onItemClick,
     onMoreClick,
@@ -271,18 +272,16 @@ export const CompositeBar: FC<CompositeBarProps> = ({
         setCollapsedIds((prev) => ({...prev, [groupId]: !prev[groupId]}));
     }, []);
 
-    if (!items || items.length === 0) {
+    if (!groupedItems || groupedItems.length === 0) {
         return null;
     }
 
-    const sortedItems = sortItemsByAfterMoreButton(items);
+    const sortedItems = sortItemsByAfterMoreButton(groupedItems);
 
-    if (visibleGroupedItems && visibleGroupedItems.length > 0) {
-        if (type !== 'menu') {
-            return null;
-        }
+    let node: ReactNode;
 
-        const node = (
+    if (visibleGroupedItems && visibleGroupedItems.length > 0 && type === 'menu') {
+        node = (
             <div className={b({autosizer: true, className})}>
                 {visibleGroupedItems.map((group) => {
                     const isCollapsible = Boolean(group.collapsible);
@@ -291,10 +290,11 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                     const hasHeader = group.title || group.icon || isCollapsible;
 
                     const groupListItems = group.items.filter((item) => !item.hidden);
+                    const isUngrouped = group.id === UNGROUPED_ID;
 
                     return (
                         <div key={group.id} className={b('menu-group')}>
-                            {hasHeader && (
+                            {hasHeader && !isUngrouped && (
                                 <Flex
                                     className={b('menu-group-header')}
                                     gap="2"
@@ -333,7 +333,11 @@ export const CompositeBar: FC<CompositeBarProps> = ({
 
                             {showItems && groupListItems.length > 0 && (
                                 <CompositeBarView
-                                    className={className}
+                                    className={b(
+                                        'menu-group-items',
+                                        {grouped: !isUngrouped},
+                                        className,
+                                    )}
                                     compositeId={
                                         compositeId ? `${compositeId}-${group.id}` : undefined
                                     }
@@ -350,26 +354,6 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                 })}
             </div>
         );
-
-        return <MultipleTooltipProvider>{node}</MultipleTooltipProvider>;
-    }
-
-    let node: ReactNode;
-
-    if (type === 'menu') {
-        node = (
-            <div className={b({scrollable: true})}>
-                <CompositeBarView
-                    compositeId={compositeId}
-                    type="menu"
-                    compact={compact}
-                    items={sortedItems}
-                    onItemClick={onItemClick}
-                    onMoreClick={onMoreClick}
-                    multipleTooltip={multipleTooltip}
-                />
-            </div>
-        );
     } else {
         node = (
             <div className={b({subheader: true}, className)}>
@@ -382,5 +366,6 @@ export const CompositeBar: FC<CompositeBarProps> = ({
             </div>
         );
     }
+
     return <MultipleTooltipProvider>{node}</MultipleTooltipProvider>;
 };
