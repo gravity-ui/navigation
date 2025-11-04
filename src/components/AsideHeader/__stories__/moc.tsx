@@ -239,57 +239,51 @@ export const menuItemsWithGroups: AsideHeaderProps['menuItems'] = [
         current: true,
     },
     {
-        id: 'divider1',
-        title: '-',
-        type: 'divider',
+        id: 'dashboard2',
+        title: 'Dashboard2',
+        icon: Gear,
+        groupId: 'main',
     },
+    {
+        id: 'dashboard3',
+        title: 'Dashboard3',
+        icon: Gear,
+        groupId: 'main',
+    },
+    // {
+    //     id: 'divider1',
+    //     title: '-',
+    //     type: 'divider',
+    // },
     {
         id: 'settings',
         title: 'Settings',
         icon: Gear,
         groupId: 'admin',
     },
-    {
-        id: 'users',
-        title: 'Users',
-        icon: Gear,
-        groupId: 'admin',
-    },
-    {
-        id: 'divider2',
-        title: '-',
-        type: 'divider',
-    },
-    {
-        id: 'help',
-        title: 'Help',
-        icon: Gear,
-        groupId: 'support',
-    },
-    {
-        id: 'feedback',
-        title: 'Feedback',
-        icon: Gear,
-        groupId: 'support',
-    },
-];
-
-export const menuGroups: AsideHeaderProps['menuGroups'] = [
-    {
-        id: 'main',
-        title: 'Main',
-        order: 1,
-    },
-    {
-        id: 'admin',
-        title: 'Administration',
-        order: 2,
-    },
-    {
-        id: 'support',
-        title: 'Support',
-        order: 3,
-    },
+    // {
+    //     id: 'users',
+    //     title: 'Users',
+    //     icon: Gear,
+    //     groupId: 'admin',
+    // },
+    // {
+    //     id: 'divider2',
+    //     title: '-',
+    //     type: 'divider',
+    // },
+    // {
+    //     id: 'help',
+    //     title: 'Help',
+    //     icon: Gear,
+    //     groupId: 'support',
+    // },
+    // {
+    //     id: 'feedback',
+    //     title: 'Feedback',
+    //     icon: Gear,
+    //     groupId: 'support',
+    // },
 ];
 
 // Groups with icons and collapsible behavior
@@ -310,12 +304,12 @@ export const menuGroupsWithIcons: AsideHeaderProps['menuGroups'] = [
         collapsible: true,
         collapsedByDefault: true,
     },
-    {
-        id: 'support',
-        title: 'Support',
-        icon: Gear,
-        order: 3,
-        collapsible: true,
-        collapsedByDefault: false,
-    },
+    // {
+    //     id: 'support',
+    //     title: 'Support',
+    //     icon: Gear,
+    //     order: 3,
+    //     collapsible: true,
+    //     collapsedByDefault: false,
+    // },
 ];

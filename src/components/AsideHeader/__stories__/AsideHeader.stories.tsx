@@ -12,7 +12,6 @@ import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
 import {AsideHeaderShowcase, AsideHeaderShowcaseProps} from './AsideHeaderShowcase';
 import {
     DEFAULT_LOGO,
-    menuGroups,
     menuGroupsWithIcons,
     menuItemsClamped,
     menuItemsMany,
@@ -333,36 +332,10 @@ ManyItems.parameters = {
     },
 };
 
-const GroupedMenuTemplate: StoryFn = (args) => {
-    const [compact, setCompact] = React.useState(false);
-
-    return (
-        <PageLayout compact={compact}>
-            <PageLayoutAside
-                headerDecoration
-                logo={DEFAULT_LOGO}
-                menuItems={menuItemsWithGroups}
-                menuGroups={menuGroups}
-                onChangeCompact={setCompact}
-                qa={'pl-aside-grouped'}
-                {...args}
-            />
-
-            <PageLayout.Content>PageContent</PageLayout.Content>
-        </PageLayout>
-    );
-};
-
-export const GroupedMenu = GroupedMenuTemplate.bind({});
-GroupedMenu.args = {
-    multipleTooltip: false,
-    initialCompact: false,
-};
-
-// Collapsible Groups + Icons story
 const GroupedMenuCollapsibleTemplate: StoryFn = (args) => {
     const [compact, setCompact] = React.useState(false);
     const [menuItems, setMenuItems] = React.useState(menuItemsWithGroups);
+    const [currentMenuGroups, setCurrentMenuGroups] = React.useState(menuGroupsWithIcons);
 
     return (
         <PageLayout compact={compact}>
@@ -372,10 +345,11 @@ const GroupedMenuCollapsibleTemplate: StoryFn = (args) => {
                 menuItems={menuItems}
                 defaultMenuItems={menuItemsWithGroups}
                 editMenuProps={{enableSorting: true}}
-                menuGroups={menuGroupsWithIcons}
+                menuGroups={currentMenuGroups}
+                defaultMenuGroups={menuGroupsWithIcons}
                 onMenuItemsChanged={setMenuItems}
+                onMenuGroupsChanged={setCurrentMenuGroups}
                 onChangeCompact={setCompact}
-                qa={'pl-aside-grouped-collapsible'}
                 {...args}
             />
         </PageLayout>

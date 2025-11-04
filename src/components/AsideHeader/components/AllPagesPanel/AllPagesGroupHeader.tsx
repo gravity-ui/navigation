@@ -13,22 +13,22 @@ const b = block('all-pages-group-header');
 
 interface AllPagesGroupHeaderProps {
     group: MenuGroup;
-    onTogglePin?: (groupId: string) => void;
+    onToggleHidden?: (groupId: string) => void;
     editMode?: boolean;
 }
 
 export const AllPagesGroupHeader: React.FC<AllPagesGroupHeaderProps> = ({
     group,
-    onTogglePin,
+    onToggleHidden,
     editMode,
 }) => {
-    const onPinButtonClick = useCallback(
+    const onHideButtonClick = useCallback(
         (e: MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation();
             e.preventDefault();
-            onTogglePin?.(group.id);
+            onToggleHidden?.(group.id);
         },
-        [group.id, onTogglePin],
+        [group.id, onToggleHidden],
     );
 
     return (
@@ -43,11 +43,10 @@ export const AllPagesGroupHeader: React.FC<AllPagesGroupHeaderProps> = ({
 
             {editMode && group.id !== 'ungrouped' && (
                 <Button
-                    onClick={onPinButtonClick}
-                    view={group.pinned ? 'flat-action' : 'flat-secondary'}
-                    size="m"
+                    onClick={onHideButtonClick}
+                    view={group.hidden ? 'flat-secondary' : 'flat-action'}
                 >
-                    <Button.Icon>{group.pinned ? <PinFill /> : <Pin />}</Button.Icon>
+                    <Button.Icon>{group.hidden ? <Pin /> : <PinFill />}</Button.Icon>
                 </Button>
             )}
         </Flex>

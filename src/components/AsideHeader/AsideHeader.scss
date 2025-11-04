@@ -248,7 +248,7 @@ $block: '.#{variables.$ns}aside-header';
     }
 
     &__panels {
-        --gn-drawer-z-index: var(--gn-aside-header-panel-z-index, 98);
+        z-index: var(--gn-aside-header-panel-z-index, 98);
 
         position: fixed;
         inset: var(--gn-top-alert-height, 0) 0 0;
