@@ -276,8 +276,6 @@ export const CompositeBar: FC<CompositeBarProps> = ({
         return null;
     }
 
-    const sortedItems = sortItemsByAfterMoreButton(groupedItems);
-
     let node: ReactNode;
 
     if (type === 'menu') {
@@ -287,9 +285,10 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                     const isCollapsible = Boolean(group.collapsible);
                     const isCollapsed = Boolean(collapsedIds[group.id]);
                     const showItems = !isCollapsible || !isCollapsed;
+                    const groupListItems = group.items.filter((item) => !item.hidden);
                     const hasHeader = group.title || group.icon || isCollapsible;
 
-                    const groupListItems = group.items.filter((item) => !item.hidden);
+                    const sortedItems = sortItemsByAfterMoreButton(groupListItems);
                     const isUngrouped = group.id === UNGROUPED_ID;
 
                     return (
@@ -331,7 +330,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                                 </Flex>
                             )}
 
-                            {showItems && groupListItems.length > 0 && (
+                            {showItems && sortedItems.length > 0 && (
                                 <CompositeBarView
                                     className={b(
                                         'menu-group-items',
@@ -355,6 +354,8 @@ export const CompositeBar: FC<CompositeBarProps> = ({
             </div>
         );
     } else {
+        const sortedItems = sortItemsByAfterMoreButton(groupedItems);
+
         node = (
             <div className={b({subheader: true}, className)}>
                 <CompositeBarView
