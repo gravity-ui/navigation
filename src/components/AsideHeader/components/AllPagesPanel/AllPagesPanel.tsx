@@ -1,4 +1,4 @@
-import React, {ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {ReactNode, useCallback, useEffect, useRef, useState} from 'react';
 
 import {Gear} from '@gravity-ui/icons';
 import {Button, Flex, Icon, List, ListItemData, ListProps, Text, Tooltip} from '@gravity-ui/uikit';
@@ -182,21 +182,6 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         [onMenuItemsChanged, editMenuProps],
     );
 
-    const groupedItemsForEdit = useMemo(() => {
-        return groupedItems.map((groupWithItems) => {
-            const originalGroup = menuGroups?.find((g) => g.id === groupWithItems.id);
-
-            return {
-                ...groupWithItems,
-                hidden: originalGroup?.hidden || false,
-            };
-        });
-    }, [groupedItems, menuGroups]);
-
-    const groupedItemsForDisplay = useMemo(() => {
-        return groupedItemsForEdit.filter((groupWithItems) => !groupWithItems.hidden);
-    }, [groupedItemsForEdit]);
-
     return (
         <Flex className={b(null, className)} gap="5" direction="column">
             <Flex gap="4" alignItems="center" justifyContent="space-between">
@@ -214,7 +199,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             <Flex className={b('content')} gap="2" direction="column">
                 {isEditMode && editMenuProps?.enableSorting ? (
                     <>
-                        {groupedItemsForEdit.map((groupWithItems) => {
+                        {groupedItems.map((groupWithItems) => {
                             const sortableGroupItems = groupWithItems.items.filter(
                                 ({afterMoreButton, type}) => !afterMoreButton && type !== 'divider',
                             );
@@ -230,7 +215,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                                         id={groupWithItems.id}
                                         icon={groupWithItems.icon}
                                         title={groupWithItems.title}
-                                        hidden={groupWithItems.hidden}
+                                        hidden={Boolean(groupWithItems.hidden)}
                                         onToggleHidden={toggleGroupHidden}
                                         editMode={isEditMode}
                                     />
@@ -256,7 +241,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                         )}
                     </>
                 ) : (
-                    groupedItemsForDisplay.map((groupWithItems) => {
+                    groupedItems.map((groupWithItems) => {
                         if (groupWithItems.items.length === 0) {
                             return null;
                         }
@@ -273,7 +258,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                                         id={groupWithItems.id}
                                         icon={groupWithItems.icon}
                                         title={groupWithItems.title}
-                                        hidden={groupWithItems.hidden}
+                                        hidden={Boolean(groupWithItems.hidden)}
                                         onToggleHidden={toggleGroupHidden}
                                         editMode={isEditMode}
                                     />
