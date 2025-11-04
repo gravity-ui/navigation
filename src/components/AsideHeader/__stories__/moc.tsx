@@ -250,43 +250,19 @@ export const menuItemsWithGroups: AsideHeaderProps['menuItems'] = [
         icon: Gear,
         groupId: 'main',
     },
-    // {
-    //     id: 'divider1',
-    //     title: '-',
-    //     type: 'divider',
-    // },
+    {
+        id: 'divider1',
+        title: '-',
+        type: 'divider',
+    },
     {
         id: 'settings',
         title: 'Settings',
         icon: Gear,
         groupId: 'admin',
     },
-    // {
-    //     id: 'users',
-    //     title: 'Users',
-    //     icon: Gear,
-    //     groupId: 'admin',
-    // },
-    // {
-    //     id: 'divider2',
-    //     title: '-',
-    //     type: 'divider',
-    // },
-    // {
-    //     id: 'help',
-    //     title: 'Help',
-    //     icon: Gear,
-    //     groupId: 'support',
-    // },
-    // {
-    //     id: 'feedback',
-    //     title: 'Feedback',
-    //     icon: Gear,
-    //     groupId: 'support',
-    // },
 ];
 
-// Groups with icons and collapsible behavior
 export const menuGroupsWithIcons: AsideHeaderProps['menuGroups'] = [
     {
         id: 'main',
@@ -295,6 +271,7 @@ export const menuGroupsWithIcons: AsideHeaderProps['menuGroups'] = [
         order: 1,
         collapsible: true,
         collapsedByDefault: false,
+        hidden: false,
     },
     {
         id: 'admin',
@@ -302,14 +279,7 @@ export const menuGroupsWithIcons: AsideHeaderProps['menuGroups'] = [
         icon: Gear,
         order: 2,
         collapsible: true,
-        collapsedByDefault: true,
+        collapsedByDefault: false,
+        hidden: false,
     },
-    // {
-    //     id: 'support',
-    //     title: 'Support',
-    //     icon: Gear,
-    //     order: 3,
-    //     collapsible: true,
-    //     collapsedByDefault: false,
-    // },
 ];

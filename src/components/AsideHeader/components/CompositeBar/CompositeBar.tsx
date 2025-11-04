@@ -1,13 +1,13 @@
 import React, {FC, ReactNode, useCallback, useContext, useRef} from 'react';
 
 import {ChevronDown, ChevronUp} from '@gravity-ui/icons';
-import {Button, Icon, List, Text} from '@gravity-ui/uikit';
+import {Button, Flex, Icon, List, Text} from '@gravity-ui/uikit';
 
 import {ASIDE_HEADER_COMPACT_WIDTH} from '../../../constants';
 import {block} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
-import {MenuGroupWithItems} from '../../hooks/useGroupedMenuItems';
 import {AsideHeaderItem} from '../../types';
+import {MenuGroupWithItems} from '../AllPagesPanel/useGroupedMenuItems';
 
 import {Item, ItemProps} from './Item/Item';
 import {MultipleTooltip, MultipleTooltipContext, MultipleTooltipProvider} from './MultipleTooltip';
@@ -254,12 +254,15 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     compositeId,
     className,
 }) => {
+    const visibleGroupedItems = groupedItems?.filter((g) => !g.hidden);
+
     const [collapsedIds, setCollapsedIds] = React.useState<Record<string, boolean>>(() => {
         const initial: Record<string, boolean> = {};
-        if (groupedItems) {
-            groupedItems.forEach((g) => {
-                if (g.collapsible && g.collapsedByDefault) {
-                    initial[g.id] = true;
+
+        if (visibleGroupedItems) {
+            visibleGroupedItems.forEach((group) => {
+                if (group.collapsible && group.collapsedByDefault) {
+                    initial[group.id] = true;
                 }
             });
         }
@@ -270,35 +273,35 @@ export const CompositeBar: FC<CompositeBarProps> = ({
         setCollapsedIds((prev) => ({...prev, [groupId]: !prev[groupId]}));
     }, []);
 
-    // Fallback to original logic with items
     if (!items || items.length === 0) {
         return null;
     }
 
     const sortedItems = sortItemsByAfterMoreButton(items);
 
-    // If groupedItems is provided, use it; otherwise fall back to items
-    if (groupedItems && groupedItems.length > 0) {
+    if (visibleGroupedItems && visibleGroupedItems.length > 0) {
         if (type !== 'menu') {
-            // Groups are only supported for menu type
             return null;
         }
 
         const node = (
             <div className={b({autosizer: true, className})}>
-                {groupedItems.map((group) => {
+                {visibleGroupedItems.map((group) => {
                     const isCollapsible = Boolean(group.collapsible);
                     const isCollapsed = Boolean(collapsedIds[group.id]);
                     const showItems = !isCollapsible || !isCollapsed;
                     const hasHeader = group.title || group.icon || isCollapsible;
 
-                    // Calculate items for this group
-                    const groupListItems: AsideHeaderItem[] = group.items;
+                    const groupListItems = group.items.filter((item) => !item.hidden);
 
                     return (
                         <div key={group.id} className={b('menu-group')}>
                             {hasHeader && (
-                                <div className={b('menu-group-header')}>
+                                <Flex
+                                    className={b('menu-group-header')}
+                                    gap="2"
+                                    alignItems="center"
+                                >
                                     {group.icon ? (
                                         <Icon
                                             data={group.icon}
@@ -327,7 +330,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                                     ) : (
                                         <span className={b('menu-group-toggle-placeholder')} />
                                     )}
-                                </div>
+                                </Flex>
                             )}
 
                             {showItems && groupListItems.length > 0 && (

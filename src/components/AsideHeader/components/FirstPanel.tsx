@@ -3,13 +3,13 @@ import React, {useRef} from 'react';
 import {setRef} from '@gravity-ui/uikit';
 
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
-import {useGroupedMenuItems} from '../hooks/useGroupedMenuItems';
 import {b} from '../utils';
 
 import {useVisibleMenuItems} from './AllPagesPanel';
+import {useGroupedMenuItems} from './AllPagesPanel/useGroupedMenuItems';
 import {CollapseButton} from './CollapseButton/CollapseButton';
+import {CompositeBar} from './CompositeBar';
 import {Header} from './Header';
-import {MenuItems} from './MenuItems';
 import {Panels} from './Panels';
 
 const MENU_ITEMS_COMPOSITE_ID = 'gravity-ui/navigation-menu-items-composite-bar';
@@ -62,14 +62,16 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 <div className={b('aside-content', {['with-decoration']: headerDecoration})}>
                     <Header />
 
-                    <MenuItems
+                    <CompositeBar
+                        compositeId={MENU_ITEMS_COMPOSITE_ID}
+                        className={b('menu-items')}
                         compact={compact}
-                        compositeIdBase={MENU_ITEMS_COMPOSITE_ID}
-                        groupedMenuItems={groupedMenuItems}
-                        visibleMenuItems={visibleMenuItems}
-                        multipleTooltip={multipleTooltip}
+                        type="menu"
+                        groupedItems={groupedMenuItems}
+                        items={visibleMenuItems}
                         onItemClick={onItemClick}
                         onMoreClick={onMenuMoreClick}
+                        multipleTooltip={multipleTooltip}
                     />
 
                     <div className={b('footer')}>

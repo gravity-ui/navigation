@@ -3,50 +3,56 @@ import React, {MouseEvent, useCallback} from 'react';
 import {Pin, PinFill} from '@gravity-ui/icons';
 import {Button, Flex, Icon, Text} from '@gravity-ui/uikit';
 
-import {MenuGroup} from 'src/components/types';
-
 import {block} from '../../../utils/cn';
+
+import {UNGROUPED_ID} from './constants';
 
 import './AllPagesGroupHeader.scss';
 
 const b = block('all-pages-group-header');
 
 interface AllPagesGroupHeaderProps {
-    group: MenuGroup;
-    onToggleHidden?: (groupId: string) => void;
+    id: string;
+    title: string;
+    hidden: boolean;
+    icon?: SVGIconData;
     editMode?: boolean;
+    onToggleHidden?: (groupId: string) => void;
 }
 
 export const AllPagesGroupHeader: React.FC<AllPagesGroupHeaderProps> = ({
-    group,
     onToggleHidden,
     editMode,
+    id,
+    icon,
+    title,
+    hidden,
 }) => {
     const onHideButtonClick = useCallback(
         (e: MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation();
             e.preventDefault();
-            onToggleHidden?.(group.id);
+            onToggleHidden?.(id);
         },
-        [group.id, onToggleHidden],
+        [id, onToggleHidden],
     );
 
     return (
         <Flex className={b()} gap="2" alignItems="center" justifyContent="space-between">
             <Flex gap="2" alignItems="center">
-                {group.icon && <Icon data={group.icon} size={16} />}
+                {icon && <Icon data={icon} size={16} />}
 
                 <Text className={b('title')} variant="body-1" color="secondary">
-                    {group.title}
+                    {title}
                 </Text>
             </Flex>
 
-            {editMode && group.id !== 'ungrouped' && (
+            {editMode && id !== UNGROUPED_ID && (
                 <Button
                     onClick={onHideButtonClick}
-                    view={group.hidden ? 'flat-secondary' : 'flat-action'}
+                    view={hidden ? 'flat-secondary' : 'flat-action'}
                 >
-                    <Button.Icon>{group.hidden ? <Pin /> : <PinFill />}</Button.Icon>
+                    <Button.Icon>{hidden ? <Pin /> : <PinFill />}</Button.Icon>
                 </Button>
             )}
         </Flex>
