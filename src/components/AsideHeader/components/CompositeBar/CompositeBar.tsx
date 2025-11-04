@@ -51,6 +51,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     multipleTooltip = false,
     compact,
     compositeId,
+    className,
 }) => {
     const ref = useRef<List<AsideHeaderItem>>(null);
     const tooltipRef = useRef<HTMLDivElement>(null);
@@ -201,6 +202,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     return (
         <React.Fragment>
             <div
+                className={className}
                 ref={tooltipRef}
                 onMouseEnter={onTooltipMouseEnter}
                 onMouseLeave={onTooltipMouseLeave}
@@ -328,7 +330,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
 
                             {showItems && groupListItems.length > 0 && (
                                 <CompositeBarView
-                                    className={b()}
+                                    className={className}
                                     compositeId={
                                         compositeId ? `${compositeId}-${group.id}` : undefined
                                     }

@@ -22,7 +22,7 @@
     }
 
     &__item_editMode {
-        padding: 0 var(--g-spacing-6);
+        padding-left: var(--g-spacing-6);
     }
 
     &__drag-placeholder {
@@ -30,5 +30,12 @@
         padding-right: 68px;
         text-wrap: nowrap;
         visibility: hidden;
+    }
+
+    &__groups-container {
+        &:not(:last-child) {
+            padding-bottom: var(--g-spacing-2);
+            border-bottom: 1px solid var(--g-color-line-generic);
+        }
     }
 }
