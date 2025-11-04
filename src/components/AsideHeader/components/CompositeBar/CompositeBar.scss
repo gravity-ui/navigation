@@ -36,7 +36,7 @@ $block: '.#{variables.$ns}composite-bar';
 
     &__menu-group-items {
         &_grouped {
-            left: var(--g-spacing-7);
+            margin-left: var(--g-spacing-7);
             position: relative;
             border-left: 1px solid var(--g-color-line-generic);
         }
