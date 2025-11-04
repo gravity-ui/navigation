@@ -35,9 +35,6 @@ $block: '.#{variables.$ns}composite-bar';
     }
 
     &__menu-group-header {
-        display: flex;
-        align-items: center;
-        gap: var(--g-spacing-2);
         padding: var(--g-spacing-2) var(--g-spacing-5);
     }
 

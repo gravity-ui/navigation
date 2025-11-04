@@ -7,6 +7,7 @@ import {block} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
 import {AsideHeaderItem} from '../../types';
 
+import {AllPagesGroupHeader} from './AllPagesGroupHeader';
 import {AllPagesListItem} from './AllPagesListItem';
 import {ALL_PAGES_ID} from './constants';
 import i18n from './i18n';
@@ -24,11 +25,21 @@ interface AllPagesPanelProps {
 
 export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     const {startEditIcon, onEditModeChanged, className} = props;
-    const {menuItems, defaultMenuItems, onMenuItemsChanged, editMenuProps} =
-        useAsideHeaderInnerContext();
+    const {
+        menuItems,
+        defaultMenuItems,
+        onMenuItemsChanged,
+        editMenuProps,
+        menuGroups,
+        defaultMenuGroups,
+        onMenuGroupsChanged,
+    } = useAsideHeaderInnerContext();
 
     const menuItemsRef = useRef(menuItems);
     menuItemsRef.current = menuItems;
+
+    const menuGroupsRef = useRef(menuGroups);
+    menuGroupsRef.current = menuGroups;
 
     const [isEditMode, setIsEditMode] = useState(false);
 
@@ -120,29 +131,120 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         if (originItems) {
             onMenuItemsChanged(originItems);
         }
-    }, [onMenuItemsChanged, editMenuProps, defaultMenuItems]);
 
-    const changeItemsOrder = useCallback(
-        ({oldIndex, newIndex}: {oldIndex: number; newIndex: number}) => {
-            const newItems = menuItemsRef.current.filter(({id}) => id !== ALL_PAGES_ID);
+        if (onMenuGroupsChanged && defaultMenuGroups) {
+            onMenuGroupsChanged(defaultMenuGroups);
+        }
+    }, [
+        onMenuItemsChanged,
+        editMenuProps,
+        defaultMenuItems,
+        onMenuGroupsChanged,
+        defaultMenuGroups,
+    ]);
 
-            const element = newItems.splice(oldIndex, 1)[0];
-            newItems.splice(newIndex, 0, element);
+    const toggleGroupHidden = useCallback(
+        (groupId: string) => {
+            if (!onMenuGroupsChanged) {
+                return;
+            }
 
-            onMenuItemsChanged?.(newItems.filter(({type}) => type !== 'divider'));
+            const currentGroups = menuGroupsRef.current || [];
+            const updatedGroups = currentGroups.map((group) => {
+                if (group.id === groupId) {
+                    return {
+                        ...group,
+                        hidden: !group.hidden,
+                    };
+                }
 
-            setDraggingItemTitle(null);
-            editMenuProps?.onChangeItemsOrder?.(element, oldIndex, newIndex);
+                return group;
+            });
+
+            onMenuGroupsChanged(updatedGroups);
+        },
+        [onMenuGroupsChanged],
+    );
+
+    const createChangeItemsOrderHandler = useCallback(
+        (groupId: string, groupItems: AsideHeaderItem[]) => {
+            return ({oldIndex, newIndex}: {oldIndex: number; newIndex: number}) => {
+                // Check if indices are within group bounds
+                if (
+                    oldIndex < 0 ||
+                    oldIndex >= groupItems.length ||
+                    newIndex < 0 ||
+                    newIndex >= groupItems.length
+                ) {
+                    return;
+                }
+
+                // Get item being moved
+                const element = groupItems[oldIndex];
+
+                // Check that element belongs to this group
+                if (element.groupId !== groupId) {
+                    return;
+                }
+
+                // Reorder within group
+                const newGroupItems = [...groupItems];
+                const [removed] = newGroupItems.splice(oldIndex, 1);
+                newGroupItems.splice(newIndex, 0, removed);
+
+                // Update order property
+                const updatedGroupItems = newGroupItems.map((item, index) => ({
+                    ...item,
+                    order: index,
+                }));
+
+                // Rebuild all items with updated group
+                const allItems = menuItemsRef.current.filter(({id}) => id !== ALL_PAGES_ID);
+                const otherItems = allItems.filter((item) => item.groupId !== groupId);
+
+                const updatedItems = [...otherItems, ...updatedGroupItems].sort((itemA, itemB) => {
+                    // Maintain group order, then item order within group
+                    const aGroupId = itemA.groupId || 'ungrouped';
+                    const bGroupId = itemB.groupId || 'ungrouped';
+
+                    if (aGroupId !== bGroupId) {
+                        const aGroup = menuGroupsRef.current?.find((g) => g.id === aGroupId);
+                        const bGroup = menuGroupsRef.current?.find((g) => g.id === bGroupId);
+                        const aOrder = aGroup?.order || 0;
+                        const bOrder = bGroup?.order || 0;
+                        if (aOrder !== bOrder) {
+                            return aOrder - bOrder;
+                        }
+                        return aGroupId.localeCompare(bGroupId);
+                    }
+                    return (itemA.order || 0) - (itemB.order || 0);
+                });
+
+                onMenuItemsChanged?.(updatedItems.filter(({type}) => type !== 'divider'));
+
+                setDraggingItemTitle(null);
+                editMenuProps?.onChangeItemsOrder?.(element, oldIndex, newIndex);
+            };
         },
         [onMenuItemsChanged, editMenuProps],
     );
 
-    const sortableItems = useMemo(() => {
-        return menuItems.filter(
-            ({id, afterMoreButton, type}) =>
-                id !== ALL_PAGES_ID && !afterMoreButton && type !== 'divider',
-        );
-    }, [menuItems]);
+    const groupedItemsForEdit = useMemo(() => {
+        return groupedItems.map((groupWithItems) => {
+            const originalGroup = menuGroups?.find((g) => g.id === groupWithItems.group.id);
+            return {
+                ...groupWithItems,
+                group: {
+                    ...groupWithItems.group,
+                    hidden: originalGroup?.hidden || false,
+                },
+            };
+        });
+    }, [groupedItems, menuGroups]);
+
+    const groupedItemsForDisplay = useMemo(() => {
+        return groupedItemsForEdit.filter((groupWithItems) => !groupWithItems.group.hidden);
+    }, [groupedItemsForEdit]);
 
     return (
         <Flex className={b(null, className)} gap="5" direction="column">
@@ -150,42 +252,84 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                 <Text variant="subheader-2">
                     {isEditMode ? i18n('all-panel.title.editing') : i18n('all-panel.title.main')}
                 </Text>
+
                 <Tooltip content={i18n('all-panel.title.editing')}>
                     <Button selected={isEditMode} view="normal" onClick={toggleEditMode}>
                         {startEditIcon ? startEditIcon : <Icon data={Gear} />}
                     </Button>
                 </Tooltip>
             </Flex>
-            <Flex className={b('content')} gap="5" direction="column">
+
+            <Flex className={b('content')} gap="2" direction="column">
                 {isEditMode && editMenuProps?.enableSorting ? (
-                    <div>
-                        <List
-                            itemClassName={b('item', {editMode: true})}
-                            itemHeight={40}
-                            onSortEnd={changeItemsOrder}
-                            sortable
-                            virtualized={false}
-                            filterable={false}
-                            items={sortableItems}
-                            onItemClick={onItemClick}
-                            renderItem={itemRender}
-                        />
+                    <>
+                        {groupedItemsForEdit.map((groupWithItems) => {
+                            const sortableGroupItems = groupWithItems.items.filter(
+                                ({afterMoreButton, type}) => !afterMoreButton && type !== 'divider',
+                            );
+
+                            // In edit mode, show all groups (including hidden ones and empty ones)
+                            return (
+                                <Flex
+                                    className={b('groups-container')}
+                                    key={groupWithItems.group.id}
+                                    direction="column"
+                                    gap="3"
+                                >
+                                    <AllPagesGroupHeader
+                                        group={groupWithItems.group}
+                                        onToggleHidden={toggleGroupHidden}
+                                        editMode={isEditMode}
+                                    />
+                                    {sortableGroupItems.length > 0 && (
+                                        <List
+                                            itemClassName={b('item', {editMode: true})}
+                                            itemHeight={40}
+                                            onSortEnd={createChangeItemsOrderHandler(
+                                                groupWithItems.group.id,
+                                                sortableGroupItems,
+                                            )}
+                                            sortable
+                                            virtualized={false}
+                                            filterable={false}
+                                            items={sortableGroupItems}
+                                            onItemClick={onItemClick}
+                                            renderItem={itemRender}
+                                        />
+                                    )}
+                                </Flex>
+                            );
+                        })}
 
                         {draggingItemTitle && (
                             <div className={b('drag-placeholder')}>{draggingItemTitle}</div>
                         )}
-                    </div>
+                    </>
                 ) : (
-                    Object.keys(groupedItems).map((category) => {
+                    groupedItemsForDisplay.map((groupWithItems) => {
+                        if (groupWithItems.items.length === 0) {
+                            return null;
+                        }
+
                         return (
-                            <Flex key={category} direction="column" gap="3">
-                                <Text className={b('category')} variant="body-1" color="secondary">
-                                    {category}
-                                </Text>
+                            <Flex
+                                key={groupWithItems.group.id}
+                                direction="column"
+                                gap="3"
+                                className={b('groups-container')}
+                            >
+                                {groupWithItems.group.title && (
+                                    <AllPagesGroupHeader
+                                        group={groupWithItems.group}
+                                        onToggleHidden={toggleGroupHidden}
+                                        editMode={isEditMode}
+                                    />
+                                )}
+
                                 <List
                                     virtualized={false}
                                     filterable={false}
-                                    items={groupedItems[category]}
+                                    items={groupWithItems.items}
                                     onItemClick={onItemClick}
                                     renderItem={itemRender}
                                 />
