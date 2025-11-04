@@ -201,8 +201,13 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                     <>
                         {groupedItems.map((groupWithItems) => {
                             const sortableGroupItems = groupWithItems.items.filter(
-                                ({afterMoreButton, type}) => !afterMoreButton && type !== 'divider',
+                                ({id, afterMoreButton, type}) =>
+                                    !afterMoreButton && type !== 'divider' && id !== ALL_PAGES_ID,
                             );
+
+                            if (sortableGroupItems.length === 0) {
+                                return null;
+                            }
 
                             return (
                                 <Flex
