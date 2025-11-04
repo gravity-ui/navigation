@@ -17,7 +17,7 @@ const b = block('composite-bar-item');
 export interface ItemProps extends AsideHeaderItem {}
 
 interface ItemInnerProps extends ItemProps {
-    compact: boolean;
+    compact?: boolean;
     className?: string;
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
