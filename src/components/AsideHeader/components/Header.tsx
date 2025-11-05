@@ -8,6 +8,7 @@ import {useAsideHeaderContext, useAsideHeaderInnerContext} from '../AsideHeaderC
 import {AsideHeaderItem} from '../types';
 import {b} from '../utils';
 
+import {useGroupedMenuItems} from './AllPagesPanel/useGroupedMenuItems';
 import {CompositeBar} from './CompositeBar';
 
 import headerDividerCollapsedIcon from '../../../../assets/icons/divider-collapsed.svg';
@@ -19,6 +20,8 @@ export const Header = () => {
     const {logo, onItemClick, onClosePanel, headerDecoration, subheaderItems} =
         useAsideHeaderInnerContext();
     const {compact} = useAsideHeaderContext();
+
+    const groupedItems = useGroupedMenuItems(subheaderItems || DEFAULT_SUBHEADER_ITEMS);
 
     const onLogoClick = useCallback(
         (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -44,7 +47,7 @@ export const Header = () => {
                 compositeId={HEADER_COMPOSITE_ID}
                 type="subheader"
                 compact={compact}
-                items={subheaderItems || DEFAULT_SUBHEADER_ITEMS}
+                groupedItems={groupedItems}
                 onItemClick={onItemClick}
             />
 

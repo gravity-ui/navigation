@@ -26,9 +26,11 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         customBackgroundClassName,
         className,
         hideCollapseButton,
+        menuItems,
+        menuGroups,
         qa,
     } = useAsideHeaderInnerContext();
-    const groupedMenuItems = useGroupedMenuItems();
+    const groupedMenuItems = useGroupedMenuItems(menuItems, menuGroups, true);
 
     const asideRef = useRef<HTMLDivElement>(null);
 
