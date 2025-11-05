@@ -7,7 +7,12 @@ import {AsideHeaderProps} from './types';
 export const AsideHeader = React.forwardRef<HTMLDivElement, AsideHeaderProps>(
     ({compact, className, topAlert, ...props}, ref) => {
         return (
-            <PageLayout compact={compact} className={className} topAlert={topAlert}>
+            <PageLayout
+                compact={compact}
+                onChangeCompact={props.onChangeCompact}
+                className={className}
+                topAlert={topAlert}
+            >
                 <PageLayoutAside ref={ref} {...props} />
                 <PageLayout.Content renderContent={props.renderContent} />
             </PageLayout>

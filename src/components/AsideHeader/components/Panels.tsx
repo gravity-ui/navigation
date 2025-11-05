@@ -4,8 +4,8 @@ import {Drawer, DrawerItem} from '../../Drawer/Drawer';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {b} from '../utils';
 
-export const Panels = () => {
-    const {panelItems, onClosePanel, size} = useAsideHeaderInnerContext();
+export const Panels: React.FC = () => {
+    const {panelItems, size, onClosePanel} = useAsideHeaderInnerContext();
 
     return panelItems ? (
         <Drawer

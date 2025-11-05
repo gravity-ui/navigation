@@ -104,7 +104,7 @@ const AdvancedUsageTemplate: StoryFn = (args) => {
     const [compact, setCompact] = React.useState(args.initialCompact);
 
     return (
-        <PageLayout compact={compact}>
+        <PageLayout compact={compact} onChangeCompact={setCompact}>
             <PageLayoutAside
                 headerDecoration
                 menuItems={menuItemsShowcase}
@@ -160,7 +160,7 @@ const FallbackTemplate: StoryFn<typeof fallbackArgs> = ({
     const [compact, setCompact] = React.useState(false);
 
     return (
-        <PageLayout compact={compact}>
+        <PageLayout compact={compact} onChangeCompact={setCompact}>
             <AsideFallback
                 headerDecoration={headerDecoration}
                 subheaderItemsCount={subheaderItemsCount}
@@ -182,8 +182,9 @@ Fallback.args = fallbackArgs;
 /** @type {StoryFn} */
 export function LineClamp() {
     const [compact, setCompact] = React.useState(false);
+
     return (
-        <PageLayout compact={compact}>
+        <PageLayout compact={compact} onChangeCompact={setCompact}>
             <PageLayoutAside
                 logo={{icon: logoIcon, text: 'Line clamp', 'aria-label': 'Line clamp'}}
                 menuItems={menuItemsClamped}
@@ -198,7 +199,7 @@ const CollapseButtonWrapperTemplate: StoryFn = (args) => {
     const [compact, setCompact] = React.useState(args.initialCompact);
 
     return (
-        <PageLayout compact={compact}>
+        <PageLayout compact={compact} onChangeCompact={setCompact}>
             <PageLayoutAside
                 headerDecoration
                 menuItems={menuItemsShowcase}

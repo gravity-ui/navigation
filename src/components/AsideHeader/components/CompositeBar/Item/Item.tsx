@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {ActionTooltip, Icon, List, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
+import {Icon, List, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
 
 import {AsideHeaderItem} from 'src/components/AsideHeader/types';
 
@@ -24,6 +24,7 @@ const b = block('composite-bar-item');
 export interface ItemProps extends AsideHeaderItem {}
 
 interface ItemInnerProps extends ItemProps {
+    compact?: boolean;
     className?: string;
     collapseItems?: AsideHeaderItem[];
     onMouseEnter?: () => void;
@@ -52,10 +53,8 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const {
         className,
         collapseItems,
-        compact,
         onMouseLeave,
         onMouseEnter,
-        enableTooltip = true,
         popupVisible = false,
         popupRef: anchoreRefProp,
         popupPlacement = defaultPopupPlacement,
@@ -71,6 +70,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         title,
         href,
         qa,
+        compact,
     } = props;
 
     const [open, toggleOpen] = React.useState<boolean>(false);
@@ -81,7 +81,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const type = props.type || ITEM_TYPE_REGULAR;
     const current = props.current || false;
-    const tooltipText = props.tooltipText || props.title;
     const icon = props.icon;
     const iconSize = props.iconSize || ASIDE_HEADER_ICON_SIZE;
     const iconQa = props.iconQa;
@@ -106,25 +105,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     }
 
     const makeIconNode = (iconEl: React.ReactNode): React.ReactNode => {
-        return compact ? (
-            <ActionTooltip
-                title=""
-                description={tooltipText}
-                disabled={!enableTooltip || (collapsedItem && open) || popupVisible}
-                placement="right"
-                className={b('icon-tooltip', {'item-type': type})}
-            >
-                <div
-                    onMouseEnter={() => onMouseEnter?.()}
-                    onMouseLeave={() => onMouseLeave?.()}
-                    className={b('btn-icon')}
-                >
-                    {iconEl}
-                </div>
-            </ActionTooltip>
-        ) : (
-            iconEl
-        );
+        return compact ? <div className={b('btn-icon')}>{iconEl}</div> : iconEl;
     };
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
@@ -238,8 +219,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         </React.Fragment>
     );
 };
-
-Item.displayName = 'Item';
 
 interface CollapsedPopupProps {
     anchorRef: React.RefObject<HTMLElement>;

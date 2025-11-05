@@ -4,7 +4,7 @@ import {Icon} from '@gravity-ui/uikit';
 
 import {Logo} from '../../Logo';
 import {ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT} from '../../constants';
-import {useAsideHeaderContext, useAsideHeaderInnerContext} from '../AsideHeaderContext';
+import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {AsideHeaderItem} from '../types';
 import {b} from '../utils';
 
@@ -16,9 +16,9 @@ const DEFAULT_SUBHEADER_ITEMS: AsideHeaderItem[] = [];
 const HEADER_COMPOSITE_ID = 'gravity-ui/navigation-header-composite-bar';
 
 export const Header = () => {
-    const {logo, onItemClick, onClosePanel, headerDecoration, subheaderItems} =
+    const {logo, compact, onItemClick, onClosePanel, headerDecoration, subheaderItems} =
         useAsideHeaderInnerContext();
-    const {compact} = useAsideHeaderContext();
+    const {isExpanded} = useAsideHeaderInnerContext();
 
     const onLogoClick = useCallback(
         (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -34,7 +34,7 @@ export const Header = () => {
                 <Logo
                     {...logo}
                     onClick={onLogoClick}
-                    compact={compact}
+                    compact={!isExpanded}
                     buttonClassName={b('logo-button')}
                     iconPlaceClassName={b('logo-icon-place')}
                 />
