@@ -13,6 +13,9 @@ export const expectScreenshotFixture: PlaywrightFixture<ExpectScreenshotFixture>
         ...pageScreenshotOptions
     } = {}) => {
         const captureScreenshot = async () => {
+            // move cursor to a safe position to prevent accidental hover effects
+            await page.mouse.move(-1, 0);
+
             return (component || page.locator('.playwright-wrapper-test')).screenshot({
                 animations: 'disabled',
                 ...pageScreenshotOptions,
