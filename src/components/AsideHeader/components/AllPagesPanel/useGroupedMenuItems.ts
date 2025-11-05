@@ -1,7 +1,6 @@
 import {useMemo} from 'react';
 
 import {MenuGroup, MenuItem} from '../../../types';
-import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
 
 import {UNGROUPED_ID} from './constants';
 import i18n from './i18n';
@@ -16,9 +15,11 @@ export interface MenuGroupWithItems extends MenuGroup {
     items: GroupedMenuItem[];
 }
 
-export const useGroupedMenuItems = (isAllPagesAvailable = true): MenuGroupWithItems[] => {
-    const {menuItems, menuGroups} = useAsideHeaderInnerContext();
-
+export const useGroupedMenuItems = (
+    menuItems: MenuItem[],
+    menuGroups?: MenuGroup[],
+    isAllPagesAvailable = true,
+): MenuGroupWithItems[] => {
     return useMemo(() => {
         const visibleItems = menuItems.filter((item: MenuItem): boolean => {
             if (item.type === 'divider') {

@@ -29,16 +29,17 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         defaultMenuItems,
         onMenuItemsChanged,
         editMenuProps,
+        menuItems,
         menuGroups,
         defaultMenuGroups,
         onMenuGroupsChanged,
     } = useAsideHeaderInnerContext();
 
-    const groupedItems = useGroupedMenuItems(false);
-    const menuItems = groupedItems.flatMap((group) => group.items);
+    const groupedItems = useGroupedMenuItems(menuItems, menuGroups, false);
+    const items = groupedItems.flatMap((group) => group.items);
 
-    const menuItemsRef = useRef(menuItems);
-    menuItemsRef.current = menuItems;
+    const menuItemsRef = useRef(items);
+    menuItemsRef.current = items;
 
     const menuGroupsRef = useRef(menuGroups);
     menuGroupsRef.current = menuGroups;

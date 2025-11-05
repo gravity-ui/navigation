@@ -356,7 +356,8 @@ export const CompositeBar: FC<CompositeBarProps> = ({
             </div>
         );
     } else {
-        const sortedItems = sortItemsByAfterMoreButton(groupedItems);
+        const items = groupedItems.flatMap((group) => group.items);
+        const sortedItems = sortItemsByAfterMoreButton(items);
 
         node = (
             <div className={b({subheader: true}, className)}>

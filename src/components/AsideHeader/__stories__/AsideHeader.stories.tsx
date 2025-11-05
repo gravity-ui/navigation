@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Xmark} from '@gravity-ui/icons';
+import {Gear, Magnifier, Xmark} from '@gravity-ui/icons';
 import {Button, Flex, Icon, Text, spacing} from '@gravity-ui/uikit';
 import type {Meta, StoryFn} from '@storybook/react';
 
@@ -347,6 +347,21 @@ const GroupedMenuCollapsibleTemplate: StoryFn = (args) => {
                 editMenuProps={{enableSorting: true}}
                 menuGroups={currentMenuGroups}
                 defaultMenuGroups={menuGroupsWithIcons}
+                subheaderItems={[
+                    {
+                        id: 'services',
+                        title: 'Services',
+                        icon: Gear,
+                        popupPlacement: ['right-start'],
+                        popupOffset: {mainAxis: 10, crossAxis: 10},
+                    },
+                    {
+                        id: 'search',
+                        title: 'Search',
+                        qa: 'subheader-item-search',
+                        icon: Magnifier,
+                    },
+                ]}
                 onMenuItemsChanged={setMenuItems}
                 onMenuGroupsChanged={setCurrentMenuGroups}
                 onChangeCompact={setCompact}
