@@ -222,12 +222,12 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         (
             firstLevelItem: ListItemData<MenuItemsWithGroups>,
             _isActive: boolean,
-            _itemIndex: number,
+            itemIndex: number,
         ) => {
             const groupListItems = firstLevelItem.items;
 
             if (!groupListItems || groupListItems.length === 0) {
-                return itemRender(firstLevelItem, _isActive, _itemIndex);
+                return itemRender(firstLevelItem, _isActive, itemIndex);
             }
 
             const sortableGroupItems =
@@ -265,7 +265,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                         }
                         onSortEnd={
                             isEditMode && editMenuProps?.enableSorting
-                                ? onSecondLevelSortEnd(_itemIndex)
+                                ? onSecondLevelSortEnd(itemIndex)
                                 : undefined
                         }
                         sortable={isEditMode && editMenuProps?.enableSorting}

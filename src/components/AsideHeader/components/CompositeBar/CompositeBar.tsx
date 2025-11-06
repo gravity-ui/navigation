@@ -342,11 +342,13 @@ export const CompositeBar: FC<CompositeBarProps> = ({
 }) => {
     const visibleItems = items?.filter((item) => !item.hidden);
 
-    if (!items || items.length === 0) {
+    if (!visibleItems || visibleItems.length === 0) {
         return null;
     }
 
     let node: ReactNode;
+
+    const sortedItems = sortItemsByAfterMoreButton(visibleItems);
 
     if (type === 'menu') {
         node = (
@@ -355,7 +357,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                     compositeId={compositeId}
                     type="menu"
                     compact={compact}
-                    items={visibleItems}
+                    items={sortedItems}
                     onItemClick={onItemClick}
                     onMoreClick={onMoreClick}
                     multipleTooltip={multipleTooltip}
@@ -364,8 +366,6 @@ export const CompositeBar: FC<CompositeBarProps> = ({
             </div>
         );
     } else {
-        const sortedItems = sortItemsByAfterMoreButton(items);
-
         node = (
             <div className={b({subheader: true}, className)}>
                 <CompositeBarView
