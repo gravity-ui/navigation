@@ -2,9 +2,17 @@ import {ITEM_HEIGHT} from '../../../constants';
 import {AsideHeaderItem} from '../../types';
 import {MenuItemsWithGroups} from '../AllPagesPanel/useGroupedMenuItems';
 
+function getGroupHeight(compositeItem: MenuItemsWithGroups) {
+    const visibleItemsCount = compositeItem.items?.filter(({hidden}) => !hidden).length || 0;
+
+    const visibleGroupItemsCount = compositeItem.isCollapsed ? 0 : visibleItemsCount;
+
+    return ITEM_HEIGHT * (visibleGroupItemsCount + 1);
+}
+
 export function getItemHeight(compositeItem: MenuItemsWithGroups) {
     if (compositeItem.items && compositeItem.items?.length > 0) {
-        return ITEM_HEIGHT * (compositeItem.items.length + 1);
+        return getGroupHeight(compositeItem);
     }
 
     switch (compositeItem.type) {

@@ -13,6 +13,7 @@ import {
     Tooltip,
 } from '@gravity-ui/uikit';
 
+import {ITEM_HEIGHT} from '../../../constants';
 import {block} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
 
@@ -78,33 +79,6 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         [],
     );
 
-    const togglePageVisibility = useCallback(
-        (item: MenuItemsWithGroups) => {
-            if (!onMenuItemsChanged) {
-                return;
-            }
-            const changedItem: MenuItemsWithGroups = {
-                ...item,
-                hidden: !item.hidden,
-            };
-
-            const originItems = menuItemsRef.current.filter(
-                (menuItem) => menuItem.id !== ALL_PAGES_ID,
-            );
-
-            editMenuProps?.onToggleMenuItem?.(changedItem);
-            onMenuItemsChanged(
-                originItems.map((menuItem) => {
-                    if (menuItem.id !== changedItem.id) {
-                        return menuItem;
-                    }
-                    return changedItem;
-                }),
-            );
-        },
-        [onMenuItemsChanged, editMenuProps],
-    );
-
     const onResetToDefaultClick = useCallback(() => {
         if (!onMenuItemsChanged) {
             return;
@@ -127,7 +101,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         defaultMenuGroups,
     ]);
 
-    const toggleGroupHidden = useCallback(
+    const toggleGroupVisibility = useCallback(
         (groupId: string) => {
             if (!onMenuGroupsChanged) {
                 return;
@@ -148,6 +122,34 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             onMenuGroupsChanged(updatedGroups);
         },
         [onMenuGroupsChanged],
+    );
+
+    const toggleMenuItemsVisibility = useCallback(
+        (item: MenuItemsWithGroups) => {
+            if (!onMenuItemsChanged) {
+                return;
+            }
+
+            const changedItem: MenuItemsWithGroups = {
+                ...item,
+                hidden: !item.hidden,
+            };
+
+            const originItems = menuItemsRef.current;
+            const expandedItems = buildExpandedFromFlatList(originItems);
+
+            editMenuProps?.onToggleMenuItem?.(changedItem);
+
+            onMenuItemsChanged(
+                expandedItems.map((menuItem) => {
+                    if (menuItem.id !== changedItem.id) {
+                        return menuItem;
+                    }
+                    return changedItem;
+                }),
+            );
+        },
+        [onMenuItemsChanged, editMenuProps],
     );
 
     const onFirstLevelSortEnd = useCallback(
@@ -206,14 +208,14 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                 <AllPagesListItem
                     item={asideHeaderItem}
                     editMode={isEditMode}
-                    onToggle={() => togglePageVisibility(asideHeaderItem)}
+                    onToggle={() => toggleMenuItemsVisibility(asideHeaderItem)}
                     onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
                     enableSorting={editMenuProps?.enableSorting}
                 />
             );
         },
-        [isEditMode, editMenuProps?.enableSorting, togglePageVisibility],
+        [isEditMode, editMenuProps?.enableSorting, toggleMenuItemsVisibility],
     );
 
     const renderFirstLevelItem = useCallback(
@@ -248,7 +250,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                             icon={firstLevelItem.icon}
                             title={firstLevelItem.title}
                             hidden={Boolean(firstLevelItem.hidden)}
-                            onToggleHidden={toggleGroupHidden}
+                            onToggleHidden={toggleGroupVisibility}
                             editMode={isEditMode}
                         />
                     )}
@@ -258,7 +260,9 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                                 ? b('item', {editMode: true})
                                 : undefined
                         }
-                        itemHeight={isEditMode && editMenuProps?.enableSorting ? 40 : undefined}
+                        itemHeight={
+                            isEditMode && editMenuProps?.enableSorting ? ITEM_HEIGHT : undefined
+                        }
                         onSortEnd={
                             isEditMode && editMenuProps?.enableSorting
                                 ? onSecondLevelSortEnd(_itemIndex)
@@ -277,7 +281,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         [
             isEditMode,
             editMenuProps,
-            toggleGroupHidden,
+            toggleGroupVisibility,
             onSecondLevelSortEnd,
             onItemClick,
             itemRender,

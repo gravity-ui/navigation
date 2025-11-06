@@ -326,6 +326,7 @@ export const menuGroupsWithIcons: AsideHeaderProps['menuGroups'] = [
         order: 1,
         collapsible: true,
         collapsedByDefault: false,
+        collapsed: false,
         hidden: false,
     },
     {
@@ -335,6 +336,7 @@ export const menuGroupsWithIcons: AsideHeaderProps['menuGroups'] = [
         order: 2,
         collapsible: true,
         collapsedByDefault: false,
+        collapsed: false,
         hidden: false,
     },
 ];

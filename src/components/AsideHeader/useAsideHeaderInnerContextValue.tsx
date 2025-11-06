@@ -64,6 +64,25 @@ export const useAsideHeaderInnerContextValue = (
         [innerOnClosePanel, ALL_PAGES_MENU_ITEM, onClosePanel],
     );
 
+    const onToggleMenuGroupVisibility = useCallback(
+        (groupId: string) => {
+            const updatedMenuGroups = menuGroups?.map((group) => {
+                if (group.id === groupId) {
+                    return {
+                        ...group,
+                        collapsed: !group.collapsed,
+                    };
+                }
+                return group;
+            });
+
+            if (updatedMenuGroups) {
+                onMenuGroupsChanged?.(updatedMenuGroups);
+            }
+        },
+        [menuGroups, onMenuGroupsChanged],
+    );
+
     const innerMenuItems = useMemo(
         () =>
             allPagesIsAvailable
@@ -104,5 +123,6 @@ export const useAsideHeaderInnerContextValue = (
         panelItems: innerPanelItems,
         size,
         onItemClick,
+        onToggleMenuGroupVisibility,
     };
 };

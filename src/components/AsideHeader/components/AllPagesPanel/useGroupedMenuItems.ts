@@ -7,6 +7,7 @@ import {ALL_PAGES_ID} from '.';
 export interface MenuItemsWithGroups extends MenuItem {
     groupId?: string;
     collapsible?: boolean;
+    isCollapsed?: boolean;
     collapsedByDefault?: boolean;
     items?: MenuItemsWithGroups[];
 }
@@ -86,6 +87,7 @@ export const useGroupedMenuItems = (
                             hidden: isGroupHidden,
                             collapsible: group?.collapsible,
                             collapsedByDefault: group?.collapsedByDefault,
+                            isCollapsed: group?.collapsed,
                             groupId: groupId,
                             items: sortedItems,
                         });
