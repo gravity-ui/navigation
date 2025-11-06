@@ -248,7 +248,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                         const isUngrouped = item.id === UNGROUPED_ID;
 
                         return (
-                            <div>
+                            <div className={b('menu-group')}>
                                 {hasHeader && !isUngrouped && (
                                     <Flex
                                         className={b('menu-group-header')}
