@@ -21,6 +21,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         multipleTooltip,
         onMenuMoreClick,
         renderFooter,
+        onToggleMenuGroupVisibility,
         compact,
         customBackground,
         customBackgroundClassName,
@@ -60,6 +61,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         items={flatListItems}
                         onItemClick={onItemClick}
                         onMoreClick={onMenuMoreClick}
+                        onToggleMenuGroupVisibility={onToggleMenuGroupVisibility}
                         multipleTooltip={multipleTooltip}
                     />
 
