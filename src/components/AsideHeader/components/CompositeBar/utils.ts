@@ -1,7 +1,12 @@
 import {ITEM_HEIGHT} from '../../../constants';
 import {AsideHeaderItem} from '../../types';
+import {MenuItemsWithGroups} from '../AllPagesPanel/useGroupedMenuItems';
 
-export function getItemHeight(compositeItem: AsideHeaderItem) {
+export function getItemHeight(compositeItem: MenuItemsWithGroups) {
+    if (compositeItem.items && compositeItem.items?.length > 0) {
+        return ITEM_HEIGHT * (compositeItem.items.length + 1);
+    }
+
     switch (compositeItem.type) {
         case 'action':
             return 50;

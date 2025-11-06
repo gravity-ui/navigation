@@ -21,7 +21,7 @@ export const Header = () => {
         useAsideHeaderInnerContext();
     const {isExpanded} = useAsideHeaderInnerContext();
 
-    const groupedItems = useGroupedMenuItems(subheaderItems || DEFAULT_SUBHEADER_ITEMS);
+    const items = useGroupedMenuItems(subheaderItems || DEFAULT_SUBHEADER_ITEMS);
 
     const onLogoClick = useCallback(
         (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -47,7 +47,7 @@ export const Header = () => {
                 compositeId={HEADER_COMPOSITE_ID}
                 type="subheader"
                 compact={compact}
-                groupedItems={groupedItems}
+                items={items}
                 onItemClick={onItemClick}
             />
 

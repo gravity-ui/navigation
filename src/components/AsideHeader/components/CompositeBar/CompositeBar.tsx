@@ -8,7 +8,7 @@ import {block} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
 import {AsideHeaderItem} from '../../types';
 import {UNGROUPED_ID} from '../AllPagesPanel/constants';
-import {MenuGroupWithItems} from '../AllPagesPanel/useGroupedMenuItems';
+import {MenuItemsWithGroups} from '../AllPagesPanel/useGroupedMenuItems';
 
 import {Item, ItemProps} from './Item/Item';
 import {MultipleTooltip, MultipleTooltipContext, MultipleTooltipProvider} from './MultipleTooltip';
@@ -27,7 +27,7 @@ const b = block('composite-bar');
 export type CompositeBarProps = {
     type: 'menu' | 'subheader';
 
-    groupedItems?: MenuGroupWithItems[];
+    items?: MenuItemsWithGroups[];
     onItemClick?: (
         item: AsideHeaderItem,
         collapsed: boolean,
@@ -43,7 +43,9 @@ export type CompositeBarProps = {
 
 type CompositeBarViewProps = CompositeBarProps & {
     compositeId?: string;
-    items?: AsideHeaderItem[];
+    items?: MenuItemsWithGroups[];
+    collapsedIds?: Record<string, boolean>;
+    toggleGroup?: (groupId: string) => void;
 };
 
 const CompositeBarView: FC<CompositeBarViewProps> = ({
@@ -54,6 +56,8 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     multipleTooltip = false,
     compositeId,
     className,
+    collapsedIds,
+    toggleGroup,
 }) => {
     const ref = useRef<List<AsideHeaderItem>>(null);
     const tooltipRef = useRef<HTMLDivElement>(null);
@@ -211,7 +215,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                 onMouseEnter={onTooltipMouseEnter}
                 onMouseLeave={onTooltipMouseLeave}
             >
-                <List<AsideHeaderItem>
+                <List<MenuItemsWithGroups>
                     id={compositeId}
                     ref={ref}
                     items={items}
@@ -222,15 +226,94 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                     virtualized={false}
                     filterable={false}
                     sortable={false}
-                    renderItem={(item, _isItemActive, itemIndex) => (
-                        <Item
-                            {...item}
-                            compact={compact}
-                            onMouseEnter={onMouseEnterByIndex(itemIndex)}
-                            onMouseLeave={onMouseLeave}
-                            onItemClick={onItemClickByIndex(itemIndex, item.onItemClick)}
-                        />
-                    )}
+                    renderItem={(item, _isItemActive, itemIndex) => {
+                        if (!item.groupId) {
+                            return (
+                                <Item
+                                    {...item}
+                                    compact={compact}
+                                    onMouseEnter={onMouseEnterByIndex(itemIndex)}
+                                    onMouseLeave={onMouseLeave}
+                                    onItemClick={onItemClickByIndex(itemIndex, item.onItemClick)}
+                                />
+                            );
+                        }
+
+                        const isCollapsible = Boolean(item.collapsible);
+                        const isCollapsed = Boolean(collapsedIds?.[item.id]);
+                        const groupListItems = item.items?.filter((item) => !item.hidden);
+                        const hasHeader = item.title || item.icon || isCollapsible;
+
+                        const sortedItems = sortItemsByAfterMoreButton(groupListItems || []);
+                        const isUngrouped = item.id === UNGROUPED_ID;
+                        const showItems = !isCollapsed;
+
+                        return (
+                            <div>
+                                {hasHeader && !isUngrouped && (
+                                    <Flex
+                                        className={b('menu-group-header')}
+                                        gap="2"
+                                        alignItems="center"
+                                    >
+                                        {item.icon ? (
+                                            <Icon
+                                                data={item.icon}
+                                                size={16}
+                                                className={b('menu-group-icon')}
+                                            />
+                                        ) : null}
+
+                                        <Text variant="body-1">{item.title}</Text>
+
+                                        {isCollapsible ? (
+                                            <Button
+                                                view="flat-secondary"
+                                                size="s"
+                                                className={b('menu-group-toggle')}
+                                                onClick={() => toggleGroup?.(item.id)}
+                                                aria-label={
+                                                    isCollapsed ? 'Expand group' : 'Collapse group'
+                                                }
+                                            >
+                                                <Icon
+                                                    data={isCollapsed ? ChevronUp : ChevronDown}
+                                                    size={14}
+                                                />
+                                            </Button>
+                                        ) : (
+                                            <span className={b('menu-group-toggle-placeholder')} />
+                                        )}
+                                    </Flex>
+                                )}
+
+                                {showItems && (
+                                    <div
+                                        className={b(
+                                            'menu-group-items',
+                                            {grouped: !isUngrouped},
+                                            className,
+                                        )}
+                                    >
+                                        {sortedItems?.map((item) => (
+                                            <Item
+                                                className={b('menu-group-item')}
+                                                key={item.id}
+                                                {...item}
+                                                compact={compact}
+                                                onMouseEnter={onMouseEnterByIndex(itemIndex)}
+                                                onMouseLeave={onMouseLeave}
+                                                onItemClick={onItemClickByIndex(
+                                                    itemIndex,
+                                                    item.onItemClick,
+                                                )}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    }}
                 />
             </div>
             {type === 'menu' && multipleTooltip && (
@@ -247,7 +330,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
 
 export const CompositeBar: FC<CompositeBarProps> = ({
     type,
-    groupedItems,
+    items,
     onItemClick,
     onMoreClick,
     multipleTooltip = false,
@@ -255,15 +338,15 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     compositeId,
     className,
 }) => {
-    const visibleGroupedItems = groupedItems?.filter((g) => !g.hidden);
+    const visibleItems = items?.filter((item) => !item.hidden);
 
     const [collapsedIds, setCollapsedIds] = React.useState<Record<string, boolean>>(() => {
         const initial: Record<string, boolean> = {};
 
-        if (visibleGroupedItems) {
-            visibleGroupedItems.forEach((group) => {
-                if (group.collapsible && group.collapsedByDefault) {
-                    initial[group.id] = true;
+        if (visibleItems) {
+            visibleItems.forEach((item) => {
+                if (item.collapsible && item.collapsedByDefault) {
+                    initial[item.id] = true;
                 }
             });
         }
@@ -274,7 +357,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
         setCollapsedIds((prev) => ({...prev, [groupId]: !prev[groupId]}));
     }, []);
 
-    if (!groupedItems || groupedItems.length === 0) {
+    if (!items || items.length === 0) {
         return null;
     }
 
@@ -283,80 +366,20 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     if (type === 'menu') {
         node = (
             <div className={b({scrollable: true}, className)}>
-                {visibleGroupedItems?.map((group) => {
-                    const isCollapsible = Boolean(group.collapsible);
-                    const isCollapsed = Boolean(collapsedIds[group.id]);
-                    const showItems = !isCollapsible || !isCollapsed;
-                    const groupListItems = group.items.filter((item) => !item.hidden);
-                    const hasHeader = group.title || group.icon || isCollapsible;
-
-                    const sortedItems = sortItemsByAfterMoreButton(groupListItems);
-                    const isUngrouped = group.id === UNGROUPED_ID;
-
-                    return (
-                        <div key={group.id} className={b('menu-group')}>
-                            {hasHeader && !isUngrouped && (
-                                <Flex
-                                    className={b('menu-group-header')}
-                                    gap="2"
-                                    alignItems="center"
-                                >
-                                    {group.icon ? (
-                                        <Icon
-                                            data={group.icon}
-                                            size={16}
-                                            className={b('menu-group-icon')}
-                                        />
-                                    ) : null}
-
-                                    <Text variant="body-1">{group.title}</Text>
-
-                                    {isCollapsible ? (
-                                        <Button
-                                            view="flat-secondary"
-                                            size="s"
-                                            className={b('menu-group-toggle')}
-                                            onClick={() => toggleGroup(group.id)}
-                                            aria-label={
-                                                isCollapsed ? 'Expand group' : 'Collapse group'
-                                            }
-                                        >
-                                            <Icon
-                                                data={isCollapsed ? ChevronUp : ChevronDown}
-                                                size={14}
-                                            />
-                                        </Button>
-                                    ) : (
-                                        <span className={b('menu-group-toggle-placeholder')} />
-                                    )}
-                                </Flex>
-                            )}
-
-                            {showItems && sortedItems.length > 0 && (
-                                <CompositeBarView
-                                    className={b(
-                                        'menu-group-items',
-                                        {grouped: !isUngrouped},
-                                        className,
-                                    )}
-                                    compositeId={
-                                        compositeId ? `${compositeId}-${group.id}` : undefined
-                                    }
-                                    type="menu"
-                                    compact={compact}
-                                    items={groupListItems}
-                                    onItemClick={onItemClick}
-                                    onMoreClick={onMoreClick}
-                                    multipleTooltip={multipleTooltip}
-                                />
-                            )}
-                        </div>
-                    );
-                })}
+                <CompositeBarView
+                    compositeId={compositeId}
+                    type="menu"
+                    compact={compact}
+                    items={visibleItems}
+                    onItemClick={onItemClick}
+                    onMoreClick={onMoreClick}
+                    multipleTooltip={multipleTooltip}
+                    collapsedIds={collapsedIds}
+                    toggleGroup={toggleGroup}
+                />
             </div>
         );
     } else {
-        const items = groupedItems.flatMap((group) => group.items);
         const sortedItems = sortItemsByAfterMoreButton(items);
 
         node = (
@@ -366,6 +389,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                     compact={compact}
                     items={sortedItems}
                     onItemClick={onItemClick}
+                    toggleGroup={toggleGroup}
                 />
             </div>
         );

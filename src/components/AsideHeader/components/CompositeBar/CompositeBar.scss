@@ -42,6 +42,10 @@ $block: '.#{variables.$ns}composite-bar';
         }
     }
 
+    &__menu-group-item {
+        height: 40px;
+    }
+
     &__menu-group-header {
         padding: var(--g-spacing-2) var(--g-spacing-5);
     }

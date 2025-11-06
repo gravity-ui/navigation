@@ -33,7 +33,8 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         onMouseLeave,
         isExpanded,
     } = useAsideHeaderInnerContext();
-    const groupedMenuItems = useGroupedMenuItems(menuItems, menuGroups, true);
+
+    const flatListItems = useGroupedMenuItems(menuItems, menuGroups);
 
     const asideRef = useRef<HTMLDivElement>(null);
 
@@ -67,7 +68,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         className={b('menu-items')}
                         compact={compact}
                         type="menu"
-                        groupedItems={groupedMenuItems}
+                        items={flatListItems}
                         onItemClick={onItemClick}
                         onMoreClick={onMenuMoreClick}
                         multipleTooltip={multipleTooltip}
