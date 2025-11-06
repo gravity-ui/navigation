@@ -16,6 +16,7 @@ import {
 import {ITEM_HEIGHT} from '../../../constants';
 import {block} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
+import {getGroupBlockHeight} from '../../utils/getGroupHeight';
 
 import {AllPagesGroupHeader} from './AllPagesGroupHeader';
 import {AllPagesListItem} from './AllPagesListItem';
@@ -198,19 +199,11 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             _isActive: boolean,
             _itemIndex: number,
         ) => {
-            const onDragStart = () => {
-                setDraggingItemTitle(asideHeaderItem.title);
-            };
-            const onDragEnd = () => {
-                setDraggingItemTitle(null);
-            };
             return (
                 <AllPagesListItem
                     item={asideHeaderItem}
                     editMode={isEditMode}
                     onToggle={() => toggleMenuItemsVisibility(asideHeaderItem)}
-                    onDragStart={onDragStart}
-                    onDragEnd={onDragEnd}
                     enableSorting={editMenuProps?.enableSorting}
                 />
             );
@@ -242,8 +235,14 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                 return null;
             }
 
+            const blockHeight = getGroupBlockHeight(sortableGroupItems);
+
             return (
-                <Flex className={b('groups-container')} direction="column">
+                <Flex
+                    className={b('groups-container')}
+                    direction="column"
+                    style={{height: blockHeight}}
+                >
                     {firstLevelItem.title && (
                         <AllPagesGroupHeader
                             id={firstLevelItem.id}

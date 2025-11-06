@@ -1,13 +1,13 @@
 import {ITEM_HEIGHT} from '../../../constants';
 import {AsideHeaderItem} from '../../types';
+import {getGroupBlockHeight} from '../../utils/getGroupHeight';
 import {MenuItemsWithGroups} from '../AllPagesPanel/useGroupedMenuItems';
 
 function getGroupHeight(compositeItem: MenuItemsWithGroups) {
-    const visibleItemsCount = compositeItem.items?.filter(({hidden}) => !hidden).length || 0;
+    const visibleItemsCount = compositeItem.items?.filter(({hidden}) => !hidden) || [];
+    const visibleGroupItems = compositeItem.isCollapsed ? [] : visibleItemsCount;
 
-    const visibleGroupItemsCount = compositeItem.isCollapsed ? 0 : visibleItemsCount;
-
-    return ITEM_HEIGHT * (visibleGroupItemsCount + 1);
+    return getGroupBlockHeight(visibleGroupItems);
 }
 
 export function getItemHeight(compositeItem: MenuItemsWithGroups) {

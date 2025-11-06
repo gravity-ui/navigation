@@ -16,12 +16,10 @@ interface AllPagesListItemProps {
     editMode?: boolean;
     enableSorting?: boolean;
     onToggle: () => void;
-    onDragStart?: () => void;
-    onDragEnd?: () => void;
 }
 
 export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
-    const {item, editMode, onToggle, onDragStart, onDragEnd} = props;
+    const {item, editMode, onToggle} = props;
 
     const onPinButtonClick = useCallback(
         (e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
@@ -41,30 +39,8 @@ export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
 
     const [Tag, tagProps] = item.href ? ['a' as const, {href: item.href}] : ['button' as const, {}];
 
-    const onItemDragStart = (e: MouseEvent<HTMLDivElement>) => {
-        if (editMode && onDragStart) {
-            e.stopPropagation();
-            e.preventDefault();
-            onDragStart();
-        }
-    };
-
-    const onItemDragEnd = (e: MouseEvent<HTMLDivElement>) => {
-        if (editMode && onDragEnd) {
-            e.stopPropagation();
-            e.preventDefault();
-            onDragEnd();
-        }
-    };
-
     return (
-        <Tag
-            {...tagProps}
-            className={b()}
-            onClick={onItemClick}
-            onMouseDown={onItemDragStart}
-            onMouseUp={onItemDragEnd}
-        >
+        <Tag {...tagProps} className={b()} onClick={onItemClick}>
             {item.icon ? (
                 <Icon className={b('icon')} data={item.icon} size={item.iconSize} />
             ) : null}
