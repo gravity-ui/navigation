@@ -1,4 +1,4 @@
-import React, {MouseEvent, useCallback} from 'react';
+import React, {MouseEvent, ReactNode, useCallback} from 'react';
 
 import {Pin, PinFill} from '@gravity-ui/icons';
 import {Button, Flex, Icon, Text} from '@gravity-ui/uikit';
@@ -13,7 +13,7 @@ const b = block('all-pages-group-header');
 
 interface AllPagesGroupHeaderProps {
     id: string;
-    title: string;
+    title: string | ReactNode;
     hidden: boolean;
     icon?: SVGIconData;
     editMode?: boolean;

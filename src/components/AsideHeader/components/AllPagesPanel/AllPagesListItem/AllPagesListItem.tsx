@@ -21,7 +21,8 @@ interface AllPagesListItemProps {
 }
 
 export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
-    const {item, editMode, onToggle} = props;
+    const {item, editMode, onToggle, onDragStart, onDragEnd} = props;
+
     const onPinButtonClick = useCallback(
         (e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
             e.stopPropagation();
@@ -40,8 +41,30 @@ export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
 
     const [Tag, tagProps] = item.href ? ['a' as const, {href: item.href}] : ['button' as const, {}];
 
+    const onItemDragStart = (e: MouseEvent<HTMLDivElement>) => {
+        if (editMode && onDragStart) {
+            e.stopPropagation();
+            e.preventDefault();
+            onDragStart();
+        }
+    };
+
+    const onItemDragEnd = (e: MouseEvent<HTMLDivElement>) => {
+        if (editMode && onDragEnd) {
+            e.stopPropagation();
+            e.preventDefault();
+            onDragEnd();
+        }
+    };
+
     return (
-        <Tag {...tagProps} className={b()} onClick={onItemClick}>
+        <Tag
+            {...tagProps}
+            className={b()}
+            onClick={onItemClick}
+            onMouseDown={onItemDragStart}
+            onMouseUp={onItemDragEnd}
+        >
             {item.icon ? (
                 <Icon className={b('icon')} data={item.icon} size={item.iconSize} />
             ) : null}
