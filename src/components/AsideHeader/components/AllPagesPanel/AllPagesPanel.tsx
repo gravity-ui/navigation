@@ -1,4 +1,4 @@
-import React, {ReactNode, useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {Gear} from '@gravity-ui/icons';
 import {
@@ -59,8 +59,6 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     menuGroupsRef.current = menuGroups;
 
     const [isEditMode, setIsEditMode] = useState(true);
-
-    const [draggingItemTitle, setDraggingItemTitle] = useState<ReactNode | null>(null);
 
     const toggleEditMode = useCallback(() => {
         setIsEditMode((prev) => !prev);
@@ -164,8 +162,6 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             const currentFlatList = menuItemsRef.current || [];
 
             const updatedItems = sortMenuItems(oldIndex, newIndex, currentFlatList);
-
-            setDraggingItemTitle(null);
 
             if (updatedItems) {
                 onMenuItemsChanged?.(updatedItems);
@@ -311,10 +307,6 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                     items={items}
                     renderItem={renderFirstLevelItem}
                 />
-
-                {isEditMode && editMenuProps?.enableSorting && draggingItemTitle && (
-                    <div className={b('drag-placeholder')}>{draggingItemTitle}</div>
-                )}
             </Flex>
             {isEditMode && (
                 <Button onClick={onResetToDefaultClick}>{i18n('all-panel.resetToDefault')}</Button>
