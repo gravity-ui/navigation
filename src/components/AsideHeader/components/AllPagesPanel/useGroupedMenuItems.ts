@@ -73,10 +73,7 @@ export const useGroupedMenuItems = (
                     const items = groupedItems.get(groupId) || [];
 
                     if (items.length > 0) {
-                        const sortedItems = items.sort((a, b) => (a.order || 0) - (b.order || 0));
-                        const itemsWithVisible = sortedItems.filter(
-                            (sortedItem) => !sortedItem.hidden,
-                        );
+                        const itemsWithVisible = items.filter((sortedItem) => !sortedItem.hidden);
 
                         const group = groupsMap.get(groupId);
                         const isAllGroupItemsHidden = itemsWithVisible.length === 0;
@@ -88,14 +85,13 @@ export const useGroupedMenuItems = (
                             id: groupId,
                             title: group?.title ?? groupId,
                             icon: group?.icon,
-                            order: group?.order ?? sortedItems[0]?.order ?? 0,
                             hidden: isGroupHidden,
                             isDisabled: isAllGroupItemsHidden,
                             collapsible: group?.collapsible,
                             collapsedByDefault: group?.collapsedByDefault,
                             isCollapsed: group?.collapsed,
                             groupId: groupId,
-                            items: sortedItems,
+                            items,
                         });
                     }
                 }
