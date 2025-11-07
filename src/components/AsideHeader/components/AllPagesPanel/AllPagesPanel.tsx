@@ -14,15 +14,17 @@ import {
 } from '@gravity-ui/uikit';
 
 import {ITEM_HEIGHT} from '../../../constants';
+import {MenuItem} from '../../../types';
 import {block} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
+import {MenuItemsWithGroups} from '../../types';
 import {getGroupBlockHeight} from '../../utils/getGroupHeight';
 
 import {AllPagesGroupHeader} from './AllPagesGroupHeader';
 import {AllPagesListItem} from './AllPagesListItem';
 import {ALL_PAGES_ID} from './constants';
 import i18n from './i18n';
-import {MenuItemsWithGroups, useGroupedMenuItems} from './useGroupedMenuItems';
+import {useGroupedMenuItems} from './useGroupedMenuItems';
 import {buildExpandedFromFlatList} from './utils/buildExpandedFromFlatList';
 import {getRealIndexInGroup} from './utils/getRealIndexInGroup';
 import {sortMenuItems} from './utils/sortMenuItems';
@@ -194,11 +196,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     );
 
     const itemRender = useCallback(
-        (
-            asideHeaderItem: ListItemData<MenuItemsWithGroups>,
-            _isActive: boolean,
-            _itemIndex: number,
-        ) => {
+        (asideHeaderItem: ListItemData<MenuItem>, _isActive: boolean, _itemIndex: number) => {
             return (
                 <AllPagesListItem
                     item={asideHeaderItem}
@@ -217,11 +215,11 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             _isActive: boolean,
             itemIndex: number,
         ) => {
-            const groupListItems = firstLevelItem.items;
-
-            if (!groupListItems || groupListItems.length === 0) {
+            if (!('items' in firstLevelItem) || firstLevelItem.items.length === 0) {
                 return itemRender(firstLevelItem, _isActive, itemIndex);
             }
+
+            const groupListItems = firstLevelItem.items;
 
             const sortableGroupItems =
                 isEditMode && editMenuProps?.enableSorting
@@ -249,6 +247,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                             icon={firstLevelItem.icon}
                             title={firstLevelItem.title}
                             hidden={Boolean(firstLevelItem.hidden)}
+                            isDisabled={firstLevelItem.isDisabled}
                             onToggleHidden={toggleGroupVisibility}
                             editMode={isEditMode}
                         />

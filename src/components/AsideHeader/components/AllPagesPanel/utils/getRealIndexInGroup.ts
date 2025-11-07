@@ -1,4 +1,4 @@
-import {MenuItemsWithGroups} from '../useGroupedMenuItems';
+import {MenuItemsWithGroups} from '../../../types';
 
 function getRealIndexInExpandedMenu(
     flatListIndex: number,
@@ -9,7 +9,7 @@ function getRealIndexInExpandedMenu(
     for (let i = 0; i < flatListIndex; i++) {
         const item = flatList[i];
 
-        if (item.items && item.items.length > 0) {
+        if ('items' in item && item.items && item.items.length > 0) {
             realIndex += item.items.length;
         } else {
             realIndex += 1;

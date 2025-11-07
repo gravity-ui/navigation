@@ -1,4 +1,4 @@
-import {MenuItemsWithGroups} from '../useGroupedMenuItems';
+import {MenuItemsWithGroups} from '../../../types';
 
 import {buildExpandedFromFlatList} from './buildExpandedFromFlatList';
 
