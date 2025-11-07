@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {Gear, Magnifier} from '@gravity-ui/icons';
 import {Button, Flex, Icon, Text, spacing} from '@gravity-ui/uikit';
 import type {Meta, StoryFn} from '@storybook/react';
 
@@ -9,7 +10,14 @@ import {PageLayout} from '../components/PageLayout/PageLayout';
 import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
 
 import {AsideHeaderShowcase} from './AsideHeaderShowcase';
-import {DEFAULT_LOGO, menuItemsClamped, menuItemsShowcase} from './moc';
+import {
+    DEFAULT_LOGO,
+    menuGroupsWithIcons,
+    menuItemsClamped,
+    menuItemsMany,
+    menuItemsShowcase,
+    menuItemsWithGroups,
+} from './moc';
 
 import logoIcon from '../../../../.storybook/assets/logo.svg';
 
@@ -235,5 +243,95 @@ const CollapseButtonWrapperTemplate: StoryFn = (args) => {
 
 export const CollapseButtonWrapper = CollapseButtonWrapperTemplate.bind({});
 CollapseButtonWrapper.args = {
+    initialCompact: false,
+};
+
+const ManyItemsTemplate: StoryFn = (args) => {
+    const [compact, setCompact] = React.useState<boolean>(args.initialCompact);
+
+    return (
+        <PageLayout compact={compact}>
+            <PageLayoutAside
+                headerDecoration
+                menuItems={menuItemsMany}
+                logo={DEFAULT_LOGO}
+                onChangeCompact={setCompact}
+                {...args}
+            />
+
+            <PageLayout.Content>
+                <div style={{padding: 16}}>
+                    <Button onClick={() => setCompact((prev) => !prev)}>Toggle compact</Button>
+                    <div style={{marginTop: 16}}>
+                        <Text variant="subheader-2">
+                            Scroll demonstration with many navigation items
+                        </Text>
+                        <Text color="secondary" style={{marginTop: 8}}>
+                            Total items: {menuItemsMany?.length || 0}. On low screens, items scroll
+                            with invisible scrollbar instead of collapsing into &quot;...&quot;
+                        </Text>
+                    </div>
+                </div>
+            </PageLayout.Content>
+        </PageLayout>
+    );
+};
+
+export const ManyItems = ManyItemsTemplate.bind({});
+ManyItems.args = {
+    initialCompact: false,
+};
+ManyItems.parameters = {
+    docs: {
+        description: {
+            story:
+                'Demonstration of scroll functionality with many navigation items. ' +
+                'On low screens, all items remain accessible through scrolling with invisible scrollbar.',
+        },
+    },
+};
+
+const GroupedMenuCollapsibleTemplate: StoryFn = (args) => {
+    const [compact, setCompact] = React.useState(false);
+    const [menuItems, setMenuItems] = React.useState(menuItemsWithGroups);
+    const [currentMenuGroups, setCurrentMenuGroups] = React.useState(menuGroupsWithIcons);
+
+    return (
+        <PageLayout compact={compact}>
+            <PageLayoutAside
+                headerDecoration
+                logo={DEFAULT_LOGO}
+                menuItems={menuItems}
+                defaultMenuItems={menuItemsWithGroups}
+                editMenuProps={{enableSorting: true}}
+                menuGroups={currentMenuGroups}
+                defaultMenuGroups={menuGroupsWithIcons}
+                subheaderItems={[
+                    {
+                        id: 'services',
+                        title: 'Services',
+                        icon: Gear,
+                        popupPlacement: ['right-start'],
+                        popupOffset: {mainAxis: 10, crossAxis: 10},
+                    },
+                    {
+                        id: 'search',
+                        title: 'Search',
+                        qa: 'subheader-item-search',
+                        icon: Magnifier,
+                    },
+                ]}
+                onMenuItemsChanged={setMenuItems}
+                onMenuGroupsChanged={setCurrentMenuGroups}
+                onChangeCompact={setCompact}
+                {...args}
+            />
+        </PageLayout>
+    );
+};
+
+export const GroupedMenuCollapsible = GroupedMenuCollapsibleTemplate.bind({});
+GroupedMenuCollapsible.args = {
+    multipleTooltip: false,
     initialCompact: false,
 };
