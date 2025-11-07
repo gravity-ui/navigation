@@ -5,7 +5,9 @@ import {buildExpandedFromFlatList} from './buildExpandedFromFlatList';
 export function sortMenuItems(oldIndex: number, newIndex: number, items: MenuItemsWithGroups[]) {
     const sortedItems = [...items];
 
-    [sortedItems[oldIndex], sortedItems[newIndex]] = [sortedItems[newIndex], sortedItems[oldIndex]];
+    const [movedElement] = sortedItems.splice(oldIndex, 1);
+
+    sortedItems.splice(newIndex, 0, movedElement);
 
     const expandedItems = buildExpandedFromFlatList(sortedItems);
     const updatedItems = expandedItems.map((item, index) => ({
