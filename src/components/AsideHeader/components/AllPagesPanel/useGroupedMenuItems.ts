@@ -16,11 +16,21 @@ export const useGroupedMenuItems = (
                 return false;
             }
 
-            if (isEditMode && (item.id === ALL_PAGES_ID || item.type === 'action')) {
+            if (isEditMode && item.id === ALL_PAGES_ID) {
                 return false;
             }
 
             return true;
+        });
+
+        visibleItems.sort(({type: typeA}, {type: typeB}) => {
+            if (typeA === 'action') {
+                return 1;
+            }
+            if (typeB === 'action') {
+                return -1;
+            }
+            return 0;
         });
 
         const groupsMap = new Map<string, MenuGroup>();
