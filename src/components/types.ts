@@ -42,10 +42,6 @@ export interface MenuItem extends QAProps {
     type?: MenuItemType;
     afterMoreButton?: boolean;
     /**
-     * Order number. Used to determine the display order in the side menu
-     */
-    order?: number;
-    /**
      * Visibility flag in the side menu
      */
     hidden?: boolean;
@@ -63,7 +59,6 @@ export interface MenuGroup {
     id: string;
     title: string;
     icon?: IconProps['data'];
-    order?: number;
     /** Hide the group from display */
     hidden?: boolean;
     /** Allow collapsing the group via UI */
