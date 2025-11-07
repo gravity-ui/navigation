@@ -1,12 +1,11 @@
-import {MenuItem} from 'src/components/types';
-
-import {MenuItemsWithGroups} from '../useGroupedMenuItems';
+import {MenuItem} from '../../../../types';
+import {MenuItemsWithGroups} from '../../../types';
 
 export function buildExpandedFromFlatList(flatList: MenuItemsWithGroups[]): MenuItem[] {
     const expanded: MenuItem[] = [];
 
     flatList.forEach((item) => {
-        if (item.items && item.items.length > 0) {
+        if ('items' in item && item.items && item.items.length > 0) {
             expanded.push(...item.items);
         } else {
             expanded.push(item);

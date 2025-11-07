@@ -1,9 +1,8 @@
 import {ITEM_HEIGHT} from '../../../constants';
-import {AsideHeaderItem} from '../../types';
+import {AsideHeaderItem, GroupedMenuItem, MenuItemsWithGroups} from '../../types';
 import {getGroupBlockHeight} from '../../utils/getGroupHeight';
-import {MenuItemsWithGroups} from '../AllPagesPanel/useGroupedMenuItems';
 
-function getGroupHeight(compositeItem: MenuItemsWithGroups) {
+function getGroupHeight(compositeItem: GroupedMenuItem) {
     const visibleItemsCount = compositeItem.items?.filter(({hidden}) => !hidden) || [];
     const visibleGroupItems = compositeItem.isCollapsed ? [] : visibleItemsCount;
 
@@ -11,7 +10,7 @@ function getGroupHeight(compositeItem: MenuItemsWithGroups) {
 }
 
 export function getItemHeight(compositeItem: MenuItemsWithGroups) {
-    if (compositeItem.items && compositeItem.items?.length > 0) {
+    if ('items' in compositeItem && compositeItem.items && compositeItem.items?.length > 0) {
         return getGroupHeight(compositeItem);
     }
 

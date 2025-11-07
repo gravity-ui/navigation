@@ -124,3 +124,14 @@ export interface AsideHeaderItem extends MenuItem {
      */
     onOpenChangePopup?: PopupProps['onOpenChange'];
 }
+
+export interface GroupedMenuItem extends MenuItem {
+    groupId: string;
+    collapsible: boolean;
+    isCollapsed: boolean;
+    isDisabled: boolean;
+    collapsedByDefault?: boolean;
+    items: MenuItemsWithGroups[];
+}
+
+export type MenuItemsWithGroups = MenuItem | GroupedMenuItem;

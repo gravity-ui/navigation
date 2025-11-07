@@ -1,16 +1,9 @@
 import {useMemo} from 'react';
 
 import {MenuGroup, MenuItem} from '../../../types';
+import {MenuItemsWithGroups} from '../../types';
 
 import {ALL_PAGES_ID} from '.';
-
-export interface MenuItemsWithGroups extends MenuItem {
-    groupId?: string;
-    collapsible?: boolean;
-    isCollapsed?: boolean;
-    collapsedByDefault?: boolean;
-    items?: MenuItemsWithGroups[];
-}
 
 export const useGroupedMenuItems = (
     menuItems: MenuItem[],
@@ -76,8 +69,10 @@ export const useGroupedMenuItems = (
                         );
 
                         const group = groupsMap.get(groupId);
-                        const isGroupHidden =
-                            itemsWithVisible.length === 0 ? true : (group?.hidden ?? false);
+                        const isAllGroupItemsHidden = itemsWithVisible.length === 0;
+                        const isGroupHidden = isAllGroupItemsHidden
+                            ? true
+                            : (group?.hidden ?? false);
 
                         flatListItems.push({
                             id: groupId,
@@ -85,6 +80,7 @@ export const useGroupedMenuItems = (
                             icon: group?.icon,
                             order: group?.order ?? sortedItems[0]?.order ?? 0,
                             hidden: isGroupHidden,
+                            isDisabled: isAllGroupItemsHidden,
                             collapsible: group?.collapsible,
                             collapsedByDefault: group?.collapsedByDefault,
                             isCollapsed: group?.collapsed,

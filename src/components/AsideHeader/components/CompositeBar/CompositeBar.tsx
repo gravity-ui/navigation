@@ -6,9 +6,8 @@ import {Button, Flex, Icon, List, Text} from '@gravity-ui/uikit';
 import {ASIDE_HEADER_COMPACT_WIDTH} from '../../../constants';
 import {block} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
-import {AsideHeaderItem} from '../../types';
+import {AsideHeaderItem, MenuItemsWithGroups} from '../../types';
 import {UNGROUPED_ID} from '../AllPagesPanel/constants';
-import {MenuItemsWithGroups} from '../AllPagesPanel/useGroupedMenuItems';
 
 import {Item, ItemProps} from './Item/Item';
 import {MultipleTooltip, MultipleTooltipContext, MultipleTooltipProvider} from './MultipleTooltip';
@@ -239,9 +238,10 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                             );
                         }
 
-                        const isCollapsible = Boolean(item.collapsible);
-                        const isCollapsed = item.isCollapsed;
-                        const groupListItems = item.items?.filter((item) => !item.hidden);
+                        const isCollapsible = Boolean('collapsible' in item && item.collapsible);
+                        const isCollapsed = Boolean('isCollapsed' in item && item.isCollapsed);
+                        const groupListItems =
+                            'items' in item && item.items?.filter((item) => !item.hidden);
                         const hasHeader = item.title || item.icon || isCollapsible;
 
                         const sortedItems = sortItemsByAfterMoreButton(groupListItems || []);

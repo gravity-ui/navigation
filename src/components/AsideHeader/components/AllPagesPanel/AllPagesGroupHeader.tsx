@@ -15,6 +15,7 @@ interface AllPagesGroupHeaderProps {
     id: string;
     title: string | ReactNode;
     hidden: boolean;
+    isDisabled: boolean;
     icon?: SVGIconData;
     editMode?: boolean;
     onToggleHidden?: (groupId: string) => void;
@@ -27,6 +28,7 @@ export const AllPagesGroupHeader: React.FC<AllPagesGroupHeaderProps> = ({
     icon,
     title,
     hidden,
+    isDisabled,
 }) => {
     const onHideButtonClick = useCallback(
         (e: MouseEvent<HTMLButtonElement>) => {
@@ -50,6 +52,7 @@ export const AllPagesGroupHeader: React.FC<AllPagesGroupHeaderProps> = ({
             {editMode && id !== UNGROUPED_ID && (
                 <Button
                     onClick={onHideButtonClick}
+                    disabled={isDisabled}
                     view={hidden ? 'flat-secondary' : 'flat-action'}
                 >
                     <Button.Icon>{hidden ? <Pin /> : <PinFill />}</Button.Icon>
