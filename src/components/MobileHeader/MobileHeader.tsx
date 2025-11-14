@@ -204,8 +204,15 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                         className={b('burger-menu')}
                     />
                 ),
+                className: burgerMenu.className,
             }),
-            [burgerMenu.items, burgerMenu.modalItem, onBurgerMenuItemClick, renderBurgerMenuFooter],
+            [
+                burgerMenu.items,
+                burgerMenu.modalItem,
+                burgerMenu.className,
+                onBurgerMenuItemClick,
+                renderBurgerMenuFooter,
+            ],
         );
 
         useEffect(() => {
