@@ -58,6 +58,7 @@ $block: '.#{variables.$ns}mobile-header';
 
     &__panel-item {
         top: unset;
+        height: 100%;
     }
 
     &__content {
