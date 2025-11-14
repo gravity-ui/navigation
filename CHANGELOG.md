@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.5](https://github.com/gravity-ui/navigation/compare/v3.7.4...v3.7.5) (2025-11-14)
+
+
+### Bug Fixes
+
+* **MobileHeader:** set height to 100% for panel items and include burger menu class name ([#488](https://github.com/gravity-ui/navigation/issues/488)) ([d7367aa](https://github.com/gravity-ui/navigation/commit/d7367aa1a0e0ef578260136c68c03cd520c2e34a))
+
 ## [3.7.4](https://github.com/gravity-ui/navigation/compare/v3.7.3...v3.7.4) (2025-10-24)
 
 
