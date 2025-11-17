@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import {QAProps} from '@gravity-ui/uikit';
 
 import {RenderContentType} from '../Content';
@@ -6,10 +8,12 @@ import {LogoProps, MenuItem, OpenModalSubscriber, SubheaderMenuItem, TopAlertPro
 
 import {AsideHeaderContextType} from './AsideHeaderContext';
 
+export type TopAlertType = TopAlertProps | (() => React.ReactNode);
+
 export interface LayoutProps {
     compact: boolean;
     className?: string;
-    topAlert?: TopAlertProps;
+    topAlert?: TopAlertType;
 }
 
 interface EditMenuProps {
@@ -27,7 +31,7 @@ interface AsideHeaderGeneralProps extends QAProps {
     collapseTitle?: string;
     expandTitle?: string;
     menuMoreTitle?: string;
-    topAlert?: TopAlertProps;
+    topAlert?: TopAlertType;
     customBackground?: React.ReactNode;
     customBackgroundClassName?: string;
     hideCollapseButton?: boolean;

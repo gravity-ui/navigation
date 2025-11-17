@@ -11,10 +11,11 @@ import {
     eventBroker,
 } from '@gravity-ui/uikit';
 
-import {AsideHeader, AsideHeaderProps, FooterItem, TopAlertProps} from '../..';
+import {AsideHeader, AsideHeaderProps, FooterItem} from '../..';
 import {ASIDE_HEADER_ICON_SIZE} from '../../constants';
 import {OpenModalSubscriber} from '../../types';
 import {cn} from '../../utils/cn';
+import {TopAlertType} from '../types';
 
 import {menuItemsShowcase, text as placeholderText} from './moc';
 
@@ -39,7 +40,7 @@ enum Panel {
 interface AsideHeaderShowcaseProps {
     multipleTooltip?: boolean;
     initialCompact?: boolean;
-    topAlert?: TopAlertProps;
+    topAlert?: TopAlertType;
     customBackground?: React.ReactNode;
     customBackgroundClassName?: string;
     headerDecoration?: boolean;

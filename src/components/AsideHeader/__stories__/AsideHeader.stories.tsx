@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {Xmark} from '@gravity-ui/icons';
 import {Button, Flex, Icon, Text, spacing} from '@gravity-ui/uikit';
 import type {Meta, StoryFn} from '@storybook/react';
 
@@ -146,6 +147,49 @@ HeaderAlertCentered.args = {
         centered: true,
         dense: true,
     },
+};
+
+export const CustomTopAlert = TopAlertTemplate.bind({});
+CustomTopAlert.args = {
+    topAlert: () => (
+        <div
+            style={{
+                height: '28px',
+                padding: '8px',
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                background:
+                    ' linear-gradient(120deg, #191654, #43cea2 40%, #185a9d 70%, #f857a6 100%)',
+            }}
+        >
+            <div style={{width: '28px', height: '28px'}} />
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '8px',
+                    flexGrow: 1,
+                }}
+            >
+                <Text variant="subheader-2" style={{color: 'var(--g-color-text-light-primary)'}}>
+                    We&apos;ve got something new for you to try!
+                </Text>
+                <Button view="normal-contrast" size="m">
+                    Try Now
+                </Button>
+                <Button view="outlined-contrast" size="m">
+                    Learn More
+                </Button>
+            </div>
+            <Button view="flat-contrast" aria-label="Close">
+                <Icon data={Xmark} size={18} />
+            </Button>
+        </div>
+    ),
 };
 
 const fallbackArgs = {
