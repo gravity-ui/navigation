@@ -12,7 +12,7 @@ import './TopAlert.scss';
 const b = block('top-alert');
 
 type Props = {
-    alert: TopAlertProps;
+    alert?: TopAlertProps;
     className?: string;
     mobileView?: boolean;
 };
