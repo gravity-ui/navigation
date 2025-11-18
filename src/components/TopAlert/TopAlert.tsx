@@ -12,7 +12,7 @@ import './TopAlert.scss';
 const b = block('top-alert');
 
 type Props = {
-    alert?: TopAlertProps;
+    alert: TopAlertProps;
     className?: string;
     mobileView?: boolean;
 };
@@ -35,6 +35,12 @@ export const TopAlert = ({alert, className, mobileView = false}: Props) => {
 
     if (!alert || !alert.message) {
         return null;
+    }
+
+    const {render, ...restProps} = alert;
+
+    if (typeof render === 'function') {
+        return <div ref={alertRef}>{opened && render({...restProps, handleClose})}</div>;
     }
 
     return (

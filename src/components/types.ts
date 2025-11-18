@@ -77,7 +77,7 @@ export interface LogoProps {
     'aria-labelledby'?: string;
 }
 
-export interface TopAlertProps {
+interface TopAlertBaseProps {
     align?: AlertProps['align'];
     message: AlertProps['message'];
     title?: AlertProps['title'];
@@ -89,4 +89,8 @@ export interface TopAlertProps {
     centered?: boolean;
     dense?: boolean;
     onCloseTopAlert?: () => void;
+}
+
+export interface TopAlertProps extends TopAlertBaseProps {
+    render?: (params: TopAlertBaseProps & {handleClose: () => void}) => React.ReactElement;
 }

@@ -8,12 +8,10 @@ import {LogoProps, MenuItem, OpenModalSubscriber, SubheaderMenuItem, TopAlertPro
 
 import {AsideHeaderContextType} from './AsideHeaderContext';
 
-export type TopAlertType = TopAlertProps | (() => React.ReactNode);
-
 export interface LayoutProps {
     compact: boolean;
     className?: string;
-    topAlert?: TopAlertType;
+    topAlert?: TopAlertProps;
 }
 
 interface EditMenuProps {
@@ -31,7 +29,7 @@ interface AsideHeaderGeneralProps extends QAProps {
     collapseTitle?: string;
     expandTitle?: string;
     menuMoreTitle?: string;
-    topAlert?: TopAlertType;
+    topAlert?: TopAlertProps;
     customBackground?: React.ReactNode;
     customBackgroundClassName?: string;
     hideCollapseButton?: boolean;

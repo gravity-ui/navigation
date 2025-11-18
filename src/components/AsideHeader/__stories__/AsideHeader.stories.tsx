@@ -9,7 +9,7 @@ import {AsideFallback} from '../components/PageLayout/AsideFallback';
 import {PageLayout} from '../components/PageLayout/PageLayout';
 import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
 
-import {AsideHeaderShowcase} from './AsideHeaderShowcase';
+import {AsideHeaderShowcase, AsideHeaderShowcaseProps} from './AsideHeaderShowcase';
 import {DEFAULT_LOGO, menuItemsClamped, menuItemsShowcase} from './moc';
 
 import logoIcon from '../../../../.storybook/assets/logo.svg';
@@ -127,7 +127,9 @@ AdvancedUsage.args = {
     initialCompact: true,
 };
 
-const TopAlertTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
+const TopAlertTemplate: StoryFn<AsideHeaderShowcaseProps> = (args) => (
+    <AsideHeaderShowcase {...args} />
+);
 export const HeaderAlert = TopAlertTemplate.bind({});
 HeaderAlert.args = {
     topAlert: {
@@ -149,34 +151,25 @@ HeaderAlertCentered.args = {
     },
 };
 
-export const CustomTopAlert = TopAlertTemplate.bind({});
-CustomTopAlert.args = {
-    topAlert: () => (
-        <div
-            style={{
-                height: '28px',
-                padding: '8px',
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                background:
-                    ' linear-gradient(120deg, #191654, #43cea2 40%, #185a9d 70%, #f857a6 100%)',
-            }}
-        >
-            <div style={{width: '28px', height: '28px'}} />
-            <div
+export const HeaderAlertCustom = TopAlertTemplate.bind({});
+HeaderAlertCustom.args = {
+    topAlert: {
+        message: "We've got something new for you to try!",
+        render: ({message, handleClose}) => (
+            <Flex
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                gap={4}
                 style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: '8px',
-                    flexGrow: 1,
+                    position: 'relative',
+                    padding: '8px',
+                    background:
+                        ' linear-gradient(120deg, #191654, #43cea2 40%, #185a9d 70%, #f857a6 100%)',
                 }}
             >
                 <Text variant="subheader-2" style={{color: 'var(--g-color-text-light-primary)'}}>
-                    We&apos;ve got something new for you to try!
+                    {message}
                 </Text>
                 <Button view="normal-contrast" size="m">
                     Try Now
@@ -184,12 +177,17 @@ CustomTopAlert.args = {
                 <Button view="outlined-contrast" size="m">
                     Learn More
                 </Button>
-            </div>
-            <Button view="flat-contrast" aria-label="Close">
-                <Icon data={Xmark} size={18} />
-            </Button>
-        </div>
-    ),
+                <Button
+                    style={{position: 'absolute', right: '8px'}}
+                    view="flat-contrast"
+                    aria-label="Close"
+                    onClick={handleClose}
+                >
+                    <Icon data={Xmark} size={18} />
+                </Button>
+            </Flex>
+        ),
+    },
 };
 
 const fallbackArgs = {

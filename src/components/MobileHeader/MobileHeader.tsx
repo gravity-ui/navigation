@@ -1,11 +1,10 @@
 import React, {Suspense, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {useForwardRef} from '../../hooks/useForwardRef';
-import {TopAlertType} from '../AsideHeader/types';
 import {Content, RenderContentType} from '../Content';
 import {Drawer, DrawerItem, DrawerItemProps} from '../Drawer/Drawer';
 import {MobileLogo} from '../MobileLogo';
-import {LogoProps} from '../types';
+import {LogoProps, TopAlertProps} from '../types';
 import {block} from '../utils/cn';
 
 import {Burger} from './Burger/Burger';
@@ -49,7 +48,7 @@ export interface MobileHeaderProps {
     burgerCloseTitle?: string;
     burgerOpenTitle?: string;
     panelItems?: PanelItem[];
-    topAlert?: TopAlertType;
+    topAlert?: TopAlertProps;
     renderContent?: RenderContentType;
     sideItemRenderContent?: RenderContentType;
     onEvent?: (itemName: string, eventName: MobileHeaderEvent) => void;
@@ -278,11 +277,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                 <div className={b('header-container')}>
                     {topAlert && (
                         <Suspense fallback={null}>
-                            {typeof topAlert === 'function' ? (
-                                topAlert()
-                            ) : (
-                                <TopAlert alert={topAlert} mobileView />
-                            )}
+                            <TopAlert alert={topAlert} mobileView />
                         </Suspense>
                     )}
                     <header className={b('header')} style={{height: size}}>

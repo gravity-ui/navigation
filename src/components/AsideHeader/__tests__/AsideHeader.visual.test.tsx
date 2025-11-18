@@ -68,8 +68,8 @@ test.describe('AsideHeader', () => {
         await expectScreenshot();
     });
 
-    test('render story: <CustomTopAlert>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.CustomTopAlert />, undefined, {
+    test('render story: <HeaderAlertCustom>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.HeaderAlertCustom />, undefined, {
             width: 1200,
             height: 720,
         });
