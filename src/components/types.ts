@@ -89,8 +89,11 @@ interface TopAlertBaseProps {
     centered?: boolean;
     dense?: boolean;
     onCloseTopAlert?: () => void;
+    render?: never;
 }
 
-export interface TopAlertProps extends TopAlertBaseProps {
-    render?: (params: TopAlertBaseProps & {handleClose: () => void}) => React.ReactElement;
-}
+export type TopAlertProps =
+    | TopAlertBaseProps
+    | {
+          render: (params: {handleClose: () => void}) => React.ReactElement;
+      };

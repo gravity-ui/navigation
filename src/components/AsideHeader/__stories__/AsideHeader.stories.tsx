@@ -154,8 +154,7 @@ HeaderAlertCentered.args = {
 export const HeaderAlertCustom = TopAlertTemplate.bind({});
 HeaderAlertCustom.args = {
     topAlert: {
-        message: "We've got something new for you to try!",
-        render: ({message, handleClose}) => (
+        render: ({handleClose}) => (
             <Flex
                 direction="row"
                 justifyContent="center"
@@ -169,7 +168,7 @@ HeaderAlertCustom.args = {
                 }}
             >
                 <Text variant="subheader-2" style={{color: 'var(--g-color-text-light-primary)'}}>
-                    {message}
+                    We&apos;ve got something new for you to try!
                 </Text>
                 <Button view="normal-contrast" size="m">
                     Try Now
