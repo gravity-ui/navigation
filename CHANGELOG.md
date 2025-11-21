@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.8.0](https://github.com/gravity-ui/navigation/compare/v3.7.5...v3.8.0) (2025-11-21)
+
+
+### Features
+
+* **PageLayout:** support function type for topAlert prop ([#491](https://github.com/gravity-ui/navigation/issues/491)) ([7790d8c](https://github.com/gravity-ui/navigation/commit/7790d8cb1e203ef333b6a694ca30c6de2da8d6fb))
+
 ## [3.7.5](https://github.com/gravity-ui/navigation/compare/v3.7.4...v3.7.5) (2025-11-14)
 
 
