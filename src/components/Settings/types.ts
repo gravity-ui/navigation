@@ -74,6 +74,10 @@ export interface SettingsItemProps {
     labelId?: string;
     title: string;
     highlightedTitle?: React.ReactNode | null;
+    /**
+     * Method to change rendering of title
+     * When method returns null, whole label column is not rendered
+     */
     renderTitleComponent?: (highlightedTitle: React.ReactNode | null) => React.ReactNode;
     align?: 'top' | 'center';
     children: React.ReactNode;
