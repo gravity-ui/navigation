@@ -78,6 +78,11 @@ const config: PlaywrightTestConfig = {
             },
         },
     },
+    expect: {
+        toMatchSnapshot: {
+            threshold: 0.1,
+        },
+    },
     /* Configure projects for major browsers */
     projects: [
         {
