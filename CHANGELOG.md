@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.0](https://github.com/gravity-ui/navigation/compare/v3.8.0...v3.9.0) (2025-11-21)
+
+
+### Features
+
+* **Settings.Item:** add the ability to hide item title ([#492](https://github.com/gravity-ui/navigation/issues/492)) ([8b257a1](https://github.com/gravity-ui/navigation/commit/8b257a1f26b09e2a9c3060d44f92fd6fe3194574))
+
 ## [3.8.0](https://github.com/gravity-ui/navigation/compare/v3.7.5...v3.8.0) (2025-11-21)
 
 
