@@ -74,17 +74,16 @@ export interface SettingsItemProps {
     labelId?: string;
     title: string;
     highlightedTitle?: React.ReactNode | null;
+    /**
+     * Method to change rendering of title
+     * When method returns null, whole label column is not rendered
+     */
     renderTitleComponent?: (highlightedTitle: React.ReactNode | null) => React.ReactNode;
     align?: 'top' | 'center';
     children: React.ReactNode;
     withBadge?: boolean;
     mode?: 'row';
     description?: React.ReactNode;
-    /**
-     * Render item with label or with content only
-     * @default true
-     */
-    showTitle?: boolean;
 }
 
 export type SettingsContentProps = Omit<SettingsProps, 'loading' | 'renderLoading'>;

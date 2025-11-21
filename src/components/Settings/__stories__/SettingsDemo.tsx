@@ -198,7 +198,11 @@ export const SettingsComponent = React.memo(
                                     }}
                                 />
                             </Settings.Item>
-                            <Settings.Item title="Full width" id="full-width" showTitle={false}>
+                            <Settings.Item
+                                title="Full width"
+                                id="full-width"
+                                renderTitleComponent={() => null}
+                            >
                                 Place to display full width content
                             </Settings.Item>
                         </Settings.Section>

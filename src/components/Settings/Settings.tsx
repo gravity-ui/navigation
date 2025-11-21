@@ -241,18 +241,17 @@ Settings.Item = function SettingsItem(setting: SettingsItemProps) {
         renderTitleComponent = identity,
         mode,
         description,
-        showTitle = true,
     } = setting;
 
     const selected = useSettingsSelectionContext();
     const isSettingSelected = selected.setting && selected.setting.id === id;
 
     const {renderRightAdornment, showRightAdornmentOnHover} = useSettingsContext();
-    const titleNode = (
-        <span className={b('item-title', {badge: withBadge})}>
-            {renderTitleComponent(highlightedTitle)}
-        </span>
-    );
+    const titleComponent = renderTitleComponent(highlightedTitle);
+    const titleNode = <span className={b('item-title', {badge: withBadge})}>{titleComponent}</span>;
+
+    const showTitle = titleComponent !== null;
+
     return (
         <div
             className={b('item', {
