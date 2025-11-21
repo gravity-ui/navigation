@@ -198,6 +198,9 @@ export const SettingsComponent = React.memo(
                                     }}
                                 />
                             </Settings.Item>
+                            <Settings.Item title="Full width" id="full-width" showTitle={false}>
+                                Place to display full width content
+                            </Settings.Item>
                         </Settings.Section>
                     </Settings.Page>
                     <Settings.Page id="appearance" title="Appearance" icon={{data: Gear}}>

@@ -241,6 +241,7 @@ Settings.Item = function SettingsItem(setting: SettingsItemProps) {
         renderTitleComponent = identity,
         mode,
         description,
+        showTitle = true,
     } = setting;
 
     const selected = useSettingsSelectionContext();
@@ -254,26 +255,35 @@ Settings.Item = function SettingsItem(setting: SettingsItemProps) {
     );
     return (
         <div
-            className={b('item', {align, mode, selected: isSettingSelected})}
+            className={b('item', {
+                align,
+                mode,
+                selected: isSettingSelected,
+                title: showTitle ? 'show' : 'hide',
+            })}
             ref={isSettingSelected ? selected.selectedRef : undefined}
         >
-            <label className={b('item-heading')} id={labelId}>
-                {renderRightAdornment ? (
-                    <Flex className={b('item-title-wrapper')} gap={3}>
-                        {titleNode}
-                        <div
-                            className={b('item-right-adornment', {
-                                hidden: showRightAdornmentOnHover,
-                            })}
-                        >
-                            {renderRightAdornment(setting)}
-                        </div>
-                    </Flex>
-                ) : (
-                    titleNode
-                )}
-                {description ? <span className={b('item-description')}>{description}</span> : null}
-            </label>
+            {showTitle ? (
+                <label className={b('item-heading')} id={labelId}>
+                    {renderRightAdornment ? (
+                        <Flex className={b('item-title-wrapper')} gap={3}>
+                            {titleNode}
+                            <div
+                                className={b('item-right-adornment', {
+                                    hidden: showRightAdornmentOnHover,
+                                })}
+                            >
+                                {renderRightAdornment(setting)}
+                            </div>
+                        </Flex>
+                    ) : (
+                        titleNode
+                    )}
+                    {description ? (
+                        <span className={b('item-description')}>{description}</span>
+                    ) : null}
+                </label>
+            ) : null}
             <div className={b('item-content')}>{children}</div>
         </div>
     );

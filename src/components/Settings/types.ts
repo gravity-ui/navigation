@@ -80,6 +80,11 @@ export interface SettingsItemProps {
     withBadge?: boolean;
     mode?: 'row';
     description?: React.ReactNode;
+    /**
+     * Render item with label or with content only
+     * @default true
+     */
+    showTitle?: boolean;
 }
 
 export type SettingsContentProps = Omit<SettingsProps, 'loading' | 'renderLoading'>;

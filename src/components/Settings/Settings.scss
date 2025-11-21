@@ -183,6 +183,10 @@ $block: '.#{variables.$ns}settings';
         grid-template-columns: 216px 1fr;
         justify-items: start;
 
+        &_title_hide {
+            grid-template-columns: 1fr;
+        }
+
         &_align_top {
             align-items: start;
         }
