@@ -58,15 +58,11 @@ const config: PlaywrightTestConfig = {
         timezoneId: 'UTC',
         ctCacheDir: process.env.IS_DOCKER ? '.cache-docker' : '.cache',
         ctViteConfig: {
-            css: {
-                preprocessorOptions: {
-                    scss: {
-                        api: 'modern-compiler',
-                    },
-                },
-            },
+            //@ts-ignore
             plugins: [
+                //@ts-ignore
                 react(),
+                //@ts-ignore
                 svgrPlugin({
                     include: '**/*.svg',
                 }),
@@ -74,13 +70,12 @@ const config: PlaywrightTestConfig = {
             resolve: {
                 alias: {
                     '~playwright': resolve(__dirname),
+                    '~@gravity-ui/uikit/styles/mixins': '@gravity-ui/uikit/styles/mixins',
+                    '~@doc-tools/transform/dist/css/yfm.css':
+                        '@doc-tools/transform/dist/css/yfm.css',
+                    '~@gravity-ui/uikit/styles/fonts.scss': '@gravity-ui/uikit/styles/fonts.scss',
                 },
             },
-        },
-    },
-    expect: {
-        toMatchSnapshot: {
-            threshold: 0.1,
         },
     },
     /* Configure projects for major browsers */

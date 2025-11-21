@@ -1,5 +1,5 @@
-@use '~@doc-tools/transform/dist/css/yfm';
-@use '~@gravity-ui/uikit/styles/fonts.scss';
+@import '~@doc-tools/transform/dist/css/yfm.css';
+@import '~@gravity-ui/uikit/styles/fonts.scss';
 
 body {
     padding: 0;

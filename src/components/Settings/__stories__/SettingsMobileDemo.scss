@@ -1,4 +1,4 @@
-@use '~@gravity-ui/uikit/styles/mixins';
+@import '../../../../styles/mixins';
 
 .settings-mobile-demo {
     height: 100%;
@@ -8,6 +8,6 @@
     }
 
     &__appearance-header {
-        @include mixins.text-body-2;
+        @include text-body-2;
     }
 }
