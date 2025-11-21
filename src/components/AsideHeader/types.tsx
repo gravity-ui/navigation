@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import {QAProps} from '@gravity-ui/uikit';
 
 import {RenderContentType} from '../Content';

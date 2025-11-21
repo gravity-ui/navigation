@@ -24,7 +24,10 @@ export const TopAlert = ({alert, className, mobileView = false}: Props) => {
 
     const handleClose = React.useCallback(() => {
         setOpened(false);
-        alert?.onCloseTopAlert?.();
+
+        if (alert && 'onCloseTopAlert' in alert) {
+            alert.onCloseTopAlert?.();
+        }
     }, [alert]);
 
     React.useEffect(() => {
@@ -33,8 +36,21 @@ export const TopAlert = ({alert, className, mobileView = false}: Props) => {
         }
     }, [opened, updateTopSize]);
 
-    if (!alert || !alert.message) {
+    if (!alert) {
         return null;
+    }
+
+    const {render} = alert;
+
+    if (typeof render === 'function') {
+        return (
+            <div
+                ref={alertRef}
+                className={b('wrapper', {'with-bottom-border': !mobileView && opened}, className)}
+            >
+                {opened && render({handleClose})}
+            </div>
+        );
     }
 
     return (
