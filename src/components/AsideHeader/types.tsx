@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import {PopupProps, QAProps} from '@gravity-ui/uikit';
 
 import {RenderContentType} from '../Content';
