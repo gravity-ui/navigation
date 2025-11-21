@@ -1,6 +1,5 @@
+@use '~@gravity-ui/uikit/styles/mixins';
 @use '../../variables';
-
-@import '~@gravity-ui/uikit/styles/mixins';
 
 $block: '.#{variables.$ns}mobile-header-footer-item';
 
@@ -11,7 +10,7 @@ $block: '.#{variables.$ns}mobile-header-footer-item';
     position: relative;
 
     &__button {
-        @include button-reset();
+        @include mixins.button-reset();
 
         display: flex;
         align-items: center;
