@@ -1,6 +1,5 @@
+@use '~@gravity-ui/uikit/styles/mixins';
 @use '../variables';
-
-@import '../../../styles/mixins';
 
 $block: '.#{variables.$ns}settings';
 
@@ -53,7 +52,7 @@ $block: '.#{variables.$ns}settings';
 
         #{$block}__section {
             &-heading {
-                @include text-subheader-3;
+                @include mixins.text-subheader-3;
             }
 
             &-subheader {
@@ -85,11 +84,11 @@ $block: '.#{variables.$ns}settings';
             }
 
             &-heading {
-                @include text-body-2();
+                @include mixins.text-body-2();
             }
 
             &-description {
-                @include text-body-1();
+                @include mixins.text-body-1();
             }
 
             &_mode_row {
@@ -106,7 +105,7 @@ $block: '.#{variables.$ns}settings';
         }
 
         #{$block}__not-found {
-            @include text-body-2;
+            @include mixins.text-body-2;
             justify-items: start;
             color: var(--g-color-text-hint);
             margin: 20px 0 0 20px;
@@ -132,7 +131,7 @@ $block: '.#{variables.$ns}settings';
     }
 
     &__heading {
-        @include text-subheader-2;
+        @include mixins.text-subheader-2;
         margin: 20px 20px 0;
     }
 
@@ -158,7 +157,7 @@ $block: '.#{variables.$ns}settings';
         }
 
         &-heading {
-            @include text-subheader-2;
+            @include mixins.text-subheader-2;
             margin: 0;
         }
 
@@ -211,7 +210,7 @@ $block: '.#{variables.$ns}settings';
         }
 
         &-description {
-            @include text-caption-2();
+            @include mixins.text-caption-2();
             display: block;
             margin-top: 2px;
             padding-right: 20px;
@@ -236,7 +235,7 @@ $block: '.#{variables.$ns}settings';
     }
 
     &__found {
-        @include text-accent;
+        @include mixins.text-accent;
         background: var(--g-color-base-selection);
     }
 }
