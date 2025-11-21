@@ -247,33 +247,42 @@ Settings.Item = function SettingsItem(setting: SettingsItemProps) {
     const isSettingSelected = selected.setting && selected.setting.id === id;
 
     const {renderRightAdornment, showRightAdornmentOnHover} = useSettingsContext();
-    const titleNode = (
-        <span className={b('item-title', {badge: withBadge})}>
-            {renderTitleComponent(highlightedTitle)}
-        </span>
-    );
+    const titleComponent = renderTitleComponent(highlightedTitle);
+    const titleNode = <span className={b('item-title', {badge: withBadge})}>{titleComponent}</span>;
+
+    const showTitle = titleComponent !== null;
+
     return (
         <div
-            className={b('item', {align, mode, selected: isSettingSelected})}
+            className={b('item', {
+                align,
+                mode,
+                selected: isSettingSelected,
+                title: showTitle ? 'show' : 'hide',
+            })}
             ref={isSettingSelected ? selected.selectedRef : undefined}
         >
-            <label className={b('item-heading')} id={labelId}>
-                {renderRightAdornment ? (
-                    <Flex className={b('item-title-wrapper')} gap={3}>
-                        {titleNode}
-                        <div
-                            className={b('item-right-adornment', {
-                                hidden: showRightAdornmentOnHover,
-                            })}
-                        >
-                            {renderRightAdornment(setting)}
-                        </div>
-                    </Flex>
-                ) : (
-                    titleNode
-                )}
-                {description ? <span className={b('item-description')}>{description}</span> : null}
-            </label>
+            {showTitle ? (
+                <label className={b('item-heading')} id={labelId}>
+                    {renderRightAdornment ? (
+                        <Flex className={b('item-title-wrapper')} gap={3}>
+                            {titleNode}
+                            <div
+                                className={b('item-right-adornment', {
+                                    hidden: showRightAdornmentOnHover,
+                                })}
+                            >
+                                {renderRightAdornment(setting)}
+                            </div>
+                        </Flex>
+                    ) : (
+                        titleNode
+                    )}
+                    {description ? (
+                        <span className={b('item-description')}>{description}</span>
+                    ) : null}
+                </label>
+            ) : null}
             <div className={b('item-content')}>{children}</div>
         </div>
     );
