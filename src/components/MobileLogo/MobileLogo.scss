@@ -1,6 +1,5 @@
+@use '~@gravity-ui/uikit/styles/mixins';
 @use '../variables';
-
-@import '../../../styles/mixins';
 
 $block: '.#{variables.$ns}mobile-logo';
 
@@ -28,7 +27,7 @@ $block: '.#{variables.$ns}mobile-logo';
     }
 
     &__title {
-        @include text-header-1();
-        @include overflow-ellipsis();
+        @include mixins.text-header-1();
+        @include mixins.overflow-ellipsis();
     }
 }
