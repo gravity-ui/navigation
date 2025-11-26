@@ -7,6 +7,7 @@ import {AsideHeaderItem} from 'src/components/AsideHeader/types';
 import {MakeItemParams} from 'src/components/types';
 
 import {block} from '../../../../utils/cn';
+import {MakeItemParams} from '../../types';
 
 import './AllPagesListItem.scss';
 
