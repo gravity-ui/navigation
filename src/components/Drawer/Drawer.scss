@@ -26,7 +26,6 @@ $block: '.#{variables.$ns}drawer';
         left: var(--gn-aside-header-size, 0);
         top: var(--gn-top-alert-height, 0);
         bottom: 0;
-        will-change: transform;
         background-color: var(--g-color-base-background);
         pointer-events: initial;
         box-shadow: var(--_--item-shadow, none);
