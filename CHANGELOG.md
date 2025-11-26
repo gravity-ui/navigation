@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.10.1](https://github.com/gravity-ui/navigation/compare/v3.10.0...v3.10.1) (2025-11-26)
+
+
+### Bug Fixes
+
+* **Settings.Item:** correct styles override for item w/out title ([#500](https://github.com/gravity-ui/navigation/issues/500)) ([76d7921](https://github.com/gravity-ui/navigation/commit/76d792139bd01b2ddcf5611650cb474af68dff32))
+
 ## [3.10.0](https://github.com/gravity-ui/navigation/compare/v3.9.0...v3.10.0) (2025-11-26)
 
 
