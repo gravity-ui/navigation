@@ -1,7 +1,7 @@
-import React, {FC, ReactNode, useCallback, useContext, useRef} from 'react';
+import React, {FC, ReactNode, useCallback, useContext, useRef, useState} from 'react';
 
-import {ChevronDown, ChevronUp} from '@gravity-ui/icons';
-import {Button, Flex, Icon, List, Text} from '@gravity-ui/uikit';
+import {ChevronDown, ChevronRight} from '@gravity-ui/icons';
+import {List} from '@gravity-ui/uikit';
 
 import {ASIDE_HEADER_COMPACT_WIDTH} from '../../../constants';
 import {block} from '../../../utils/cn';
@@ -60,6 +60,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
 }) => {
     const ref = useRef<List<AsideHeaderItem>>(null);
     const tooltipRef = useRef<HTMLDivElement>(null);
+    const [hoveredGroupId, setHoveredGroupId] = useState<string | null>(null);
 
     const {
         setValue: setMultipleTooltipContextValue,
@@ -246,46 +247,34 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
 
                         const sortedItems = sortItemsByAfterMoreButton(groupListItems || []);
                         const isUngrouped = item.id === UNGROUPED_ID;
+                        const isGroupHovered = hoveredGroupId === item.id;
+
+                        let groupIcon = item.icon;
+
+                        if (!isCollapsed) {
+                            groupIcon = ChevronDown;
+                        } else if (isGroupHovered) {
+                            groupIcon = ChevronRight;
+                        }
 
                         return (
                             <div className={b('menu-group')}>
                                 {hasHeader && !isUngrouped && (
-                                    <Flex
-                                        className={b('menu-group-header')}
-                                        gap="2"
-                                        alignItems="center"
-                                    >
-                                        {item.icon ? (
-                                            <Icon
-                                                data={item.icon}
-                                                size={16}
-                                                className={b('menu-group-icon')}
-                                            />
-                                        ) : null}
-
-                                        <Text variant="body-1">{item.title}</Text>
-
-                                        {isCollapsible ? (
-                                            <Button
-                                                view="flat-secondary"
-                                                size="s"
-                                                className={b('menu-group-toggle')}
-                                                onClick={() =>
-                                                    onToggleMenuGroupVisibility?.(item.id)
-                                                }
-                                                aria-label={
-                                                    isCollapsed ? 'Expand group' : 'Collapse group'
-                                                }
-                                            >
-                                                <Icon
-                                                    data={isCollapsed ? ChevronUp : ChevronDown}
-                                                    size={14}
-                                                />
-                                            </Button>
-                                        ) : (
-                                            <span className={b('menu-group-toggle-placeholder')} />
-                                        )}
-                                    </Flex>
+                                    <Item
+                                        {...item}
+                                        className={b('menu-group-header', {collapsed: isCollapsed})}
+                                        icon={groupIcon}
+                                        compact={compact}
+                                        onMouseEnter={() => {
+                                            setHoveredGroupId(item.id);
+                                        }}
+                                        onMouseLeave={() => {
+                                            setHoveredGroupId(null);
+                                        }}
+                                        onItemClick={(item) => {
+                                            onToggleMenuGroupVisibility?.(item.id);
+                                        }}
+                                    />
                                 )}
 
                                 {!isCollapsed && (
