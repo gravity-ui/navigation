@@ -185,7 +185,7 @@ $block: '.#{variables.$ns}settings';
 
         &_title_hide {
             grid-template-columns: 1fr;
-            justify-content: normal;
+            justify-items: normal;
         }
 
         &_align_top {
