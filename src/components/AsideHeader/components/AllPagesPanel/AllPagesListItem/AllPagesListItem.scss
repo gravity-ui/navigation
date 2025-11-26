@@ -12,6 +12,8 @@
     padding: 0 var(--g-spacing-6);
     column-gap: var(--g-spacing-4);
 
+    cursor: pointer;
+
     &__text {
         flex: 1;
         text-align: initial;
