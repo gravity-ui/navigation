@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.10.0](https://github.com/gravity-ui/navigation/compare/v3.9.0...v3.10.0) (2025-11-26)
+
+
+### Features
+
+* support item.itemWrapper in AllPagesPannel ([#496](https://github.com/gravity-ui/navigation/issues/496)) ([bfaa84b](https://github.com/gravity-ui/navigation/commit/bfaa84b3354c2ca4af7ebd02480734da81112d10))
+
+
+### Bug Fixes
+
+* **Settings.Item:** width of item w/out label ([#497](https://github.com/gravity-ui/navigation/issues/497)) ([a71471a](https://github.com/gravity-ui/navigation/commit/a71471a7b1fcad312cec7c8e548a46924cd7bdfd))
+
 ## [3.9.0](https://github.com/gravity-ui/navigation/compare/v3.8.0...v3.9.0) (2025-11-21)
 
 
