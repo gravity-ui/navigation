@@ -48,10 +48,17 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         }
     }, [isEditMode, onEditModeChanged, editMenuProps]);
 
-    const onItemClick = useCallback((item: ListItemData<MenuItem>) => {
-        //@ts-ignore TODO fix when @gravity-ui/uikit/List will provide event arg on item click
-        item.onItemClick?.(item, false);
-    }, []);
+    const onItemClick = useCallback(
+        (
+            item: ListItemData<MenuItem>,
+            _index: number,
+            _fromKeyboard?: boolean,
+            event?: React.MouseEvent<HTMLDivElement, MouseEvent> | React.KeyboardEvent<HTMLElement>,
+        ) => {
+            item.onItemClick?.(item, false, event as React.MouseEvent<HTMLDivElement, MouseEvent>);
+        },
+        [],
+    );
 
     const togglePageVisibility = useCallback(
         (item: MenuItem) => {
