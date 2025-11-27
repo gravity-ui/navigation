@@ -171,7 +171,6 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                                 setVisiblePanel(undefined);
                                 setPopupVisible(!popupVisible);
                             }}
-                            enableTooltip={false}
                             popupVisible={popupVisible}
                             popupRef={asideRef}
                             popupPlacement={['right-end']}

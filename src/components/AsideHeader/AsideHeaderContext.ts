@@ -11,6 +11,9 @@ export interface AsideHeaderInnerContextType extends AsideHeaderInnerProps {
         collapsed: boolean,
         event: React.MouseEvent<HTMLElement, MouseEvent>,
     ) => void;
+    onMouseEnter?: () => void;
+    onMouseLeave?: () => void;
+    isExpanded: boolean;
 }
 
 const AsideHeaderInnerContext = React.createContext<AsideHeaderInnerContextType | undefined>(
@@ -32,11 +35,19 @@ export const useAsideHeaderInnerContext = (): AsideHeaderInnerContextType => {
 export interface AsideHeaderContextType {
     compact: boolean;
     size: number;
+    isExpanded: boolean;
+    onChangeCompact?: (compact: boolean) => void;
+    onMouseEnter?: () => void;
+    onMouseLeave?: () => void;
 }
 
 const AsideHeaderContext = React.createContext<AsideHeaderContextType | undefined>({
     compact: false,
     size: 0,
+    isExpanded: false,
+    onChangeCompact: () => {},
+    onMouseEnter: () => {},
+    onMouseLeave: () => {},
 });
 
 AsideHeaderContext.displayName = 'AsideHeaderContext';

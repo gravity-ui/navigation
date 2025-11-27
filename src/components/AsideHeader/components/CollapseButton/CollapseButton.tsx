@@ -3,7 +3,7 @@ import React, {useCallback} from 'react';
 import {Icon} from '@gravity-ui/uikit';
 
 import {block} from '../../../utils/cn';
-import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
+import {useAsideHeaderContext, useAsideHeaderInnerContext} from '../../AsideHeaderContext';
 import i18n from '../../i18n';
 
 import controlMenuButtonIcon from '../../../../../assets/icons/control-menu-button.svg';
@@ -17,11 +17,13 @@ interface CollapseButtonProps {
 }
 
 export const CollapseButton = ({className}: CollapseButtonProps) => {
-    const {onChangeCompact, compact, expandTitle, collapseTitle, collapseButtonWrapper} =
-        useAsideHeaderInnerContext();
+    const {compact, onChangeCompact} = useAsideHeaderContext();
+    const {expandTitle, collapseTitle, collapseButtonWrapper} = useAsideHeaderInnerContext();
 
     const onCollapseButtonClick = useCallback(() => {
-        onChangeCompact?.(!compact);
+        const newCompact = !compact;
+
+        onChangeCompact?.(newCompact);
     }, [compact, onChangeCompact]);
 
     const buttonTitle = compact
@@ -30,7 +32,7 @@ export const CollapseButton = ({className}: CollapseButtonProps) => {
 
     const defaultButton = (
         <button
-            className={b({compact}, className)}
+            className={b({compact: compact}, className)}
             onClick={onCollapseButtonClick}
             title={buttonTitle}
         >
@@ -39,7 +41,10 @@ export const CollapseButton = ({className}: CollapseButtonProps) => {
     );
 
     if (collapseButtonWrapper) {
-        return collapseButtonWrapper(defaultButton, {compact, onChangeCompact});
+        return collapseButtonWrapper(defaultButton, {
+            compact,
+            onChangeCompact,
+        });
     }
 
     return defaultButton;

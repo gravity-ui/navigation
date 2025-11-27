@@ -29,6 +29,9 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         className,
         hideCollapseButton,
         qa,
+        onMouseEnter,
+        onMouseLeave,
+        isExpanded,
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
 
@@ -38,9 +41,17 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         setRef<HTMLDivElement>(ref, asideRef.current);
     }, [ref]);
 
+    const isExpandedByHover = compact && isExpanded;
+
     return (
         <React.Fragment>
-            <div className={b('aside', className)} style={{width: size}} data-qa={qa}>
+            <div
+                className={b('aside', {'expanded-by-hover': isExpandedByHover}, className)}
+                style={{width: size}}
+                data-qa={qa}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
+            >
                 <div className={b('aside-popup-anchor')} ref={asideRef} />
                 {customBackground && (
                     <div className={b('aside-custom-background', customBackgroundClassName)}>

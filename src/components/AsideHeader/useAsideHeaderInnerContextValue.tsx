@@ -9,7 +9,13 @@ import {AsideHeaderItem, AsideHeaderProps, InnerPanels} from './types';
 const EMPTY_MENU_ITEMS: AsideHeaderItem[] = [];
 
 export const useAsideHeaderInnerContextValue = (
-    props: AsideHeaderProps & {size: number},
+    props: AsideHeaderProps & {
+        size: number;
+        compact: boolean;
+        isExpanded: boolean;
+        onMouseEnter?: () => void;
+        onMouseLeave?: () => void;
+    },
 ): AsideHeaderInnerContextType => {
     const {size, onClosePanel, menuItems, panelItems, onMenuItemsChanged, onAllPagesClick} = props;
     const [innerVisiblePanel, setInnerVisiblePanel] = useState<InnerPanels | undefined>();

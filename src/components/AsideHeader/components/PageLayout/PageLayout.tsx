@@ -3,6 +3,7 @@ import React, {PropsWithChildren, Suspense, useMemo} from 'react';
 import {Content, ContentProps} from '../../../Content';
 import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../../constants';
 import {AsideHeaderContextProvider, useAsideHeaderContext} from '../../AsideHeaderContext';
+import {useIsExpanded} from '../../hooks/useIsExpanded';
 import {LayoutProps} from '../../types';
 import {b} from '../../utils';
 
@@ -12,16 +13,31 @@ const TopAlert = React.lazy(() =>
     import('../../../TopAlert').then((module) => ({default: module.TopAlert})),
 );
 
-export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {}
+export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {
+    onChangeCompact?: (compact: boolean) => void;
+}
 
-const Layout = ({compact, className, children, topAlert}: PageLayoutProps) => {
-    const size = compact ? ASIDE_HEADER_COMPACT_WIDTH : ASIDE_HEADER_EXPANDED_WIDTH;
-    const asideHeaderContextValue = useMemo(() => ({size, compact}), [compact, size]);
+const Layout = ({compact, className, children, topAlert, onChangeCompact}: PageLayoutProps) => {
+    const {isExpanded, onMouseEnter, onMouseLeave} = useIsExpanded(compact);
+
+    const size = isExpanded ? ASIDE_HEADER_EXPANDED_WIDTH : ASIDE_HEADER_COMPACT_WIDTH;
+
+    const asideHeaderContextValue = useMemo(
+        () => ({
+            size,
+            compact,
+            isExpanded,
+            onChangeCompact,
+            onMouseEnter,
+            onMouseLeave,
+        }),
+        [size, compact, isExpanded, onChangeCompact, onMouseEnter, onMouseLeave],
+    );
 
     return (
         <AsideHeaderContextProvider value={asideHeaderContextValue}>
             <div
-                className={b({compact}, className)}
+                className={b({compact: !isExpanded}, className)}
                 style={{
                     ...({'--gn-aside-header-size': `${size}px`} as React.CSSProperties),
                 }}
@@ -41,10 +57,15 @@ const ConnectedContent: React.FC<PropsWithChildren<Pick<ContentProps, 'renderCon
     children,
     renderContent,
 }) => {
-    const {size} = useAsideHeaderContext();
+    const {size, compact, isExpanded} = useAsideHeaderContext();
+    const isExpandedByHover = compact && isExpanded;
 
     return (
-        <Content size={size} className={b('content')} renderContent={renderContent}>
+        <Content
+            size={size}
+            className={b('content', {'expanded-by-hover': isExpandedByHover})}
+            renderContent={renderContent}
+        >
             {children}
         </Content>
     );
