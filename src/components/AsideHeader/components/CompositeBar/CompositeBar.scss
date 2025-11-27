@@ -73,6 +73,14 @@ $block: '.#{variables.$ns}composite-bar';
         height: 36px;
     }
 
+    &__menu-group-item {
+        position: relative;
+
+        &_edit {
+            left: -16px;
+        }
+    }
+
     &__menu-group-toggle,
     &__menu-group-toggle-placeholder {
         width: 24px;

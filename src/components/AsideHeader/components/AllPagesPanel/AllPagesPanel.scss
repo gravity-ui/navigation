@@ -5,6 +5,7 @@
     height: 100%;
     padding: var(--g-spacing-4) var(--g-spacing-6);
     box-sizing: border-box;
+    --gn-aside-header-item-expanded-radius: 6px;
 
     &__content {
         overflow: auto;
@@ -25,12 +26,13 @@
         display: flex;
     }
 
-    &__item_editMode {
-        padding-left: var(--g-spacing-6);
+    &__root-menu-item {
+        margin-bottom: var(--g-spacing-1);
     }
 
-    &__groups-container {
+    &__menu-group {
         width: 100%;
+        margin-inline: 10px;
 
         &:not(:last-child) {
             padding-bottom: var(--g-spacing-2);
