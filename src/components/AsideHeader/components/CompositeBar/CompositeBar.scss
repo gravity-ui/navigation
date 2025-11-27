@@ -73,10 +73,6 @@ $block: '.#{variables.$ns}composite-bar';
         height: 36px;
     }
 
-    &__menu-group-header {
-        padding: var(--g-spacing-2) 0;
-    }
-
     &__menu-group-toggle,
     &__menu-group-toggle-placeholder {
         width: 24px;
