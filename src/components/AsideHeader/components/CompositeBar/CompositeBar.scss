@@ -39,6 +39,7 @@ $block: '.#{variables.$ns}composite-bar';
 
     &__menu-group {
         width: 100%;
+        height: 100%;
         position: relative;
 
         &:before {
@@ -64,8 +65,7 @@ $block: '.#{variables.$ns}composite-bar';
 
     &__menu-item,
     &__menu-group {
-        margin-left: 10px;
-        margin-right: 10px;
+        margin-inline: 10px;
     }
 
     &__menu-group-header,

@@ -1,7 +1,7 @@
 import React, {FC, ReactNode, useCallback, useContext, useRef, useState} from 'react';
 
 import {ChevronDown, ChevronRight} from '@gravity-ui/icons';
-import {List} from '@gravity-ui/uikit';
+import {List, ListSortParams} from '@gravity-ui/uikit';
 
 import {ASIDE_HEADER_COMPACT_WIDTH} from '../../../constants';
 import {block} from '../../../utils/cn';
@@ -46,9 +46,14 @@ type CompositeBarViewProps = CompositeBarProps & {
     items?: MenuItemsWithGroups[];
     collapsedIds?: Record<string, boolean>;
     onToggleMenuGroupVisibility?: (groupId: string) => void;
+    enableSorting?: boolean;
+    onFirstLevelSortEnd?: (params: {oldIndex: number; newIndex: number}) => void;
+    onSecondLevelSortEnd?: (
+        groupId: string,
+    ) => (params: {oldIndex: number; newIndex: number}) => void;
 };
 
-const CompositeBarView: FC<CompositeBarViewProps> = ({
+export const CompositeBarView: FC<CompositeBarViewProps> = ({
     type,
     items,
     onItemClick,
@@ -57,6 +62,9 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     compositeId,
     className,
     onToggleMenuGroupVisibility,
+    enableSorting = false,
+    onFirstLevelSortEnd,
+    onSecondLevelSortEnd,
 }) => {
     const ref = useRef<List<AsideHeaderItem>>(null);
     const tooltipRef = useRef<HTMLDivElement>(null);
@@ -203,6 +211,122 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
         ],
     );
 
+    const handleFirstLevelSortEnd = useCallback(
+        ({oldIndex, newIndex}: ListSortParams) => {
+            if (onFirstLevelSortEnd) {
+                onFirstLevelSortEnd({oldIndex, newIndex});
+            }
+        },
+        [onFirstLevelSortEnd],
+    );
+
+    const handleSecondLevelSortEnd = useCallback(
+        (groupId: string) =>
+            ({oldIndex, newIndex}: ListSortParams) => {
+                if (onSecondLevelSortEnd) {
+                    onSecondLevelSortEnd(groupId)({oldIndex, newIndex});
+                }
+            },
+        [onSecondLevelSortEnd],
+    );
+
+    const renderNestedItem = useCallback(
+        (
+            nestedItem: MenuItemsWithGroups,
+            parentItemIndex: number,
+            _nestedItemIndex: number,
+            _parentGroupId?: string,
+        ) => {
+            if ('items' in nestedItem && nestedItem.items && nestedItem.items.length > 0) {
+                const isCollapsible = Boolean(
+                    'collapsible' in nestedItem && nestedItem.collapsible,
+                );
+                const isCollapsed = Boolean('isCollapsed' in nestedItem && nestedItem.isCollapsed);
+                const nestedGroupListItems = nestedItem.items?.filter((item) => !item.hidden) || [];
+                const hasHeader = nestedItem.title || nestedItem.icon || isCollapsible;
+                const sortedNestedItems = sortItemsByAfterMoreButton(nestedGroupListItems);
+                const isNestedGroupHovered = hoveredGroupId === nestedItem.id;
+
+                let nestedGroupIcon = nestedItem.icon;
+
+                if (!isCollapsed) {
+                    nestedGroupIcon = ChevronDown;
+                } else if (isNestedGroupHovered) {
+                    nestedGroupIcon = ChevronRight;
+                }
+
+                return (
+                    <div className={b('menu-group', {expanded: !isCollapsed, nested: true})}>
+                        {hasHeader && (
+                            <Item
+                                {...nestedItem}
+                                className={b('menu-group-header', {collapsed: isCollapsed})}
+                                icon={nestedGroupIcon}
+                                compact={compact}
+                                onMouseEnter={() => {
+                                    setHoveredGroupId(nestedItem.id);
+                                }}
+                                onMouseLeave={() => {
+                                    setHoveredGroupId(null);
+                                }}
+                                onItemClick={(item) => {
+                                    onToggleMenuGroupVisibility?.(item.id);
+                                }}
+                            />
+                        )}
+
+                        {!isCollapsed && (
+                            <List<MenuItemsWithGroups>
+                                items={sortedNestedItems}
+                                sortable={enableSorting}
+                                onSortEnd={handleSecondLevelSortEnd(nestedItem.id)}
+                                virtualized={false}
+                                filterable={false}
+                                itemClassName={b('menu-group-item')}
+                                itemsHeight={getItemsHeight}
+                                renderItem={(
+                                    deepNestedItem,
+                                    _isDeepItemActive,
+                                    deepNestedIndex,
+                                ) => {
+                                    return renderNestedItem(
+                                        deepNestedItem,
+                                        parentItemIndex,
+                                        deepNestedIndex,
+                                        nestedItem.id,
+                                    );
+                                }}
+                            />
+                        )}
+                    </div>
+                );
+            }
+
+            return (
+                <Item
+                    className={b('menu-group-item')}
+                    key={nestedItem.id}
+                    {...nestedItem}
+                    compact={compact}
+                    onMouseEnter={onMouseEnterByIndex(parentItemIndex)}
+                    onMouseLeave={onMouseLeave}
+                    onItemClick={onItemClickByIndex(parentItemIndex, nestedItem.onItemClick)}
+                />
+            );
+        },
+        [
+            compact,
+            enableSorting,
+            handleSecondLevelSortEnd,
+            hoveredGroupId,
+            onItemClickByIndex,
+            onMouseEnterByIndex,
+            onMouseLeave,
+            onToggleMenuGroupVisibility,
+            setHoveredGroupId,
+        ],
+    );
+
     if (!items || items.length === 0) {
         return null;
     }
@@ -225,7 +349,8 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                     itemClassName={b('root-menu-item')}
                     virtualized={false}
                     filterable={false}
-                    sortable={false}
+                    sortable={enableSorting}
+                    onSortEnd={enableSorting ? handleFirstLevelSortEnd : undefined}
                     renderItem={(item, _isItemActive, itemIndex) => {
                         if (!item.groupId) {
                             return (
@@ -243,7 +368,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                         const isCollapsible = Boolean('collapsible' in item && item.collapsible);
                         const isCollapsed = Boolean('isCollapsed' in item && item.isCollapsed);
                         const groupListItems =
-                            'items' in item && item.items?.filter((item) => !item.hidden);
+                            'items' in item && item.items?.filter((groupItem) => !groupItem.hidden);
                         const hasHeader = item.title || item.icon || isCollapsible;
 
                         const sortedItems = sortItemsByAfterMoreButton(groupListItems || []);
@@ -272,29 +397,35 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                                         onMouseLeave={() => {
                                             setHoveredGroupId(null);
                                         }}
-                                        onItemClick={(item) => {
-                                            onToggleMenuGroupVisibility?.(item.id);
+                                        onItemClick={(clickedItem) => {
+                                            onToggleMenuGroupVisibility?.(clickedItem.id);
                                         }}
                                     />
                                 )}
 
                                 {!isCollapsed && (
-                                    <div className={b('menu-group-items', className)}>
-                                        {sortedItems?.map((item) => (
-                                            <Item
-                                                className={b('menu-group-item')}
-                                                key={item.id}
-                                                {...item}
-                                                compact={compact}
-                                                onMouseEnter={onMouseEnterByIndex(itemIndex)}
-                                                onMouseLeave={onMouseLeave}
-                                                onItemClick={onItemClickByIndex(
-                                                    itemIndex,
-                                                    item.onItemClick,
-                                                )}
-                                            />
-                                        ))}
-                                    </div>
+                                    <List<MenuItemsWithGroups>
+                                        items={sortedItems}
+                                        sortable={enableSorting}
+                                        onSortEnd={handleSecondLevelSortEnd(item.id)}
+                                        virtualized={false}
+                                        filterable={false}
+                                        itemClassName={b('menu-group-item')}
+                                        itemHeight={getItemHeight}
+                                        itemsHeight={getItemsHeight}
+                                        renderItem={(
+                                            nestedItem,
+                                            _isNestedItemActive,
+                                            nestedItemIndex,
+                                        ) => {
+                                            return renderNestedItem(
+                                                nestedItem,
+                                                itemIndex,
+                                                nestedItemIndex,
+                                                item.id,
+                                            );
+                                        }}
+                                    />
                                 )}
                             </div>
                         );
