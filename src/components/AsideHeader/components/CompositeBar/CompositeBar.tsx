@@ -231,6 +231,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                             return (
                                 <Item
                                     {...item}
+                                    className={b('menu-item', {compact})}
                                     compact={compact}
                                     onMouseEnter={onMouseEnterByIndex(itemIndex)}
                                     onMouseLeave={onMouseLeave}
@@ -258,7 +259,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                         }
 
                         return (
-                            <div className={b('menu-group')}>
+                            <div className={b('menu-group', {expanded: !isCollapsed})}>
                                 {hasHeader && !isUngrouped && (
                                     <Item
                                         {...item}
@@ -278,13 +279,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                                 )}
 
                                 {!isCollapsed && (
-                                    <div
-                                        className={b(
-                                            'menu-group-items',
-                                            {grouped: !isUngrouped},
-                                            className,
-                                        )}
-                                    >
+                                    <div className={b('menu-group-items', className)}>
                                         {sortedItems?.map((item) => (
                                             <Item
                                                 className={b('menu-group-item')}

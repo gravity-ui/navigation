@@ -255,7 +255,7 @@ export const menuItemsWithGroups: AsideHeaderProps['menuItems'] = [
     {
         id: 'notifications',
         title: 'Main notifications long long long long menu title',
-        icon: Gear,
+        icon: Plus,
         current: true,
         onItemClick({id, title, current}) {
             alert(JSON.stringify({id, title, current}));
@@ -281,7 +281,7 @@ export const menuItemsWithGroups: AsideHeaderProps['menuItems'] = [
         id: 'id1',
         title: 'Objects',
         tooltipText: 'Custom tooltip text',
-        icon: Gear,
+        icon: Plus,
         pinned: true,
         groupId: 'admin',
         onItemClick({id, title, current}) {

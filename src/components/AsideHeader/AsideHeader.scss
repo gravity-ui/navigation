@@ -8,9 +8,9 @@ $block: '.#{variables.$ns}aside-header';
 
 #{$block} {
     $class: &;
-    --gn-aside-header-min-width: 56px;
+    --gn-aside-header-min-width: 36px;
 
-    --_--item-icon-background-size: 38px;
+    --_--item-icon-background-size: 36px;
     --_--background-color: var(--g-color-base-background);
     --_--decoration-collapsed-background-color: var(--g-color-base-warning-light);
     --_--decoration-expanded-background-color: var(--g-color-base-warning-light);
@@ -187,6 +187,10 @@ $block: '.#{variables.$ns}aside-header';
         &::after {
             display: none;
         }
+    }
+
+    &__logo-button {
+        margin: 0 var(--g-spacing-2) 2px;
     }
 
     &__logo-button &__logo-icon-place {
