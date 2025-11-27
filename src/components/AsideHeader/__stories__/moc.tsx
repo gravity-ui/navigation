@@ -158,3 +158,68 @@ export const menuItemsClamped = MENU_ITEMS_CLAMPED.concat({
         rightAdornment: renderTag('new'),
     })),
 );
+
+export const generateManyMenuItems = (count = 20): AsideHeaderProps['menuItems'] => {
+    const items: AsideHeaderProps['menuItems'] = [];
+
+    const sections = [
+        'Dashboard',
+        'Analytics',
+        'Reports',
+        'Settings',
+        'Users',
+        'Projects',
+        'Tasks',
+        'Calendar',
+        'Messages',
+        'Files',
+        'Help',
+        'Support',
+    ];
+
+    sections.forEach((section, index) => {
+        items.push({
+            id: `section-${index}`,
+            title: section,
+            icon: Gear,
+            current: index === 0,
+            onItemClick(_item) {},
+        });
+
+        if (index % 3 === 0) {
+            const subItems = [`${section} Overview`, `${section} Details`, `${section} Settings`];
+
+            subItems.forEach((subItem, subIndex) => {
+                items.push({
+                    id: `section-${index}-sub-${subIndex}`,
+                    title: subItem,
+                    icon: Gear,
+                    onItemClick(_item) {},
+                });
+            });
+        }
+
+        if ((index + 1) % 4 === 0 && index < sections.length - 1) {
+            items.push({
+                id: `divider-${index}`,
+                title: '-',
+                type: 'divider',
+            });
+        }
+    });
+
+    const additionalCount = Math.max(0, count - items.length);
+    for (let i = 0; i < additionalCount; i++) {
+        items.push({
+            id: `additional-${i}`,
+            title: `Additional Item ${i + 1}`,
+            icon: Gear,
+            rightAdornment: i % 5 === 0 ? renderTag('New') : undefined,
+            onItemClick(_item) {},
+        });
+    }
+
+    return items;
+};
+
+export const menuItemsMany = generateManyMenuItems(25);
