@@ -33,6 +33,7 @@ This document provides comprehensive information for AI agents and developers wo
 ### Library Purpose
 
 The library provides a complete navigation solution for web applications, with special focus on:
+
 - Responsive design (desktop and mobile variants)
 - Customizable theming via CSS variables
 - Accessibility support
@@ -84,6 +85,7 @@ import {Drawer, DrawerItem} from '@gravity-ui/navigation';
 ### Navigation States
 
 The `AsideHeader` component has two main visual states:
+
 - **Expanded**: Full navigation with icons and text labels
 - **Collapsed/Compact**: Only icons visible, text hidden
 
@@ -208,7 +210,7 @@ import {Breadcrumbs} from '@gravity-ui/uikit/legacy';
         <Breadcrumbs items={breadcrumbItems} />
       </ActionBar.Item>
     </ActionBar.Group>
-    
+
     <ActionBar.Group pull="right">
       <ActionBar.Item>
         <Button>Action</Button>
@@ -353,7 +355,7 @@ const Aside = React.lazy(() => import('./Aside'));
   <Suspense fallback={<AsideFallback />}>
     <Aside />
   </Suspense>
-  
+
   <PageLayout.Content>
     <MainContent />
   </PageLayout.Content>
@@ -451,31 +453,31 @@ The library uses CSS variables for theming. Set these on `.g-root` or a parent e
   --gn-aside-header-background-color: #fff;
   --gn-aside-header-collapsed-background-color: #f5f5f5;
   --gn-aside-header-expanded-background-color: #fff;
-  
+
   /* Decoration (top section) */
   --gn-aside-header-decoration-collapsed-background-color: #f0f0f0;
   --gn-aside-header-decoration-expanded-background-color: #e8e8e8;
-  
+
   /* Dividers */
   --gn-aside-header-divider-horizontal-color: #e5e5e5;
   --gn-aside-header-divider-vertical-color: #e5e5e5;
-  
+
   /* Item colors */
   --gn-aside-header-general-item-icon-color: #666;
   --gn-aside-header-item-icon-color: #333;
   --gn-aside-header-item-text-color: #333;
-  --gn-aside-header-item-background-color-hover: rgba(0,0,0,0.05);
-  
+  --gn-aside-header-item-background-color-hover: rgba(0, 0, 0, 0.05);
+
   /* Current item */
   --gn-aside-header-item-current-background-color: #e3f2fd;
   --gn-aside-header-item-current-icon-color: #1976d2;
   --gn-aside-header-item-current-text-color: #1976d2;
-  
+
   /* Z-indexes */
   --gn-aside-header-z-index: 100;
   --gn-aside-header-panel-z-index: 200;
   --gn-aside-header-content-z-index: 1;
-  
+
   /* Read-only (for calculations) */
   --gn-aside-header-size: 240px; /* Actual navigation width */
   --gn-top-alert-height: 48px; /* Top alert height */
@@ -519,19 +521,10 @@ Components expose CSS classes that can be targeted for custom styling:
 
 ```typescript
 // Component types
-import type {
-  AsideHeaderProps,
-  FooterItemProps,
-  PageLayoutProps,
-} from '@gravity-ui/navigation';
+import type {AsideHeaderProps, FooterItemProps, PageLayoutProps} from '@gravity-ui/navigation';
 
 // Data types
-import type {
-  MenuItem,
-  LogoProps,
-  TopAlertProps,
-  MenuItemType,
-} from '@gravity-ui/navigation';
+import type {MenuItem, LogoProps, TopAlertProps, MenuItemType} from '@gravity-ui/navigation';
 ```
 
 ### Type Definitions
@@ -556,7 +549,7 @@ import {Home, Settings, User} from '@gravity-ui/icons';
 function App() {
   const [compact, setCompact] = useState(false);
   const [currentPage, setCurrentPage] = useState('home');
-  
+
   const menuItems = [
     {
       id: 'home',
@@ -573,7 +566,7 @@ function App() {
       onItemClick: () => setCurrentPage('settings'),
     },
   ];
-  
+
   return (
     <AsideHeader
       logo={{text: 'My App', icon: logoIcon}}
@@ -646,11 +639,11 @@ import {AsideHeader, MobileHeader} from '@gravity-ui/navigation';
 
 function ResponsiveLayout() {
   const isMobile = useMediaQuery('(max-width: 768px)');
-  
+
   if (isMobile) {
     return <MobileHeader {...mobileProps} />;
   }
-  
+
   return <AsideHeader {...desktopProps} />;
 }
 ```
@@ -698,6 +691,7 @@ function ResponsiveLayout() {
 ### Component Testing
 
 The library uses:
+
 - **Jest** for unit tests
 - **Playwright** for visual regression tests
 - **Storybook** for component development and testing
@@ -716,7 +710,7 @@ test('renders navigation', () => {
       menuItems={[{id: '1', title: 'Item'}]}
     />
   );
-  
+
   expect(screen.getByText('Test')).toBeInTheDocument();
 });
 ```
@@ -746,6 +740,7 @@ src/
 ### Storybook
 
 Storybook examples are in `__stories__/` directories:
+
 - `*.stories.tsx` - Storybook stories
 - `*Showcase.tsx` - Comprehensive examples
 
@@ -782,10 +777,10 @@ When working with this library:
 8. **Performance**: Use PageLayout pattern for large applications
 
 When suggesting changes or fixes:
+
 - Maintain backward compatibility
 - Follow existing code patterns
 - Add TypeScript types
 - Update relevant README files
 - Consider both desktop and mobile views
 - Test in both collapsed and expanded states
-
