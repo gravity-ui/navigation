@@ -1,27 +1,13 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {Gear} from '@gravity-ui/icons';
-import {
-    Button,
-    Flex,
-    Icon,
-    List,
-    ListItemData,
-    ListProps,
-    ListSortParams,
-    Text,
-    Tooltip,
-} from '@gravity-ui/uikit';
+import {Button, Flex, Icon, ListProps, ListSortParams, Text, Tooltip} from '@gravity-ui/uikit';
 
-import {ITEM_HEIGHT} from '../../../constants';
-import {MenuItem} from '../../../types';
 import {block} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
 import {MenuItemsWithGroups} from '../../types';
-import {getGroupBlockHeight} from '../../utils/getGroupHeight';
+import {CompositeBarView} from '../CompositeBar/CompositeBar';
 
-import {AllPagesGroupHeader} from './AllPagesGroupHeader';
-import {AllPagesListItem} from './AllPagesListItem';
 import {ALL_PAGES_ID} from './constants';
 import i18n from './i18n';
 import {useGroupedMenuItems} from './useGroupedMenuItems';
@@ -47,6 +33,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         menuItems,
         menuGroups,
         defaultMenuGroups,
+        toggleExpandedGroup,
         onMenuItemsChanged,
         onMenuGroupsChanged,
     } = useAsideHeaderInnerContext();
@@ -102,7 +89,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         defaultMenuGroups,
     ]);
 
-    const toggleGroupVisibility = useCallback(
+    const handleToggleGroupVisibility = useCallback(
         (groupId: string) => {
             if (!onMenuGroupsChanged) {
                 return;
@@ -190,95 +177,9 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         [onMenuItemsChanged],
     );
 
-    const itemRender = useCallback(
-        (asideHeaderItem: ListItemData<MenuItem>, _isActive: boolean, _itemIndex: number) => {
-            return (
-                <AllPagesListItem
-                    item={asideHeaderItem}
-                    editMode={isEditMode}
-                    onToggle={() => toggleMenuItemsVisibility(asideHeaderItem)}
-                    enableSorting={editMenuProps?.enableSorting}
-                />
-            );
-        },
-        [isEditMode, editMenuProps?.enableSorting, toggleMenuItemsVisibility],
+    const data = items.filter(
+        (item) => item.id !== ALL_PAGES_ID && item.type !== 'divider' && item.type !== 'action',
     );
-
-    const renderFirstLevelItem = useCallback(
-        (
-            firstLevelItem: ListItemData<MenuItemsWithGroups>,
-            _isActive: boolean,
-            itemIndex: number,
-        ) => {
-            if (!('items' in firstLevelItem) || firstLevelItem.items.length === 0) {
-                return itemRender(firstLevelItem, _isActive, itemIndex);
-            }
-
-            const groupListItems = firstLevelItem.items;
-
-            const sortableGroupItems =
-                isEditMode && editMenuProps?.enableSorting
-                    ? groupListItems.filter(({id}) => id !== ALL_PAGES_ID)
-                    : groupListItems;
-
-            if (sortableGroupItems.length === 0) {
-                return null;
-            }
-
-            const blockHeight = getGroupBlockHeight(sortableGroupItems);
-
-            return (
-                <Flex
-                    className={b('groups-container')}
-                    direction="column"
-                    style={{height: blockHeight}}
-                >
-                    {firstLevelItem.title && (
-                        <AllPagesGroupHeader
-                            id={firstLevelItem.id}
-                            icon={firstLevelItem.icon}
-                            title={firstLevelItem.title}
-                            hidden={Boolean(firstLevelItem.hidden)}
-                            isDisabled={firstLevelItem.isDisabled}
-                            onToggleHidden={toggleGroupVisibility}
-                            editMode={isEditMode}
-                        />
-                    )}
-                    <List
-                        itemClassName={
-                            isEditMode && editMenuProps?.enableSorting
-                                ? b('item', {editMode: true})
-                                : undefined
-                        }
-                        itemHeight={
-                            isEditMode && editMenuProps?.enableSorting ? ITEM_HEIGHT : undefined
-                        }
-                        onSortEnd={
-                            isEditMode && editMenuProps?.enableSorting
-                                ? onSecondLevelSortEnd(itemIndex)
-                                : undefined
-                        }
-                        sortable={isEditMode && editMenuProps?.enableSorting}
-                        virtualized={false}
-                        filterable={false}
-                        items={sortableGroupItems}
-                        onItemClick={onItemClick}
-                        renderItem={itemRender}
-                    />
-                </Flex>
-            );
-        },
-        [
-            isEditMode,
-            editMenuProps,
-            toggleGroupVisibility,
-            onSecondLevelSortEnd,
-            onItemClick,
-            itemRender,
-        ],
-    );
-
-    const data = items.filter((item) => item.id !== ALL_PAGES_ID && item.type !== 'action');
 
     return (
         <Flex className={b(null, className)} gap="5" direction="column">
@@ -294,18 +195,24 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                 </Tooltip>
             </Flex>
 
-            <Flex className={b('content', {'edit-mode': isEditMode})} gap="2" direction="column">
-                <List
-                    onSortEnd={
-                        isEditMode && editMenuProps?.enableSorting ? onFirstLevelSortEnd : undefined
-                    }
-                    sortable={isEditMode && editMenuProps?.enableSorting}
-                    virtualized={false}
-                    filterable={false}
-                    items={data}
-                    renderItem={renderFirstLevelItem}
-                />
-            </Flex>
+            <CompositeBarView
+                compositeId={'compositeId'}
+                type="menu"
+                compact={false}
+                enableSorting={isEditMode && editMenuProps?.enableSorting}
+                items={data}
+                onFirstLevelSortEnd={
+                    isEditMode && editMenuProps?.enableSorting ? onFirstLevelSortEnd : undefined
+                }
+                onSecondLevelSortEnd={
+                    isEditMode && editMenuProps?.enableSorting ? onSecondLevelSortEnd : undefined
+                }
+                editMode={isEditMode}
+                onItemClick={onItemClick}
+                onToggleExpandedGroup={toggleExpandedGroup}
+                onToggleMenuGroupVisibility={handleToggleGroupVisibility}
+                onToggleMenuItemVisibility={toggleMenuItemsVisibility}
+            />
             {isEditMode && (
                 <Button onClick={onResetToDefaultClick}>{i18n('all-panel.resetToDefault')}</Button>
             )}
