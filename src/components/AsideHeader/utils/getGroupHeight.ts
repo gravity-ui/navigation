@@ -10,5 +10,6 @@ export function getGroupBlockHeight(items: MenuItemsWithGroups[]) {
 
     const gaps = items.length * GAP;
 
+    // +1 accounts for the group header item in addition to the menu items
     return (items.length + 1) * ITEM_HEIGHT + gaps;
 }
