@@ -33,15 +33,15 @@ export type CompositeBarProps = {
     compact: boolean;
     compositeId?: string;
     className?: string;
-    onToggleMenuGroupVisibility?: (groupId: string) => void;
+    onToggleGroupCollapsed?: (groupId: string) => void;
 };
 
 type CompositeBarViewProps = CompositeBarProps & {
     compositeId?: string;
     items?: MenuItemsWithGroups[];
     collapsedIds?: Record<string, boolean>;
-    onToggleMenuGroupVisibility?: (groupId: string) => void;
     enableSorting?: boolean;
+    onToggleGroupCollapsed?: (groupId: string) => void;
     onFirstLevelSortEnd?: (params: {oldIndex: number; newIndex: number}) => void;
     onSecondLevelSortEnd?: (
         groupId: string,
@@ -56,7 +56,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
     multipleTooltip = false,
     compositeId,
     className,
-    onToggleMenuGroupVisibility,
+    onToggleGroupCollapsed,
     enableSorting = false,
     onFirstLevelSortEnd,
     onSecondLevelSortEnd,
@@ -264,7 +264,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                                     setHoveredGroupId(null);
                                 }}
                                 onItemClick={(item) => {
-                                    onToggleMenuGroupVisibility?.(item.id);
+                                    onToggleGroupCollapsed?.(item.id);
                                 }}
                             />
                         )}
@@ -316,7 +316,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
             onItemClickByIndex,
             onMouseEnterByIndex,
             onMouseLeave,
-            onToggleMenuGroupVisibility,
+            onToggleGroupCollapsed,
             setHoveredGroupId,
         ],
     );
@@ -393,7 +393,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                                             setHoveredGroupId(null);
                                         }}
                                         onItemClick={(clickedItem) => {
-                                            onToggleMenuGroupVisibility?.(clickedItem.id);
+                                            onToggleGroupCollapsed?.(clickedItem.id);
                                         }}
                                     />
                                 )}
@@ -444,7 +444,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     items,
     onItemClick,
     onMoreClick,
-    onToggleMenuGroupVisibility,
+    onToggleGroupCollapsed,
     multipleTooltip = false,
     compact,
     compositeId,
@@ -469,7 +469,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                     onItemClick={onItemClick}
                     onMoreClick={onMoreClick}
                     multipleTooltip={multipleTooltip}
-                    onToggleMenuGroupVisibility={onToggleMenuGroupVisibility}
+                    onToggleGroupCollapsed={onToggleGroupCollapsed}
                 />
             </div>
         );
@@ -481,7 +481,6 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                     compact={compact}
                     items={visibleItems}
                     onItemClick={onItemClick}
-                    onToggleMenuGroupVisibility={onToggleMenuGroupVisibility}
                 />
             </div>
         );

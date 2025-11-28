@@ -64,7 +64,7 @@ export const useAsideHeaderInnerContextValue = (
         [innerOnClosePanel, ALL_PAGES_MENU_ITEM, onClosePanel],
     );
 
-    const onToggleMenuGroupVisibility = useCallback(
+    const onToggleGroupCollapsed = useCallback(
         (groupId: string) => {
             const updatedMenuGroups = menuGroups?.map((group) => {
                 if (group.id === groupId) {
@@ -123,6 +123,6 @@ export const useAsideHeaderInnerContextValue = (
         panelItems: innerPanelItems,
         size,
         onItemClick,
-        onToggleMenuGroupVisibility,
+        onToggleGroupCollapsed,
     };
 };
