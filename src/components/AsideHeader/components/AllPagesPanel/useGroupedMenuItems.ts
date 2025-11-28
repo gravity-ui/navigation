@@ -12,10 +12,6 @@ export const useGroupedMenuItems = (
 ): MenuItemsWithGroups[] => {
     return useMemo(() => {
         const visibleItems = menuItems.filter((item: MenuItem): boolean => {
-            if (item.type === 'divider') {
-                return false;
-            }
-
             if (isEditMode && item.id === ALL_PAGES_ID) {
                 return false;
             }

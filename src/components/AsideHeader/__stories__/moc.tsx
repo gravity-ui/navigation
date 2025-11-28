@@ -250,7 +250,6 @@ export const menuItemsWithGroups: AsideHeaderProps['menuItems'] = [
         id: 'divider',
         title: '-',
         type: 'divider',
-        groupId: 'main',
     },
     {
         id: 'notifications',
