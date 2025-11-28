@@ -117,7 +117,6 @@ const AdvancedUsageTemplate: StoryFn = (args) => {
                 headerDecoration
                 menuItems={menuItemsShowcase}
                 logo={DEFAULT_LOGO}
-                onChangeCompact={setCompact}
                 qa={'pl-aside'}
                 {...args}
             />
@@ -236,7 +235,6 @@ export function LineClamp() {
             <PageLayoutAside
                 logo={{icon: logoIcon, text: 'Line clamp', 'aria-label': 'Line clamp'}}
                 menuItems={menuItemsClamped}
-                onChangeCompact={setCompact}
                 headerDecoration
             />
         </PageLayout>
@@ -252,7 +250,6 @@ const CollapseButtonWrapperTemplate: StoryFn = (args) => {
                 headerDecoration
                 menuItems={menuItemsShowcase}
                 logo={DEFAULT_LOGO}
-                onChangeCompact={setCompact}
                 collapseButtonWrapper={(defaultButton, {compact}) => (
                     <React.Fragment>
                         {defaultButton}
@@ -291,12 +288,11 @@ const ManyItemsTemplate: StoryFn = (args) => {
     const [compact, setCompact] = React.useState<boolean>(args.initialCompact);
 
     return (
-        <PageLayout compact={compact}>
+        <PageLayout compact={compact} onChangeCompact={setCompact}>
             <PageLayoutAside
                 headerDecoration
                 menuItems={menuItemsMany}
                 logo={DEFAULT_LOGO}
-                onChangeCompact={setCompact}
                 {...args}
             />
 
@@ -338,7 +334,7 @@ const GroupedMenuCollapsibleTemplate: StoryFn = (args) => {
     const [currentMenuGroups, setCurrentMenuGroups] = React.useState(menuGroupsWithIcons);
 
     return (
-        <PageLayout compact={compact}>
+        <PageLayout compact={compact} onChangeCompact={setCompact}>
             <PageLayoutAside
                 headerDecoration
                 logo={DEFAULT_LOGO}
@@ -364,7 +360,6 @@ const GroupedMenuCollapsibleTemplate: StoryFn = (args) => {
                 ]}
                 onMenuItemsChanged={setMenuItems}
                 onMenuGroupsChanged={setCurrentMenuGroups}
-                onChangeCompact={setCompact}
                 {...args}
             />
         </PageLayout>
