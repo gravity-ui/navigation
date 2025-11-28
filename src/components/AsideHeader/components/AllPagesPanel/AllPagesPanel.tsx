@@ -1,11 +1,11 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {Gear} from '@gravity-ui/icons';
-import {Button, Flex, Icon, ListProps, ListSortParams, Text, Tooltip} from '@gravity-ui/uikit';
+import {Button, Flex, Icon, ListSortParams, Text, Tooltip} from '@gravity-ui/uikit';
 
 import {block} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
-import {MenuItemsWithGroups} from '../../types';
+import {AsideHeaderItem, MenuItemsWithGroups} from '../../types';
 import {CompositeBarView} from '../CompositeBar/CompositeBar';
 
 import {ALL_PAGES_ID} from './constants';
@@ -33,7 +33,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         menuItems,
         menuGroups,
         defaultMenuGroups,
-        toggleExpandedGroup,
+        onToggleGroupCollapsed,
         onMenuItemsChanged,
         onMenuGroupsChanged,
     } = useAsideHeaderInnerContext();
@@ -59,10 +59,14 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         }
     }, [isEditMode, onEditModeChanged, editMenuProps]);
 
-    const onItemClick = useCallback<NonNullable<ListProps<MenuItemsWithGroups>['onItemClick']>>(
-        (item, _index, _forwardKey, event) => {
+    const onItemClick = useCallback(
+        (
+            item: AsideHeaderItem,
+            collapsed: boolean,
+            event: React.MouseEvent<HTMLElement, MouseEvent>,
+        ) => {
             // TODO: make event an optional argument
-            item.onItemClick?.(item, false, event as React.MouseEvent<HTMLElement, MouseEvent>);
+            item.onItemClick?.(item, collapsed, event as React.MouseEvent<HTMLElement, MouseEvent>);
         },
         [],
     );
@@ -197,6 +201,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                 compositeId={'compositeId'}
                 type="menu"
                 compact={false}
+                className={b('content')}
                 enableSorting={isEditMode && editMenuProps?.enableSorting}
                 items={data}
                 onFirstLevelSortEnd={
@@ -207,7 +212,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                 }
                 editMode={isEditMode}
                 onItemClick={onItemClick}
-                onToggleExpandedGroup={toggleExpandedGroup}
+                onToggleGroupCollapsed={onToggleGroupCollapsed}
                 onToggleMenuGroupVisibility={handleToggleGroupVisibility}
                 onToggleMenuItemVisibility={toggleMenuItemsVisibility}
             />

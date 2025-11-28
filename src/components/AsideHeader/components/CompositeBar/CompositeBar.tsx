@@ -309,11 +309,12 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                                         onMouseLeave={() => {
                                             setHoveredGroupId(null);
                                         }}
-                                        onItemClick={
+                                        onItemClick={onItemClickByIndex(
+                                            itemIndex,
                                             onToggleGroupCollapsed
                                                 ? () => onToggleGroupCollapsed(groupId)
-                                                : undefined
-                                        }
+                                                : undefined,
+                                        )}
                                         onToggleVisibility={
                                             onToggleMenuGroupVisibility
                                                 ? () => onToggleMenuGroupVisibility(groupId)
@@ -351,6 +352,10 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                                                     onMouseLeave={() => {
                                                         setHoveredGroupId(null);
                                                     }}
+                                                    onItemClick={onItemClickByIndex(
+                                                        itemIndex,
+                                                        item.onItemClick,
+                                                    )}
                                                     onToggleVisibility={
                                                         onToggleMenuItemVisibility
                                                             ? () =>

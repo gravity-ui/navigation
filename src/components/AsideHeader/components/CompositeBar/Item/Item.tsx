@@ -147,6 +147,16 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     >
                         {titleEl}
                     </div>
+
+                    {editMode && !preventUserRemoving && onToggleVisibility ? (
+                        <Button
+                            onClick={onPinButtonClick}
+                            view={hidden ? 'flat-secondary' : 'flat-action'}
+                            className={b('visibility-button')}
+                        >
+                            <Button.Icon>{hidden ? <Pin /> : <PinFill />}</Button.Icon>
+                        </Button>
+                    ) : null}
                 </Tag>
                 {renderPopupContent && Boolean(anchorRef?.current) && (
                     <Popup
@@ -171,20 +181,9 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         <Icon qa={iconQa} data={icon} size={iconSize} className={b('icon')} />
     ) : null;
 
-    const visibilityButton =
-        editMode && !preventUserRemoving && onToggleVisibility ? (
-            <Button
-                onClick={onPinButtonClick}
-                view={hidden ? 'flat-secondary' : 'flat-action'}
-                className={b('visibility-button')}
-            >
-                <Button.Icon>{hidden ? <Pin /> : <PinFill />}</Button.Icon>
-            </Button>
-        ) : null;
-
     const titleNode = renderItemTitle({
         title,
-        rightAdornment: visibilityButton || rightAdornment,
+        rightAdornment: rightAdornment,
     });
     const params = {icon: iconNode, title: titleNode};
     let highlightedNode = null;
