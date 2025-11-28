@@ -207,8 +207,7 @@ $block: '.#{variables.$ns}aside-header';
 
     &__footer {
         flex-shrink: 0;
-        width: 100%;
-        margin: 8px 0;
+        margin: var(--g-spacing-2) 10px;
         display: flex;
         flex-direction: column;
     }

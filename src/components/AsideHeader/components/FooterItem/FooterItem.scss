@@ -3,10 +3,16 @@
 $block: '.#{variables.$ns}footer-item';
 
 #{$block} {
+    --gn-aside-header-item-expanded-radius: 6px;
     $class: &;
 
     width: 100%;
     height: 36px;
 
-    margin: 0 var(--g-spacing-2);
+    border-radius: var(--gn-aside-header-item-expanded-radius);
+    margin-bottom: 2px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
 }
