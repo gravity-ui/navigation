@@ -40,7 +40,6 @@ export interface MenuItem extends QAProps {
     preventUserRemoving?: boolean;
     rightAdornment?: React.ReactNode;
     type?: MenuItemType;
-    afterMoreButton?: boolean;
     /**
      * Visibility flag in the side menu
      */

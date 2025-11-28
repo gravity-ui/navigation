@@ -89,7 +89,6 @@ export const menuItemsShowcase: AsideHeaderProps['menuItems'] = [
         title: 'Create smth',
         type: 'action',
         icon: Plus,
-        afterMoreButton: true,
         onItemClick({id, title, current}) {
             alert(JSON.stringify({id, title, current}));
         },
