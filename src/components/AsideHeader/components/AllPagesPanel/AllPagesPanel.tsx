@@ -160,8 +160,8 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             }
 
             const currentFlatList = menuItemsRef.current || [];
-
             const updatedItems = sortMenuItems(oldIndex, newIndex, currentFlatList);
+
             if (updatedItems) {
                 onMenuItemsChanged?.(updatedItems);
             }
@@ -218,10 +218,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
 
             const sortableGroupItems =
                 isEditMode && editMenuProps?.enableSorting
-                    ? groupListItems.filter(
-                          ({id, afterMoreButton, type}) =>
-                              !afterMoreButton && type !== 'divider' && id !== ALL_PAGES_ID,
-                      )
+                    ? groupListItems.filter(({id}) => id !== ALL_PAGES_ID)
                     : groupListItems;
 
             if (sortableGroupItems.length === 0) {
@@ -281,9 +278,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         ],
     );
 
-    const data = items.filter(
-        (item) => item.id !== ALL_PAGES_ID && item.type !== 'divider' && item.type !== 'action',
-    );
+    const data = items.filter((item) => item.id !== ALL_PAGES_ID && item.type !== 'action');
 
     return (
         <Flex className={b(null, className)} gap="5" direction="column">

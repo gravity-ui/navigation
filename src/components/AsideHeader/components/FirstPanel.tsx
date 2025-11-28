@@ -64,18 +64,6 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 <div className={b('aside-content', {['with-decoration']: headerDecoration})}>
                     <Header />
 
-                    <CompositeBar
-                        compositeId={MENU_ITEMS_COMPOSITE_ID}
-                        className={b('menu-items')}
-                        compact={compact}
-                        type="menu"
-                        items={flatListItems}
-                        onItemClick={onItemClick}
-                        onMoreClick={onMenuMoreClick}
-                        onToggleMenuGroupVisibility={onToggleMenuGroupVisibility}
-                        multipleTooltip={multipleTooltip}
-                    />
-
                     {flatListItems?.length ? (
                         <CompositeBar
                             compositeId={MENU_ITEMS_COMPOSITE_ID}

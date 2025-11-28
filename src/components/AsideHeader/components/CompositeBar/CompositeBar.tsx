@@ -12,12 +12,7 @@ import {UNGROUPED_ID} from '../AllPagesPanel/constants';
 import {Item, ItemProps} from './Item/Item';
 import {MultipleTooltip, MultipleTooltipContext, MultipleTooltipProvider} from './MultipleTooltip';
 import {COLLAPSE_ITEM_ID} from './constants';
-import {
-    getItemHeight,
-    getItemsHeight,
-    getSelectedItemIndex,
-    sortItemsByAfterMoreButton,
-} from './utils';
+import {getItemHeight, getItemsHeight, getSelectedItemIndex} from './utils';
 
 import './CompositeBar.scss';
 
@@ -244,7 +239,6 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                 const isCollapsed = Boolean('isCollapsed' in nestedItem && nestedItem.isCollapsed);
                 const nestedGroupListItems = nestedItem.items?.filter((item) => !item.hidden) || [];
                 const hasHeader = nestedItem.title || nestedItem.icon || isCollapsible;
-                const sortedNestedItems = sortItemsByAfterMoreButton(nestedGroupListItems);
                 const isNestedGroupHovered = hoveredGroupId === nestedItem.id;
 
                 let nestedGroupIcon = nestedItem.icon;
@@ -277,7 +271,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
 
                         {!isCollapsed && (
                             <List<MenuItemsWithGroups>
-                                items={sortedNestedItems}
+                                items={nestedGroupListItems}
                                 sortable={enableSorting}
                                 onSortEnd={handleSecondLevelSortEnd(nestedItem.id)}
                                 virtualized={false}
@@ -368,10 +362,11 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                         const isCollapsible = Boolean('collapsible' in item && item.collapsible);
                         const isCollapsed = Boolean('isCollapsed' in item && item.isCollapsed);
                         const groupListItems =
-                            'items' in item && item.items?.filter((groupItem) => !groupItem.hidden);
+                            ('items' in item &&
+                                item.items?.filter((groupItem) => !groupItem.hidden)) ||
+                            [];
                         const hasHeader = item.title || item.icon || isCollapsible;
 
-                        const sortedItems = sortItemsByAfterMoreButton(groupListItems || []);
                         const isUngrouped = item.id === UNGROUPED_ID;
                         const isGroupHovered = hoveredGroupId === item.id;
 
@@ -405,7 +400,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
 
                                 {!isCollapsed && (
                                     <List<MenuItemsWithGroups>
-                                        items={sortedItems}
+                                        items={groupListItems}
                                         sortable={enableSorting}
                                         onSortEnd={handleSecondLevelSortEnd(item.id)}
                                         virtualized={false}
@@ -463,8 +458,6 @@ export const CompositeBar: FC<CompositeBarProps> = ({
 
     let node: ReactNode;
 
-    const sortedItems = sortItemsByAfterMoreButton(visibleItems);
-
     if (type === 'menu') {
         node = (
             <div className={b({scrollable: true}, className)}>
@@ -472,7 +465,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                     compositeId={compositeId}
                     type="menu"
                     compact={compact}
-                    items={sortedItems}
+                    items={visibleItems}
                     onItemClick={onItemClick}
                     onMoreClick={onMoreClick}
                     multipleTooltip={multipleTooltip}
@@ -486,7 +479,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                 <CompositeBarView
                     type="subheader"
                     compact={compact}
-                    items={sortedItems}
+                    items={visibleItems}
                     onItemClick={onItemClick}
                     onToggleMenuGroupVisibility={onToggleMenuGroupVisibility}
                 />

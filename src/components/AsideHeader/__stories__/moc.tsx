@@ -301,7 +301,6 @@ export const menuItemsWithGroups: AsideHeaderProps['menuItems'] = [
         title: 'Create smth',
         type: 'action',
         icon: Plus,
-        afterMoreButton: true,
         onItemClick({id, title, current}) {
             alert(JSON.stringify({id, title, current}));
         },

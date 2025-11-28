@@ -33,10 +33,3 @@ export function getSelectedItemIndex(compositeItems: AsideHeaderItem[]) {
     const index = compositeItems.findIndex(({current}) => Boolean(current));
     return index === -1 ? undefined : index;
 }
-
-export function sortItemsByAfterMoreButton(compositeItems: AsideHeaderItem[]): AsideHeaderItem[] {
-    const afterMoreButtonItems = compositeItems.filter(({afterMoreButton}) => afterMoreButton);
-    const regularItems = compositeItems.filter(({afterMoreButton}) => !afterMoreButton);
-
-    return [...regularItems, ...afterMoreButtonItems];
-}
