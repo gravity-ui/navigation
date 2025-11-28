@@ -213,7 +213,7 @@ $block: '.#{variables.$ns}aside-header';
     }
 
     &__panels {
-        z-index: var(--gn-aside-header-panel-z-index, 98);
+        --gn-drawer-z-index: var(--gn-aside-header-panel-z-index, 98);
 
         position: fixed;
         inset: var(--gn-top-alert-height, 0) 0 0;
@@ -237,8 +237,8 @@ $block: '.#{variables.$ns}aside-header';
     }
 
     &__top-alert {
+        --gn-drawer-z-index: var(--gn-aside-header-panel-z-index, 98);
         position: fixed;
-        z-index: var(--gn-aside-header-pane-top-z-index, 98);
         top: 0;
         background: var(--g-color-base-background);
         width: 100%;
@@ -247,6 +247,7 @@ $block: '.#{variables.$ns}aside-header';
     &__content {
         width: calc(100% - var(--gn-aside-header-size));
         margin-top: var(--gn-top-alert-height, 0);
+        z-index: var(--gn-aside-header-content-z-index, 95);
 
         &_expanded-by-hover {
             padding-left: var(--gn-aside-header-min-width);
