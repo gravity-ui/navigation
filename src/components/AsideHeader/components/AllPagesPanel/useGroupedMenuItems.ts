@@ -3,7 +3,7 @@ import {useMemo} from 'react';
 import {MenuGroup, MenuItem} from '../../../types';
 import {MenuItemsWithGroups} from '../../types';
 
-import {ALL_PAGES_ID} from '.';
+import {ALL_PAGES_ID} from './constants';
 
 export const useGroupedMenuItems = (
     menuItems: MenuItem[],
