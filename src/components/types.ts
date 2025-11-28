@@ -40,11 +40,6 @@ export interface MenuItem extends QAProps {
     preventUserRemoving?: boolean;
     rightAdornment?: React.ReactNode;
     type?: MenuItemType;
-    afterMoreButton?: boolean;
-    /**
-     * Order number. Used to determine the display order in the side menu
-     */
-    order?: number;
     /**
      * Visibility flag in the side menu
      */
@@ -53,7 +48,24 @@ export interface MenuItem extends QAProps {
      * The category to which the menu item belongs. Need for grouping in the display/editing mode of all pages
      */
     category?: string;
-    className?: string;
+    /**
+     * The group ID to which the menu item belongs. Used for grouping menu items
+     */
+    groupId?: string;
+}
+
+export interface MenuGroup {
+    id: string;
+    title: string;
+    icon?: IconProps['data'];
+    /** Hide the group from display */
+    hidden?: boolean;
+    /** Allow collapsing the group via UI */
+    collapsible?: boolean;
+    /** Initial collapsed state when collapsible is true */
+    collapsedByDefault?: boolean;
+    /** Current collapsed state */
+    collapsed: boolean;
 }
 
 export interface LogoProps {

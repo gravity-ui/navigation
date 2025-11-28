@@ -11,6 +11,10 @@
         flex: 1;
 
         margin: 0 calc(var(--g-spacing-6) * -1);
+
+        &_edit-mode {
+            padding-left: var(--g-spacing-6);
+        }
     }
 
     &__category {
@@ -22,13 +26,15 @@
     }
 
     &__item_editMode {
-        padding: 0 var(--g-spacing-6);
+        padding-left: var(--g-spacing-6);
     }
 
-    &__drag-placeholder {
-        padding-left: 88px;
-        padding-right: 68px;
-        text-wrap: nowrap;
-        visibility: hidden;
+    &__groups-container {
+        width: 100%;
+
+        &:not(:last-child) {
+            padding-bottom: var(--g-spacing-2);
+            border-bottom: 1px solid var(--g-color-line-generic);
+        }
     }
 }

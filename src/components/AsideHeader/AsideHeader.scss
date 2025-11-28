@@ -8,9 +8,9 @@ $block: '.#{variables.$ns}aside-header';
 
 #{$block} {
     $class: &;
-    --gn-aside-header-min-width: 56px;
+    --gn-aside-header-min-width: 36px;
 
-    --_--item-icon-background-size: 38px;
+    --_--item-icon-background-size: 36px;
     --_--background-color: var(--g-color-base-background);
     --_--decoration-collapsed-background-color: var(--g-color-base-warning-light);
     --_--decoration-expanded-background-color: var(--g-color-base-warning-light);
@@ -189,6 +189,10 @@ $block: '.#{variables.$ns}aside-header';
         }
     }
 
+    &__logo-button {
+        margin: 0 10px 2px;
+    }
+
     &__logo-button &__logo-icon-place {
         height: var(
             --gn-aside-header-item-icon-background-size,
@@ -203,14 +207,13 @@ $block: '.#{variables.$ns}aside-header';
 
     &__footer {
         flex-shrink: 0;
-        width: 100%;
-        margin: 8px 0;
+        margin: var(--g-spacing-2) 10px;
         display: flex;
         flex-direction: column;
     }
 
     &__panels {
-        --gn-drawer-z-index: var(--gn-aside-header-panel-z-index, 98);
+        z-index: var(--gn-aside-header-panel-z-index, 98);
 
         position: fixed;
         inset: var(--gn-top-alert-height, 0) 0 0;
@@ -243,7 +246,6 @@ $block: '.#{variables.$ns}aside-header';
 
     &__content {
         width: calc(100% - var(--gn-aside-header-size));
-        z-index: var(--gn-aside-header-content-z-index, 95);
         margin-top: var(--gn-top-alert-height, 0);
 
         &_expanded-by-hover {

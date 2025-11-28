@@ -80,7 +80,7 @@ $actionLeftRightMargin: 10px;
         display: flex;
         align-items: center;
         overflow: hidden;
-        margin-right: 16px;
+        margin: 0 var(--g-spacing-4) 0 var(--g-spacing-2);
     }
 
     &__title-text {
@@ -129,7 +129,7 @@ $actionLeftRightMargin: 10px;
     }
 
     &__menu-divider {
-        margin: 0 8px;
+        margin: 0 10px;
         width: 100%;
         border-top: 1px solid
             var(--gn-aside-header-divider-horizontal-color, var(--_--horizontal-divider-line-color));
@@ -168,7 +168,7 @@ $actionLeftRightMargin: 10px;
     &_type_action {
         justify-content: center;
         height: var(--gn-composite-bar-item-action-size);
-        margin: 0 $actionLeftRightMargin 8px;
+        margin-bottom: var(--g-spacing-2);
         background: var(--g-color-base-float);
         box-shadow:
             0px 0px 0px 1px rgba(0, 0, 0, 0.03),
@@ -262,8 +262,8 @@ $actionLeftRightMargin: 10px;
                     --gn-aside-header-item-icon-background-size,
                     var(--_--item-icon-background-size)
                 );
-                margin-top: -19px;
-                margin-left: -19px;
+                margin-top: -18px;
+                margin-left: -18px;
                 border-radius: var(
                     --gn-aside-header-item-collapsed-radius,
                     var(--_--item-collapsed-radius)

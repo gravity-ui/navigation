@@ -1,21 +1,18 @@
-import React, {FC, ReactNode, useCallback, useContext, useRef} from 'react';
+import React, {FC, ReactNode, useCallback, useContext, useRef, useState} from 'react';
 
-import {List} from '@gravity-ui/uikit';
+import {ChevronDown, ChevronRight} from '@gravity-ui/icons';
+import {List, ListSortParams} from '@gravity-ui/uikit';
 
 import {ASIDE_HEADER_COMPACT_WIDTH} from '../../../constants';
 import {block} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
-import {AsideHeaderItem} from '../../types';
+import {AsideHeaderItem, MenuItemsWithGroups} from '../../types';
+import {UNGROUPED_ID} from '../AllPagesPanel/constants';
 
 import {Item, ItemProps} from './Item/Item';
 import {MultipleTooltip, MultipleTooltipContext, MultipleTooltipProvider} from './MultipleTooltip';
 import {COLLAPSE_ITEM_ID} from './constants';
-import {
-    getItemHeight,
-    getItemsHeight,
-    getSelectedItemIndex,
-    sortItemsByAfterMoreButton,
-} from './utils';
+import {getItemHeight, getItemsHeight, getSelectedItemIndex} from './utils';
 
 import './CompositeBar.scss';
 
@@ -23,7 +20,8 @@ const b = block('composite-bar');
 
 export type CompositeBarProps = {
     type: 'menu' | 'subheader';
-    items: AsideHeaderItem[];
+
+    items?: MenuItemsWithGroups[];
     onItemClick?: (
         item: AsideHeaderItem,
         collapsed: boolean,
@@ -34,22 +32,38 @@ export type CompositeBarProps = {
     onMoreClick?: () => void;
     compact: boolean;
     compositeId?: string;
+    className?: string;
+    onToggleGroupCollapsed?: (groupId: string) => void;
 };
 
 type CompositeBarViewProps = CompositeBarProps & {
     compositeId?: string;
+    items?: MenuItemsWithGroups[];
+    collapsedIds?: Record<string, boolean>;
+    enableSorting?: boolean;
+    onToggleGroupCollapsed?: (groupId: string) => void;
+    onFirstLevelSortEnd?: (params: {oldIndex: number; newIndex: number}) => void;
+    onSecondLevelSortEnd?: (
+        groupId: string,
+    ) => (params: {oldIndex: number; newIndex: number}) => void;
 };
 
-const CompositeBarView: FC<CompositeBarViewProps> = ({
+export const CompositeBarView: FC<CompositeBarViewProps> = ({
     type,
     items,
     onItemClick,
     onMoreClick,
     multipleTooltip = false,
     compositeId,
+    className,
+    onToggleGroupCollapsed,
+    enableSorting = false,
+    onFirstLevelSortEnd,
+    onSecondLevelSortEnd,
 }) => {
     const ref = useRef<List<AsideHeaderItem>>(null);
     const tooltipRef = useRef<HTMLDivElement>(null);
+    const [hoveredGroupId, setHoveredGroupId] = useState<string | null>(null);
 
     const {
         setValue: setMultipleTooltipContextValue,
@@ -192,14 +206,134 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
         ],
     );
 
+    const handleFirstLevelSortEnd = useCallback(
+        ({oldIndex, newIndex}: ListSortParams) => {
+            if (onFirstLevelSortEnd) {
+                onFirstLevelSortEnd({oldIndex, newIndex});
+            }
+        },
+        [onFirstLevelSortEnd],
+    );
+
+    const handleSecondLevelSortEnd = useCallback(
+        (groupId: string) =>
+            ({oldIndex, newIndex}: ListSortParams) => {
+                if (onSecondLevelSortEnd) {
+                    onSecondLevelSortEnd(groupId)({oldIndex, newIndex});
+                }
+            },
+        [onSecondLevelSortEnd],
+    );
+
+    const renderNestedItem = useCallback(
+        (
+            nestedItem: MenuItemsWithGroups,
+            parentItemIndex: number,
+            _nestedItemIndex: number,
+            _parentGroupId?: string,
+        ) => {
+            if ('items' in nestedItem && nestedItem.items && nestedItem.items.length > 0) {
+                const isCollapsible = Boolean(
+                    'collapsible' in nestedItem && nestedItem.collapsible,
+                );
+                const isCollapsed = Boolean('isCollapsed' in nestedItem && nestedItem.isCollapsed);
+                const nestedGroupListItems = nestedItem.items?.filter((item) => !item.hidden) || [];
+                const hasHeader = nestedItem.title || nestedItem.icon || isCollapsible;
+                const isNestedGroupHovered = hoveredGroupId === nestedItem.id;
+
+                let nestedGroupIcon = nestedItem.icon;
+
+                if (!isCollapsed) {
+                    nestedGroupIcon = ChevronDown;
+                } else if (isNestedGroupHovered) {
+                    nestedGroupIcon = ChevronRight;
+                }
+
+                return (
+                    <div className={b('menu-group', {expanded: !isCollapsed, nested: true})}>
+                        {hasHeader && (
+                            <Item
+                                {...nestedItem}
+                                className={b('menu-group-header', {collapsed: isCollapsed})}
+                                icon={nestedGroupIcon}
+                                compact={compact}
+                                onMouseEnter={() => {
+                                    setHoveredGroupId(nestedItem.id);
+                                }}
+                                onMouseLeave={() => {
+                                    setHoveredGroupId(null);
+                                }}
+                                onItemClick={(item) => {
+                                    onToggleGroupCollapsed?.(item.id);
+                                }}
+                            />
+                        )}
+
+                        {!isCollapsed && (
+                            <List<MenuItemsWithGroups>
+                                items={nestedGroupListItems}
+                                sortable={enableSorting}
+                                onSortEnd={handleSecondLevelSortEnd(nestedItem.id)}
+                                virtualized={false}
+                                filterable={false}
+                                itemClassName={b('menu-group-item')}
+                                itemsHeight={getItemsHeight}
+                                renderItem={(
+                                    deepNestedItem,
+                                    _isDeepItemActive,
+                                    deepNestedIndex,
+                                ) => {
+                                    return renderNestedItem(
+                                        deepNestedItem,
+                                        parentItemIndex,
+                                        deepNestedIndex,
+                                        nestedItem.id,
+                                    );
+                                }}
+                            />
+                        )}
+                    </div>
+                );
+            }
+
+            return (
+                <Item
+                    className={b('menu-group-item')}
+                    key={nestedItem.id}
+                    {...nestedItem}
+                    compact={compact}
+                    onMouseEnter={onMouseEnterByIndex(parentItemIndex)}
+                    onMouseLeave={onMouseLeave}
+                    onItemClick={onItemClickByIndex(parentItemIndex, nestedItem.onItemClick)}
+                />
+            );
+        },
+        [
+            compact,
+            enableSorting,
+            handleSecondLevelSortEnd,
+            hoveredGroupId,
+            onItemClickByIndex,
+            onMouseEnterByIndex,
+            onMouseLeave,
+            onToggleGroupCollapsed,
+            setHoveredGroupId,
+        ],
+    );
+
+    if (!items || items.length === 0) {
+        return null;
+    }
+
     return (
         <React.Fragment>
             <div
+                className={className}
                 ref={tooltipRef}
                 onMouseEnter={onTooltipMouseEnter}
                 onMouseLeave={onTooltipMouseLeave}
             >
-                <List<AsideHeaderItem>
+                <List<MenuItemsWithGroups>
                     id={compositeId}
                     ref={ref}
                     items={items}
@@ -209,16 +343,88 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                     itemClassName={b('root-menu-item')}
                     virtualized={false}
                     filterable={false}
-                    sortable={false}
-                    renderItem={(item, _isItemActive, itemIndex) => (
-                        <Item
-                            {...item}
-                            compact={compact}
-                            onMouseEnter={onMouseEnterByIndex(itemIndex)}
-                            onMouseLeave={onMouseLeave}
-                            onItemClick={onItemClickByIndex(itemIndex, item.onItemClick)}
-                        />
-                    )}
+                    sortable={enableSorting}
+                    onSortEnd={enableSorting ? handleFirstLevelSortEnd : undefined}
+                    renderItem={(item, _isItemActive, itemIndex) => {
+                        if (!item.groupId) {
+                            return (
+                                <Item
+                                    {...item}
+                                    className={b('menu-item', {compact})}
+                                    compact={compact}
+                                    onMouseEnter={onMouseEnterByIndex(itemIndex)}
+                                    onMouseLeave={onMouseLeave}
+                                    onItemClick={onItemClickByIndex(itemIndex, item.onItemClick)}
+                                />
+                            );
+                        }
+
+                        const isCollapsible = Boolean('collapsible' in item && item.collapsible);
+                        const isCollapsed = Boolean('isCollapsed' in item && item.isCollapsed);
+                        const groupListItems =
+                            ('items' in item &&
+                                item.items?.filter((groupItem) => !groupItem.hidden)) ||
+                            [];
+                        const hasHeader = item.title || item.icon || isCollapsible;
+
+                        const isUngrouped = item.id === UNGROUPED_ID;
+                        const isGroupHovered = hoveredGroupId === item.id;
+
+                        let groupIcon = item.icon;
+
+                        if (!isCollapsed) {
+                            groupIcon = ChevronDown;
+                        } else if (isGroupHovered) {
+                            groupIcon = ChevronRight;
+                        }
+
+                        return (
+                            <div className={b('menu-group', {expanded: !isCollapsed})}>
+                                {hasHeader && !isUngrouped && (
+                                    <Item
+                                        {...item}
+                                        className={b('menu-group-header', {collapsed: isCollapsed})}
+                                        icon={groupIcon}
+                                        compact={compact}
+                                        onMouseEnter={() => {
+                                            setHoveredGroupId(item.id);
+                                        }}
+                                        onMouseLeave={() => {
+                                            setHoveredGroupId(null);
+                                        }}
+                                        onItemClick={(clickedItem) => {
+                                            onToggleGroupCollapsed?.(clickedItem.id);
+                                        }}
+                                    />
+                                )}
+
+                                {!isCollapsed && (
+                                    <List<MenuItemsWithGroups>
+                                        items={groupListItems}
+                                        sortable={enableSorting}
+                                        onSortEnd={handleSecondLevelSortEnd(item.id)}
+                                        virtualized={false}
+                                        filterable={false}
+                                        itemClassName={b('menu-group-item')}
+                                        itemHeight={getItemHeight}
+                                        itemsHeight={getItemsHeight}
+                                        renderItem={(
+                                            nestedItem,
+                                            _isNestedItemActive,
+                                            nestedItemIndex,
+                                        ) => {
+                                            return renderNestedItem(
+                                                nestedItem,
+                                                itemIndex,
+                                                nestedItemIndex,
+                                                item.id,
+                                            );
+                                        }}
+                                    />
+                                )}
+                            </div>
+                        );
+                    }}
                 />
             </div>
             {type === 'menu' && multipleTooltip && (
@@ -238,42 +444,47 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     items,
     onItemClick,
     onMoreClick,
+    onToggleGroupCollapsed,
     multipleTooltip = false,
     compact,
     compositeId,
+    className,
 }) => {
-    if (items.length === 0) {
+    const visibleItems = items?.filter((item) => !item.hidden);
+
+    if (!visibleItems || visibleItems.length === 0) {
         return null;
     }
-    let node: ReactNode;
 
-    const sortedItems = sortItemsByAfterMoreButton(items);
+    let node: ReactNode;
 
     if (type === 'menu') {
         node = (
-            <div className={b({scrollable: true})}>
+            <div className={b({scrollable: true}, className)}>
                 <CompositeBarView
                     compositeId={compositeId}
                     type="menu"
                     compact={compact}
-                    items={sortedItems}
+                    items={visibleItems}
                     onItemClick={onItemClick}
                     onMoreClick={onMoreClick}
                     multipleTooltip={multipleTooltip}
+                    onToggleGroupCollapsed={onToggleGroupCollapsed}
                 />
             </div>
         );
     } else {
         node = (
-            <div className={b({subheader: true})}>
+            <div className={b({subheader: true}, className)}>
                 <CompositeBarView
                     type="subheader"
                     compact={compact}
-                    items={sortedItems}
+                    items={visibleItems}
                     onItemClick={onItemClick}
                 />
             </div>
         );
     }
+
     return <MultipleTooltipProvider>{node}</MultipleTooltipProvider>;
 };

@@ -4,7 +4,7 @@ import {PopupProps, QAProps} from '@gravity-ui/uikit';
 
 import {RenderContentType} from '../Content';
 import {DrawerItemProps} from '../Drawer/Drawer';
-import {LogoProps, MenuItem, OpenModalSubscriber, TopAlertProps} from '../types';
+import {LogoProps, MenuGroup, MenuItem, OpenModalSubscriber, TopAlertProps} from '../types';
 
 import {AsideHeaderContextType} from './AsideHeaderContext';
 
@@ -59,7 +59,10 @@ interface AsideHeaderDefaultProps {
     subheaderItems?: AsideHeaderItem[];
     menuItems?: AsideHeaderItem[];
     defaultMenuItems?: AsideHeaderItem[];
+    menuGroups?: MenuGroup[];
+    defaultMenuGroups?: MenuGroup[];
     onMenuItemsChanged?: (items: AsideHeaderItem[]) => void;
+    onMenuGroupsChanged?: (groups: MenuGroup[]) => void;
     headerDecoration?: boolean;
 }
 
@@ -121,3 +124,14 @@ export interface AsideHeaderItem extends MenuItem {
      */
     onOpenChangePopup?: PopupProps['onOpenChange'];
 }
+
+export interface GroupedMenuItem extends MenuItem {
+    groupId: string;
+    collapsible: boolean;
+    isCollapsed: boolean;
+    isDisabled: boolean;
+    collapsedByDefault?: boolean;
+    items: MenuItemsWithGroups[];
+}
+
+export type MenuItemsWithGroups = MenuItem | GroupedMenuItem;

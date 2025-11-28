@@ -32,6 +32,10 @@ $block: '.#{variables.$ns}logo';
         }
     }
 
+    &__logo {
+        margin: 0 var(--g-spacing-4) 0 var(--g-spacing-2);
+    }
+
     &__logo-icon-place {
         width: 36px;
 

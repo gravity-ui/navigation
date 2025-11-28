@@ -89,7 +89,6 @@ export const menuItemsShowcase: AsideHeaderProps['menuItems'] = [
         title: 'Create smth',
         type: 'action',
         icon: Plus,
-        afterMoreButton: true,
         onItemClick({id, title, current}) {
             alert(JSON.stringify({id, title, current}));
         },
@@ -224,3 +223,115 @@ export const generateManyMenuItems = (count = 20): AsideHeaderProps['menuItems']
 };
 
 export const menuItemsMany = generateManyMenuItems(25);
+export const menuItemsWithGroups: AsideHeaderProps['menuItems'] = [
+    {
+        id: 'overview',
+        title: 'Overview',
+        icon: Gear,
+        qa: 'menu-item-gear',
+        iconQa: 'menu-item-icon-gear',
+        groupId: 'main',
+    },
+    {
+        id: 'operations',
+        title: 'Operations',
+        icon: Gear,
+        rightAdornment: renderTag('New'),
+        groupId: 'main',
+    },
+    {
+        id: 'templates',
+        title: 'Main notifications long menu title',
+        icon: Gear,
+        groupId: 'main',
+    },
+    {
+        id: 'divider',
+        title: '-',
+        type: 'divider',
+    },
+    {
+        id: 'notifications',
+        title: 'Main notifications long long long long menu title',
+        icon: Plus,
+        current: true,
+        onItemClick({id, title, current}) {
+            alert(JSON.stringify({id, title, current}));
+        },
+        groupId: 'main',
+    },
+    {
+        id: 'dashboard',
+        title: 'Dashboard',
+        icon: Gear,
+        rightAdornment: renderTag('New'),
+        onItemClick({id, title, current}) {
+            alert(JSON.stringify({id, title, current}));
+        },
+        groupId: 'admin',
+    },
+    {
+        id: 'divider2',
+        title: '-',
+        type: 'divider',
+    },
+    {
+        id: 'id1',
+        title: 'Objects',
+        tooltipText: 'Custom tooltip text',
+        icon: Plus,
+        pinned: true,
+        groupId: 'admin',
+        onItemClick({id, title, current}) {
+            alert(JSON.stringify({id, title, current}));
+        },
+        itemWrapper(params, makeItem, {collapsed, compact}) {
+            return !collapsed && !compact ? (
+                <div className="composite-bar-showcase__item-accent aside-header-showcase__item-accent">
+                    {makeItem(params)}
+                </div>
+            ) : (
+                makeItem(params)
+            );
+        },
+    },
+    {
+        id: 'action2',
+        title: 'Create smth',
+        type: 'action',
+        icon: Plus,
+        onItemClick({id, title, current}) {
+            alert(JSON.stringify({id, title, current}));
+        },
+    },
+    {
+        id: 'dashboard2',
+        title: 'Dashboard2',
+        icon: Gear,
+        rightAdornment: renderTag('New'),
+        onItemClick({id, title, current}) {
+            alert(JSON.stringify({id, title, current}));
+        },
+    },
+];
+
+export const menuGroupsWithIcons: AsideHeaderProps['menuGroups'] = [
+    {
+        id: 'main',
+        title: 'Main',
+        icon: Gear,
+        collapsible: true,
+        collapsedByDefault: false,
+        collapsed: false,
+        hidden: false,
+    },
+    {
+        id: 'admin',
+        title: 'Administration',
+        icon: Gear,
+        collapsible: true,
+        collapsedByDefault: false,
+        collapsed: false,
+        hidden: false,
+    },
+];

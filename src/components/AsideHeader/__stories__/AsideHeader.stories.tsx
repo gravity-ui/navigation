@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Xmark} from '@gravity-ui/icons';
+import {Gear, Magnifier, Xmark} from '@gravity-ui/icons';
 import {Button, Flex, Icon, Text, spacing} from '@gravity-ui/uikit';
 import type {Meta, StoryFn} from '@storybook/react';
 
@@ -10,7 +10,14 @@ import {PageLayout} from '../components/PageLayout/PageLayout';
 import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
 
 import {AsideHeaderShowcase, AsideHeaderShowcaseProps} from './AsideHeaderShowcase';
-import {DEFAULT_LOGO, menuItemsClamped, menuItemsMany, menuItemsShowcase} from './moc';
+import {
+    DEFAULT_LOGO,
+    menuGroupsWithIcons,
+    menuItemsClamped,
+    menuItemsMany,
+    menuItemsShowcase,
+    menuItemsWithGroups,
+} from './moc';
 
 import logoIcon from '../../../../.storybook/assets/logo.svg';
 
@@ -110,7 +117,6 @@ const AdvancedUsageTemplate: StoryFn = (args) => {
                 headerDecoration
                 menuItems={menuItemsShowcase}
                 logo={DEFAULT_LOGO}
-                onChangeCompact={setCompact}
                 qa={'pl-aside'}
                 {...args}
             />
@@ -229,7 +235,6 @@ export function LineClamp() {
             <PageLayoutAside
                 logo={{icon: logoIcon, text: 'Line clamp', 'aria-label': 'Line clamp'}}
                 menuItems={menuItemsClamped}
-                onChangeCompact={setCompact}
                 headerDecoration
             />
         </PageLayout>
@@ -245,7 +250,6 @@ const CollapseButtonWrapperTemplate: StoryFn = (args) => {
                 headerDecoration
                 menuItems={menuItemsShowcase}
                 logo={DEFAULT_LOGO}
-                onChangeCompact={setCompact}
                 collapseButtonWrapper={(defaultButton, {compact}) => (
                     <React.Fragment>
                         {defaultButton}
@@ -284,12 +288,11 @@ const ManyItemsTemplate: StoryFn = (args) => {
     const [compact, setCompact] = React.useState<boolean>(args.initialCompact);
 
     return (
-        <PageLayout compact={compact}>
+        <PageLayout compact={compact} onChangeCompact={setCompact}>
             <PageLayoutAside
                 headerDecoration
                 menuItems={menuItemsMany}
                 logo={DEFAULT_LOGO}
-                onChangeCompact={setCompact}
                 {...args}
             />
 
@@ -323,4 +326,48 @@ ManyItems.parameters = {
                 'On low screens, all items remain accessible through scrolling with invisible scrollbar.',
         },
     },
+};
+
+const GroupedMenuCollapsibleTemplate: StoryFn = (args) => {
+    const [compact, setCompact] = React.useState(false);
+    const [menuItems, setMenuItems] = React.useState(menuItemsWithGroups);
+    const [currentMenuGroups, setCurrentMenuGroups] = React.useState(menuGroupsWithIcons);
+
+    return (
+        <PageLayout compact={compact} onChangeCompact={setCompact}>
+            <PageLayoutAside
+                headerDecoration
+                logo={DEFAULT_LOGO}
+                menuItems={menuItems}
+                defaultMenuItems={menuItemsWithGroups}
+                editMenuProps={{enableSorting: true}}
+                menuGroups={currentMenuGroups}
+                defaultMenuGroups={menuGroupsWithIcons}
+                subheaderItems={[
+                    {
+                        id: 'services',
+                        title: 'Services',
+                        icon: Gear,
+                        popupPlacement: ['right-start'],
+                        popupOffset: {mainAxis: 10, crossAxis: 10},
+                    },
+                    {
+                        id: 'search',
+                        title: 'Search',
+                        qa: 'subheader-item-search',
+                        icon: Magnifier,
+                    },
+                ]}
+                onMenuItemsChanged={setMenuItems}
+                onMenuGroupsChanged={setCurrentMenuGroups}
+                {...args}
+            />
+        </PageLayout>
+    );
+};
+
+export const GroupedMenuCollapsible = GroupedMenuCollapsibleTemplate.bind({});
+GroupedMenuCollapsible.args = {
+    multipleTooltip: false,
+    initialCompact: false,
 };
