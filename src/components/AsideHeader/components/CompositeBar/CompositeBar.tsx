@@ -280,10 +280,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
 
                         const isCollapsible = Boolean('collapsible' in item && item.collapsible);
                         const isCollapsed = Boolean('isCollapsed' in item && item.isCollapsed);
-                        const groupListItems =
-                            ('items' in item &&
-                                item.items?.filter((groupItem) => !groupItem.hidden)) ||
-                            [];
+                        const groupListItems = ('items' in item && item.items) || [];
                         const hasHeader = item.title || item.icon || isCollapsible;
 
                         const isUngrouped = item.id === UNGROUPED_ID;
@@ -396,13 +393,14 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     className,
     editMode = false,
 }) => {
-    const visibleItems = items?.filter((item) => !item.hidden);
-    const itemsWithHiddenItems = visibleItems?.map((item) => ({
-        ...item,
-        items: 'items' in item ? item.items?.filter((item) => !item.hidden) : [],
-    }));
+    const visibleItems = items
+        ?.filter((item) => !item.hidden)
+        ?.map((item) => ({
+            ...item,
+            items: 'items' in item ? item.items?.filter((item) => !item.hidden) : [],
+        }));
 
-    if (!itemsWithHiddenItems || itemsWithHiddenItems.length === 0) {
+    if (!visibleItems || visibleItems.length === 0) {
         return null;
     }
 

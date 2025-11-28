@@ -37,6 +37,10 @@ $block: '.#{variables.$ns}composite-bar';
         }
     }
 
+    &__root-menu-item[class] {
+        margin-bottom: 2px;
+    }
+
     &__menu-group {
         width: 100%;
         height: 100%;
