@@ -177,9 +177,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         [onMenuItemsChanged],
     );
 
-    const data = items.filter(
-        (item) => item.id !== ALL_PAGES_ID && item.type !== 'divider' && item.type !== 'action',
-    );
+    const data = items.filter((item) => item.id !== ALL_PAGES_ID && item.type !== 'action');
 
     return (
         <Flex className={b(null, className)} gap="5" direction="column">
