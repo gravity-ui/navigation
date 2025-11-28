@@ -80,7 +80,12 @@ $actionLeftRightMargin: 10px;
         display: flex;
         align-items: center;
         overflow: hidden;
+        justify-content: space-between;
         margin: 0 var(--g-spacing-4) 0 var(--g-spacing-2);
+    }
+
+    &__visibility-button {
+        margin-left: auto;
     }
 
     &__title-text {
