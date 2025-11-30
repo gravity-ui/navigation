@@ -205,6 +205,11 @@ $block: '.#{variables.$ns}aside-header';
         flex-grow: 1;
     }
 
+    &__menu-items-group,
+    &__menu-item {
+        margin-inline: 10px;
+    }
+
     &__footer {
         flex-shrink: 0;
         margin: var(--g-spacing-2) 10px;

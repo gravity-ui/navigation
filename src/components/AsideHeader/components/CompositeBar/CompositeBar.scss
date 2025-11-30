@@ -37,8 +37,19 @@ $block: '.#{variables.$ns}composite-bar';
         }
     }
 
-    &__root-menu-item[class] {
-        margin-bottom: 2px;
+    &__root-menu-item {
+        &:has(#{$class}__menu-group) {
+            align-items: flex-start;
+
+            > .g-list__item-sort-icon {
+                top: 12px;
+                position: relative;
+            }
+
+            .g-list__item-content {
+                overflow: visible;
+            }
+        }
     }
 
     &__menu-group {
@@ -65,11 +76,6 @@ $block: '.#{variables.$ns}composite-bar';
                 border-radius: var(--gn-aside-header-item-expanded-radius);
             }
         }
-    }
-
-    &__menu-item,
-    &__menu-group {
-        margin-inline: 10px;
     }
 
     &__menu-group-header,

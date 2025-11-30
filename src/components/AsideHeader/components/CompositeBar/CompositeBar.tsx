@@ -33,6 +33,8 @@ export type CompositeBarProps = {
     compact: boolean;
     compositeId?: string;
     className?: string;
+    groupClassName?: string;
+    menuItemClassName?: string;
     editMode?: boolean;
     onToggleGroupCollapsed?: (groupId: string) => void;
 };
@@ -60,13 +62,14 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
     multipleTooltip = false,
     compositeId,
     className,
+    groupClassName,
+    enableSorting = false,
+    editMode = false,
     onToggleGroupCollapsed,
     onToggleMenuGroupVisibility,
     onToggleMenuItemVisibility,
-    enableSorting = false,
     onFirstLevelSortEnd,
     onSecondLevelSortEnd,
-    editMode = false,
 }) => {
     const ref = useRef<List<AsideHeaderItem>>(null);
     const tooltipRef = useRef<HTMLDivElement>(null);
@@ -295,7 +298,13 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                         }
 
                         return (
-                            <div className={b('menu-group', {expanded: !isCollapsed})}>
+                            <div
+                                className={b(
+                                    'menu-group',
+                                    {expanded: !isCollapsed},
+                                    groupClassName,
+                                )}
+                            >
                                 {hasHeader && !isUngrouped && (
                                     <Item
                                         {...item}
@@ -396,6 +405,8 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     compact,
     compositeId,
     className,
+    groupClassName,
+    menuItemClassName,
     editMode = false,
 }) => {
     const visibleItems = items
@@ -416,6 +427,8 @@ export const CompositeBar: FC<CompositeBarProps> = ({
             <div className={b({scrollable: true}, className)}>
                 <CompositeBarView
                     compositeId={compositeId}
+                    groupClassName={groupClassName}
+                    menuItemClassName={menuItemClassName}
                     type="menu"
                     compact={compact}
                     items={visibleItems}
@@ -431,6 +444,8 @@ export const CompositeBar: FC<CompositeBarProps> = ({
         node = (
             <div className={b({subheader: true}, className)}>
                 <CompositeBarView
+                    groupClassName={groupClassName}
+                    menuItemClassName={menuItemClassName}
                     type="subheader"
                     compact={compact}
                     items={visibleItems}
