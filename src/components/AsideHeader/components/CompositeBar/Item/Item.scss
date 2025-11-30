@@ -69,7 +69,7 @@ $actionLeftRightMargin: 10px;
 
     &__icon-place {
         flex-shrink: 0;
-        width: var(--gn-aside-header-min-width);
+        width: var(--gn-aside-header-min-width, 36px);
         display: flex;
         align-items: center;
         justify-content: center;
