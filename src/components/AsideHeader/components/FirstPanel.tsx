@@ -68,6 +68,8 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         <CompositeBar
                             compositeId={MENU_ITEMS_COMPOSITE_ID}
                             className={b('menu-items')}
+                            groupClassName={b('menu-items-group')}
+                            menuItemClassName={b('menu-item')}
                             compact={compact}
                             type="menu"
                             items={flatListItems}
