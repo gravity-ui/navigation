@@ -18,7 +18,7 @@ $block: '.#{variables.$ns}composite-bar';
 
     &__menu-group-item,
     &__menu-group-header,
-    & &__root-menu-item[class] {
+    &__root-menu-item[class] {
         margin-bottom: 2px;
 
         &:last-child {
