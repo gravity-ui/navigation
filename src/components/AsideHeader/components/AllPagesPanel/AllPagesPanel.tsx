@@ -198,7 +198,6 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             </Flex>
 
             <CompositeBarView
-                compositeId={'compositeId'}
                 type="menu"
                 compact={false}
                 className={b('content')}
