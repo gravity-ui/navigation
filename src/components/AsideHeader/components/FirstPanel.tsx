@@ -70,7 +70,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             className={b('menu-items')}
                             groupClassName={b('menu-items-group')}
                             menuItemClassName={b('menu-item')}
-                            compact={compact}
+                            compact={!isExpanded}
                             type="menu"
                             items={flatListItems}
                             onItemClick={onItemClick}

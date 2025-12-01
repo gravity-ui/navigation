@@ -5,7 +5,6 @@ import {List, ListSortParams} from '@gravity-ui/uikit';
 
 import {ASIDE_HEADER_COMPACT_WIDTH} from '../../../constants';
 import {block} from '../../../utils/cn';
-import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
 import {AsideHeaderItem, MenuItemsWithGroups} from '../../types';
 import {UNGROUPED_ID} from '../AllPagesPanel/constants';
 
@@ -66,6 +65,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
     menuItemClassName,
     enableSorting = false,
     editMode = false,
+    compact,
     onToggleGroupCollapsed,
     onToggleMenuGroupVisibility,
     onToggleMenuItemVisibility,
@@ -82,8 +82,6 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
         activeIndex,
         lastClickedItemIndex,
     } = useContext(MultipleTooltipContext);
-    const {isExpanded} = useAsideHeaderInnerContext();
-    const compact = !isExpanded;
 
     React.useEffect(() => {
         function handleBlurWindow() {
@@ -255,7 +253,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                     selectedItemIndex={type === 'menu' ? getSelectedItemIndex(items) : undefined}
                     itemHeight={getItemHeight}
                     itemsHeight={getItemsHeight}
-                    itemClassName={b('root-menu-item')}
+                    itemClassName={b('root-menu-item', {compact})}
                     virtualized={false}
                     filterable={false}
                     sortable={enableSorting}
@@ -340,7 +338,10 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                                         onSortEnd={handleSecondLevelSortEnd(itemIndex)}
                                         virtualized={false}
                                         filterable={false}
-                                        itemClassName={b('menu-group-item', {edit: enableSorting})}
+                                        itemClassName={b('menu-group-item', {
+                                            edit: enableSorting,
+                                            compact,
+                                        })}
                                         itemHeight={getItemHeight}
                                         itemsHeight={getItemsHeight}
                                         renderItem={(

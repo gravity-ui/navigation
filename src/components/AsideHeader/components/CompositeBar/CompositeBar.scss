@@ -45,7 +45,9 @@ $block: '.#{variables.$ns}composite-bar';
                 top: 12px;
                 position: relative;
             }
+        }
 
+        &:has(#{$class}__menu-group):not(#{$class}__root-menu-item_compact) {
             .g-list__item-content {
                 overflow: visible;
             }
@@ -86,7 +88,9 @@ $block: '.#{variables.$ns}composite-bar';
     &__menu-group-item {
         position: relative;
 
-        width: calc(100% + 16px);
+        &:not(#{$class}__menu-group-item_compact) {
+            width: calc(100% + 16px);
+        }
 
         &_edit {
             left: -16px;
