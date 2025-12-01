@@ -5,16 +5,11 @@
     height: 100%;
     padding: var(--g-spacing-4) var(--g-spacing-6);
     box-sizing: border-box;
+    --gn-aside-header-item-expanded-radius: 6px;
 
     &__content {
         overflow: auto;
         flex: 1;
-
-        margin: 0 calc(var(--g-spacing-6) * -1);
-
-        &_edit-mode {
-            padding-left: var(--g-spacing-6);
-        }
     }
 
     &__category {
@@ -25,12 +20,9 @@
         display: flex;
     }
 
-    &__item_editMode {
-        padding-left: var(--g-spacing-6);
-    }
-
-    &__groups-container {
+    &__menu-group {
         width: 100%;
+        margin-inline: 10px;
 
         &:not(:last-child) {
             padding-bottom: var(--g-spacing-2);

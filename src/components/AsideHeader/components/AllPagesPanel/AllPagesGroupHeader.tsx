@@ -41,7 +41,7 @@ export const AllPagesGroupHeader: React.FC<AllPagesGroupHeaderProps> = ({
 
     return (
         <Flex className={b()} gap="2" alignItems="center" justifyContent="space-between">
-            <Flex gap="2" alignItems="center">
+            <Flex className={b('title-container')} alignItems="center">
                 {icon && <Icon data={icon} size={16} />}
 
                 <Text className={b('title')} variant="body-1" color="secondary">

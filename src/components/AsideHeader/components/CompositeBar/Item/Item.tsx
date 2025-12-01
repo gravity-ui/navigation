@@ -1,6 +1,7 @@
 import React from 'react';
 
-import {Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
+import {Pin, PinFill} from '@gravity-ui/icons';
+import {Button, Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
 
 import {AsideHeaderItem} from 'src/components/AsideHeader/types';
 
@@ -21,6 +22,8 @@ interface ItemInnerProps extends ItemProps {
     className?: string;
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
+    editMode?: boolean;
+    onToggleVisibility?: () => void;
 }
 
 function renderItemTitle(params: Pick<AsideHeaderItem, 'title' | 'rightAdornment'>) {
@@ -62,6 +65,10 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         href,
         qa,
         compact,
+        editMode = false,
+        onToggleVisibility,
+        hidden,
+        preventUserRemoving,
     } = props;
 
     const ref = React.useRef<HTMLAnchorElement & HTMLButtonElement>(null);
@@ -73,6 +80,15 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const icon = props.icon;
     const iconSize = props.iconSize || ASIDE_HEADER_ICON_SIZE;
     const iconQa = props.iconQa;
+
+    const onPinButtonClick = React.useCallback(
+        (e: React.MouseEvent<HTMLButtonElement>) => {
+            e.stopPropagation();
+            e.preventDefault();
+            onToggleVisibility?.();
+        },
+        [onToggleVisibility],
+    );
 
     const handleOpenChangePopup = React.useCallback<NonNullable<ItemProps['onOpenChangePopup']>>(
         (newOpen, event, reason) => {
@@ -131,6 +147,16 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     >
                         {titleEl}
                     </div>
+
+                    {editMode && !preventUserRemoving && onToggleVisibility ? (
+                        <Button
+                            onClick={onPinButtonClick}
+                            view={hidden ? 'flat-secondary' : 'flat-action'}
+                            className={b('visibility-button')}
+                        >
+                            <Button.Icon>{hidden ? <Pin /> : <PinFill />}</Button.Icon>
+                        </Button>
+                    ) : null}
                 </Tag>
                 {renderPopupContent && Boolean(anchorRef?.current) && (
                     <Popup
@@ -154,6 +180,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const iconNode = icon ? (
         <Icon qa={iconQa} data={icon} size={iconSize} className={b('icon')} />
     ) : null;
+
     const titleNode = renderItemTitle({title, rightAdornment});
     const params = {icon: iconNode, title: titleNode};
     let highlightedNode = null;

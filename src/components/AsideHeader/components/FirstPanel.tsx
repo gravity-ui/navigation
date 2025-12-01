@@ -68,7 +68,9 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         <CompositeBar
                             compositeId={MENU_ITEMS_COMPOSITE_ID}
                             className={b('menu-items')}
-                            compact={compact}
+                            groupClassName={b('menu-items-group')}
+                            menuItemClassName={b('menu-item')}
+                            compact={!isExpanded}
                             type="menu"
                             items={flatListItems}
                             onItemClick={onItemClick}
@@ -83,7 +85,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     <div className={b('footer')}>
                         {renderFooter?.({
                             size,
-                            compact: Boolean(compact),
+                            compact: Boolean(!isExpanded),
                             asideRef,
                         })}
                     </div>

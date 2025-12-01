@@ -3,8 +3,7 @@ import {AsideHeaderItem, GroupedMenuItem, MenuItemsWithGroups} from '../../types
 import {getGroupBlockHeight} from '../../utils/getGroupHeight';
 
 function getGroupHeight(compositeItem: GroupedMenuItem) {
-    const visibleItemsCount = compositeItem.items?.filter(({hidden}) => !hidden) || [];
-    const visibleGroupItems = compositeItem.isCollapsed ? [] : visibleItemsCount;
+    const visibleGroupItems = compositeItem.isCollapsed ? [] : compositeItem.items;
 
     return getGroupBlockHeight(visibleGroupItems);
 }
