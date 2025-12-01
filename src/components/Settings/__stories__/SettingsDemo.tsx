@@ -5,8 +5,8 @@ import {
     Button,
     Checkbox,
     HelpMark,
-    Radio,
     SegmentedRadioGroup,
+    SegmentedRadioGroupOption,
     Select,
     Switch,
     useUniqId,
@@ -176,8 +176,12 @@ export const SettingsComponent = React.memo(
                                         handleChange('vcs', event.target.value);
                                     }}
                                 >
-                                    <Radio value="arc">{'Arc'}</Radio>
-                                    <Radio value="svn">{'SVN'}</Radio>
+                                    <SegmentedRadioGroupOption value="arc">
+                                        {'Arc'}
+                                    </SegmentedRadioGroupOption>
+                                    <SegmentedRadioGroupOption value="svn">
+                                        {'SVN'}
+                                    </SegmentedRadioGroupOption>
                                 </SegmentedRadioGroup>
                             </Settings.Item>
                             <Settings.Item
@@ -231,10 +235,18 @@ export const SettingsComponent = React.memo(
                                         handleChange('arcanumTheme', event.target.value);
                                     }}
                                 >
-                                    <Radio value="light">{'Light'}</Radio>
-                                    <Radio value="dark">{'Dark'}</Radio>
-                                    <Radio value="special">{'Special'}</Radio>
-                                    <Radio value="general">{'Inherit from General'}</Radio>
+                                    <SegmentedRadioGroupOption value="light">
+                                        {'Light'}
+                                    </SegmentedRadioGroupOption>
+                                    <SegmentedRadioGroupOption value="dark">
+                                        {'Dark'}
+                                    </SegmentedRadioGroupOption>
+                                    <SegmentedRadioGroupOption value="special">
+                                        {'Special'}
+                                    </SegmentedRadioGroupOption>
+                                    <SegmentedRadioGroupOption value="general">
+                                        {'Inherit from General'}
+                                    </SegmentedRadioGroupOption>
                                 </SegmentedRadioGroup>
                             </Settings.Item>
                             <Settings.Item title="Code theme">
@@ -297,8 +309,12 @@ function renderGeneralSettings(
                                 handleChange('lang', event.target.value);
                             }}
                         >
-                            <Radio value="ru">{'Русский'}</Radio>
-                            <Radio value="en">{'English'}</Radio>
+                            <SegmentedRadioGroupOption value="ru">
+                                {'Русский'}
+                            </SegmentedRadioGroupOption>
+                            <SegmentedRadioGroupOption value="en">
+                                {'English'}
+                            </SegmentedRadioGroupOption>
                         </SegmentedRadioGroup>
                     </Settings.Item>
                     <Settings.Item title="Theme">
@@ -308,8 +324,12 @@ function renderGeneralSettings(
                                 handleChange('theme', event.target.value);
                             }}
                         >
-                            <Radio value="light">{'Light'}</Radio>
-                            <Radio value="dark">{'Dark'}</Radio>
+                            <SegmentedRadioGroupOption value="light">
+                                {'Light'}
+                            </SegmentedRadioGroupOption>
+                            <SegmentedRadioGroupOption value="dark">
+                                {'Dark'}
+                            </SegmentedRadioGroupOption>
                         </SegmentedRadioGroup>
                     </Settings.Item>
                 </Settings.Section>

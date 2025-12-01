@@ -6,8 +6,8 @@ import {
     EventBrokerData,
     Icon,
     Modal,
-    Radio,
     SegmentedRadioGroup,
+    SegmentedRadioGroupOption,
     eventBroker,
 } from '@gravity-ui/uikit';
 
@@ -242,8 +242,12 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                                     setHeaderDecoration(event.target.value);
                                 }}
                             >
-                                <Radio value={BOOLEAN_OPTIONS.No}>No</Radio>
-                                <Radio value={BOOLEAN_OPTIONS.Yes}>Yes</Radio>
+                                <SegmentedRadioGroupOption value={BOOLEAN_OPTIONS.No}>
+                                    No
+                                </SegmentedRadioGroupOption>
+                                <SegmentedRadioGroupOption value={BOOLEAN_OPTIONS.Yes}>
+                                    Yes
+                                </SegmentedRadioGroupOption>
                             </SegmentedRadioGroup>
                             <br />
                             <br />
