@@ -10,6 +10,7 @@ $actionLeftRightMargin: 10px;
 
     $class: &;
     --gn-composite-bar-item-action-size: 36px;
+    --_--item-icon-background-size: 36px;
 
     --_--horizontal-divider-line-color: var(--g-color-line-generic);
 
@@ -69,7 +70,7 @@ $actionLeftRightMargin: 10px;
 
     &__icon-place {
         flex-shrink: 0;
-        width: var(--gn-aside-header-min-width, 36px);
+        width: var(--_--item-icon-background-size, 36px);
         display: flex;
         align-items: center;
         justify-content: center;

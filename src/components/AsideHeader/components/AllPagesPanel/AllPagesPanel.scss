@@ -10,10 +10,6 @@
     &__content {
         overflow: auto;
         flex: 1;
-
-        &_edit-mode {
-            padding-left: var(--g-spacing-6);
-        }
     }
 
     &__category {

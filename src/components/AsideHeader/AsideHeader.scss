@@ -8,7 +8,7 @@ $block: '.#{variables.$ns}aside-header';
 
 #{$block} {
     $class: &;
-    --gn-aside-header-min-width: 36px;
+    --gn-aside-header-min-width: 56px;
 
     --_--item-icon-background-size: 36px;
     --_--background-color: var(--g-color-base-background);
@@ -198,7 +198,7 @@ $block: '.#{variables.$ns}aside-header';
             --gn-aside-header-item-icon-background-size,
             var(--_--item-icon-background-size)
         );
-        width: var(--gn-aside-header-min-width);
+        width: var(--_--item-icon-background-size);
     }
 
     &__menu-items {
