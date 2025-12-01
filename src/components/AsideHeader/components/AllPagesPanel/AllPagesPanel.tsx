@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {Gear} from '@gravity-ui/icons';
 import {Button, Flex, Icon, ListSortParams, Text, Tooltip} from '@gravity-ui/uikit';
@@ -33,7 +33,6 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         menuItems,
         menuGroups,
         defaultMenuGroups,
-        onToggleGroupCollapsed,
         onMenuItemsChanged,
         onMenuGroupsChanged,
     } = useAsideHeaderInnerContext();
@@ -46,6 +45,21 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     menuGroupsRef.current = menuGroups;
 
     const [isEditMode, setIsEditMode] = useState(false);
+
+    const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>(() => {
+        const initial: Record<string, boolean> = {};
+
+        items.forEach((item) => {
+            if ('groupId' in item && item.groupId && 'isCollapsed' in item) {
+                initial[item.groupId] = Boolean(true);
+            }
+        });
+        return initial;
+    });
+
+    const handleToggleGroupCollapsed = useCallback((groupId: string) => {
+        setCollapsedGroups((prev) => ({...prev, [groupId]: !prev[groupId]}));
+    }, []);
 
     const toggleEditMode = useCallback(() => {
         setIsEditMode((prev) => !prev);
@@ -181,7 +195,21 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         [onMenuItemsChanged],
     );
 
-    const data = items.filter((item) => item.id !== ALL_PAGES_ID && item.type !== 'action');
+    const itemsWithLocalCollapsed = useMemo(() => {
+        return items.map((item) => {
+            if ('groupId' in item && item.groupId && item.groupId in collapsedGroups) {
+                return {
+                    ...item,
+                    isCollapsed: collapsedGroups[item.groupId],
+                };
+            }
+            return item;
+        });
+    }, [items, collapsedGroups]);
+
+    const data = itemsWithLocalCollapsed.filter(
+        (item) => item.id !== ALL_PAGES_ID && item.type !== 'action',
+    );
 
     return (
         <Flex className={b(null, className)} gap="5" direction="column">
@@ -211,7 +239,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                 }
                 editMode={isEditMode}
                 onItemClick={onItemClick}
-                onToggleGroupCollapsed={onToggleGroupCollapsed}
+                onToggleGroupCollapsed={handleToggleGroupCollapsed}
                 onToggleMenuGroupVisibility={handleToggleGroupVisibility}
                 onToggleMenuItemVisibility={toggleMenuItemsVisibility}
             />
