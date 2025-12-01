@@ -44,10 +44,6 @@ export interface MenuItem extends QAProps {
      */
     hidden?: boolean;
     /**
-     * The category to which the menu item belongs. Need for grouping in the display/editing mode of all pages
-     */
-    category?: string;
-    /**
      * The group ID to which the menu item belongs. Used for grouping menu items
      */
     groupId?: string;

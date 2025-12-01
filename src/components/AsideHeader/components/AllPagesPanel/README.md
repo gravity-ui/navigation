@@ -4,7 +4,7 @@
 
 <!--/GITHUB_BLOCK-->
 
-A navigation panel for managing and organizing application pages in the middle (menuItems) section of `AsideHeader` component. Panel provides drag-and-drop reordering, visibility toggles, pin/unpin and category grouping of menu items.
+A navigation panel for managing and organizing application pages in the middle (menuItems) section of `AsideHeader` component. Panel provides drag-and-drop reordering and visibility toggles of menu items.
 
 <!--GITHUB_BLOCK-->
 
