@@ -12,8 +12,10 @@ import {ALL_PAGES_ID} from './constants';
 import i18n from './i18n';
 import {useGroupedMenuItems} from './useGroupedMenuItems';
 import {buildExpandedFromFlatList} from './utils/buildExpandedFromFlatList';
+import {getIsMenuItem} from './utils/getIsMenuItem';
 import {getRealIndexInGroup} from './utils/getRealIndexInGroup';
 import {sortMenuItems} from './utils/sortMenuItems';
+import {sortMenuItemsWithDividers} from './utils/sortMenuItemsWithDividers';
 
 import './AllPagesPanel.scss';
 
@@ -165,7 +167,10 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             }
 
             const currentFlatList = menuItemsRef.current || [];
-            const updatedItems = sortMenuItems(oldIndex, newIndex, currentFlatList);
+            const sortedResult = sortMenuItemsWithDividers(oldIndex, newIndex, currentFlatList);
+
+            // convert to expanded list and pass to onMenuItemsChanged
+            const updatedItems = buildExpandedFromFlatList(sortedResult);
 
             if (updatedItems) {
                 onMenuItemsChanged?.(updatedItems);
@@ -209,9 +214,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         });
     }, [items, collapsedGroups]);
 
-    const data = itemsWithLocalCollapsed.filter(
-        (item) => item.id !== ALL_PAGES_ID && item.type !== 'action',
-    );
+    const data = itemsWithLocalCollapsed.filter((item) => getIsMenuItem(item));
 
     return (
         <Flex className={b(null, className)} gap="5" direction="column">
