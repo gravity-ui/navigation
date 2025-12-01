@@ -181,10 +181,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         <Icon qa={iconQa} data={icon} size={iconSize} className={b('icon')} />
     ) : null;
 
-    const titleNode = renderItemTitle({
-        title,
-        rightAdornment: rightAdornment,
-    });
+    const titleNode = renderItemTitle({title, rightAdornment});
     const params = {icon: iconNode, title: titleNode};
     let highlightedNode = null;
     let node;
