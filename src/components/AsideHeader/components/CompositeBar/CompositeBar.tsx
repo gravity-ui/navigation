@@ -63,6 +63,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
     compositeId,
     className,
     groupClassName,
+    menuItemClassName,
     enableSorting = false,
     editMode = false,
     onToggleGroupCollapsed,
@@ -266,7 +267,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                             return (
                                 <Item
                                     {...item}
-                                    className={b('menu-item', {compact})}
+                                    className={b('menu-item', {compact}, menuItemClassName)}
                                     compact={compact}
                                     editMode={editMode}
                                     onMouseEnter={onMouseEnterByIndex(itemIndex)}
