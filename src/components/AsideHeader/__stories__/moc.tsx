@@ -70,7 +70,6 @@ export const menuItemsShowcase: AsideHeaderProps['menuItems'] = [
         title: 'Objects',
         tooltipText: 'Custom tooltip text',
         icon: Gear,
-        pinned: true,
         onItemClick({id, title, current}) {
             alert(JSON.stringify({id, title, current}));
         },
@@ -280,7 +279,6 @@ export const menuItemsWithGroups: AsideHeaderProps['menuItems'] = [
         title: 'Objects',
         tooltipText: 'Custom tooltip text',
         icon: Plus,
-        pinned: true,
         groupId: 'admin',
         onItemClick({id, title, current}) {
             alert(JSON.stringify({id, title, current}));

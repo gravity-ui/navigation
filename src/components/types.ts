@@ -20,7 +20,6 @@ export interface MenuItem extends QAProps {
     iconQa?: string;
     href?: string;
     current?: boolean;
-    pinned?: boolean;
     onItemClick?: (
         item: MenuItem,
         collapsed: boolean,

@@ -16,7 +16,7 @@ type MobileMenuItemType = 'regular' | 'divider';
 export interface MobileMenuItem
     extends Omit<
         MenuItem,
-        'tooltipText' | 'pinned' | 'rightAdornment' | 'itemWrapper' | 'onItemClick' | 'href'
+        'tooltipText' | 'rightAdornment' | 'itemWrapper' | 'onItemClick' | 'href'
     > {
     type?: MobileMenuItemType;
     closeMenuOnClick?: boolean;
