@@ -85,7 +85,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     <div className={b('footer')}>
                         {renderFooter?.({
                             size,
-                            compact: Boolean(compact),
+                            compact: Boolean(!isExpanded),
                             asideRef,
                         })}
                     </div>
