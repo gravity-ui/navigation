@@ -51,7 +51,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
 
         items.forEach((item) => {
             if ('groupId' in item && item.groupId && 'isCollapsed' in item) {
-                initial[item.groupId] = Boolean(true);
+                initial[item.groupId] = false;
             }
         });
         return initial;
