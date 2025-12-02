@@ -127,14 +127,10 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     }}
                     onClickCapture={onItemClickCapture}
                     onMouseEnter={() => {
-                        if (!compact) {
-                            onMouseEnter?.();
-                        }
+                        onMouseEnter?.();
                     }}
                     onMouseLeave={() => {
-                        if (!compact) {
-                            onMouseLeave?.();
-                        }
+                        onMouseLeave?.();
                     }}
                 >
                     <div className={b('icon-place')} ref={highlightedRef}>

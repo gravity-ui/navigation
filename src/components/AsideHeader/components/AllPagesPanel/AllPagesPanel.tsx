@@ -214,7 +214,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     );
 
     return (
-        <Flex className={b(null, className)} gap="5" direction="column">
+        <Flex className={b(null, className)} gap="1" direction="column">
             <Flex gap="4" alignItems="center" justifyContent="space-between">
                 <Text variant="subheader-2">
                     {isEditMode ? i18n('all-panel.title.editing') : i18n('all-panel.title.main')}
