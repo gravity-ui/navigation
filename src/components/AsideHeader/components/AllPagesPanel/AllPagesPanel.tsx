@@ -196,6 +196,8 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     );
 
     const itemsWithLocalCollapsed = useMemo(() => {
+        if (Object.keys(collapsedGroups).length === 0) return items;
+
         return items.map((item) => {
             if ('groupId' in item && item.groupId && item.groupId in collapsedGroups) {
                 return {
