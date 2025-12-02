@@ -6,7 +6,6 @@ import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {b} from '../utils';
 
 import {useGroupedMenuItems} from './AllPagesPanel/useGroupedMenuItems';
-import {CollapseButton} from './CollapseButton/CollapseButton';
 import {CompositeBar} from './CompositeBar';
 import {Header} from './Header';
 import {Panels} from './Panels';
@@ -26,7 +25,6 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         customBackground,
         customBackgroundClassName,
         className,
-        hideCollapseButton,
         menuItems,
         menuGroups,
         qa,
@@ -89,7 +87,6 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             asideRef,
                         })}
                     </div>
-                    {!hideCollapseButton && <CollapseButton />}
                 </div>
             </div>
             <Panels />

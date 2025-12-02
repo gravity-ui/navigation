@@ -193,6 +193,12 @@ $block: '.#{variables.$ns}aside-header';
         margin: 0 10px 2px;
     }
 
+    &__logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
     &__logo-button &__logo-icon-place {
         height: var(
             --gn-aside-header-item-icon-background-size,

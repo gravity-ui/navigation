@@ -1,12 +1,12 @@
 import React, {useCallback} from 'react';
 
-import {Icon} from '@gravity-ui/uikit';
+import {Button, Icon} from '@gravity-ui/uikit';
 
 import {block} from '../../../utils/cn';
 import {useAsideHeaderContext, useAsideHeaderInnerContext} from '../../AsideHeaderContext';
 import i18n from '../../i18n';
 
-import controlMenuButtonIcon from '../../../../../assets/icons/control-menu-button.svg';
+import ArrowLeftFromLineIcon from '@gravity-ui/icons/svgs/arrow-left-from-line.svg';
 
 import './CollapseButton.scss';
 
@@ -31,13 +31,15 @@ export const CollapseButton = ({className}: CollapseButtonProps) => {
         : collapseTitle || i18n('button_collapse');
 
     const defaultButton = (
-        <button
+        <Button
+            view="flat-secondary"
+            size="l"
             className={b({compact: compact}, className)}
             onClick={onCollapseButtonClick}
-            title={buttonTitle}
+            aria-label={buttonTitle}
         >
-            <Icon data={controlMenuButtonIcon} className={b('icon')} width="16" height="10" />
-        </button>
+            <Icon data={ArrowLeftFromLineIcon} className={b('icon')} size={16} />
+        </Button>
     );
 
     if (collapseButtonWrapper) {
