@@ -48,8 +48,5 @@ export function sortMenuItemsWithDividers(
         }
     }
 
-    // Add remaining items if any
-    result.push(...sortedItemsWithoutDividers.slice(sortedIndex));
-
     return result;
 }
