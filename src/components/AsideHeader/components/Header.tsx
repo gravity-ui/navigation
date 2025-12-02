@@ -20,7 +20,6 @@ const HEADER_COMPOSITE_ID = 'gravity-ui/navigation-header-composite-bar';
 export const Header = () => {
     const {
         logo,
-        compact,
         isExpanded,
         onItemClick,
         onClosePanel,
@@ -59,7 +58,7 @@ export const Header = () => {
                 compositeId={HEADER_COMPOSITE_ID}
                 menuItemClassName={b('menu-item')}
                 type="subheader"
-                compact={compact}
+                compact={!isExpanded}
                 items={items}
                 onItemClick={onItemClick}
             />
