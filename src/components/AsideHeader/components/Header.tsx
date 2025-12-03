@@ -28,6 +28,8 @@ export const Header = () => {
         hideCollapseButton,
     } = useAsideHeaderInnerContext();
 
+    const compact = !isExpanded;
+
     const items = useGroupedMenuItems(subheaderItems || DEFAULT_SUBHEADER_ITEMS);
 
     const onLogoClick = useCallback(
@@ -40,25 +42,25 @@ export const Header = () => {
 
     return (
         <div className={b('header', {['with-decoration']: headerDecoration})}>
-            <div className={b('logo-container')}>
+            <div className={b('logo-container', {'without-logo': !logo})}>
                 {logo && (
                     <Logo
                         {...logo}
                         onClick={onLogoClick}
-                        compact={!isExpanded}
+                        compact={compact}
                         buttonClassName={b('logo-button')}
                         iconPlaceClassName={b('logo-icon-place')}
                     />
                 )}
 
-                {!hideCollapseButton && isExpanded && <CollapseButton />}
+                {!hideCollapseButton && <CollapseButton className={b('pin-button', {compact})} />}
             </div>
 
             <CompositeBar
                 compositeId={HEADER_COMPOSITE_ID}
                 menuItemClassName={b('menu-item')}
                 type="subheader"
-                compact={!isExpanded}
+                compact={compact}
                 items={items}
                 onItemClick={onItemClick}
             />

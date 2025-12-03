@@ -3,9 +3,6 @@
 $block: '.#{variables.$ns}collapse-button';
 
 #{$block} {
-    margin-right: 2px;
-    margin-left: auto;
-
     &_compact {
         #{$block}__icon {
             transform: rotate(180deg);
