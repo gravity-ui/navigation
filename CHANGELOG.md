@@ -1,5 +1,32 @@
 # Changelog
 
+## [4.0.0](https://github.com/gravity-ui/navigation/compare/v3.7.1...v4.0.0) (2025-11-21)
+
+### ⚠ BREAKING CHANGES
+
+#### Interface Unification ([#470](https://github.com/gravity-ui/navigation/pull/470))
+
+We have unified the API for navigation components to provide a consistent and flat structure across all items.
+
+**Type Changes:**
+* `SubheaderMenuItem` → `AsideHeaderItem`
+* `CompositeBarItem` → `AsideHeaderItem`
+* Removed nested `item` wrapper structure
+* `link` property renamed to `href` for HTML consistency
+
+### 📚 Migration Guide
+
+**Complete Migration Documentation:** See `MIGRATION_GUIDE_v4.md` for detailed migration instructions, examples, and troubleshooting.
+
+**Automated Migration:**
+```bash
+# Run the complete v4 migration codemod
+npx navigation-codemod v4 path/to/your/code
+```
+
+**AI Migration Assistant:** See `AI_MIGRATION_ASSISTANT.md` for AI prompt to help with complex migration cases.
+
+
 ## [3.10.2](https://github.com/gravity-ui/navigation/compare/v3.10.1...v3.10.2) (2025-12-04)
 
 
