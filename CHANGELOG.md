@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.11.0](https://github.com/gravity-ui/navigation/compare/v3.10.2...v3.11.0) (2025-12-04)
+
+
+### Features
+
+* create agents.md ([#502](https://github.com/gravity-ui/navigation/issues/502)) ([b01c9e2](https://github.com/gravity-ui/navigation/commit/b01c9e2606faa6df31852631b17bc698167cb568))
+
 ## [3.10.2](https://github.com/gravity-ui/navigation/compare/v3.10.1...v3.10.2) (2025-12-04)
 
 
