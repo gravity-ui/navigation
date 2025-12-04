@@ -9,6 +9,7 @@ import {AsideHeaderItem} from '../types';
 import {b} from '../utils';
 
 import {useGroupedMenuItems} from './AllPagesPanel/useGroupedMenuItems';
+import {CollapseButton} from './CollapseButton/CollapseButton';
 import {CompositeBar} from './CompositeBar';
 
 import headerDividerCollapsedIcon from '../../../../assets/icons/divider-collapsed.svg';
@@ -17,9 +18,17 @@ const DEFAULT_SUBHEADER_ITEMS: AsideHeaderItem[] = [];
 const HEADER_COMPOSITE_ID = 'gravity-ui/navigation-header-composite-bar';
 
 export const Header = () => {
-    const {logo, compact, onItemClick, onClosePanel, headerDecoration, subheaderItems} =
-        useAsideHeaderInnerContext();
-    const {isExpanded} = useAsideHeaderInnerContext();
+    const {
+        logo,
+        isExpanded,
+        onItemClick,
+        onClosePanel,
+        headerDecoration,
+        subheaderItems,
+        hideCollapseButton,
+    } = useAsideHeaderInnerContext();
+
+    const compact = !isExpanded;
 
     const items = useGroupedMenuItems(subheaderItems || DEFAULT_SUBHEADER_ITEMS);
 
@@ -33,15 +42,19 @@ export const Header = () => {
 
     return (
         <div className={b('header', {['with-decoration']: headerDecoration})}>
-            {logo && (
-                <Logo
-                    {...logo}
-                    onClick={onLogoClick}
-                    compact={!isExpanded}
-                    buttonClassName={b('logo-button')}
-                    iconPlaceClassName={b('logo-icon-place')}
-                />
-            )}
+            <div className={b('logo-container', {'without-logo': !logo})}>
+                {logo && (
+                    <Logo
+                        {...logo}
+                        onClick={onLogoClick}
+                        compact={compact}
+                        buttonClassName={b('logo-button')}
+                        iconPlaceClassName={b('logo-icon-place')}
+                    />
+                )}
+
+                {!hideCollapseButton && <CollapseButton className={b('pin-button', {compact})} />}
+            </div>
 
             <CompositeBar
                 compositeId={HEADER_COMPOSITE_ID}

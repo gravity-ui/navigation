@@ -193,6 +193,18 @@ $block: '.#{variables.$ns}aside-header';
         margin: 0 10px 2px;
     }
 
+    &__logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        &_without-logo {
+            padding-bottom: var(--g-spacing-2);
+            margin-bottom: var(--g-spacing-2);
+            border-bottom: solid 1px var(--g-color-line-generic);
+        }
+    }
+
     &__logo-button &__logo-icon-place {
         height: var(
             --gn-aside-header-item-icon-background-size,
@@ -256,6 +268,15 @@ $block: '.#{variables.$ns}aside-header';
 
         &_expanded-by-hover {
             padding-left: var(--gn-aside-header-min-width);
+        }
+    }
+
+    &__pin-button {
+        margin-right: 10px;
+        margin-left: auto;
+
+        &_compact {
+            margin-right: auto;
         }
     }
 }
