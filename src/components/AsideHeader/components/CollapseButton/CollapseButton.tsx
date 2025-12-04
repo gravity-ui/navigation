@@ -37,6 +37,7 @@ export const CollapseButton = ({className}: CollapseButtonProps) => {
             className={b({compact}, className)}
             onClick={onCollapseButtonClick}
             aria-label={buttonTitle}
+            title={buttonTitle}
         >
             <Icon data={ArrowLeftFromLineIcon} className={b('icon')} size={16} />
         </Button>
