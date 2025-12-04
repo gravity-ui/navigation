@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.10.2](https://github.com/gravity-ui/navigation/compare/v3.10.1...v3.10.2) (2025-12-04)
+
+
+### Bug Fixes
+
+* **MultipleTooltip:** use tooltipText if available, fallback to title ([#511](https://github.com/gravity-ui/navigation/issues/511)) ([1551ed8](https://github.com/gravity-ui/navigation/commit/1551ed86656981b2eb8278e9bae0770e1590dbe1))
+
 ## [3.10.1](https://github.com/gravity-ui/navigation/compare/v3.10.0...v3.10.1) (2025-11-26)
 
 
