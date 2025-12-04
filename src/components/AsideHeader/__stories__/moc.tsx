@@ -123,23 +123,18 @@ const MENU_ITEMS_CLAMPED: AsideHeaderProps['menuItems'] = [
         title: MENU_ITEMS_CLAMPED_TITLE,
         icon: Gear,
     },
-    {
-        id: 'text-action',
-        title: MENU_ITEMS_CLAMPED_TITLE,
-        icon: Gear,
-        type: 'action',
-    },
+    {id: 'text-action', title: MENU_ITEMS_CLAMPED_TITLE, icon: Gear, type: 'action'},
     {
         id: 'text-link',
         title: MENU_ITEMS_CLAMPED_TITLE,
         icon: Gear,
-        link: 'about:blank',
+        href: 'about:blank',
     },
     {
         id: 'text-link-action',
         title: MENU_ITEMS_CLAMPED_TITLE,
         icon: Gear,
-        link: 'about:blank',
+        href: 'about:blank',
         type: 'action',
     },
 ];

@@ -11,7 +11,7 @@ export interface ModalItem {
     onClose?: () => void;
 }
 
-export type MobileMenuItemType = 'regular' | 'divider';
+type MobileMenuItemType = 'regular' | 'divider';
 
 export interface MobileMenuItem
     extends Omit<
@@ -22,9 +22,11 @@ export interface MobileMenuItem
         | 'afterMoreButton'
         | 'itemWrapper'
         | 'onItemClick'
+        | 'href'
     > {
     type?: MobileMenuItemType;
     closeMenuOnClick?: boolean;
+    link?: string;
     onItemClick?: (item: MobileMenuItem) => void;
     itemWrapper?: (node: React.ReactNode, item: MobileMenuItem) => React.ReactNode;
 }

@@ -12,7 +12,7 @@ import './CollapseButton.scss';
 
 const b = block('collapse-button');
 
-export interface CollapseButtonProps {
+interface CollapseButtonProps {
     className?: string;
 }
 

@@ -1,98 +1,35 @@
 import React from 'react';
 
-import {Flex, IconProps, Loader} from '@gravity-ui/uikit';
+import {Flex, Loader} from '@gravity-ui/uikit';
 import identity from 'lodash/identity';
 
 import {Title} from '../Title';
-import {block} from '../utils/cn';
 
-import {SettingsSelection} from './Selection';
 import {
     SettingsSelectionContextProvider,
     useSettingsSelectionContext,
     useSettingsSelectionProviderValue,
 } from './Selection/context';
-import {isSectionSelected} from './Selection/utils';
+import {SettingsContext} from './SettingsContext/SettingsContext';
+import {useSettingsContext} from './SettingsContext/useSettingsContext';
 import {SettingsMenu, SettingsMenuInstance} from './SettingsMenu/SettingsMenu';
 import {SettingsMenuMobile} from './SettingsMenuMobile/SettingsMenuMobile';
+import {SettingsPageComponent} from './SettingsPage/SettingsPageComponent';
 import {useAllResultsPage} from './SettingsSearch/AllResultsPage';
 import {SettingsSearch} from './SettingsSearch/SettingsSearch';
-import type {
-    SettingsItem,
-    SettingsMenu as SettingsMenuType,
-    SettingsPageSection,
-} from './collect-settings';
+import {b} from './b';
 import {getSettingsFromChildren} from './collect-settings';
-import {escapeStringForRegExp} from './helpers';
 import i18n from './i18n';
+import type {
+    SettingsContentProps,
+    SettingsGroupProps,
+    SettingsItemProps,
+    SettingsPageProps,
+    SettingsProps,
+    SettingsSectionProps,
+} from './types';
 
 import './Settings.scss';
-
-const b = block('settings');
-
-export interface SettingsProps {
-    children: React.ReactNode;
-    title?: string;
-    filterPlaceholder?: string;
-    emptyPlaceholder?: string;
-    initialPage?: string;
-    initialSearch?: string;
-    selection?: SettingsSelection;
-    onPageChange?: (page: string | undefined) => void;
-    renderNotFound?: () => React.ReactNode;
-    renderLoading?: () => React.ReactNode;
-    loading?: boolean;
-    view?: 'normal' | 'mobile';
-    onClose?: () => void;
-    renderRightAdornment?: (item: SettingsItemProps) => React.ReactNode;
-    renderSectionRightAdornment?: (section: SettingsPageSection) => React.ReactNode;
-    showRightAdornmentOnHover?: boolean;
-}
-
-export interface SettingsGroupProps {
-    id?: string;
-    groupTitle: string;
-    children: React.ReactNode;
-}
-
-export interface SettingsPageProps {
-    id?: string;
-    title?: string;
-    icon?: IconProps;
-    children: React.ReactNode;
-}
-
-export interface SettingsSectionProps {
-    id?: string;
-    title: string;
-    header?: React.ReactNode;
-    children: React.ReactNode;
-    withBadge?: boolean;
-    hideTitle?: boolean;
-}
-
-export interface SettingsItemProps {
-    id?: string;
-    labelId?: string;
-    title: string;
-    highlightedTitle?: React.ReactNode | null;
-    renderTitleComponent?: (highlightedTitle: React.ReactNode | null) => React.ReactNode;
-    align?: 'top' | 'center';
-    children: React.ReactNode;
-    withBadge?: boolean;
-    mode?: 'row';
-    description?: React.ReactNode;
-}
-
-export interface SettingsContextType
-    extends Pick<
-        SettingsProps,
-        'renderRightAdornment' | 'renderSectionRightAdornment' | 'showRightAdornmentOnHover'
-    > {}
-
-const SettingsContext = React.createContext<SettingsContextType>({});
-
-export const useSettingsContext = () => React.useContext(SettingsContext);
 
 export function Settings({
     loading,
@@ -127,18 +64,6 @@ export function Settings({
     );
 }
 
-const getPageTitleById = (menu: SettingsMenuType, activePage: string) => {
-    for (const firstLevel of menu) {
-        if ('groupTitle' in firstLevel) {
-            for (const secondLevel of firstLevel.items)
-                if (secondLevel.id === activePage) return secondLevel.title;
-        } else if (firstLevel.id === activePage) return firstLevel.title;
-    }
-
-    return '';
-};
-
-type SettingsContentProps = Omit<SettingsProps, 'loading' | 'renderLoading'>;
 function SettingsContent({
     initialPage,
     initialSearch,
@@ -152,8 +77,6 @@ function SettingsContent({
     onPageChange,
     onClose,
 }: SettingsContentProps) {
-    const {renderSectionRightAdornment, showRightAdornmentOnHover} = useSettingsContext();
-
     const [search, setSearch] = React.useState(initialSearch ?? '');
     const {menu, pages} = getSettingsFromChildren(children, search);
 
@@ -222,84 +145,6 @@ function SettingsContent({
         }
     }, [selected.selectedRef]);
 
-    const renderSetting = ({title: settingTitle, element}: SettingsItem) => {
-        return (
-            <div key={settingTitle} className={b('section-item')}>
-                {React.cloneElement(element, {
-                    ...element.props,
-                    highlightedTitle:
-                        search && settingTitle ? prepareTitle(settingTitle, search) : settingTitle,
-                })}
-            </div>
-        );
-    };
-
-    const renderSection = (page: string, section: SettingsPageSection) => {
-        const isSelected = isSectionSelected(selected, page, section);
-
-        return (
-            <div
-                key={section.title}
-                className={b('section', {selected: isSelected})}
-                ref={isSelected ? selected.selectedRef : undefined}
-            >
-                {section.title && !section.hideTitle && (
-                    <h3 className={b('section-heading')}>
-                        {renderSectionRightAdornment ? (
-                            <Flex gap={2} alignItems={'center'}>
-                                {section.title}
-                                <div
-                                    className={b('section-right-adornment', {
-                                        hidden: showRightAdornmentOnHover,
-                                    })}
-                                >
-                                    {renderSectionRightAdornment(section)}
-                                </div>
-                            </Flex>
-                        ) : (
-                            section.title
-                        )}
-                    </h3>
-                )}
-
-                {section.header &&
-                    (isMobile ? (
-                        <div className={b('section-subheader')}>{section.header}</div>
-                    ) : (
-                        section.header
-                    ))}
-
-                {section.items.map((setting) => (setting.hidden ? null : renderSetting(setting)))}
-            </div>
-        );
-    };
-
-    const renderPageContent = (page: string | undefined) => {
-        if (!page) {
-            return typeof renderNotFound === 'function' ? (
-                renderNotFound()
-            ) : (
-                <div className={b('not-found')}>{emptyPlaceholder}</div>
-            );
-        }
-
-        const filteredSections = pages[page].sections.filter((section) => !section.hidden);
-
-        return (
-            <React.Fragment>
-                {!isMobile && (
-                    <Title hasSeparator onClose={onClose}>
-                        {getPageTitleById(menu, page)}
-                    </Title>
-                )}
-
-                <div className={b('content')}>
-                    {filteredSections.map((section) => renderSection(page, section))}
-                </div>
-            </React.Fragment>
-        );
-    };
-
     return (
         <SettingsSelectionContextProvider value={selected}>
             <div className={b({view})}>
@@ -355,7 +200,19 @@ function SettingsContent({
                         />
                     </div>
                 )}
-                <div className={b('page')}>{renderPageContent(activePage)}</div>
+                <div className={b('page')}>
+                    <SettingsPageComponent
+                        menu={menu}
+                        pages={pages}
+                        selected={selected}
+                        search={search}
+                        isMobile={isMobile}
+                        page={activePage}
+                        emptyPlaceholder={emptyPlaceholder}
+                        renderNotFound={renderNotFound}
+                        onClose={onClose}
+                    />
+                </div>
             </div>
         </SettingsSelectionContextProvider>
     );
@@ -390,62 +247,43 @@ Settings.Item = function SettingsItem(setting: SettingsItemProps) {
     const isSettingSelected = selected.setting && selected.setting.id === id;
 
     const {renderRightAdornment, showRightAdornmentOnHover} = useSettingsContext();
-    const titleNode = (
-        <span className={b('item-title', {badge: withBadge})}>
-            {renderTitleComponent(highlightedTitle)}
-        </span>
-    );
+    const titleComponent = renderTitleComponent(highlightedTitle);
+    const titleNode = <span className={b('item-title', {badge: withBadge})}>{titleComponent}</span>;
+
+    const showTitle = titleComponent !== null;
+
     return (
         <div
-            className={b('item', {align, mode, selected: isSettingSelected})}
+            className={b('item', {
+                align,
+                mode,
+                selected: isSettingSelected,
+                title: showTitle ? 'show' : 'hide',
+            })}
             ref={isSettingSelected ? selected.selectedRef : undefined}
         >
-            <label className={b('item-heading')} id={labelId}>
-                {renderRightAdornment ? (
-                    <Flex className={b('item-title-wrapper')} gap={3}>
-                        {titleNode}
-                        <div
-                            className={b('item-right-adornment', {
-                                hidden: showRightAdornmentOnHover,
-                            })}
-                        >
-                            {renderRightAdornment(setting)}
-                        </div>
-                    </Flex>
-                ) : (
-                    titleNode
-                )}
-                {description ? <span className={b('item-description')}>{description}</span> : null}
-            </label>
+            {showTitle ? (
+                <label className={b('item-heading')} id={labelId}>
+                    {renderRightAdornment ? (
+                        <Flex className={b('item-title-wrapper')} gap={3}>
+                            {titleNode}
+                            <div
+                                className={b('item-right-adornment', {
+                                    hidden: showRightAdornmentOnHover,
+                                })}
+                            >
+                                {renderRightAdornment(setting)}
+                            </div>
+                        </Flex>
+                    ) : (
+                        titleNode
+                    )}
+                    {description ? (
+                        <span className={b('item-description')}>{description}</span>
+                    ) : null}
+                </label>
+            ) : null}
             <div className={b('item-content')}>{children}</div>
         </div>
     );
 };
-
-function prepareTitle(string: string, search: string) {
-    let temp = string.slice(0);
-    const title: React.ReactNode[] = [];
-    const parts = escapeStringForRegExp(search).split(' ').filter(Boolean);
-    let key = 0;
-    for (const part of parts) {
-        const regex = new RegExp(part, 'ig');
-        const match = regex.exec(temp);
-        if (match) {
-            const m = match[0];
-            const i = match.index;
-            if (i > 0) {
-                title.push(temp.slice(0, i));
-            }
-            title.push(
-                <strong key={key++} className={b('found')}>
-                    {m}
-                </strong>,
-            );
-            temp = temp.slice(i + m.length);
-        }
-    }
-    if (temp) {
-        title.push(temp);
-    }
-    return title;
-}

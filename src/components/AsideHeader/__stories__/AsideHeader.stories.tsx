@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {Xmark} from '@gravity-ui/icons';
 import {Button, Flex, Icon, Text, spacing} from '@gravity-ui/uikit';
 import type {Meta, StoryFn} from '@storybook/react';
 
@@ -8,7 +9,7 @@ import {AsideFallback} from '../components/PageLayout/AsideFallback';
 import {PageLayout} from '../components/PageLayout/PageLayout';
 import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
 
-import {AsideHeaderShowcase} from './AsideHeaderShowcase';
+import {AsideHeaderShowcase, AsideHeaderShowcaseProps} from './AsideHeaderShowcase';
 import {DEFAULT_LOGO, menuItemsClamped, menuItemsShowcase} from './moc';
 
 import logoIcon from '../../../../.storybook/assets/logo.svg';
@@ -126,7 +127,9 @@ AdvancedUsage.args = {
     initialCompact: true,
 };
 
-const TopAlertTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
+const TopAlertTemplate: StoryFn<AsideHeaderShowcaseProps> = (args) => (
+    <AsideHeaderShowcase {...args} />
+);
 export const HeaderAlert = TopAlertTemplate.bind({});
 HeaderAlert.args = {
     topAlert: {
@@ -145,6 +148,44 @@ HeaderAlertCentered.args = {
         message: 'Scheduled maintenance is being performed',
         centered: true,
         dense: true,
+    },
+};
+
+export const HeaderAlertCustom = TopAlertTemplate.bind({});
+HeaderAlertCustom.args = {
+    topAlert: {
+        render: ({handleClose}) => (
+            <Flex
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                gap={4}
+                style={{
+                    position: 'relative',
+                    padding: '8px',
+                    background:
+                        ' linear-gradient(120deg, #191654, #43cea2 40%, #185a9d 70%, #f857a6 100%)',
+                }}
+            >
+                <Text variant="subheader-2" style={{color: 'var(--g-color-text-light-primary)'}}>
+                    We&apos;ve got something new for you to try!
+                </Text>
+                <Button view="normal-contrast" size="m">
+                    Try Now
+                </Button>
+                <Button view="outlined-contrast" size="m">
+                    Learn More
+                </Button>
+                <Button
+                    style={{position: 'absolute', right: '8px'}}
+                    view="flat-contrast"
+                    aria-label="Close"
+                    onClick={handleClose}
+                >
+                    <Icon data={Xmark} size={18} />
+                </Button>
+            </Flex>
+        ),
     },
 };
 

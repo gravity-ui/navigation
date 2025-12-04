@@ -3,7 +3,7 @@ import type {RefObject} from 'react';
 
 import debounceFn from 'lodash/debounce';
 
-export type UseOverflowingContainerListItemsProps<ItemType extends unknown> = {
+type UseOverflowingContainerListItemsProps<ItemType extends unknown> = {
     containerRef: RefObject<HTMLElement>;
     items?: ItemType[];
     itemSelector: string;
