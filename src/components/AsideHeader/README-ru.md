@@ -41,8 +41,6 @@ import {AsideHeader} from '@gravity-ui/navigation';
 
 Данный блок, как правило, включает логотип и другие элементы, расположенные под ним, которые присутствуют на всех страницах сайта. Для быстрого перехода на главную страницу можно использовать кликабельный логотип. При необходимости под логотипом можно разместить другие элементы, такие как поисковая строка и каталог.
 
-Элементы данного блока поддерживают тултипы, всплывающие окна и выдвижные боковые панели — для их применения необходимо задать соответствующие настройки.
-
 ### Средний блок (`menuItems`)
 
 Данный блок является основным, а его содержимое может меняться в зависимости от текущей страницы. Один из примеров использования — навигация по многостраничным сайтам.
@@ -56,17 +54,63 @@ import {AsideHeader} from '@gravity-ui/navigation';
 
 **Примечание**: пользователь управляет списком элементов меню, полученным из обратного вызова, и передает новое состояние элементов в `AsideHeader`.
 
+Элементы данного блока могут иметь множественную всплывающую подсказку.
+
 ### Нижний блок
 
 Нижний блок (футер) повышает удобство пользователей, обеспечивая легкий доступ к элементам и вспомогательным ресурсам. Он позволяет связаться со службой поддержки и включает дополнительную информацию, чтобы пользователю было проще ориентироваться.
 
 В футере можно использовать как собственные компоненты, так и `FooterItem`.
 
+### Элементы
+
+Элементы блока поддерживают тултипы, всплывающие окна и выдвижные боковые панели — для их применения необходимо задать соответствующие настройки.
+
+#### Всплывающие окна (Popup)
+
+⚠️ **Важно**: Встроенные поля попапов (`popupVisible`, `popupRef`, `popupPlacement`, `popupOffset`, `popupKeepMounted`, `renderPopupContent`, `onOpenChangePopup`) помечены как устаревшие и будут удалены в будущих версиях.
+
+Для создания всплывающих окон теперь рекомендуется использовать свойство `itemWrapper`. Это дает больше гибкости и контроля над поведением элемента.
+
+**Пример использования itemWrapper для создания попапа:**
+
+```tsx
+import {Popup} from '@gravity-ui/uikit';
+
+const menuItems: AsideHeaderItem[] = [
+  {
+    id: 'item-with-popup',
+    title: 'Элемент с попапом',
+    icon: 'settings',
+    itemWrapper: (params, makeItem, opts) => {
+      const [popupOpen, setPopupOpen] = React.useState(false);
+      const anchorRef = React.useRef<HTMLElement>(null);
+
+      return (
+        <>
+          <div ref={anchorRef} onClick={() => setPopupOpen(!popupOpen)}>
+            {makeItem(params)}
+          </div>
+          <Popup
+            open={popupOpen}
+            anchorRef={anchorRef}
+            onOpenChange={setPopupOpen}
+            placement="right-start"
+          >
+            <div style={{padding: '12px'}}>Содержимое попапа</div>
+          </Popup>
+        </>
+      );
+    },
+  },
+];
+```
+
 #### Выделение элемента
 
 Выделение элемента поверх модальных окон может быть полезным, если пользователь хочет отправить сообщение об ошибке через форму обратной связи, открываемую в модальном окне.
 
-В компоненте `FooterItem` можно передать свойство `bringForward`, которое отображает иконку поверх модальных окон. Кроме того, в `AsideHeader` необходимо передать функцию, которая будет уведомлять об открытии модальных окон.
+В компоненте `FooterItem` и в конфигурации элементов `menuItems`, `subheaderItems` можно передать свойство `bringForward`, которое отображает иконку поверх модальных окон. Кроме того, в `AsideHeader` необходимо передать функцию, которая будет уведомлять об открытии модальных окон.
 
 ## Рендеринг контента
 
@@ -130,12 +174,12 @@ export const Aside: FC = () => {
 | headerDecoration          | Цвет фона верхнего блока с элементами логотипа и подзаголовка.                                                   |                                                           `boolean`                                                           |          `false`          |
 | hideCollapseButton        | Скрывает `CollapseButton`. Для установки дефолтного состояния элемента навигации используйте свойство `compact`. |                                                           `boolean`                                                           |          `false`          |
 | logo                      | Контейнер логотипа, включающий иконку с заголовком и обрабатывающий клики.                                       |                                              [`Logo`](./../Logo/Readme.md#logo)                                               |                           |
-| menuItems                 | Элементы в среднем блоке навигации.                                                                              |                                                       `Array<MenuItem>`                                                       |           `[]`            |
+| menuItems                 | Элементы в среднем блоке навигации.                                                                              |                                                   `Array<AsideHeaderItem>`                                                    |           `[]`            |
 | menuMoreTitle             | Дополнительный заголовок для `menuItems`, если элементы не помещаются.                                           |                                                           `string`                                                            |     `"Ещё"` `"More"`      |
 | multipleTooltip           | Отображает несколько тултипов при наведении на элементы меню (`menuItems`) в свернутом состоянии.                |                                                           `boolean`                                                           |          `false`          |
 | onChangeCompact           | Обратный вызов, срабатывающий при изменении визуального состояния элемента навигации.                            |                                                 `(compact: boolean) => void;`                                                 |                           |
 | onClosePanel              | Обратный вызов, срабатывающий при закрытии панели. Панели можно добавлять через свойство `PanelItems`.           |                                                         `() => void;`                                                         |                           |
-| onMenuItemsChanged        | Обратный вызов, срабатывающий при изменении списка `menuItems` в `AllPagesPanel`.                                |                                              `(items: Array<MenuItem>) => void`                                               |                           |
+| onMenuItemsChanged        | Обратный вызов, срабатывающий при изменении списка `menuItems` в `AllPagesPanel`.                                |                                           `(items: Array<AsideHeaderItem>) => void`                                           |                           |
 | onMenuMoreClick           | Обратный вызов, срабатывающий при нажатии кнопки **More** («Еще»), если часть элементов скрыта.                  |                                                         `() => void;`                                                         |                           |
 | onAllPagesClick           | Обратный вызов, срабатывающий при нажатии кнопки **All pages** («Все станицы»).                                  |                                                         `() => void;`                                                         |                           |
 | openModalSubscriber       | Функция для уведомления `AsideHeader` об изменении состояния видимости модальных окон.                           |                                             `( (open: boolean) => void) => void`                                              |                           |
@@ -143,33 +187,43 @@ export const Aside: FC = () => {
 | renderContent             | Функция рендеринга основного контента справа от `AsideHeader`.                                                   |                                          `(data: {size: number}) => React.ReactNode`                                          |                           |
 | renderFooter              | Функция рендеринга нижнего блока навигации.                                                                      |                                          `(data: {size: number}) => React.ReactNode`                                          |                           |
 | ref                       | Ссылка на якорь целевого всплывающего окна.                                                                      |                                    `React.ForwardedRef<HTMLDivElement, AsideHeaderProps>`                                     |                           |
-| subheaderItems            | Элементы, расположенные под логотипом в верхнем блоке навигации.                                                 |                          ` Array<{item: MenuItem; enableTooltip?: boolean; bringForward?: boolean}>`                          |           `[]`            |
+| subheaderItems            | Элементы, расположенные под логотипом в верхнем блоке навигации.                                                 |                                                   ` Array<AsideHeaderItem>`                                                   |           `[]`            |
 | topAlert                  | Контейнер над элементом навигации на основе компонента `Alert` из фреймворка UIKit.                              |                                                          `TopAlert`                                                           |                           |
 | qa                        | Значение, которое будет передано в атрибут `data-qa` контейнера `AsideHeader`.                                   |                                                           `string`                                                            |                           |
 
-### `MenuItem`
+### `AsideHeaderItem`
 
-| Имя                | Описание                                                                                                                        |                                                                   Тип                                                                   |    Значение по умолчанию    |
-| :----------------- | :------------------------------------------------------------------------------------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------: |
-| afterMoreButton    | Элемент будет всегда отображаться в конце списка, даже если не помещается.                                                      |                                                                `boolean`                                                                |                             |
-| category           | Категория, к которой относится элемент меню. Используется для группировки в режиме отображения или редактирования всех страниц. |                                                                `string`                                                                 | `"Остальное"` `"All other"` |
-| current            | Текущий (выбранный) элемент.                                                                                                    |                                                                `boolean`                                                                |           `false`           |
-| hidden             | Скрытие элемента в меню, работает с включенным режимом `AllPages`.                                                              |                                                                `boolean`                                                                |           `false`           |
-| icon               | Иконка меню на основе компонента `Icon` из фреймворка UIKit.                                                                    |                   [`IconProps['data']`](https://github.com/gravity-ui/uikit/tree/main/src/components/Icon#properties)                   |                             |
-| iconSize           | Размер иконки меню.                                                                                                             |                                                            `number` `string`                                                            |            `18`             |
-| iconQa             | Значение, которое будет передано в атрибут `data-qa` контейнера `Icon`.                                                         |                                                                `string`                                                                 |                             |
-| id                 | Идентификатор элемента меню.                                                                                                    |                                                                `string`                                                                 |                             |
-| itemWrapper        | Обертка элемента меню.                                                                                                          | [`ItemWrapper`](https://github.com/gravity-ui/navigation/blob/b8367cf343fc20304bc3c8d9a337d9f7d803a9b3/src/components/types.ts#L32-L41) |                             |
-| link               | HTML-атрибут `href`.                                                                                                            |                                                                `string`                                                                 |                             |
-| onItemClick        | Обратный вызов, срабатывающий при клике по элементу.                                                                            |                   `(item: MenuItem, collapsed: boolean, event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void`                   |                             |
-| onItemClickCapture | Обратный вызов, срабатывающий при клике по элементу.                                                                            |                                                ` (event: React.SyntheticEvent) => void`                                                 |                             |
-| order              | Определяет порядок отображения в элементе навигации.                                                                            |                                                                `number`                                                                 |                             |
-| pinned             | Запрещает скрытие элемента меню.                                                                                                |                                                                `boolean`                                                                |           `false`           |
-| rightAdornment     | Настраивает правую часть элемента меню.                                                                                         |                                                            `React.ReactNode`                                                            |                             |
-| title              | Заголовок элемента меню.                                                                                                        |                                                            `React.ReactNode`                                                            |                             |
-| tooltipText        | Содержимое тултипа.                                                                                                             |                                                            `React.ReactNode`                                                            |                             |
-| type               | Тип элемента меню, определяющий его внешний вид: `"regular"`, `"action"` или `"divider"`.                                       |                                                                `string`                                                                 |         `"regular"`         |
-| qa                 | Значение, которое будет передано в атрибут `data-qa`.                                                                           |                                                                `string`                                                                 |                             |
+| Имя                    | Описание                                                                                                                                                                                            |                                                                         Тип                                                                          |      Значение по умолчанию      |
+| :--------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------: |
+| afterMoreButton        | Элемент будет всегда отображаться в конце списка, даже если не помещается.                                                                                                                          |                                                                      `boolean`                                                                       |                                 |
+| category               | Категория, к которой относится элемент меню. Используется для группировки в режиме отображения или редактирования всех страниц.                                                                     |                                                                       `string`                                                                       |   `"Остальное"` `"All other"`   |
+| current                | Текущий (выбранный) элемент.                                                                                                                                                                        |                                                                      `boolean`                                                                       |             `false`             |
+| hidden                 | Скрытие элемента в меню, работает с включенным режимом `AllPages`.                                                                                                                                  |                                                                      `boolean`                                                                       |             `false`             |
+| icon                   | Иконка меню на основе компонента `Icon` из фреймворка UIKit.                                                                                                                                        |                         [`IconProps['data']`](https://github.com/gravity-ui/uikit/tree/main/src/components/Icon#properties)                          |                                 |
+| iconSize               | Размер иконки меню.                                                                                                                                                                                 |                                                                  `number` `string`                                                                   |              `18`               |
+| iconQa                 | Значение, которое будет передано в атрибут `data-qa` контейнера `Icon`.                                                                                                                             |                                                                       `string`                                                                       |                                 |
+| id                     | Идентификатор элемента меню.                                                                                                                                                                        |                                                                       `string`                                                                       |                                 |
+| itemWrapper            | Обертка элемента меню.                                                                                                                                                                              |       [`ItemWrapper`](https://github.com/gravity-ui/navigation/blob/b8367cf343fc20304bc3c8d9a337d9f7d803a9b3/src/components/types.ts#L32-L41)        |                                 |
+| href                   | HTML-атрибут `href`.                                                                                                                                                                                |                                                                       `string`                                                                       |                                 |
+| onItemClick            | Обратный вызов, срабатывающий при клике по элементу. Параметр `collapsed` указывает на состояние: `false` для обычных элементов, `true` для элементов в свернутом попапе или клике на кнопку "еще". |                      `(item: AsideHeaderItem, collapsed: boolean, event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void`                      |                                 |
+| onItemClickCapture     | Обратный вызов, срабатывающий при клике по элементу.                                                                                                                                                |                                                       ` (event: React.SyntheticEvent) => void`                                                       |                                 |
+| order                  | Определяет порядок отображения в элементе навигации.                                                                                                                                                |                                                                       `number`                                                                       |                                 |
+| pinned                 | Запрещает скрытие элемента меню.                                                                                                                                                                    |                                                                      `boolean`                                                                       |             `false`             |
+| rightAdornment         | Настраивает правую часть элемента меню.                                                                                                                                                             |                                                                  `React.ReactNode`                                                                   |                                 |
+| title                  | Заголовок элемента меню.                                                                                                                                                                            |                                                                  `React.ReactNode`                                                                   |                                 |
+| tooltipText            | Содержимое тултипа.                                                                                                                                                                                 |                                                                  `React.ReactNode`                                                                   |                                 |
+| type                   | Тип элемента меню, определяющий его внешний вид: `"regular"`, `"action"` или `"divider"`.                                                                                                           |                                                                       `string`                                                                       |           `"regular"`           |
+| qa                     | Значение, которое будет передано в атрибут `data-qa`.                                                                                                                                               |                                                                       `string`                                                                       |                                 |
+| enableTooltip          | Отображать ли подсказку.                                                                                                                                                                            |                                                                      `boolean`                                                                       |             `true`              |
+| bringForward           | Отображать ли иконку поверх модальных окон.                                                                                                                                                         |                                                                      `boolean`                                                                       |                                 |
+| compact                | Флаг, отвечающий за отображение элемента меню в компактном формате.                                                                                                                                 |                                                                      `boolean`                                                                       |                                 |
+| ~~popupVisible~~       | ⚠️ **Устарело**: Используйте `itemWrapper` для создания всплывающих окон. Флаг, отвечающий за отображение всплывающего окна.                                                                        |                                                                      `boolean`                                                                       |             `false`             |
+| ~~popupRef~~           | ⚠️ **Устарело**: Используйте `itemWrapper` для создания всплывающих окон. Ссылка на якорный элемент для всплывающего окна.                                                                          |                                                            `React.RefObject<HTMLElement>`                                                            |                                 |
+| ~~popupPlacement~~     | ⚠️ **Устарело**: Используйте `itemWrapper` для создания всплывающих окон. Расположение всплывающего окна относительно компонента привязки.                                                          |  [`PopupProps['placement']`](https://github.com/gravity-ui/uikit/blob/7748aaeec8dc7414487f7c06c899f16b275b25ef/src/components/Popup/Popup.tsx#L69)   |                                 |
+| ~~popupOffset~~        | ⚠️ **Устарело**: Используйте `itemWrapper` для создания всплывающих окон. Смещение всплывающего окна относительно компонента привязки.                                                              |    [`PopupProps['offset']`](https://github.com/gravity-ui/uikit/blob/7748aaeec8dc7414487f7c06c899f16b275b25ef/src/components/Popup/Popup.tsx#L71)    | `{mainAxis: 8, crossAxis: -20}` |
+| ~~popupKeepMounted~~   | ⚠️ **Устарело**: Используйте `itemWrapper` для создания всплывающих окон. Всплывающее окно не будет удалено из DOM при скрытии.                                                                     |                                                                      `boolean`                                                                       |             `false`             |
+| ~~renderPopupContent~~ | ⚠️ **Устарело**: Используйте `itemWrapper` для создания всплывающих окон. Функция отвечает за отрисовку контента во всплывающем окне.                                                               |                                                               `() => React.ReactNode`                                                                |                                 |
+| ~~onOpenChangePopup~~  | ⚠️ **Устарело**: Используйте `itemWrapper` для создания всплывающих окон. Обратный вызов для изменения состояния popupVisible, например, при отклонении.                                            | [`PopupProps['onOpenChange']`](https://github.com/gravity-ui/uikit/blob/7748aaeec8dc7414487f7c06c899f16b275b25ef/src/components/Popup/Popup.tsx#L61) |                                 |
 
 ### `TopAlert`
 

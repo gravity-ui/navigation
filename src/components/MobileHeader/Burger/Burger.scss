@@ -1,12 +1,11 @@
+@use '~@gravity-ui/uikit/styles/mixins';
 @use '../../variables';
-
-@import '~@gravity-ui/uikit/styles/mixins';
 
 $block: '.#{variables.$ns}mobile-header-burger';
 
 #{$block} {
     $class: &;
-    @include button-reset();
+    @include mixins.button-reset();
 
     &_opened {
         #{$class}__icon {

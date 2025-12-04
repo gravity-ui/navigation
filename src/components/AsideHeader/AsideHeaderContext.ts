@@ -1,21 +1,19 @@
 import React from 'react';
 
-import {MenuItem} from '../types';
-
-import {AsideHeaderInnerProps} from './types';
+import {AsideHeaderInnerProps, AsideHeaderItem} from './types';
 
 export interface AsideHeaderInnerContextType extends AsideHeaderInnerProps {
-    menuItems: MenuItem[];
-    defaultMenuItems?: MenuItem[];
+    menuItems: AsideHeaderItem[];
+    defaultMenuItems?: AsideHeaderItem[];
     allPagesIsAvailable: boolean;
     onItemClick: (
-        item: MenuItem,
+        item: AsideHeaderItem,
         collapsed: boolean,
         event: React.MouseEvent<HTMLElement, MouseEvent>,
     ) => void;
 }
 
-export const AsideHeaderInnerContext = React.createContext<AsideHeaderInnerContextType | undefined>(
+const AsideHeaderInnerContext = React.createContext<AsideHeaderInnerContextType | undefined>(
     undefined,
 );
 AsideHeaderInnerContext.displayName = 'AsideHeaderInnerContext';
@@ -36,7 +34,7 @@ export interface AsideHeaderContextType {
     size: number;
 }
 
-export const AsideHeaderContext = React.createContext<AsideHeaderContextType | undefined>({
+const AsideHeaderContext = React.createContext<AsideHeaderContextType | undefined>({
     compact: false,
     size: 0,
 });

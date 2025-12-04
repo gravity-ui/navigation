@@ -41,8 +41,6 @@ Navigation includes 3 parts: the top, the middle and the bottom. These sections 
 
 The section usually contains general elements for all site pages and includes the logo and the elements below it. Clickable logo can be useful for a quick navigation to the home page, if necessary the element (e.g. search, catalogue) is placed under it.
 
-The elements have access to tooltip, popup, drawers, it is enough to select the desired behavior when configuring this section.
-
 ### The Middle (menuItems)
 
 The main section usually depends on context of the page — one of examples using navigation on the multipage sites.
@@ -56,17 +54,63 @@ The `onMenuItemsChanged` callback is required for adding extra component `All Pa
 
 **Important note**: A user manages a modified list of the menu items that they receive from the callback and provides the new state of items to `AsideHeader`.
 
+The elements of this block can have multiple tooltips.
+
 ### The Bottom
 
 The Footer improves user experience by offering easy access to the elements and supplementary resources. It gives opportunity to connect with support add custom information to be sure that user will not get lost.
 
 There can be both their own components inside, or also you can use `FooterItem`.
 
+## Elements
+
+The elements have access to tooltip, popup, drawers, it is enough to select the desired behavior when configuring this section.
+
+#### Popup Windows
+
+⚠️ **Important**: Built-in popup fields (`popupVisible`, `popupRef`, `popupPlacement`, `popupOffset`, `popupKeepMounted`, `renderPopupContent`, `onOpenChangePopup`) are marked as deprecated and will be removed in future versions.
+
+For creating popup windows, it is now recommended to use the `itemWrapper` property. This provides more flexibility and control over element behavior.
+
+**Example of using itemWrapper to create a popup:**
+
+```tsx
+import {Popup} from '@gravity-ui/uikit';
+
+const menuItems: AsideHeaderItem[] = [
+  {
+    id: 'item-with-popup',
+    title: 'Item with popup',
+    icon: 'settings',
+    itemWrapper: (params, makeItem, opts) => {
+      const [popupOpen, setPopupOpen] = React.useState(false);
+      const anchorRef = React.useRef<HTMLElement>(null);
+
+      return (
+        <>
+          <div ref={anchorRef} onClick={() => setPopupOpen(!popupOpen)}>
+            {makeItem(params)}
+          </div>
+          <Popup
+            open={popupOpen}
+            anchorRef={anchorRef}
+            onOpenChange={setPopupOpen}
+            placement="right-start"
+          >
+            <div style={{padding: '12px'}}>Popup content</div>
+          </Popup>
+        </>
+      );
+    },
+  },
+];
+```
+
 #### Highlighting element
 
 Highlighting an element over modal windows can be useful when a user wants to report an error via a feedback form, and the form with bug is opened in a modal window.
 
-In the `FooterItem` component, you can pass a `bringForward` prop, which renders the icon above modal windows. Additionally, you need to pass a function to `AsideHeader` that will notify about the opening of modal windows.
+In the `FooterItem` component and in the configuration of the `menuItems` and `subheaderItems` elements, you can pass the `bringForward` property, which displays an icon on top of the modal windows. Additionally, in the `AsideHeader`, you need to pass a function that will notify you when the modal windows are opened.
 
 ## Rendering Content
 
@@ -131,12 +175,12 @@ export const Aside: FC = () => {
 | headerDecoration          | Color background of the top section with logo and subheader items                    |                                                           `boolean`                                                           |          `false`          |
 | hideCollapseButton        | Hiding `CollapseButton`. Use `compact` prop for setting default navigation state     |                                                           `boolean`                                                           |          `false`          |
 | logo                      | Logo container includes icon, title, handling clicks                                 |                [`Logo`](https://github.com/gravity-ui/navigation/blob/main/src/components/Logo/Readme.md#logo)                |                           |
-| menuItems                 | Items in the navigation middle section                                               |                                                       `Array<MenuItem>`                                                       |           `[]`            |
+| menuItems                 | Items in the navigation middle section                                               |                                                   `Array<AsideHeaderItem>`                                                    |           `[]`            |
 | menuMoreTitle             | Additional element title of menuItems if elements don't fit                          |                                                           `string`                                                            |     `"Ещё"` `"More"`      |
 | multipleTooltip           | Show the multiple tooltip by hovering elements of menuItems in collapsed state       |                                                           `boolean`                                                           |          `false`          |
 | onChangeCompact           | Callback will be called when changing navigation visual state                        |                                                 `(compact: boolean) => void;`                                                 |                           |
 | onClosePanel              | Callback will be called when closing panel. You can add panels via `PanelItems` prop |                                                         `() => void;`                                                         |                           |
-| onMenuItemsChanged        | Callback will be called when updating list of the menuItems in `AllPagesPanel`       |                                              `(items: Array<MenuItem>) => void`                                               |                           |
+| onMenuItemsChanged        | Callback will be called when updating list of the menuItems in `AllPagesPanel`       |                                           `(items: Array<AsideHeaderItem>) => void`                                           |                           |
 | onMenuMoreClick           | Callback will be called when some items don't fit and "more" button is clicked       |                                                         `() => void;`                                                         |                           |
 | onAllPagesClick           | Callback will be called when "All pages" button is clicked                           |                                                         `() => void;`                                                         |                           |
 | openModalSubscriber       | Function notifies `AsideHeader` about Modals visibility changes                      |                                             `( (open: boolean) => void) => void`                                              |                           |
@@ -144,33 +188,43 @@ export const Aside: FC = () => {
 | renderContent             | Function rendering the main content at the right of the `AsideHeader`                |                                          `(data: {size: number}) => React.ReactNode`                                          |                           |
 | renderFooter              | Function rendering the navigation bottom section                                     |                                          `(data: {size: number}) => React.ReactNode`                                          |                           |
 | ref                       | `ref` to target popup anchor                                                         |                                    `React.ForwardedRef<HTMLDivElement, AsideHeaderProps>`                                     |                           |
-| subheaderItems            | Items in the navigation top section under Logo                                       |                          `Array<{item: MenuItem; enableTooltip?: boolean; bringForward?: boolean}>`                           |           `[]`            |
+| subheaderItems            | Items in the navigation top section under Logo                                       |                                                   `Array<AsideHeaderItem>`                                                    |           `[]`            |
 | topAlert                  | The container above the navigation based on the uikit `Alert` component              |                                                          `TopAlert`                                                           |                           |
 | qa                        | The value to be passed to `data-qa` attribute of the `AsideHeader` container         |                                                           `string`                                                            |                           |
 
-### `MenuItem`
+### `AsideHeaderItem`
 
-| Name               | Description                                                                                             |                                                                  Type                                                                   |           Default           |
-| :----------------- | :------------------------------------------------------------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------: |
-| afterMoreButton    | The menu item will be placed in the end, even item don't fit                                            |                                                                `boolean`                                                                |                             |
-| category           | The category to which the menu item belongs. Need for grouping in the display/editing mode of all pages |                                                                `string`                                                                 | `"Остальное"` `"All other"` |
-| current            | The current/selected item                                                                               |                                                                `boolean`                                                                |           `false`           |
-| hidden             | Visibility item in the menu, only for AllPages                                                          |                                                                `boolean`                                                                |           `false`           |
-| icon               | Menu icon based on the uikit `Icon` component                                                           |                   [`IconProps['data']`](https://github.com/gravity-ui/uikit/tree/main/src/components/Icon#properties)                   |                             |
-| iconSize           | Menu icon size                                                                                          |                                                            `number` `string`                                                            |            `18`             |
-| iconQa             | The value to be passed to `data-qa` attribute of the `Icon` container                                   |                                                                `string`                                                                 |                             |
-| id                 | The menu item id                                                                                        |                                                                `string`                                                                 |                             |
-| itemWrapper        | The menu item wrapper                                                                                   | [`ItemWrapper`](https://github.com/gravity-ui/navigation/blob/b8367cf343fc20304bc3c8d9a337d9f7d803a9b3/src/components/types.ts#L32-L41) |                             |
-| link               | HTML href attribute                                                                                     |                                                                `string`                                                                 |                             |
-| onItemClick        | Callback will be called when clicking on the item                                                       |                   `(item: MenuItem, collapsed: boolean, event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void`                   |                             |
-| onItemClickCapture | Callback will be called when clicking on the item                                                       |                                                ` (event: React.SyntheticEvent) => void`                                                 |                             |
-| order              | Determine the display order in the navigation                                                           |                                                                `number`                                                                 |                             |
-| pinned             | The parameter restricts hiding menu item                                                                |                                                                `boolean`                                                                |           `false`           |
-| rightAdornment     | Customize right side of the menu item                                                                   |                                                            `React.ReactNode`                                                            |                             |
-| title              | The menu item title                                                                                     |                                                            `React.ReactNode`                                                            |                             |
-| tooltipText        | Tooltip content                                                                                         |                                                            `React.ReactNode`                                                            |                             |
-| type               | The menu item type changes appearance: `"regular"`, `"action"`, `"divider"`                             |                                                                `string`                                                                 |         `"regular"`         |
-| qa                 | The value to be passed to `data-qa` attribute                                                           |                                                                `string`                                                                 |                             |
+| Name                   | Description                                                                                                                                                                                      |                                                                         Type                                                                         |             Default             |
+| :--------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------: |
+| afterMoreButton        | The menu item will be placed in the end, even item don't fit                                                                                                                                     |                                                                      `boolean`                                                                       |                                 |
+| category               | The category to which the menu item belongs. Need for grouping in the display/editing mode of all pages                                                                                          |                                                                       `string`                                                                       |   `"Остальное"` `"All other"`   |
+| current                | The current/selected item                                                                                                                                                                        |                                                                      `boolean`                                                                       |             `false`             |
+| hidden                 | Visibility item in the menu, only for AllPages                                                                                                                                                   |                                                                      `boolean`                                                                       |             `false`             |
+| icon                   | Menu icon based on the uikit `Icon` component                                                                                                                                                    |                         [`IconProps['data']`](https://github.com/gravity-ui/uikit/tree/main/src/components/Icon#properties)                          |                                 |
+| iconSize               | Menu icon size                                                                                                                                                                                   |                                                                  `number` `string`                                                                   |              `18`               |
+| iconQa                 | The value to be passed to `data-qa` attribute of the `Icon` container                                                                                                                            |                                                                       `string`                                                                       |                                 |
+| id                     | The menu item id                                                                                                                                                                                 |                                                                       `string`                                                                       |                                 |
+| itemWrapper            | The menu item wrapper                                                                                                                                                                            |       [`ItemWrapper`](https://github.com/gravity-ui/navigation/blob/b8367cf343fc20304bc3c8d9a337d9f7d803a9b3/src/components/types.ts#L32-L41)        |                                 |
+| href                   | HTML href attribute                                                                                                                                                                              |                                                                       `string`                                                                       |                                 |
+| onItemClick            | Callback will be called when clicking on the item. The `collapsed` parameter indicates state: `false` for regular items, `true` for items in collapsed popup or when clicking the "more" button. |                      `(item: AsideHeaderItem, collapsed: boolean, event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void`                      |                                 |
+| onItemClickCapture     | Callback will be called when clicking on the item                                                                                                                                                |                                                       ` (event: React.SyntheticEvent) => void`                                                       |                                 |
+| order                  | Determine the display order in the navigation                                                                                                                                                    |                                                                       `number`                                                                       |                                 |
+| pinned                 | The parameter restricts hiding menu item                                                                                                                                                         |                                                                      `boolean`                                                                       |             `false`             |
+| rightAdornment         | Customize right side of the menu item                                                                                                                                                            |                                                                  `React.ReactNode`                                                                   |                                 |
+| title                  | The menu item title                                                                                                                                                                              |                                                                  `React.ReactNode`                                                                   |                                 |
+| tooltipText            | Tooltip content                                                                                                                                                                                  |                                                                  `React.ReactNode`                                                                   |                                 |
+| type                   | The menu item type changes appearance: `"regular"`, `"action"`, `"divider"`                                                                                                                      |                                                                       `string`                                                                       |           `"regular"`           |
+| qa                     | The value to be passed to `data-qa` attribute                                                                                                                                                    |                                                                       `string`                                                                       |                                 |
+| enableTooltip          | Whether to display a tooltip.                                                                                                                                                                    |                                                                      `boolean`                                                                       |             `true`              |
+| bringForward           | Whether to display the icon on top of modal windows.                                                                                                                                             |                                                                      `boolean`                                                                       |                                 |
+| compact                | The flag responsible for displaying the menu item in a compact form.                                                                                                                             |                                                                      `boolean`                                                                       |                                 |
+| ~~popupVisible~~       | ⚠️ **Deprecated**: Use `itemWrapper` for popup functionality. The flag responsible for displaying the pop-up window.                                                                             |                                                                      `boolean`                                                                       |             `false`             |
+| ~~popupRef~~           | ⚠️ **Deprecated**: Use `itemWrapper` for popup functionality. Reference to anchor element for popup.                                                                                             |                                                            `React.RefObject<HTMLElement>`                                                            |                                 |
+| ~~popupPlacement~~     | ⚠️ **Deprecated**: Use `itemWrapper` for popup functionality. The location of the pop-up window relative to the anchor component.                                                                |  [`PopupProps['placement']`](https://github.com/gravity-ui/uikit/blob/7748aaeec8dc7414487f7c06c899f16b275b25ef/src/components/Popup/Popup.tsx#L69)   |                                 |
+| ~~popupOffset~~        | ⚠️ **Deprecated**: Use `itemWrapper` for popup functionality. The offset of the pop-up window relative to the anchor component.                                                                  |    [`PopupProps['offset']`](https://github.com/gravity-ui/uikit/blob/7748aaeec8dc7414487f7c06c899f16b275b25ef/src/components/Popup/Popup.tsx#L71)    | `{mainAxis: 8, crossAxis: -20}` |
+| ~~popupKeepMounted~~   | ⚠️ **Deprecated**: Use `itemWrapper` for popup functionality. The pop-up window will not be removed from the DOM when it is opened.                                                              |                                                                      `boolean`                                                                       |             `false`             |
+| ~~renderPopupContent~~ | ⚠️ **Deprecated**: Use `itemWrapper` for popup functionality. This function is responsible for rendering content in a pop-up window.                                                             |                                                               `() => React.ReactNode`                                                                |                                 |
+| ~~onOpenChangePopup~~  | ⚠️ **Deprecated**: Use `itemWrapper` for popup functionality. A callback for changing the popupVisible state, such as when it is dismissed.                                                      | [`PopupProps['onOpenChange']`](https://github.com/gravity-ui/uikit/blob/7748aaeec8dc7414487f7c06c899f16b275b25ef/src/components/Popup/Popup.tsx#L61) |                                 |
 
 ### `TopAlert`
 

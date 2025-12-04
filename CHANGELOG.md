@@ -27,6 +27,74 @@ npx navigation-codemod v4 path/to/your/code
 **AI Migration Assistant:** See `AI_MIGRATION_ASSISTANT.md` for AI prompt to help with complex migration cases.
 
 
+## [3.10.2](https://github.com/gravity-ui/navigation/compare/v3.10.1...v3.10.2) (2025-12-04)
+
+
+### Bug Fixes
+
+* **MultipleTooltip:** use tooltipText if available, fallback to title ([#511](https://github.com/gravity-ui/navigation/issues/511)) ([1551ed8](https://github.com/gravity-ui/navigation/commit/1551ed86656981b2eb8278e9bae0770e1590dbe1))
+
+## [3.10.1](https://github.com/gravity-ui/navigation/compare/v3.10.0...v3.10.1) (2025-11-26)
+
+
+### Bug Fixes
+
+* **Settings.Item:** correct styles override for item w/out title ([#500](https://github.com/gravity-ui/navigation/issues/500)) ([76d7921](https://github.com/gravity-ui/navigation/commit/76d792139bd01b2ddcf5611650cb474af68dff32))
+
+## [3.10.0](https://github.com/gravity-ui/navigation/compare/v3.9.0...v3.10.0) (2025-11-26)
+
+
+### Features
+
+* support item.itemWrapper in AllPagesPannel ([#496](https://github.com/gravity-ui/navigation/issues/496)) ([bfaa84b](https://github.com/gravity-ui/navigation/commit/bfaa84b3354c2ca4af7ebd02480734da81112d10))
+
+
+### Bug Fixes
+
+* **Settings.Item:** width of item w/out label ([#497](https://github.com/gravity-ui/navigation/issues/497)) ([a71471a](https://github.com/gravity-ui/navigation/commit/a71471a7b1fcad312cec7c8e548a46924cd7bdfd))
+
+## [3.9.0](https://github.com/gravity-ui/navigation/compare/v3.8.0...v3.9.0) (2025-11-21)
+
+
+### Features
+
+* **Settings.Item:** add the ability to hide item title ([#492](https://github.com/gravity-ui/navigation/issues/492)) ([8b257a1](https://github.com/gravity-ui/navigation/commit/8b257a1f26b09e2a9c3060d44f92fd6fe3194574))
+
+## [3.8.0](https://github.com/gravity-ui/navigation/compare/v3.7.5...v3.8.0) (2025-11-21)
+
+
+### Features
+
+* **PageLayout:** support function type for topAlert prop ([#491](https://github.com/gravity-ui/navigation/issues/491)) ([7790d8c](https://github.com/gravity-ui/navigation/commit/7790d8cb1e203ef333b6a694ca30c6de2da8d6fb))
+
+## [3.7.5](https://github.com/gravity-ui/navigation/compare/v3.7.4...v3.7.5) (2025-11-14)
+
+
+### Bug Fixes
+
+* **MobileHeader:** set height to 100% for panel items and include burger menu class name ([#488](https://github.com/gravity-ui/navigation/issues/488)) ([d7367aa](https://github.com/gravity-ui/navigation/commit/d7367aa1a0e0ef578260136c68c03cd520c2e34a))
+
+## [3.7.4](https://github.com/gravity-ui/navigation/compare/v3.7.3...v3.7.4) (2025-10-24)
+
+
+### Bug Fixes
+
+* **Drawer:** fix Drawer height ([#480](https://github.com/gravity-ui/navigation/issues/480)) ([a72b55e](https://github.com/gravity-ui/navigation/commit/a72b55ea4aed2744c6d6731142048d0e15de99c5))
+
+## [3.7.3](https://github.com/gravity-ui/navigation/compare/v3.7.2...v3.7.3) (2025-10-21)
+
+
+### Bug Fixes
+
+* **AsiderHeader:** fix scroll height for panel with header alert ([#478](https://github.com/gravity-ui/navigation/issues/478)) ([0bf0af4](https://github.com/gravity-ui/navigation/commit/0bf0af44a5d416d756e524964b6dff5aa1ef7798))
+
+## [3.7.2](https://github.com/gravity-ui/navigation/compare/v3.7.1...v3.7.2) (2025-10-09)
+
+
+### Bug Fixes
+
+* resolve [#472](https://github.com/gravity-ui/navigation/issues/472) — add z-index to Drawer root element ([#473](https://github.com/gravity-ui/navigation/issues/473)) ([9fab3f9](https://github.com/gravity-ui/navigation/commit/9fab3f9d842da32e2b4e4fcf1fdb09d0ca0d56b5))
+
 ## [3.7.1](https://github.com/gravity-ui/navigation/compare/v3.7.0...v3.7.1) (2025-09-29)
 
 

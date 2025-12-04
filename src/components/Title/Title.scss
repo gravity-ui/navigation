@@ -1,7 +1,5 @@
 @use '../variables';
 
-@import '../../../styles/mixins';
-
 $block: '.#{variables.$ns}title';
 
 #{$block} {

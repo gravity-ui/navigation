@@ -4,6 +4,7 @@ $block: '.#{variables.$ns}drawer';
 
 #{$block} {
     pointer-events: none;
+    z-index: var(--gn-drawer-z-index);
 
     --_--item-shadow-default: 0 1px 5px 0 var(--g-color-sfx-shadow);
     --_--item-position: fixed;
@@ -25,8 +26,6 @@ $block: '.#{variables.$ns}drawer';
         left: var(--gn-aside-header-size, 0);
         top: var(--gn-top-alert-height, 0);
         bottom: 0;
-        height: 100%;
-        will-change: transform;
         background-color: var(--g-color-base-background);
         pointer-events: initial;
         box-shadow: var(--_--item-shadow, none);
@@ -40,11 +39,13 @@ $block: '.#{variables.$ns}drawer';
         &_direction_top {
             bottom: auto;
             right: 0;
+            height: 100%;
         }
 
         &_direction_bottom {
             top: auto;
             right: 0;
+            height: 100%;
         }
     }
 

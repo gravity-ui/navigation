@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-export const DRAWER_ITEM_MIN_RESIZE_WIDTH = 200;
-export const DRAWER_ITEM_MAX_RESIZE_WIDTH = 800;
-export const DRAWER_ITEM_INITIAL_RESIZE_WIDTH = 400;
+const DRAWER_ITEM_MIN_RESIZE_WIDTH = 200;
+const DRAWER_ITEM_MAX_RESIZE_WIDTH = 800;
+const DRAWER_ITEM_INITIAL_RESIZE_WIDTH = 400;
 
 export type DrawerDirection = 'right' | 'left' | 'top' | 'bottom';
 export type OnResizeHandler = (width: number, event: MouseEvent | TouchEvent) => void;
@@ -34,14 +34,14 @@ export function useScrollLock(enabled: boolean) {
     }, [enabled]);
 }
 
-export interface UseResizeHandlersParams {
+interface UseResizeHandlersParams {
     onStart: () => void;
     onMove: (delta: number) => void;
     onEnd: (delta: number, event: MouseEvent | TouchEvent) => void;
     direction?: 'horizontal' | 'vertical';
 }
 
-export function useResizeHandlers({
+function useResizeHandlers({
     onStart,
     onMove,
     onEnd,
@@ -121,7 +121,7 @@ export function useResizeHandlers({
     };
 }
 
-export interface UseResizableDrawerItemParams {
+interface UseResizableDrawerItemParams {
     direction?: DrawerDirection;
     width?: number;
     minResizeWidth?: number;

@@ -1,0 +1,10 @@
+@use '../../../variables';
+
+$block: '.#{variables.$ns}footer-item';
+
+#{$block} {
+    $class: &;
+
+    width: 100%;
+    height: 40px;
+}
