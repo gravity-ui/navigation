@@ -15,8 +15,15 @@
     "*.scss"
   ],
   "files": [
-    "build"
+    "build",
+    "codemods/bin",
+    "codemods/transforms",
+    "!codemods/transforms/__tests__",
+    "!codemods/transforms/__testfixtures__"
   ],
+  "bin": {
+    "navigation-codemod": "./codemods/bin/cli.js"
+  },
   "scripts": {
     "prepare": "husky",
     "typecheck": "tsc --noEmit",
@@ -37,14 +44,18 @@
     "playwright:clear-cache": "rm -rf ./playwright/.cache",
     "playwright:docker": "./scripts/playwright-docker.sh 'npm run playwright'",
     "playwright:docker:update": "./scripts/playwright-docker.sh 'npm run playwright:update'",
-    "playwright:docker:clear-cache": "./scripts/playwright-docker.sh clear-cache"
+    "playwright:docker:clear-cache": "./scripts/playwright-docker.sh clear-cache",
+    "codemod:test:transforms": "jest --config jest.codemods.config.js"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.4",
     "react-transition-group": "^4.4.5",
-    "tslib": "^2.8.1"
+    "tslib": "^2.8.1",
+    "jscodeshift": "^0.15.0",
+    "commander": "^11.0.0"
   },
   "devDependencies": {
+    "@types/jscodeshift": "^0.12.0",
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-react": "^7.26.3",
@@ -89,6 +100,7 @@
     "eslint-plugin-testing-library": "^6.5.0",
     "husky": "^9.1.7",
     "jest": "^28.0.0",
+    "@types/jest": "^28.1.0",
     "knip": "^5.66.4",
     "nano-staged": "^0.6.0",
     "npm-run-all": "^4.0.0",
