@@ -8,14 +8,14 @@ import {useAsideHeaderInnerContextValue} from '../../useAsideHeaderInnerContextV
 type Props = Omit<AsideHeaderProps, 'compact' | 'size'>;
 
 export const PageLayoutAside = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
-    const {size, compact, isExpanded, onMouseEnter, onMouseLeave} = useAsideHeaderContext();
+    const {size, compact, isExpanded, onExpand, onFold} = useAsideHeaderContext();
 
     const asideHeaderInnerContextValue = useAsideHeaderInnerContextValue({
         size,
         compact,
         isExpanded,
-        onMouseEnter,
-        onMouseLeave,
+        onExpand,
+        onFold,
         ...props,
     });
 

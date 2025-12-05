@@ -215,6 +215,7 @@ export interface DrawerProps {
      * @default false
      */
     scrollLock?: boolean;
+    onNavigationExpand?: () => void;
 }
 
 export const Drawer: React.FC<DrawerProps> = ({
@@ -224,6 +225,7 @@ export const Drawer: React.FC<DrawerProps> = ({
     style,
     onVeilClick,
     onEscape,
+    onNavigationExpand,
     hideVeil,
     disablePortal = true,
     keepMounted = false,
@@ -271,7 +273,12 @@ export const Drawer: React.FC<DrawerProps> = ({
                 const childrenVisible = someItemVisible && state === 'entered';
 
                 const content = (
-                    <div ref={containerRef} className={b({hideVeil}, className)} style={style}>
+                    <div
+                        ref={containerRef}
+                        className={b({hideVeil}, className)}
+                        style={style}
+                        onMouseEnter={onNavigationExpand}
+                    >
                         <CSSTransition
                             in={childrenVisible}
                             timeout={TIMEOUT}
