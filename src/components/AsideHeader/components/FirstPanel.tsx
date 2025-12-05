@@ -28,8 +28,8 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         menuItems,
         menuGroups,
         qa,
-        onMouseEnter,
-        onMouseLeave,
+        onExpand,
+        onFold,
         isExpanded,
     } = useAsideHeaderInnerContext();
 
@@ -49,8 +49,8 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 className={b('aside', {'expanded-by-hover': isExpandedByHover}, className)}
                 style={{width: size}}
                 data-qa={qa}
-                onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
+                onMouseEnter={onExpand}
+                onMouseLeave={onFold}
             >
                 <div className={b('aside-popup-anchor')} ref={asideRef} />
                 {customBackground && (

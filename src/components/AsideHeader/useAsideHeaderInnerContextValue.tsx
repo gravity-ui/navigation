@@ -13,8 +13,8 @@ export const useAsideHeaderInnerContextValue = (
         size: number;
         compact: boolean;
         isExpanded: boolean;
-        onMouseEnter?: () => void;
-        onMouseLeave?: () => void;
+        onExpand?: () => void;
+        onFold?: () => void;
     },
 ): AsideHeaderInnerContextType => {
     const {

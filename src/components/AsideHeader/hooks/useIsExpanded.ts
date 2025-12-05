@@ -6,8 +6,8 @@ const HOVER_DELAY = 150;
 
 export interface UseIsExpandedResult {
     isExpanded: boolean;
-    onMouseEnter: () => void;
-    onMouseLeave: () => void;
+    onExpand: () => void;
+    onFold: () => void;
 }
 
 export const useIsExpanded = (externalCompact: boolean): UseIsExpandedResult => {
@@ -39,17 +39,17 @@ export const useIsExpanded = (externalCompact: boolean): UseIsExpandedResult => 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [delayedShouldExpand]);
 
-    const handleMouseEnter = useCallback(() => {
+    const handleExpand = useCallback(() => {
         setIsMouseInside(true);
     }, []);
 
-    const handleMouseLeave = useCallback(() => {
+    const handleFold = useCallback(() => {
         setIsMouseInside(false);
     }, []);
 
     return {
         isExpanded,
-        onMouseEnter: handleMouseEnter,
-        onMouseLeave: handleMouseLeave,
+        onExpand: handleExpand,
+        onFold: handleFold,
     };
 };

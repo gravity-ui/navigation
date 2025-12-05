@@ -18,7 +18,7 @@ export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {
 }
 
 const Layout = ({compact, className, children, topAlert, onChangeCompact}: PageLayoutProps) => {
-    const {isExpanded, onMouseEnter, onMouseLeave} = useIsExpanded(compact);
+    const {isExpanded, onExpand, onFold} = useIsExpanded(compact);
 
     const size = isExpanded ? ASIDE_HEADER_EXPANDED_WIDTH : ASIDE_HEADER_COMPACT_WIDTH;
 
@@ -28,10 +28,10 @@ const Layout = ({compact, className, children, topAlert, onChangeCompact}: PageL
             compact,
             isExpanded,
             onChangeCompact,
-            onMouseEnter,
-            onMouseLeave,
+            onExpand,
+            onFold,
         }),
-        [size, compact, isExpanded, onChangeCompact, onMouseEnter, onMouseLeave],
+        [size, compact, isExpanded, onChangeCompact, onExpand, onFold],
     );
 
     return (
