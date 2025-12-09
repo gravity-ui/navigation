@@ -1,4 +1,4 @@
-@use '../variables';
+@use '../../../variables';
 
 .#{variables.$ns}all-pages-panel {
     min-width: 300px;
@@ -11,10 +11,6 @@
         flex: 1;
 
         margin: 0 calc(var(--g-spacing-6) * -1);
-
-        &_editMode {
-            --g-list-item-padding: 0 var(--g-spacing-6);
-        }
     }
 
     &__category {
@@ -23,6 +19,10 @@
 
     &__discoverable-feature-wrapper {
         display: flex;
+    }
+
+    &__item_editMode {
+        padding: 0 var(--g-spacing-6);
     }
 
     &__drag-placeholder {

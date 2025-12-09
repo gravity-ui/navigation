@@ -1,13 +1,13 @@
 import React from 'react';
 
 import {ASIDE_HEADER_ICON_SIZE} from '../../../constants';
-import {block} from '../../../utils/cn';
+import {createBlock} from '../../../utils/cn';
 import {AsideHeaderItem} from '../../types';
 import {Item} from '../CompositeBar/Item/Item';
 
-import './FooterItem.scss';
+import styles from './FooterItem.module.scss';
 
-const b = block('footer-item');
+const b = createBlock('footer-item', styles);
 
 export interface FooterItemProps extends AsideHeaderItem {}
 

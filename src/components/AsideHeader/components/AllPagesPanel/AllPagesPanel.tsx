@@ -3,9 +3,9 @@ import React, {ReactNode, useCallback, useEffect, useMemo, useRef, useState} fro
 import {Gear} from '@gravity-ui/icons';
 import {Button, Flex, Icon, List, ListItemData, ListProps, Text, Tooltip} from '@gravity-ui/uikit';
 
+import {createBlock} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
 import {AsideHeaderItem} from '../../types';
-import {createBlock} from '../utils/cn';
 
 import {AllPagesListItem} from './AllPagesListItem';
 import {ALL_PAGES_ID} from './constants';

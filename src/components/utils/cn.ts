@@ -31,16 +31,19 @@ export const createBlock = (blockName: string, styles: Record<string, string>) =
 
     // Create a function with the same signature as the original block function
     function cssModuleBlock(): string;
-    function cssModuleBlock(mods?: CnMods | null, mix?: string | string[] | undefined): string;
+    function cssModuleBlock(
+        mods?: NoStrictEntityMods | null,
+        mix?: string | string[] | undefined,
+    ): string;
     function cssModuleBlock(elemName: string, elemMix?: string | string[] | undefined): string;
     function cssModuleBlock(
         elemName: string,
-        elemMods?: CnMods | null,
+        elemMods?: NoStrictEntityMods | null,
         elemMix?: string | string[] | undefined,
     ): string;
     function cssModuleBlock(
-        elemOrMods?: string | CnMods | null,
-        elemModsOrBlockMix?: CnMods | string | string[] | null | undefined,
+        elemOrMods?: string | NoStrictEntityMods | null,
+        elemModsOrBlockMix?: NoStrictEntityMods | string | string[] | null | undefined,
         elemMix?: string | string[] | undefined,
     ): string {
         // Type-safe calls to blockFn based on argument patterns

@@ -17,7 +17,7 @@ const TITLE_HEIGHT_BONUS = 14; // Additional height when title is present
 const DENSE_HEIGHT_REDUCTION = 16; // Height reduction when dense mode is enabled
 
 function calcEstimatedTopAlertHeight(topAlert?: TopAlertProps) {
-    if (!topAlert) {
+    if (!topAlert || 'render' in topAlert) {
         return 0;
     }
 
@@ -39,7 +39,7 @@ const Layout = ({compact, className, children, topAlert}: PageLayoutProps) => {
     // Reserve margin immediately on server render through inline variable on container.
     // After TopAlert mount, the exact height will be set by hook.
     const getPreloadHeightValue = (): number | undefined => {
-        if (!topAlert || typeof topAlert.preloadHeight === 'undefined') {
+        if (!topAlert || 'render' in topAlert || typeof topAlert.preloadHeight === 'undefined') {
             return undefined;
         }
 

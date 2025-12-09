@@ -4,7 +4,7 @@ import {List} from '@gravity-ui/uikit';
 import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
 
 import {ASIDE_HEADER_COMPACT_WIDTH} from '../../../constants';
-import {createBlock} from '../utils/cn';
+import {createBlock} from '../../../utils/cn';
 import {AsideHeaderItem} from '../../types';
 
 import {Item, ItemProps} from './Item/Item';

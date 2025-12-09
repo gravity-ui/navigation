@@ -1,9 +1,9 @@
-@use '../../variables';
+@use '../../../../variables';
 
 $block: '.#{variables.$ns}multiple-tooltip';
 
-:global(.g-root_theme_dark) #{$block},
-:global(.g-root_theme_dark-hc) #{$block} {
+.g-root_theme_dark #{$block},
+.g-root_theme_dark-hc #{$block} {
     --multiple-tooltip-item-bg-color: var(
         --g-color-base-float-medium,
         var(--g-color-private-white-100-solid)
@@ -17,15 +17,15 @@ $block: '.#{variables.$ns}multiple-tooltip';
     --multiple-tooltip-backdrop-filter: blur(16px);
 }
 
-:global(.g-root_theme_dark-hc) #{$block} {
+.g-root_theme_dark-hc #{$block} {
     --multiple-tooltip-item-bg-color: var(
         --g-color-base-float-medium,
         var(--g-color-private-white-150-solid)
     );
 }
 
-:global(.g-root_theme_light) #{$block},
-:global(.g-root_theme_light-hc) #{$block} {
+.g-root_theme_light #{$block},
+.g-root_theme_light-hc #{$block} {
     --multiple-tooltip-item-bg-color: var(
         --g-color-base-float-medium,
         var(--g-color-private-black-550-solid)
@@ -52,7 +52,7 @@ $block: '.#{variables.$ns}multiple-tooltip';
         filter: var(--multiple-tooltip-backdrop-filter);
     }
 
-    @at-root :global(.g-popup)#{&}__popup,
+    @at-root .g-popup#{&}__popup,
         &__popup {
         --g-popup-background-color: transparent;
         --g-popup-border-color: transparent;

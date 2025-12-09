@@ -147,8 +147,8 @@ export const DrawerItem = React.forwardRef<HTMLDivElement, DrawerItemProps>(
         const withDir = (phase: string) =>
             cssDirection
                 ? `${b('item-transition-' + phase)} ${b(
-                        `item-transition_direction_${cssDirection}-${phase}`,
-                    )}`
+                      `item-transition_direction_${cssDirection}-${phase}`,
+                  )}`
                 : b('item-transition-' + phase);
 
         const itemTransitionClassNames = {
