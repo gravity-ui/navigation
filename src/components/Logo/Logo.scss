@@ -1,4 +1,5 @@
 @use '../variables';
+@use '../../../styles/mixins';
 
 $block: '.#{variables.$ns}logo';
 
@@ -45,31 +46,7 @@ $block: '.#{variables.$ns}logo';
         flex-shrink: 0;
     }
 
-    &__transition {
-        &-enter {
-            opacity: 0;
-        }
-
-        &-enter-active {
-            opacity: 0;
-        }
-
-        &-enter-done {
-            opacity: 1;
-            transition: opacity 50ms ease-in-out;
-        }
-
-        &-exit {
-            opacity: 1;
-            transition: opacity 50ms ease-in-out;
-        }
-
-        &-exit-active {
-            opacity: 0;
-        }
-
-        &-exit-done {
-            opacity: 0;
-        }
+    &__transition-logo {
+        @include mixins.opacity-transition(50ms, ease-in-out);
     }
 }

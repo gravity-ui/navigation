@@ -141,7 +141,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     <CSSTransition
                         in={!compact}
                         timeout={ASIDE_HEADER_HOVER_DELAY}
-                        classNames={b('transition')}
+                        classNames={b('transition-title')}
                     >
                         <div
                             className={b('title')}

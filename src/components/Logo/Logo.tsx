@@ -75,7 +75,7 @@ export const Logo: React.FC<
             <CSSTransition
                 in={!compact}
                 timeout={ASIDE_HEADER_HOVER_DELAY}
-                classNames={b('transition')}
+                classNames={b('transition-logo')}
             >
                 {logo}
             </CSSTransition>

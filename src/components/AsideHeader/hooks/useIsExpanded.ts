@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useState} from 'react';
 
-import {ASIDE_HEADER_HOVER_DELAY} from 'src/components/constants';
+import {ASIDE_HEADER_HOVER_DELAY} from '../../constants';
 
 import {useDelayedToggle} from './useDelayedToggle';
 
