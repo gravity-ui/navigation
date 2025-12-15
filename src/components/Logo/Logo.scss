@@ -44,4 +44,32 @@ $block: '.#{variables.$ns}logo';
         justify-content: center;
         flex-shrink: 0;
     }
+
+    &__transition {
+        &-enter {
+            opacity: 0;
+        }
+
+        &-enter-active {
+            opacity: 0;
+        }
+
+        &-enter-done {
+            opacity: 1;
+            transition: opacity 50ms ease-in-out;
+        }
+
+        &-exit {
+            opacity: 1;
+            transition: opacity 50ms ease-in-out;
+        }
+
+        &-exit-active {
+            opacity: 0;
+        }
+
+        &-exit-done {
+            opacity: 0;
+        }
+    }
 }

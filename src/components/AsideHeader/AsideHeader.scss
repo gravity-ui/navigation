@@ -30,6 +30,7 @@ $block: '.#{variables.$ns}aside-header';
         width: inherit;
         display: flex;
         flex-direction: column;
+        transition: width 150ms ease-in-out;
         background-color: var(
             --gn-aside-header-expanded-background-color,
             var(--gn-aside-header-background-color, var(--_--background-color))

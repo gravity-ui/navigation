@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {Icon} from '@gravity-ui/uikit';
+import {CSSTransition} from 'react-transition-group';
 
 import {LogoProps} from '../types';
 import {block} from '../utils/cn';
@@ -69,7 +70,10 @@ export const Logo: React.FC<
     const button = (
         <Button {...buttonProps} className={b('btn-logo', buttonClassName)} onClick={onClick}>
             <span className={b('logo-icon-place', iconPlaceClassName)}>{buttonIcon}</span>
-            {!compact && logo}
+
+            <CSSTransition in={!compact} timeout={150} classNames={b('transition')}>
+                {logo}
+            </CSSTransition>
         </Button>
     );
 

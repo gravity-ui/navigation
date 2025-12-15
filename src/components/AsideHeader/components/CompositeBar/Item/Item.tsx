@@ -2,6 +2,7 @@ import React from 'react';
 
 import {Pin, PinFill} from '@gravity-ui/icons';
 import {Button, Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
+import {CSSTransition} from 'react-transition-group';
 
 import {AsideHeaderItem} from 'src/components/AsideHeader/types';
 
@@ -137,12 +138,14 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                         {makeIconNode(iconEl)}
                     </div>
 
-                    <div
-                        className={b('title')}
-                        title={typeof title === 'string' ? title : undefined}
-                    >
-                        {titleEl}
-                    </div>
+                    <CSSTransition in={!compact} timeout={150} classNames={b('transition')}>
+                        <div
+                            className={b('title')}
+                            title={typeof title === 'string' ? title : undefined}
+                        >
+                            {titleEl}
+                        </div>
+                    </CSSTransition>
 
                     {editMode && !preventUserRemoving && onToggleVisibility ? (
                         <Button

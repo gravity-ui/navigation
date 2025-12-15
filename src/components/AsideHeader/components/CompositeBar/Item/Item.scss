@@ -85,6 +85,34 @@ $actionLeftRightMargin: 10px;
         margin: 0 var(--g-spacing-4) 0 var(--g-spacing-2);
     }
 
+    &__transition {
+        &-enter {
+            opacity: 0;
+        }
+
+        &-enter-active {
+            opacity: 0;
+        }
+
+        &-enter-done {
+            opacity: 1;
+            transition: opacity 50ms ease-in-out;
+        }
+
+        &-exit {
+            opacity: 1;
+            transition: opacity 50ms ease-in-out;
+        }
+
+        &-exit-active {
+            opacity: 0;
+        }
+
+        &-exit-done {
+            opacity: 0;
+        }
+    }
+
     &__visibility-button {
         margin-left: auto;
     }
