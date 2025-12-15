@@ -6,7 +6,7 @@ import {CSSTransition} from 'react-transition-group';
 
 import {AsideHeaderItem} from 'src/components/AsideHeader/types';
 
-import {ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
+import {ASIDE_HEADER_HOVER_DELAY, ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
 import {MakeItemParams} from '../../../../types';
 import {block} from '../../../../utils/cn';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
@@ -138,7 +138,11 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                         {makeIconNode(iconEl)}
                     </div>
 
-                    <CSSTransition in={!compact} timeout={150} classNames={b('transition')}>
+                    <CSSTransition
+                        in={!compact}
+                        timeout={ASIDE_HEADER_HOVER_DELAY}
+                        classNames={b('transition')}
+                    >
                         <div
                             className={b('title')}
                             title={typeof title === 'string' ? title : undefined}

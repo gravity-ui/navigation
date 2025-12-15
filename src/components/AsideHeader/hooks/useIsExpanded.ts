@@ -1,8 +1,8 @@
 import {useCallback, useEffect, useState} from 'react';
 
-import {useDelayedToggle} from './useDelayedToggle';
+import {ASIDE_HEADER_HOVER_DELAY} from 'src/components/constants';
 
-const HOVER_DELAY = 150;
+import {useDelayedToggle} from './useDelayedToggle';
 
 export interface UseIsExpandedResult {
     isExpanded: boolean;
@@ -26,8 +26,8 @@ export const useIsExpanded = (externalCompact: boolean): UseIsExpandedResult => 
 
     const shouldExpand = externalCompact && isMouseInside;
     const delayedShouldExpand = useDelayedToggle(shouldExpand, {
-        enableDelay: HOVER_DELAY,
-        disableDelay: HOVER_DELAY,
+        enableDelay: ASIDE_HEADER_HOVER_DELAY,
+        disableDelay: ASIDE_HEADER_HOVER_DELAY,
     });
 
     // Update isExpanded based on hover

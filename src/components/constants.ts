@@ -3,3 +3,4 @@ export const ASIDE_HEADER_COMPACT_WIDTH = 56;
 export const ASIDE_HEADER_EXPANDED_WIDTH = 236;
 export const ITEM_HEIGHT = 36;
 export const HEADER_DIVIDER_HEIGHT = 29;
+export const ASIDE_HEADER_HOVER_DELAY = 150;
