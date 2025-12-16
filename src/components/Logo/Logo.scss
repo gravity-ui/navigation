@@ -35,6 +35,12 @@ $block: '.#{variables.$ns}logo';
 
     &__logo {
         margin: 0 var(--g-spacing-4) 0 var(--g-spacing-2);
+
+        &_compact {
+            opacity: 0;
+        }
+
+        @include mixins.opacity-transition(50ms, ease-in-out);
     }
 
     &__logo-icon-place {
@@ -44,9 +50,5 @@ $block: '.#{variables.$ns}logo';
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-    }
-
-    &__transition-logo {
-        @include mixins.opacity-transition(50ms, ease-in-out);
     }
 }

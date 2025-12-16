@@ -1,7 +1,9 @@
 import React, {useRef} from 'react';
 
 import {setRef} from '@gravity-ui/uikit';
+import {CSSTransition} from 'react-transition-group';
 
+import {ASIDE_HEADER_HOVER_DELAY} from '../../constants';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {b} from '../utils';
 
@@ -45,50 +47,56 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
     return (
         <React.Fragment>
-            <div
-                className={b('aside', {'expanded-by-hover': isExpandedByHover}, className)}
-                style={{width: size}}
-                data-qa={qa}
-                onMouseEnter={onExpand}
-                onMouseLeave={onFold}
+            <CSSTransition
+                in={isExpandedByHover}
+                timeout={ASIDE_HEADER_HOVER_DELAY}
+                classNames={b('aside-transition')}
             >
-                <div className={b('aside-popup-anchor')} ref={asideRef} />
-                {customBackground && (
-                    <div className={b('aside-custom-background', customBackgroundClassName)}>
-                        {customBackground}
-                    </div>
-                )}
-
-                <div className={b('aside-content', {['with-decoration']: headerDecoration})}>
-                    <Header />
-
-                    {flatListItems?.length ? (
-                        <CompositeBar
-                            compositeId={MENU_ITEMS_COMPOSITE_ID}
-                            className={b('menu-items')}
-                            groupClassName={b('menu-items-group')}
-                            menuItemClassName={b('menu-item')}
-                            compact={!isExpanded}
-                            type="menu"
-                            items={flatListItems}
-                            onItemClick={onItemClick}
-                            onMoreClick={onMenuMoreClick}
-                            onToggleGroupCollapsed={onToggleGroupCollapsed}
-                            multipleTooltip={multipleTooltip}
-                        />
-                    ) : (
-                        <div className={b('menu-items')} />
+                <div
+                    className={b('aside', className)}
+                    style={{width: size}}
+                    data-qa={qa}
+                    onMouseEnter={onExpand}
+                    onMouseLeave={onFold}
+                >
+                    <div className={b('aside-popup-anchor')} ref={asideRef} />
+                    {customBackground && (
+                        <div className={b('aside-custom-background', customBackgroundClassName)}>
+                            {customBackground}
+                        </div>
                     )}
 
-                    <div className={b('footer')}>
-                        {renderFooter?.({
-                            size,
-                            compact: Boolean(!isExpanded),
-                            asideRef,
-                        })}
+                    <div className={b('aside-content', {['with-decoration']: headerDecoration})}>
+                        <Header />
+
+                        {flatListItems?.length ? (
+                            <CompositeBar
+                                compositeId={MENU_ITEMS_COMPOSITE_ID}
+                                className={b('menu-items')}
+                                groupClassName={b('menu-items-group')}
+                                menuItemClassName={b('menu-item')}
+                                compact={!isExpanded}
+                                type="menu"
+                                items={flatListItems}
+                                onItemClick={onItemClick}
+                                onMoreClick={onMenuMoreClick}
+                                onToggleGroupCollapsed={onToggleGroupCollapsed}
+                                multipleTooltip={multipleTooltip}
+                            />
+                        ) : (
+                            <div className={b('menu-items')} />
+                        )}
+
+                        <div className={b('footer')}>
+                            {renderFooter?.({
+                                size,
+                                compact: Boolean(!isExpanded),
+                                asideRef,
+                            })}
+                        </div>
                     </div>
                 </div>
-            </div>
+            </CSSTransition>
             <Panels />
         </React.Fragment>
     );
