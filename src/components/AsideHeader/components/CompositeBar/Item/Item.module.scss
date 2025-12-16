@@ -42,18 +42,18 @@ $actionLeftRightMargin: 10px;
             );
         }
 
-        .#{variables.$ns}footer-item &,
-        .#{variables.$ns}composite-bar-highlighted-item &,
-        .#{variables.$ns}composite-bar_subheader & {
+        :global(.#{variables.$ns}footer-item) &,
+        :global(.#{variables.$ns}composite-bar-highlighted-item) &,
+        :global(.#{variables.$ns}composite-bar_subheader) & {
             color: var(
                 --gn-aside-header-general-item-icon-color,
                 var(--_--item-general-icon-color)
             );
         }
 
-        .#{variables.$ns}footer-item#{$class}_current &,
-        .#{variables.$ns}composite-bar-highlighted-item#{$class}_current &,
-        .#{variables.$ns}composite-bar_subheader #{$class}_current & {
+        :global(.#{variables.$ns}footer-item) #{$class}_current &,
+        :global(.#{variables.$ns}composite-bar-highlighted-item) #{$class}_current &,
+        :global(.#{variables.$ns}composite-bar_subheader) #{$class}_current & {
             color: var(
                 --gn-aside-header-item-current-icon-color,
                 var(--gn-aside-header-general-item-icon-color, var(--_--item-general-icon-color))
@@ -196,7 +196,7 @@ $actionLeftRightMargin: 10px;
             width: var(--gn-composite-bar-item-action-size);
         }
 
-        &.#{variables.$ns}footer-item {
+        &:global(.#{variables.$ns}footer-item) {
             width: calc(100% - 2 * $actionLeftRightMargin);
         }
     }

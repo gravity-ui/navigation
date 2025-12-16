@@ -3,8 +3,6 @@
 $block: '.#{variables.$ns}composite-bar-highlighted-item';
 
 #{$block} {
-    $class: &;
-
     --_--background-color: var(--g-color-base-background);
     --_--item-icon-background-size: 38px;
     --_--item-background-color-hover: var(--g-color-base-selection-hover);

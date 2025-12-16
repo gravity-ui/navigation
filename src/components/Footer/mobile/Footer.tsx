@@ -59,8 +59,6 @@ export const MobileFooter: FC<FooterProps> = ({
         </Menu>
     );
 
-    const shouldRenderLogo = view !== 'clear' && Boolean(logo);
-
     return (
         <footer className={b({mobile: true, 'with-divider': withDivider, view}, className)}>
             <div className={b('menu', {measured})} ref={menuContainerRef}>
@@ -89,9 +87,9 @@ export const MobileFooter: FC<FooterProps> = ({
             </div>
             <div className={b('bottom-row')}>
                 <small className={b('copyright')}>{copyright}</small>
-                {shouldRenderLogo && (
+                {view !== 'clear' && logo && (
                     <div className={logoWrapperClassName}>
-                        <Logo {...logo!} />
+                        <Logo {...logo} />
                     </div>
                 )}
             </div>

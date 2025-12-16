@@ -1,4 +1,4 @@
-@use '~@gravity-ui/uikit/styles/mixins' as *;
+@use '~@gravity-ui/uikit/styles/mixins';
 @use '../../variables';
 
 $block: '.#{variables.$ns}mobile-header-burger';

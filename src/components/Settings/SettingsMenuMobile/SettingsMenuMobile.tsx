@@ -21,11 +21,11 @@ export const SettingsMenuMobile = ({
     const ref = React.useRef<HTMLDivElement>(null);
 
     const tabItems = React.useMemo(() => {
-        const tabItems: LegacyTabsItemProps[] = [];
+        const result: LegacyTabsItemProps[] = [];
 
         items.forEach((firstLevelItem) => {
             if ('groupTitle' in firstLevelItem) {
-                tabItems.push(
+                result.push(
                     ...firstLevelItem.items.map(({id, title, disabled, withBadge}) => ({
                         id,
                         title,
@@ -35,10 +35,10 @@ export const SettingsMenuMobile = ({
                 );
             } else {
                 const {id, title, disabled, withBadge} = firstLevelItem;
-                tabItems.push({id, title, disabled, className: b('item', {badge: withBadge})});
+                result.push({id, title, disabled, className: b('item', {badge: withBadge})});
             }
         });
-        return tabItems;
+        return result;
     }, [items]);
 
     const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {

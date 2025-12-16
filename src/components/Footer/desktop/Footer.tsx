@@ -57,7 +57,6 @@ export const Footer: FC<FooterProps> = ({
         [hiddenItems],
     );
 
-    const shouldRenderLogo = view !== 'clear' && Boolean(logo);
     const shouldRenderMenu = (menuItems?.length ?? 0) > 0;
 
     return (
@@ -88,9 +87,9 @@ export const Footer: FC<FooterProps> = ({
             )}
             <div className={b('right')}>
                 <small className={b('copyright', {small: !menuItems?.length})}>{copyright}</small>
-                {shouldRenderLogo && (
+                {view !== 'clear' && logo && (
                     <div className={logoWrapperClassName}>
-                        <Logo {...logo!} />
+                        <Logo {...logo} />
                     </div>
                 )}
             </div>
