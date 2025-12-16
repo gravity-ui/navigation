@@ -3,7 +3,7 @@ import React, {useRef} from 'react';
 import {setRef} from '@gravity-ui/uikit';
 import {CSSTransition} from 'react-transition-group';
 
-import {ASIDE_HEADER_HOVER_DELAY} from '../../constants';
+import {ASIDE_HEADER_EXPAND_TRANSITION_DELAY} from '../../constants';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {b} from '../utils';
 
@@ -44,12 +44,11 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
     }, [ref]);
 
     const isExpandedByHover = compact && isExpanded;
-
     return (
         <React.Fragment>
             <CSSTransition
                 in={isExpandedByHover}
-                timeout={ASIDE_HEADER_HOVER_DELAY}
+                timeout={ASIDE_HEADER_EXPAND_TRANSITION_DELAY}
                 classNames={b('aside-transition')}
             >
                 <div
