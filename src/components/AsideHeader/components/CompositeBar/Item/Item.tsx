@@ -106,6 +106,17 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     }
 
     const makeIconNode = (iconEl: React.ReactNode): React.ReactNode => {
+        // Ensure icon has the b('icon') class for proper styling
+        let processedIconEl = iconEl;
+        if (React.isValidElement(iconEl)) {
+            const existingClassName = (iconEl.props as {className?: string}).className || '';
+            if (!existingClassName.includes(b('icon'))) {
+                processedIconEl = React.cloneElement(iconEl, {
+                    className: `${existingClassName} ${b('icon')}`.trim(),
+                } as React.Attributes);
+            }
+        }
+
         return compact ? (
             <ActionTooltip
                 title=""
@@ -119,11 +130,11 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     onMouseLeave={() => onMouseLeave?.()}
                     className={b('btn-icon')}
                 >
-                    {iconEl}
+                    {processedIconEl}
                 </div>
             </ActionTooltip>
         ) : (
-            iconEl
+            processedIconEl
         );
     };
 
