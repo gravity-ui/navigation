@@ -44,7 +44,8 @@ fi
 COMMAND="$1"
 shift
 if [[ $# -gt 0 ]]; then
-    COMMAND="$COMMAND $@"
+    # Add '--' to properly forward arguments through npm scripts chain
+    COMMAND="$COMMAND -- $@"
 fi
 
 run_command "$COMMAND"
