@@ -10,6 +10,8 @@ export interface UseIsExpandedResult {
     onFold: () => void;
 }
 
+const EXPAND_DELAY = 250;
+
 export const useIsExpanded = (externalCompact: boolean): UseIsExpandedResult => {
     const [isExpanded, setIsExpanded] = useState(!externalCompact);
     const [isMouseInside, setIsMouseInside] = useState(false);
@@ -26,7 +28,7 @@ export const useIsExpanded = (externalCompact: boolean): UseIsExpandedResult => 
 
     const shouldExpand = externalCompact && isMouseInside;
     const delayedShouldExpand = useDelayedToggle(shouldExpand, {
-        enableDelay: ASIDE_HEADER_HOVER_DELAY,
+        enableDelay: EXPAND_DELAY,
         disableDelay: ASIDE_HEADER_HOVER_DELAY,
     });
 
