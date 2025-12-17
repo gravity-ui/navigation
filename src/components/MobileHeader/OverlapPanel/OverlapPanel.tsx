@@ -1,9 +1,8 @@
 import React from 'react';
 
 import {ArrowLeft as CloseIcon} from '@gravity-ui/icons';
-import {Button, Icon, IconProps, Text} from '@gravity-ui/uikit';
+import {Button, Drawer, Icon, IconProps, Text} from '@gravity-ui/uikit';
 
-import {Drawer, DrawerItem} from '../../Drawer/Drawer';
 import {createBlock} from '../../utils/cn';
 import {MOBILE_HEADER_ICON_SIZE} from '../constants';
 import i18n from '../i18n';
@@ -41,84 +40,53 @@ export const OverlapPanel = ({
     topOffset,
 }: OverlapPanelProps) => {
     const topOffsetValue = typeof topOffset === 'number' ? `${topOffset}px` : topOffset;
-    const [itemPosition, setItemPosition] = React.useState<React.CSSProperties['position']>();
 
     const drawerStyle = React.useMemo(
         () => ({top: `calc(${topOffsetValue} + var(--gn-top-alert-height, 0px))`}),
         [topOffsetValue],
     );
 
-    const drawerItemStyle = React.useMemo(
-        () =>
-            itemPosition === 'absolute'
-                ? {}
-                : {top: `calc(${topOffsetValue} + var(--gn-top-alert-height, 0px))`},
-        [topOffsetValue, itemPosition],
-    );
-
-    const itemRef = React.useRef<HTMLDivElement>(null);
-
-    // It is necessary to determine the position of the DrawerItem in order to correctly set the top offset
-    React.useLayoutEffect(() => {
-        if (itemRef.current) {
-            const style = getComputedStyle(itemRef.current);
-            const position = style.position as React.CSSProperties['position'];
-            setItemPosition(position);
-        }
-    }, []);
-
     return (
         <Drawer
             className={b('', {action: Boolean(action)}, className)}
-            onVeilClick={onClose}
-            onEscape={onClose}
+            open={visible}
+            onOpenChange={(open) => !open && onClose()}
             style={drawerStyle}
+            contentClassName={b('drawer-item')}
         >
-            <DrawerItem
-                id="overlap"
-                ref={itemRef}
-                visible={visible}
-                className={b('drawer-item')}
-                style={drawerItemStyle}
-            >
-                <div className={b('header')}>
+            <div className={b('header')}>
+                <Button
+                    size="l"
+                    view="flat"
+                    className={b('close')}
+                    onClick={onClose}
+                    aria-label={closeTitle}
+                >
+                    <Icon className={b('icon')} data={CloseIcon} size={MOBILE_HEADER_ICON_SIZE} />
+                </Button>
+                <Text
+                    whiteSpace="nowrap"
+                    ellipsis
+                    variant={'subheader-2'}
+                    className={b('title')}
+                    as={title ? ('h2' as const) : undefined}
+                >
+                    {title}
+                </Text>
+                {action && (
                     <Button
                         size="l"
+                        type="button"
                         view="flat"
-                        className={b('close')}
-                        onClick={onClose}
-                        aria-label={closeTitle}
+                        onClick={action.onClick}
+                        className={b('action')}
+                        aria-label={action.title}
                     >
-                        <Icon
-                            className={b('icon')}
-                            data={CloseIcon}
-                            size={MOBILE_HEADER_ICON_SIZE}
-                        />
+                        <Icon data={action.icon} size={MOBILE_HEADER_ICON_SIZE} />
                     </Button>
-                    <Text
-                        whiteSpace="nowrap"
-                        ellipsis
-                        variant={'subheader-2'}
-                        className={b('title')}
-                        as={title ? ('h2' as const) : undefined}
-                    >
-                        {title}
-                    </Text>
-                    {action && (
-                        <Button
-                            size="l"
-                            type="button"
-                            view="flat"
-                            onClick={action.onClick}
-                            className={b('action')}
-                            aria-label={action.title}
-                        >
-                            <Icon data={action.icon} size={MOBILE_HEADER_ICON_SIZE} />
-                        </Button>
-                    )}
-                </div>
-                <div className={b('content')}>{renderContent()}</div>
-            </DrawerItem>
+                )}
+            </div>
+            <div className={b('content')}>{renderContent()}</div>
         </Drawer>
     );
 };

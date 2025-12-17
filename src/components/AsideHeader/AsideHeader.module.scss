@@ -204,19 +204,22 @@ $block: '.#{variables.$ns}aside-header';
     }
 
     &__panels {
-        --gn-drawer-z-index: var(--gn-aside-header-panel-z-index, 98);
+        z-index: var(--gn-aside-header-panel-z-index, 98);
 
-        position: fixed;
-        inset: var(--gn-top-alert-height, 0) 0 0;
-        overflow: auto;
-        display: flex;
-        flex-direction: column;
-        max-height: calc(100vh - var(--gn-top-alert-height, 0));
+        &,
+        &:global(.g-drawer) {
+            position: fixed;
+            inset: var(--gn-top-alert-height, 0) 0 0;
+        }
     }
 
     &__panel {
-        flex-grow: 1;
-        height: auto;
+        &,
+        &:global(.g-drawer__item) {
+            top: var(--gn-top-alert-height, 0);
+            bottom: 0;
+            height: auto;
+        }
     }
 
     &__pane-container {

@@ -1,5 +1,4 @@
 export * from './AsideHeader';
-export * from './Drawer';
 export * from './ActionBar';
 export * from './Title';
 export * from './HotkeysPanel';
