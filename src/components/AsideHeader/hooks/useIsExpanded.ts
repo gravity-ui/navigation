@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useState} from 'react';
 
-import {ASIDE_HEADER_EXPAND_TRANSITION_DELAY} from '../../constants';
+import {ASIDE_HEADER_EXPAND_DELAY, ASIDE_HEADER_EXPAND_TRANSITION_DELAY} from '../../constants';
 
 import {useDelayedToggle} from './useDelayedToggle';
 
@@ -9,8 +9,6 @@ export interface UseIsExpandedResult {
     onExpand: () => void;
     onFold: () => void;
 }
-
-const ASIDE_HEADER_EXPAND_DELAY = 250;
 
 export const useIsExpanded = (externalCompact: boolean): UseIsExpandedResult => {
     const [isExpanded, setIsExpanded] = useState(!externalCompact);
