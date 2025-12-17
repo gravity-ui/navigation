@@ -1,4 +1,5 @@
 @use '../variables';
+@use '../../../styles/mixins';
 
 $block: '.#{variables.$ns}logo';
 
@@ -34,6 +35,12 @@ $block: '.#{variables.$ns}logo';
 
     &__logo {
         margin: 0 var(--g-spacing-4) 0 var(--g-spacing-2);
+
+        &_compact {
+            opacity: 0;
+        }
+
+        @include mixins.opacity-transition(50ms, ease-in-out);
     }
 
     &__logo-icon-place {

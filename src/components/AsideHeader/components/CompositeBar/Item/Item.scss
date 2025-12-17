@@ -85,6 +85,10 @@ $actionLeftRightMargin: 10px;
         margin: 0 var(--g-spacing-4) 0 var(--g-spacing-2);
     }
 
+    &__transition-title {
+        @include mixins.opacity-transition(50ms, ease-in-out);
+    }
+
     &__visibility-button {
         margin-left: auto;
     }

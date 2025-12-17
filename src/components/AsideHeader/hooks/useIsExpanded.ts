@@ -1,8 +1,8 @@
 import {useCallback, useEffect, useState} from 'react';
 
-import {useDelayedToggle} from './useDelayedToggle';
+import {ASIDE_HEADER_EXPAND_DELAY, ASIDE_HEADER_EXPAND_TRANSITION_DELAY} from '../../constants';
 
-const HOVER_DELAY = 150;
+import {useDelayedToggle} from './useDelayedToggle';
 
 export interface UseIsExpandedResult {
     isExpanded: boolean;
@@ -24,10 +24,9 @@ export const useIsExpanded = (externalCompact: boolean): UseIsExpandedResult => 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [externalCompact]);
 
-    const shouldExpand = externalCompact && isMouseInside;
-    const delayedShouldExpand = useDelayedToggle(shouldExpand, {
-        enableDelay: HOVER_DELAY,
-        disableDelay: HOVER_DELAY,
+    const delayedShouldExpand = useDelayedToggle(isMouseInside, {
+        enableDelay: ASIDE_HEADER_EXPAND_DELAY,
+        disableDelay: ASIDE_HEADER_EXPAND_TRANSITION_DELAY,
     });
 
     // Update isExpanded based on hover
