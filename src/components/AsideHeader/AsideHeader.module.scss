@@ -293,4 +293,8 @@ $block: '.#{variables.$ns}aside-header';
             margin-right: auto;
         }
     }
+
+    &__panel-content {
+        height: 100%;
+    }
 }
