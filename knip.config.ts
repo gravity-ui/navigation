@@ -19,8 +19,10 @@ const config: KnipConfig = {
     ignoreDependencies: [
         // Documentation tools
         '@doc-tools/transform',
-        // Sass is used indirectly by rollup-plugin-postcss and sass-loader for SCSS compilation
-        'sass',
+        // Webpack loaders used by Storybook for SCSS compilation
+        'css-loader',
+        'sass-loader',
+        'style-loader',
     ],
     ignoreBinaries: [
         // These are false positives from GitHub Actions workflow
