@@ -43,7 +43,8 @@ $block: '.#{variables.$ns}hotkeys-panel';
         padding: var(--g-spacing-2) 0;
         margin: 0 var(--hotkeys-panel-horizontal-padding);
 
-        &.g-list__item_active {
+        &:global(.g-list__item_active),
+        &:hover {
             background: inherit;
         }
 

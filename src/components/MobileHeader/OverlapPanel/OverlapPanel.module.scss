@@ -9,14 +9,21 @@ $block: '.#{variables.$ns}mobile-overlap-panel';
     inset: 0;
 
     &__drawer-item {
-        width: 100%;
-        max-width: 100%;
         flex-direction: column;
         height: 100%;
         display: flex;
 
         box-sizing: border-box;
         max-height: 100%;
+
+        /* TODO: remove overrides after Drawer fix in uikit */
+        /* stylelint-disable declaration-no-important */
+        /* Override uikit Drawer inline styles for full-width panel */
+        &:global(.g-drawer__item) {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        /* stylelint-enable declaration-no-important */
     }
 
     &_action {

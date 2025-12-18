@@ -5,7 +5,6 @@ import {
     Button,
     Checkbox,
     HelpMark,
-    Radio,
     SegmentedRadioGroup,
     Select,
     Switch,
@@ -176,8 +175,12 @@ export const SettingsComponent = React.memo(
                                         handleChange('vcs', event.target.value);
                                     }}
                                 >
-                                    <Radio value="arc">{'Arc'}</Radio>
-                                    <Radio value="svn">{'SVN'}</Radio>
+                                    <SegmentedRadioGroup.Option value="arc">
+                                        Arc
+                                    </SegmentedRadioGroup.Option>
+                                    <SegmentedRadioGroup.Option value="svn">
+                                        SVN
+                                    </SegmentedRadioGroup.Option>
                                 </SegmentedRadioGroup>
                             </Settings.Item>
                             <Settings.Item
@@ -231,10 +234,18 @@ export const SettingsComponent = React.memo(
                                         handleChange('arcanumTheme', event.target.value);
                                     }}
                                 >
-                                    <Radio value="light">{'Light'}</Radio>
-                                    <Radio value="dark">{'Dark'}</Radio>
-                                    <Radio value="special">{'Special'}</Radio>
-                                    <Radio value="general">{'Inherit from General'}</Radio>
+                                    <SegmentedRadioGroup.Option value="light">
+                                        Light
+                                    </SegmentedRadioGroup.Option>
+                                    <SegmentedRadioGroup.Option value="dark">
+                                        Dark
+                                    </SegmentedRadioGroup.Option>
+                                    <SegmentedRadioGroup.Option value="special">
+                                        Special
+                                    </SegmentedRadioGroup.Option>
+                                    <SegmentedRadioGroup.Option value="general">
+                                        Inherit from General
+                                    </SegmentedRadioGroup.Option>
                                 </SegmentedRadioGroup>
                             </Settings.Item>
                             <Settings.Item title="Code theme">
@@ -297,8 +308,12 @@ function renderGeneralSettings(
                                 handleChange('lang', event.target.value);
                             }}
                         >
-                            <Radio value="ru">{'Русский'}</Radio>
-                            <Radio value="en">{'English'}</Radio>
+                            <SegmentedRadioGroup.Option value="ru">
+                                Русский
+                            </SegmentedRadioGroup.Option>
+                            <SegmentedRadioGroup.Option value="en">
+                                English
+                            </SegmentedRadioGroup.Option>
                         </SegmentedRadioGroup>
                     </Settings.Item>
                     <Settings.Item title="Theme">
@@ -308,8 +323,12 @@ function renderGeneralSettings(
                                 handleChange('theme', event.target.value);
                             }}
                         >
-                            <Radio value="light">{'Light'}</Radio>
-                            <Radio value="dark">{'Dark'}</Radio>
+                            <SegmentedRadioGroup.Option value="light">
+                                Light
+                            </SegmentedRadioGroup.Option>
+                            <SegmentedRadioGroup.Option value="dark">
+                                Dark
+                            </SegmentedRadioGroup.Option>
                         </SegmentedRadioGroup>
                     </Settings.Item>
                 </Settings.Section>
