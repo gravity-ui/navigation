@@ -3,12 +3,13 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Portal} from '@gravity-ui/uikit';
 import debounceFn from 'lodash/debounce';
 
-import {block} from '../../../../utils/cn';
+import {block, createBlock} from '../../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../../AsideHeaderContext';
 
-import './HighlightedItem.scss';
+import styles from './HighlightedItem.module.scss';
 
-const b = block('composite-bar-highlighted-item');
+const b = createBlock('composite-bar-highlighted-item', styles);
+const bGlobal = block('composite-bar-highlighted-item');
 
 interface ItemInnerProps {
     iconRef: React.RefObject<HTMLDivElement>;
@@ -85,7 +86,7 @@ export const HighlightedItem: React.FC<ItemInnerProps> = ({
     return (
         <Portal>
             <div
-                className={b()}
+                className={`${b()} ${bGlobal()}`}
                 style={position}
                 onClick={onClick}
                 onClickCapture={onClickCapture}

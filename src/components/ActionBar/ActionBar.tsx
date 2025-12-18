@@ -2,14 +2,14 @@ import React, {PropsWithChildren} from 'react';
 
 import {DOMProps, QAProps} from '@gravity-ui/uikit';
 
-import {block} from '../utils/cn';
+import {createBlock} from '../utils/cn';
 
 import {ActionBarGroup} from './Group/ActionBarGroup';
 import {ActionBarItem} from './Item/ActionBarItem';
 import {ActionBarSection} from './Section/ActionBarSection';
 import {ActionBarSeparator} from './Separator/ActionBarSeparator';
 
-import './ActionBar.scss';
+import styles from './ActionBar.module.scss';
 
 export type Props = DOMProps &
     QAProps &
@@ -17,7 +17,7 @@ export type Props = DOMProps &
         'aria-label'?: string;
     }>;
 
-const b = block('action-bar');
+const b = createBlock('action-bar', styles);
 
 const ActionBar = ({children, className, style, qa, 'aria-label': ariaLabel}: Props) => {
     return (

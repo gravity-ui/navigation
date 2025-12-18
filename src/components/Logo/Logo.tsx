@@ -3,11 +3,11 @@ import React from 'react';
 import {Icon} from '@gravity-ui/uikit';
 
 import {LogoProps} from '../types';
-import {block} from '../utils/cn';
+import {createBlock} from '../utils/cn';
 
-import './Logo.scss';
+import styles from './Logo.module.scss';
 
-const b = block('logo');
+const b = createBlock('logo', styles);
 
 export const Logo: React.FC<
     LogoProps & {compact?: boolean; buttonClassName?: string; iconPlaceClassName?: string}

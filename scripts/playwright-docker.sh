@@ -40,4 +40,12 @@ if [[ ! -d "$NODE_MODULES_CACHE_DIR" ]]; then
     run_command 'npm ci'
 fi
 
-run_command "$1"
+# Combine all arguments into a single command
+COMMAND="$1"
+shift
+if [[ $# -gt 0 ]]; then
+    # Add '--' to properly forward arguments through npm scripts chain
+    COMMAND="$COMMAND -- $@"
+fi
+
+run_command "$COMMAND"
