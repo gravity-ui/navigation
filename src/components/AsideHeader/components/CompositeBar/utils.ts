@@ -26,7 +26,7 @@ export function getSelectedItemIndex(compositeItems: AsideHeaderItem[]) {
     return index === -1 ? undefined : index;
 }
 
-export function getPinnedItems(compositeItems: AsideHeaderItem[]) {
+function getPinnedItems(compositeItems: AsideHeaderItem[]) {
     const pinnedItems: AsideHeaderItem[] = [];
     for (const compositeItem of compositeItems) {
         if (compositeItem.pinned) {
