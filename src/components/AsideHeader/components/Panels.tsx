@@ -1,6 +1,7 @@
 import React from 'react';
 
-import {Drawer, DrawerItem} from '../../Drawer/Drawer';
+import {Drawer} from '@gravity-ui/uikit';
+
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {b} from '../utils';
 
@@ -8,15 +9,19 @@ export const Panels = () => {
     const {panelItems, onClosePanel, size} = useAsideHeaderInnerContext();
 
     return panelItems ? (
-        <Drawer
-            className={b('panels')}
-            onVeilClick={onClosePanel}
-            onEscape={onClosePanel}
-            style={{left: size}}
-        >
+        <React.Fragment>
             {panelItems.map((item) => (
-                <DrawerItem key={item.id} className={b('panel')} {...item} />
+                <Drawer
+                    key={item.id}
+                    className={b('panels')}
+                    open={item.visible}
+                    onOpenChange={(open) => !open && onClosePanel?.()}
+                    style={{left: size}}
+                    contentClassName={b('panel', item.className)}
+                >
+                    {item.content}
+                </Drawer>
             ))}
-        </Drawer>
+        </React.Fragment>
     ) : null;
 };

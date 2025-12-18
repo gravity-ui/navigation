@@ -1,19 +1,18 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import type {ReactNode} from 'react';
 
-import {HelpMark, Hotkey, List, Text, TextInput} from '@gravity-ui/uikit';
+import {Drawer, HelpMark, Hotkey, List, Text, TextInput} from '@gravity-ui/uikit';
 import type {ListProps} from '@gravity-ui/uikit';
 
-import {Drawer, DrawerItem} from '../Drawer/Drawer';
-import {block} from '../utils/cn';
+import {createBlock} from '../utils/cn';
 
 import type {HotkeysGroup, HotkeysListItem} from './types';
 import {filterHotkeys} from './utils/filterHotkeys';
 import {flattenHotkeyGroups} from './utils/flattenHotkeyGroups';
 
-import './HotkeysPanel.scss';
+import styles from './HotkeysPanel.module.scss';
 
-const b = block('hotkeys-panel');
+const b = createBlock('hotkeys-panel', styles);
 
 export type HotkeysPanelProps<T> = {
     hotkeys: HotkeysGroup<T>[];
@@ -138,20 +137,15 @@ export function HotkeysPanel<T = {}>({
     return (
         <Drawer
             className={b(null, className)}
-            onVeilClick={onClose}
-            onEscape={onClose}
+            open={visible}
+            onOpenChange={(open) => !open && onClose?.()}
             style={{
                 left: leftOffset,
                 top: topOffset,
             }}
+            contentClassName={b('drawer-item', drawerItemClassName)}
         >
-            <DrawerItem
-                id="hotkeys"
-                visible={visible}
-                className={b('drawer-item', drawerItemClassName)}
-            >
-                {drawerItemContent}
-            </DrawerItem>
+            {drawerItemContent}
         </Drawer>
     );
 }

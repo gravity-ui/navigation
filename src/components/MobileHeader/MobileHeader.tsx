@@ -1,11 +1,12 @@
 import React, {Suspense, useCallback, useEffect, useMemo, useState} from 'react';
 
+import {Drawer} from '@gravity-ui/uikit';
+
 import {useForwardRef} from '../../hooks/useForwardRef';
 import {Content, RenderContentType} from '../Content';
-import {Drawer, DrawerItem, DrawerItemProps} from '../Drawer/Drawer';
 import {MobileLogo} from '../MobileLogo';
 import {LogoProps, TopAlertProps} from '../types';
-import {block} from '../utils/cn';
+import {createBlock} from '../utils/cn';
 
 import {Burger} from './Burger/Burger';
 import {BurgerMenu, BurgerMenuInnerProps} from './BurgerMenu/BurgerMenu';
@@ -23,15 +24,15 @@ import {
 import i18n from './i18n';
 import {MobileHeaderEvent, MobileHeaderEventOptions, MobileMenuItem} from './types';
 
-import './MobileHeader.scss';
+import styles from './MobileHeader.module.scss';
 
 const TopAlert = React.lazy(() =>
     import('../TopAlert').then((module) => ({default: module.TopAlert})),
 );
 
-const b = block('mobile-header');
+const b = createBlock('mobile-header', styles);
 
-type PanelName = DrawerItemProps['id'] | null;
+type PanelName = string | null;
 
 interface BurgerMenuProps extends Omit<BurgerMenuInnerProps, 'renderFooter'> {
     renderFooter?: (data: {size: number; isCompact: boolean}) => React.ReactNode;
@@ -39,7 +40,11 @@ interface BurgerMenuProps extends Omit<BurgerMenuInnerProps, 'renderFooter'> {
 
 type OverlapPanelProps = Omit<CommonOverlapPanelProps, 'onClose' | 'visible'>;
 
-interface PanelItem extends Omit<DrawerItemProps, 'visible'> {}
+interface PanelItem {
+    id: string;
+    content?: React.ReactNode;
+    className?: string;
+}
 
 export interface MobileHeaderProps {
     logo: LogoProps;
@@ -272,6 +277,8 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
             onOverlapClose,
         ]);
 
+        const allPanelItems = [burgerPanelItem, ...panelItems];
+
         return (
             <div className={b({compact}, className)} ref={targetRef}>
                 <div className={b('header-container')}>
@@ -294,21 +301,20 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                     </header>
                 </div>
 
-                <Drawer
-                    className={b('panels')}
-                    onVeilClick={onCloseDrawer}
-                    onEscape={onCloseDrawer}
-                    style={{top: `calc(${size}px + var(--gn-top-alert-height, 0px))`}}
-                >
-                    {[burgerPanelItem, ...panelItems].map((item) => (
-                        <DrawerItem
-                            {...item}
-                            key={item.id}
-                            visible={visiblePanel === item.id}
-                            className={b('panel-item', item.className)}
-                        />
-                    ))}
-                </Drawer>
+                {allPanelItems.map((item) => (
+                    <Drawer
+                        key={item.id}
+                        className={b('panels')}
+                        open={visiblePanel === item.id}
+                        onOpenChange={(open) => !open && onCloseDrawer()}
+                        style={{top: `calc(${size}px + var(--gn-top-alert-height, 0px))`}}
+                        contentClassName={b('panel-item', item.className)}
+                        size={320}
+                        disablePortal
+                    >
+                        {item.content}
+                    </Drawer>
+                ))}
                 {overlapPanel && (
                     <OverlapPanel
                         topOffset={size}

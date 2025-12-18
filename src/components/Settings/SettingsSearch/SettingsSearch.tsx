@@ -3,12 +3,12 @@ import React, {useEffect} from 'react';
 import {TextInput, TextInputSize} from '@gravity-ui/uikit';
 import debounceFn from 'lodash/debounce';
 
-import {block} from '../../utils/cn';
+import {cn} from '../../utils/cn';
 import {SettingsSelection} from '../Selection/types';
 import {useStableCallback} from '../helpers';
 import i18n from '../i18n';
 
-const b = block('settings-search');
+const b = cn('settings-search');
 
 interface SettingsSearchProps {
     className?: string;

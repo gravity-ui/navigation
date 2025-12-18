@@ -29,8 +29,6 @@ import type {
     SettingsSectionProps,
 } from './types';
 
-import './Settings.scss';
-
 export function Settings({
     loading,
     renderLoading,
