@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.0.0](https://github.com/gravity-ui/navigation/compare/v3.11.0...v4.0.0) (2025-12-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* migration to css modules
+
+### Features
+
+* **codemod:** codemods for migration to v4 ([#471](https://github.com/gravity-ui/navigation/issues/471)) ([2ba079a](https://github.com/gravity-ui/navigation/commit/2ba079ab90081a67ffbbf947b0f64f6ade00a98c))
+* migration to css modules ([52a414e](https://github.com/gravity-ui/navigation/commit/52a414eb508094d44e7662e19aa95d284bf47f73))
+* **PageLayout:** support function type for topAlert prop ([#491](https://github.com/gravity-ui/navigation/issues/491)) ([e26a6ae](https://github.com/gravity-ui/navigation/commit/e26a6ae276b331709dc671742be2c5bc56abec34))
+* support item.itemWrapper in AllPagesPannel ([#496](https://github.com/gravity-ui/navigation/issues/496)) ([a072b05](https://github.com/gravity-ui/navigation/commit/a072b05d65a5c0bd7ebccd2ebeac7ba0d2c7fa21))
+
 ## [4.0.0](https://github.com/gravity-ui/navigation/compare/v3.7.1...v4.0.0) (2025-11-21)
 
 ### ⚠ BREAKING CHANGES
