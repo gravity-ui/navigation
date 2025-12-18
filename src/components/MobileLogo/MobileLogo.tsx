@@ -3,11 +3,11 @@ import React from 'react';
 import {Icon} from '@gravity-ui/uikit';
 
 import {LogoProps} from '../types';
-import {block} from '../utils/cn';
+import {createBlock} from '../utils/cn';
 
-import './MobileLogo.scss';
+import styles from './MobileLogo.module.scss';
 
-const b = block('mobile-logo');
+const b = createBlock('mobile-logo', styles);
 
 export interface MobileLogoProps extends LogoProps {
     compact: boolean;

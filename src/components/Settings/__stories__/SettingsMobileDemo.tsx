@@ -1,7 +1,7 @@
 import React, {useReducer} from 'react';
 
 import {Gear} from '@gravity-ui/icons';
-import {Button, Radio, SegmentedRadioGroup, Select, Switch, useUniqId} from '@gravity-ui/uikit';
+import {Button, SegmentedRadioGroup, Select, Switch, useUniqId} from '@gravity-ui/uikit';
 
 import {Settings} from '../../..';
 import {cn} from '../../utils/cn';
@@ -132,8 +132,12 @@ export const SettingsMobileComponent = React.memo(
                                     }}
                                     size="xl"
                                 >
-                                    <Radio value="arc">{'Arc'}</Radio>
-                                    <Radio value="svn">{'SVN'}</Radio>
+                                    <SegmentedRadioGroup.Option value="arc">
+                                        Arc
+                                    </SegmentedRadioGroup.Option>
+                                    <SegmentedRadioGroup.Option value="svn">
+                                        SVN
+                                    </SegmentedRadioGroup.Option>
                                 </SegmentedRadioGroup>
                             </Settings.Item>
                             <Settings.Item
@@ -209,8 +213,12 @@ export const SettingsMobileComponent = React.memo(
                                     }}
                                     size="xl"
                                 >
-                                    <Radio value="default">{'Default'}</Radio>
-                                    <Radio value="exta">{'Extra'}</Radio>
+                                    <SegmentedRadioGroup.Option value="default">
+                                        Default
+                                    </SegmentedRadioGroup.Option>
+                                    <SegmentedRadioGroup.Option value="exta">
+                                        Extra
+                                    </SegmentedRadioGroup.Option>
                                 </SegmentedRadioGroup>
                             </Settings.Item>
                         </Settings.Section>
@@ -249,8 +257,12 @@ function renderGeneralSettings(
                             }}
                             size="xl"
                         >
-                            <Radio value="ru">{'Русский'}</Radio>
-                            <Radio value="en">{'English'}</Radio>
+                            <SegmentedRadioGroup.Option value="ru">
+                                Русский
+                            </SegmentedRadioGroup.Option>
+                            <SegmentedRadioGroup.Option value="en">
+                                English
+                            </SegmentedRadioGroup.Option>
                         </SegmentedRadioGroup>
                     </Settings.Item>
                     <Settings.Item title="Theme">
@@ -261,8 +273,12 @@ function renderGeneralSettings(
                             }}
                             size="xl"
                         >
-                            <Radio value="light">{'Light'}</Radio>
-                            <Radio value="dark">{'Dark'}</Radio>
+                            <SegmentedRadioGroup.Option value="light">
+                                Light
+                            </SegmentedRadioGroup.Option>
+                            <SegmentedRadioGroup.Option value="dark">
+                                Dark
+                            </SegmentedRadioGroup.Option>
                         </SegmentedRadioGroup>
                     </Settings.Item>
                 </Settings.Section>

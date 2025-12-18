@@ -6,7 +6,7 @@ import {AsideHeaderItem} from 'src/components/AsideHeader/types';
 
 import {ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
 import {MakeItemParams} from '../../../../types';
-import {block} from '../../../../utils/cn';
+import {createBlock} from '../../../../utils/cn';
 import {useAsideHeaderContext} from '../../../AsideHeaderContext';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {
@@ -17,9 +17,9 @@ import {
 } from '../constants';
 import {getSelectedItemIndex} from '../utils';
 
-import './Item.scss';
+import styles from './Item.module.scss';
 
-const b = block('composite-bar-item');
+const b = createBlock('composite-bar-item', styles);
 
 export interface ItemProps extends AsideHeaderItem {}
 
@@ -106,6 +106,17 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     }
 
     const makeIconNode = (iconEl: React.ReactNode): React.ReactNode => {
+        // Ensure icon has the b('icon') class for proper styling
+        let processedIconEl = iconEl;
+        if (React.isValidElement(iconEl)) {
+            const existingClassName = (iconEl.props as {className?: string}).className || '';
+            if (!existingClassName.includes(b('icon'))) {
+                processedIconEl = React.cloneElement(iconEl, {
+                    className: `${existingClassName} ${b('icon')}`.trim(),
+                } as React.Attributes);
+            }
+        }
+
         return compact ? (
             <ActionTooltip
                 title=""
@@ -119,11 +130,11 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     onMouseLeave={() => onMouseLeave?.()}
                     className={b('btn-icon')}
                 >
-                    {iconEl}
+                    {processedIconEl}
                 </div>
             </ActionTooltip>
         ) : (
-            iconEl
+            processedIconEl
         );
     };
 

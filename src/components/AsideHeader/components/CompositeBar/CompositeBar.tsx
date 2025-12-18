@@ -4,7 +4,7 @@ import {List} from '@gravity-ui/uikit';
 import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
 
 import {ASIDE_HEADER_COMPACT_WIDTH} from '../../../constants';
-import {block} from '../../../utils/cn';
+import {createBlock} from '../../../utils/cn';
 import {AsideHeaderItem} from '../../types';
 
 import {Item, ItemProps} from './Item/Item';
@@ -19,9 +19,9 @@ import {
     getSelectedItemIndex,
 } from './utils';
 
-import './CompositeBar.scss';
+import styles from './CompositeBar.module.scss';
 
-const b = block('composite-bar');
+const b = createBlock('composite-bar', styles);
 
 export type CompositeBarProps = {
     type: 'menu' | 'subheader';
@@ -40,7 +40,6 @@ export type CompositeBarProps = {
 
 type CompositeBarViewProps = CompositeBarProps & {
     collapseItems?: AsideHeaderItem[];
-    compositeId?: string;
 };
 
 const CompositeBarView: FC<CompositeBarViewProps> = ({
