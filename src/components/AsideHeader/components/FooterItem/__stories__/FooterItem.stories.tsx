@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {Gear} from '@gravity-ui/icons';
-import type {Meta, StoryFn} from '@storybook/react';
+import type {Meta, StoryFn} from '@storybook/react-webpack5';
 
 import {ASIDE_HEADER_COLLAPSED_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../../../constants';
 import {AsideHeaderContextProvider} from '../../../AsideHeaderContext';

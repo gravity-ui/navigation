@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {addons, types} from '@storybook/manager-api';
-import {useGlobals, type API} from '@storybook/manager-api';
+import {addons, types} from 'storybook/manager-api';
+import {useGlobals, type API} from 'storybook/manager-api';
 import {getThemeType} from '@gravity-ui/uikit';
 import {themes} from '../theme';
 

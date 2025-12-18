@@ -2,7 +2,7 @@ import React from 'react';
 
 import {Bug, Gear, Magnifier, Person, Star, Xmark} from '@gravity-ui/icons';
 import {Button, Flex, Icon, Text, spacing} from '@gravity-ui/uikit';
-import type {Meta, StoryFn} from '@storybook/react';
+import type {Meta, StoryFn} from '@storybook/react-webpack5';
 
 import {AsideHeader} from '../AsideHeader';
 import {FooterItem} from '../components/FooterItem/FooterItem';
@@ -27,7 +27,7 @@ export default {
     component: AsideHeader,
     parameters: {
         a11y: {
-            element: '#storybook-root',
+            context: '#storybook-root',
             config: {
                 rules: [
                     {

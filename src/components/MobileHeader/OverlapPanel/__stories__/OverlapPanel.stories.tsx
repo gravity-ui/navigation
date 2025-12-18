@@ -2,7 +2,7 @@ import React from 'react';
 
 import {Plus} from '@gravity-ui/icons';
 import {Button} from '@gravity-ui/uikit';
-import type {Meta, StoryFn} from '@storybook/react';
+import type {Meta, StoryFn} from '@storybook/react-webpack5';
 
 const b = cn('overlap-panel-showcase');
 
@@ -31,7 +31,7 @@ export default {
     ],
     parameters: {
         a11y: {
-            element: '#storybook-root',
+            context: '#storybook-root',
             config: {
                 rules: [
                     {

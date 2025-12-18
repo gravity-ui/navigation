@@ -6,8 +6,6 @@ const config: StorybookConfig = {
 
     addons: [
         '@storybook/addon-links',
-        { name: '@storybook/addon-essentials', options: { backgrounds: false } },
-        '@storybook/addon-interactions',
         'storybook-preset-inline-svg',
         './theme-addon/register.tsx',
         './focus-addon/register.tsx',
@@ -19,12 +17,6 @@ const config: StorybookConfig = {
     framework: {
         name: '@storybook/react-webpack5',
         options: {}
-    },
-
-    docs: {},
-
-    core: {
-        disableTelemetry: true,
     },
 
     typescript: {
@@ -108,8 +100,11 @@ const config: StorybookConfig = {
         );
 
         return config;
-    }
+    },
 
+    features: {
+      backgrounds: false
+    }
 };
 
 export default config;
