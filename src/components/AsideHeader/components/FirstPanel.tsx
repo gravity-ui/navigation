@@ -14,6 +14,14 @@ import {Panels} from './Panels';
 
 const MENU_ITEMS_COMPOSITE_ID = 'gravity-ui/navigation-menu-items-composite-bar';
 
+const asideTransitionClassNames = {
+    enter: b('aside-transition-enter'),
+    enterActive: b('aside-transition-enter-active'),
+    enterDone: b('aside-transition-enter-done'),
+    exit: b('aside-transition-exit'),
+    exitActive: b('aside-transition-exit-active'),
+};
+
 export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
     const {
         size,
@@ -49,7 +57,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
             <CSSTransition
                 in={isExpandedByHover}
                 timeout={ASIDE_HEADER_EXPAND_TRANSITION_DELAY}
-                classNames={b('aside-transition')}
+                classNames={asideTransitionClassNames}
             >
                 <div
                     className={b('aside', className)}

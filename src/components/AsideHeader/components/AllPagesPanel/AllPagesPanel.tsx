@@ -3,7 +3,7 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Gear} from '@gravity-ui/icons';
 import {Button, Flex, Icon, ListSortParams, Text, Tooltip} from '@gravity-ui/uikit';
 
-import {block} from '../../../utils/cn';
+import {createBlock} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
 import {AsideHeaderItem, MenuItemsWithGroups} from '../../types';
 import {CompositeBarView} from '../CompositeBar/CompositeBar';
@@ -17,9 +17,9 @@ import {getRealIndexInGroup} from './utils/getRealIndexInGroup';
 import {sortMenuItems} from './utils/sortMenuItems';
 import {sortMenuItemsWithDividers} from './utils/sortMenuItemsWithDividers';
 
-import './AllPagesPanel.scss';
+import styles from './AllPagesPanel.module.scss';
 
-const b = block('all-pages-panel');
+const b = createBlock('all-pages-panel', styles);
 
 interface AllPagesPanelProps {
     className?: string;
@@ -222,7 +222,6 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                 <Text variant="subheader-2">
                     {isEditMode ? i18n('all-panel.title.editing') : i18n('all-panel.title.main')}
                 </Text>
-
                 <Tooltip content={i18n('all-panel.title.editing')}>
                     <Button selected={isEditMode} view="normal" onClick={toggleEditMode}>
                         {startEditIcon ? startEditIcon : <Icon data={Gear} />}

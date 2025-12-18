@@ -202,7 +202,6 @@ export function MobileHeaderShowcase() {
                         {
                             id: 'settings',
                             content: <div className={b('modal-footer')}>Form content here</div>,
-                            direction: 'right',
                         },
                     ]}
                     renderContent={() => {

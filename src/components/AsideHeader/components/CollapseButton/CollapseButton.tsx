@@ -2,15 +2,15 @@ import React, {useCallback} from 'react';
 
 import {Button, Icon} from '@gravity-ui/uikit';
 
-import {block} from '../../../utils/cn';
+import {createBlock} from '../../../utils/cn';
 import {useAsideHeaderContext, useAsideHeaderInnerContext} from '../../AsideHeaderContext';
 import i18n from '../../i18n';
 
 import ArrowLeftFromLineIcon from '@gravity-ui/icons/svgs/arrow-left-from-line.svg';
 
-import './CollapseButton.scss';
+import styles from './CollapseButton.module.scss';
 
-const b = block('collapse-button');
+const b = createBlock('collapse-button', styles);
 
 interface CollapseButtonProps {
     className?: string;

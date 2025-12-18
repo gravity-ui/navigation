@@ -8,13 +8,22 @@ import {AsideHeaderItem} from 'src/components/AsideHeader/types';
 
 import {ASIDE_HEADER_EXPAND_TRANSITION_DELAY, ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
 import {MakeItemParams} from '../../../../types';
-import {block} from '../../../../utils/cn';
+import {createBlock} from '../../../../utils/cn';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {ITEM_TYPE_REGULAR} from '../constants';
 
-import './Item.scss';
+import styles from './Item.module.scss';
 
-const b = block('composite-bar-item');
+const b = createBlock('composite-bar-item', styles);
+
+const itemTransitionClasses = {
+    enter: b('transition-title-enter'),
+    enterActive: b('transition-title-enter-active'),
+    enterDone: b('transition-title-enter-done'),
+    exit: b('transition-title-exit'),
+    exitActive: b('transition-title-exit-active'),
+    exitDone: b('transition-title-exit-done'),
+};
 
 export interface ItemProps extends AsideHeaderItem {}
 
@@ -141,7 +150,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     <CSSTransition
                         in={!compact}
                         timeout={ASIDE_HEADER_EXPAND_TRANSITION_DELAY}
-                        classNames={b('transition-title')}
+                        classNames={itemTransitionClasses}
                     >
                         <div
                             className={b('title')}
@@ -183,7 +192,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const iconNode = icon ? (
         <Icon qa={iconQa} data={icon} size={iconSize} className={b('icon')} />
     ) : null;
-
     const titleNode = renderItemTitle({title, rightAdornment});
     const params = {icon: iconNode, title: titleNode};
     let highlightedNode = null;

@@ -6,11 +6,11 @@ import {Button, Icon} from '@gravity-ui/uikit';
 import {AsideHeaderItem} from 'src/components/AsideHeader/types';
 import {MakeItemParams} from 'src/components/types';
 
-import {block} from '../../../../utils/cn';
+import {createBlock} from '../../../../utils/cn';
 
-import './AllPagesListItem.scss';
+import styles from './AllPagesListItem.module.scss';
 
-const b = block('all-pages-list-item');
+const b = createBlock('all-pages-list-item', styles);
 
 interface AllPagesListItemProps {
     item: AsideHeaderItem;
@@ -32,17 +32,17 @@ export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
         [onToggle],
     );
 
-    const onItemClick = (e: MouseEvent<HTMLElement>) => {
-        if (editMode) {
-            e.stopPropagation();
-            e.preventDefault();
-        }
-    };
-
     const [Tag, tagProps] = item.href ? ['a' as const, {href: item.href}] : ['button' as const, {}];
 
     const makeNode = useCallback(
         (params: MakeItemParams) => {
+            const onItemClick = (e: MouseEvent<HTMLElement>) => {
+                if (editMode) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                }
+            };
+
             return (
                 <Tag {...tagProps} className={b()} onClick={onItemClick} ref={ref}>
                     {params.icon}
@@ -58,7 +58,7 @@ export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
                 </Tag>
             );
         },
-        [Tag, tagProps, onItemClick, editMode, item, onPinButtonClick],
+        [Tag, tagProps, editMode, item, onPinButtonClick],
     );
 
     const iconNode = item.icon ? (

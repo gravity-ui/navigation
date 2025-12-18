@@ -3,10 +3,16 @@ import * as React from 'react';
 import {PopupProps, QAProps} from '@gravity-ui/uikit';
 
 import {RenderContentType} from '../Content';
-import {DrawerItemProps} from '../Drawer/Drawer';
 import {LogoProps, MenuGroup, MenuItem, OpenModalSubscriber, TopAlertProps} from '../types';
 
 import {AsideHeaderContextType} from './AsideHeaderContext';
+
+export interface PanelItemProps {
+    id: string;
+    content?: React.ReactNode;
+    visible?: boolean;
+    className?: string;
+}
 
 export interface LayoutProps {
     compact: boolean;
@@ -55,7 +61,7 @@ interface AsideHeaderGeneralProps extends QAProps {
 }
 
 interface AsideHeaderDefaultProps {
-    panelItems?: DrawerItemProps[];
+    panelItems?: PanelItemProps[];
     subheaderItems?: AsideHeaderItem[];
     menuItems?: AsideHeaderItem[];
     defaultMenuItems?: AsideHeaderItem[];

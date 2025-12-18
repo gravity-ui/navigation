@@ -1,14 +1,7 @@
 import React, {useReducer} from 'react';
 
 import {Gear} from '@gravity-ui/icons';
-import {
-    Button,
-    SegmentedRadioGroup,
-    SegmentedRadioGroupOption,
-    Select,
-    Switch,
-    useUniqId,
-} from '@gravity-ui/uikit';
+import {Button, SegmentedRadioGroup, Select, Switch, useUniqId} from '@gravity-ui/uikit';
 
 import {Settings} from '../../..';
 import {cn} from '../../utils/cn';
@@ -139,12 +132,12 @@ export const SettingsMobileComponent = React.memo(
                                     }}
                                     size="xl"
                                 >
-                                    <SegmentedRadioGroupOption value="arc">
-                                        {'Arc'}
-                                    </SegmentedRadioGroupOption>
-                                    <SegmentedRadioGroupOption value="svn">
-                                        {'SVN'}
-                                    </SegmentedRadioGroupOption>
+                                    <SegmentedRadioGroup.Option value="arc">
+                                        Arc
+                                    </SegmentedRadioGroup.Option>
+                                    <SegmentedRadioGroup.Option value="svn">
+                                        SVN
+                                    </SegmentedRadioGroup.Option>
                                 </SegmentedRadioGroup>
                             </Settings.Item>
                             <Settings.Item
@@ -220,12 +213,12 @@ export const SettingsMobileComponent = React.memo(
                                     }}
                                     size="xl"
                                 >
-                                    <SegmentedRadioGroupOption value="default">
-                                        {'Default'}
-                                    </SegmentedRadioGroupOption>
-                                    <SegmentedRadioGroupOption value="exta">
-                                        {'Extra'}
-                                    </SegmentedRadioGroupOption>
+                                    <SegmentedRadioGroup.Option value="default">
+                                        Default
+                                    </SegmentedRadioGroup.Option>
+                                    <SegmentedRadioGroup.Option value="exta">
+                                        Extra
+                                    </SegmentedRadioGroup.Option>
                                 </SegmentedRadioGroup>
                             </Settings.Item>
                         </Settings.Section>
@@ -264,12 +257,12 @@ function renderGeneralSettings(
                             }}
                             size="xl"
                         >
-                            <SegmentedRadioGroupOption value="ru">
-                                {'Русский'}
-                            </SegmentedRadioGroupOption>
-                            <SegmentedRadioGroupOption value="en">
-                                {'English'}
-                            </SegmentedRadioGroupOption>
+                            <SegmentedRadioGroup.Option value="ru">
+                                Русский
+                            </SegmentedRadioGroup.Option>
+                            <SegmentedRadioGroup.Option value="en">
+                                English
+                            </SegmentedRadioGroup.Option>
                         </SegmentedRadioGroup>
                     </Settings.Item>
                     <Settings.Item title="Theme">
@@ -280,12 +273,12 @@ function renderGeneralSettings(
                             }}
                             size="xl"
                         >
-                            <SegmentedRadioGroupOption value="light">
-                                {'Light'}
-                            </SegmentedRadioGroupOption>
-                            <SegmentedRadioGroupOption value="dark">
-                                {'Dark'}
-                            </SegmentedRadioGroupOption>
+                            <SegmentedRadioGroup.Option value="light">
+                                Light
+                            </SegmentedRadioGroup.Option>
+                            <SegmentedRadioGroup.Option value="dark">
+                                Dark
+                            </SegmentedRadioGroup.Option>
                         </SegmentedRadioGroup>
                     </Settings.Item>
                 </Settings.Section>

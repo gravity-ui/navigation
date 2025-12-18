@@ -4,7 +4,7 @@ import {ChevronDown, ChevronRight} from '@gravity-ui/icons';
 import {List, ListSortParams} from '@gravity-ui/uikit';
 
 import {ASIDE_HEADER_COMPACT_WIDTH} from '../../../constants';
-import {block} from '../../../utils/cn';
+import {createBlock} from '../../../utils/cn';
 import {AsideHeaderItem, MenuItemsWithGroups} from '../../types';
 import {UNGROUPED_ID} from '../AllPagesPanel/constants';
 
@@ -13,9 +13,9 @@ import {MultipleTooltip, MultipleTooltipContext, MultipleTooltipProvider} from '
 import {COLLAPSE_ITEM_ID} from './constants';
 import {getItemHeight, getItemsHeight, getSelectedItemIndex} from './utils';
 
-import './CompositeBar.scss';
+import styles from './CompositeBar.module.scss';
 
-const b = block('composite-bar');
+const b = createBlock('composite-bar', styles);
 
 export type CompositeBarProps = {
     type: 'menu' | 'subheader';
@@ -457,6 +457,5 @@ export const CompositeBar: FC<CompositeBarProps> = ({
             </div>
         );
     }
-
     return <MultipleTooltipProvider>{node}</MultipleTooltipProvider>;
 };

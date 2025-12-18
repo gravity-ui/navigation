@@ -48,7 +48,7 @@ The elements will collapse into three dots if there is no vertical space by defa
 
 Navigation elements can be in one of two states: collapsed (isCollapsed), where only the icon is visible, and expanded. There is some space for customization of the entire item through a wrapper.
 
-With additional configuration via `AllPages` users can further customize menu to their preference by hiding unnecessary items. This brings in a new state for items - `hidden`.
+With additional configuration via `AllPages` users can further customize menu to their preference by hiding unnecessary items. This brings in a new state for items - `hidden`. If item is pinned, it will always be displayed in the section.
 
 The `onMenuItemsChanged` callback is required for adding extra component `All Pages` which displays panel for editing the list of visible menu items.
 
@@ -244,19 +244,20 @@ Top Alert can be useful for displaying important information that users need to 
 
 You can customize the inner content, make alert closeable if necessary. For reading top alert height see value from CSS variable `--gn-top-alert-height`.
 
-| Name            | Description                                                             |                                                Type                                                |   Default    |
-| :-------------- | :---------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------: | :----------: |
-| actions         | Array of buttons or full custom components                              |  [`AlertActions`](https://github.com/gravity-ui/uikit/tree/main/src/components/Alert#properties)   |              |
-| centered        | Centering all content                                                   |                                             `boolean`                                              |   `false`    |
-| align           | Determines how content inside the Alert component is vertically aligned |      [`AlertAlign`](https://github.com/gravity-ui/uikit/tree/main/src/components/Alert#align)      | `"baseline"` |
-| closable        | Show close button and make possible to pass `onCloseTopAlert` prop      |                                             `boolean`                                              |   `false`    |
-| dense           | Add top, bottom paddings to `TopAlert` container                        |                                             `boolean`                                              |   `false`    |
-| icon            | Override default icon                                                   |    [`AlertIcon`](https://github.com/gravity-ui/uikit/tree/main/src/components/Alert#properties)    |              |
-| message         | Message of the alert                                                    | [`AlertMessage`](https://github.com/gravity-ui/uikit/tree/main/src/components/Alert#alert-message) |              |
-| onCloseTopAlert | Callback will be called when clicking on the close button               |                                            `() => void`                                            |              |
-| title           | Title of the alert                                                      |   [`AlertTitle`](https://github.com/gravity-ui/uikit/tree/main/src/components/Alert#alert-title)   |              |
-| theme           | Alert appearance                                                        |      [`AlertTheme`](https://github.com/gravity-ui/uikit/tree/main/src/components/Alert#theme)      | `"warning"`  |
-| view            | Enable/disable background color of the alert                            |       [`AlertView`](https://github.com/gravity-ui/uikit/tree/main/src/components/Alert#view)       |  `"filled"`  |
+| Name            | Description                                                                                                               |                                                Type                                                |   Default    |
+| :-------------- | :------------------------------------------------------------------------------------------------------------------------ | :------------------------------------------------------------------------------------------------: | :----------: |
+| actions         | Array of buttons or full custom components                                                                                |  [`AlertActions`](https://github.com/gravity-ui/uikit/tree/main/src/components/Alert#properties)   |              |
+| centered        | Centering all content                                                                                                     |                                             `boolean`                                              |   `false`    |
+| align           | Determines how content inside the Alert component is vertically aligned                                                   |      [`AlertAlign`](https://github.com/gravity-ui/uikit/tree/main/src/components/Alert#align)      | `"baseline"` |
+| closable        | Show close button and make possible to pass `onCloseTopAlert` prop                                                        |                                             `boolean`                                              |   `false`    |
+| dense           | Add top, bottom paddings to `TopAlert` container                                                                          |                                             `boolean`                                              |   `false`    |
+| icon            | Override default icon                                                                                                     |    [`AlertIcon`](https://github.com/gravity-ui/uikit/tree/main/src/components/Alert#properties)    |              |
+| message         | Message of the alert                                                                                                      | [`AlertMessage`](https://github.com/gravity-ui/uikit/tree/main/src/components/Alert#alert-message) |              |
+| onCloseTopAlert | Callback will be called when clicking on the close button                                                                 |                                            `() => void`                                            |              |
+| title           | Title of the alert                                                                                                        |   [`AlertTitle`](https://github.com/gravity-ui/uikit/tree/main/src/components/Alert#alert-title)   |              |
+| theme           | Alert appearance                                                                                                          |      [`AlertTheme`](https://github.com/gravity-ui/uikit/tree/main/src/components/Alert#theme)      |  "warning"   |
+| view            | Enable/disable background color of the alert                                                                              |       [`AlertView`](https://github.com/gravity-ui/uikit/tree/main/src/components/Alert#view)       |   "filled"   |
+| preloadHeight   | Preload TopAlert height on SSR to prevent layout shift. `true` uses estimated height; a number sets explicit height in px |                                         `boolean` `number`                                         |   `false`    |
 
 ## CSS API
 

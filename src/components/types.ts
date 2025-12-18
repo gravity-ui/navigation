@@ -47,6 +47,7 @@ export interface MenuItem extends QAProps {
      * The group ID to which the menu item belongs. Used for grouping menu items
      */
     groupId?: string;
+    className?: string;
 }
 
 export interface MenuGroup {
@@ -91,6 +92,11 @@ interface TopAlertBaseProps {
     centered?: boolean;
     dense?: boolean;
     onCloseTopAlert?: () => void;
+    /**
+     * SSR-прелоад высоты: true — использовать оценку (dense/title),
+     * число — задать конкретное значение, иначе — не устанавливать.
+     */
+    preloadHeight?: boolean | number;
     render?: never;
 }
 

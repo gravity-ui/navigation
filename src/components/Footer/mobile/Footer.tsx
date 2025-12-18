@@ -6,13 +6,13 @@ import {Button, Icon, Menu, Sheet} from '@gravity-ui/uikit';
 
 import {useOverflowingHorizontalListItems} from '../../../hooks/useOverflowingHorizontalListItems';
 import {Logo} from '../../Logo';
-import {block} from '../../utils/cn';
+import {createBlock} from '../../utils/cn';
 import {MenuItem} from '../MenuItem/MenuItem';
 import {FooterMenuItem, FooterProps} from '../types';
 
-import './Footer.scss';
+import styles from './Footer.module.scss';
 
-const b = block('footer');
+const b = createBlock('footer', styles);
 
 const modalId = 'footer-more-items';
 
@@ -59,8 +59,6 @@ export const MobileFooter: FC<FooterProps> = ({
         </Menu>
     );
 
-    const shouldRenderLogo = view !== 'clear' && Boolean(logo);
-
     return (
         <footer className={b({mobile: true, 'with-divider': withDivider, view}, className)}>
             <div className={b('menu', {measured})} ref={menuContainerRef}>
@@ -89,9 +87,9 @@ export const MobileFooter: FC<FooterProps> = ({
             </div>
             <div className={b('bottom-row')}>
                 <small className={b('copyright')}>{copyright}</small>
-                {shouldRenderLogo && (
+                {view !== 'clear' && logo && (
                     <div className={logoWrapperClassName}>
-                        <Logo {...logo!} />
+                        <Logo {...logo} />
                     </div>
                 )}
             </div>

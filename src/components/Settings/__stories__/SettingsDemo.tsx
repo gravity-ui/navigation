@@ -6,7 +6,6 @@ import {
     Checkbox,
     HelpMark,
     SegmentedRadioGroup,
-    SegmentedRadioGroupOption,
     Select,
     Switch,
     useUniqId,
@@ -176,12 +175,12 @@ export const SettingsComponent = React.memo(
                                         handleChange('vcs', event.target.value);
                                     }}
                                 >
-                                    <SegmentedRadioGroupOption value="arc">
-                                        {'Arc'}
-                                    </SegmentedRadioGroupOption>
-                                    <SegmentedRadioGroupOption value="svn">
-                                        {'SVN'}
-                                    </SegmentedRadioGroupOption>
+                                    <SegmentedRadioGroup.Option value="arc">
+                                        Arc
+                                    </SegmentedRadioGroup.Option>
+                                    <SegmentedRadioGroup.Option value="svn">
+                                        SVN
+                                    </SegmentedRadioGroup.Option>
                                 </SegmentedRadioGroup>
                             </Settings.Item>
                             <Settings.Item
@@ -235,18 +234,18 @@ export const SettingsComponent = React.memo(
                                         handleChange('arcanumTheme', event.target.value);
                                     }}
                                 >
-                                    <SegmentedRadioGroupOption value="light">
-                                        {'Light'}
-                                    </SegmentedRadioGroupOption>
-                                    <SegmentedRadioGroupOption value="dark">
-                                        {'Dark'}
-                                    </SegmentedRadioGroupOption>
-                                    <SegmentedRadioGroupOption value="special">
-                                        {'Special'}
-                                    </SegmentedRadioGroupOption>
-                                    <SegmentedRadioGroupOption value="general">
-                                        {'Inherit from General'}
-                                    </SegmentedRadioGroupOption>
+                                    <SegmentedRadioGroup.Option value="light">
+                                        Light
+                                    </SegmentedRadioGroup.Option>
+                                    <SegmentedRadioGroup.Option value="dark">
+                                        Dark
+                                    </SegmentedRadioGroup.Option>
+                                    <SegmentedRadioGroup.Option value="special">
+                                        Special
+                                    </SegmentedRadioGroup.Option>
+                                    <SegmentedRadioGroup.Option value="general">
+                                        Inherit from General
+                                    </SegmentedRadioGroup.Option>
                                 </SegmentedRadioGroup>
                             </Settings.Item>
                             <Settings.Item title="Code theme">
@@ -309,12 +308,12 @@ function renderGeneralSettings(
                                 handleChange('lang', event.target.value);
                             }}
                         >
-                            <SegmentedRadioGroupOption value="ru">
-                                {'Русский'}
-                            </SegmentedRadioGroupOption>
-                            <SegmentedRadioGroupOption value="en">
-                                {'English'}
-                            </SegmentedRadioGroupOption>
+                            <SegmentedRadioGroup.Option value="ru">
+                                Русский
+                            </SegmentedRadioGroup.Option>
+                            <SegmentedRadioGroup.Option value="en">
+                                English
+                            </SegmentedRadioGroup.Option>
                         </SegmentedRadioGroup>
                     </Settings.Item>
                     <Settings.Item title="Theme">
@@ -324,12 +323,12 @@ function renderGeneralSettings(
                                 handleChange('theme', event.target.value);
                             }}
                         >
-                            <SegmentedRadioGroupOption value="light">
-                                {'Light'}
-                            </SegmentedRadioGroupOption>
-                            <SegmentedRadioGroupOption value="dark">
-                                {'Dark'}
-                            </SegmentedRadioGroupOption>
+                            <SegmentedRadioGroup.Option value="light">
+                                Light
+                            </SegmentedRadioGroup.Option>
+                            <SegmentedRadioGroup.Option value="dark">
+                                Dark
+                            </SegmentedRadioGroup.Option>
                         </SegmentedRadioGroup>
                     </Settings.Item>
                 </Settings.Section>

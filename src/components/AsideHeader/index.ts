@@ -1,5 +1,5 @@
 export {AsideHeader} from './AsideHeader';
-export type {AsideHeaderProps} from './types';
+export type {AsideHeaderProps, PanelItemProps} from './types';
 export {AsideHeaderContextProvider, useAsideHeaderContext} from './AsideHeaderContext';
 export {FooterItem, type FooterItemProps} from './components/FooterItem/FooterItem';
 export {PageLayout, type PageLayoutProps} from './components/PageLayout/PageLayout';

@@ -10,6 +10,7 @@
         "node": true,
         "jest": true,
     },
+    "ignorePatterns": ["**/__testfixtures__/**/*.tsx"],
     "overrides": [
         {
             "files": ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
@@ -24,6 +25,7 @@
     ],
     "plugins": ["react-hooks"],
     "rules": {
+        "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["acc", "ref"] }],
         "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
         "react-hooks/exhaustive-deps": "warn", // Checks effect dependencies
     },

@@ -1,0 +1,77 @@
+@use '../../variables';
+
+$block: '.#{variables.$ns}mobile-overlap-panel';
+
+#{$block} {
+    $action-width: 40px;
+
+    position: fixed;
+    inset: 0;
+
+    &__drawer-item {
+        flex-direction: column;
+        height: 100%;
+        display: flex;
+
+        box-sizing: border-box;
+        max-height: 100%;
+
+        /* TODO: remove overrides after Drawer fix in uikit */
+        /* stylelint-disable declaration-no-important */
+        /* Override uikit Drawer inline styles for full-width panel */
+        &:global(.g-drawer__item) {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        /* stylelint-enable declaration-no-important */
+    }
+
+    &_action {
+        #{$block}__title {
+            padding-right: 0;
+        }
+    }
+
+    &__close {
+        margin-right: var(--g-spacing-1);
+    }
+
+    &__action {
+        margin-left: var(--g-spacing-1);
+    }
+
+    &__close.g-button:hover::before,
+    &__action.g-button:hover::before {
+        background-color: transparent;
+    }
+
+    &__title {
+        display: inline-block;
+        flex: 1;
+        justify-content: center;
+
+        padding-right: #{$action-width};
+
+        text-align: center;
+        margin: 0;
+    }
+
+    &__content {
+        display: flex;
+        overflow-y: auto;
+        flex-direction: column;
+
+        box-sizing: border-box;
+        height: 100%;
+        padding: 0px var(--g-spacing-5);
+    }
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        margin-bottom: var(--g-spacing-3);
+        padding: var(--g-spacing-1) var(--g-spacing-3);
+    }
+}

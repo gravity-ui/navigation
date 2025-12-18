@@ -1,3 +1,5 @@
+@forward '@gravity-ui/uikit/styles/mixins';
+
 @mixin aside-header-button() {
     &_current::before {
         background-color: var(--g-color-base-selection);

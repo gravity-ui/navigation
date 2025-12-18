@@ -5,11 +5,20 @@ import {CSSTransition} from 'react-transition-group';
 
 import {ASIDE_HEADER_EXPAND_TRANSITION_DELAY} from '../constants';
 import {LogoProps} from '../types';
-import {block} from '../utils/cn';
+import {createBlock} from '../utils/cn';
 
-import './Logo.scss';
+import styles from './Logo.module.scss';
 
-const b = block('logo');
+const b = createBlock('logo', styles);
+
+const logoTransitionClasses = {
+    enter: b('logo-enter'),
+    enterActive: b('logo-enter-active'),
+    enterDone: b('logo-enter-done'),
+    exit: b('logo-exit'),
+    exitActive: b('logo-exit-active'),
+    exitDone: b('logo-exit-done'),
+};
 
 export const Logo: React.FC<
     LogoProps & {compact?: boolean; buttonClassName?: string; iconPlaceClassName?: string}
@@ -75,7 +84,7 @@ export const Logo: React.FC<
             <CSSTransition
                 in={!compact}
                 timeout={ASIDE_HEADER_EXPAND_TRANSITION_DELAY}
-                classNames={b('logo')}
+                classNames={logoTransitionClasses}
             >
                 {logo}
             </CSSTransition>
