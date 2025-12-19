@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.2](https://github.com/gravity-ui/navigation/compare/v4.0.1...v4.0.2) (2025-12-19)
+
+
+### Bug Fixes
+
+* Refine the panelItems properties and change the visible property to open ([#522](https://github.com/gravity-ui/navigation/issues/522)) ([7844f85](https://github.com/gravity-ui/navigation/commit/7844f850355c89b76b5d2b6504383c590fe00e41))
+
 ## [4.1.0](https://github.com/gravity-ui/navigation/compare/v4.0.1...v4.1.0) (2025-12-19)
 
 ### ⚠ BREAKING CHANGES
