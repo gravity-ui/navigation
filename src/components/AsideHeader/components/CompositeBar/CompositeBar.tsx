@@ -17,7 +17,7 @@ import styles from './CompositeBar.module.scss';
 
 const b = createBlock('composite-bar', styles);
 
-export type CompositeBarProps = {
+type CompositeBarProps = {
     type: 'menu' | 'subheader';
 
     items?: MenuItemsWithGroups[];
