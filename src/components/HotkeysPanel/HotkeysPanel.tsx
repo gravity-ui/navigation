@@ -21,7 +21,7 @@ export type HotkeysPanelProps<T> = {
     filterable?: boolean;
     filterPlaceholder?: string;
     emptyState?: ReactNode;
-    visible: boolean;
+    open: boolean;
     onClose?: () => void;
     className?: string;
     drawerItemClassName?: string;
@@ -49,7 +49,7 @@ export type HotkeysPanelProps<T> = {
 >;
 
 export function HotkeysPanel<T = {}>({
-    visible,
+    open,
     onClose,
     leftOffset,
     topOffset,
@@ -137,7 +137,7 @@ export function HotkeysPanel<T = {}>({
     return (
         <Drawer
             className={b(null, className)}
-            open={visible}
+            open={open}
             onOpenChange={(open) => !open && onClose?.()}
             style={{
                 left: leftOffset,
