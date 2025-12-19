@@ -25,7 +25,7 @@ export interface OverlapPanelProps {
     action?: OverlapPanelActionProps;
     renderContent: () => React.ReactNode;
     closeTitle?: string;
-    visible: boolean;
+    open: boolean;
     topOffset?: number | string;
 }
 
@@ -36,7 +36,7 @@ export const OverlapPanel = ({
     onClose,
     action,
     closeTitle = i18n('overlap_button_close'),
-    visible,
+    open,
     topOffset,
 }: OverlapPanelProps) => {
     const topOffsetValue = typeof topOffset === 'number' ? `${topOffset}px` : topOffset;
@@ -49,7 +49,7 @@ export const OverlapPanel = ({
     return (
         <Drawer
             className={b('', {action: Boolean(action)}, className)}
-            open={visible}
+            open={open}
             onOpenChange={(open) => !open && onClose()}
             style={drawerStyle}
             contentClassName={b('drawer-item')}

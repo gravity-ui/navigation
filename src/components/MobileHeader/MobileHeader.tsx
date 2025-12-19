@@ -1,6 +1,6 @@
 import React, {Suspense, useCallback, useEffect, useMemo, useState} from 'react';
 
-import {Drawer} from '@gravity-ui/uikit';
+import {Drawer, DrawerProps} from '@gravity-ui/uikit';
 
 import {useForwardRef} from '../../hooks/useForwardRef';
 import {Content, RenderContentType} from '../Content';
@@ -38,12 +38,10 @@ interface BurgerMenuProps extends Omit<BurgerMenuInnerProps, 'renderFooter'> {
     renderFooter?: (data: {size: number; isCompact: boolean}) => React.ReactNode;
 }
 
-type OverlapPanelProps = Omit<CommonOverlapPanelProps, 'onClose' | 'visible'>;
+type OverlapPanelProps = Omit<CommonOverlapPanelProps, 'onClose' | 'open'>;
 
-interface PanelItem {
+interface PanelItem extends DrawerProps {
     id: string;
-    content?: React.ReactNode;
-    className?: string;
 }
 
 export interface MobileHeaderProps {
@@ -301,19 +299,18 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                     </header>
                 </div>
 
-                {allPanelItems.map((item) => (
+                {allPanelItems.map(({id, className, ...rest}) => (
                     <Drawer
-                        key={item.id}
+                        {...rest}
+                        key={id}
                         className={b('panels')}
-                        open={visiblePanel === item.id}
+                        open={visiblePanel === id}
                         onOpenChange={(open) => !open && onCloseDrawer()}
                         style={{top: `calc(${size}px + var(--gn-top-alert-height, 0px))`}}
-                        contentClassName={b('panel-item', item.className)}
+                        contentClassName={b('panel-item', className)}
                         size={320}
                         disablePortal
-                    >
-                        {item.content}
-                    </Drawer>
+                    />
                 ))}
                 {overlapPanel && (
                     <OverlapPanel
@@ -322,7 +319,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                         title={overlapPanel.title}
                         onClose={onOverlapClose}
                         action={overlapPanel.action}
-                        visible={overlapPanelVisible}
+                        open={overlapPanelVisible}
                         renderContent={overlapPanel.renderContent}
                     />
                 )}

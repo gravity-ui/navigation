@@ -14,23 +14,23 @@ const b = cn('hotkeys-panel-showcase');
 type HotkeysPanelShowcaseProps = Pick<HotkeysPanelProps<HotkeysGroup>, 'filterable'>;
 
 export function HotkeysPanelShowcase({filterable}: HotkeysPanelShowcaseProps) {
-    const [visible, setVisible] = React.useState<boolean>(true);
+    const [open, setOpen] = React.useState<boolean>(true);
 
     const handleClose = () => {
-        setVisible(false);
+        setOpen(false);
     };
 
     return (
         <div className={b()}>
             <div className={b('header')}>
-                <Button view="action" size="l" onClick={() => setVisible(!visible)}>
-                    {visible ? 'Hide hotkeys' : 'Show hotkeys'}
+                <Button view="action" size="l" onClick={() => setOpen(!open)}>
+                    {open ? 'Hide hotkeys' : 'Show hotkeys'}
                 </Button>
             </div>
             <div className={b('body')} />
             <HotkeysPanel
                 hotkeys={hotkeys}
-                visible={visible}
+                open={open}
                 onClose={handleClose}
                 topOffset={77}
                 title="Hotkeys"

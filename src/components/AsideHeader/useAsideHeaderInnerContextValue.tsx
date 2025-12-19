@@ -21,8 +21,8 @@ export const useAsideHeaderInnerContextValue = (
         Boolean(onMenuItemsChanged) && (!menuItems || menuItems?.length > 0);
 
     useEffect(() => {
-        // If any user panel became visible we need to switch off all inner panels
-        if (panelItems?.some((x) => x.visible)) {
+        // If any user panel became open we need to switch off all inner panels
+        if (panelItems?.some((x) => x.open)) {
             setInnerVisiblePanel(undefined);
         }
     }, [panelItems]);

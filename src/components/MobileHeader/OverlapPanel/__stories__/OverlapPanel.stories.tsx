@@ -54,27 +54,27 @@ export default {
 } as Meta;
 
 const ShowcaseTemplate: StoryFn<OverlapPanelProps> = (args) => {
-    const [visible, setVisible] = React.useState<boolean>(true);
+    const [open, setOpen] = React.useState<boolean>(true);
 
     const handleClose = () => {
-        setVisible(false);
+        setOpen(false);
     };
 
     React.useEffect(() => {
-        setVisible(args.visible);
-    }, [args.visible]);
+        setOpen(args.open);
+    }, [args.open]);
 
     return (
         <div className={b()}>
             <div className={b('header')}>
-                <Button view="action" size="l" onClick={() => setVisible(!visible)}>
-                    {visible ? 'Hide' : 'Show'}
+                <Button view="action" size="l" onClick={() => setOpen(!open)}>
+                    {open ? 'Hide' : 'Show'}
                 </Button>
             </div>
             <OverlapPanel
                 {...args}
                 topOffset={77}
-                visible={visible}
+                open={open}
                 onClose={handleClose}
                 renderContent={() => (
                     <div className={b('content')}>

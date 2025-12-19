@@ -201,7 +201,7 @@ export function MobileHeaderShowcase() {
                     panelItems={[
                         {
                             id: 'settings',
-                            content: <div className={b('modal-footer')}>Form content here</div>,
+                            children: <div className={b('modal-footer')}>Form content here</div>,
                         },
                     ]}
                     renderContent={() => {

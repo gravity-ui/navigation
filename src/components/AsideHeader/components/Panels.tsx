@@ -10,17 +10,15 @@ export const Panels = () => {
 
     return panelItems ? (
         <React.Fragment>
-            {panelItems.map((item) => (
+            {panelItems.map(({id, className, ...rest}) => (
                 <Drawer
-                    key={item.id}
+                    {...rest}
+                    key={id}
                     className={b('panels')}
-                    open={item.visible}
                     onOpenChange={(open) => !open && onClosePanel?.()}
                     style={{left: size}}
-                    contentClassName={b('panel', item.className)}
-                >
-                    {item.content}
-                </Drawer>
+                    contentClassName={b('panel', className)}
+                />
             ))}
         </React.Fragment>
     ) : null;
