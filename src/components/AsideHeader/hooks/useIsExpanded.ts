@@ -4,7 +4,7 @@ import {ASIDE_HEADER_EXPAND_DELAY, ASIDE_HEADER_EXPAND_TRANSITION_DELAY} from '.
 
 import {useDelayedToggle} from './useDelayedToggle';
 
-export interface UseIsExpandedResult {
+interface UseIsExpandedResult {
     isExpanded: boolean;
     onExpand: () => void;
     onFold: () => void;
