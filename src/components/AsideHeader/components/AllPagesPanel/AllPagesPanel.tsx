@@ -223,7 +223,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                     {isEditMode ? i18n('all-panel.title.editing') : i18n('all-panel.title.main')}
                 </Text>
                 <Tooltip content={i18n('all-panel.title.editing')}>
-                    <Button selected={isEditMode} view="flat" onClick={toggleEditMode}>
+                    <Button selected={isEditMode} view="flat-secondary" onClick={toggleEditMode}>
                         {startEditIcon ? startEditIcon : <Icon data={Gear} />}
                     </Button>
                 </Tooltip>
