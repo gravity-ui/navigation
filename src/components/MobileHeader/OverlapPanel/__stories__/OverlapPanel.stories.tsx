@@ -18,7 +18,7 @@ export default {
     component: OverlapPanel,
     args: {
         title: 'Title',
-        visible: true,
+        open: true,
     },
     decorators: [
         (DecoratedStory) => {
