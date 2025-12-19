@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.1](https://github.com/gravity-ui/navigation/compare/v4.0.0...v4.0.1) (2025-12-19)
+
+
+### Bug Fixes
+
+* add AsideHeaderItem type export to AsideHeader component ([#519](https://github.com/gravity-ui/navigation/issues/519)) ([4321274](https://github.com/gravity-ui/navigation/commit/43212744d1ec734463f57dc97b2307fb3ce5af4a))
+
 ## [4.0.0](https://github.com/gravity-ui/navigation/compare/v3.11.0...v4.0.0) (2025-12-18)
 
 
