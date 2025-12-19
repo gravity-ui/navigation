@@ -1,8 +1,9 @@
 import React, {Suspense, useCallback, useEffect, useMemo, useState} from 'react';
 
-import {Drawer, DrawerProps} from '@gravity-ui/uikit';
+import {Drawer} from '@gravity-ui/uikit';
 
 import {useForwardRef} from '../../hooks/useForwardRef';
+import {PanelItemProps} from '../AsideHeader';
 import {Content, RenderContentType} from '../Content';
 import {MobileLogo} from '../MobileLogo';
 import {LogoProps, TopAlertProps} from '../types';
@@ -40,17 +41,13 @@ interface BurgerMenuProps extends Omit<BurgerMenuInnerProps, 'renderFooter'> {
 
 type OverlapPanelProps = Omit<CommonOverlapPanelProps, 'onClose' | 'open'>;
 
-interface PanelItem extends DrawerProps {
-    id: string;
-}
-
 export interface MobileHeaderProps {
     logo: LogoProps;
     burgerMenu: BurgerMenuProps;
     overlapPanel?: OverlapPanelProps;
     burgerCloseTitle?: string;
     burgerOpenTitle?: string;
-    panelItems?: PanelItem[];
+    panelItems?: PanelItemProps[];
     topAlert?: TopAlertProps;
     renderContent?: RenderContentType;
     sideItemRenderContent?: RenderContentType;
@@ -81,7 +78,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
     ): React.ReactElement => {
         const targetRef = useForwardRef<HTMLDivElement>(ref);
         const [compact] = useState(true);
-        const [visiblePanel, setVisiblePanel] = useState<PanelName>(null);
+        const [openPanel, setOpenPanel] = useState<PanelName>(null);
         const [overlapPanelVisible, setOverlapPanelVisible] = useState(false);
 
         // for expand top panel cases (i.e. switch service panel). Will be removed if not used in future design
@@ -91,7 +88,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
             (name: PanelName) => {
                 if (!name) return;
 
-                setVisiblePanel((prev) => {
+                setOpenPanel((prev) => {
                     const panelOpen = prev === name;
 
                     onEvent?.(
@@ -122,7 +119,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
             ({detail}: {detail: MobileHeaderEventOptions}) => {
                 if (typeof detail?.panelName === 'string') {
                     onEvent?.(detail?.panelName, MOBILE_HEADER_EVENT_NAMES.openEvent);
-                    setVisiblePanel(detail?.panelName);
+                    setOpenPanel(detail?.panelName);
                     setOverlapPanelVisible(false);
                 }
             },
@@ -133,7 +130,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
             ({detail}: {detail: MobileHeaderEventOptions}) => {
                 if (typeof detail?.panelName === 'string') {
                     onEvent?.(detail?.panelName, MOBILE_HEADER_EVENT_NAMES.closeEvent);
-                    setVisiblePanel(null);
+                    setOpenPanel(null);
                     setOverlapPanelVisible(false);
                 }
             },
@@ -142,12 +139,12 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
 
         const onBurgerOpen = useCallback(() => {
             onEvent?.(BURGER_PANEL_ITEM_ID, MOBILE_HEADER_EVENT_NAMES.openEvent);
-            setVisiblePanel(BURGER_PANEL_ITEM_ID);
+            setOpenPanel(BURGER_PANEL_ITEM_ID);
         }, [onEvent]);
 
         const onBurgerClose = useCallback(() => {
             onEvent?.(BURGER_PANEL_ITEM_ID, MOBILE_HEADER_EVENT_NAMES.closeEvent);
-            setVisiblePanel(null);
+            setOpenPanel(null);
         }, [onEvent]);
 
         const onOverlapOpen = useCallback(() => {
@@ -161,11 +158,11 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
         }, [onEvent]);
 
         const onCloseDrawer = useCallback(() => {
-            if (visiblePanel) {
-                onEvent?.(visiblePanel, MOBILE_HEADER_EVENT_NAMES.closeEvent);
+            if (openPanel) {
+                onEvent?.(openPanel, MOBILE_HEADER_EVENT_NAMES.closeEvent);
             }
-            setVisiblePanel(null);
-        }, [visiblePanel, onEvent]);
+            setOpenPanel(null);
+        }, [openPanel, onEvent]);
 
         const onBurgerMenuItemClick = useCallback(
             (item: MobileMenuItem) => {
@@ -195,7 +192,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
             [logo, onClosePanel],
         );
 
-        const burgerPanelItem: PanelItem = useMemo(
+        const burgerPanelItem: PanelItemProps = useMemo(
             () => ({
                 id: BURGER_PANEL_ITEM_ID,
                 content: (
@@ -287,7 +284,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                     )}
                     <header className={b('header')} style={{height: size}}>
                         <Burger
-                            opened={visiblePanel === burgerPanelItem.id}
+                            opened={openPanel === burgerPanelItem.id}
                             onClick={() => onPanelToggle(BURGER_PANEL_ITEM_ID)}
                             className={b('burger')}
                             closeTitle={burgerCloseTitle}
@@ -304,7 +301,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                         {...rest}
                         key={id}
                         className={b('panels')}
-                        open={visiblePanel === id}
+                        open={openPanel === id}
                         onOpenChange={(open) => !open && onCloseDrawer()}
                         style={{top: `calc(${size}px + var(--gn-top-alert-height, 0px))`}}
                         contentClassName={b('panel-item', className)}
