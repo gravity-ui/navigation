@@ -10,7 +10,7 @@ import {UNGROUPED_ID} from '../AllPagesPanel/constants';
 
 import {Item, ItemProps} from './Item/Item';
 import {MultipleTooltip, MultipleTooltipContext, MultipleTooltipProvider} from './MultipleTooltip';
-import {COLLAPSE_ITEM_ID} from './constants';
+import {COLLAPSE_ITEM_ID, ITEM_TYPE_REGULAR} from './constants';
 import {getItemHeight, getItemsHeight, getSelectedItemIndex} from './utils';
 
 import styles from './CompositeBar.module.scss';
@@ -260,12 +260,17 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                     onSortEnd={enableSorting ? handleFirstLevelSortEnd : undefined}
                     renderItem={(item, _isItemActive, itemIndex) => {
                         const groupId = item.groupId;
+                        const itemType = item.type || ITEM_TYPE_REGULAR;
 
                         if (!groupId) {
                             return (
                                 <Item
                                     {...item}
-                                    className={b('menu-item', {compact}, menuItemClassName)}
+                                    className={b(
+                                        'menu-item',
+                                        {compact, type: itemType},
+                                        menuItemClassName,
+                                    )}
                                     compact={compact}
                                     editMode={editMode}
                                     onMouseEnter={onMouseEnterByIndex(itemIndex)}
@@ -352,9 +357,6 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                                             return (
                                                 <Item
                                                     {...nestedItem}
-                                                    className={b('menu-group-header', {
-                                                        collapsed: isCollapsed,
-                                                    })}
                                                     compact={compact}
                                                     editMode={editMode}
                                                     onMouseEnter={() => {
