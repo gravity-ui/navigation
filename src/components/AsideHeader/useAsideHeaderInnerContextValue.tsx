@@ -4,7 +4,7 @@ import {MenuItem} from '../types';
 
 import {AsideHeaderInnerContextType} from './AsideHeaderContext';
 import {AllPagesPanel, getAllPagesMenuItem} from './components/AllPagesPanel';
-import {AsideHeaderItem, AsideHeaderProps, InnerPanels} from './types';
+import {AsideHeaderItem, AsideHeaderProps, InnerPanels, PanelItemProps} from './types';
 
 const EMPTY_MENU_ITEMS: AsideHeaderItem[] = [];
 
@@ -62,16 +62,17 @@ export const useAsideHeaderInnerContextValue = (
         [allPagesIsAvailable, menuItems, innerVisiblePanel, ALL_PAGES_MENU_ITEM, onAllPagesClick],
     );
 
-    const innerPanelItems = useMemo(() => {
+    const innerPanelItems = useMemo<PanelItemProps[] | undefined>(() => {
         if (!allPagesIsAvailable) {
             return panelItems;
         }
+
         return [
             ...(panelItems || []),
             {
                 id: InnerPanels.AllPages,
-                content: <AllPagesPanel />,
-                visible: innerVisiblePanel === InnerPanels.AllPages,
+                children: <AllPagesPanel />,
+                open: innerVisiblePanel === InnerPanels.AllPages,
             },
         ];
     }, [allPagesIsAvailable, panelItems, innerVisiblePanel]);

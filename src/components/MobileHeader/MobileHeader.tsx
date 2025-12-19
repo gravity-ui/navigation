@@ -192,10 +192,10 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
             [logo, onClosePanel],
         );
 
-        const burgerPanelItem: PanelItemProps = useMemo(
+        const burgerPanelItem: PanelItemProps = useMemo<PanelItemProps>(
             () => ({
                 id: BURGER_PANEL_ITEM_ID,
-                content: (
+                children: (
                     <BurgerMenu
                         items={burgerMenu.items}
                         modalItem={burgerMenu.modalItem}
