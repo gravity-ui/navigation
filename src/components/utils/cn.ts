@@ -10,8 +10,6 @@ export const NAMESPACE = 'gn-';
 export const cn = withNaming({e: '__', m: '_'});
 export const block = withNaming({n: NAMESPACE, e: '__', m: '_'});
 
-export type CnBlock = ReturnType<typeof cn>;
-
 /**
  * Creates a BEM block function that works with CSS modules
  * @param blockName - The block name (without namespace)

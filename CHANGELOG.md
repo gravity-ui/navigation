@@ -1,5 +1,26 @@
 # Changelog
 
+## [4.0.1](https://github.com/gravity-ui/navigation/compare/v4.0.0...v4.0.1) (2025-12-19)
+
+
+### Bug Fixes
+
+* add AsideHeaderItem type export to AsideHeader component ([#519](https://github.com/gravity-ui/navigation/issues/519)) ([4321274](https://github.com/gravity-ui/navigation/commit/43212744d1ec734463f57dc97b2307fb3ce5af4a))
+
+## [4.0.0](https://github.com/gravity-ui/navigation/compare/v3.11.0...v4.0.0) (2025-12-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* migration to css modules
+
+### Features
+
+* **codemod:** codemods for migration to v4 ([#471](https://github.com/gravity-ui/navigation/issues/471)) ([2ba079a](https://github.com/gravity-ui/navigation/commit/2ba079ab90081a67ffbbf947b0f64f6ade00a98c))
+* migration to css modules ([52a414e](https://github.com/gravity-ui/navigation/commit/52a414eb508094d44e7662e19aa95d284bf47f73))
+* **PageLayout:** support function type for topAlert prop ([#491](https://github.com/gravity-ui/navigation/issues/491)) ([e26a6ae](https://github.com/gravity-ui/navigation/commit/e26a6ae276b331709dc671742be2c5bc56abec34))
+* support item.itemWrapper in AllPagesPannel ([#496](https://github.com/gravity-ui/navigation/issues/496)) ([a072b05](https://github.com/gravity-ui/navigation/commit/a072b05d65a5c0bd7ebccd2ebeac7ba0d2c7fa21))
+
 ## [4.0.0](https://github.com/gravity-ui/navigation/compare/v3.7.1...v4.0.0) (2025-11-21)
 
 ### ⚠ BREAKING CHANGES
@@ -26,6 +47,13 @@ npx navigation-codemod v4 path/to/your/code
 
 **AI Migration Assistant:** See `AI_MIGRATION_ASSISTANT.md` for AI prompt to help with complex migration cases.
 
+
+## [3.11.0](https://github.com/gravity-ui/navigation/compare/v3.10.2...v3.11.0) (2025-12-04)
+
+
+### Features
+
+* create agents.md ([#502](https://github.com/gravity-ui/navigation/issues/502)) ([b01c9e2](https://github.com/gravity-ui/navigation/commit/b01c9e2606faa6df31852631b17bc698167cb568))
 
 ## [3.10.2](https://github.com/gravity-ui/navigation/compare/v3.10.1...v3.10.2) (2025-12-04)
 
