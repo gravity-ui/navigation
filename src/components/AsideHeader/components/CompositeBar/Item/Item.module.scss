@@ -222,8 +222,6 @@ $actionLeftRightMargin: 10px;
                     --gn-aside-header-item-current-background-color,
                     var(--_--item-selected-background-color)
                 );
-
-                border-radius: var(--gn-aside-header-item-expanded-radius);
             }
         }
 
@@ -236,8 +234,6 @@ $actionLeftRightMargin: 10px;
                         var(--_--item-selected-background-color)
                     )
                 );
-
-                border-radius: var(--gn-aside-header-item-expanded-radius);
             }
         }
 
@@ -247,8 +243,6 @@ $actionLeftRightMargin: 10px;
                     --gn-aside-header-item-background-color-hover,
                     var(--_--item-background-color-hover)
                 );
-
-                border-radius: var(--gn-aside-header-item-expanded-radius);
             }
         }
     }

@@ -52,6 +52,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
     }, [ref]);
 
     const isExpandedByHover = compact && isExpanded;
+
     return (
         <React.Fragment>
             <CSSTransition
