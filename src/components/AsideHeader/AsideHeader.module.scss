@@ -243,4 +243,14 @@ $block: '.#{variables.$ns}aside-header';
         z-index: var(--gn-aside-header-content-z-index, 95);
         margin-top: var(--gn-top-alert-height, 0);
     }
+
+    &__all-pages-panel {
+        /**
+        * This is a way to fix the width of the panel.
+        * This is necessary because the panel is a sliding element and has a built-in width.
+        * Since we don't know what width the content will have, we use important to adjust the width to the content.
+        */
+        /* stylelint-disable-next-line */
+        width: fit-content !important;
+    }
 }

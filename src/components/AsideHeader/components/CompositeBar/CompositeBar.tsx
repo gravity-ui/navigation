@@ -215,6 +215,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                     renderItem={(item, _isItemActive, itemIndex) => (
                         <Item
                             {...item}
+                            enableTooltip={multipleTooltip ? false : item.enableTooltip}
                             compact={compact}
                             onMouseEnter={onMouseEnterByIndex(itemIndex)}
                             onMouseLeave={onMouseLeave}

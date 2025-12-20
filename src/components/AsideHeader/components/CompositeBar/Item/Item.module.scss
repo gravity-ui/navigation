@@ -201,6 +201,21 @@ $actionLeftRightMargin: 10px;
         }
     }
 
+    &__icon-tooltip {
+        display: flex;
+        box-sizing: border-box;
+        height: 30px;
+        padding: 8px 12px;
+        align-items: center;
+
+        :global(.g-action-tooltip__description) {
+            margin: 0;
+            margin-block: 0;
+
+            color: var(--g-color-text-light-primary);
+        }
+    }
+
     &__icon-tooltip_item-type_action {
         margin-left: 10px;
     }
