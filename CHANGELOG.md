@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.0.3](https://github.com/gravity-ui/navigation/compare/v4.0.2...v4.0.3) (2025-12-22)
+
+
+### Bug Fixes
+
+* fix tooltip functionality and styling in CompositeBar and AsideHeader components ([#525](https://github.com/gravity-ui/navigation/issues/525)) ([089135d](https://github.com/gravity-ui/navigation/commit/089135d461db190cc2b8fd2a8dd71180f1f05565))
+* remove phantom 4.1.0 and duplicate 4.0.0 entries from CHANGELOG ([#527](https://github.com/gravity-ui/navigation/issues/527)) ([3cb4399](https://github.com/gravity-ui/navigation/commit/3cb4399c8be3b02f9cfe96f5e53f58c30e7f8edc))
+
 ## [4.0.2](https://github.com/gravity-ui/navigation/compare/v4.0.1...v4.0.2) (2025-12-19)
 
 
