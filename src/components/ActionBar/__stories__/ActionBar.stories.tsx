@@ -1,6 +1,6 @@
 import React from 'react';
 
-import type {Meta, StoryFn} from '@storybook/react';
+import type {Meta, StoryFn} from '@storybook/react-webpack5';
 
 import {getAsideHeaderWrapper} from '../../AsideHeader/__stories__/getAsideHeaderWrapper';
 import {ActionBar} from '../ActionBar';
@@ -18,7 +18,7 @@ export default {
     decorators: [getAsideHeaderWrapper()],
     parameters: {
         a11y: {
-            element: '#storybook-root',
+            context: '#storybook-root',
             config: {
                 rules: [
                     {

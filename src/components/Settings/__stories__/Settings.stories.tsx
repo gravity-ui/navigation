@@ -1,6 +1,6 @@
 import React from 'react';
 
-import type {Meta, StoryFn} from '@storybook/react';
+import type {Meta, StoryFn} from '@storybook/react-webpack5';
 
 import {Settings} from '..';
 
@@ -12,7 +12,7 @@ export default {
     component: Settings,
     parameters: {
         a11y: {
-            element: '#storybook-root',
+            context: '#storybook-root',
             config: {
                 rules: [
                     {
