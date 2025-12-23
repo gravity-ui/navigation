@@ -128,6 +128,7 @@ $block: '.#{variables.$ns}settings';
 
     &__menu {
         border-right: 1px solid var(--g-color-line-generic);
+        overflow-y: auto;
     }
 
     &__heading {
