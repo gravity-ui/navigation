@@ -235,7 +235,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
     if (!items || items.length === 0) {
         return null;
     }
-    console.log('menuItemClassName', menuItemClassName);
+
     return (
         <React.Fragment>
             <div
