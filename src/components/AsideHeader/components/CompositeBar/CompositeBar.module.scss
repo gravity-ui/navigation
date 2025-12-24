@@ -82,8 +82,10 @@ $block: '.#{variables.$ns}composite-bar';
         position: relative;
 
         &:last-child {
-            border-radius: 0 0 var(--gn-aside-header-item-expanded-radius)
-                var(--gn-aside-header-item-expanded-radius);
+            #{$class}__group-item {
+                border-radius: 0 0 var(--gn-aside-header-item-expanded-radius)
+                    var(--gn-aside-header-item-expanded-radius);
+            }
         }
 
         &_edit {
