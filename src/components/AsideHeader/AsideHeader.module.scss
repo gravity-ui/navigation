@@ -211,13 +211,14 @@ $block: '.#{variables.$ns}aside-header';
     }
 
     &__logo-button {
-        margin: 0 10px 2px;
+        margin-bottom: 2px;
     }
 
     &__logo-container {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        margin-inline: 10px;
 
         &_without-logo {
             padding-bottom: var(--g-spacing-2);
@@ -285,7 +286,6 @@ $block: '.#{variables.$ns}aside-header';
     }
 
     &__pin-button {
-        margin-right: 10px;
         margin-left: auto;
 
         &_compact {
