@@ -1,12 +1,11 @@
 import React, {useCallback} from 'react';
 
+import {ArrowLeftFromLine} from '@gravity-ui/icons';
 import {Button, Icon} from '@gravity-ui/uikit';
 
 import {createBlock} from '../../../utils/cn';
 import {useAsideHeaderContext, useAsideHeaderInnerContext} from '../../AsideHeaderContext';
 import i18n from '../../i18n';
-
-import ArrowLeftFromLineIcon from '@gravity-ui/icons/svgs/arrow-left-from-line.svg';
 
 import styles from './CollapseButton.module.scss';
 
@@ -39,7 +38,7 @@ export const CollapseButton = ({className}: CollapseButtonProps) => {
             aria-label={buttonTitle}
             title={buttonTitle}
         >
-            <Icon data={ArrowLeftFromLineIcon} className={b('icon')} size={16} />
+            <Icon data={ArrowLeftFromLine} className={b('icon')} size={16} />
         </Button>
     );
 
