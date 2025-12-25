@@ -40,7 +40,11 @@ export function SettingsOverflowDemo() {
                                     <Settings.Section key={section.id} title={section.title}>
                                         {section.items.map((item) => (
                                             <Settings.Item key={item.id} title={item.title}>
-                                                <Switch />
+                                                <Switch
+                                                    controlProps={{
+                                                        'aria-label': item.title,
+                                                    }}
+                                                />
                                             </Settings.Item>
                                         ))}
                                     </Settings.Section>

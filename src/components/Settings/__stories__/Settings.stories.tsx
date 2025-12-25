@@ -24,6 +24,10 @@ export default {
                         id: 'heading-order', // not relevant in stories
                         enabled: false,
                     },
+                    {
+                        id: 'scrollable-region-focusable', // https://github.com/gravity-ui/uikit/issues/1549
+                        enabled: false,
+                    },
                 ],
             },
         },
