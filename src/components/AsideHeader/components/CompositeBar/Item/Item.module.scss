@@ -25,6 +25,12 @@ $actionLeftRightMargin: 10px;
     --_--item-selected-text-color: var(--g-color-text-primary);
     --_--item-selected-background-color: var(--g-color-base-selection);
 
+    // Zone-aware background variables (overridden by zone context)
+    --_--zone-bg: transparent;
+    --_--zone-bg-hover: var(--_--item-background-color-hover);
+    --_--zone-current-bg: var(--_--item-selected-background-color);
+    --_--zone-current-bg-hover: var(--_--zone-current-bg);
+
     display: flex;
     min-width: 0;
     width: 100%;
@@ -34,8 +40,6 @@ $actionLeftRightMargin: 10px;
     padding: 0;
 
     &__icon {
-        color: var(--gn-aside-header-item-icon-color, var(--_--item-icon-color));
-
         #{$class}_current & {
             color: var(
                 --gn-aside-header-item-current-icon-color,
@@ -43,28 +47,11 @@ $actionLeftRightMargin: 10px;
             );
         }
 
-        :global(.#{variables.$ns}footer-item) &,
         :global(.#{variables.$ns}composite-bar-highlighted-item) & {
             color: var(
                 --gn-aside-header-general-item-icon-color,
                 var(--_--item-general-icon-color)
             );
-        }
-
-        :global(.#{variables.$ns}composite-bar_subheader) & {
-            color: var(--gn-aside-top-item-icon-color, var(--_--item-general-icon-color));
-        }
-
-        :global(.#{variables.$ns}footer-item) #{$class}_current &,
-        :global(.#{variables.$ns}composite-bar-highlighted-item) #{$class}_current & {
-            color: var(
-                --gn-aside-header-item-current-icon-color,
-                var(--gn-aside-header-general-item-icon-color, var(--_--item-general-icon-color))
-            );
-        }
-
-        :global(.#{variables.$ns}composite-bar_subheader) #{$class}_current & {
-            color: var(--gn-aside-top-item-current-icon-color, var(--_--item-general-icon-color));
         }
 
         // FIXME: fix hack in the next major
@@ -81,6 +68,34 @@ $actionLeftRightMargin: 10px;
         align-items: center;
         justify-content: center;
         height: 100%;
+        color: var(--gn-aside-header-item-icon-color, var(--_--item-icon-color));
+
+        :global(.#{variables.$ns}composite-bar_subheader) & {
+            color: var(--gn-aside-top-item-icon-color, var(--_--item-general-icon-color));
+        }
+
+        :global(.#{variables.$ns}composite-bar-highlighted-item) #{$class}_current & {
+            color: var(
+                --gn-aside-header-item-current-icon-color,
+                var(--gn-aside-header-general-item-icon-color, var(--_--item-general-icon-color))
+            );
+        }
+
+        :global(.#{variables.$ns}composite-bar_subheader) #{$class}_current & {
+            color: var(--gn-aside-top-item-current-icon-color, var(--_--item-general-icon-color));
+        }
+
+        // Footer (Bottom zone) icon color
+        :global(.#{variables.$ns}footer-item) & {
+            color: var(--gn-aside-bottom-item-icon-color, var(--_--item-general-icon-color));
+        }
+
+        :global(.#{variables.$ns}footer-item) #{$class}_current & {
+            color: var(
+                --gn-aside-bottom-item-current-icon-color,
+                var(--_--item-general-icon-color)
+            );
+        }
     }
 
     &__title {
@@ -123,6 +138,18 @@ $actionLeftRightMargin: 10px;
 
         :global(.#{variables.$ns}composite-bar_subheader) #{$class}_current & {
             color: var(--gn-aside-top-item-current-text-color, var(--_--item-selected-text-color));
+        }
+
+        // Footer (Bottom zone) text color
+        :global(.#{variables.$ns}footer-item) & {
+            color: var(--gn-aside-bottom-item-text-color, var(--_--item-text-color));
+        }
+
+        :global(.#{variables.$ns}footer-item) #{$class}_current & {
+            color: var(
+                --gn-aside-bottom-item-current-text-color,
+                var(--_--item-selected-text-color)
+            );
         }
     }
 
@@ -229,6 +256,39 @@ $actionLeftRightMargin: 10px;
         margin-left: 10px;
     }
 
+    // Top zone (subheader) variable overrides
+    :global(.#{variables.$ns}composite-bar_subheader) & {
+        --_--zone-bg: var(--gn-aside-top-item-background-color, transparent);
+        --_--zone-bg-hover: var(
+            --gn-aside-top-item-background-color-hover,
+            var(--_--item-background-color-hover)
+        );
+        --_--zone-current-bg: var(
+            --gn-aside-top-item-current-background-color,
+            var(--_--item-selected-background-color)
+        );
+        --_--zone-current-bg-hover: var(
+            --gn-aside-top-item-current-background-color-hover,
+            var(--_--zone-current-bg)
+        );
+    }
+
+    // Bottom zone (footer) variable overrides
+    :global(.#{variables.$ns}footer-item) & {
+        --_--zone-bg-hover: var(
+            --gn-aside-bottom-item-background-color-hover,
+            var(--_--item-background-color-hover)
+        );
+        --_--zone-current-bg: var(
+            --gn-aside-bottom-item-current-background-color,
+            var(--_--item-selected-background-color)
+        );
+        --_--zone-current-bg-hover: var(
+            --gn-aside-bottom-item-current-background-color-hover,
+            var(--_--zone-current-bg)
+        );
+    }
+
     &:not(&_compact) {
         &#{$class}_current {
             &#{$class}_type_regular {
@@ -259,67 +319,88 @@ $actionLeftRightMargin: 10px;
                 );
             }
         }
+    }
 
-        // Subheader (Top zone) background styles
-        :global(.#{variables.$ns}composite-bar_subheader) & {
-            &#{$class}_type_regular {
-                background-color: var(--gn-aside-top-item-background-color, transparent);
+    // Mixin for compact mode background
+    @mixin item-bg {
+        position: relative;
+        background-color: transparent;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            z-index: -1;
+            width: var(
+                --gn-aside-header-item-icon-background-size,
+                var(--_--item-icon-background-size)
+            );
+            height: var(
+                --gn-aside-header-item-icon-background-size,
+                var(--_--item-icon-background-size)
+            );
+            margin-top: -18px;
+            margin-left: -18px;
+            border-radius: var(
+                --gn-aside-header-item-collapsed-radius,
+                var(--_--item-collapsed-radius)
+            );
+        }
+    }
+
+    // Zone-aware background styles (Top zone & Bottom zone) - applies to both expanded and compact
+    :global(.#{variables.$ns}composite-bar_subheader) &,
+    :global(.#{variables.$ns}footer-item) & {
+        // Expanded mode
+        &#{$class}_type_regular {
+            background-color: var(--_--zone-bg);
+        }
+
+        &#{$class}_current#{$class}_type_regular {
+            background-color: var(--_--zone-current-bg);
+        }
+
+        &:hover#{$class}_type_regular {
+            background-color: var(--_--zone-current-bg-hover);
+        }
+
+        &:not(#{$class}_current):hover#{$class}_type_regular {
+            background-color: var(--_--zone-bg-hover);
+        }
+
+        &#{$class}_compact#{$class}_current#{$class}_type_regular {
+            #{$class}__btn-icon {
+                @include item-bg();
+
+                &::before {
+                    background-color: var(--_--zone-current-bg);
+                }
             }
+        }
 
-            &#{$class}_current#{$class}_type_regular {
-                background-color: var(
-                    --gn-aside-top-item-current-background-color,
-                    var(--_--item-selected-background-color)
-                );
+        &#{$class}_compact:hover#{$class}_type_regular {
+            #{$class}__btn-icon {
+                @include item-bg();
+
+                &::before {
+                    background-color: var(--_--zone-current-bg-hover);
+                }
             }
+        }
 
-            &:hover#{$class}_type_regular {
-                background-color: var(
-                    --gn-aside-top-item-current-background-color-hover,
-                    var(
-                        --gn-aside-top-item-current-background-color,
-                        var(--_--item-selected-background-color)
-                    )
-                );
-            }
+        &#{$class}_compact:not(#{$class}_current):hover#{$class}_type_regular {
+            #{$class}__btn-icon {
+                @include item-bg();
 
-            &:not(#{$class}_current):hover#{$class}_type_regular {
-                background-color: var(
-                    --gn-aside-top-item-background-color-hover,
-                    var(--_--item-background-color-hover)
-                );
+                &::before {
+                    background-color: var(--_--zone-bg-hover);
+                }
             }
         }
     }
 
     &_compact {
-        @mixin item-bg {
-            position: relative;
-            background-color: transparent;
-
-            &::before {
-                content: '';
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                z-index: -1;
-                width: var(
-                    --gn-aside-header-item-icon-background-size,
-                    var(--_--item-icon-background-size)
-                );
-                height: var(
-                    --gn-aside-header-item-icon-background-size,
-                    var(--_--item-icon-background-size)
-                );
-                margin-top: -18px;
-                margin-left: -18px;
-                border-radius: var(
-                    --gn-aside-header-item-collapsed-radius,
-                    var(--_--item-collapsed-radius)
-                );
-            }
-        }
-
         &#{$class}_type_action {
             width: var(--gn-composite-bar-item-action-size);
 
@@ -369,55 +450,6 @@ $actionLeftRightMargin: 10px;
                     &::before {
                         background-color: var(
                             --gn-aside-header-item-background-color-hover,
-                            var(--_--item-background-color-hover)
-                        );
-                    }
-                }
-            }
-        }
-
-        // Subheader (Top zone) compact background styles
-        :global(.#{variables.$ns}composite-bar_subheader) &#{$class}_current {
-            &#{$class}_type_regular {
-                #{$class}__btn-icon {
-                    @include item-bg();
-
-                    &::before {
-                        background-color: var(
-                            --gn-aside-top-item-current-background-color,
-                            var(--_--item-selected-background-color)
-                        );
-                    }
-                }
-            }
-        }
-
-        :global(.#{variables.$ns}composite-bar_subheader) &:hover {
-            &#{$class}_type_regular {
-                #{$class}__btn-icon {
-                    @include item-bg();
-
-                    &::before {
-                        background-color: var(
-                            --gn-aside-top-item-current-background-color-hover,
-                            var(
-                                --gn-aside-top-item-current-background-color,
-                                var(--_--item-selected-background-color)
-                            )
-                        );
-                    }
-                }
-            }
-        }
-
-        :global(.#{variables.$ns}composite-bar_subheader) &:not(#{$class}_current):hover {
-            &#{$class}_type_regular {
-                #{$class}__btn-icon {
-                    @include item-bg();
-
-                    &::before {
-                        background-color: var(
-                            --gn-aside-top-item-background-color-hover,
                             var(--_--item-background-color-hover)
                         );
                     }
