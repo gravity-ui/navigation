@@ -151,6 +151,7 @@ $block: '.#{variables.$ns}aside-header';
         width: calc(100%);
         padding-top: 8px;
         padding-bottom: 22px;
+        background-color: var(--gn-aside-top-decoration-background-color);
 
         #{$class}__header-divider {
             position: absolute;
@@ -174,8 +175,11 @@ $block: '.#{variables.$ns}aside-header';
             height: calc(100% - var(--gn-aside-header-header-divider-height));
             content: '';
             background-color: var(
-                --gn-aside-header-decoration-collapsed-background-color,
-                var(--_--decoration-collapsed-background-color)
+                --gn-aside-top-divider-color,
+                var(
+                    --gn-aside-header-decoration-collapsed-background-color,
+                    var(--_--decoration-collapsed-background-color)
+                )
             );
         }
 
