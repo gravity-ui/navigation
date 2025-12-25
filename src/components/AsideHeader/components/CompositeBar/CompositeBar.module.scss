@@ -98,11 +98,12 @@ $block: '.#{variables.$ns}composite-bar';
     }
 
     &__menu-group-header {
-        border-radius: var(--gn-aside-header-item-expanded-radius)
-            var(--gn-aside-header-item-expanded-radius) 0 0;
+        &:not(&_collapsed) {
+            border-radius: var(--gn-aside-header-item-expanded-radius)
+                var(--gn-aside-header-item-expanded-radius) 0 0;
+        }
     }
 
-    &__menu-group-header_collapsed,
     &__menu-item_type_regular,
     &__root-menu-item[class]:hover,
     &__menu-group:hover:before,
