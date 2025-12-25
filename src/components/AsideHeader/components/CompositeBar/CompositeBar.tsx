@@ -32,7 +32,6 @@ type CompositeBarProps = {
     compact: boolean;
     compositeId?: string;
     className?: string;
-    groupClassName?: string;
     menuItemClassName?: string;
     editMode?: boolean;
     onToggleGroupCollapsed?: (groupId: string) => void;
@@ -61,7 +60,6 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
     multipleTooltip = false,
     compositeId,
     className,
-    groupClassName,
     menuItemClassName,
     enableSorting = false,
     editMode = false,
@@ -253,7 +251,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                     selectedItemIndex={type === 'menu' ? getSelectedItemIndex(items) : undefined}
                     itemHeight={getItemHeight}
                     itemsHeight={getItemsHeight}
-                    itemClassName={b('root-menu-item', {compact})}
+                    itemClassName={b('root-menu-item', {compact}, menuItemClassName)}
                     virtualized={false}
                     filterable={false}
                     sortable={enableSorting}
@@ -266,11 +264,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                             return (
                                 <Item
                                     {...item}
-                                    className={b(
-                                        'menu-item',
-                                        {compact, type: itemType},
-                                        menuItemClassName,
-                                    )}
+                                    className={b('menu-item', {compact, type: itemType})}
                                     compact={compact}
                                     editMode={editMode}
                                     onMouseEnter={onMouseEnterByIndex(itemIndex)}
@@ -302,13 +296,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                         }
 
                         return (
-                            <div
-                                className={b(
-                                    'menu-group',
-                                    {expanded: !isCollapsed},
-                                    groupClassName,
-                                )}
-                            >
+                            <div className={b('menu-group', {expanded: !isCollapsed})}>
                                 {hasHeader && !isUngrouped && (
                                     <Item
                                         {...item}
@@ -358,6 +346,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                                                 <Item
                                                     {...nestedItem}
                                                     compact={compact}
+                                                    className={b('group-item')}
                                                     editMode={editMode}
                                                     onMouseEnter={() => {
                                                         setHoveredGroupId(nestedItem.id);
@@ -409,7 +398,6 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     compact,
     compositeId,
     className,
-    groupClassName,
     menuItemClassName,
     editMode = false,
 }) => {
@@ -431,7 +419,6 @@ export const CompositeBar: FC<CompositeBarProps> = ({
             <div className={b({scrollable: true}, className)}>
                 <CompositeBarView
                     compositeId={compositeId}
-                    groupClassName={groupClassName}
                     menuItemClassName={menuItemClassName}
                     type="menu"
                     compact={compact}
@@ -448,7 +435,6 @@ export const CompositeBar: FC<CompositeBarProps> = ({
         node = (
             <div className={b({subheader: true}, className)}>
                 <CompositeBarView
-                    groupClassName={groupClassName}
                     menuItemClassName={menuItemClassName}
                     type="subheader"
                     compact={compact}
