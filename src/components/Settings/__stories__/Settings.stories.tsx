@@ -6,6 +6,7 @@ import {Settings} from '..';
 
 import {SettingsDemo} from './SettingsDemo';
 import {SettingsMobileDemo} from './SettingsMobileDemo';
+import {SettingsOverflowDemo} from './SettingsOverflowDemo';
 
 export default {
     title: 'components/Settings',
@@ -34,3 +35,6 @@ export const Showcase = ShowcaseTemplate.bind({});
 
 const ShowcaseMobileTemplate: StoryFn = () => <SettingsMobileDemo />;
 export const ViewMobile = ShowcaseMobileTemplate.bind({});
+
+const OverflowTemplate: StoryFn = () => <SettingsOverflowDemo />;
+export const Overflow = OverflowTemplate.bind({});
