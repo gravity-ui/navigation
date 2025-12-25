@@ -253,7 +253,6 @@ $block: '.#{variables.$ns}aside-header';
         display: flex;
         flex-direction: column;
         background-color: var(--gn-aside-bottom-background-color);
-        border-top: 1px solid var(--gn-aside-bottom-divider-color, transparent);
     }
 
     &__panels {
