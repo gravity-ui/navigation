@@ -26,10 +26,20 @@ $actionLeftRightMargin: 10px;
     --_--item-selected-background-color: var(--g-color-base-selection);
 
     // Zone-aware background variables (overridden by zone context)
+    // Default values use --gn-aside-header-item-* for root items compatibility
     --_--zone-bg: transparent;
-    --_--zone-bg-hover: var(--_--item-background-color-hover);
-    --_--zone-current-bg: var(--_--item-selected-background-color);
-    --_--zone-current-bg-hover: var(--_--zone-current-bg);
+    --_--zone-bg-hover: var(
+        --gn-aside-header-item-background-color-hover,
+        var(--_--item-background-color-hover)
+    );
+    --_--zone-current-bg: var(
+        --gn-aside-header-item-current-background-color,
+        var(--_--item-selected-background-color)
+    );
+    --_--zone-current-bg-hover: var(
+        --gn-aside-header-item-current-background-color-hover,
+        var(--_--zone-current-bg)
+    );
 
     display: flex;
     min-width: 0;
@@ -39,14 +49,105 @@ $actionLeftRightMargin: 10px;
     cursor: pointer;
     padding: 0;
 
-    &__icon {
-        #{$class}_current & {
-            color: var(
-                --gn-aside-header-item-current-icon-color,
-                var(--gn-aside-header-item-icon-color, var(--_--item-icon-color))
+    // Top zone (subheader) variable overrides
+    :global(.#{variables.$ns}composite-bar_subheader) & {
+        --_--zone-bg: var(--gn-aside-top-item-background-color, transparent);
+        --_--zone-bg-hover: var(
+            --gn-aside-top-item-background-color-hover,
+            var(--_--item-background-color-hover)
+        );
+        --_--zone-current-bg: var(
+            --gn-aside-top-item-current-background-color,
+            var(--_--item-selected-background-color)
+        );
+        --_--zone-current-bg-hover: var(
+            --gn-aside-top-item-current-background-color-hover,
+            var(--_--zone-current-bg)
+        );
+    }
+
+    // Main zone (group items) variable overrides
+    :global(.#{variables.$ns}composite-bar__menu-group_wrapper) & {
+        --_--zone-bg-hover: var(
+            --gn-aside-main-group-item-background-color-hover,
+            var(--_--item-background-color-hover)
+        );
+        --_--zone-current-bg: var(
+            --gn-aside-main-group-item-current-background-color,
+            var(--_--item-selected-background-color)
+        );
+        --_--zone-current-bg-hover: var(
+            --gn-aside-main-group-item-current-background-color-hover,
+            var(--_--zone-current-bg)
+        );
+    }
+
+    // Bottom zone (footer) variable overrides
+    :global(.#{variables.$ns}footer-item) & {
+        --_--zone-bg-hover: var(
+            --gn-aside-bottom-item-background-color-hover,
+            var(--_--item-background-color-hover)
+        );
+        --_--zone-current-bg: var(
+            --gn-aside-bottom-item-current-background-color,
+            var(--_--item-selected-background-color)
+        );
+        --_--zone-current-bg-hover: var(
+            --gn-aside-bottom-item-current-background-color-hover,
+            var(--_--zone-current-bg)
+        );
+    }
+
+    // Mixin for compact mode background
+    @mixin item-bg {
+        position: relative;
+        background-color: transparent;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            z-index: -1;
+            width: var(
+                --gn-aside-header-item-icon-background-size,
+                var(--_--item-icon-background-size)
+            );
+            height: var(
+                --gn-aside-header-item-icon-background-size,
+                var(--_--item-icon-background-size)
+            );
+            margin-top: -18px;
+            margin-left: -18px;
+            border-radius: var(
+                --gn-aside-header-item-collapsed-radius,
+                var(--_--item-collapsed-radius)
             );
         }
+    }
 
+    // Background styles - applies to all items (zone variables are overridden by zone context)
+    &#{$class}_type_regular {
+        background-color: var(--_--zone-bg);
+
+        #{$class}__btn-icon {
+            @include item-bg();
+        }
+    }
+
+    &#{$class}_current#{$class}_type_regular {
+        background-color: var(--_--zone-current-bg);
+    }
+
+    &:hover#{$class}_type_regular {
+        background-color: var(--_--zone-current-bg-hover);
+    }
+
+    &:not(#{$class}_current):hover#{$class}_type_regular {
+        background-color: var(--_--zone-bg-hover);
+    }
+
+    &__icon {
         :global(.#{variables.$ns}composite-bar-highlighted-item) & {
             color: var(
                 --gn-aside-header-general-item-icon-color,
@@ -256,204 +357,12 @@ $actionLeftRightMargin: 10px;
         margin-left: 10px;
     }
 
-    // Top zone (subheader) variable overrides
-    :global(.#{variables.$ns}composite-bar_subheader) & {
-        --_--zone-bg: var(--gn-aside-top-item-background-color, transparent);
-        --_--zone-bg-hover: var(
-            --gn-aside-top-item-background-color-hover,
-            var(--_--item-background-color-hover)
-        );
-        --_--zone-current-bg: var(
-            --gn-aside-top-item-current-background-color,
-            var(--_--item-selected-background-color)
-        );
-        --_--zone-current-bg-hover: var(
-            --gn-aside-top-item-current-background-color-hover,
-            var(--_--zone-current-bg)
-        );
-    }
-
-    // Bottom zone (footer) variable overrides
-    :global(.#{variables.$ns}footer-item) & {
-        --_--zone-bg-hover: var(
-            --gn-aside-bottom-item-background-color-hover,
-            var(--_--item-background-color-hover)
-        );
-        --_--zone-current-bg: var(
-            --gn-aside-bottom-item-current-background-color,
-            var(--_--item-selected-background-color)
-        );
-        --_--zone-current-bg-hover: var(
-            --gn-aside-bottom-item-current-background-color-hover,
-            var(--_--zone-current-bg)
-        );
-    }
-
-    &:not(&_compact) {
-        &#{$class}_current {
-            &#{$class}_type_regular {
-                background-color: var(
-                    --gn-aside-header-item-current-background-color,
-                    var(--_--item-selected-background-color)
-                );
-            }
-        }
-
-        &:hover {
-            &#{$class}_type_regular {
-                background-color: var(
-                    --gn-aside-header-item-current-background-color-hover,
-                    var(
-                        --gn-aside-header-item-current-background-color,
-                        var(--_--item-selected-background-color)
-                    )
-                );
-            }
-        }
-
-        &:not(#{$class}_current):hover {
-            &#{$class}_type_regular {
-                background-color: var(
-                    --gn-aside-header-item-background-color-hover,
-                    var(--_--item-background-color-hover)
-                );
-            }
-        }
-    }
-
-    // Mixin for compact mode background
-    @mixin item-bg {
-        position: relative;
-        background-color: transparent;
-
-        &::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            z-index: -1;
-            width: var(
-                --gn-aside-header-item-icon-background-size,
-                var(--_--item-icon-background-size)
-            );
-            height: var(
-                --gn-aside-header-item-icon-background-size,
-                var(--_--item-icon-background-size)
-            );
-            margin-top: -18px;
-            margin-left: -18px;
-            border-radius: var(
-                --gn-aside-header-item-collapsed-radius,
-                var(--_--item-collapsed-radius)
-            );
-        }
-    }
-
-    // Zone-aware background styles (Top zone & Bottom zone) - applies to both expanded and compact
-    :global(.#{variables.$ns}composite-bar_subheader) &,
-    :global(.#{variables.$ns}footer-item) & {
-        // Expanded mode
-        &#{$class}_type_regular {
-            background-color: var(--_--zone-bg);
-        }
-
-        &#{$class}_current#{$class}_type_regular {
-            background-color: var(--_--zone-current-bg);
-        }
-
-        &:hover#{$class}_type_regular {
-            background-color: var(--_--zone-current-bg-hover);
-        }
-
-        &:not(#{$class}_current):hover#{$class}_type_regular {
-            background-color: var(--_--zone-bg-hover);
-        }
-
-        &#{$class}_compact#{$class}_current#{$class}_type_regular {
-            #{$class}__btn-icon {
-                @include item-bg();
-
-                &::before {
-                    background-color: var(--_--zone-current-bg);
-                }
-            }
-        }
-
-        &#{$class}_compact:hover#{$class}_type_regular {
-            #{$class}__btn-icon {
-                @include item-bg();
-
-                &::before {
-                    background-color: var(--_--zone-current-bg-hover);
-                }
-            }
-        }
-
-        &#{$class}_compact:not(#{$class}_current):hover#{$class}_type_regular {
-            #{$class}__btn-icon {
-                @include item-bg();
-
-                &::before {
-                    background-color: var(--_--zone-bg-hover);
-                }
-            }
-        }
-    }
-
     &_compact {
         &#{$class}_type_action {
             width: var(--gn-composite-bar-item-action-size);
 
             & #{$class}__title {
                 margin: 0;
-            }
-        }
-
-        &#{$class}_current {
-            &#{$class}_type_regular {
-                #{$class}__btn-icon {
-                    @include item-bg();
-
-                    &::before {
-                        background-color: var(
-                            --gn-aside-header-item-current-background-color,
-                            var(--_--item-selected-background-color)
-                        );
-                    }
-                }
-            }
-        }
-
-        &:hover {
-            &#{$class}_type_regular {
-                #{$class}__btn-icon {
-                    @include item-bg();
-
-                    &::before {
-                        background-color: var(
-                            --gn-aside-header-item-current-background-color-hover,
-                            var(
-                                --gn-aside-header-item-current-background-color,
-                                var(--_--item-selected-background-color)
-                            )
-                        );
-                    }
-                }
-            }
-        }
-
-        &:not(#{$class}_current):hover {
-            &#{$class}_type_regular {
-                #{$class}__btn-icon {
-                    @include item-bg();
-
-                    &::before {
-                        background-color: var(
-                            --gn-aside-header-item-background-color-hover,
-                            var(--_--item-background-color-hover)
-                        );
-                    }
-                }
             }
         }
     }

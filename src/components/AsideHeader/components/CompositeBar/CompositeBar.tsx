@@ -294,7 +294,9 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                         }
 
                         return (
-                            <div className={b('menu-group', {expanded: !isCollapsed})}>
+                            <div
+                                className={b('menu-group', {expanded: !isCollapsed, wrapper: true})}
+                            >
                                 {hasHeader && !isUngrouped && (
                                     <Item
                                         {...item}
