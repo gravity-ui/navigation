@@ -127,6 +127,9 @@ $block: '.#{variables.$ns}settings';
     }
 
     &__menu {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
         border-right: 1px solid var(--g-color-line-generic);
     }
 

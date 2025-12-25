@@ -6,6 +6,7 @@ import {Settings} from '..';
 
 import {SettingsDemo} from './SettingsDemo';
 import {SettingsMobileDemo} from './SettingsMobileDemo';
+import {SettingsOverflowDemo} from './SettingsOverflowDemo';
 
 export default {
     title: 'components/Settings',
@@ -23,6 +24,10 @@ export default {
                         id: 'heading-order', // not relevant in stories
                         enabled: false,
                     },
+                    {
+                        id: 'scrollable-region-focusable', // https://github.com/gravity-ui/uikit/issues/1549
+                        enabled: false,
+                    },
                 ],
             },
         },
@@ -34,3 +39,6 @@ export const Showcase = ShowcaseTemplate.bind({});
 
 const ShowcaseMobileTemplate: StoryFn = () => <SettingsMobileDemo />;
 export const ViewMobile = ShowcaseMobileTemplate.bind({});
+
+const OverflowTemplate: StoryFn = () => <SettingsOverflowDemo />;
+export const Overflow = OverflowTemplate.bind({});

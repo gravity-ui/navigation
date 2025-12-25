@@ -16,4 +16,10 @@ test.describe('Settings', () => {
 
         await expectScreenshot();
     });
+
+    test('render story: <Overflow>', async ({mount, expectScreenshot}) => {
+        await mount(<SettingsStories.Overflow />);
+
+        await expectScreenshot();
+    });
 });

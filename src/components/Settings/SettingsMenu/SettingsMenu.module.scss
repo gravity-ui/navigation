@@ -4,6 +4,8 @@
 $block: '.#{variables.$ns}settings-menu';
 
 #{$block} {
+    overflow-y: auto;
+
     &__group {
         &-heading {
             @include mixins.text-accent;
