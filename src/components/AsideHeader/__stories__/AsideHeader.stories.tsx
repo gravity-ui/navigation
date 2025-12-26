@@ -5,6 +5,7 @@ import {Button, Flex, Icon, Text, spacing} from '@gravity-ui/uikit';
 import type {Meta, StoryFn} from '@storybook/react';
 
 import {AsideHeader} from '../AsideHeader';
+import {FooterItem} from '../components/FooterItem/FooterItem';
 import {AsideFallback} from '../components/PageLayout/AsideFallback';
 import {PageLayout} from '../components/PageLayout/PageLayout';
 import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
@@ -368,6 +369,108 @@ const GroupedMenuCollapsibleTemplate: StoryFn = (args) => {
 
 export const GroupedMenuCollapsible = GroupedMenuCollapsibleTemplate.bind({});
 GroupedMenuCollapsible.args = {
+    multipleTooltip: false,
+    initialCompact: false,
+};
+
+const CustomThemesWithNewColorsTemplate: StoryFn = (args) => {
+    const [compact, setCompact] = React.useState(false);
+    const [menuItems, setMenuItems] = React.useState(menuItemsWithGroups);
+    const [currentMenuGroups, setCurrentMenuGroups] = React.useState(menuGroupsWithIcons);
+
+    return (
+        <>
+            <style>
+                {`.g-root {
+                    // Top zone (subheader)
+                    --gn-aside-top-item-icon-color: #ff0000;
+                    --gn-aside-top-item-text-color: #ff6600;
+                    --gn-aside-top-item-background-color: rgba(255, 255, 0, 0.3);
+                    --gn-aside-top-item-background-color-hover: rgba(255, 255, 0, 0.7);
+                    --gn-aside-top-item-current-icon-color: #00ff00;
+                    --gn-aside-top-item-current-text-color: #00cc00;
+                    --gn-aside-top-item-current-background-color: rgba(0, 255, 0, 0.2);
+                    --gn-aside-top-item-current-background-color-hover: rgba(0, 255, 0, 0.4);
+
+                    // Main zone (groups)
+                    --gn-aside-main-background-color: transparent;
+                    --gn-aside-main-group-item-background-color: rgba(255, 255, 255, 0.6);
+                    --gn-aside-main-group-item-background-color-hover: rgba(0, 255, 255, 0.7);
+                    --gn-aside-main-group-item-current-background-color: rgba(0, 0, 255, 0.2);
+                    --gn-aside-main-group-item-current-background-color-hover: rgba(0, 0, 255, 0.4);
+
+                    // Bottom zone (footer)
+                    --gn-aside-bottom-background-color: rgba(128, 0, 128, 0.1);
+                    --gn-aside-bottom-divider-color: #ff00ff;
+                    --gn-aside-bottom-item-icon-color: #ff00ff;
+                    --gn-aside-bottom-item-text-color: #cc00cc;
+                    --gn-aside-bottom-item-background-color-hover: rgba(255, 0, 255, 0.3);
+                    --gn-aside-bottom-item-current-icon-color: #00ffff;
+                    --gn-aside-bottom-item-current-text-color: #00cccc;
+                    --gn-aside-bottom-item-current-background-color: rgba(0, 255, 255, 0.2);
+                    --gn-aside-bottom-item-current-background-color-hover: rgba(0, 255, 255, 0.4);
+            }`}
+            </style>
+
+            <PageLayout compact={compact} onChangeCompact={setCompact}>
+                <PageLayoutAside
+                    headerDecoration
+                    logo={DEFAULT_LOGO}
+                    menuItems={menuItems}
+                    defaultMenuItems={menuItemsWithGroups}
+                    editMenuProps={{enableSorting: true}}
+                    menuGroups={currentMenuGroups}
+                    defaultMenuGroups={menuGroupsWithIcons}
+                    subheaderItems={[
+                        {
+                            id: 'services',
+                            title: 'Services',
+                            icon: Gear,
+                            popupPlacement: ['right-start'],
+                            current: true,
+                            popupOffset: {mainAxis: 10, crossAxis: 10},
+                        },
+                        {
+                            id: 'search',
+                            title: 'Search',
+                            qa: 'subheader-item-search',
+                            icon: Magnifier,
+                        },
+                    ]}
+                    renderFooter={({compact}) => (
+                        <React.Fragment>
+                            <FooterItem
+                                id={'project-settings'}
+                                title={'Settings with panel'}
+                                tooltipText={
+                                    <div>
+                                        <b>Settings with panel</b>
+                                    </div>
+                                }
+                                current={true}
+                                bringForward
+                                compact={compact}
+                            />
+                            <FooterItem
+                                id={'user-settings'}
+                                icon={Gear}
+                                title={'User Settings with panel'}
+                                tooltipText={'User Settings with panel'}
+                                compact={compact}
+                            />
+                        </React.Fragment>
+                    )}
+                    onMenuItemsChanged={setMenuItems}
+                    onMenuGroupsChanged={setCurrentMenuGroups}
+                    {...args}
+                />
+            </PageLayout>
+        </>
+    );
+};
+
+export const CustomThemesWithNewColors = CustomThemesWithNewColorsTemplate.bind({});
+CustomThemesWithNewColors.args = {
     multipleTooltip: false,
     initialCompact: false,
 };
