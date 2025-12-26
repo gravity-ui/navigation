@@ -164,6 +164,16 @@ $actionLeftRightMargin: 10px;
         height: 100%;
         color: var(--gn-aside-header-item-icon-color, var(--_--item-icon-color));
 
+        #{$class}_current & {
+            color: var(
+                --gn-aside-main-group-item-current-background-color,
+                var(
+                    --gn-aside-header-item-current-icon-color,
+                    var(--gn-aside-header-item-icon-color, var(--_--item-icon-color))
+                )
+            );
+        }
+
         :global(.#{variables.$ns}composite-bar-highlighted-item) & {
             color: var(
                 --gn-aside-header-general-item-icon-color,
@@ -171,8 +181,7 @@ $actionLeftRightMargin: 10px;
             );
         }
 
-        :global(.#{variables.$ns}composite-bar-highlighted-item) #{$class}_current &,
-        #{$class}_current & {
+        :global(.#{variables.$ns}composite-bar-highlighted-item) #{$class}_current & {
             color: var(
                 --gn-aside-header-item-current-icon-color,
                 var(--gn-aside-header-general-item-icon-color, var(--_--item-general-icon-color))
