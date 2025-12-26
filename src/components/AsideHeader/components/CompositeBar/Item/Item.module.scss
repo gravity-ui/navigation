@@ -201,7 +201,10 @@ $actionLeftRightMargin: 10px;
 
         // Footer (Bottom zone) icon color
         :global(.#{variables.$ns}footer-item) & {
-            color: var(--gn-aside-bottom-item-icon-color, var(--_--item-general-icon-color));
+            color: var(
+                --gn-aside-bottom-item-icon-color,
+                var(--gn-aside-header-general-item-icon-color, var(--_--item-general-icon-color))
+            );
         }
 
         :global(.#{variables.$ns}footer-item) #{$class}_current & {
