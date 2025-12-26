@@ -131,4 +131,8 @@ $block: '.#{variables.$ns}composite-bar';
     &__menu-group-icon {
         margin-right: var(--g-spacing-3);
     }
+
+    &__menu-item[data-type='action'] {
+        margin-inline: 10px;
+    }
 }

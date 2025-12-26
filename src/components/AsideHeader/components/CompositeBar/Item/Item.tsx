@@ -132,6 +132,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     className={b({type, current, compact}, className)}
                     ref={ref}
                     data-qa={qa}
+                    data-type={type}
                     onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
                         onItemClick?.(props, false, event);
                     }}

@@ -239,7 +239,7 @@ $block: '.#{variables.$ns}aside-header';
         flex-grow: 1;
     }
 
-    &__menu-item {
+    &__menu-item:not(:has([data-type='action'])) {
         margin-inline: 10px;
     }
 
