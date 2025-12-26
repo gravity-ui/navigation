@@ -77,12 +77,16 @@ New CSS variables for styling the Bottom zone (footer area):
 
 The following variables have been replaced with zone-specific alternatives:
 
-| Old Variable                                | New Variable                        | Zone   |
-| ------------------------------------------- | ----------------------------------- | ------ |
-| `--gn-aside-header-general-item-icon-color` | `--gn-aside-top-item-icon-color`    | Top    |
-| `--gn-aside-header-general-item-icon-color` | `--gn-aside-bottom-item-icon-color` | Bottom |
+| Old Variable                                | New Variable                                | Zone   |
+| ------------------------------------------- | ------------------------------------------- | ------ |
+| `--gn-aside-header-general-item-icon-color` | `--gn-aside-top-item-icon-color`            | Top    |
+| `--gn-aside-header-item-current-icon-color` | `--gn-aside-top-item-current-icon-color`    | Top    |
+| `--gn-aside-header-general-item-icon-color` | `--gn-aside-bottom-item-icon-color`         | Bottom |
+| `--gn-aside-header-item-current-icon-color` | `--gn-aside-bottom-item-current-icon-color` | Bottom |
 
 ### Migration Steps
 
 1. **Subheader icons**: Replace `--gn-aside-header-general-item-icon-color` with `--gn-aside-top-item-icon-color`
 2. **Footer icons**: Replace `--gn-aside-header-general-item-icon-color` with `--gn-aside-bottom-item-icon-color`
+3. **Subheader current icons**: Replace `--gn-aside-header-item-current-icon-color` with `--gn-aside-top-item-current-icon-color`
+4. **Footer current icons**: Replace `--gn-aside-header-item-current-icon-color` with `--gn-aside-bottom-item-current-icon-color`

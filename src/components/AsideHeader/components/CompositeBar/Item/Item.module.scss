@@ -207,7 +207,7 @@ $actionLeftRightMargin: 10px;
         :global(.#{variables.$ns}footer-item) #{$class}_current & {
             color: var(
                 --gn-aside-bottom-item-current-icon-color,
-                var(--_--item-general-icon-color)
+                var(--gn-aside-header-item-current-icon-color, var(--_--item-general-icon-color))
             );
         }
     }
