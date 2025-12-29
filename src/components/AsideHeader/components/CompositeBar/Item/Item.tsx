@@ -75,7 +75,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         title,
         href,
         qa,
-        isExpanded,
+        isExpanded = true,
         editMode = false,
         onToggleVisibility,
         hidden,

@@ -34,7 +34,7 @@ export const Logo: React.FC<
     target = '_self',
     wrapper,
     onClick,
-    isExpanded,
+    isExpanded = true,
     className,
     buttonClassName,
     'aria-label': ariaLabel,
