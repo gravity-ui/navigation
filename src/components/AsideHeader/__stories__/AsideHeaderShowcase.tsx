@@ -43,9 +43,11 @@ export interface AsideHeaderShowcaseProps {
     customBackgroundClassName?: string;
     headerDecoration?: boolean;
     hideCollapseButton?: boolean;
+    externalMenuItems?: AsideHeaderProps['menuItems'];
+    externalMenuGroups?: AsideHeaderProps['menuGroups'];
 }
 
-export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
+export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderShowcaseProps>> = ({
     multipleTooltip = false,
     initialCompact = false,
     topAlert,
@@ -53,6 +55,9 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
     customBackgroundClassName,
     headerDecoration,
     hideCollapseButton,
+    externalMenuItems,
+    externalMenuGroups,
+    children,
 }) => {
     const ref = React.useRef<HTMLDivElement>(null);
     const [popupVisible, setPopupVisible] = React.useState(false);
@@ -63,6 +68,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
         BOOLEAN_OPTIONS.Yes,
     );
     const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
+    const [currentMenuGroups, setCurrentMenuGroups] = React.useState(externalMenuGroups);
 
     const openModalSubscriber = (callback: OpenModalSubscriber) => {
         // @ts-ignore
@@ -76,8 +82,9 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
         });
     };
 
-    const [menuItems, setMenuItems] =
-        React.useState<AsideHeaderProps['menuItems']>(menuItemsShowcase);
+    const [menuItems, setMenuItems] = React.useState<AsideHeaderProps['menuItems']>(
+        externalMenuItems || menuItemsShowcase,
+    );
 
     return (
         <div className={b()}>
@@ -103,6 +110,8 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                 }
                 onMenuItemsChanged={setMenuItems}
                 menuItems={menuItems}
+                menuGroups={currentMenuGroups}
+                onMenuGroupsChanged={setCurrentMenuGroups}
                 defaultMenuItems={menuItemsShowcase}
                 customBackground={customBackground}
                 customBackgroundClassName={customBackgroundClassName}
@@ -233,25 +242,27 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                 )}
                 renderContent={() => {
                     return (
-                        <div className={b('content')}>
-                            <pre>{placeholderText}</pre>
-                            <SegmentedRadioGroup
-                                value={addonHeaderDecoration}
-                                onChange={(event) => {
-                                    setHeaderDecoration(event.target.value);
-                                }}
-                            >
-                                <SegmentedRadioGroup.Option value={BOOLEAN_OPTIONS.No}>
-                                    No
-                                </SegmentedRadioGroup.Option>
-                                <SegmentedRadioGroup.Option value={BOOLEAN_OPTIONS.Yes}>
-                                    Yes
-                                </SegmentedRadioGroup.Option>
-                            </SegmentedRadioGroup>
-                            <br />
-                            <br />
-                            <Button onClick={() => setIsModalOpen(true)}>Open Modal</Button>
-                        </div>
+                        children || (
+                            <div className={b('content')}>
+                                <pre>{placeholderText}</pre>
+                                <SegmentedRadioGroup
+                                    value={addonHeaderDecoration}
+                                    onChange={(event) => {
+                                        setHeaderDecoration(event.target.value);
+                                    }}
+                                >
+                                    <SegmentedRadioGroup.Option value={BOOLEAN_OPTIONS.No}>
+                                        No
+                                    </SegmentedRadioGroup.Option>
+                                    <SegmentedRadioGroup.Option value={BOOLEAN_OPTIONS.Yes}>
+                                        Yes
+                                    </SegmentedRadioGroup.Option>
+                                </SegmentedRadioGroup>
+                                <br />
+                                <br />
+                                <Button onClick={() => setIsModalOpen(true)}>Open Modal</Button>
+                            </div>
+                        )
                     );
                 }}
                 panelItems={[

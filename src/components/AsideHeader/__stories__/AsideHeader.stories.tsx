@@ -371,3 +371,57 @@ GroupedMenuCollapsible.args = {
     multipleTooltip: false,
     initialCompact: false,
 };
+
+const CustomThemesWithNewColorsTemplate: StoryFn = (args) => {
+    return (
+        <>
+            <style>
+                {`.g-root {
+                    /* Top zone (subheader) */
+                    --gn-aside-top-item-icon-color: #ff0000;
+                    --gn-aside-top-item-text-color: #ff6600;
+                    --gn-aside-top-item-background-color: rgba(255, 255, 0, 0.3);
+                    --gn-aside-top-item-background-color-hover: rgba(255, 255, 0, 0.7);
+                    --gn-aside-top-item-current-icon-color: #00ff00;
+                    --gn-aside-top-item-current-text-color: #00cc00;
+                    --gn-aside-top-item-current-background-color: rgba(0, 255, 0, 0.2);
+                    --gn-aside-top-item-current-background-color-hover: rgba(0, 255, 0, 0.4);
+
+                    /* Main zone (groups) */
+                    --gn-aside-main-background-color: transparent;
+                    --gn-aside-main-group-item-background-color: rgba(255, 255, 255, 0.6);
+                    --gn-aside-main-group-item-background-color-hover: rgba(0, 255, 255, 0.7);
+                    --gn-aside-main-group-item-current-background-color: rgba(0, 0, 255, 0.2);
+                    --gn-aside-main-group-item-current-background-color-hover: rgba(0, 0, 255, 0.4);
+
+                    /* Bottom zone (footer) */
+                    --gn-aside-bottom-background-color: rgba(128, 0, 128, 0.1);
+                    --gn-aside-bottom-divider-color: #ff00ff;
+                    --gn-aside-bottom-item-icon-color: #ff00ff;
+                    --gn-aside-bottom-item-text-color: #cc00cc;
+                    --gn-aside-bottom-item-background-color-hover: rgba(255, 0, 255, 0.3);
+                    --gn-aside-bottom-item-current-icon-color: #00ffff;
+                    --gn-aside-bottom-item-current-text-color: #00cccc;
+                    --gn-aside-bottom-item-current-background-color: rgba(0, 255, 255, 0.2);
+                    --gn-aside-bottom-item-current-background-color-hover: rgba(0, 255, 255, 0.4);
+            }`}
+            </style>
+
+            <AsideHeaderShowcase
+                {...args}
+                externalMenuItems={menuItemsWithGroups}
+                externalMenuGroups={menuGroupsWithIcons}
+            >
+                <div>
+                    <Text>Custom content</Text>
+                </div>
+            </AsideHeaderShowcase>
+        </>
+    );
+};
+
+export const CustomThemesWithNewColors = CustomThemesWithNewColorsTemplate.bind({});
+CustomThemesWithNewColors.args = {
+    multipleTooltip: false,
+    initialCompact: false,
+};
