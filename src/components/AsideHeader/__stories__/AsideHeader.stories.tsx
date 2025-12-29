@@ -411,7 +411,11 @@ const CustomThemesWithNewColorsTemplate: StoryFn = (args) => {
                 {...args}
                 externalMenuItems={menuItemsWithGroups}
                 externalMenuGroups={menuGroupsWithIcons}
-            />
+            >
+                <div>
+                    <Text>Custom content</Text>
+                </div>
+            </AsideHeaderShowcase>
         </>
     );
 };

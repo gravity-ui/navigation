@@ -47,7 +47,7 @@ export interface AsideHeaderShowcaseProps {
     externalMenuGroups?: AsideHeaderProps['menuGroups'];
 }
 
-export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
+export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderShowcaseProps>> = ({
     multipleTooltip = false,
     initialCompact = false,
     topAlert,
@@ -57,6 +57,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
     hideCollapseButton,
     externalMenuItems,
     externalMenuGroups,
+    children,
 }) => {
     const ref = React.useRef<HTMLDivElement>(null);
     const [popupVisible, setPopupVisible] = React.useState(false);
@@ -241,25 +242,27 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                 )}
                 renderContent={() => {
                     return (
-                        <div className={b('content')}>
-                            <pre>{placeholderText}</pre>
-                            <SegmentedRadioGroup
-                                value={addonHeaderDecoration}
-                                onChange={(event) => {
-                                    setHeaderDecoration(event.target.value);
-                                }}
-                            >
-                                <SegmentedRadioGroup.Option value={BOOLEAN_OPTIONS.No}>
-                                    No
-                                </SegmentedRadioGroup.Option>
-                                <SegmentedRadioGroup.Option value={BOOLEAN_OPTIONS.Yes}>
-                                    Yes
-                                </SegmentedRadioGroup.Option>
-                            </SegmentedRadioGroup>
-                            <br />
-                            <br />
-                            <Button onClick={() => setIsModalOpen(true)}>Open Modal</Button>
-                        </div>
+                        children || (
+                            <div className={b('content')}>
+                                <pre>{placeholderText}</pre>
+                                <SegmentedRadioGroup
+                                    value={addonHeaderDecoration}
+                                    onChange={(event) => {
+                                        setHeaderDecoration(event.target.value);
+                                    }}
+                                >
+                                    <SegmentedRadioGroup.Option value={BOOLEAN_OPTIONS.No}>
+                                        No
+                                    </SegmentedRadioGroup.Option>
+                                    <SegmentedRadioGroup.Option value={BOOLEAN_OPTIONS.Yes}>
+                                        Yes
+                                    </SegmentedRadioGroup.Option>
+                                </SegmentedRadioGroup>
+                                <br />
+                                <br />
+                                <Button onClick={() => setIsModalOpen(true)}>Open Modal</Button>
+                            </div>
+                        )
                     );
                 }}
                 panelItems={[
