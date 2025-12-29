@@ -60,7 +60,7 @@ export const Logo: React.FC<
         logo = text();
     } else {
         logo = (
-            <div className={b('logo', {compact})} style={{fontSize: textSize}}>
+            <div className={b('logo', {collapsed: compact})} style={{fontSize: textSize}}>
                 {text}
             </div>
         );

@@ -75,7 +75,7 @@ const Layout = ({compact, className, children, topAlert, onChangeCompact}: PageL
     return (
         <AsideHeaderContextProvider value={asideHeaderContextValue}>
             <div
-                className={b({compact: !isExpanded}, className)}
+                className={b({collapsed: !isExpanded}, className)}
                 style={{
                     ...({'--gn-aside-header-size': `${size}px`} as React.CSSProperties),
                 }}

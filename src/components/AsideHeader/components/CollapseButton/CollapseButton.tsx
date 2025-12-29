@@ -33,7 +33,7 @@ export const CollapseButton = ({className}: CollapseButtonProps) => {
         <Button
             view="flat-secondary"
             size="l"
-            className={b({compact}, className)}
+            className={b({collapsed: compact}, className)}
             onClick={onCollapseButtonClick}
             aria-label={buttonTitle}
             title={buttonTitle}

@@ -53,7 +53,9 @@ export const Header = () => {
                     />
                 )}
 
-                {!hideCollapseButton && <CollapseButton className={b('pin-button', {compact})} />}
+                {!hideCollapseButton && (
+                    <CollapseButton className={b('pin-button', {collapsed: compact})} />
+                )}
             </div>
 
             <CompositeBar

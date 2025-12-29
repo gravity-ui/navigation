@@ -251,7 +251,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                     selectedItemIndex={type === 'menu' ? getSelectedItemIndex(items) : undefined}
                     itemHeight={getItemHeight}
                     itemsHeight={getItemsHeight}
-                    itemClassName={b('root-menu-item', {compact}, menuItemClassName)}
+                    itemClassName={b('root-menu-item', {collapsed: compact}, menuItemClassName)}
                     virtualized={false}
                     filterable={false}
                     sortable={enableSorting}
@@ -264,7 +264,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                             return (
                                 <Item
                                     {...item}
-                                    className={b('menu-item', {compact, type: itemType})}
+                                    className={b('menu-item', {collapsed: compact, type: itemType})}
                                     compact={compact}
                                     editMode={editMode}
                                     onMouseEnter={onMouseEnterByIndex(itemIndex)}
@@ -333,7 +333,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                                         filterable={false}
                                         itemClassName={b('menu-group-item', {
                                             edit: enableSorting,
-                                            compact,
+                                            collapsed: compact,
                                         })}
                                         itemHeight={getItemHeight}
                                         itemsHeight={getItemsHeight}

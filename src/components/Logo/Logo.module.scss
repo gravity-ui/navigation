@@ -36,7 +36,7 @@ $block: '.#{variables.$ns}logo';
     &__logo {
         margin: 0 var(--g-spacing-4) 0 var(--g-spacing-2);
 
-        &_compact {
+        &_collapsed {
             opacity: 0;
         }
 
