@@ -11,7 +11,7 @@ const EMPTY_MENU_ITEMS: AsideHeaderItem[] = [];
 export const useAsideHeaderInnerContextValue = (
     props: AsideHeaderProps & {
         size: number;
-        compact: boolean;
+        pinned: boolean;
         isExpanded: boolean;
         onExpand?: () => void;
         onFold?: () => void;

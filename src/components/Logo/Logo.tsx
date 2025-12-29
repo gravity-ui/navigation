@@ -21,7 +21,7 @@ const logoTransitionClasses = {
 };
 
 export const Logo: React.FC<
-    LogoProps & {compact?: boolean; buttonClassName?: string; iconPlaceClassName?: string}
+    LogoProps & {pinned?: boolean; buttonClassName?: string; iconPlaceClassName?: string}
 > = ({
     text,
     icon,
@@ -34,7 +34,7 @@ export const Logo: React.FC<
     target = '_self',
     wrapper,
     onClick,
-    compact,
+    pinned,
     className,
     buttonClassName,
     'aria-label': ariaLabel,
@@ -60,7 +60,7 @@ export const Logo: React.FC<
         logo = text();
     } else {
         logo = (
-            <div className={b('logo', {collapsed: compact})} style={{fontSize: textSize}}>
+            <div className={b('logo', {collapsed: !pinned})} style={{fontSize: textSize}}>
                 {text}
             </div>
         );
@@ -82,7 +82,7 @@ export const Logo: React.FC<
             <span className={b('logo-icon-place', iconPlaceClassName)}>{buttonIcon}</span>
 
             <CSSTransition
-                in={!compact}
+                in={pinned}
                 timeout={ASIDE_HEADER_EXPAND_TRANSITION_DELAY}
                 classNames={logoTransitionClasses}
             >
@@ -93,7 +93,7 @@ export const Logo: React.FC<
 
     return (
         <div className={b(null, className)}>
-            {hasWrapper ? wrapper(button, Boolean(compact)) : button}
+            {hasWrapper ? wrapper(button, Boolean(pinned)) : button}
         </div>
     );
 };

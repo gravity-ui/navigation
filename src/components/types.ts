@@ -31,7 +31,7 @@ export interface MenuItem extends QAProps {
         makeItem: (p: MakeItemParams) => React.ReactNode,
         opts: {
             collapsed: boolean;
-            compact: boolean;
+            pinned: boolean;
             item: MenuItem;
             ref: React.RefObject<HTMLElement>;
         },
@@ -74,7 +74,8 @@ export interface LogoProps {
     textSize?: number;
     href?: string;
     target?: HTMLAttributeAnchorTarget;
-    wrapper?: (node: React.ReactNode, compact: boolean) => React.ReactNode;
+    /** Wrapper function for the logo. The `pinned` parameter indicates if the navigation is expanded. */
+    wrapper?: (node: React.ReactNode, pinned: boolean) => React.ReactNode;
     onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
     'aria-label'?: string;
     'aria-labelledby'?: string;

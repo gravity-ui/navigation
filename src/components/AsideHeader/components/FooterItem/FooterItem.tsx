@@ -17,7 +17,7 @@ export function FooterItem(props: FooterItemProps) {
         <Item
             {...props}
             iconSize={ASIDE_HEADER_ICON_SIZE}
-            className={`${b({collapsed: props.compact})} ${bGlobal()}`}
+            className={`${b({collapsed: !props.pinned})} ${bGlobal()}`}
         />
     );
 }

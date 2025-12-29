@@ -5,11 +5,11 @@ import {PageLayoutAside} from './components/PageLayout/PageLayoutAside';
 import {AsideHeaderProps} from './types';
 
 export const AsideHeader = React.forwardRef<HTMLDivElement, AsideHeaderProps>(
-    ({compact, className, topAlert, ...props}, ref) => {
+    ({pinned, className, topAlert, ...props}, ref) => {
         return (
             <PageLayout
-                compact={compact}
-                onChangeCompact={props.onChangeCompact}
+                pinned={pinned}
+                onChangePinned={props.onChangePinned}
                 className={className}
                 topAlert={topAlert}
             >

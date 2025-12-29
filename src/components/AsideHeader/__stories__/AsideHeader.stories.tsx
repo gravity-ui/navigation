@@ -54,7 +54,7 @@ export const Showcase = ShowcaseTemplate.bind({});
 const CompactTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
 export const Compact = CompactTemplate.bind({});
 Compact.args = {
-    initialCompact: true,
+    initialPinned: false,
     hideCollapseButton: true,
 };
 
@@ -62,7 +62,7 @@ const MultipleTooltipTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args
 export const MultipleTooltip = MultipleTooltipTemplate.bind({});
 MultipleTooltip.args = {
     multipleTooltip: true,
-    initialCompact: true,
+    initialPinned: false,
 };
 
 const CustomThemeTemplate: StoryFn = (args) => (
@@ -109,10 +109,10 @@ CustomBackground.args = {
 };
 
 const AdvancedUsageTemplate: StoryFn = (args) => {
-    const [compact, setCompact] = React.useState(args.initialCompact);
+    const [pinned, setPinned] = React.useState(args.initialPinned);
 
     return (
-        <PageLayout compact={compact} onChangeCompact={setCompact}>
+        <PageLayout pinned={pinned} onChangePinned={setPinned}>
             <PageLayoutAside
                 headerDecoration
                 menuItems={menuItemsShowcase}
@@ -130,7 +130,7 @@ export const AdvancedUsage = AdvancedUsageTemplate.bind({});
 
 AdvancedUsage.args = {
     multipleTooltip: false,
-    initialCompact: true,
+    initialPinned: false,
 };
 
 const TopAlertTemplate: StoryFn<AsideHeaderShowcaseProps> = (args) => (
@@ -204,10 +204,10 @@ const FallbackTemplate: StoryFn<typeof fallbackArgs> = ({
     headerDecoration,
     subheaderItemsCount,
 }) => {
-    const [compact, setCompact] = React.useState(false);
+    const [pinned, setPinned] = React.useState(true);
 
     return (
-        <PageLayout compact={compact} onChangeCompact={setCompact}>
+        <PageLayout pinned={pinned} onChangePinned={setPinned}>
             <AsideFallback
                 headerDecoration={headerDecoration}
                 subheaderItemsCount={subheaderItemsCount}
@@ -216,7 +216,7 @@ const FallbackTemplate: StoryFn<typeof fallbackArgs> = ({
 
             <PageLayout.Content>
                 <div style={{padding: 16}}>
-                    <Button onClick={() => setCompact((prev) => !prev)}>Toggle compact</Button>
+                    <Button onClick={() => setPinned((prev) => !prev)}>Toggle pinned</Button>
                 </div>
             </PageLayout.Content>
         </PageLayout>
@@ -228,10 +228,10 @@ Fallback.args = fallbackArgs;
 
 /** @type {StoryFn} */
 export function LineClamp() {
-    const [compact, setCompact] = React.useState(false);
+    const [pinned, setPinned] = React.useState(true);
 
     return (
-        <PageLayout compact={compact} onChangeCompact={setCompact}>
+        <PageLayout pinned={pinned} onChangePinned={setPinned}>
             <PageLayoutAside
                 logo={{icon: logoIcon, text: 'Line clamp', 'aria-label': 'Line clamp'}}
                 menuItems={menuItemsClamped}
@@ -242,15 +242,15 @@ export function LineClamp() {
 }
 
 const CollapseButtonWrapperTemplate: StoryFn = (args) => {
-    const [compact, setCompact] = React.useState(args.initialCompact);
+    const [pinned, setPinned] = React.useState(args.initialPinned);
 
     return (
-        <PageLayout compact={compact} onChangeCompact={setCompact}>
+        <PageLayout pinned={pinned} onChangePinned={setPinned}>
             <PageLayoutAside
                 headerDecoration
                 menuItems={menuItemsShowcase}
                 logo={DEFAULT_LOGO}
-                collapseButtonWrapper={(defaultButton, {compact}) => (
+                collapseButtonWrapper={(defaultButton, {pinned}) => (
                     <React.Fragment>
                         {defaultButton}
                         <div
@@ -264,10 +264,10 @@ const CollapseButtonWrapperTemplate: StoryFn = (args) => {
                                     <Icon
                                         size={14}
                                         data={logoIcon}
-                                        className={compact ? undefined : spacing({mr: 1})}
+                                        className={pinned ? spacing({mr: 1}) : undefined}
                                     />
                                 }
-                                {compact ? null : <Text color="secondary">{'Gravity UI'}</Text>}
+                                {pinned ? <Text color="secondary">{'Gravity UI'}</Text> : null}
                             </Flex>
                         </div>
                     </React.Fragment>
@@ -281,14 +281,14 @@ const CollapseButtonWrapperTemplate: StoryFn = (args) => {
 
 export const CollapseButtonWrapper = CollapseButtonWrapperTemplate.bind({});
 CollapseButtonWrapper.args = {
-    initialCompact: false,
+    initialPinned: true,
 };
 
 const ManyItemsTemplate: StoryFn = (args) => {
-    const [compact, setCompact] = React.useState<boolean>(args.initialCompact);
+    const [pinned, setPinned] = React.useState<boolean>(args.initialPinned);
 
     return (
-        <PageLayout compact={compact} onChangeCompact={setCompact}>
+        <PageLayout pinned={pinned} onChangePinned={setPinned}>
             <PageLayoutAside
                 headerDecoration
                 menuItems={menuItemsMany}
@@ -298,7 +298,7 @@ const ManyItemsTemplate: StoryFn = (args) => {
 
             <PageLayout.Content>
                 <div style={{padding: 16}}>
-                    <Button onClick={() => setCompact((prev) => !prev)}>Toggle compact</Button>
+                    <Button onClick={() => setPinned((prev) => !prev)}>Toggle pinned</Button>
                     <div style={{marginTop: 16}}>
                         <Text variant="subheader-2">
                             Scroll demonstration with many navigation items
@@ -316,7 +316,7 @@ const ManyItemsTemplate: StoryFn = (args) => {
 
 export const ManyItems = ManyItemsTemplate.bind({});
 ManyItems.args = {
-    initialCompact: false,
+    initialPinned: true,
 };
 ManyItems.parameters = {
     docs: {
@@ -329,12 +329,12 @@ ManyItems.parameters = {
 };
 
 const GroupedMenuCollapsibleTemplate: StoryFn = (args) => {
-    const [compact, setCompact] = React.useState(false);
+    const [pinned, setPinned] = React.useState(true);
     const [menuItems, setMenuItems] = React.useState(menuItemsWithGroups);
     const [currentMenuGroups, setCurrentMenuGroups] = React.useState(menuGroupsWithIcons);
 
     return (
-        <PageLayout compact={compact} onChangeCompact={setCompact}>
+        <PageLayout pinned={pinned} onChangePinned={setPinned}>
             <PageLayoutAside
                 headerDecoration
                 logo={DEFAULT_LOGO}
@@ -369,7 +369,7 @@ const GroupedMenuCollapsibleTemplate: StoryFn = (args) => {
 export const GroupedMenuCollapsible = GroupedMenuCollapsibleTemplate.bind({});
 GroupedMenuCollapsible.args = {
     multipleTooltip: false,
-    initialCompact: false,
+    initialPinned: true,
 };
 
 const CustomThemesWithNewColorsTemplate: StoryFn = (args) => {

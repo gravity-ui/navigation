@@ -10,12 +10,13 @@ import styles from './MobileLogo.module.scss';
 const b = createBlock('mobile-logo', styles);
 
 export interface MobileLogoProps extends LogoProps {
-    compact: boolean;
+    /** When `true`, the logo is displayed in expanded (pinned) form. */
+    pinned: boolean;
 }
 
 export const MobileLogo: React.FC<MobileLogoProps> = ({
     text,
-    compact,
+    pinned,
     icon,
     iconSrc,
     iconClassName,
@@ -66,7 +67,7 @@ export const MobileLogo: React.FC<MobileLogoProps> = ({
 
     return hasWrapper ? (
         <div className={b(null, className)} onClick={onClick}>
-            {wrapper(logo, compact)}
+            {wrapper(logo, pinned)}
         </div>
     ) : (
         <a
