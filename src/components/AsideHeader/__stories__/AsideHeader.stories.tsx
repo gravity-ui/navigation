@@ -250,7 +250,7 @@ const CollapseButtonWrapperTemplate: StoryFn = (args) => {
                 headerDecoration
                 menuItems={menuItemsShowcase}
                 logo={DEFAULT_LOGO}
-                collapseButtonWrapper={(defaultButton, {pinned}) => (
+                collapseButtonWrapper={(defaultButton, {isExpanded}) => (
                     <React.Fragment>
                         {defaultButton}
                         <div
@@ -264,10 +264,10 @@ const CollapseButtonWrapperTemplate: StoryFn = (args) => {
                                     <Icon
                                         size={14}
                                         data={logoIcon}
-                                        className={pinned ? spacing({mr: 1}) : undefined}
+                                        className={isExpanded ? spacing({mr: 1}) : undefined}
                                     />
                                 }
-                                {pinned ? <Text color="secondary">{'Gravity UI'}</Text> : null}
+                                {isExpanded ? <Text color="secondary">{'Gravity UI'}</Text> : null}
                             </Flex>
                         </div>
                     </React.Fragment>

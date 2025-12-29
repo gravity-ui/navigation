@@ -162,7 +162,7 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
                 renderFooter={({isExpanded, asideRef}) => (
                     <React.Fragment>
                         <FooterItem
-                            pinned={isExpanded}
+                            isExpanded={isExpanded}
                             id={'infra'}
                             icon={Gear}
                             current={popupVisible}
@@ -221,7 +221,7 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
                                 );
                             }}
                             bringForward
-                            pinned={isExpanded}
+                            isExpanded={isExpanded}
                         />
                         <FooterItem
                             id={'user-settings'}
@@ -236,7 +236,7 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
                                         : Panel.UserSettings,
                                 );
                             }}
-                            pinned={isExpanded}
+                            isExpanded={isExpanded}
                         />
                     </React.Fragment>
                 )}

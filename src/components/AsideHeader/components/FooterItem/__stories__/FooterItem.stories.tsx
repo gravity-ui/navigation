@@ -16,14 +16,14 @@ export default {
     decorators: [
         (DecoratedStory, context) => {
             const {
-                args: {pinned},
+                args: {isExpanded},
             } = context;
-            const width = pinned ? ASIDE_HEADER_EXPANDED_WIDTH : ASIDE_HEADER_COMPACT_WIDTH;
+            const width = isExpanded ? ASIDE_HEADER_EXPANDED_WIDTH : ASIDE_HEADER_COMPACT_WIDTH;
 
             return (
                 <div style={{width}} className="footer-item-showcase">
                     <AsideHeaderContextProvider
-                        value={{...EMPTY_CONTEXT_VALUE, pinned, size: width}}
+                        value={{...EMPTY_CONTEXT_VALUE, pinned: isExpanded ?? false, size: width}}
                     >
                         <DecoratedStory />
                     </AsideHeaderContextProvider>
@@ -37,7 +37,7 @@ const Template: StoryFn<FooterItemProps> = (args) => <FooterItem {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
-    pinned: true,
+    isExpanded: true,
     id: 'settings',
     title: 'Settings',
     icon: Gear,

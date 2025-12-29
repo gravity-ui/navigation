@@ -74,8 +74,8 @@ export interface LogoProps {
     textSize?: number;
     href?: string;
     target?: HTMLAttributeAnchorTarget;
-    /** Wrapper function for the logo. The `pinned` parameter indicates if the navigation is expanded. */
-    wrapper?: (node: React.ReactNode, pinned: boolean) => React.ReactNode;
+    /** Wrapper function for the logo. The `isExpanded` parameter indicates if the navigation is expanded. */
+    wrapper?: (node: React.ReactNode, isExpanded: boolean) => React.ReactNode;
     onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
     'aria-label'?: string;
     'aria-labelledby'?: string;

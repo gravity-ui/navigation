@@ -45,7 +45,7 @@ export const Header = () => {
                     <Logo
                         {...logo}
                         onClick={onLogoClick}
-                        pinned={isExpanded}
+                        isExpanded={isExpanded}
                         buttonClassName={b('logo-button')}
                         iconPlaceClassName={b('logo-icon-place')}
                     />

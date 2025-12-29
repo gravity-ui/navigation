@@ -44,7 +44,7 @@ export const CollapseButton = ({className}: CollapseButtonProps) => {
 
     if (collapseButtonWrapper) {
         return collapseButtonWrapper(defaultButton, {
-            pinned,
+            isExpanded: pinned,
             onChangePinned,
         });
     }

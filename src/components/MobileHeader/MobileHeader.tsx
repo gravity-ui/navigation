@@ -35,7 +35,7 @@ const b = createBlock('mobile-header', styles);
 type PanelName = string | null;
 
 interface BurgerMenuProps extends Omit<BurgerMenuInnerProps, 'renderFooter'> {
-    renderFooter?: (data: {size: number; isCompact: boolean}) => React.ReactNode;
+    renderFooter?: (data: {size: number; isExpanded: boolean}) => React.ReactNode;
 }
 
 type OverlapPanelProps = Omit<CommonOverlapPanelProps, 'onClose' | 'visible'>;
@@ -184,7 +184,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
             () =>
                 burgerMenu.renderFooter?.({
                     size,
-                    isCompact: !pinned,
+                    isExpanded: pinned,
                 }),
             [burgerMenu, size, pinned],
         );
@@ -280,7 +280,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
         const allPanelItems = [burgerPanelItem, ...panelItems];
 
         return (
-            <div className={b({compact: !pinned}, className)} ref={targetRef}>
+            <div className={b(null, className)} ref={targetRef}>
                 <div className={b('header-container')}>
                     {topAlert && (
                         <Suspense fallback={null}>
@@ -295,7 +295,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                             closeTitle={burgerCloseTitle}
                             openTitle={burgerOpenTitle}
                         />
-                        <MobileLogo {...logo} pinned={pinned} onClick={onLogoClick} />
+                        <MobileLogo {...logo} isExpanded={pinned} onClick={onLogoClick} />
 
                         <div className={b('side-item')}>{sideItemRenderContent?.({size})}</div>
                     </header>

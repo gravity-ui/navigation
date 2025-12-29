@@ -49,7 +49,7 @@ interface AsideHeaderGeneralProps extends QAProps {
     collapseButtonWrapper?: (
         defaultButton: React.ReactNode,
         data: {
-            pinned: boolean;
+            isExpanded: boolean;
             onChangePinned?: (pinned: boolean) => void;
         },
     ) => React.ReactNode;
@@ -94,8 +94,8 @@ export interface AsideHeaderItem extends MenuItem {
         event: React.MouseEvent<HTMLElement, MouseEvent>,
     ) => void;
     bringForward?: boolean;
-    /** When `true`, forces the item to display in expanded (pinned) form. */
-    pinned?: boolean;
+    /** When `true`, forces the item to display in expanded form. */
+    isExpanded?: boolean;
 
     /**
      * @deprecated Use itemWrapper instead for popup functionality
