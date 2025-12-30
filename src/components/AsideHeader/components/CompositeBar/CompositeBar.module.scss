@@ -87,7 +87,7 @@ $block: '.#{variables.$ns}composite-bar';
 
     &__menu-group-header,
     &__menu-group-item {
-        height: 36px;
+        height: var(--_--item-height);
     }
 
     &__menu-group-item {

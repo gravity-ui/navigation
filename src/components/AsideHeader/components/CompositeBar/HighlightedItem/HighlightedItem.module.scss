@@ -4,7 +4,6 @@ $block: '.#{variables.$ns}composite-bar-highlighted-item';
 
 #{$block} {
     --_--background-color: var(--g-color-base-background);
-    --_--item-icon-background-size: 38px;
     --_--item-background-color-hover: var(--g-color-base-selection-hover);
     --_--item-selected-background-color-active: var(--g-color-base-selection);
 
@@ -14,14 +13,8 @@ $block: '.#{variables.$ns}composite-bar-highlighted-item';
     justify-content: center;
 
     &__icon {
-        width: var(
-            --gn-aside-header-item-icon-background-size,
-            var(--_--item-icon-background-size)
-        );
-        height: var(
-            --gn-aside-header-item-icon-background-size,
-            var(--_--item-icon-background-size)
-        );
+        width: var(--_--item-height);
+        height: var(--_--item-height);
         border-radius: 7px;
         cursor: pointer;
         background-color: var(--gn-aside-header-background-color, var(--_--background-color));
