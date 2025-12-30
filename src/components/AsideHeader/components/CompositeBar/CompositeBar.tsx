@@ -29,7 +29,8 @@ type CompositeBarProps = {
     multipleTooltip?: boolean;
     menuMoreTitle?: string;
     onMoreClick?: () => void;
-    compact: boolean;
+    /** When `true`, the navigation is expanded. When `false`, it is collapsed. */
+    isExpanded: boolean;
     compositeId?: string;
     className?: string;
     menuItemClassName?: string;
@@ -63,7 +64,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
     menuItemClassName,
     enableSorting = false,
     editMode = false,
-    compact,
+    isExpanded,
     onToggleGroupCollapsed,
     onToggleMenuGroupVisibility,
     onToggleMenuItemVisibility,
@@ -99,7 +100,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
         (e: {clientX: number}) => {
             if (
                 multipleTooltip &&
-                compact &&
+                !isExpanded &&
                 !multipleTooltipActive &&
                 document.hasFocus() &&
                 activeIndex !== lastClickedItemIndex &&
@@ -112,7 +113,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
         },
         [
             multipleTooltip,
-            compact,
+            isExpanded,
             multipleTooltipActive,
             activeIndex,
             lastClickedItemIndex,
@@ -158,7 +159,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
     );
 
     const onMouseLeave = useCallback(() => {
-        if (compact && document.hasFocus()) {
+        if (!isExpanded && document.hasFocus()) {
             ref.current?.activateItem(undefined as unknown as number);
             if (
                 multipleTooltip &&
@@ -172,7 +173,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
         }
     }, [
         activeIndex,
-        compact,
+        isExpanded,
         lastClickedItemIndex,
         multipleTooltip,
         setMultipleTooltipContextValue,
@@ -185,7 +186,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
         ): ItemProps['onItemClick'] =>
             (item, collapsed, event) => {
                 if (
-                    compact &&
+                    !isExpanded &&
                     multipleTooltip &&
                     itemIndex !== lastClickedItemIndex &&
                     item.id !== COLLAPSE_ITEM_ID
@@ -204,7 +205,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                 }
             },
         [
-            compact,
+            isExpanded,
             lastClickedItemIndex,
             multipleTooltip,
             onItemClick,
@@ -251,7 +252,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                     selectedItemIndex={type === 'menu' ? getSelectedItemIndex(items) : undefined}
                     itemHeight={getItemHeight}
                     itemsHeight={getItemsHeight}
-                    itemClassName={b('root-menu-item', {compact}, menuItemClassName)}
+                    itemClassName={b('root-menu-item', {collapsed: !isExpanded}, menuItemClassName)}
                     virtualized={false}
                     filterable={false}
                     sortable={enableSorting}
@@ -264,8 +265,11 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                             return (
                                 <Item
                                     {...item}
-                                    className={b('menu-item', {compact, type: itemType})}
-                                    compact={compact}
+                                    className={b('menu-item', {
+                                        collapsed: !isExpanded,
+                                        type: itemType,
+                                    })}
+                                    isExpanded={isExpanded}
                                     editMode={editMode}
                                     onMouseEnter={onMouseEnterByIndex(itemIndex)}
                                     onMouseLeave={onMouseLeave}
@@ -302,7 +306,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                                         {...item}
                                         className={b('menu-group-header', {collapsed: isCollapsed})}
                                         icon={groupIcon}
-                                        compact={compact}
+                                        isExpanded={isExpanded}
                                         editMode={editMode}
                                         onMouseEnter={() => {
                                             setHoveredGroupId(item.id);
@@ -333,7 +337,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                                         filterable={false}
                                         itemClassName={b('menu-group-item', {
                                             edit: enableSorting,
-                                            compact,
+                                            collapsed: !isExpanded,
                                         })}
                                         itemHeight={getItemHeight}
                                         itemsHeight={getItemsHeight}
@@ -345,7 +349,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                                             return (
                                                 <Item
                                                     {...nestedItem}
-                                                    compact={compact}
+                                                    isExpanded={isExpanded}
                                                     className={b('group-item')}
                                                     editMode={editMode}
                                                     onMouseEnter={() => {
@@ -378,7 +382,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
             </div>
             {type === 'menu' && multipleTooltip && (
                 <MultipleTooltip
-                    open={compact && multipleTooltipActive}
+                    open={!isExpanded && multipleTooltipActive}
                     anchorRef={tooltipRef}
                     placement={['right-start']}
                     items={items}
@@ -395,7 +399,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     onMoreClick,
     onToggleGroupCollapsed,
     multipleTooltip = false,
-    compact,
+    isExpanded,
     compositeId,
     className,
     menuItemClassName,
@@ -421,7 +425,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                     compositeId={compositeId}
                     menuItemClassName={menuItemClassName}
                     type="menu"
-                    compact={compact}
+                    isExpanded={isExpanded}
                     items={visibleItems}
                     onItemClick={onItemClick}
                     onMoreClick={onMoreClick}
@@ -437,7 +441,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                 <CompositeBarView
                     menuItemClassName={menuItemClassName}
                     type="subheader"
-                    compact={compact}
+                    isExpanded={isExpanded}
                     items={visibleItems}
                     onItemClick={onItemClick}
                     editMode={editMode}

@@ -31,7 +31,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         onMenuMoreClick,
         renderFooter,
         onToggleGroupCollapsed,
-        compact,
+        pinned,
         customBackground,
         customBackgroundClassName,
         className,
@@ -51,7 +51,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         setRef<HTMLDivElement>(ref, asideRef.current);
     }, [ref]);
 
-    const isExpandedByHover = compact && isExpanded;
+    const isExpandedByHover = !pinned && isExpanded;
 
     return (
         <React.Fragment>
@@ -82,7 +82,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                                 compositeId={MENU_ITEMS_COMPOSITE_ID}
                                 className={b('menu-items')}
                                 menuItemClassName={b('menu-item')}
-                                compact={!isExpanded}
+                                isExpanded={isExpanded}
                                 type="menu"
                                 items={flatListItems}
                                 onItemClick={onItemClick}
@@ -97,7 +97,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         <div className={b('footer')}>
                             {renderFooter?.({
                                 size,
-                                compact: Boolean(!isExpanded),
+                                isExpanded,
                                 asideRef,
                             })}
                         </div>

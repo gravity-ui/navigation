@@ -16,24 +16,24 @@ interface CollapseButtonProps {
 }
 
 export const CollapseButton = ({className}: CollapseButtonProps) => {
-    const {compact, onChangeCompact} = useAsideHeaderContext();
+    const {pinned, onChangePinned} = useAsideHeaderContext();
     const {expandTitle, collapseTitle, collapseButtonWrapper} = useAsideHeaderInnerContext();
 
     const onCollapseButtonClick = useCallback(() => {
-        const newCompact = !compact;
+        const newPinned = !pinned;
 
-        onChangeCompact?.(newCompact);
-    }, [compact, onChangeCompact]);
+        onChangePinned?.(newPinned);
+    }, [pinned, onChangePinned]);
 
-    const buttonTitle = compact
-        ? expandTitle || i18n('button_expand')
-        : collapseTitle || i18n('button_collapse');
+    const buttonTitle = pinned
+        ? collapseTitle || i18n('button_collapse')
+        : expandTitle || i18n('button_expand');
 
     const defaultButton = (
         <Button
             view="flat-secondary"
             size="l"
-            className={b({compact}, className)}
+            className={b({collapsed: !pinned}, className)}
             onClick={onCollapseButtonClick}
             aria-label={buttonTitle}
             title={buttonTitle}
@@ -44,8 +44,8 @@ export const CollapseButton = ({className}: CollapseButtonProps) => {
 
     if (collapseButtonWrapper) {
         return collapseButtonWrapper(defaultButton, {
-            compact,
-            onChangeCompact,
+            isExpanded: pinned,
+            onChangePinned,
         });
     }
 

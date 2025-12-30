@@ -14,7 +14,7 @@ function renderTag(tag: string) {
 
 export const EMPTY_CONTEXT_VALUE: AsideHeaderContextType = {
     size: ASIDE_HEADER_EXPANDED_WIDTH,
-    compact: true,
+    pinned: false,
     isExpanded: false,
 };
 
@@ -73,8 +73,8 @@ export const menuItemsShowcase: AsideHeaderProps['menuItems'] = [
         onItemClick({id, title, current}) {
             alert(JSON.stringify({id, title, current}));
         },
-        itemWrapper(params, makeItem, {collapsed, compact}) {
-            return !collapsed && !compact ? (
+        itemWrapper(params, makeItem, {collapsed, pinned}) {
+            return !collapsed && pinned ? (
                 <div className="composite-bar-showcase__item-accent aside-header-showcase__item-accent">
                     {makeItem(params)}
                 </div>
@@ -283,8 +283,8 @@ export const menuItemsWithGroups: AsideHeaderProps['menuItems'] = [
         onItemClick({id, title, current}) {
             alert(JSON.stringify({id, title, current}));
         },
-        itemWrapper(params, makeItem, {collapsed, compact}) {
-            return !collapsed && !compact ? (
+        itemWrapper(params, makeItem, {collapsed, pinned}) {
+            return !collapsed && pinned ? (
                 <div className="composite-bar-showcase__item-accent aside-header-showcase__item-accent">
                     {makeItem(params)}
                 </div>

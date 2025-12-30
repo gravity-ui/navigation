@@ -30,24 +30,24 @@ function calcEstimatedTopAlertHeight(topAlert?: TopAlertProps) {
 }
 
 export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {
-    onChangeCompact?: (compact: boolean) => void;
+    onChangePinned?: (pinned: boolean) => void;
 }
 
-const Layout = ({compact, className, children, topAlert, onChangeCompact}: PageLayoutProps) => {
-    const {isExpanded, onExpand, onFold} = useIsExpanded(compact);
+const Layout = ({pinned, className, children, topAlert, onChangePinned}: PageLayoutProps) => {
+    const {isExpanded, onExpand, onFold} = useIsExpanded(pinned);
 
     const size = isExpanded ? ASIDE_HEADER_EXPANDED_WIDTH : ASIDE_HEADER_COMPACT_WIDTH;
 
     const asideHeaderContextValue = useMemo(
         () => ({
             size,
-            compact,
+            pinned,
             isExpanded,
-            onChangeCompact,
+            onChangePinned,
             onExpand,
             onFold,
         }),
-        [size, compact, isExpanded, onChangeCompact, onExpand, onFold],
+        [size, pinned, isExpanded, onChangePinned, onExpand, onFold],
     );
 
     const estimatedTopAlertHeight = calcEstimatedTopAlertHeight(topAlert);
@@ -75,7 +75,7 @@ const Layout = ({compact, className, children, topAlert, onChangeCompact}: PageL
     return (
         <AsideHeaderContextProvider value={asideHeaderContextValue}>
             <div
-                className={b({compact: !isExpanded}, className)}
+                className={b({collapsed: !isExpanded}, className)}
                 style={{
                     ...({'--gn-aside-header-size': `${size}px`} as React.CSSProperties),
                 }}
@@ -102,8 +102,8 @@ const ConnectedContent: React.FC<PropsWithChildren<Pick<ContentProps, 'renderCon
     children,
     renderContent,
 }) => {
-    const {size, compact, isExpanded} = useAsideHeaderContext();
-    const isExpandedByHover = compact && isExpanded;
+    const {size, pinned, isExpanded} = useAsideHeaderContext();
+    const isExpandedByHover = !pinned && isExpanded;
 
     return (
         <Content

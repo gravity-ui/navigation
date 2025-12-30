@@ -231,7 +231,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
 
             <CompositeBarView
                 type="menu"
-                compact={false}
+                isExpanded={true}
                 className={b('content')}
                 enableSorting={isEditMode && editMenuProps?.enableSorting}
                 items={data}

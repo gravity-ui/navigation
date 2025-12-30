@@ -39,19 +39,20 @@ export const useAsideHeaderInnerContext = (): AsideHeaderInnerContextType => {
 };
 
 export interface AsideHeaderContextType {
-    compact: boolean;
+    /** Navigation visual state. When `true`, the navigation is expanded (pinned open). When `false`, it is collapsed. */
+    pinned: boolean;
     size: number;
     isExpanded: boolean;
-    onChangeCompact?: (compact: boolean) => void;
+    onChangePinned?: (pinned: boolean) => void;
     onExpand?: () => void;
     onFold?: () => void;
 }
 
 const AsideHeaderContext = React.createContext<AsideHeaderContextType | undefined>({
-    compact: false,
+    pinned: true,
     size: 0,
     isExpanded: false,
-    onChangeCompact: () => {},
+    onChangePinned: () => {},
     onExpand: () => {},
     onFold: () => {},
 });

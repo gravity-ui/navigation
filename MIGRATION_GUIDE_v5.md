@@ -90,3 +90,107 @@ The following variables have been replaced with zone-specific alternatives:
 2. **Footer icons**: Replace `--gn-aside-header-general-item-icon-color` with `--gn-aside-bottom-item-icon-color`
 3. **Subheader current icons**: Replace `--gn-aside-header-item-current-icon-color` with `--gn-aside-top-item-current-icon-color`
 4. **Footer current icons**: Replace `--gn-aside-header-item-current-icon-color` with `--gn-aside-bottom-item-current-icon-color`
+
+## Breaking Changes: Prop Renaming (`compact` → `pinned`/`isExpanded`)
+
+The `compact` prop and related APIs have been renamed to use clearer semantics with **inverted boolean logic**.
+
+### Main Prop Changes
+
+| Old Prop/Parameter                            | New Prop/Parameter                         | Notes                                           |
+| --------------------------------------------- | ------------------------------------------ | ----------------------------------------------- |
+| `compact: boolean`                            | `pinned: boolean`                          | **Inverted!** `compact: true` → `pinned: false` |
+| `onChangeCompact`                             | `onChangePinned`                           | Callback receives inverted value                |
+| `AsideHeaderItem.compact`                     | `AsideHeaderItem.isExpanded`               | Used by `FooterItem`                            |
+| `renderFooter({ compact })`                   | `renderFooter({ isExpanded })`             | Parameter renamed (AsideHeader)                 |
+| `collapseButtonWrapper(_, { compact })`       | `collapseButtonWrapper(_, { isExpanded })` | Parameter renamed                               |
+| `MenuItem.itemWrapper opts.compact`           | `MenuItem.itemWrapper opts.pinned`         | In itemWrapper callback                         |
+| `LogoProps.wrapper(_, compact)`               | `LogoProps.wrapper(_, isExpanded)`         | Second parameter renamed                        |
+| `MobileLogoProps.compact`                     | `MobileLogoProps.isExpanded`               | MobileLogo prop renamed                         |
+| `BurgerMenuProps.renderFooter({ isCompact })` | `renderFooter({ isExpanded })`             | MobileHeader burger menu                        |
+
+### Context Changes
+
+The `AsideHeaderContext` has been updated:
+
+```typescript
+// Before (v4.x)
+interface AsideHeaderContextType {
+  compact: boolean;
+  onChangeCompact?: (compact: boolean) => void;
+  // ...
+}
+
+// After (v5.0)
+interface AsideHeaderContextType {
+  pinned: boolean; // Note: inverted semantics!
+  onChangePinned?: (pinned: boolean) => void;
+  // ...
+}
+```
+
+### Migration Examples
+
+**AsideHeader component:**
+
+```tsx
+// Before (v4.x)
+<AsideHeader
+  compact={isCompact}
+  onChangeCompact={setIsCompact}
+/>
+
+// After (v5.0)
+<AsideHeader
+  pinned={!isCompact}  // or use new state: pinned={isPinned}
+  onChangePinned={setIsPinned}
+/>
+```
+
+**FooterItem component:**
+
+```tsx
+// Before (v4.x)
+<FooterItem compact={!isExpanded} />
+
+// After (v5.0)
+<FooterItem isExpanded={isExpanded} />
+```
+
+**renderFooter callback:**
+
+```tsx
+// Before (v4.x)
+renderFooter={({ compact }) => (
+  <FooterItem compact={compact} />
+)}
+
+// After (v5.0)
+renderFooter={({ isExpanded }) => (
+  <FooterItem isExpanded={isExpanded} />
+)}
+```
+
+**Logo wrapper:**
+
+```tsx
+// Before (v4.x)
+logo={{
+  wrapper: (node, compact) => <Link>{node}</Link>
+}}
+
+// After (v5.0)
+logo={{
+  wrapper: (node, isExpanded) => <Link>{node}</Link>
+}}
+```
+
+**itemWrapper callback:**
+
+```tsx
+// Before (v4.x)
+itemWrapper={(params, makeItem, { compact }) => makeItem(params)}
+
+// After (v5.0)
+itemWrapper={(params, makeItem, { pinned }) => makeItem(params)}
+```

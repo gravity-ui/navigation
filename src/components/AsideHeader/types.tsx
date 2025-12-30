@@ -15,7 +15,8 @@ export interface PanelItemProps {
 }
 
 export interface LayoutProps {
-    compact: boolean;
+    /** Navigation visual state. When `true`, the navigation is expanded (pinned open). When `false`, it is collapsed. */
+    pinned: boolean;
     className?: string;
     topAlert?: TopAlertProps;
 }
@@ -42,19 +43,19 @@ interface AsideHeaderGeneralProps extends QAProps {
     renderContent?: RenderContentType;
     renderFooter?: (data: {
         size: number;
-        compact: boolean;
+        isExpanded: boolean;
         asideRef: React.RefObject<HTMLDivElement>;
     }) => React.ReactNode;
     collapseButtonWrapper?: (
         defaultButton: React.ReactNode,
         data: {
-            compact: boolean;
-            onChangeCompact?: (compact: boolean) => void;
+            isExpanded: boolean;
+            onChangePinned?: (pinned: boolean) => void;
         },
     ) => React.ReactNode;
     editMenuProps?: EditMenuProps;
     onClosePanel?: () => void;
-    onChangeCompact?: (compact: boolean) => void;
+    onChangePinned?: (pinned: boolean) => void;
     onMenuMoreClick?: () => void;
     onAllPagesClick?: () => void;
     openModalSubscriber?: (subscriber: OpenModalSubscriber) => void;
@@ -93,7 +94,8 @@ export interface AsideHeaderItem extends MenuItem {
         event: React.MouseEvent<HTMLElement, MouseEvent>,
     ) => void;
     bringForward?: boolean;
-    compact?: boolean;
+    /** When `true`, forces the item to display in expanded form. */
+    isExpanded?: boolean;
 
     /**
      * @deprecated Use itemWrapper instead for popup functionality

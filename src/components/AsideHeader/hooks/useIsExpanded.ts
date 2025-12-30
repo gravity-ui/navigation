@@ -10,19 +10,19 @@ interface UseIsExpandedResult {
     onFold: () => void;
 }
 
-export const useIsExpanded = (externalCompact: boolean): UseIsExpandedResult => {
-    const [isExpanded, setIsExpanded] = useState(!externalCompact);
+export const useIsExpanded = (externalPinned: boolean): UseIsExpandedResult => {
+    const [isExpanded, setIsExpanded] = useState(externalPinned);
     const [isMouseInside, setIsMouseInside] = useState(false);
 
     useEffect(() => {
-        if (externalCompact && isExpanded) {
+        if (!externalPinned && isExpanded) {
             return;
         }
 
-        setIsExpanded(!externalCompact);
-        // We need to run this effect only when externalCompact changes
+        setIsExpanded(externalPinned);
+        // We need to run this effect only when externalPinned changes
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [externalCompact]);
+    }, [externalPinned]);
 
     const delayedShouldExpand = useDelayedToggle(isMouseInside, {
         enableDelay: ASIDE_HEADER_EXPAND_DELAY,
@@ -31,7 +31,7 @@ export const useIsExpanded = (externalCompact: boolean): UseIsExpandedResult => 
 
     // Update isExpanded based on hover
     useEffect(() => {
-        if (externalCompact) {
+        if (!externalPinned) {
             setIsExpanded(delayedShouldExpand);
         }
         // We need to run this effect only when delayedShouldExpand changes

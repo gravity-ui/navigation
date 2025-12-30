@@ -14,9 +14,9 @@ interface Props extends QAProps {
 }
 
 export const AsideFallback: React.FC<Props> = ({headerDecoration, subheaderItemsCount = 0, qa}) => {
-    const {compact} = useAsideHeaderContext();
+    const {pinned} = useAsideHeaderContext();
 
-    const widthVar = compact ? '--gn-aside-header-min-width' : '--gn-aside-header-size';
+    const widthVar = pinned ? '--gn-aside-header-size' : '--gn-aside-header-min-width';
 
     const subheaderHeight = (1 + subheaderItemsCount) * ITEM_HEIGHT;
 
@@ -25,7 +25,7 @@ export const AsideFallback: React.FC<Props> = ({headerDecoration, subheaderItems
             <div className={b('aside-content', {'with-decoration': headerDecoration})}>
                 <div className={b('header', {'with-decoration': headerDecoration})}>
                     <div style={{height: subheaderHeight}} />
-                    {compact && headerDecoration ? (
+                    {!pinned && headerDecoration ? (
                         <Icon
                             data={headerDividerCollapsedIcon}
                             className={b('header-divider')}

@@ -37,7 +37,7 @@ enum Panel {
 
 export interface AsideHeaderShowcaseProps {
     multipleTooltip?: boolean;
-    initialCompact?: boolean;
+    initialPinned?: boolean;
     topAlert?: TopAlertProps;
     customBackground?: React.ReactNode;
     customBackgroundClassName?: string;
@@ -49,7 +49,7 @@ export interface AsideHeaderShowcaseProps {
 
 export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderShowcaseProps>> = ({
     multipleTooltip = false,
-    initialCompact = false,
+    initialPinned = true,
     topAlert,
     customBackground,
     customBackgroundClassName,
@@ -63,7 +63,7 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
     const [popupVisible, setPopupVisible] = React.useState(false);
     const [subheaderPopupVisible, setSubheaderPopupVisible] = React.useState(false);
     const [visiblePanel, setVisiblePanel] = React.useState<Panel>();
-    const [compact, setCompact] = React.useState(initialCompact);
+    const [pinned, setPinned] = React.useState(initialPinned);
     const [addonHeaderDecoration, setHeaderDecoration] = React.useState<string>(
         BOOLEAN_OPTIONS.Yes,
     );
@@ -154,15 +154,15 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
                             ),
                     },
                 ]}
-                compact={compact}
+                pinned={pinned}
                 hideCollapseButton={hideCollapseButton}
                 multipleTooltip={multipleTooltip}
                 openModalSubscriber={openModalSubscriber}
                 topAlert={topAlert}
-                renderFooter={({compact, asideRef}) => (
+                renderFooter={({isExpanded, asideRef}) => (
                     <React.Fragment>
                         <FooterItem
-                            compact={compact}
+                            isExpanded={isExpanded}
                             id={'infra'}
                             icon={Gear}
                             current={popupVisible}
@@ -221,7 +221,7 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
                                 );
                             }}
                             bringForward
-                            compact={compact}
+                            isExpanded={isExpanded}
                         />
                         <FooterItem
                             id={'user-settings'}
@@ -236,7 +236,7 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
                                         : Panel.UserSettings,
                                 );
                             }}
-                            compact={compact}
+                            isExpanded={isExpanded}
                         />
                     </React.Fragment>
                 )}
@@ -292,8 +292,8 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
                     },
                 ]}
                 onClosePanel={() => setVisiblePanel(undefined)}
-                onChangeCompact={(v) => {
-                    setCompact(v);
+                onChangePinned={(v) => {
+                    setPinned(v);
                 }}
                 onMenuMoreClick={() => console.log('onMenuMoreClick')}
                 onAllPagesClick={() => console.log('onAllPagesClick')}

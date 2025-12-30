@@ -33,8 +33,8 @@ const Navigation: React.FC<React.PropsWithChildren> = ({children}) => {
         href: '#',
       }}
       menuItems={menuItems}
-      compact={compact}
-      onChangeCompact={setCompact}
+      pinned={pinned}
+      onChangePinned={setPinned}
       renderContent={() => children}
       // All pages
       defaultMenuItems={defaultMenuItems}

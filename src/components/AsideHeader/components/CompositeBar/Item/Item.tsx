@@ -28,7 +28,8 @@ const itemTransitionClasses = {
 export interface ItemProps extends AsideHeaderItem {}
 
 interface ItemInnerProps extends ItemProps {
-    compact?: boolean;
+    /** When `true`, the item is displayed in expanded form. */
+    isExpanded?: boolean;
     className?: string;
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
@@ -74,7 +75,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         title,
         href,
         qa,
-        compact,
+        isExpanded = true,
         editMode = false,
         onToggleVisibility,
         hidden,
@@ -119,7 +120,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     }
 
     const makeIconNode = (iconEl: React.ReactNode): React.ReactNode => {
-        return compact ? <div className={b('btn-icon')}>{iconEl}</div> : iconEl;
+        return isExpanded ? iconEl : <div className={b('btn-icon')}>{iconEl}</div>;
     };
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
@@ -129,7 +130,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             <React.Fragment>
                 <Tag
                     {...tagProps}
-                    className={b({type, current, compact}, className)}
+                    className={b({type, current, collapsed: !isExpanded}, className)}
                     ref={ref}
                     data-qa={qa}
                     data-type={type}
@@ -149,7 +150,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     </div>
 
                     <CSSTransition
-                        in={!compact}
+                        in={isExpanded}
                         timeout={ASIDE_HEADER_EXPAND_TRANSITION_DELAY}
                         classNames={itemTransitionClasses}
                     >
@@ -198,7 +199,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     let highlightedNode = null;
     let node;
 
-    const opts = {compact: Boolean(compact), collapsed: false, item: props, ref};
+    const opts = {pinned: Boolean(isExpanded), collapsed: false, item: props, ref};
 
     if (typeof itemWrapper === 'function') {
         node = itemWrapper(params, makeNode, opts) as React.ReactElement;

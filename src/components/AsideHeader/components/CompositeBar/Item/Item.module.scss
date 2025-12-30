@@ -382,7 +382,7 @@ $actionLeftRightMargin: 10px;
         margin-left: 10px;
     }
 
-    &_compact {
+    &_collapsed {
         &#{$class}_type_action {
             width: var(--gn-composite-bar-item-action-size);
 
