@@ -1,7 +1,11 @@
 import React, {PropsWithChildren, Suspense, useMemo} from 'react';
 
 import {Content, ContentProps} from '../../../Content';
-import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../../constants';
+import {
+    ASIDE_HEADER_COMPACT_WIDTH,
+    ASIDE_HEADER_COMPACT_WIDTH_COMPACT_MODE,
+    ASIDE_HEADER_EXPANDED_WIDTH,
+} from '../../../constants';
 import {TopAlertProps} from '../../../types';
 import {AsideHeaderContextProvider, useAsideHeaderContext} from '../../AsideHeaderContext';
 import {useIsExpanded} from '../../hooks/useIsExpanded';
@@ -45,7 +49,10 @@ const Layout = ({
 }: PageLayoutProps) => {
     const {isExpanded, onExpand, onFold} = useIsExpanded(pinned);
 
-    const size = isExpanded ? ASIDE_HEADER_EXPANDED_WIDTH : ASIDE_HEADER_COMPACT_WIDTH;
+    const collapsedWidth = isCompactMode
+        ? ASIDE_HEADER_COMPACT_WIDTH_COMPACT_MODE
+        : ASIDE_HEADER_COMPACT_WIDTH;
+    const size = isExpanded ? ASIDE_HEADER_EXPANDED_WIDTH : collapsedWidth;
 
     const asideHeaderContextValue = useMemo(
         () => ({

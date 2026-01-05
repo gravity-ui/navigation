@@ -3,7 +3,11 @@ import React, {useCallback} from 'react';
 import {Icon} from '@gravity-ui/uikit';
 
 import {Logo} from '../../Logo';
-import {ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT} from '../../constants';
+import {
+    ASIDE_HEADER_COMPACT_WIDTH,
+    ASIDE_HEADER_COMPACT_WIDTH_COMPACT_MODE,
+    HEADER_DIVIDER_HEIGHT,
+} from '../../constants';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {AsideHeaderItem} from '../types';
 import {b} from '../utils';
@@ -71,7 +75,11 @@ export const Header = () => {
                 <Icon
                     data={headerDividerCollapsedIcon}
                     className={b('header-divider')}
-                    width={ASIDE_HEADER_COMPACT_WIDTH}
+                    width={
+                        isCompactMode
+                            ? ASIDE_HEADER_COMPACT_WIDTH_COMPACT_MODE
+                            : ASIDE_HEADER_COMPACT_WIDTH
+                    }
                     height={HEADER_DIVIDER_HEIGHT}
                 />
             )}

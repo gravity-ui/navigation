@@ -8,11 +8,12 @@ $block: '.#{variables.$ns}aside-header';
 
 #{$block} {
     $class: &;
-    --gn-aside-header-min-width: 56px;
+    --gn-aside-header-min-width: #{variables.$aside-header-min-width};
 
     --_--item-height: #{variables.$item-height};
 
     &_compact-mode {
+        --gn-aside-header-min-width: #{variables.$aside-header-min-width-compact};
         --_--item-height: #{variables.$item-height-compact};
     }
 
