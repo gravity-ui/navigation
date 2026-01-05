@@ -58,6 +58,19 @@ Compact.args = {
     hideCollapseButton: true,
 };
 
+const CompactModeTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
+export const CompactMode = CompactModeTemplate.bind({});
+CompactMode.args = {
+    isCompactMode: true,
+};
+CompactMode.parameters = {
+    docs: {
+        description: {
+            story: 'Compact mode reduces menu item height for denser navigation.',
+        },
+    },
+};
+
 const MultipleTooltipTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
 export const MultipleTooltip = MultipleTooltipTemplate.bind({});
 MultipleTooltip.args = {
