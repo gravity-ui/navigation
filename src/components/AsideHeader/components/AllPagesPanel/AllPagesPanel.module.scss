@@ -18,7 +18,7 @@
 
     &__menu-group {
         width: 100%;
-        margin-inline: 10px;
+        margin-inline: var(--_--item-margin-inline);
 
         &:not(:last-child) {
             padding-bottom: var(--g-spacing-2);

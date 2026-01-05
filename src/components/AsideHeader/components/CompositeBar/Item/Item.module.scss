@@ -3,8 +3,6 @@
 
 $block: '.#{variables.$ns}composite-bar-item';
 
-$actionLeftRightMargin: 10px;
-
 #{$block} {
     @include mixins.accessibility-button;
 
@@ -367,7 +365,7 @@ $actionLeftRightMargin: 10px;
         }
 
         &:global(.#{variables.$ns}footer-item) {
-            width: calc(100% - 2 * $actionLeftRightMargin);
+            width: calc(100% - 2 * var(--_--item-margin-inline));
         }
     }
 

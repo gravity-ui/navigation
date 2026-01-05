@@ -11,10 +11,12 @@ $block: '.#{variables.$ns}aside-header';
     --gn-aside-header-min-width: #{variables.$aside-header-min-width};
 
     --_--item-height: #{variables.$item-height};
+    --_--item-margin-inline: #{variables.$item-margin-inline};
 
     &_compact-mode {
         --gn-aside-header-min-width: #{variables.$aside-header-min-width-compact};
         --_--item-height: #{variables.$item-height-compact};
+        --_--item-margin-inline: #{variables.$item-margin-inline-compact};
     }
 
     --_--background-color: var(--g-color-base-background);
@@ -228,7 +230,7 @@ $block: '.#{variables.$ns}aside-header';
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-inline: 10px;
+        margin-inline: var(--_--item-margin-inline);
 
         &_without-logo {
             padding-bottom: var(--g-spacing-2);
@@ -247,12 +249,12 @@ $block: '.#{variables.$ns}aside-header';
     }
 
     &__menu-item:not(:has([data-type='action'])) {
-        margin-inline: 10px;
+        margin-inline: var(--_--item-margin-inline);
     }
 
     &__footer {
         flex-shrink: 0;
-        margin: var(--g-spacing-2) 10px;
+        margin: var(--g-spacing-2) var(--_--item-margin-inline);
         display: flex;
         flex-direction: column;
         background-color: var(--gn-aside-bottom-background-color);

@@ -145,6 +145,6 @@ $block: '.#{variables.$ns}composite-bar';
     }
 
     &__menu-item[data-type='action'] {
-        margin-inline: 10px;
+        margin-inline: var(--_--item-margin-inline);
     }
 }
