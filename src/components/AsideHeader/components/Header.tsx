@@ -26,6 +26,7 @@ export const Header = () => {
         headerDecoration,
         subheaderItems,
         hideCollapseButton,
+        isCompactMode,
     } = useAsideHeaderInnerContext();
 
     const items = useGroupedMenuItems(subheaderItems || DEFAULT_SUBHEADER_ITEMS);
@@ -63,6 +64,7 @@ export const Header = () => {
                 isExpanded={isExpanded}
                 items={items}
                 onItemClick={onItemClick}
+                isCompactMode={isCompactMode}
             />
 
             {headerDecoration && (

@@ -13,7 +13,7 @@ $block: '.#{variables.$ns}aside-header';
     --_--item-height: #{variables.$item-height};
 
     &_compact-mode {
-        // Compact mode styles will be added in subsequent commits
+        --_--item-height: #{variables.$item-height-compact};
     }
 
     --_--background-color: var(--g-color-base-background);

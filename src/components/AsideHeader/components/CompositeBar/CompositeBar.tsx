@@ -36,6 +36,8 @@ type CompositeBarProps = {
     menuItemClassName?: string;
     editMode?: boolean;
     onToggleGroupCollapsed?: (groupId: string) => void;
+    /** When `true`, menu items use compact height. */
+    isCompactMode?: boolean;
 };
 
 type CompositeBarViewProps = CompositeBarProps & {
@@ -51,6 +53,8 @@ type CompositeBarViewProps = CompositeBarProps & {
     onSecondLevelSortEnd?: (
         groupIndex: number,
     ) => (params: {oldIndex: number; newIndex: number}) => void;
+    /** When `true`, menu items use compact height. */
+    isCompactMode?: boolean;
 };
 
 export const CompositeBarView: FC<CompositeBarViewProps> = ({
@@ -70,6 +74,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
     onToggleMenuItemVisibility,
     onFirstLevelSortEnd,
     onSecondLevelSortEnd,
+    isCompactMode,
 }) => {
     const ref = useRef<List<AsideHeaderItem>>(null);
     const tooltipRef = useRef<HTMLDivElement>(null);
@@ -250,8 +255,8 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                     ref={ref}
                     items={items}
                     selectedItemIndex={type === 'menu' ? getSelectedItemIndex(items) : undefined}
-                    itemHeight={getItemHeight}
-                    itemsHeight={getItemsHeight}
+                    itemHeight={(item) => getItemHeight(item, isCompactMode)}
+                    itemsHeight={(items) => getItemsHeight(items, isCompactMode)}
                     itemClassName={b('root-menu-item', {collapsed: !isExpanded}, menuItemClassName)}
                     virtualized={false}
                     filterable={false}
@@ -339,8 +344,10 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                                             edit: enableSorting,
                                             collapsed: !isExpanded,
                                         })}
-                                        itemHeight={getItemHeight}
-                                        itemsHeight={getItemsHeight}
+                                        itemHeight={(item) => getItemHeight(item, isCompactMode)}
+                                        itemsHeight={(items) =>
+                                            getItemsHeight(items, isCompactMode)
+                                        }
                                         renderItem={(
                                             nestedItem,
                                             _isNestedItemActive,
@@ -404,6 +411,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     className,
     menuItemClassName,
     editMode = false,
+    isCompactMode,
 }) => {
     const visibleItems = items
         ?.filter((item) => !item.hidden)
@@ -432,6 +440,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                     multipleTooltip={multipleTooltip}
                     onToggleGroupCollapsed={onToggleGroupCollapsed}
                     editMode={editMode}
+                    isCompactMode={isCompactMode}
                 />
             </div>
         );
@@ -445,6 +454,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                     items={visibleItems}
                     onItemClick={onItemClick}
                     editMode={editMode}
+                    isCompactMode={isCompactMode}
                 />
             </div>
         );
