@@ -37,11 +37,14 @@ interface AsideHeaderGeneralProps extends QAProps {
     customBackground?: React.ReactNode;
     customBackgroundClassName?: string;
     hideCollapseButton?: boolean;
+    /** When `true`, menu items use compact height. */
+    isCompactMode?: boolean;
     renderContent?: RenderContentType;
     renderFooter?: (data: {
         size: number;
         isExpanded: boolean;
         asideRef: React.RefObject<HTMLDivElement>;
+        isCompactMode?: boolean;
     }) => React.ReactNode;
     collapseButtonWrapper?: (
         defaultButton: React.ReactNode,

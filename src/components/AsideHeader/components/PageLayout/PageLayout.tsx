@@ -31,9 +31,18 @@ function calcEstimatedTopAlertHeight(topAlert?: TopAlertProps) {
 
 export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {
     onChangePinned?: (pinned: boolean) => void;
+    /** When `true`, menu items use compact height. */
+    isCompactMode?: boolean;
 }
 
-const Layout = ({pinned, className, children, topAlert, onChangePinned}: PageLayoutProps) => {
+const Layout = ({
+    pinned,
+    className,
+    children,
+    topAlert,
+    onChangePinned,
+    isCompactMode,
+}: PageLayoutProps) => {
     const {isExpanded, onExpand, onFold} = useIsExpanded(pinned);
 
     const size = isExpanded ? ASIDE_HEADER_EXPANDED_WIDTH : ASIDE_HEADER_COMPACT_WIDTH;
@@ -75,7 +84,7 @@ const Layout = ({pinned, className, children, topAlert, onChangePinned}: PageLay
     return (
         <AsideHeaderContextProvider value={asideHeaderContextValue}>
             <div
-                className={b({collapsed: !isExpanded}, className)}
+                className={b({collapsed: !isExpanded, 'compact-mode': isCompactMode}, className)}
                 style={{
                     ...({'--gn-aside-header-size': `${size}px`} as React.CSSProperties),
                 }}
