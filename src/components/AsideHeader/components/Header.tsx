@@ -7,6 +7,7 @@ import {
     ASIDE_HEADER_COMPACT_WIDTH,
     ASIDE_HEADER_COMPACT_WIDTH_COMPACT_MODE,
     HEADER_DIVIDER_HEIGHT,
+    HEADER_DIVIDER_HEIGHT_COMPACT,
 } from '../../constants';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {AsideHeaderItem} from '../types';
@@ -80,7 +81,7 @@ export const Header = () => {
                             ? ASIDE_HEADER_COMPACT_WIDTH_COMPACT_MODE
                             : ASIDE_HEADER_COMPACT_WIDTH
                     }
-                    height={HEADER_DIVIDER_HEIGHT}
+                    height={isCompactMode ? HEADER_DIVIDER_HEIGHT_COMPACT : HEADER_DIVIDER_HEIGHT}
                 />
             )}
         </div>
