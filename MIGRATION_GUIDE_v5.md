@@ -194,3 +194,83 @@ itemWrapper={(params, makeItem, { compact }) => makeItem(params)}
 // After (v5.0)
 itemWrapper={(params, makeItem, { pinned }) => makeItem(params)}
 ```
+
+## Step-by-Step Migration
+
+### Step 1: Update Dependencies
+
+```bash
+npm install @gravity-ui/navigation@^5.0.0
+```
+
+### Step 2: Run Automated Migration
+
+The easiest way to migrate `compact` → `isExpanded` props is to use our codemod:
+
+```bash
+# Migrate compact to isExpanded (for FooterItem, MobileLogo, render callbacks)
+npx jscodeshift --parser tsx --transform node_modules/@gravity-ui/navigation/codemods/transforms/compactToIsExpanded.ts src/
+
+# Or using npx directly
+npx navigation-codemod compact-to-is-expanded src/
+```
+
+The codemod automatically handles:
+
+- **Literal values**: `compact={true}` → `isExpanded={false}`
+- **Variable references**: `compact={isCompact}` → `isExpanded={!isCompact}`
+- **Double negation removal**: `compact={!isExpanded}` → `isExpanded={isExpanded}`
+- **Complex expressions**: `compact={a && b}` → `isExpanded={!(a && b)}`
+- **Shorthand props**: `compact` → `isExpanded={false}`
+- **Destructuring in callbacks**: `({ compact })` → `({ isExpanded })`
+- **Callback parameters**: `(node, compact)` → `(node, isExpanded)`
+- **Pass-through props**: `compact={compact}` in callbacks → `isExpanded={isExpanded}` (no double inversion)
+
+### Step 3: Manual Updates (if needed)
+
+The codemod handles most cases, but you may need to manually update:
+
+#### Conditional logic using renamed variables
+
+```tsx
+// Before (v4.x)
+renderFooter={({ compact }) => (
+  <div className={compact ? 'collapsed' : 'expanded'}>...</div>
+)}
+
+// After codemod (parameter renamed, but ternary logic needs manual fix)
+renderFooter={({ isExpanded }) => (
+  <div className={isExpanded ? 'expanded' : 'collapsed'}>...</div>  // ← swap branches manually
+)}
+```
+
+#### Update CSS variable usage
+
+Replace deprecated CSS variables with zone-specific alternatives (see CSS Variables section above).
+
+### Step 4: Verify and Test
+
+1. **TypeScript Compilation**: Ensure all type errors are resolved
+2. **Runtime Testing**: Test navigation expand/collapse functionality
+3. **Visual Regression**: Check that UI appears correctly in both states
+
+## Codemod Limitations
+
+Our codemod handles most cases automatically, but may not cover:
+
+1. **Conditional expressions using renamed variables**: Ternary operators like `compact ? 'a' : 'b'` need manual logic inversion
+2. **Dynamic property access**: `item['compact']`
+3. **Computed property names**: `item[propName]`
+4. **Spread patterns with compact**: `{...props, compact: true}`
+5. **Non-target components**: Only `FooterItem`, `MobileLogo`, and `Item` components are transformed
+
+## Migration Checklist
+
+- [ ] **Dependencies**: Update to @gravity-ui/navigation@^5.0.0
+- [ ] **Run Codemod**: Execute `compact-to-is-expanded` transform on your codebase
+- [ ] **Review Conditionals**: Manually check ternary expressions using renamed variables
+- [ ] **CSS Variables**: Update deprecated CSS variable names to zone-specific alternatives
+- [ ] **Context Usage**: Update any direct usage of `AsideHeaderContext` with new prop names
+- [ ] **TypeScript**: Resolve any remaining type errors
+- [ ] **Tests**: Update test assertions and mocks
+- [ ] **Visual Testing**: Verify navigation works correctly in both expanded and collapsed states
