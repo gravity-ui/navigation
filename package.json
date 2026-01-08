@@ -27,7 +27,7 @@
     "navigation-codemod": "./codemods/bin/cli.js"
   },
   "scripts": {
-    "prepare": "husky",
+    "prepare": "husky && npm run build || true",
     "typecheck": "tsc --noEmit",
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --passWithNoTests",
     "test-storybook": "test-storybook --url ${PR_PREVIEW_URL:-http://localhost:7008}",
