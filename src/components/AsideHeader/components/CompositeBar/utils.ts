@@ -1,4 +1,4 @@
-import {ITEM_HEIGHT, ITEM_HEIGHT_COMPACT} from '../../../constants';
+import {ITEM_GAP, ITEM_HEIGHT, ITEM_HEIGHT_COMPACT} from '../../../constants';
 import {AsideHeaderItem, GroupedMenuItem, MenuItemsWithGroups} from '../../types';
 import {getGroupBlockHeight} from '../../utils/getGroupHeight';
 
@@ -25,7 +25,9 @@ export function getItemHeight(compositeItem: MenuItemsWithGroups, isCompactMode?
 }
 
 export function getItemsHeight<T extends AsideHeaderItem>(items: T[], isCompactMode?: boolean) {
-    return items.reduce((sum, item) => sum + getItemHeight(item, isCompactMode), 0);
+    const gaps = (items.length - 1) * ITEM_GAP;
+
+    return items.reduce((sum, item) => sum + getItemHeight(item, isCompactMode), 0) + gaps;
 }
 
 export function getSelectedItemIndex(compositeItems: AsideHeaderItem[]) {
