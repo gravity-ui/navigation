@@ -3,12 +3,8 @@ import React, {useCallback} from 'react';
 import {Icon} from '@gravity-ui/uikit';
 
 import {Logo} from '../../Logo';
-import {
-    ASIDE_HEADER_COMPACT_WIDTH,
-    ASIDE_HEADER_COMPACT_WIDTH_COMPACT_MODE,
-    HEADER_DIVIDER_HEIGHT,
-    HEADER_DIVIDER_HEIGHT_COMPACT,
-} from '../../constants';
+import {HEADER_DIVIDER_HEIGHT, HEADER_DIVIDER_HEIGHT_COMPACT} from '../../constants';
+import {getCollapsedWidth} from '../../utils/getCollapsedWidth';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {AsideHeaderItem} from '../types';
 import {b} from '../utils';
@@ -17,6 +13,7 @@ import {useGroupedMenuItems} from './AllPagesPanel/useGroupedMenuItems';
 import {CollapseButton} from './CollapseButton/CollapseButton';
 import {CompositeBar} from './CompositeBar';
 
+import headerDividerCollapsedCompactIcon from '../../../../assets/icons/divider-collapsed-compact.svg';
 import headerDividerCollapsedIcon from '../../../../assets/icons/divider-collapsed.svg';
 
 const DEFAULT_SUBHEADER_ITEMS: AsideHeaderItem[] = [];
@@ -58,7 +55,10 @@ export const Header = () => {
                 )}
 
                 {!hideCollapseButton && (
-                    <CollapseButton className={b('pin-button', {collapsed: !isExpanded})} />
+                    <CollapseButton
+                        className={b('pin-button', {collapsed: !isExpanded})}
+                        isCompactMode={isCompactMode}
+                    />
                 )}
             </div>
 
@@ -74,13 +74,13 @@ export const Header = () => {
 
             {headerDecoration && (
                 <Icon
-                    data={headerDividerCollapsedIcon}
-                    className={b('header-divider')}
-                    width={
+                    data={
                         isCompactMode
-                            ? ASIDE_HEADER_COMPACT_WIDTH_COMPACT_MODE
-                            : ASIDE_HEADER_COMPACT_WIDTH
+                            ? headerDividerCollapsedCompactIcon
+                            : headerDividerCollapsedIcon
                     }
+                    className={b('header-divider')}
+                    width={getCollapsedWidth(isCompactMode)}
                     height={isCompactMode ? HEADER_DIVIDER_HEIGHT_COMPACT : HEADER_DIVIDER_HEIGHT}
                 />
             )}
