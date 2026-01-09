@@ -51,24 +51,11 @@ export default {
 const ShowcaseTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
 export const Showcase = ShowcaseTemplate.bind({});
 
-const CompactTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
-export const Compact = CompactTemplate.bind({});
-Compact.args = {
+const CollapsedTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
+export const Collapsed = CollapsedTemplate.bind({});
+Collapsed.args = {
     initialPinned: false,
     hideCollapseButton: true,
-};
-
-const CompactModeTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
-export const CompactMode = CompactModeTemplate.bind({});
-CompactMode.args = {
-    isCompactMode: true,
-};
-CompactMode.parameters = {
-    docs: {
-        description: {
-            story: 'Compact mode reduces menu item height for denser navigation.',
-        },
-    },
 };
 
 const MultipleTooltipTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
@@ -347,7 +334,7 @@ const GroupedMenuCollapsibleTemplate: StoryFn = (args) => {
     const [currentMenuGroups, setCurrentMenuGroups] = React.useState(menuGroupsWithIcons);
 
     return (
-        <PageLayout pinned={pinned} onChangePinned={setPinned}>
+        <PageLayout pinned={pinned} onChangePinned={setPinned} isCompactMode={args.isCompactMode}>
             <PageLayoutAside
                 headerDecoration
                 logo={DEFAULT_LOGO}
@@ -383,6 +370,11 @@ export const GroupedMenuCollapsible = GroupedMenuCollapsibleTemplate.bind({});
 GroupedMenuCollapsible.args = {
     multipleTooltip: false,
     initialPinned: true,
+};
+
+export const CompactMode = GroupedMenuCollapsibleTemplate.bind({});
+CompactMode.args = {
+    isCompactMode: true,
 };
 
 const CustomThemesWithNewColorsTemplate: StoryFn = (args) => {
