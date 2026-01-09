@@ -5,7 +5,8 @@
     height: 100%;
     padding: var(--g-spacing-4) var(--g-spacing-6);
     box-sizing: border-box;
-    --gn-aside-header-item-expanded-radius: 6px;
+    --gn-aside-header-item-expanded-radius: #{variables.$item-expanded-radius};
+    --_--item-height: #{variables.$item-height};
 
     &__content {
         overflow: auto;

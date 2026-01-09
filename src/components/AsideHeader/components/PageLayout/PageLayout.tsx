@@ -1,12 +1,9 @@
 import React, {PropsWithChildren, Suspense, useMemo} from 'react';
 
 import {Content, ContentProps} from '../../../Content';
-import {
-    ASIDE_HEADER_COMPACT_WIDTH,
-    ASIDE_HEADER_COMPACT_WIDTH_COMPACT_MODE,
-    ASIDE_HEADER_EXPANDED_WIDTH,
-} from '../../../constants';
+import {ASIDE_HEADER_EXPANDED_WIDTH} from '../../../constants';
 import {TopAlertProps} from '../../../types';
+import {getCollapsedWidth} from '../../../utils/getCollapsedWidth';
 import {AsideHeaderContextProvider, useAsideHeaderContext} from '../../AsideHeaderContext';
 import {useIsExpanded} from '../../hooks/useIsExpanded';
 import {LayoutProps} from '../../types';
@@ -49,10 +46,7 @@ const Layout = ({
 }: PageLayoutProps) => {
     const {isExpanded, onExpand, onFold} = useIsExpanded(pinned);
 
-    const collapsedWidth = isCompactMode
-        ? ASIDE_HEADER_COMPACT_WIDTH_COMPACT_MODE
-        : ASIDE_HEADER_COMPACT_WIDTH;
-    const size = isExpanded ? ASIDE_HEADER_EXPANDED_WIDTH : collapsedWidth;
+    const size = isExpanded ? ASIDE_HEADER_EXPANDED_WIDTH : getCollapsedWidth(isCompactMode);
 
     const asideHeaderContextValue = useMemo(
         () => ({
@@ -91,7 +85,7 @@ const Layout = ({
     return (
         <AsideHeaderContextProvider value={asideHeaderContextValue}>
             <div
-                className={b({collapsed: !isExpanded, 'compact-mode': isCompactMode}, className)}
+                className={b({collapsed: !isExpanded}, className)}
                 style={{
                     ...({'--gn-aside-header-size': `${size}px`} as React.CSSProperties),
                 }}

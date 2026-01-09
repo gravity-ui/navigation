@@ -7,7 +7,7 @@ $block: '.#{variables.$ns}composite-bar-item';
     @include mixins.accessibility-button;
 
     $class: &;
-    --gn-composite-bar-item-action-size: 36px;
+    --gn-composite-bar-item-action-size: var(--_--item-height);
 
     --_--horizontal-divider-line-color: var(--g-color-line-generic);
 

@@ -62,7 +62,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 classNames={asideTransitionClassNames}
             >
                 <div
-                    className={b('aside', className)}
+                    className={b('aside', {['compact-mode']: isCompactMode}, className)}
                     style={{width: size}}
                     data-qa={qa}
                     onMouseEnter={onExpand}

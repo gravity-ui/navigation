@@ -3,11 +3,8 @@ import React, {FC, ReactNode, useCallback, useContext, useRef, useState} from 'r
 import {ChevronRight} from '@gravity-ui/icons';
 import {List, ListSortParams} from '@gravity-ui/uikit';
 
-import {
-    ASIDE_HEADER_COMPACT_WIDTH,
-    ASIDE_HEADER_COMPACT_WIDTH_COMPACT_MODE,
-} from '../../../constants';
 import {createBlock} from '../../../utils/cn';
+import {getCollapsedWidth} from '../../../utils/getCollapsedWidth';
 import {AsideHeaderItem, MenuItemsWithGroups} from '../../types';
 import {UNGROUPED_ID} from '../AllPagesPanel/constants';
 
@@ -104,9 +101,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
         };
     }, [multipleTooltip, multipleTooltipActive, setMultipleTooltipContextValue]);
 
-    const collapsedWidth = isCompactMode
-        ? ASIDE_HEADER_COMPACT_WIDTH_COMPACT_MODE
-        : ASIDE_HEADER_COMPACT_WIDTH;
+    const collapsedWidth = getCollapsedWidth(isCompactMode);
 
     const onTooltipMouseEnter = useCallback(
         (e: {clientX: number}) => {
