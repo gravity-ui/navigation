@@ -51,7 +51,7 @@ export const MultipleTooltip: React.FC<MultipleTooltipProps> = ({
                                 case 'divider':
                                     return (
                                         <div className={b('item', {divider: true})} key={idx}>
-                                            {currentItem.title}
+                                            {currentItem.tooltipText || currentItem.title}
                                         </div>
                                     );
                                 default:
@@ -62,7 +62,7 @@ export const MultipleTooltip: React.FC<MultipleTooltipProps> = ({
                                             })}
                                             key={idx}
                                         >
-                                            {currentItem.title}
+                                            {currentItem.tooltipText || currentItem.title}
                                         </div>
                                     );
                             }

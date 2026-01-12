@@ -1,17 +1,14 @@
 import * as React from 'react';
 
-import {PopupProps, QAProps} from '@gravity-ui/uikit';
+import {DrawerProps, PopupProps, QAProps} from '@gravity-ui/uikit';
 
 import {RenderContentType} from '../Content';
 import {LogoProps, MenuGroup, MenuItem, OpenModalSubscriber, TopAlertProps} from '../types';
 
 import {AsideHeaderContextType} from './AsideHeaderContext';
 
-export interface PanelItemProps {
+export interface PanelItemProps extends DrawerProps {
     id: string;
-    content?: React.ReactNode;
-    visible?: boolean;
-    className?: string;
 }
 
 export interface LayoutProps {

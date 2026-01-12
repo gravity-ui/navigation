@@ -1,5 +1,20 @@
 # Changelog
 
+## [4.0.3](https://github.com/gravity-ui/navigation/compare/v4.0.2...v4.0.3) (2025-12-22)
+
+
+### Bug Fixes
+
+* fix tooltip functionality and styling in CompositeBar and AsideHeader components ([#525](https://github.com/gravity-ui/navigation/issues/525)) ([089135d](https://github.com/gravity-ui/navigation/commit/089135d461db190cc2b8fd2a8dd71180f1f05565))
+* remove phantom 4.1.0 and duplicate 4.0.0 entries from CHANGELOG ([#527](https://github.com/gravity-ui/navigation/issues/527)) ([3cb4399](https://github.com/gravity-ui/navigation/commit/3cb4399c8be3b02f9cfe96f5e53f58c30e7f8edc))
+
+## [4.0.2](https://github.com/gravity-ui/navigation/compare/v4.0.1...v4.0.2) (2025-12-19)
+
+
+### Bug Fixes
+
+* Refine the panelItems properties and change the visible property to open ([#522](https://github.com/gravity-ui/navigation/issues/522)) ([7844f85](https://github.com/gravity-ui/navigation/commit/7844f850355c89b76b5d2b6504383c590fe00e41))
+
 ## [4.0.1](https://github.com/gravity-ui/navigation/compare/v4.0.0...v4.0.1) (2025-12-19)
 
 
@@ -20,10 +35,6 @@
 * migration to css modules ([52a414e](https://github.com/gravity-ui/navigation/commit/52a414eb508094d44e7662e19aa95d284bf47f73))
 * **PageLayout:** support function type for topAlert prop ([#491](https://github.com/gravity-ui/navigation/issues/491)) ([e26a6ae](https://github.com/gravity-ui/navigation/commit/e26a6ae276b331709dc671742be2c5bc56abec34))
 * support item.itemWrapper in AllPagesPannel ([#496](https://github.com/gravity-ui/navigation/issues/496)) ([a072b05](https://github.com/gravity-ui/navigation/commit/a072b05d65a5c0bd7ebccd2ebeac7ba0d2c7fa21))
-
-## [4.0.0](https://github.com/gravity-ui/navigation/compare/v3.7.1...v4.0.0) (2025-11-21)
-
-### ⚠ BREAKING CHANGES
 
 #### Interface Unification ([#470](https://github.com/gravity-ui/navigation/pull/470))
 

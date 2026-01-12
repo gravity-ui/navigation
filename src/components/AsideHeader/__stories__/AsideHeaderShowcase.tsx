@@ -62,7 +62,7 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
     const ref = React.useRef<HTMLDivElement>(null);
     const [popupVisible, setPopupVisible] = React.useState(false);
     const [subheaderPopupVisible, setSubheaderPopupVisible] = React.useState(false);
-    const [visiblePanel, setVisiblePanel] = React.useState<Panel>();
+    const [openPanel, setOpenPanel] = React.useState<Panel>();
     const [pinned, setPinned] = React.useState(initialPinned);
     const [addonHeaderDecoration, setHeaderDecoration] = React.useState<string>(
         BOOLEAN_OPTIONS.Yes,
@@ -121,7 +121,7 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
                         title: 'Services',
                         icon: Gear,
                         onItemClick: () => {
-                            setVisiblePanel(undefined);
+                            setOpenPanel(undefined);
                             setSubheaderPopupVisible(!subheaderPopupVisible);
                         },
                         popupRef: ref,
@@ -147,11 +147,9 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
                         title: 'Search',
                         qa: 'subheader-item-search',
                         icon: Magnifier,
-                        current: visiblePanel === Panel.Search,
+                        current: openPanel === Panel.Search,
                         onItemClick: () =>
-                            setVisiblePanel(
-                                visiblePanel === Panel.Search ? undefined : Panel.Search,
-                            ),
+                            setOpenPanel(openPanel === Panel.Search ? undefined : Panel.Search),
                     },
                 ]}
                 pinned={pinned}
@@ -176,7 +174,7 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
                             }
                             tooltipText={'Minor issue (Now)'}
                             onItemClick={() => {
-                                setVisiblePanel(undefined);
+                                setOpenPanel(undefined);
                                 setPopupVisible(!popupVisible);
                             }}
                             popupVisible={popupVisible}
@@ -206,7 +204,7 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
                                     <b>Settings with panel</b>
                                 </div>
                             }
-                            current={visiblePanel === Panel.ProjectSettings}
+                            current={openPanel === Panel.ProjectSettings}
                             itemWrapper={(params, makeItem) =>
                                 makeItem({
                                     ...params,
@@ -214,8 +212,8 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
                                 })
                             }
                             onItemClick={() => {
-                                setVisiblePanel(
-                                    visiblePanel === Panel.ProjectSettings
+                                setOpenPanel(
+                                    openPanel === Panel.ProjectSettings
                                         ? undefined
                                         : Panel.ProjectSettings,
                                 );
@@ -228,10 +226,10 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
                             icon={Gear}
                             title={'User Settings with panel'}
                             tooltipText={'User Settings with panel'}
-                            current={visiblePanel === Panel.UserSettings}
+                            current={openPanel === Panel.UserSettings}
                             onItemClick={() => {
-                                setVisiblePanel(
-                                    visiblePanel === Panel.UserSettings
+                                setOpenPanel(
+                                    openPanel === Panel.UserSettings
                                         ? undefined
                                         : Panel.UserSettings,
                                 );
@@ -268,30 +266,30 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
                 panelItems={[
                     {
                         id: 'search',
-                        content: <div className={b('search-panel')}>Search panel</div>,
-                        visible: visiblePanel === Panel.Search,
+                        children: <div className={b('search-panel')}>Search panel</div>,
+                        open: openPanel === Panel.Search,
                     },
                     {
                         id: 'project-settings',
-                        content: <div className={b('settings-panel')}>Project Settings</div>,
-                        visible: visiblePanel === Panel.ProjectSettings,
+                        children: <div className={b('settings-panel')}>Project Settings</div>,
+                        open: openPanel === Panel.ProjectSettings,
                     },
                     {
                         id: 'user-settings',
-                        content: (
+                        children: (
                             <div className={b('settings-panel')}>
                                 <div className={b('user-settings-content')}>User Settings</div>
                             </div>
                         ),
-                        visible: visiblePanel === Panel.UserSettings,
+                        open: openPanel === Panel.UserSettings,
                     },
                     {
                         id: 'components',
-                        content: <div className={b('components-panel')}>Components</div>,
-                        visible: visiblePanel === Panel.Components,
+                        children: <div className={b('components-panel')}>Components</div>,
+                        open: openPanel === Panel.Components,
                     },
                 ]}
-                onClosePanel={() => setVisiblePanel(undefined)}
+                onClosePanel={() => setOpenPanel(undefined)}
                 onChangePinned={(v) => {
                     setPinned(v);
                 }}

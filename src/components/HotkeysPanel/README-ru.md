@@ -18,7 +18,7 @@ import {HotkeysPanel} from '@gravity-ui/navigation';
 | hotkeys              | `Array`         |      Да      |                       | Список групп горячих клавиш.                |
 | title                | `ReactNode`     |              |                       | Заголовок панели.                           |
 | togglePanelHotkey    | `String`        |              |                       | Хоткей для открытия панели.                 |
-| visible              | `Boolean`       |      Да      |                       | Определяет видимость выдвижной панели.      |
+| open                 | `Boolean`       |      Да      |                       | Определяет видимость выдвижной панели.      |
 | onClose              | `Function`      |              |                       | Обработчик закрытия выдвижной панели.       |
 | filterable           | `Boolean`       |              | true                  | Определяет видимость поля поиска.           |
 | filterPlaceholder    | `String`        |              |                       | Заглушка для поля поиска.                   |

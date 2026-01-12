@@ -31,17 +31,17 @@ export const Panels: React.FC = () => {
 
     return panelItems ? (
         <React.Fragment>
-            {panelItems.map((item) => (
+            {panelItems.map(({id, className, children, ...rest}) => (
                 <Drawer
-                    key={item.id}
+                    {...rest}
+                    key={id}
                     className={b('panels')}
-                    open={item.visible}
                     onOpenChange={handleOpenChange}
                     style={{left: size}}
-                    contentClassName={b('panel', item.className)}
+                    contentClassName={b('panel', className)}
                 >
                     <div onMouseEnter={onExpand} className={b('panel-content')}>
-                        {item.content}
+                        {children}
                     </div>
                 </Drawer>
             ))}
