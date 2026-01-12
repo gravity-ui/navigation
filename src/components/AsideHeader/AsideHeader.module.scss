@@ -161,7 +161,7 @@ $block: '.#{variables.$ns}aside-header';
         box-sizing: border-box;
         width: calc(100%);
         padding-top: 8px;
-        padding-bottom: 22px;
+        padding-bottom: 25px;
         background-color: var(--gn-aside-top-decoration-background-color);
 
         #{$class}__header-divider {
@@ -234,6 +234,7 @@ $block: '.#{variables.$ns}aside-header';
         align-items: center;
         justify-content: space-between;
         margin-inline: var(--_--item-margin-inline);
+        margin-bottom: 2px;
 
         &_without-logo {
             padding-bottom: var(--g-spacing-2);
