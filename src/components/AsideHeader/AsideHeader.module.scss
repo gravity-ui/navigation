@@ -110,7 +110,7 @@ $block: '.#{variables.$ns}aside-header';
         &_compact-mode {
             --_--item-height: #{variables.$item-height-compact};
             --_--item-margin-inline: #{variables.$item-margin-inline-compact};
-            --_--item-collapsed-radius: 4px;
+            --_--item-collapsed-radius: #{variables.$item-expanded-radius-compact};
             --gn-aside-header-item-expanded-radius: #{variables.$item-expanded-radius-compact};
             --gn-aside-header-header-divider-height: #{variables.$header-divider-height-compact};
             --gn-aside-header-min-width: #{variables.$aside-header-min-width-compact};
