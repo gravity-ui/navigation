@@ -12,18 +12,4 @@
         overflow: auto;
         flex: 1;
     }
-
-    &__discoverable-feature-wrapper {
-        display: flex;
-    }
-
-    &__menu-group {
-        width: 100%;
-        margin-inline: var(--_--item-margin-inline);
-
-        &:not(:last-child) {
-            padding-bottom: var(--g-spacing-2);
-            border-bottom: 1px solid var(--g-color-line-generic);
-        }
-    }
 }
