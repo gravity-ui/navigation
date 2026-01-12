@@ -22,7 +22,7 @@ export function getAsideHeaderWrapper(
     props: AsideHeaderProps = {
         logo: {
             icon: logoIcon,
-            iconSize: 24,
+            iconSize: 32,
             text: 'My Service',
             'aria-label': 'My Service',
         },

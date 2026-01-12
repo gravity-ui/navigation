@@ -47,6 +47,7 @@ export const Header = () => {
                 {logo && (
                     <Logo
                         {...logo}
+                        isCompactMode={isCompactMode}
                         onClick={onLogoClick}
                         isExpanded={isExpanded}
                         buttonClassName={b('logo-button')}

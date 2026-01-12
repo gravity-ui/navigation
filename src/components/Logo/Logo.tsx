@@ -20,15 +20,19 @@ const logoTransitionClasses = {
     exitDone: b('logo-exit-done'),
 };
 
-export const Logo: React.FC<
-    LogoProps & {isExpanded?: boolean; buttonClassName?: string; iconPlaceClassName?: string}
-> = ({
+interface Props extends LogoProps {
+    isCompactMode?: boolean;
+    isExpanded?: boolean;
+    buttonClassName?: string;
+    iconPlaceClassName?: string;
+}
+
+export const Logo: React.FC<Props> = ({
     text,
     icon,
     iconSrc,
     iconClassName,
     iconPlaceClassName,
-    iconSize = 24,
     textSize = 15,
     href,
     target = '_self',
@@ -37,10 +41,14 @@ export const Logo: React.FC<
     isExpanded = true,
     className,
     buttonClassName,
+    isCompactMode,
     'aria-label': ariaLabel,
     'aria-labelledby': ariaLabelledby,
+    ...props
 }) => {
     const hasWrapper = typeof wrapper === 'function';
+    const defaultIconSize = isCompactMode ? 24 : 32;
+    const iconSize = props.iconSize || defaultIconSize;
 
     let buttonIcon;
 
