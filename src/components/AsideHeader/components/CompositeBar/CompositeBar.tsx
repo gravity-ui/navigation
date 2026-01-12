@@ -410,7 +410,22 @@ export const CompositeBar: FC<CompositeBarProps> = ({
         ?.map((item) => ({
             ...item,
             items: 'items' in item ? item.items?.filter((item) => !item.hidden) : [],
-        }));
+        }))
+        ?.filter((item, index, arr) => {
+            if (item.type !== 'divider') return true;
+
+            // Hide divider if no non-divider item exists before it
+            const hasNonDividerBefore = arr
+                .slice(0, index)
+                .some((prevItem) => prevItem.type !== 'divider');
+
+            if (!hasNonDividerBefore) return false;
+
+            // Hide divider if previous item is also a divider (deduplicate consecutive)
+            if (arr[index - 1]?.type === 'divider') return false;
+
+            return true;
+        });
 
     if (!visibleItems || visibleItems.length === 0) {
         return null;
