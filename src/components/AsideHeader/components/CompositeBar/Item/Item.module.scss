@@ -239,6 +239,8 @@ $block: '.#{variables.$ns}composite-bar-item';
         -webkit-line-clamp: 2;
         overflow: hidden;
         text-align: start;
+        font-size: var(--g-text-body-short-font-size);
+        line-height: var(--g-text-body-short-line-height);
 
         color: var(--gn-aside-header-item-text-color, var(--_--item-text-color));
 
