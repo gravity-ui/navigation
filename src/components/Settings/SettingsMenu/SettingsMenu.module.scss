@@ -6,6 +6,10 @@ $block: '.#{variables.$ns}settings-menu';
 #{$block} {
     overflow-y: auto;
 
+    &_scrolled {
+        box-shadow: inset 0 5px 5px -5px rgba(0, 0, 0, 0.15);
+    }
+
     &__group {
         &-heading {
             @include mixins.text-accent;
