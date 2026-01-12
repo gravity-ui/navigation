@@ -14,8 +14,17 @@ test.describe('AsideHeader', () => {
         await expectScreenshot();
     });
 
-    test('render story: <Compact>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.Compact />, undefined, {
+    test('render story: <Collapsed>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.Collapsed />, undefined, {
+            width: 1200,
+            height: 720,
+        });
+
+        await expectScreenshot();
+    });
+
+    test('render story: <CompactMode>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.CompactMode />, undefined, {
             width: 1200,
             height: 720,
         });
