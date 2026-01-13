@@ -51,9 +51,9 @@ export default {
 const ShowcaseTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
 export const Showcase = ShowcaseTemplate.bind({});
 
-const CollapsedTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
-export const Collapsed = CollapsedTemplate.bind({});
-Collapsed.args = {
+const CollapsedNavigationTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
+export const CollapsedNavigation = CollapsedNavigationTemplate.bind({});
+CollapsedNavigation.args = {
     initialPinned: false,
     hideCollapseButton: true,
 };
@@ -372,8 +372,8 @@ GroupedMenuCollapsible.args = {
     initialPinned: true,
 };
 
-export const CompactMode = GroupedMenuCollapsibleTemplate.bind({});
-CompactMode.args = {
+export const CompactItemSizing = GroupedMenuCollapsibleTemplate.bind({});
+CompactItemSizing.args = {
     isCompactMode: true,
 };
 

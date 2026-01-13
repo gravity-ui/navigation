@@ -14,8 +14,8 @@ test.describe('AsideHeader', () => {
         await expectScreenshot();
     });
 
-    test('render story: <Collapsed>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.Collapsed />, undefined, {
+    test('render story: <CollapsedNavigation>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.CollapsedNavigation />, undefined, {
             width: 1200,
             height: 720,
         });
@@ -23,8 +23,8 @@ test.describe('AsideHeader', () => {
         await expectScreenshot();
     });
 
-    test('render story: <CompactMode>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.CompactMode />, undefined, {
+    test('render story: <CompactItemSizing>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.CompactItemSizing />, undefined, {
             width: 1200,
             height: 720,
         });
