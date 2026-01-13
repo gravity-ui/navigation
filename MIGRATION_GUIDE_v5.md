@@ -208,11 +208,8 @@ npm install @gravity-ui/navigation@^5.0.0
 The easiest way to migrate `compact` → `isExpanded` props is to use our codemod:
 
 ```bash
-# Migrate compact to isExpanded (for FooterItem, MobileLogo, render callbacks)
-npx jscodeshift --parser tsx --transform node_modules/@gravity-ui/navigation/codemods/transforms/compactToIsExpanded.ts src/
-
-# Or using npx directly
-npx navigation-codemod compact-to-is-expanded src/
+# Complete migration (recommended)
+npx navigation-codemod v5 src/
 ```
 
 The codemod automatically handles:

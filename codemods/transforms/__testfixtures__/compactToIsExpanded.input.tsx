@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // @ts-nocheck
 import React from 'react';
-import {FooterItem, MobileLogo} from '@gravity-ui/navigation';
+import {AsideHeader, FooterItem, MobileLogo} from '@gravity-ui/navigation';
 
 // Test 1: Literal boolean values
 function LiteralBooleans() {
@@ -99,4 +99,3 @@ function CollapseButtonWrapper() {
 function NonTargetComponent() {
     return <SomeOtherComponent compact={true} />;
 }
-

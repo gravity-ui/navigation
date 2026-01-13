@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import type {
     API,
     ASTPath,
@@ -37,18 +38,11 @@ const TARGET_JSX_COMPONENTS = new Set(['FooterItem', 'MobileLogo', 'Item']);
 
 const RENDER_CALLBACK_PROPS = new Set(['renderFooter', 'collapseButtonWrapper']);
 
-// Track identifiers that were renamed from 'compact' to 'isExpanded' in destructuring
-const renamedIdentifiers = new Set<string>();
-
 export default function transformer(file: FileInfo, api: API) {
     const j = api.jscodeshift;
     const root = j(file.source);
 
-    // Clear tracking set for each file
-    renamedIdentifiers.clear();
-
     // First pass: rename destructuring parameters and callback params
-    // This also tracks renamed identifiers
     const hasDestructuringUpdate = updateDestructuringParams(root, j);
     const hasCallbackParamUpdate = updateCallbackSecondParam(root, j);
 
@@ -191,12 +185,37 @@ function updateDestructuringParams(root: Collection, j: JSCodeshift): boolean {
                         if (j.Identifier.check(key) && key.name === 'compact') {
                             key.name = 'isExpanded';
                             hasChanges = true;
-                            renamedIdentifiers.add('compact');
 
                             // Also update the value if it's a shorthand (compact → isExpanded)
                             const value = (prop as ObjectProperty).value;
                             if (j.Identifier.check(value) && value.name === 'compact') {
                                 value.name = 'isExpanded';
+
+                                // Rename all references to 'compact' in the function body to 'isExpanded'
+                                // and invert ternary expressions where compact is the test
+                                j(funcExpr)
+                                    .find(j.Identifier, {name: 'compact'})
+                                    .forEach((identPath) => {
+                                        // Skip if this is the parameter itself
+                                        if (identPath.value !== value) {
+                                            identPath.value.name = 'isExpanded';
+
+                                            // Check if this identifier is the test of a conditional expression
+                                            if (
+                                                identPath.parent &&
+                                                j.ConditionalExpression.check(
+                                                    identPath.parent.value,
+                                                ) &&
+                                                identPath.parent.value.test === identPath.value
+                                            ) {
+                                                // Swap consequent and alternate to invert the logic
+                                                const temp = identPath.parent.value.consequent;
+                                                identPath.parent.value.consequent =
+                                                    identPath.parent.value.alternate;
+                                                identPath.parent.value.alternate = temp;
+                                            }
+                                        }
+                                    });
                             }
                         }
                     }
@@ -229,11 +248,36 @@ function updateDestructuringParams(root: Collection, j: JSCodeshift): boolean {
                         if (j.Identifier.check(key) && key.name === 'compact') {
                             key.name = 'isExpanded';
                             hasChanges = true;
-                            renamedIdentifiers.add('compact');
 
                             const value = (prop as ObjectProperty).value;
                             if (j.Identifier.check(value) && value.name === 'compact') {
                                 value.name = 'isExpanded';
+
+                                // Rename all references to 'compact' in the function body to 'isExpanded'
+                                // and invert ternary expressions where compact is the test
+                                j(funcExpr)
+                                    .find(j.Identifier, {name: 'compact'})
+                                    .forEach((identPath) => {
+                                        // Skip if this is the parameter itself
+                                        if (identPath.value !== value) {
+                                            identPath.value.name = 'isExpanded';
+
+                                            // Check if this identifier is the test of a conditional expression
+                                            if (
+                                                identPath.parent &&
+                                                j.ConditionalExpression.check(
+                                                    identPath.parent.value,
+                                                ) &&
+                                                identPath.parent.value.test === identPath.value
+                                            ) {
+                                                // Swap consequent and alternate to invert the logic
+                                                const temp = identPath.parent.value.consequent;
+                                                identPath.parent.value.consequent =
+                                                    identPath.parent.value.alternate;
+                                                identPath.parent.value.alternate = temp;
+                                            }
+                                        }
+                                    });
                             }
                         }
                     }
@@ -271,7 +315,6 @@ function updateCallbackSecondParam(root: Collection, j: JSCodeshift): boolean {
             if (j.Identifier.check(secondParam) && secondParam.name === 'compact') {
                 secondParam.name = 'isExpanded';
                 hasChanges = true;
-                renamedIdentifiers.add('compact');
             }
         }
     });
