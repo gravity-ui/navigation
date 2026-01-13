@@ -108,8 +108,8 @@ $block: '.#{variables.$ns}composite-bar-item';
             z-index: -1;
             width: var(--_--item-height);
             height: var(--_--item-height);
-            margin-top: -18px;
-            margin-left: -18px;
+            margin-top: calc(var(--_--item-height) / -2);
+            margin-left: calc(var(--_--item-height) / -2);
             border-radius: var(
                 --gn-aside-header-item-collapsed-radius,
                 var(--_--item-collapsed-radius)
