@@ -25,7 +25,7 @@ export function getItemHeight(compositeItem: MenuItemsWithGroups, isCompactMode?
 }
 
 export function getItemsHeight<T extends AsideHeaderItem>(items: T[], isCompactMode?: boolean) {
-    const gaps = (items.length - 1) * ITEM_GAP;
+    const gaps = items.length > 1 ? (items.length - 1) * ITEM_GAP : 0;
 
     return items.reduce((sum, item) => sum + getItemHeight(item, isCompactMode), 0) + gaps;
 }
