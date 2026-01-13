@@ -44,7 +44,7 @@ $block: '.#{variables.$ns}logo';
     }
 
     &__logo-icon-place {
-        width: var(--_--item-height);
+        width: var(--_--item-height, 36px);
 
         display: flex;
         align-items: center;
