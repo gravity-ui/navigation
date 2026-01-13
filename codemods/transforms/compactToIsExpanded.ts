@@ -1,4 +1,6 @@
 /* eslint-disable no-param-reassign */
+import {execSync} from 'child_process';
+
 import type {
     API,
     ASTPath,
@@ -53,7 +55,24 @@ export default function transformer(file: FileInfo, api: API) {
         return null;
     }
 
-    return root.toSource();
+    const output = root.toSource();
+
+    // Format with Prettier to ensure consistent output
+    // Uses project's prettier config if available (searches from cwd)
+    // Falls back to unformatted output if Prettier is not installed or fails
+    try {
+        const formatted = execSync('prettier --parser typescript', {
+            input: output,
+            encoding: 'utf-8',
+            maxBuffer: 10 * 1024 * 1024,
+            stdio: ['pipe', 'pipe', 'pipe'],
+        });
+        return formatted;
+    } catch {
+        // Prettier not installed or failed - return unformatted output
+        // User can run their own formatter afterwards
+        return output;
+    }
 }
 
 /**
@@ -65,11 +84,12 @@ export default function transformer(file: FileInfo, api: API) {
  * - (expression) → !(expression)
  */
 function invertExpression(j: JSCodeshift, expr: any): any {
-    // Handle literal booleans
+    // Handle literal booleans - modify in place to preserve formatting
     if (j.BooleanLiteral.check(expr) || j.Literal.check(expr)) {
         const value = expr.value;
         if (typeof value === 'boolean') {
-            return j.booleanLiteral(!value);
+            expr.value = !value;
+            return expr;
         }
     }
 
@@ -127,9 +147,11 @@ function updateJsxProps(root: Collection, j: JSCodeshift): boolean {
                 // Check if this is a simple identifier named 'compact'
                 // that might be from a renamed destructuring parameter
                 if (j.Identifier.check(expr) && expr.name === 'compact') {
-                    // Just rename it to isExpanded (no inversion)
+                    // Just rename it to isExpanded in place (no inversion)
                     // This handles the case: compact={compact} → isExpanded={isExpanded}
-                    attrValue.expression = j.identifier('isExpanded');
+                    expr.name = 'isExpanded';
+                } else if (j.Identifier.check(expr) && expr.name === 'isExpanded') {
+                    // Already renamed by destructuring pass, leave as is
                 } else {
                     // Invert the expression
                     attrValue.expression = invertExpression(j, expr);
