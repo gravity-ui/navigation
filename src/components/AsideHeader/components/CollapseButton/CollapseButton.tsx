@@ -13,9 +13,10 @@ const b = createBlock('collapse-button', styles);
 
 interface CollapseButtonProps {
     className?: string;
+    isCompactMode?: boolean;
 }
 
-export const CollapseButton = ({className}: CollapseButtonProps) => {
+export const CollapseButton = ({className, isCompactMode}: CollapseButtonProps) => {
     const {pinned, onChangePinned} = useAsideHeaderContext();
     const {expandTitle, collapseTitle, collapseButtonWrapper} = useAsideHeaderInnerContext();
 
@@ -32,7 +33,7 @@ export const CollapseButton = ({className}: CollapseButtonProps) => {
     const defaultButton = (
         <Button
             view="flat-secondary"
-            size="l"
+            size={isCompactMode ? 'm' : 'l'}
             className={b({collapsed: !pinned}, className)}
             onClick={onCollapseButtonClick}
             aria-label={buttonTitle}

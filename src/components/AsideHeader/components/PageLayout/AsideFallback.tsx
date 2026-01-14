@@ -2,7 +2,7 @@ import React from 'react';
 
 import {Icon, QAProps} from '@gravity-ui/uikit';
 
-import {ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT, ITEM_HEIGHT} from '../../../constants';
+import {ASIDE_HEADER_COLLAPSED_WIDTH, HEADER_DIVIDER_HEIGHT, ITEM_HEIGHT} from '../../../constants';
 import {useAsideHeaderContext} from '../../AsideHeaderContext';
 import {b} from '../../utils';
 
@@ -29,7 +29,7 @@ export const AsideFallback: React.FC<Props> = ({headerDecoration, subheaderItems
                         <Icon
                             data={headerDividerCollapsedIcon}
                             className={b('header-divider')}
-                            width={ASIDE_HEADER_COMPACT_WIDTH}
+                            width={ASIDE_HEADER_COLLAPSED_WIDTH}
                             height={HEADER_DIVIDER_HEIGHT}
                         />
                     ) : null}

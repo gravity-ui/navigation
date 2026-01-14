@@ -5,8 +5,6 @@ $block: '.#{variables.$ns}composite-bar';
 #{$block} {
     $class: &;
 
-    --gn-aside-header-item-expanded-radius: 6px;
-
     flex: 1 1 auto;
     width: 100%;
     min-height: 40px;
@@ -85,9 +83,8 @@ $block: '.#{variables.$ns}composite-bar';
         }
     }
 
-    &__menu-group-header,
-    &__menu-group-item {
-        height: 36px;
+    &__menu-group-header {
+        height: var(--_--item-height);
     }
 
     &__menu-group-item {
@@ -145,6 +142,6 @@ $block: '.#{variables.$ns}composite-bar';
     }
 
     &__menu-item[data-type='action'] {
-        margin-inline: 10px;
+        margin-inline: var(--_--item-margin-inline);
     }
 }

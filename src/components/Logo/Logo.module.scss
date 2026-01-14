@@ -6,7 +6,7 @@ $block: '.#{variables.$ns}logo';
 #{$block} {
     display: flex;
     align-items: center;
-    height: 36px;
+    height: var(--_--item-height);
 
     &__btn-logo {
         display: flex;
@@ -34,7 +34,9 @@ $block: '.#{variables.$ns}logo';
     }
 
     &__logo {
-        margin: 0 var(--g-spacing-4) 0 var(--g-spacing-2);
+        &_placement_header {
+            margin: 0 var(--g-spacing-4) 0 var(--g-spacing-2);
+        }
 
         &_collapsed {
             opacity: 0;
@@ -44,7 +46,7 @@ $block: '.#{variables.$ns}logo';
     }
 
     &__logo-icon-place {
-        width: 36px;
+        width: var(--_--item-height, 36px);
 
         display: flex;
         align-items: center;

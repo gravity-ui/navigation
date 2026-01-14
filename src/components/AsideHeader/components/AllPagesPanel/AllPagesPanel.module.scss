@@ -5,24 +5,11 @@
     height: 100%;
     padding: var(--g-spacing-4) var(--g-spacing-6);
     box-sizing: border-box;
-    --gn-aside-header-item-expanded-radius: 6px;
+    --gn-aside-header-item-expanded-radius: #{variables.$item-expanded-radius};
+    --_--item-height: #{variables.$item-height};
 
     &__content {
         overflow: auto;
         flex: 1;
-    }
-
-    &__discoverable-feature-wrapper {
-        display: flex;
-    }
-
-    &__menu-group {
-        width: 100%;
-        margin-inline: 10px;
-
-        &:not(:last-child) {
-            padding-bottom: var(--g-spacing-2);
-            border-bottom: 1px solid var(--g-color-line-generic);
-        }
     }
 }

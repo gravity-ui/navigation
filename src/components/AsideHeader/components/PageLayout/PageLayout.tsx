@@ -1,8 +1,9 @@
 import React, {PropsWithChildren, Suspense, useMemo} from 'react';
 
 import {Content, ContentProps} from '../../../Content';
-import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../../constants';
+import {ASIDE_HEADER_EXPANDED_WIDTH} from '../../../constants';
 import {TopAlertProps} from '../../../types';
+import {getCollapsedWidth} from '../../../utils/getCollapsedWidth';
 import {AsideHeaderContextProvider, useAsideHeaderContext} from '../../AsideHeaderContext';
 import {useIsExpanded} from '../../hooks/useIsExpanded';
 import {LayoutProps} from '../../types';
@@ -31,12 +32,21 @@ function calcEstimatedTopAlertHeight(topAlert?: TopAlertProps) {
 
 export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {
     onChangePinned?: (pinned: boolean) => void;
+    /** When `true`, menu items use compact height. */
+    isCompactMode?: boolean;
 }
 
-const Layout = ({pinned, className, children, topAlert, onChangePinned}: PageLayoutProps) => {
+const Layout = ({
+    pinned,
+    className,
+    children,
+    topAlert,
+    onChangePinned,
+    isCompactMode,
+}: PageLayoutProps) => {
     const {isExpanded, onExpand, onFold} = useIsExpanded(pinned);
 
-    const size = isExpanded ? ASIDE_HEADER_EXPANDED_WIDTH : ASIDE_HEADER_COMPACT_WIDTH;
+    const size = isExpanded ? ASIDE_HEADER_EXPANDED_WIDTH : getCollapsedWidth(isCompactMode);
 
     const asideHeaderContextValue = useMemo(
         () => ({

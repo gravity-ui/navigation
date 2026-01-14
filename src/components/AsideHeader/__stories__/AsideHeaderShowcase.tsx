@@ -43,6 +43,7 @@ export interface AsideHeaderShowcaseProps {
     customBackgroundClassName?: string;
     headerDecoration?: boolean;
     hideCollapseButton?: boolean;
+    isCompactMode?: boolean;
     externalMenuItems?: AsideHeaderProps['menuItems'];
     externalMenuGroups?: AsideHeaderProps['menuGroups'];
 }
@@ -55,6 +56,7 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
     customBackgroundClassName,
     headerDecoration,
     hideCollapseButton,
+    isCompactMode,
     externalMenuItems,
     externalMenuGroups,
     children,
@@ -154,6 +156,7 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
                 ]}
                 pinned={pinned}
                 hideCollapseButton={hideCollapseButton}
+                isCompactMode={isCompactMode}
                 multipleTooltip={multipleTooltip}
                 openModalSubscriber={openModalSubscriber}
                 topAlert={topAlert}

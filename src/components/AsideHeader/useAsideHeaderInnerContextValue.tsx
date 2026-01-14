@@ -24,6 +24,7 @@ export const useAsideHeaderInnerContextValue = (
         menuGroups,
         defaultMenuGroups,
         panelItems,
+        isCompactMode = false,
         onMenuItemsChanged,
         onMenuGroupsChanged,
         onAllPagesClick,
@@ -115,6 +116,7 @@ export const useAsideHeaderInnerContextValue = (
 
     return {
         ...props,
+        isCompactMode,
         onClosePanel: innerOnClosePanel,
         allPagesIsAvailable,
         menuItems: innerMenuItems,

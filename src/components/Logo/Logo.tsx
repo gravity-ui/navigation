@@ -20,15 +20,20 @@ const logoTransitionClasses = {
     exitDone: b('logo-exit-done'),
 };
 
-export const Logo: React.FC<
-    LogoProps & {isExpanded?: boolean; buttonClassName?: string; iconPlaceClassName?: string}
-> = ({
+interface Props extends LogoProps {
+    placement: 'header' | 'footer';
+    isCompactMode?: boolean;
+    isExpanded?: boolean;
+    buttonClassName?: string;
+    iconPlaceClassName?: string;
+}
+
+export const Logo: React.FC<Props> = ({
     text,
     icon,
     iconSrc,
     iconClassName,
     iconPlaceClassName,
-    iconSize = 24,
     textSize = 15,
     href,
     target = '_self',
@@ -37,10 +42,15 @@ export const Logo: React.FC<
     isExpanded = true,
     className,
     buttonClassName,
+    isCompactMode,
+    placement,
     'aria-label': ariaLabel,
     'aria-labelledby': ariaLabelledby,
+    ...props
 }) => {
     const hasWrapper = typeof wrapper === 'function';
+    const defaultIconSize = isCompactMode === false ? 32 : 24;
+    const iconSize = props.iconSize || defaultIconSize;
 
     let buttonIcon;
 
@@ -60,7 +70,10 @@ export const Logo: React.FC<
         logo = text();
     } else {
         logo = (
-            <div className={b('logo', {collapsed: !isExpanded})} style={{fontSize: textSize}}>
+            <div
+                className={b('logo', {collapsed: !isExpanded, placement})}
+                style={{fontSize: textSize}}
+            >
                 {text}
             </div>
         );
