@@ -47,7 +47,7 @@ export const Logo: React.FC<Props> = ({
     ...props
 }) => {
     const hasWrapper = typeof wrapper === 'function';
-    const defaultIconSize = isCompactMode ? 24 : 32;
+    const defaultIconSize = isCompactMode === false ? 32 : 24;
     const iconSize = props.iconSize || defaultIconSize;
 
     let buttonIcon;
