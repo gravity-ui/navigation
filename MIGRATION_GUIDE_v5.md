@@ -1,8 +1,171 @@
 # Navigation v5.0 Migration Guide
 
-## CSS Variables Changes
+## Breaking Changes
 
-### New Zone-Based CSS Variables
+This section lists all breaking changes in v5.0 that require code modifications.
+
+### 1. Removed `multipleTooltip` Prop
+
+The `multipleTooltip` prop has been removed from `AsideHeader` component.
+
+#### What Was Removed
+
+- `multipleTooltip` prop from `AsideHeader` and `PageLayoutAside` components
+- `MultipleTooltip` component and related context (`MultipleTooltipContext`, `MultipleTooltipProvider`)
+- All associated tooltip behavior in collapsed navigation mode
+
+#### Migration
+
+If you were using `multipleTooltip={true}`:
+
+```tsx
+// Before (v4.x)
+<AsideHeader
+  multipleTooltip={true}
+  menuItems={menuItems}
+  // ...
+/>
+
+// After (v5.0)
+<AsideHeader
+  menuItems={menuItems}
+  // ... (simply remove the prop)
+/>
+```
+
+**Note**: There is no direct replacement for this feature. If you need custom tooltip behavior for menu items in collapsed mode, consider implementing it using the `itemWrapper` prop on individual menu items.
+
+---
+
+### 2. Prop Renaming (`compact` → `pinned`/`isExpanded`)
+
+The `compact` prop and related APIs have been renamed to use clearer semantics with **inverted boolean logic**.
+
+#### Main Prop Changes
+
+| Old Prop/Parameter                            | New Prop/Parameter                         | Notes                                           |
+| --------------------------------------------- | ------------------------------------------ | ----------------------------------------------- |
+| `compact: boolean`                            | `pinned: boolean`                          | **Inverted!** `compact: true` → `pinned: false` |
+| `onChangeCompact`                             | `onChangePinned`                           | Callback receives inverted value                |
+| `AsideHeaderItem.compact`                     | `AsideHeaderItem.isExpanded`               | Used by `FooterItem`                            |
+| `renderFooter({ compact })`                   | `renderFooter({ isExpanded })`             | Parameter renamed (AsideHeader)                 |
+| `collapseButtonWrapper(_, { compact })`       | `collapseButtonWrapper(_, { isExpanded })` | Parameter renamed                               |
+| `MenuItem.itemWrapper opts.compact`           | `MenuItem.itemWrapper opts.pinned`         | In itemWrapper callback                         |
+| `LogoProps.wrapper(_, compact)`               | `LogoProps.wrapper(_, isExpanded)`         | Second parameter renamed                        |
+| `MobileLogoProps.compact`                     | `MobileLogoProps.isExpanded`               | MobileLogo prop renamed                         |
+| `BurgerMenuProps.renderFooter({ isCompact })` | `renderFooter({ isExpanded })`             | MobileHeader burger menu                        |
+
+#### Context Changes
+
+The `AsideHeaderContext` has been updated:
+
+```typescript
+// Before (v4.x)
+interface AsideHeaderContextType {
+  compact: boolean;
+  onChangeCompact?: (compact: boolean) => void;
+  // ...
+}
+
+// After (v5.0)
+interface AsideHeaderContextType {
+  pinned: boolean; // Note: inverted semantics!
+  onChangePinned?: (pinned: boolean) => void;
+  // ...
+}
+```
+
+#### Migration Examples
+
+**AsideHeader component:**
+
+```tsx
+// Before (v4.x)
+<AsideHeader
+  compact={isCompact}
+  onChangeCompact={setIsCompact}
+/>
+
+// After (v5.0)
+<AsideHeader
+  pinned={!isCompact}  // or use new state: pinned={isPinned}
+  onChangePinned={setIsPinned}
+/>
+```
+
+**FooterItem component:**
+
+```tsx
+// Before (v4.x)
+<FooterItem compact={!isExpanded} />
+
+// After (v5.0)
+<FooterItem isExpanded={isExpanded} />
+```
+
+**renderFooter callback:**
+
+```tsx
+// Before (v4.x)
+renderFooter={({ compact }) => (
+  <FooterItem compact={compact} />
+)}
+
+// After (v5.0)
+renderFooter={({ isExpanded }) => (
+  <FooterItem isExpanded={isExpanded} />
+)}
+```
+
+**Logo wrapper:**
+
+```tsx
+// Before (v4.x)
+logo={{
+  wrapper: (node, compact) => <Link>{node}</Link>
+}}
+
+// After (v5.0)
+logo={{
+  wrapper: (node, isExpanded) => <Link>{node}</Link>
+}}
+```
+
+**itemWrapper callback:**
+
+```tsx
+// Before (v4.x)
+itemWrapper={(params, makeItem, { compact }) => makeItem(params)}
+
+// After (v5.0)
+itemWrapper={(params, makeItem, { pinned }) => makeItem(params)}
+```
+
+---
+
+### 3. Deprecated CSS Variables
+
+The following CSS variables have been replaced with zone-specific alternatives:
+
+| Old Variable                                | New Variable                                | Zone   |
+| ------------------------------------------- | ------------------------------------------- | ------ |
+| `--gn-aside-header-general-item-icon-color` | `--gn-aside-top-item-icon-color`            | Top    |
+| `--gn-aside-header-item-current-icon-color` | `--gn-aside-top-item-current-icon-color`    | Top    |
+| `--gn-aside-header-general-item-icon-color` | `--gn-aside-bottom-item-icon-color`         | Bottom |
+| `--gn-aside-header-item-current-icon-color` | `--gn-aside-bottom-item-current-icon-color` | Bottom |
+
+#### Migration Steps
+
+1. **Subheader icons**: Replace `--gn-aside-header-general-item-icon-color` with `--gn-aside-top-item-icon-color`
+2. **Footer icons**: Replace `--gn-aside-header-general-item-icon-color` with `--gn-aside-bottom-item-icon-color`
+3. **Subheader current icons**: Replace `--gn-aside-header-item-current-icon-color` with `--gn-aside-top-item-current-icon-color`
+4. **Footer current icons**: Replace `--gn-aside-header-item-current-icon-color` with `--gn-aside-bottom-item-current-icon-color`
+
+---
+
+## New Features
+
+### Zone-Based CSS Variables
 
 Navigation v5.0 introduces zone-based CSS variables for more granular control over styling. The navigation is divided into zones: **Top** (header/subheader area), **Main** (navigation groups), and **Bottom** (footer area).
 
@@ -69,130 +232,6 @@ New CSS variables for styling the Bottom zone (footer area):
   --gn-aside-bottom-item-icon-color: #666;
   --gn-aside-bottom-item-current-background-color: rgba(0, 100, 255, 0.1);
 }
-```
-
-## Migration from v4.x
-
-### Deprecated Variables
-
-The following variables have been replaced with zone-specific alternatives:
-
-| Old Variable                                | New Variable                                | Zone   |
-| ------------------------------------------- | ------------------------------------------- | ------ |
-| `--gn-aside-header-general-item-icon-color` | `--gn-aside-top-item-icon-color`            | Top    |
-| `--gn-aside-header-item-current-icon-color` | `--gn-aside-top-item-current-icon-color`    | Top    |
-| `--gn-aside-header-general-item-icon-color` | `--gn-aside-bottom-item-icon-color`         | Bottom |
-| `--gn-aside-header-item-current-icon-color` | `--gn-aside-bottom-item-current-icon-color` | Bottom |
-
-### Migration Steps
-
-1. **Subheader icons**: Replace `--gn-aside-header-general-item-icon-color` with `--gn-aside-top-item-icon-color`
-2. **Footer icons**: Replace `--gn-aside-header-general-item-icon-color` with `--gn-aside-bottom-item-icon-color`
-3. **Subheader current icons**: Replace `--gn-aside-header-item-current-icon-color` with `--gn-aside-top-item-current-icon-color`
-4. **Footer current icons**: Replace `--gn-aside-header-item-current-icon-color` with `--gn-aside-bottom-item-current-icon-color`
-
-## Breaking Changes: Prop Renaming (`compact` → `pinned`/`isExpanded`)
-
-The `compact` prop and related APIs have been renamed to use clearer semantics with **inverted boolean logic**.
-
-### Main Prop Changes
-
-| Old Prop/Parameter                            | New Prop/Parameter                         | Notes                                           |
-| --------------------------------------------- | ------------------------------------------ | ----------------------------------------------- |
-| `compact: boolean`                            | `pinned: boolean`                          | **Inverted!** `compact: true` → `pinned: false` |
-| `onChangeCompact`                             | `onChangePinned`                           | Callback receives inverted value                |
-| `AsideHeaderItem.compact`                     | `AsideHeaderItem.isExpanded`               | Used by `FooterItem`                            |
-| `renderFooter({ compact })`                   | `renderFooter({ isExpanded })`             | Parameter renamed (AsideHeader)                 |
-| `collapseButtonWrapper(_, { compact })`       | `collapseButtonWrapper(_, { isExpanded })` | Parameter renamed                               |
-| `MenuItem.itemWrapper opts.compact`           | `MenuItem.itemWrapper opts.pinned`         | In itemWrapper callback                         |
-| `LogoProps.wrapper(_, compact)`               | `LogoProps.wrapper(_, isExpanded)`         | Second parameter renamed                        |
-| `MobileLogoProps.compact`                     | `MobileLogoProps.isExpanded`               | MobileLogo prop renamed                         |
-| `BurgerMenuProps.renderFooter({ isCompact })` | `renderFooter({ isExpanded })`             | MobileHeader burger menu                        |
-
-### Context Changes
-
-The `AsideHeaderContext` has been updated:
-
-```typescript
-// Before (v4.x)
-interface AsideHeaderContextType {
-  compact: boolean;
-  onChangeCompact?: (compact: boolean) => void;
-  // ...
-}
-
-// After (v5.0)
-interface AsideHeaderContextType {
-  pinned: boolean; // Note: inverted semantics!
-  onChangePinned?: (pinned: boolean) => void;
-  // ...
-}
-```
-
-### Migration Examples
-
-**AsideHeader component:**
-
-```tsx
-// Before (v4.x)
-<AsideHeader
-  compact={isCompact}
-  onChangeCompact={setIsCompact}
-/>
-
-// After (v5.0)
-<AsideHeader
-  pinned={!isCompact}  // or use new state: pinned={isPinned}
-  onChangePinned={setIsPinned}
-/>
-```
-
-**FooterItem component:**
-
-```tsx
-// Before (v4.x)
-<FooterItem compact={!isExpanded} />
-
-// After (v5.0)
-<FooterItem isExpanded={isExpanded} />
-```
-
-**renderFooter callback:**
-
-```tsx
-// Before (v4.x)
-renderFooter={({ compact }) => (
-  <FooterItem compact={compact} />
-)}
-
-// After (v5.0)
-renderFooter={({ isExpanded }) => (
-  <FooterItem isExpanded={isExpanded} />
-)}
-```
-
-**Logo wrapper:**
-
-```tsx
-// Before (v4.x)
-logo={{
-  wrapper: (node, compact) => <Link>{node}</Link>
-}}
-
-// After (v5.0)
-logo={{
-  wrapper: (node, isExpanded) => <Link>{node}</Link>
-}}
-```
-
-**itemWrapper callback:**
-
-```tsx
-// Before (v4.x)
-itemWrapper={(params, makeItem, { compact }) => makeItem(params)}
-
-// After (v5.0)
-itemWrapper={(params, makeItem, { pinned }) => makeItem(params)}
 ```
 
 ## Step-by-Step Migration

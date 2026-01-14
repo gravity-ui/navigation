@@ -58,13 +58,6 @@ CollapsedNavigation.args = {
     hideCollapseButton: true,
 };
 
-const MultipleTooltipTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
-export const MultipleTooltip = MultipleTooltipTemplate.bind({});
-MultipleTooltip.args = {
-    multipleTooltip: true,
-    initialPinned: false,
-};
-
 const CustomThemeTemplate: StoryFn = (args) => (
     <React.Fragment>
         <style>
@@ -129,7 +122,6 @@ const AdvancedUsageTemplate: StoryFn = (args) => {
 export const AdvancedUsage = AdvancedUsageTemplate.bind({});
 
 AdvancedUsage.args = {
-    multipleTooltip: false,
     initialPinned: false,
 };
 
@@ -368,7 +360,6 @@ const GroupedMenuCollapsibleTemplate: StoryFn = (args) => {
 
 export const GroupedMenuCollapsible = GroupedMenuCollapsibleTemplate.bind({});
 GroupedMenuCollapsible.args = {
-    multipleTooltip: false,
     initialPinned: true,
 };
 
@@ -427,6 +418,5 @@ const CustomThemesWithNewColorsTemplate: StoryFn = (args) => {
 
 export const CustomThemesWithNewColors = CustomThemesWithNewColorsTemplate.bind({});
 CustomThemesWithNewColors.args = {
-    multipleTooltip: false,
     initialCompact: false,
 };
