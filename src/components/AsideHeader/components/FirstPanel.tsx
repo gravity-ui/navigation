@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useCallback, useRef} from 'react';
 
 import {setRef} from '@gravity-ui/uikit';
 import {CSSTransition} from 'react-transition-group';
@@ -9,6 +9,7 @@ import {b} from '../utils';
 
 import {useGroupedMenuItems} from './AllPagesPanel/useGroupedMenuItems';
 import {CompositeBar} from './CompositeBar';
+import {FooterBar} from './FooterBar';
 import {Header} from './Header';
 import {Panels} from './Panels';
 
@@ -53,6 +54,26 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
     }, [ref]);
 
     const isExpandedByHover = !pinned && isExpanded;
+    const footerResult = renderFooter?.({
+        size,
+        isExpanded,
+        isPinned: pinned,
+        asideRef,
+        isCompactMode,
+    });
+    const canRenderFooterInHorizontalMode = Array.isArray(footerResult);
+
+    const renderFooterContent = useCallback(() => {
+        if (canRenderFooterInHorizontalMode) {
+            return (
+                <FooterBar isPinned={pinned} isExpanded={isExpanded} isCompactMode={isCompactMode}>
+                    {footerResult}
+                </FooterBar>
+            );
+        }
+
+        return footerResult;
+    }, [footerResult, pinned, isExpanded, isCompactMode, canRenderFooterInHorizontalMode]);
 
     return (
         <React.Fragment>
@@ -96,13 +117,12 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             <div className={b('menu-items')} />
                         )}
 
-                        <div className={b('footer')}>
-                            {renderFooter?.({
-                                size,
-                                isExpanded,
-                                asideRef,
-                                isCompactMode,
+                        <div
+                            className={b('footer', {
+                                horizontal: canRenderFooterInHorizontalMode && pinned,
                             })}
+                        >
+                            {renderFooterContent()}
                         </div>
                     </div>
                 </div>
