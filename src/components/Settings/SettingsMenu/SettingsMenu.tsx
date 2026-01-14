@@ -19,9 +19,14 @@ export const SettingsMenu = React.forwardRef<SettingsMenuInstance, SettingsMenuP
     // eslint-disable-next-line prefer-arrow-callback
     function SettingsMenu({items, onChange, activeItemId}, ref) {
         const [focusItemId, setFocusId] = React.useState<string>();
+        const [scrolled, setScrolled] = React.useState(false);
         const containerRef = React.useRef<HTMLDivElement>(null);
         const handleChange = useStableCallback(onChange);
         const getFocused = useCurrent(focusItemId);
+
+        const handleScroll = React.useCallback((event: React.UIEvent<HTMLDivElement>) => {
+            setScrolled(event.currentTarget.scrollTop > 0);
+        }, []);
 
         React.useImperativeHandle(
             ref,
@@ -51,7 +56,7 @@ export const SettingsMenu = React.forwardRef<SettingsMenuInstance, SettingsMenuP
         );
 
         return (
-            <div ref={containerRef} className={b()}>
+            <div ref={containerRef} className={b({scrolled})} onScroll={handleScroll}>
                 {items.map((firstLevelItem) => {
                     if ('groupTitle' in firstLevelItem) {
                         return (
