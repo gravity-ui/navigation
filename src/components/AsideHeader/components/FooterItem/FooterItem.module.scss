@@ -3,7 +3,6 @@
 $block: '.#{variables.$ns}footer-item';
 
 #{$block} {
-    --gn-aside-header-item-expanded-radius: 6px;
     $class: &;
 
     height: var(--_--item-height);
