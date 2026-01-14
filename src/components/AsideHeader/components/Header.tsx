@@ -47,6 +47,7 @@ export const Header = () => {
                 {logo && (
                     <Logo
                         {...logo}
+                        placement="header"
                         isCompactMode={isCompactMode}
                         onClick={onLogoClick}
                         isExpanded={isExpanded}

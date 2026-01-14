@@ -89,7 +89,7 @@ export const Footer: FC<FooterProps> = ({
                 <small className={b('copyright', {small: !menuItems?.length})}>{copyright}</small>
                 {view !== 'clear' && logo && (
                     <div className={logoWrapperClassName}>
-                        <Logo {...logo} />
+                        <Logo {...logo} placement="footer" />
                     </div>
                 )}
             </div>

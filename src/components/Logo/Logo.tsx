@@ -21,6 +21,7 @@ const logoTransitionClasses = {
 };
 
 interface Props extends LogoProps {
+    placement: 'header' | 'footer';
     isCompactMode?: boolean;
     isExpanded?: boolean;
     buttonClassName?: string;
@@ -42,6 +43,7 @@ export const Logo: React.FC<Props> = ({
     className,
     buttonClassName,
     isCompactMode,
+    placement,
     'aria-label': ariaLabel,
     'aria-labelledby': ariaLabelledby,
     ...props
@@ -68,7 +70,10 @@ export const Logo: React.FC<Props> = ({
         logo = text();
     } else {
         logo = (
-            <div className={b('logo', {collapsed: !isExpanded})} style={{fontSize: textSize}}>
+            <div
+                className={b('logo', {collapsed: !isExpanded, placement})}
+                style={{fontSize: textSize}}
+            >
                 {text}
             </div>
         );
