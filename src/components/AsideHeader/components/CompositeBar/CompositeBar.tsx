@@ -218,7 +218,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                                     renderItem={(
                                         nestedItem,
                                         _isNestedItemActive,
-                                        _nestedItemIndex,
+                                        nestedItemIndex,
                                     ) => {
                                         return (
                                             <Item
@@ -233,8 +233,9 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                                                     setHoveredGroupId(null);
                                                 }}
                                                 onItemClick={onItemClickByIndex(
-                                                    itemIndex,
-                                                    item.onItemClick,
+                                                    // +1 because the first item is the group header
+                                                    itemIndex + nestedItemIndex + 1,
+                                                    nestedItem.onItemClick,
                                                 )}
                                                 onToggleVisibility={
                                                     onToggleMenuItemVisibility
