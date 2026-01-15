@@ -111,7 +111,7 @@ export const FooterBar: React.FC<FooterBarProps> = ({
     };
 
     return (
-        <div className={b({horizontal: isHorizontal})}>
+        <div className={b()}>
             <div className={b('items', {horizontal: isHorizontal})}>
                 {visibleChildren.map((child, index) => {
                     const renderedChild = renderChild(child);

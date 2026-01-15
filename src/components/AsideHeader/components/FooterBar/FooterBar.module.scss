@@ -8,11 +8,6 @@ $border-color: var(--gn-aside-bottom-divider-color, var(--g-color-line-generic))
     flex-direction: column;
     width: 100%;
 
-    &_horizontal {
-        border-top: 1px solid $border-color;
-        border-bottom: 1px solid $border-color;
-    }
-
     &__items {
         display: flex;
         flex-direction: column;
@@ -21,6 +16,8 @@ $border-color: var(--gn-aside-bottom-divider-color, var(--g-color-line-generic))
         &_horizontal {
             flex-direction: row;
             height: var(--_--item-height);
+            border-top: 1px solid $border-color;
+            border-bottom: 1px solid $border-color;
         }
     }
 
