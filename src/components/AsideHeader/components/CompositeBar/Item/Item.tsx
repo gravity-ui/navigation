@@ -128,6 +128,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
         const [Tag, tagProps] = href ? ['a' as const, {href}] : ['button' as const, {}];
+        const ariaLabel = typeof title === 'string' ? title : undefined;
 
         const createdNode = (
             <React.Fragment>
@@ -137,6 +138,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     ref={ref}
                     data-qa={qa}
                     data-type={type}
+                    aria-label={ariaLabel}
                     onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
                         onItemClick?.(props, false, event);
                     }}
