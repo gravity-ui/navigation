@@ -39,12 +39,13 @@ export default {
     decorators: [
         (DecoratedStory, context) => {
             const {
-                args: {isPinned, isCompactMode},
+                args: {isPinned, isExpanded, isCompactMode},
             } = context;
             const collapsedWidth = isCompactMode
                 ? ASIDE_HEADER_COLLAPSED_WIDTH_COMPACT_MODE
                 : ASIDE_HEADER_COLLAPSED_WIDTH;
-            const width = isPinned ? ASIDE_HEADER_EXPANDED_WIDTH : collapsedWidth;
+            // Width depends on isExpanded: expanded shows full width, collapsed shows icon-only width
+            const width = isExpanded ? ASIDE_HEADER_EXPANDED_WIDTH : collapsedWidth;
 
             return (
                 <div style={{width}} className="footer-bar-showcase">
@@ -173,9 +174,9 @@ VerticalWithOverflow.args = {
     maxVisibleItems: 5,
 };
 
-// Compact mode (28px height) - horizontal with layout="horizontal"
-export const CompactMode = Template.bind({});
-CompactMode.args = {
+// Horizontal mode with renderAfter slot - multiple items + user slot
+export const HorizontalWithRenderAfter = Template.bind({});
+HorizontalWithRenderAfter.args = {
     children: [
         <FooterItem key="search" id="search" title="Search" icon={Magnifier} layout="horizontal" />,
         <FooterItem
@@ -195,30 +196,13 @@ CompactMode.args = {
     ],
     isPinned: true,
     isExpanded: true,
-    isCompactMode: true,
-};
-
-// Horizontal mode with renderAfter slot - layout="horizontal" for footer items
-export const WithRenderAfter = Template.bind({});
-WithRenderAfter.args = {
-    children: [
-        <FooterItem
-            key="settings"
-            id="settings"
-            title="Settings"
-            icon={Gear}
-            layout="horizontal"
-        />,
-    ],
-    isPinned: true,
-    isExpanded: true,
     isCompactMode: false,
     renderAfter: () => (
         <div className="footer-bar-showcase__user">
             <div className="footer-bar-showcase__avatar">
                 <Person />
             </div>
-            <span className="footer-bar-showcase__username">Учетная запись</span>
+            <span className="footer-bar-showcase__username">Account</span>
         </div>
     ),
 };
