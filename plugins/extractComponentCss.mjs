@@ -1,8 +1,16 @@
 import core from './extractCssCore.cjs';
 const {parseComponentCSS} = core;
 
-// Custom plugin to extract CSS per component and add imports
-export const extractComponentCSS = () => {
+/**
+ * Custom plugin to extract CSS per component and add imports
+ * @param {Object} options - Plugin options
+ * @param {Object} [options.cssAliases={}] - Files that should receive CSS from a different component.
+ *   Key: path pattern to match, Value: component name to get CSS from.
+ *   Example: { 'AsideHeader/components/PageLayout/PageLayout.js': 'AsideHeader' }
+ */
+export const extractComponentCSS = (options = {}) => {
+    const {cssAliases = {}} = options;
+
     return {
         name: 'extract-component-css',
         generateBundle(options, bundle) {
@@ -51,13 +59,20 @@ export const extractComponentCSS = () => {
                                 : camelToKebab(componentName));
 
                         const keyed = `${componentName}::${localBlock}`;
+
+                        // Check if this file should use CSS from another component
+                        const aliasMatch = Object.keys(cssAliases).find((pattern) =>
+                            fileName.includes(pattern),
+                        );
+                        const cssSourceName = aliasMatch ? cssAliases[aliasMatch] : componentName;
+
                         const componentCSSContent =
                             componentCSS.get(keyed) ||
                             // fallback to single-bucket name if no disambiguated bucket exists
-                            componentCSS.get(componentName) ||
-                            // also attempt any bucket that starts with `${componentName}::`
+                            componentCSS.get(cssSourceName) ||
+                            // also attempt any bucket that starts with `${cssSourceName}::`
                             Array.from(componentCSS.keys())
-                                .filter((k) => k.startsWith(componentName + '::'))
+                                .filter((k) => k.startsWith(cssSourceName + '::'))
                                 .map((k) => componentCSS.get(k))
                                 .join('\n');
                         if (componentCSSContent) {
