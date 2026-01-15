@@ -93,7 +93,6 @@ HorizontalPinned.args = {
     ],
     isPinned: true,
     isExpanded: true,
-    isCompactMode: false,
 };
 
 // In vertical collapsed mode, FooterBar passes isExpanded=false
@@ -105,7 +104,6 @@ VerticalCollapsed.args = {
     ],
     isPinned: false,
     isExpanded: false,
-    isCompactMode: false,
 };
 
 // In vertical expanded mode, FooterBar passes isExpanded=true (shows text)
@@ -118,7 +116,6 @@ VerticalExpanded.args = {
     ],
     isPinned: false,
     isExpanded: true,
-    isCompactMode: false,
 };
 
 // Horizontal mode with overflow - FooterBar sets layout="horizontal" for visible items
@@ -154,7 +151,7 @@ HorizontalWithOverflow.args = {
     ],
     isPinned: true,
     isExpanded: true,
-    isCompactMode: false,
+
     maxVisibleItems: 5,
 };
 
@@ -170,7 +167,7 @@ VerticalWithOverflow.args = {
     ],
     isPinned: false,
     isExpanded: true,
-    isCompactMode: false,
+
     maxVisibleItems: 5,
 };
 
@@ -196,7 +193,7 @@ HorizontalWithRenderAfter.args = {
     ],
     isPinned: true,
     isExpanded: true,
-    isCompactMode: false,
+
     renderAfter: () => <FooterItem id="account" title="Account" icon={Person} isExpanded />,
 };
 
@@ -205,6 +202,6 @@ VerticalWithRenderAfter.args = {
     children: [<FooterItem key="settings" id="settings" title="Settings" icon={Gear} />],
     isPinned: false,
     isExpanded: false,
-    isCompactMode: false,
+
     renderAfter: () => <FooterItem id="account" title="Account" icon={Person} />,
 };

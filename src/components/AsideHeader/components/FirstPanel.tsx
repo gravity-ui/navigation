@@ -66,14 +66,14 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
     const renderFooterContent = useCallback(() => {
         if (canRenderFooterInHorizontalMode) {
             return (
-                <FooterBar isPinned={pinned} isExpanded={isExpanded} isCompactMode={isCompactMode}>
+                <FooterBar isPinned={pinned} isExpanded={isExpanded}>
                     {footerResult}
                 </FooterBar>
             );
         }
 
         return footerResult;
-    }, [footerResult, pinned, isExpanded, isCompactMode, canRenderFooterInHorizontalMode]);
+    }, [footerResult, pinned, isExpanded, canRenderFooterInHorizontalMode]);
 
     return (
         <React.Fragment>

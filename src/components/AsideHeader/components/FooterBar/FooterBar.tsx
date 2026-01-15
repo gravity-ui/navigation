@@ -23,8 +23,6 @@ export interface FooterBarProps {
     isPinned: boolean;
     /** When `true`, the navigation is expanded (hover or pinned). */
     isExpanded: boolean;
-    /** When `true`, menu items use compact height (28px instead of 36px). */
-    isCompactMode?: boolean;
     /** Maximum number of visible items before showing "more" button. Default: 5 */
     maxVisibleItems?: number;
 }
