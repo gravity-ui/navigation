@@ -86,15 +86,6 @@ test.describe('AsideHeader', () => {
         await expectScreenshot();
     });
 
-    test('render story: <MultipleTooltip>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.MultipleTooltip />, undefined, {
-            width: 1200,
-            height: 720,
-        });
-
-        await expectScreenshot();
-    });
-
     test('render story: <Showcase>', async ({mount, expectScreenshot}) => {
         await mount(<AsideHeaderStories.Showcase />, undefined, {
             width: 1200,

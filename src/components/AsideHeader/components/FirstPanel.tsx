@@ -27,7 +27,6 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         size,
         onItemClick,
         headerDecoration,
-        multipleTooltip,
         onMenuMoreClick,
         renderFooter,
         onToggleGroupCollapsed,
@@ -89,7 +88,6 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                                 onItemClick={onItemClick}
                                 onMoreClick={onMenuMoreClick}
                                 onToggleGroupCollapsed={onToggleGroupCollapsed}
-                                multipleTooltip={multipleTooltip}
                                 isCompactMode={isCompactMode}
                             />
                         ) : (
