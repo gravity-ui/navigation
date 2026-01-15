@@ -6,6 +6,7 @@ import type {DropdownMenuItem} from '@gravity-ui/uikit';
 
 import {ASIDE_HEADER_EXPAND_DELAY} from '../../../constants';
 import {createBlock} from '../../../utils/cn';
+import i18n from '../../i18n';
 import {FooterItem} from '../FooterItem/FooterItem';
 
 import {MAX_VISIBLE_ITEMS} from './constants';
@@ -147,8 +148,8 @@ export const FooterBar: React.FC<FooterBarProps> = ({
                             switcherWrapperClassName={b('dropdown-switcher')}
                             renderSwitcher={({onClick}) => (
                                 <FooterItem
-                                    id="others"
-                                    title="Others"
+                                    id="more"
+                                    title={i18n('label_others')}
                                     icon={Ellipsis}
                                     isExpanded={!isHorizontal && isExpanded}
                                     layout={isHorizontal ? 'horizontal' : 'vertical'}
