@@ -5,6 +5,8 @@
 
     background-color: var(--g-color-base-background);
     border: 1px solid var(--g-color-line-generic);
+    padding: var(--g-spacing-2) 10px;
+    box-sizing: border-box;
 
     &__user {
         display: flex;
