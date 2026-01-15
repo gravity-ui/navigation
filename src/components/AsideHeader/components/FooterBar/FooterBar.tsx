@@ -36,7 +36,11 @@ export const FooterBar: React.FC<FooterBarProps> = ({
     isExpanded,
     maxVisibleItems = MAX_VISIBLE_ITEMS,
 }) => {
-    const isHorizontal = isPinned;
+    // Convert children to array and filter out nulls
+    const childArray = React.Children.toArray(children).filter(Boolean);
+
+    // If only 1 element, render in vertical mode regardless of isPinned
+    const isHorizontal = isPinned && childArray.length > 1;
 
     // Clone child element and inject isExpanded/layout props
     // - In horizontal mode (isPinned=true): layout="horizontal" (don't render title at all)
@@ -72,9 +76,6 @@ export const FooterBar: React.FC<FooterBarProps> = ({
         },
         [isHorizontal, isExpanded],
     );
-
-    // Convert children to array and filter out nulls
-    const childArray = React.Children.toArray(children).filter(Boolean);
 
     const {visibleChildren, hiddenChildren} = useMemo(() => {
         if (childArray.length <= maxVisibleItems) {
