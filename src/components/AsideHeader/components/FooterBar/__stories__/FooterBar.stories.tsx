@@ -197,14 +197,7 @@ HorizontalWithRenderAfter.args = {
     isPinned: true,
     isExpanded: true,
     isCompactMode: false,
-    renderAfter: () => (
-        <div className="footer-bar-showcase__user">
-            <div className="footer-bar-showcase__avatar">
-                <Person />
-            </div>
-            <span className="footer-bar-showcase__username">Account</span>
-        </div>
-    ),
+    renderAfter: () => <FooterItem id="account" title="Account" icon={Person} isExpanded />,
 };
 
 export const VerticalWithRenderAfter = Template.bind({});
@@ -213,11 +206,5 @@ VerticalWithRenderAfter.args = {
     isPinned: false,
     isExpanded: false,
     isCompactMode: false,
-    renderAfter: () => (
-        <div className="footer-bar-showcase__user footer-bar-showcase__user_collapsed">
-            <div className="footer-bar-showcase__avatar">
-                <Person />
-            </div>
-        </div>
-    ),
+    renderAfter: () => <FooterItem id="account" title="Account" icon={Person} />,
 };

@@ -7,43 +7,4 @@
     border: 1px solid var(--g-color-line-generic);
     padding: var(--g-spacing-2) 10px;
     box-sizing: border-box;
-
-    &__user {
-        display: flex;
-        align-items: center;
-        gap: var(--g-spacing-2);
-        height: 100%;
-        padding: 0 6px;
-        cursor: pointer;
-
-        &:hover {
-            background-color: var(--g-color-base-simple-hover);
-        }
-
-        &_collapsed {
-            justify-content: center;
-            padding: 0;
-        }
-    }
-
-    &__avatar {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        background-color: var(--g-color-base-brand);
-        color: var(--g-color-text-light-primary);
-        flex-shrink: 0;
-    }
-
-    &__username {
-        font-size: var(--g-text-body-short-font-size);
-        line-height: var(--g-text-body-short-line-height);
-        color: var(--g-color-text-primary);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
 }
