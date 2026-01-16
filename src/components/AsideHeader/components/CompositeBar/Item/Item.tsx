@@ -30,6 +30,8 @@ export interface ItemProps extends AsideHeaderItem {}
 interface ItemInnerProps extends ItemProps {
     /** When `true`, the item is displayed in expanded form. */
     isExpanded?: boolean;
+    /** Layout mode: 'horizontal' shows icon only, 'vertical' shows icon and title. Used in FooterBar. */
+    layout?: 'horizontal' | 'vertical';
     className?: string;
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
@@ -76,6 +78,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         href,
         qa,
         isExpanded = true,
+        layout = 'vertical',
         editMode = false,
         onToggleVisibility,
         hidden,
@@ -125,6 +128,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
         const [Tag, tagProps] = href ? ['a' as const, {href}] : ['button' as const, {}];
+        const ariaLabel = typeof title === 'string' ? title : undefined;
 
         const createdNode = (
             <React.Fragment>
@@ -134,6 +138,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     ref={ref}
                     data-qa={qa}
                     data-type={type}
+                    aria-label={ariaLabel}
                     onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
                         onItemClick?.(props, false, event);
                     }}
@@ -149,18 +154,20 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                         {makeIconNode(iconEl)}
                     </div>
 
-                    <CSSTransition
-                        in={isExpanded}
-                        timeout={ASIDE_HEADER_EXPAND_TRANSITION_DELAY}
-                        classNames={itemTransitionClasses}
-                    >
-                        <div
-                            className={b('title')}
-                            title={typeof title === 'string' ? title : undefined}
+                    {layout === 'vertical' && (
+                        <CSSTransition
+                            in={isExpanded}
+                            timeout={ASIDE_HEADER_EXPAND_TRANSITION_DELAY}
+                            classNames={itemTransitionClasses}
                         >
-                            {titleEl}
-                        </div>
-                    </CSSTransition>
+                            <div
+                                className={b('title')}
+                                title={typeof title === 'string' ? title : undefined}
+                            >
+                                {titleEl}
+                            </div>
+                        </CSSTransition>
+                    )}
 
                     {editMode && !preventUserRemoving && onToggleVisibility ? (
                         <Button

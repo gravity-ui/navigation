@@ -1,0 +1,71 @@
+@use '../../../variables';
+
+$block: '.#{variables.$ns}footer-bar';
+$border-color: var(--gn-aside-bottom-divider-color, var(--g-color-line-generic));
+
+#{$block} {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    &__items {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        &_horizontal {
+            flex-direction: row;
+            height: var(--_--item-height);
+            border-top: 1px solid $border-color;
+            border-bottom: 1px solid $border-color;
+        }
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        #{$block}__items_horizontal & {
+            flex: 1 1 0;
+            min-width: 0;
+            height: 100%;
+
+            // Border between items in horizontal mode
+            &:not(:last-child) {
+                border-right: 1px solid $border-color;
+            }
+        }
+
+        #{$block}__items:not(#{$block}__items_horizontal) & {
+            width: 100%;
+            height: var(--_--item-height);
+            margin-bottom: 2px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    &__after {
+        width: 100%;
+        height: var(--_--item-height);
+        margin-top: 2px;
+    }
+
+    &__dropdown-switcher {
+        width: 100%;
+    }
+
+    &__dropdown-popup {
+        --_--item-height: 36px;
+        padding: var(--g-spacing-1);
+
+        // Style dropdown menu items with consistent height
+        :global(.g-menu__item) {
+            height: var(--_--item-height);
+            padding: 0;
+        }
+    }
+}

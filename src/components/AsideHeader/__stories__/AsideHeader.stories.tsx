@@ -1,10 +1,11 @@
 import React from 'react';
 
-import {Gear, Magnifier, Xmark} from '@gravity-ui/icons';
+import {Bug, Gear, Magnifier, Person, Star, Xmark} from '@gravity-ui/icons';
 import {Button, Flex, Icon, Text, spacing} from '@gravity-ui/uikit';
 import type {Meta, StoryFn} from '@storybook/react';
 
 import {AsideHeader} from '../AsideHeader';
+import {FooterItem} from '../components/FooterItem/FooterItem';
 import {AsideFallback} from '../components/PageLayout/AsideFallback';
 import {PageLayout} from '../components/PageLayout/PageLayout';
 import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
@@ -419,4 +420,97 @@ const CustomThemesWithNewColorsTemplate: StoryFn = (args) => {
 export const CustomThemesWithNewColors = CustomThemesWithNewColorsTemplate.bind({});
 CustomThemesWithNewColors.args = {
     initialCompact: false,
+};
+
+const FooterBarTemplate: StoryFn = (args) => {
+    const [pinned, setPinned] = React.useState<boolean>(args.initialPinned ?? true);
+
+    return (
+        <PageLayout pinned={pinned} onChangePinned={setPinned}>
+            <PageLayoutAside
+                headerDecoration
+                menuItems={menuItemsShowcase}
+                logo={DEFAULT_LOGO}
+                renderFooter={() => [
+                    <FooterItem key="settings" id="settings" title="Settings" icon={Gear} />,
+                    <FooterItem key="favorites" id="favorites" title="Favorites" icon={Star} />,
+                    <FooterItem key="profile" id="profile" title="Profile" icon={Person} />,
+                    <FooterItem key="bug" id="bug" title="Report Bug" icon={Bug} />,
+                ]}
+                {...args}
+            />
+
+            <PageLayout.Content>
+                <div style={{padding: 16}}>
+                    <Text variant="subheader-2">FooterBar Demo</Text>{' '}
+                    <Text color="secondary" style={{marginTop: 8}}>
+                        When pinned=true, footer items render horizontally with tooltips. When
+                        pinned=false, they render vertically. Try toggling the pinned state!
+                    </Text>
+                </div>
+            </PageLayout.Content>
+        </PageLayout>
+    );
+};
+
+export const FooterBarArray = FooterBarTemplate.bind({});
+FooterBarArray.args = {
+    initialPinned: true,
+};
+FooterBarArray.parameters = {
+    docs: {
+        description: {
+            story:
+                'Demonstrates renderFooter returning an array of FooterItem elements. ' +
+                'When pinned, items display horizontally with tooltips. When collapsed, they display vertically.',
+        },
+    },
+};
+
+const FooterBarWithOverflowTemplate: StoryFn = (args) => {
+    const [pinned, setPinned] = React.useState<boolean>(args.initialPinned ?? true);
+
+    return (
+        <PageLayout pinned={pinned} onChangePinned={setPinned}>
+            <PageLayoutAside
+                headerDecoration
+                menuItems={menuItemsShowcase}
+                logo={DEFAULT_LOGO}
+                renderFooter={() => [
+                    <FooterItem key="settings" id="settings" title="Settings" icon={Gear} />,
+                    <FooterItem key="favorites" id="favorites" title="Favorites" icon={Star} />,
+                    <FooterItem key="profile" id="profile" title="Profile" icon={Person} />,
+                    <FooterItem key="bug" id="bug" title="Report Bug" icon={Bug} />,
+                    <FooterItem key="search" id="search" title="Search" icon={Magnifier} />,
+                    <FooterItem key="settings2" id="settings2" title="More Settings" icon={Gear} />,
+                    <FooterItem key="extra" id="extra" title="Extra Item" icon={Star} />,
+                ]}
+                {...args}
+            />
+
+            <PageLayout.Content>
+                <div style={{padding: 16}}>
+                    <Text variant="subheader-2">FooterBar with Overflow</Text>{' '}
+                    <Text color="secondary" style={{marginTop: 8}}>
+                        When there are more than 5 items, extra items are collapsed into a dropdown
+                        menu accessible via the &quot;...&quot; button.
+                    </Text>
+                </div>
+            </PageLayout.Content>
+        </PageLayout>
+    );
+};
+
+export const FooterBarWithOverflow = FooterBarWithOverflowTemplate.bind({});
+FooterBarWithOverflow.args = {
+    initialPinned: true,
+};
+FooterBarWithOverflow.parameters = {
+    docs: {
+        description: {
+            story:
+                'Demonstrates FooterBar overflow behavior. When more than 5 items are provided, ' +
+                'extra items collapse into a dropdown menu.',
+        },
+    },
 };

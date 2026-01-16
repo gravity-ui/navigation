@@ -39,12 +39,20 @@ interface AsideHeaderGeneralProps extends QAProps {
     /** When `true`, menu items use compact height. */
     isCompactMode?: boolean;
     renderContent?: RenderContentType;
+    /**
+     * Render function for the footer section.
+     *
+     * Return types:
+     * - `React.ReactNode` - Renders custom content as-is
+     * - `React.ReactNode[]` - Wraps in FooterBar with horizontal/vertical layout based on isPinned
+     */
     renderFooter?: (data: {
         size: number;
         isExpanded: boolean;
+        isPinned: boolean;
         asideRef: React.RefObject<HTMLDivElement>;
         isCompactMode?: boolean;
-    }) => React.ReactNode;
+    }) => React.ReactNode | React.ReactNode[];
     collapseButtonWrapper?: (
         defaultButton: React.ReactNode,
         data: {

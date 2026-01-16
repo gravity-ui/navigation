@@ -3,14 +3,22 @@
 $block: '.#{variables.$ns}footer-item';
 
 #{$block} {
-    --gn-aside-header-item-expanded-radius: 6px;
     $class: &;
 
-    width: 100%;
     height: var(--_--item-height);
 
-    border-radius: var(--gn-aside-header-item-expanded-radius);
-    margin-bottom: 2px;
+    &_layout {
+        &_horizontal {
+            display: flex;
+            justify-content: center;
+        }
+
+        &_vertical {
+            width: 100%;
+            border-radius: var(--gn-aside-header-item-expanded-radius);
+            margin-bottom: 2px;
+        }
+    }
 
     &:last-child {
         margin-bottom: 0;
