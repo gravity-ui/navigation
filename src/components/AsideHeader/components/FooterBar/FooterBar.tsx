@@ -7,11 +7,17 @@ import type {DropdownMenuItem} from '@gravity-ui/uikit';
 import {ASIDE_HEADER_EXPAND_DELAY} from '../../../constants';
 import {createBlock} from '../../../utils/cn';
 import i18n from '../../i18n';
-import {FooterItem} from '../FooterItem/FooterItem';
+import {FooterItem, FooterItemProps} from '../FooterItem/FooterItem';
 
 import {MAX_VISIBLE_ITEMS} from './constants';
 
 import styles from './FooterBar.module.scss';
+
+const isValidFooterElement = (
+    child: React.ReactNode,
+): child is React.ReactElement<FooterItemProps> => {
+    return React.isValidElement(child);
+};
 
 const b = createBlock('footer-bar', styles);
 
@@ -47,13 +53,13 @@ export const FooterBar: React.FC<FooterBarProps> = ({
     // - In vertical mode: use passed isExpanded value, layout="vertical"
     const renderChild = useCallback(
         (child: React.ReactNode, forDropdown = false): React.ReactNode => {
-            if (!React.isValidElement(child)) {
+            if (!isValidFooterElement(child)) {
                 return child;
             }
 
             // In horizontal mode, don't render title (layout="horizontal")
             if (isHorizontal && !forDropdown) {
-                return React.cloneElement(child as React.ReactElement, {
+                return React.cloneElement(child, {
                     isExpanded: false,
                     layout: 'horizontal',
                 });
@@ -61,14 +67,14 @@ export const FooterBar: React.FC<FooterBarProps> = ({
 
             // In dropdown, always show text
             if (forDropdown) {
-                return React.cloneElement(child as React.ReactElement, {
+                return React.cloneElement(child, {
                     isExpanded: true,
                     layout: 'vertical',
                 });
             }
 
             // In vertical mode, use the passed isExpanded value
-            return React.cloneElement(child as React.ReactElement, {
+            return React.cloneElement(child, {
                 isExpanded,
                 layout: 'vertical',
             });
@@ -95,7 +101,7 @@ export const FooterBar: React.FC<FooterBarProps> = ({
     const dropdownItems: DropdownMenuItem[] = useMemo(
         () =>
             hiddenChildren.map((child) => ({
-                text: renderChild(child, true), // forDropdown=true, show text
+                text: renderChild(child, true),
                 action: () => {}, // clicks are handled by the child itself
             })),
         [hiddenChildren, renderChild],
