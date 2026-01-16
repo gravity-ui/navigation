@@ -452,14 +452,11 @@ const FooterBarTemplate: StoryFn = (args) => {
 
             <PageLayout.Content>
                 <div style={{padding: 16}}>
-                    <Button onClick={() => setPinned((prev) => !prev)}>Toggle pinned</Button>
-                    <div style={{marginTop: 16}}>
-                        <Text variant="subheader-2">FooterBar Demo</Text>
-                        <Text color="secondary" style={{marginTop: 8}}>
-                            When pinned=true, footer items render horizontally with tooltips. When
-                            pinned=false, they render vertically. Try toggling the pinned state!
-                        </Text>
-                    </div>
+                    <Text variant="subheader-2">FooterBar Demo</Text>{' '}
+                    <Text color="secondary" style={{marginTop: 8}}>
+                        When pinned=true, footer items render horizontally with tooltips. When
+                        pinned=false, they render vertically. Try toggling the pinned state!
+                    </Text>
                 </div>
             </PageLayout.Content>
         </PageLayout>
@@ -503,14 +500,11 @@ const FooterBarWithOverflowTemplate: StoryFn = (args) => {
 
             <PageLayout.Content>
                 <div style={{padding: 16}}>
-                    <Button onClick={() => setPinned((prev) => !prev)}>Toggle pinned</Button>
-                    <div style={{marginTop: 16}}>
-                        <Text variant="subheader-2">FooterBar with Overflow</Text>
-                        <Text color="secondary" style={{marginTop: 8}}>
-                            When there are more than 5 items, extra items are collapsed into a
-                            dropdown menu accessible via the &quot;...&quot; button.
-                        </Text>
-                    </div>
+                    <Text variant="subheader-2">FooterBar with Overflow</Text>{' '}
+                    <Text color="secondary" style={{marginTop: 8}}>
+                        When there are more than 5 items, extra items are collapsed into a dropdown
+                        menu accessible via the &quot;...&quot; button.
+                    </Text>
                 </div>
             </PageLayout.Content>
         </PageLayout>
