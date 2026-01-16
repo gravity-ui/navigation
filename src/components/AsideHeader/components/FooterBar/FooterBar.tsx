@@ -19,6 +19,13 @@ const isValidFooterElement = (
     return React.isValidElement(child);
 };
 
+const getChildKey = (child: React.ReactNode, fallbackIndex: number): string | number => {
+    if (React.isValidElement(child) && child.key) {
+        return child.key;
+    }
+    return fallbackIndex;
+};
+
 const b = createBlock('footer-bar', styles);
 
 export interface FooterBarProps {
@@ -126,7 +133,7 @@ export const FooterBar: React.FC<FooterBarProps> = ({
                     if (isHorizontal && title) {
                         return (
                             <Tooltip
-                                key={index}
+                                key={getChildKey(child, index)}
                                 content={title}
                                 placement="top"
                                 openDelay={ASIDE_HEADER_EXPAND_DELAY}
