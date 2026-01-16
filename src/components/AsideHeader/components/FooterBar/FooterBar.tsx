@@ -144,7 +144,7 @@ export const FooterBar: React.FC<FooterBarProps> = ({
                     }
 
                     return (
-                        <div key={index} className={b('item')}>
+                        <div key={getChildKey(child, index)} className={b('item')}>
                             {renderedChild}
                         </div>
                     );
