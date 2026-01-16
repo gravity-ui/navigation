@@ -1,6 +1,6 @@
 import React, {FC, useCallback, useRef, useState} from 'react';
 
-import {ChevronRight} from '@gravity-ui/icons';
+import {ChevronDown, ChevronRight} from '@gravity-ui/icons';
 import {List, ListSortParams} from '@gravity-ui/uikit';
 
 import {createBlock} from '../../../utils/cn';
@@ -170,7 +170,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                     let groupIcon = item.icon;
 
                     if (isGroupHovered) {
-                        groupIcon = ChevronRight;
+                        groupIcon = isCollapsed ? ChevronRight : ChevronDown;
                     }
 
                     return (
