@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.6](https://github.com/gravity-ui/navigation/compare/v4.0.5...v4.0.6) (2026-01-19)
+
+
+### chore
+
+* release 4.0.6 ([3c09c8b](https://github.com/gravity-ui/navigation/commit/3c09c8b60c695aa5feac7489e13ac17b5c3c20b0))
+
 ## [4.0.5](https://github.com/gravity-ui/navigation/compare/v4.0.4...v4.0.5) (2026-01-19)
 
 
