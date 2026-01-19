@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.0.4](https://github.com/gravity-ui/navigation/compare/v4.0.3...v4.0.4) (2026-01-15)
+
+
+### Bug Fixes
+
+* **build:** add CSS imports for PageLayout components ([#543](https://github.com/gravity-ui/navigation/issues/543)) ([e243ef3](https://github.com/gravity-ui/navigation/commit/e243ef3373f5cfb2abfad7250bf174535250e4e2))
+* **Settings:** add scroll only menu items, keep title and search fixed ([#531](https://github.com/gravity-ui/navigation/issues/531)) ([14c214b](https://github.com/gravity-ui/navigation/commit/14c214b158a80d38f6d79793dbd77ebb25f0791d))
+
 ## [4.0.3](https://github.com/gravity-ui/navigation/compare/v4.0.2...v4.0.3) (2025-12-22)
 
 

@@ -13,7 +13,13 @@ import {extractComponentCSS} from './plugins/extractComponentCss.mjs';
 
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'));
 
-// extractComponentCSS now imported from dedicated file
+// Files that should receive CSS from a different component
+// Key: path pattern to match, Value: component name to get CSS from
+const cssAliases = {
+    'AsideHeader/components/PageLayout/PageLayout.js': 'AsideHeader',
+    'AsideHeader/components/PageLayout/PageLayoutAside.js': 'AsideHeader',
+    'AsideHeader/components/PageLayout/AsideFallback.js': 'AsideHeader',
+};
 
 // External dependency checker - shared between ESM and CJS builds
 const peerDeps = [
@@ -83,7 +89,7 @@ const getPlugins = (outDir) => {
             ],
         }),
         svgr(),
-        extractComponentCSS(),
+        extractComponentCSS({cssAliases}),
     ];
 };
 

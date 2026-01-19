@@ -6,6 +6,7 @@ import {
     EventBrokerData,
     Icon,
     Modal,
+    Popup,
     SegmentedRadioGroup,
     eventBroker,
 } from '@gravity-ui/uikit';
@@ -177,24 +178,32 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
                                 setOpenPanel(undefined);
                                 setPopupVisible(!popupVisible);
                             }}
-                            popupVisible={popupVisible}
-                            popupRef={asideRef}
-                            popupPlacement={['right-end']}
-                            popupOffset={{mainAxis: 10, crossAxis: 10}}
-                            onOpenChangePopup={() => setPopupVisible(false)}
-                            popupKeepMounted={true}
-                            renderPopupContent={() => {
-                                return (
-                                    <div className={b('settings')}>
-                                        <ul className={b('settings-ul')}>
-                                            <li>Set 1</li>
-                                            <li>Set 2</li>
-                                            <li>Set 3</li>
-                                            <li>Set 4</li>
-                                        </ul>
-                                    </div>
-                                );
-                            }}
+                            enableTooltip={false}
+                            itemWrapper={(params, makeItem) => (
+                                <React.Fragment>
+                                    {makeItem(params)}
+                                    <Popup
+                                        strategy="fixed"
+                                        open={popupVisible}
+                                        keepMounted={true}
+                                        placement={['right-end']}
+                                        offset={{mainAxis: 10, crossAxis: 10}}
+                                        anchorElement={asideRef.current}
+                                        onOpenChange={(open) => {
+                                            if (!open) setPopupVisible(false);
+                                        }}
+                                    >
+                                        <div className={b('settings')}>
+                                            <ul className={b('settings-ul')}>
+                                                <li>Set 1</li>
+                                                <li>Set 2</li>
+                                                <li>Set 3</li>
+                                                <li>Set 4</li>
+                                            </ul>
+                                        </div>
+                                    </Popup>
+                                </React.Fragment>
+                            )}
                         />
                         <FooterItem
                             id={'project-settings'}
