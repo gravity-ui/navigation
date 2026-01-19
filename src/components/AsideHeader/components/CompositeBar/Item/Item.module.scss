@@ -32,6 +32,10 @@ $actionLeftRightMargin: 10px;
     cursor: pointer;
     padding: 0;
 
+    &:global(.#{variables.$ns}footer-item) {
+        height: 40px;
+    }
+
     &__icon {
         color: var(--gn-aside-header-item-icon-color, var(--_--item-icon-color));
 
