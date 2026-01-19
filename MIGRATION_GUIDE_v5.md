@@ -55,6 +55,39 @@ The `compact` prop and related APIs have been renamed to use clearer semantics w
 | `MobileLogoProps.compact`                     | `MobileLogoProps.isExpanded`               | MobileLogo prop renamed                         |
 | `BurgerMenuProps.renderFooter({ isCompact })` | `renderFooter({ isExpanded })`             | MobileHeader burger menu                        |
 
+#### BurgerMenu (MobileHeader) Changes
+
+```tsx
+// Before (v4.x)
+<MobileHeader
+  burgerMenu={{
+    items: menuItems,
+    renderFooter: ({ isCompact }) => <Footer collapsed={isCompact} />,
+  }}
+/>
+
+// After (v5.0)
+<MobileHeader
+  burgerMenu={{
+    items: menuItems,
+    renderFooter: ({ isExpanded }) => <Footer collapsed={!isExpanded} />,
+  }}
+/>
+```
+
+#### Understanding `pinned` vs `isExpanded`
+
+In v5.0, the navigation state is represented by two distinct concepts:
+
+| Concept      | Description                                                                                              | Controllable      |
+| ------------ | -------------------------------------------------------------------------------------------------------- | ----------------- |
+| `pinned`     | User preference — whether the sidebar should stay expanded                                               | ✅ Yes            |
+| `isExpanded` | Visual state — whether the sidebar is currently expanded (can be true on hover even when `pinned=false`) | ❌ No (read-only) |
+
+**Important**: `isExpanded` is an **internal state** managed by the navigation component. It cannot be controlled externally — it is derived from `pinned` and hover/mouse interactions. Use `pinned` prop and `onChangePinned` callback to control the navigation state.
+
+This separation allows for hover-to-expand behavior when `pinned=false`.
+
 #### Context Changes
 
 The `AsideHeaderContext` has been updated:
@@ -69,9 +102,12 @@ interface AsideHeaderContextType {
 
 // After (v5.0)
 interface AsideHeaderContextType {
-  pinned: boolean; // Note: inverted semantics!
+  pinned: boolean; // User preference (inverted from compact)
+  isExpanded: boolean; // Current visual state
+  size: number; // Current width in pixels
   onChangePinned?: (pinned: boolean) => void;
-  // ...
+  onExpand?: () => void; // Trigger expand (e.g., on mouse enter)
+  onFold?: () => void; // Trigger collapse (e.g., on mouse leave)
 }
 ```
 
@@ -105,17 +141,29 @@ interface AsideHeaderContextType {
 
 **renderFooter callback:**
 
+The `renderFooter` callback now receives additional parameters:
+
 ```tsx
 // Before (v4.x)
-renderFooter={({ compact }) => (
+renderFooter={({ compact, size }) => (
   <FooterItem compact={compact} />
 )}
 
 // After (v5.0)
-renderFooter={({ isExpanded }) => (
+renderFooter={({ isExpanded, isPinned, size, asideRef, isCompactMode }) => (
   <FooterItem isExpanded={isExpanded} />
 )}
 ```
+
+| New Parameter   | Type                              | Description                                 |
+| --------------- | --------------------------------- | ------------------------------------------- |
+| `isExpanded`    | `boolean`                         | Current visual state (replaces `compact`)   |
+| `isPinned`      | `boolean`                         | User preference for pinned state            |
+| `size`          | `number`                          | Current sidebar width in pixels             |
+| `asideRef`      | `React.RefObject<HTMLDivElement>` | Reference to the aside container element    |
+| `isCompactMode` | `boolean \| undefined`            | Whether compact item sizing mode is enabled |
+
+**New return type**: Can now return `React.ReactNode[]` (array) for automatic `FooterBar` wrapping with horizontal/vertical layout.
 
 **Logo wrapper:**
 
@@ -131,6 +179,20 @@ logo={{
 }}
 ```
 
+**collapseButtonWrapper callback:**
+
+```tsx
+// Before (v4.x)
+collapseButtonWrapper={(button, { compact }) => (
+  <Tooltip content={compact ? 'Expand' : 'Collapse'}>{button}</Tooltip>
+)}
+
+// After (v5.0)
+collapseButtonWrapper={(button, { isExpanded, onChangePinned }) => (
+  <Tooltip content={isExpanded ? 'Collapse' : 'Expand'}>{button}</Tooltip>
+)}
+```
+
 **itemWrapper callback:**
 
 ```tsx
@@ -140,6 +202,15 @@ itemWrapper={(params, makeItem, { compact }) => makeItem(params)}
 // After (v5.0)
 itemWrapper={(params, makeItem, { pinned }) => makeItem(params)}
 ```
+
+The `opts` object in `itemWrapper` now contains:
+
+| Property    | Type                           | Description                         |
+| ----------- | ------------------------------ | ----------------------------------- |
+| `pinned`    | `boolean`                      | Replaces `compact` (inverted logic) |
+| `collapsed` | `boolean`                      | Whether item is in collapsed view   |
+| `item`      | `MenuItem`                     | The menu item being rendered        |
+| `ref`       | `React.RefObject<HTMLElement>` | Reference to the item element       |
 
 ---
 
@@ -160,6 +231,20 @@ The following CSS variables have been replaced with zone-specific alternatives:
 2. **Footer icons**: Replace `--gn-aside-header-general-item-icon-color` with `--gn-aside-bottom-item-icon-color`
 3. **Subheader current icons**: Replace `--gn-aside-header-item-current-icon-color` with `--gn-aside-top-item-current-icon-color`
 4. **Footer current icons**: Replace `--gn-aside-header-item-current-icon-color` with `--gn-aside-bottom-item-current-icon-color`
+
+---
+
+### Breaking Changes Summary
+
+| Area                     | What Changed                                 | Severity  | Codemod Support |
+| ------------------------ | -------------------------------------------- | --------- | --------------- |
+| `multipleTooltip` prop   | Completely removed                           | ⚠️ High   | ❌ Manual       |
+| `compact` → `pinned`     | Renamed with inverted boolean logic          | ⚠️ High   | ✅ Automatic    |
+| `compact` → `isExpanded` | Renamed in FooterItem, MobileLogo, callbacks | ⚠️ High   | ✅ Automatic    |
+| Context API              | New fields: `pinned`, `isExpanded`, `size`   | 🟡 Medium | ❌ Manual       |
+| `renderFooter`           | Extended parameters, new return type         | 🟡 Medium | ✅ Partial      |
+| `collapseButtonWrapper`  | New `onChangePinned` in callback data        | 🟢 Low    | ✅ Partial      |
+| CSS variables            | Zone-specific alternatives                   | 🟡 Medium | ❌ Manual       |
 
 ---
 
@@ -303,8 +388,12 @@ Our codemod handles most cases automatically, but may not cover:
 ## Migration Checklist
 
 - [ ] **Dependencies**: Update to @gravity-ui/navigation@^5.0.0
-- [ ] **Run Codemod**: Execute `compact-to-is-expanded` transform on your codebase
+- [ ] **Run Codemod**: Execute `npx navigation-codemod v5 src/` on your codebase
+- [ ] **Remove `multipleTooltip`**: Delete any usage of the removed prop
 - [ ] **Review Conditionals**: Manually check ternary expressions using renamed variables
+- [ ] **Update `renderFooter`**: Check for new parameters and adjust logic if needed
+- [ ] **Update `collapseButtonWrapper`**: Adjust callback signature if used
+- [ ] **MobileHeader**: Update `BurgerMenuProps.renderFooter` from `isCompact` to `isExpanded`
 - [ ] **CSS Variables**: Update deprecated CSS variable names to zone-specific alternatives
 - [ ] **Context Usage**: Update any direct usage of `AsideHeaderContext` with new prop names
 - [ ] **TypeScript**: Resolve any remaining type errors
