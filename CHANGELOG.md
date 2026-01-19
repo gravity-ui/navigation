@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.5](https://github.com/gravity-ui/navigation/compare/v4.0.4...v4.0.5) (2026-01-19)
+
+
+### Bug Fixes
+
+* **FooterItem:** fix height overriding ([#553](https://github.com/gravity-ui/navigation/issues/553)) ([7bf844f](https://github.com/gravity-ui/navigation/commit/7bf844f716fda927a6bac4376ab8057318c2772d))
+
 ## [4.0.4](https://github.com/gravity-ui/navigation/compare/v4.0.3...v4.0.4) (2026-01-15)
 
 
