@@ -41,7 +41,12 @@ jobs:
               uses: actions/github-script@v7
               with:
                   script: |
-                      const versions = JSON.parse(process.env.VERSIONS).reverse();
+                      const allVersions = JSON.parse(process.env.VERSIONS).reverse();
+                      // Filter only stable versions (exclude beta, alpha, rc, etc.)
+                      const versions = allVersions.filter(v => !v.includes('-'));
+                      if (versions.length === 0) {
+                        throw Error("No stable versions found");
+                      }
                       const currMajor = versions[0].split(".")[0];
                       const prevVersion = versions.find(v => !v.startsWith(`${currMajor}.`));
                       if (!prevVersion) {
