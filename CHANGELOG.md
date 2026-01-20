@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.7](https://github.com/gravity-ui/navigation/compare/v4.0.6...v4.0.7) (2026-01-20)
+
+
+### Bug Fixes
+
+* **Item:** fix icon color overriding if Item has itemWrapper ([#558](https://github.com/gravity-ui/navigation/issues/558)) ([9463297](https://github.com/gravity-ui/navigation/commit/9463297d75469208f9fdae6bddfad0c8b898ab31))
+
 ## [4.0.6](https://github.com/gravity-ui/navigation/compare/v4.0.4...v4.0.6) (2026-01-19)
 
 
