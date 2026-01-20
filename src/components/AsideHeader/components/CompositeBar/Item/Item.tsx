@@ -106,19 +106,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     }
 
     const makeIconNode = (iconEl: React.ReactNode): React.ReactNode => {
-        // Add b('icon') class only when no itemWrapper is provided.
-        // When itemWrapper is present, the user controls the icon and may have custom styles
-        // that we shouldn't override.
-        let processedIconEl = iconEl;
-        if (React.isValidElement(iconEl) && typeof itemWrapper !== 'function') {
-            const existingClassName = (iconEl.props as {className?: string}).className || '';
-            if (!existingClassName.includes(b('icon'))) {
-                processedIconEl = React.cloneElement(iconEl, {
-                    className: `${existingClassName} ${b('icon')}`.trim(),
-                } as React.Attributes);
-            }
-        }
-
         return compact ? (
             <ActionTooltip
                 title=""
@@ -132,11 +119,11 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     onMouseLeave={() => onMouseLeave?.()}
                     className={b('btn-icon')}
                 >
-                    {processedIconEl}
+                    {iconEl}
                 </div>
             </ActionTooltip>
         ) : (
-            processedIconEl
+            iconEl
         );
     };
 
