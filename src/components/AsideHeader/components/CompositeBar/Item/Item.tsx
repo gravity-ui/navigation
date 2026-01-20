@@ -106,9 +106,11 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     }
 
     const makeIconNode = (iconEl: React.ReactNode): React.ReactNode => {
-        // Ensure icon has the b('icon') class for proper styling
+        // Add b('icon') class only when no itemWrapper is provided.
+        // When itemWrapper is present, the user controls the icon and may have custom styles
+        // that we shouldn't override.
         let processedIconEl = iconEl;
-        if (React.isValidElement(iconEl)) {
+        if (React.isValidElement(iconEl) && typeof itemWrapper !== 'function') {
             const existingClassName = (iconEl.props as {className?: string}).className || '';
             if (!existingClassName.includes(b('icon'))) {
                 processedIconEl = React.cloneElement(iconEl, {
