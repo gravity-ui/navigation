@@ -19,7 +19,7 @@ export default {
     },
 } as Meta<typeof Logo>;
 
-const ShowcaseTemplate: StoryFn<LogoProps> = (args) => <Logo {...args} />;
+const ShowcaseTemplate: StoryFn<LogoProps> = (args) => <Logo placement="footer" {...args} />;
 export const Showcase = ShowcaseTemplate.bind({});
 
 export const NoAnchor = ShowcaseTemplate.bind(
