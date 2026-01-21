@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.8](https://github.com/gravity-ui/navigation/compare/v4.0.7...v4.0.8) (2026-01-21)
+
+
+### Bug Fixes
+
+* **MultipleTooltip:** fix background ([#560](https://github.com/gravity-ui/navigation/issues/560)) ([2af3d73](https://github.com/gravity-ui/navigation/commit/2af3d732b29f40d745ccaacaf51df08abdcbabce))
+
 ## [4.0.7](https://github.com/gravity-ui/navigation/compare/v4.0.6...v4.0.7) (2026-01-20)
 
 
