@@ -2,44 +2,44 @@
 
 $block: '.#{variables.$ns}multiple-tooltip';
 
-:global(.g-root_theme_dark),
-:global(.g-root_theme_dark-hc) {
-    --multiple-tooltip-item-bg-color: var(
-        --g-color-base-float-medium,
-        var(--g-color-private-white-100-solid)
-    );
-    --multiple-tooltip-item-active-bg-color: var(--g-color-base-float-heavy);
-    --multiple-tooltip-backdrop-background: linear-gradient(
-        90deg,
-        var(--g-color-base-background) 50%,
-        transparent
-    );
-    --multiple-tooltip-backdrop-filter: blur(16px);
-}
-
-:global(.g-root_theme_dark-hc) {
-    --multiple-tooltip-item-bg-color: var(
-        --g-color-base-float-medium,
-        var(--g-color-private-white-150-solid)
-    );
-}
-
-:global(.g-root_theme_light),
-:global(.g-root_theme_light-hc) {
-    --multiple-tooltip-item-bg-color: var(
-        --g-color-base-float-medium,
-        var(--g-color-private-black-550-solid)
-    );
-    --multiple-tooltip-item-active-bg-color: var(--g-color-base-float-heavy);
-    --multiple-tooltip-backdrop-background: linear-gradient(
-        90deg,
-        var(--g-color-base-background) 50%,
-        transparent
-    );
-    --multiple-tooltip-backdrop-filter: blur(12px);
-}
-
 #{$block} {
+    // nested inside block to prevent CSS Modules tree-shaking
+    @at-root :global(.g-root_theme_dark) &,
+        :global(.g-root_theme_dark-hc) & {
+        --multiple-tooltip-item-bg-color: var(
+            --g-color-base-float-medium,
+            var(--g-color-private-white-100-solid)
+        );
+        --multiple-tooltip-item-active-bg-color: var(--g-color-base-float-heavy);
+        --multiple-tooltip-backdrop-background: linear-gradient(
+            90deg,
+            var(--g-color-base-background) 50%,
+            transparent
+        );
+        --multiple-tooltip-backdrop-filter: blur(16px);
+    }
+
+    @at-root :global(.g-root_theme_dark-hc) & {
+        --multiple-tooltip-item-bg-color: var(
+            --g-color-base-float-medium,
+            var(--g-color-private-white-150-solid)
+        );
+    }
+
+    @at-root :global(.g-root_theme_light) &,
+        :global(.g-root_theme_light-hc) & {
+        --multiple-tooltip-item-bg-color: var(
+            --g-color-base-float-medium,
+            var(--g-color-private-black-550-solid)
+        );
+        --multiple-tooltip-item-active-bg-color: var(--g-color-base-float-heavy);
+        --multiple-tooltip-backdrop-background: linear-gradient(
+            90deg,
+            var(--g-color-base-background) 50%,
+            transparent
+        );
+        --multiple-tooltip-backdrop-filter: blur(12px);
+    }
     &::before {
         content: '';
         box-shadow: none;
@@ -52,7 +52,7 @@ $block: '.#{variables.$ns}multiple-tooltip';
         filter: var(--multiple-tooltip-backdrop-filter);
     }
 
-    @at-root .g-popup#{&}__popup,
+    @at-root :global(.g-popup)#{&}__popup,
         &__popup {
         --g-popup-background-color: transparent;
         --g-popup-border-color: transparent;
