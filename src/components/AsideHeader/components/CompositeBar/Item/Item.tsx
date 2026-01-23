@@ -7,7 +7,7 @@ import {AsideHeaderItem} from 'src/components/AsideHeader/types';
 import {ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
 import {MakeItemParams} from '../../../../types';
 import {createBlock} from '../../../../utils/cn';
-import {useAsideHeaderContext} from '../../../AsideHeaderContext';
+import {useAsideHeaderInnerContext} from '../../../AsideHeaderContext';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {
     COLLAPSE_ITEM_ID,
@@ -252,7 +252,7 @@ function CollapsedPopup({
     anchorRef,
     onOpenChange,
 }: ItemInnerProps & CollapsedPopupProps) {
-    const {compact} = useAsideHeaderContext();
+    const {compact} = useAsideHeaderInnerContext();
     return collapseItems?.length ? (
         <Popup
             strategy="fixed"
