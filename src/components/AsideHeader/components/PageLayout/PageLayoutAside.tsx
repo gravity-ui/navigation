@@ -10,7 +10,7 @@ type Props = Omit<AsideHeaderProps, 'compact' | 'size'>;
 export const PageLayoutAside = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
     const {size, compact} = useAsideHeaderContext();
 
-    const asideHeaderInnerContextValue = useAsideHeaderInnerContextValue({size, compact, ...props});
+    const asideHeaderInnerContextValue = useAsideHeaderInnerContextValue({...props, size, compact});
 
     return (
         <AsideHeaderInnerContextProvider value={asideHeaderInnerContextValue}>
