@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.9](https://github.com/gravity-ui/navigation/compare/v4.0.8...v4.0.9) (2026-01-23)
+
+
+### Bug Fixes
+
+* correcting the desynchr. of the compact state, css variables for action colors have been added ([#562](https://github.com/gravity-ui/navigation/issues/562)) ([2de7528](https://github.com/gravity-ui/navigation/commit/2de7528a0e6a62eff54280cbe4c996969b3d0a5b))
+
 ## [4.0.8](https://github.com/gravity-ui/navigation/compare/v4.0.7...v4.0.8) (2026-01-21)
 
 
