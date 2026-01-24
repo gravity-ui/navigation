@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.10](https://github.com/gravity-ui/navigation/compare/v4.0.9...v4.0.10) (2026-01-24)
+
+
+### Bug Fixes
+
+* exclude __tests__ folder from build output ([#564](https://github.com/gravity-ui/navigation/issues/564)) ([4a279b1](https://github.com/gravity-ui/navigation/commit/4a279b15ed67d4cb1f62786009bb95dfe37b7b51))
+
 ## [4.0.9](https://github.com/gravity-ui/navigation/compare/v4.0.8...v4.0.9) (2026-01-23)
 
 
