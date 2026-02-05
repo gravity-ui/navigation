@@ -2,7 +2,7 @@ import React, {useCallback, useMemo, useState} from 'react';
 import type {ReactNode} from 'react';
 
 import {Drawer, HelpMark, Hotkey, List, Text, TextInput} from '@gravity-ui/uikit';
-import type {ListProps} from '@gravity-ui/uikit';
+import type {DrawerProps, ListProps} from '@gravity-ui/uikit';
 
 import {createBlock} from '../utils/cn';
 
@@ -31,6 +31,7 @@ export type HotkeysPanelProps<T> = {
     listClassName?: string;
     leftOffset?: number | string;
     topOffset?: number | string;
+    style?: React.CSSProperties;
 } & Omit<
     ListProps<HotkeysListItem>,
     | 'items'
@@ -46,7 +47,8 @@ export type HotkeysPanelProps<T> = {
     | 'filterItem'
     | 'onFilterEnd'
     | 'onFilterUpdate'
->;
+> &
+    Pick<DrawerProps, 'container' | 'hideVeil'>;
 
 export function HotkeysPanel<T = {}>({
     open,
@@ -66,6 +68,9 @@ export function HotkeysPanel<T = {}>({
     title,
     togglePanelHotkey,
     emptyState,
+    style,
+    container,
+    hideVeil,
     ...listProps
 }: HotkeysPanelProps<T>) {
     const [filter, setFilter] = useState('');
@@ -136,12 +141,16 @@ export function HotkeysPanel<T = {}>({
 
     return (
         <Drawer
+            container={container}
+            hideVeil={hideVeil}
             className={b(null, className)}
             open={open}
             onOpenChange={(open) => !open && onClose?.()}
             style={{
-                left: leftOffset,
-                top: topOffset,
+                position: 'absolute',
+                ...style,
+                ...(leftOffset !== undefined && {left: leftOffset}),
+                ...(topOffset !== undefined && {top: topOffset}),
             }}
             contentClassName={b('drawer-item', drawerItemClassName)}
         >

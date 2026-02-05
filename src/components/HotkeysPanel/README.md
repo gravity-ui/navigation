@@ -13,24 +13,27 @@ import {HotkeysPanel} from '@gravity-ui/navigation';
 
 ### PropTypes
 
-| Property             | Type            | Required | Default | Description                      |
-| :------------------- | :-------------- | :------: | :------ | :------------------------------- |
-| hotkeys              | `Array`         |   yes    |         | List of hotkey groups            |
-| title                | `ReactNode`     |          |         | The panel title                  |
-| togglePanelHotkey    | `String`        |          |         | The panel open hotkey            |
-| open                 | `Boolean`       |   yes    |         | Whether drawer open or not       |
-| onClose              | `Function`      |          |         | Close drawer handler             |
-| filterable           | `Boolean`       |          | true    | Whether show search input or not |
-| filterPlaceholder    | `String`        |          |         | Search input placeholder         |
-| filterClassName      | `String`        |          |         | Search input class name          |
-| leftOffset           | `Number/String` |          | 0       | Drawer left offset               |
-| topOffset            | `Number/String` |          | 0       | Drawer top offset                |
-| emptyState           | `ReactNode`     |          |         | No search results placeholder    |
-| className            | `String`        |          |         | Drawer class name                |
-| drawerItemClassName  | `String`        |          |         | Drawer item class name           |
-| titleClassName       | `String`        |          |         | Title class name                 |
-| itemContentClassName | `String`        |          |         | List item content class name     |
-| listClassName        | `String`        |          |         | List class name                  |
+| Property             | Type            | Required | Default | Description                               |
+| :------------------- | :-------------- | :------: | :------ | :---------------------------------------- |
+| hotkeys              | `Array`         |   yes    |         | List of hotkey groups                     |
+| title                | `ReactNode`     |          |         | The panel title                           |
+| togglePanelHotkey    | `String`        |          |         | The panel open hotkey                     |
+| open                 | `Boolean`       |   yes    |         | Whether drawer open or not                |
+| onClose              | `Function`      |          |         | Close drawer handler                      |
+| filterable           | `Boolean`       |          | true    | Whether show search input or not          |
+| filterPlaceholder    | `String`        |          |         | Search input placeholder                  |
+| filterClassName      | `String`        |          |         | Search input class name                   |
+| leftOffset           | `Number/String` |          | 0       | Drawer left offset                        |
+| topOffset            | `Number/String` |          | 0       | Drawer top offset                         |
+| emptyState           | `ReactNode`     |          |         | No search results placeholder             |
+| className            | `String`        |          |         | Drawer class name                         |
+| drawerItemClassName  | `String`        |          |         | Drawer item class name                    |
+| titleClassName       | `String`        |          |         | Title class name                          |
+| itemContentClassName | `String`        |          |         | List item content class name              |
+| listClassName        | `String`        |          |         | List class name                           |
+| style                | `CSSProperties` |          |         | Custom styles for the drawer              |
+| container            | `HTMLElement`   |          |         | DOM element to render the drawer into     |
+| hideVeil             | `Boolean`       |          |         | Whether to hide the drawer overlay (veil) |
 
 And all the `List` PropTypes, but not `items` and filter props (you can find them [here](https://github.com/gravity-ui/uikit/blob/main/src/components/List/README.md))
 
