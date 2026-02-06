@@ -34,6 +34,7 @@ import {HotkeysPanel} from '@gravity-ui/navigation';
 | style                | `CSSProperties` |          |         | Custom styles for the drawer              |
 | container            | `HTMLElement`   |          |         | DOM element to render the drawer into     |
 | hideVeil             | `Boolean`       |          |         | Whether to hide the drawer overlay (veil) |
+| platform             | `'pc'`/`'mac'`  |          | auto    | Platform for hotkey display format        |
 
 And all the `List` PropTypes, but not `items` and filter props (you can find them [here](https://github.com/gravity-ui/uikit/blob/main/src/components/List/README.md))
 

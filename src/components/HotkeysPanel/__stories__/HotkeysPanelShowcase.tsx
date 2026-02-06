@@ -11,9 +11,9 @@ import './HotkeysPanelShowcase.scss';
 
 const b = cn('hotkeys-panel-showcase');
 
-type HotkeysPanelShowcaseProps = Pick<HotkeysPanelProps<HotkeysGroup>, 'filterable'>;
+type HotkeysPanelShowcaseProps = Pick<HotkeysPanelProps<HotkeysGroup>, 'filterable' | 'platform'>;
 
-export function HotkeysPanelShowcase({filterable}: HotkeysPanelShowcaseProps) {
+export function HotkeysPanelShowcase({filterable, platform}: HotkeysPanelShowcaseProps) {
     const [open, setOpen] = React.useState<boolean>(true);
 
     const handleClose = () => {
@@ -38,6 +38,7 @@ export function HotkeysPanelShowcase({filterable}: HotkeysPanelShowcaseProps) {
                 filterable={filterable}
                 filterPlaceholder="Search"
                 emptyState={<div className={b('empty')}>No hotkeys found</div>}
+                platform={platform}
             />
         </div>
     );

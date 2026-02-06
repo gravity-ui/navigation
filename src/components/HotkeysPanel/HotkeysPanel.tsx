@@ -2,7 +2,7 @@ import React, {useCallback, useMemo, useState} from 'react';
 import type {ReactNode} from 'react';
 
 import {Drawer, HelpMark, Hotkey, List, Text, TextInput} from '@gravity-ui/uikit';
-import type {DrawerProps, ListProps} from '@gravity-ui/uikit';
+import type {DrawerProps, HotkeyProps, ListProps} from '@gravity-ui/uikit';
 
 import {createBlock} from '../utils/cn';
 
@@ -32,6 +32,7 @@ export type HotkeysPanelProps<T> = {
     leftOffset?: number | string;
     topOffset?: number | string;
     style?: React.CSSProperties;
+    platform?: HotkeyProps['platform'];
 } & Omit<
     ListProps<HotkeysListItem>,
     | 'items'
@@ -71,6 +72,7 @@ export function HotkeysPanel<T = {}>({
     style,
     container,
     hideVeil,
+    platform,
     ...listProps
 }: HotkeysPanelProps<T>) {
     const [filter, setFilter] = useState('');
@@ -104,17 +106,19 @@ export function HotkeysPanel<T = {}>({
                         </HelpMark>
                     )}
                 </span>
-                {item.value && <Hotkey className={b('hotkey')} value={item.value} />}
+                {item.value && (
+                    <Hotkey className={b('hotkey')} value={item.value} platform={platform} />
+                )}
             </Text>
         ),
-        [itemContentClassName],
+        [itemContentClassName, platform],
     );
 
     const drawerItemContent = (
         <React.Fragment>
             <Text variant="subheader-3" as={'h2' as const} className={b('title', titleClassName)}>
                 {title}
-                {togglePanelHotkey && <Hotkey value={togglePanelHotkey} />}
+                {togglePanelHotkey && <Hotkey value={togglePanelHotkey} platform={platform} />}
             </Text>
             {filterable && (
                 <TextInput

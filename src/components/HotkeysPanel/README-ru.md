@@ -34,6 +34,7 @@ import {HotkeysPanel} from '@gravity-ui/navigation';
 | style                | `CSSProperties` |              |                       | Пользовательские стили для выдвижной панели.   |
 | container            | `HTMLElement`   |              |                       | DOM-элемент для рендеринга выдвижной панели.   |
 | hideVeil             | `Boolean`       |              |                       | Скрытие оверлея (затемнения) выдвижной панели. |
+| platform             | `'pc'`/`'mac'`  |              | auto                  | Платформа для формата отображения хоткеев.     |
 
 Свойства `HotkeysPanel` также включают все PropTypes компонента `List`, кроме `items` и `filter` (свойства `List` см. [здесь](https://github.com/gravity-ui/uikit/blob/main/src/components/List/README.md)).
 
