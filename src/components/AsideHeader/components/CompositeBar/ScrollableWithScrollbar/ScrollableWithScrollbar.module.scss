@@ -1,0 +1,56 @@
+@use '../../../../variables';
+
+$block: '.#{variables.$ns}scrollable-with-scrollbar';
+
+#{$block} {
+    &_scrollable {
+        flex: 1 1 auto;
+        position: relative;
+        width: 100%;
+        min-height: 0;
+    }
+
+    &__scrollable-inner {
+        width: 100%;
+        height: 100%;
+        overflow: hidden auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    &__scrollbar {
+        position: absolute;
+        top: 0;
+        right: 2px;
+        bottom: 0;
+        width: var(--g-spacing-1);
+        padding: 2px 0;
+        box-sizing: border-box;
+    }
+
+    &__scrollbar-track {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        cursor: pointer;
+        border-radius: 3px;
+    }
+
+    &__scrollbar-thumb {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        min-height: 20px;
+        border-radius: 3px;
+        background: var(--g-color-line-generic-solid, rgba(0, 0, 0, 0.2));
+        cursor: grab;
+
+        &:active {
+            cursor: grabbing;
+        }
+    }
+}

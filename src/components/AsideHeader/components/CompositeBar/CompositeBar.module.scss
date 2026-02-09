@@ -27,17 +27,6 @@ $block: '.#{variables.$ns}composite-bar';
         }
     }
 
-    &_scrollable {
-        flex: 1 1 auto;
-        overflow-y: auto;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-
-        &::-webkit-scrollbar {
-            display: none;
-        }
-    }
-
     &__root-menu-item {
         &:has(#{$class}__menu-group) {
             align-items: flex-start;
