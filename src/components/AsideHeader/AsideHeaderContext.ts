@@ -20,6 +20,8 @@ export interface AsideHeaderInnerContextType extends AsideHeaderInnerProps {
     onExpand?: () => void;
     onFold?: () => void;
     isExpanded: boolean;
+    /** True when at least one panel (Drawer) is open. */
+    hasPanelOpen?: boolean;
 }
 
 const AsideHeaderInnerContext = React.createContext<AsideHeaderInnerContextType | undefined>(

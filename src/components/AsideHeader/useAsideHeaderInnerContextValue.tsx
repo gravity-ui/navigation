@@ -114,6 +114,8 @@ export const useAsideHeaderInnerContextValue = (
         ];
     }, [allPagesIsAvailable, panelItems, innerVisiblePanel]);
 
+    const hasPanelOpen = innerPanelItems?.some((p) => p.open) ?? false;
+
     return {
         ...props,
         isCompactMode,
@@ -127,5 +129,6 @@ export const useAsideHeaderInnerContextValue = (
         size,
         onItemClick,
         onToggleGroupCollapsed,
+        hasPanelOpen,
     };
 };

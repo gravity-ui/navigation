@@ -42,6 +42,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         onFold,
         isExpanded,
         isCompactMode,
+        hasPanelOpen,
     } = useAsideHeaderInnerContext();
 
     const flatListItems = useGroupedMenuItems(menuItems, menuGroups);
@@ -85,8 +86,8 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     className={b('aside', {['compact-mode']: isCompactMode}, className)}
                     style={{width: size}}
                     data-qa={qa}
-                    onMouseEnter={onExpand}
-                    onMouseLeave={onFold}
+                    onMouseEnter={hasPanelOpen ? undefined : onExpand}
+                    onMouseLeave={hasPanelOpen ? undefined : onFold}
                 >
                     <div className={b('aside-popup-anchor')} ref={asideRef} />
                     {customBackground && (
