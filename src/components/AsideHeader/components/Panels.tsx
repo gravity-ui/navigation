@@ -6,7 +6,7 @@ import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {b} from '../utils';
 
 export const Panels: React.FC = () => {
-    const {panelItems, size, onClosePanel, onExpand, onFold} = useAsideHeaderInnerContext();
+    const {panelItems, size, onClosePanel, onFold} = useAsideHeaderInnerContext();
 
     const handleVeilClick = useCallback(() => {
         onFold?.();
@@ -40,9 +40,7 @@ export const Panels: React.FC = () => {
                     style={{left: size}}
                     contentClassName={b('panel', className)}
                 >
-                    <div onMouseEnter={onExpand} className={b('panel-content')}>
-                        {children}
-                    </div>
+                    {children}
                 </Drawer>
             ))}
         </React.Fragment>
