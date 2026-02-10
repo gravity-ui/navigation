@@ -2,6 +2,7 @@ import React from 'react';
 
 import {ASIDE_HEADER_ICON_SIZE} from '../../../constants';
 import {block, createBlock} from '../../../utils/cn';
+import {useAsideHeaderContextOptional} from '../../AsideHeaderContext';
 import {AsideHeaderItem} from '../../types';
 import {Item} from '../CompositeBar/Item/Item';
 
@@ -16,13 +17,17 @@ export interface FooterItemProps extends AsideHeaderItem {
 }
 
 export function FooterItem(props: FooterItemProps) {
-    const {layout = 'vertical', ...restProps} = props;
+    const {layout = 'vertical', isExpanded: isExpandedProp, ...restProps} = props;
+    const context = useAsideHeaderContextOptional();
+    const isExpanded = isExpandedProp ?? context?.isExpanded ?? true;
+
     return (
         <Item
             {...restProps}
             layout={layout}
             iconSize={ASIDE_HEADER_ICON_SIZE}
-            className={`${b({collapsed: !props.isExpanded, layout})} ${bGlobal()}`}
+            isExpanded={isExpanded}
+            className={`${b({collapsed: !isExpanded, layout})} ${bGlobal()}`}
         />
     );
 }

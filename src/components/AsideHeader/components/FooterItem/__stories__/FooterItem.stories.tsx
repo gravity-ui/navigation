@@ -23,7 +23,12 @@ export default {
             return (
                 <div style={{width}} className="footer-item-showcase">
                     <AsideHeaderContextProvider
-                        value={{...EMPTY_CONTEXT_VALUE, pinned: isExpanded ?? false, size: width}}
+                        value={{
+                            ...EMPTY_CONTEXT_VALUE,
+                            pinned: isExpanded ?? false,
+                            size: width,
+                            isExpanded: isExpanded ?? false,
+                        }}
                     >
                         <DecoratedStory />
                     </AsideHeaderContextProvider>
