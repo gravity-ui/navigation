@@ -10,6 +10,8 @@ export type UseScrollbarOptions = {
     recalcDeps?: React.DependencyList;
 };
 
+const DEFAULT_SCROLLBAR_THUMB_HEIGHT = 20;
+
 export function useScrollbar(options: UseScrollbarOptions = {}) {
     const {recalcDeps = []} = options;
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -22,7 +24,9 @@ export function useScrollbar(options: UseScrollbarOptions = {}) {
 
     const updateScrollState = useCallback(() => {
         const el = scrollRef.current;
+
         if (!el) return;
+
         setScrollState({
             scrollTop: el.scrollTop,
             scrollHeight: el.scrollHeight,
@@ -32,21 +36,28 @@ export function useScrollbar(options: UseScrollbarOptions = {}) {
 
     useEffect(() => {
         const el = scrollRef.current;
+
         if (!el) return;
+
         updateScrollState();
+
         const observer = new ResizeObserver(updateScrollState);
         observer.observe(el);
+
         return () => observer.disconnect();
     }, [updateScrollState, ...recalcDeps]);
 
     const handleThumbMouseDown = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
+
         if (!scrollRef.current) return;
+
         thumbDragRef.current = {
             isDragging: true,
             startY: e.clientY,
             startScrollTop: scrollRef.current.scrollTop,
         };
+
         const onMouseMove = (moveEvent: MouseEvent) => {
             if (!thumbDragRef.current.isDragging || !scrollRef.current) return;
             const {scrollHeight, clientHeight} = scrollRef.current;
@@ -67,11 +78,13 @@ export function useScrollbar(options: UseScrollbarOptions = {}) {
             thumbDragRef.current.startY = moveEvent.clientY;
             thumbDragRef.current.startScrollTop = scrollRef.current.scrollTop;
         };
+
         const onMouseUp = () => {
             thumbDragRef.current.isDragging = false;
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
         };
+
         document.addEventListener('mousemove', onMouseMove);
         document.addEventListener('mouseup', onMouseUp);
     }, []);
@@ -94,7 +107,10 @@ export function useScrollbar(options: UseScrollbarOptions = {}) {
         scrollState.scrollHeight > scrollState.clientHeight && scrollState.scrollHeight > 0;
     const thumbRatio =
         scrollState.scrollHeight > 0 ? scrollState.clientHeight / scrollState.scrollHeight : 0;
-    const thumbHeight = Math.max(20, scrollState.clientHeight * thumbRatio);
+    const thumbHeight = Math.max(
+        DEFAULT_SCROLLBAR_THUMB_HEIGHT,
+        scrollState.clientHeight * thumbRatio,
+    );
     const trackHeight = scrollState.clientHeight;
     const thumbMaxTop = trackHeight - thumbHeight;
     const thumbTop =
