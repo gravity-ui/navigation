@@ -283,6 +283,10 @@ export const Aside: FC = () => {
 | `--gn-aside-header-item-current-background-color-hover`   | Цвет иконки выбранного элемента при ховере.                                                       |                                |
 | `--gn-aside-header-item-collapsed-radius`                 | Радиус скругления углов элемента навигации в свернутом состоянии.                                 |              7 px              |
 | `--gn-aside-header-item-expanded-radius`                  | Радиус скругления углов элемента навигации в развернутом состоянии.                               |                                |
+| Скроллбар                                                 |                                                                                                   |                                |
+| `--gn-aside-scrollbar-handle-color`                       | Цвет ползунка скроллбара.                                                                         |                                |
+| `--gn-aside-scrollbar-handle-color-hover`                 | Цвет ползунка скроллбара при наведении.                                                           |                                |
+| `--gn-aside-scrollbar-track-color`                        | Цвет трека (фона) скроллбара.                                                                     |                                |
 | Наложение элементов (CSS-свойство `z-index`)              |                                                                                                   |                                |
 | `--gn-aside-header-z-index`                               | `z-index` для `AsideHeader`.                                                                      |              100               |
 | `--gn-aside-header-panel-z-index`                         | `z-index` для выдвижной панели `AsideHeader` (компонент `Drawer`).                                |               98               |

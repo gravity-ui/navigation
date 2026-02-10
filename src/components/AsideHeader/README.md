@@ -284,6 +284,10 @@ You can customize the inner content, make alert closeable if necessary. For read
 | `--gn-aside-header-item-current-background-color-hover`   | Current item's icon color on hover                                        |
 | `--gn-aside-header-item-collapsed-radius`                 | Item border radius for collapsed navigation                               |
 | `--gn-aside-header-item-expanded-radius`                  | Item border radius for expanded navigation                                |
+| Scrollbar                                                 |                                                                           |
+| `--gn-aside-scrollbar-handle-color`                       | Scrollbar thumb (handle) color                                            |
+| `--gn-aside-scrollbar-handle-color-hover`                 | Scrollbar thumb color on hover                                            |
+| `--gn-aside-scrollbar-track-color`                        | Scrollbar track background color                                          |
 | z-indexes                                                 |                                                                           |
 | `--gn-aside-header-z-index`                               | Aside header z-index                                                      |
 | `--gn-aside-header-panel-z-index`                         | Aside header panel (Drawer component) z-index                             |
