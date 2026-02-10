@@ -301,6 +301,16 @@ New CSS variables for styling the Bottom zone (footer area):
 | `--gn-aside-bottom-item-current-background-color`       | Active item background       | `--gn-aside-item-current-background-color`       |
 | `--gn-aside-bottom-item-current-background-color-hover` | Active item hover background | `--gn-aside-item-current-background-color-hover` |
 
+### Scrollbar (General) Variables
+
+CSS variables for the navigation menu scrollbar (used by `ScrollableWithScrollbar` in CompositeBar):
+
+| Variable                                  | Purpose                    | Typical fallback                       |
+| ----------------------------------------- | -------------------------- | -------------------------------------- |
+| `--gn-aside-scrollbar-handle-color`       | Scrollbar thumb color      | `--g-color-private-black-100` or theme |
+| `--gn-aside-scrollbar-handle-color-hover` | Thumb color on hover       | `--g-color-private-black-150` or theme |
+| `--gn-aside-scrollbar-track-color`        | Scrollbar track background | `transparent`                          |
+
 ### Usage Example
 
 ```css
