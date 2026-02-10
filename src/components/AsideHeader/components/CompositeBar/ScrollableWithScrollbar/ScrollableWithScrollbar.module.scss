@@ -37,6 +37,7 @@ $block: '.#{variables.$ns}scrollable-with-scrollbar';
         height: 100%;
         position: relative;
         cursor: pointer;
+        background: var(--gn-aside-scrollbar-track-color, transparent);
     }
 
     &__scrollbar-thumb {
@@ -44,8 +45,15 @@ $block: '.#{variables.$ns}scrollable-with-scrollbar';
         left: 0;
         width: 100%;
         min-height: 20px;
-        background: var(--g-color-line-generic-solid, rgba(0, 0, 0, 0.2));
+        background: var(--gn-aside-scrollbar-handle-color, var(--g-color-line-generic-solid));
         cursor: grab;
+
+        &:hover {
+            background: var(
+                --gn-aside-scrollbar-handle-color-hover,
+                var(--gn-aside-scrollbar-handle-color)
+            );
+        }
 
         &:active {
             cursor: grabbing;
