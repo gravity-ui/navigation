@@ -51,7 +51,7 @@ $block: '.#{variables.$ns}scrollable-with-scrollbar';
         &:hover {
             background: var(
                 --gn-aside-scrollbar-handle-color-hover,
-                var(--gn-aside-scrollbar-handle-color)
+                var(--gn-aside-scrollbar-handle-color, var(--g-color-line-generic-solid))
             );
         }
 
