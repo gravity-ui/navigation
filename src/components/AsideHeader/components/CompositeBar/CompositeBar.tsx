@@ -283,7 +283,10 @@ export const CompositeBar: FC<CompositeBarProps> = ({
 
     if (type === 'menu') {
         return (
-            <ScrollableWithScrollbar className={className} recalcDeps={[visibleItems?.length]}>
+            <ScrollableWithScrollbar
+                className={b(null, className)}
+                recalcDeps={[visibleItems?.length]}
+            >
                 <CompositeBarView
                     compositeId={compositeId}
                     menuItemClassName={menuItemClassName}
