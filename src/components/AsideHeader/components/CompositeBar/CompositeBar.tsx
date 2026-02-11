@@ -8,6 +8,7 @@ import {AsideHeaderItem, MenuItemsWithGroups} from '../../types';
 import {UNGROUPED_ID} from '../AllPagesPanel/constants';
 
 import {Item, ItemProps} from './Item/Item';
+import {ScrollableWithScrollbar} from './ScrollableWithScrollbar';
 import {COLLAPSE_ITEM_ID, ITEM_TYPE_REGULAR} from './constants';
 import {getItemHeight, getItemsHeight, getSelectedItemIndex} from './utils';
 
@@ -282,7 +283,10 @@ export const CompositeBar: FC<CompositeBarProps> = ({
 
     if (type === 'menu') {
         return (
-            <div className={b({scrollable: true}, className)}>
+            <ScrollableWithScrollbar
+                className={b(null, className)}
+                recalcDeps={[visibleItems?.length]}
+            >
                 <CompositeBarView
                     compositeId={compositeId}
                     menuItemClassName={menuItemClassName}
@@ -295,7 +299,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                     editMode={editMode}
                     isCompactMode={isCompactMode}
                 />
-            </div>
+            </ScrollableWithScrollbar>
         );
     }
 
