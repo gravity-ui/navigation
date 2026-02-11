@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 export type ScrollbarState = {
     scrollTop: number;
@@ -12,8 +12,10 @@ export type UseScrollbarOptions = {
 
 const DEFAULT_SCROLLBAR_THUMB_HEIGHT = 20;
 
+const EMPTY_DEPS: React.DependencyList = [];
+
 export function useScrollbar(options: UseScrollbarOptions = {}) {
-    const {recalcDeps = []} = options;
+    const {recalcDeps = EMPTY_DEPS} = options;
     const scrollRef = useRef<HTMLDivElement>(null);
     const [scrollState, setScrollState] = useState<ScrollbarState>({
         scrollTop: 0,

@@ -8,6 +8,8 @@ import styles from './ScrollableWithScrollbar.module.scss';
 
 const b = createBlock('scrollable-with-scrollbar', styles);
 
+const EMPTY_DEPS: React.DependencyList = [];
+
 type ScrollableWithScrollbarProps = {
     children: ReactNode;
     className?: string;
@@ -17,7 +19,7 @@ type ScrollableWithScrollbarProps = {
 export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
     children,
     className,
-    recalcDeps = [],
+    recalcDeps = EMPTY_DEPS,
 }) => {
     const {
         scrollRef,
