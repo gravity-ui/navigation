@@ -22,6 +22,16 @@ $block: '.#{variables.$ns}scrollable-with-scrollbar';
         }
     }
 
+    &__bottom-shadow {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 52px;
+        pointer-events: none;
+        background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.08) 100%);
+    }
+
     &__scrollbar {
         position: absolute;
         top: 0;
