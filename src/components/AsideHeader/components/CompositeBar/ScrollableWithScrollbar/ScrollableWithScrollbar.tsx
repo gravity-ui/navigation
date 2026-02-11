@@ -31,6 +31,7 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
         thumbTop,
         handleThumbMouseDown,
         handleTrackClick,
+        handleScrollbarKeyDown,
     } = useScrollbar({recalcDeps});
 
     return (
@@ -53,6 +54,8 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
                     aria-valuenow={scrollState.scrollTop}
                     aria-valuemin={0}
                     aria-valuemax={scrollState.scrollHeight - scrollState.clientHeight}
+                    tabIndex={0}
+                    onKeyDown={handleScrollbarKeyDown}
                 >
                     <div className={b('scrollbar-track')} onClick={handleTrackClick}>
                         <div

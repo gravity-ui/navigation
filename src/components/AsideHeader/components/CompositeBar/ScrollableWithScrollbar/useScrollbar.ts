@@ -118,6 +118,45 @@ export function useScrollbar(options: UseScrollbarOptions = {}) {
         scrollRef.current.scrollTop = ratio * maxScroll;
     }, []);
 
+    const handleScrollbarKeyDown = useCallback(
+        (e: React.KeyboardEvent) => {
+            const el = scrollRef.current;
+            if (!el) return;
+
+            const {scrollHeight, clientHeight} = el;
+            const maxScroll = scrollHeight - clientHeight;
+            if (maxScroll <= 0) return;
+
+            const step = Math.max(20, clientHeight * 0.2);
+            let newScrollTop = el.scrollTop;
+
+            switch (e.key) {
+                case 'ArrowDown':
+                    e.preventDefault();
+                    newScrollTop = Math.min(maxScroll, el.scrollTop + step);
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    newScrollTop = Math.max(0, el.scrollTop - step);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    newScrollTop = maxScroll;
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    newScrollTop = 0;
+                    break;
+                default:
+                    return;
+            }
+
+            el.scrollTop = newScrollTop;
+            updateScrollState();
+        },
+        [updateScrollState],
+    );
+
     const showScrollbar =
         scrollState.scrollHeight > scrollState.clientHeight && scrollState.scrollHeight > 0;
     const thumbRatio =
@@ -143,5 +182,6 @@ export function useScrollbar(options: UseScrollbarOptions = {}) {
         thumbTop,
         handleThumbMouseDown,
         handleTrackClick,
+        handleScrollbarKeyDown,
     };
 }
