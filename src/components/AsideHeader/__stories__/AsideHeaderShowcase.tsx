@@ -158,10 +158,9 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
                 isCompactMode={isCompactMode}
                 openModalSubscriber={openModalSubscriber}
                 topAlert={topAlert}
-                renderFooter={({isExpanded, asideRef}) => (
+                renderFooter={({asideRef}) => (
                     <React.Fragment>
                         <FooterItem
-                            isExpanded={isExpanded}
                             id={'infra'}
                             icon={Gear}
                             current={popupVisible}
@@ -228,7 +227,6 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
                                 );
                             }}
                             bringForward
-                            isExpanded={isExpanded}
                         />
                         <FooterItem
                             id={'user-settings'}
@@ -243,7 +241,6 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
                                         : Panel.UserSettings,
                                 );
                             }}
-                            isExpanded={isExpanded}
                         />
                     </React.Fragment>
                 )}

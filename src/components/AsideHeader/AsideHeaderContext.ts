@@ -50,14 +50,7 @@ export interface AsideHeaderContextType {
     onFold?: () => void;
 }
 
-const AsideHeaderContext = React.createContext<AsideHeaderContextType | undefined>({
-    pinned: true,
-    size: 0,
-    isExpanded: false,
-    onChangePinned: () => {},
-    onExpand: () => {},
-    onFold: () => {},
-});
+const AsideHeaderContext = React.createContext<AsideHeaderContextType | undefined>(undefined);
 
 AsideHeaderContext.displayName = 'AsideHeaderContext';
 
@@ -71,4 +64,9 @@ export const useAsideHeaderContext = (): AsideHeaderContextType => {
         Context.Provider`);
     }
     return contextValue;
+};
+
+/** Returns context value or undefined when used outside AsideHeader. Use when component can be used with or without provider. */
+export const useAsideHeaderContextOptional = (): AsideHeaderContextType | undefined => {
+    return React.useContext(AsideHeaderContext);
 };
