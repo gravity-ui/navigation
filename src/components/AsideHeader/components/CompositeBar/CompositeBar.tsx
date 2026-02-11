@@ -8,7 +8,7 @@ import {AsideHeaderItem, MenuItemsWithGroups} from '../../types';
 import {UNGROUPED_ID} from '../AllPagesPanel/constants';
 
 import {Item, ItemProps} from './Item/Item';
-import {ScrollableWithScrollbar} from './ScrollableWithScrollbar/ScrollableWithScrollbar';
+import {ScrollableWithScrollbar} from './ScrollableWithScrollbar';
 import {COLLAPSE_ITEM_ID, ITEM_TYPE_REGULAR} from './constants';
 import {getItemHeight, getItemsHeight, getSelectedItemIndex} from './utils';
 
