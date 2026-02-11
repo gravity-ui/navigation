@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.11](https://github.com/gravity-ui/navigation/compare/v4.0.10...v4.0.11) (2026-02-11)
+
+
+### Bug Fixes
+
+* **HotkeysPanel:** add props for Drawer ([#567](https://github.com/gravity-ui/navigation/issues/567)) ([1d99965](https://github.com/gravity-ui/navigation/commit/1d9996551c192ed2a29e7e99c52032d6961ff1b2))
+
 ## [4.0.10](https://github.com/gravity-ui/navigation/compare/v4.0.9...v4.0.10) (2026-01-24)
 
 
