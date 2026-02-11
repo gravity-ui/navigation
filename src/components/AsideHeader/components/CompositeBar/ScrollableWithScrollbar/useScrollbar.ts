@@ -23,6 +23,7 @@ export function useScrollbar(options: UseScrollbarOptions = {}) {
         clientHeight: 0,
     });
     const thumbDragRef = useRef({isDragging: false, startY: 0, startScrollTop: 0});
+    const dragCleanupRef = useRef<(() => void) | null>(null);
 
     const updateScrollState = useCallback(() => {
         const el = scrollRef.current;
@@ -81,14 +82,26 @@ export function useScrollbar(options: UseScrollbarOptions = {}) {
             thumbDragRef.current.startScrollTop = scrollRef.current.scrollTop;
         };
 
-        const onMouseUp = () => {
-            thumbDragRef.current.isDragging = false;
+        const removeListeners = () => {
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
+            dragCleanupRef.current = null;
         };
 
+        const onMouseUp = () => {
+            thumbDragRef.current.isDragging = false;
+            removeListeners();
+        };
+
+        dragCleanupRef.current = removeListeners;
         document.addEventListener('mousemove', onMouseMove);
         document.addEventListener('mouseup', onMouseUp);
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            dragCleanupRef.current?.();
+        };
     }, []);
 
     const handleTrackClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
