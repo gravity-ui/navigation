@@ -1,4 +1,4 @@
-import React, {FC, ReactNode} from 'react';
+import React, {FC, ReactNode, useId} from 'react';
 
 import {createBlock} from '../../../../utils/cn';
 
@@ -21,6 +21,7 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
     className,
     recalcDeps = EMPTY_DEPS,
 }) => {
+    const scrollableContentId = useId();
     const {
         scrollRef,
         scrollState,
@@ -34,7 +35,12 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
 
     return (
         <div className={b({scrollable: true}, className)}>
-            <div ref={scrollRef} className={b('scrollable-inner')} onScroll={updateScrollState}>
+            <div
+                id={scrollableContentId}
+                ref={scrollRef}
+                className={b('scrollable-inner')}
+                onScroll={updateScrollState}
+            >
                 {children}
             </div>
 
@@ -42,6 +48,8 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
                 <div
                     className={b('scrollbar')}
                     role="scrollbar"
+                    aria-controls={scrollableContentId}
+                    aria-orientation="vertical"
                     aria-valuenow={scrollState.scrollTop}
                     aria-valuemin={0}
                     aria-valuemax={scrollState.scrollHeight - scrollState.clientHeight}
