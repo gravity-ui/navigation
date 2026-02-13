@@ -34,8 +34,12 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
         handleScrollbarKeyDown,
     } = useScrollbar({recalcDeps});
 
+    const hasContentBelow =
+        scrollState.scrollHeight > scrollState.clientHeight &&
+        scrollState.scrollTop + scrollState.clientHeight < scrollState.scrollHeight - 1;
+
     return (
-        <div className={b({scrollable: true}, className)}>
+        <div className={b({'bottom-shadow': hasContentBelow}, className)}>
             <div
                 id={scrollableContentId}
                 ref={scrollRef}
