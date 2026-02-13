@@ -39,7 +39,7 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
         scrollState.scrollTop + scrollState.clientHeight < scrollState.scrollHeight - 1;
 
     return (
-        <div className={b({scrollable: true}, className)}>
+        <div className={b({'bottom-shadow': hasContentBelow}, className)}>
             <div
                 id={scrollableContentId}
                 ref={scrollRef}
@@ -48,8 +48,6 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
             >
                 {children}
             </div>
-
-            {hasContentBelow && <div className={b('bottom-shadow')} aria-hidden />}
 
             {showScrollbar && (
                 <div
