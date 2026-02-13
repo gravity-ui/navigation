@@ -20,6 +20,7 @@ $block: '.#{variables.$ns}scrollable-with-scrollbar';
             --gn-aside-bottom-shadow-color,
             linear-gradient(to bottom, transparent 0%, transparent 50%, rgba(0, 0, 0, 0.08) 100%)
         );
+        transition: opacity 0.3s ease-in-out;
         opacity: 0;
     }
 
