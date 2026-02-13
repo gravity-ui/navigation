@@ -16,7 +16,10 @@ $block: '.#{variables.$ns}scrollable-with-scrollbar';
         right: 0;
         height: 100%;
         pointer-events: none;
-        background: var(--gn-aside-bottom-shadow-color);
+        background: var(
+            --gn-aside-bottom-shadow-color,
+            linear-gradient(to bottom, transparent 0%, transparent 50%, rgba(0, 0, 0, 0.08) 100%)
+        );
         opacity: 0;
     }
 
