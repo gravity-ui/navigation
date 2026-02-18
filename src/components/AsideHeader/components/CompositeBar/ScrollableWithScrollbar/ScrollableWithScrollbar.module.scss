@@ -3,11 +3,29 @@
 $block: '.#{variables.$ns}scrollable-with-scrollbar';
 
 #{$block} {
-    &_scrollable {
-        flex: 1 1 auto;
-        position: relative;
-        width: 100%;
-        min-height: 0;
+    flex: 1 1 auto;
+    position: relative;
+    width: 100%;
+    min-height: 0;
+
+    &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 100%;
+        pointer-events: none;
+        background: var(
+            --gn-aside-bottom-shadow-color,
+            linear-gradient(to bottom, transparent 0%, transparent 50%, rgba(0, 0, 0, 0.08) 100%)
+        );
+        transition: opacity 0.3s ease-in-out;
+        opacity: 0;
+    }
+
+    &#{$block}_bottom-shadow::before {
+        opacity: 1;
     }
 
     &__scrollable-inner {
@@ -59,4 +77,24 @@ $block: '.#{variables.$ns}scrollable-with-scrollbar';
             cursor: grabbing;
         }
     }
+}
+
+:global(.g-root_theme_light) #{$block},
+:global(.g-root_theme_light-hc) #{$block} {
+    --gn-aside-bottom-shadow-color: linear-gradient(
+        to bottom,
+        transparent 0%,
+        transparent 50%,
+        rgba(0, 0, 0, 0.08) 100%
+    );
+}
+
+:global(.g-root_theme_dark) #{$block},
+:global(.g-root_theme_dark-hc) #{$block} {
+    --gn-aside-bottom-shadow-color: linear-gradient(
+        to bottom,
+        transparent 80%,
+        transparent 80%,
+        rgba(0, 0, 0, 0.4) 100%
+    );
 }
