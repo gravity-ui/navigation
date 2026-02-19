@@ -42,7 +42,7 @@ $block: '.#{variables.$ns}composite-bar-item';
     display: flex;
     min-width: 0;
     width: 100%;
-    height: #{variables.$item-height};
+    height: var(--_--item-height, #{variables.$item-height});
     align-items: center;
     cursor: pointer;
     padding: 0;
