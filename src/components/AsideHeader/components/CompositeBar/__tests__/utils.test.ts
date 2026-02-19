@@ -84,16 +84,6 @@ describe('getVisibleItemsWithFilteredDividers', () => {
         expect(getVisibleItemsWithFilteredDividers(input)).toEqual([item('a'), item('c')]);
     });
 
-    test('does not add items property to non-group items', () => {
-        const input = [item('a'), item('b')];
-        const result = getVisibleItemsWithFilteredDividers(input);
-        expect(result).toHaveLength(2);
-        expect(result[0]).toEqual(item('a'));
-        expect(result[1]).toEqual(item('b'));
-        expect('items' in result[0]).toBe(false);
-        expect('items' in result[1]).toBe(false);
-    });
-
     test('filters nested hidden and redundant dividers in groups', () => {
         const input = [
             {
@@ -115,5 +105,15 @@ describe('getVisibleItemsWithFilteredDividers', () => {
             item('d1', 'divider'),
             item('c'),
         ]);
+    });
+
+    test('does not add items property to non-group items', () => {
+        const input = [item('a'), item('b')];
+        const result = getVisibleItemsWithFilteredDividers(input);
+        expect(result).toHaveLength(2);
+        expect(result[0]).toEqual(item('a'));
+        expect(result[1]).toEqual(item('b'));
+        expect('items' in result[0]).toBe(false);
+        expect('items' in result[1]).toBe(false);
     });
 });
