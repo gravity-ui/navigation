@@ -103,6 +103,6 @@ export const useGroupedMenuItems = (
             return flatListItems;
         }
 
-        return getVisibleItemsWithFilteredDividers(flatListItems) ?? [];
+        return getVisibleItemsWithFilteredDividers(flatListItems, ALL_PAGES_ID) ?? [];
     }, [menuItems, menuGroups, isEditMode]);
 };
