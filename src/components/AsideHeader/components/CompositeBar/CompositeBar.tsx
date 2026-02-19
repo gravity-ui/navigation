@@ -270,29 +270,19 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     editMode = false,
     isCompactMode,
 }) => {
-    const visibleItems = items
-        ?.filter((item) => !item.hidden)
-        ?.map((item) => ({
-            ...item,
-            items: 'items' in item ? item.items?.filter((nestedItem) => !nestedItem.hidden) : [],
-        }));
-
-    if (!visibleItems || visibleItems.length === 0) {
+    if (!items || items.length === 0) {
         return null;
     }
 
     if (type === 'menu') {
         return (
-            <ScrollableWithScrollbar
-                className={b(null, className)}
-                recalcDeps={[visibleItems?.length]}
-            >
+            <ScrollableWithScrollbar className={b(null, className)} recalcDeps={[items?.length]}>
                 <CompositeBarView
                     compositeId={compositeId}
                     menuItemClassName={menuItemClassName}
                     type="menu"
                     isExpanded={isExpanded}
-                    items={visibleItems}
+                    items={items}
                     onItemClick={onItemClick}
                     onMoreClick={onMoreClick}
                     onToggleGroupCollapsed={onToggleGroupCollapsed}
@@ -309,7 +299,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                 menuItemClassName={menuItemClassName}
                 type="subheader"
                 isExpanded={isExpanded}
-                items={visibleItems}
+                items={items}
                 onItemClick={onItemClick}
                 editMode={editMode}
                 isCompactMode={isCompactMode}
