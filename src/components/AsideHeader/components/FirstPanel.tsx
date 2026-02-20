@@ -31,6 +31,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         onMenuMoreClick,
         renderFooter,
         onToggleGroupCollapsed,
+        renderFooterAfter,
         pinned,
         customBackground,
         customBackgroundClassName,
@@ -66,14 +67,18 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
     const renderFooterContent = useCallback(() => {
         if (canRenderFooterInHorizontalMode) {
             return (
-                <FooterBar isPinned={pinned} isExpanded={isExpanded}>
+                <FooterBar
+                    isPinned={pinned}
+                    isExpanded={isExpanded}
+                    renderAfter={renderFooterAfter}
+                >
                     {footerResult}
                 </FooterBar>
             );
         }
 
         return footerResult;
-    }, [footerResult, pinned, isExpanded, canRenderFooterInHorizontalMode]);
+    }, [footerResult, pinned, isExpanded, canRenderFooterInHorizontalMode, renderFooterAfter]);
 
     return (
         <React.Fragment>

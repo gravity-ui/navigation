@@ -53,6 +53,8 @@ interface AsideHeaderGeneralProps extends QAProps {
         asideRef: React.RefObject<HTMLDivElement>;
         isCompactMode?: boolean;
     }) => React.ReactNode | React.ReactNode[];
+    /** Render function for additional content after items (e.g., user profile) */
+    renderFooterAfter?: () => React.ReactNode;
     collapseButtonWrapper?: (
         defaultButton: React.ReactNode,
         data: {
