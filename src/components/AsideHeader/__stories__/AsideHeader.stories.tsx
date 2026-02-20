@@ -479,12 +479,14 @@ const FooterBarWithOverflowTemplate: StoryFn = (args) => {
                 renderFooter={() => [
                     <FooterItem key="settings" id="settings" title="Settings" icon={Gear} />,
                     <FooterItem key="favorites" id="favorites" title="Favorites" icon={Star} />,
-                    <FooterItem key="profile" id="profile" title="Profile" icon={Person} />,
                     <FooterItem key="bug" id="bug" title="Report Bug" icon={Bug} />,
                     <FooterItem key="search" id="search" title="Search" icon={Magnifier} />,
                     <FooterItem key="settings2" id="settings2" title="More Settings" icon={Gear} />,
                     <FooterItem key="extra" id="extra" title="Extra Item" icon={Star} />,
                 ]}
+                renderFooterAfter={() => (
+                    <FooterItem key="profile" id="profile" title="Profile" icon={Person} />
+                )}
                 {...args}
             />
 
