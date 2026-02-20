@@ -34,3 +34,78 @@ export function getSelectedItemIndex(compositeItems: AsideHeaderItem[]) {
     const index = compositeItems.findIndex(({current}) => Boolean(current));
     return index === -1 ? undefined : index;
 }
+
+/** Removes consecutive dividers so that at most one divider is shown between other items. */
+function filterConsecutiveDividers<T extends AsideHeaderItem>(items: T[]): T[] {
+    return items.filter((item, index) => {
+        if (item.type !== 'divider') {
+            return true;
+        }
+
+        const prev = items[index - 1];
+
+        return prev?.type !== 'divider';
+    });
+}
+
+/** Removes dividers from the start and end of the list. */
+function filterLeadingAndTrailingDividers<T extends MenuItemsWithGroups>(items: T[]): T[] {
+    const firstNonDividerIndex = items.findIndex((item) => item.type !== 'divider');
+
+    if (firstNonDividerIndex === -1) {
+        return [];
+    }
+
+    let lastNonDividerIndex = items.length - 1;
+
+    while (
+        lastNonDividerIndex >= firstNonDividerIndex &&
+        items[lastNonDividerIndex].type === 'divider'
+    ) {
+        lastNonDividerIndex--;
+    }
+
+    if (lastNonDividerIndex < firstNonDividerIndex) {
+        return [];
+    }
+    return items.slice(firstNonDividerIndex, lastNonDividerIndex + 1);
+}
+
+export function getVisibleItemsWithFilteredDividers(
+    items: MenuItemsWithGroups[],
+    allPagesId?: string,
+) {
+    const visible = items
+        .filter((item) => !item.hidden)
+        .map((item) => {
+            if ('items' in item && item.items) {
+                return {
+                    ...item,
+                    items: filterRedundantDividers(
+                        item.items.filter((nested) => !nested.hidden),
+                        allPagesId,
+                    ),
+                };
+            }
+            return item;
+        });
+
+    return filterRedundantDividers(visible, allPagesId);
+}
+
+export function filterRedundantDividers<T extends MenuItemsWithGroups>(
+    items: T[],
+    allPagesId?: string,
+) {
+    const nonDividers = items.filter((item) => item.type !== 'divider');
+    const hasNoNonDividers = nonDividers.length === 0;
+    const isOnlyAllPagesItem =
+        nonDividers.length === 1 && allPagesId !== undefined && nonDividers[0].id === allPagesId;
+    const hasNoRealContent = hasNoNonDividers || isOnlyAllPagesItem;
+
+    if (hasNoRealContent) {
+        return nonDividers;
+    }
+
+    return filterLeadingAndTrailingDividers(filterConsecutiveDividers(items));
+}

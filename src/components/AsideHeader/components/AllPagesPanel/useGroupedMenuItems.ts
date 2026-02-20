@@ -2,6 +2,7 @@ import {useMemo} from 'react';
 
 import {MenuGroup, MenuItem} from '../../../types';
 import {MenuItemsWithGroups} from '../../types';
+import {getVisibleItemsWithFilteredDividers} from '../CompositeBar/utils';
 
 import {ALL_PAGES_ID} from './constants';
 
@@ -98,6 +99,10 @@ export const useGroupedMenuItems = (
             }
         });
 
-        return flatListItems;
+        if (isEditMode) {
+            return flatListItems;
+        }
+
+        return getVisibleItemsWithFilteredDividers(flatListItems, ALL_PAGES_ID) ?? [];
     }, [menuItems, menuGroups, isEditMode]);
 };
