@@ -5,3 +5,8 @@ export {FooterItem, type FooterItemProps} from './components/FooterItem/FooterIt
 export {PageLayout, type PageLayoutProps} from './components/PageLayout/PageLayout';
 export {PageLayoutAside} from './components/PageLayout/PageLayoutAside';
 export {AsideFallback} from './components/PageLayout/AsideFallback';
+export {
+    FooterLayoutContext,
+    useFooterLayout,
+    type FooterLayoutContextValue,
+} from './FooterLayoutContext';

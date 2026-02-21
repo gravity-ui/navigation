@@ -62,34 +62,15 @@ export default {
 
 const Template: StoryFn<FooterBarProps> = (args) => <FooterBar {...args} />;
 
-// In horizontal mode (isPinned=true), FooterBar automatically sets layout="horizontal" (hides title)
+// In horizontal mode (isPinned=true), FooterBar automatically sets  (hides title)
 export const HorizontalPinned = Template.bind({});
 HorizontalPinned.args = {
     children: [
-        <FooterItem key="search" id="search" title="Search" icon={Magnifier} layout="horizontal" />,
-        <FooterItem
-            key="favorites"
-            id="favorites"
-            title="Favorites"
-            icon={Star}
-            layout="horizontal"
-        />,
-        <FooterItem key="likes" id="likes" title="Likes" icon={Heart} layout="horizontal" />,
-        <FooterItem
-            key="notifications"
-            id="notifications"
-            title="Notifications"
-            icon={Bell}
-            layout="horizontal"
-        />,
-        <FooterItem
-            key="settings"
-            id="settings"
-            title="Settings"
-            icon={Gear}
-            layout="horizontal"
-            current
-        />,
+        <FooterItem key="search" id="search" title="Search" icon={Magnifier} />,
+        <FooterItem key="favorites" id="favorites" title="Favorites" icon={Star} />,
+        <FooterItem key="likes" id="likes" title="Likes" icon={Heart} />,
+        <FooterItem key="notifications" id="notifications" title="Notifications" icon={Bell} />,
+        <FooterItem key="settings" id="settings" title="Settings" icon={Gear} current />,
     ],
     isPinned: true,
     isExpanded: true,
@@ -118,36 +99,18 @@ VerticalExpanded.args = {
     isExpanded: true,
 };
 
-// Horizontal mode with overflow - FooterBar sets layout="horizontal" for visible items
+// Horizontal mode with overflow - FooterBar sets for visible items
 export const HorizontalWithOverflow = Template.bind({});
 HorizontalWithOverflow.args = {
     children: [
-        <FooterItem key="search" id="search" title="Search" icon={Magnifier} layout="horizontal" />,
-        <FooterItem
-            key="favorites"
-            id="favorites"
-            title="Favorites"
-            icon={Star}
-            layout="horizontal"
-        />,
-        <FooterItem key="likes" id="likes" title="Likes" icon={Heart} layout="horizontal" />,
-        <FooterItem
-            key="notifications"
-            id="notifications"
-            title="Notifications"
-            icon={Bell}
-            layout="horizontal"
-        />,
-        <FooterItem
-            key="settings"
-            id="settings"
-            title="Settings"
-            icon={Gear}
-            layout="horizontal"
-        />,
-        <FooterItem key="profile" id="profile" title="Profile" icon={Person} layout="horizontal" />,
-        <FooterItem key="nav1" id="nav1" title="Nav-item-1" icon={Gear} layout="horizontal" />,
-        <FooterItem key="nav2" id="nav2" title="Nav-item-2" icon={Gear} layout="horizontal" />,
+        <FooterItem key="search" id="search" title="Search" icon={Magnifier} />,
+        <FooterItem key="favorites" id="favorites" title="Favorites" icon={Star} />,
+        <FooterItem key="likes" id="likes" title="Likes" icon={Heart} />,
+        <FooterItem key="notifications" id="notifications" title="Notifications" icon={Bell} />,
+        <FooterItem key="settings" id="settings" title="Settings" icon={Gear} />,
+        <FooterItem key="profile" id="profile" title="Profile" icon={Person} />,
+        <FooterItem key="nav1" id="nav1" title="Nav-item-1" icon={Gear} />,
+        <FooterItem key="nav2" id="nav2" title="Nav-item-2" icon={Gear} />,
     ],
     isPinned: true,
     isExpanded: true,
@@ -175,21 +138,9 @@ VerticalWithOverflow.args = {
 export const HorizontalWithRenderAfter = Template.bind({});
 HorizontalWithRenderAfter.args = {
     children: [
-        <FooterItem key="search" id="search" title="Search" icon={Magnifier} layout="horizontal" />,
-        <FooterItem
-            key="favorites"
-            id="favorites"
-            title="Favorites"
-            icon={Star}
-            layout="horizontal"
-        />,
-        <FooterItem
-            key="settings"
-            id="settings"
-            title="Settings"
-            icon={Gear}
-            layout="horizontal"
-        />,
+        <FooterItem key="search" id="search" title="Search" icon={Magnifier} />,
+        <FooterItem key="favorites" id="favorites" title="Favorites" icon={Star} />,
+        <FooterItem key="settings" id="settings" title="Settings" icon={Gear} />,
     ],
     isPinned: true,
     isExpanded: true,
