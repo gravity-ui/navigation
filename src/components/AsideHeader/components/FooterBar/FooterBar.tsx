@@ -142,7 +142,9 @@ export const FooterBar: React.FC<FooterBarProps> = ({
                 )}
             </div>
 
-            {renderAfter && <div className={b('after')}>{renderAfter()}</div>}
+            {renderAfter && (
+                <div className={b('after', {horizontal: isHorizontal})}>{renderAfter()}</div>
+            )}
         </div>
     );
 };
