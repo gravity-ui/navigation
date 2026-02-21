@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useMemo} from 'react';
 
 import {Ellipsis} from '@gravity-ui/icons';
 import {DropdownMenu, Tooltip} from '@gravity-ui/uikit';
@@ -6,18 +6,13 @@ import type {DropdownMenuItem} from '@gravity-ui/uikit';
 
 import {ASIDE_HEADER_EXPAND_DELAY} from '../../../constants';
 import {createBlock} from '../../../utils/cn';
+import {FooterLayoutContext} from '../../FooterLayoutContext';
 import i18n from '../../i18n';
-import {FooterItem, FooterItemProps} from '../FooterItem/FooterItem';
+import {FooterItem} from '../FooterItem/FooterItem';
 
 import {MAX_VISIBLE_ITEMS} from './constants';
 
 import styles from './FooterBar.module.scss';
-
-const isValidFooterElement = (
-    child: React.ReactNode,
-): child is React.ReactElement<FooterItemProps> => {
-    return React.isValidElement(child);
-};
 
 const getChildKey = (child: React.ReactNode, fallbackIndex: number): string | number => {
     if (React.isValidElement(child) && child.key) {
@@ -54,41 +49,6 @@ export const FooterBar: React.FC<FooterBarProps> = ({
     // If only 1 element, render in vertical mode regardless of isPinned
     const isHorizontal = isPinned && childArray.length > 1;
 
-    // Clone child element and inject isExpanded/layout props
-    // - In horizontal mode (isPinned=true): layout="horizontal" (don't render title at all)
-    // - In dropdown: isExpanded=true, layout="vertical" (show text)
-    // - In vertical mode: use passed isExpanded value, layout="vertical"
-    const renderChild = useCallback(
-        (child: React.ReactNode, forDropdown = false): React.ReactNode => {
-            if (!isValidFooterElement(child)) {
-                return child;
-            }
-
-            // In horizontal mode, don't render title (layout="horizontal")
-            if (isHorizontal && !forDropdown) {
-                return React.cloneElement(child, {
-                    isExpanded: false,
-                    layout: 'horizontal',
-                });
-            }
-
-            // In dropdown, always show text
-            if (forDropdown) {
-                return React.cloneElement(child, {
-                    isExpanded: true,
-                    layout: 'vertical',
-                });
-            }
-
-            // In vertical mode, use the passed isExpanded value
-            return React.cloneElement(child, {
-                isExpanded,
-                layout: 'vertical',
-            });
-        },
-        [isHorizontal, isExpanded],
-    );
-
     const {visibleChildren, hiddenChildren} = useMemo(() => {
         if (childArray.length <= maxVisibleItems) {
             return {
@@ -108,10 +68,10 @@ export const FooterBar: React.FC<FooterBarProps> = ({
     const dropdownItems: DropdownMenuItem[] = useMemo(
         () =>
             hiddenChildren.map((child) => ({
-                text: renderChild(child, true),
+                text: child,
                 action: () => {}, // clicks are handled by the child itself
             })),
-        [hiddenChildren, renderChild],
+        [hiddenChildren],
     );
 
     // Get title from child props for tooltip
@@ -125,30 +85,36 @@ export const FooterBar: React.FC<FooterBarProps> = ({
     return (
         <div className={b()}>
             <div className={b('items', {horizontal: isHorizontal})}>
-                {visibleChildren.map((child, index) => {
-                    const renderedChild = renderChild(child);
-                    const title = getChildTitle(child);
+                <FooterLayoutContext.Provider
+                    value={{
+                        layout: isHorizontal ? 'horizontal' : 'vertical',
+                        isExpanded,
+                    }}
+                >
+                    {visibleChildren.map((child, index) => {
+                        const title = getChildTitle(child);
 
-                    // In horizontal mode, wrap in Tooltip to show title on hover
-                    if (isHorizontal && title) {
+                        // In horizontal mode, wrap in Tooltip to show title on hover
+                        if (isHorizontal && title) {
+                            return (
+                                <Tooltip
+                                    key={getChildKey(child, index)}
+                                    content={title}
+                                    placement="top"
+                                    openDelay={ASIDE_HEADER_EXPAND_DELAY}
+                                >
+                                    <div className={b('item')}>{child}</div>
+                                </Tooltip>
+                            );
+                        }
+
                         return (
-                            <Tooltip
-                                key={getChildKey(child, index)}
-                                content={title}
-                                placement="top"
-                                openDelay={ASIDE_HEADER_EXPAND_DELAY}
-                            >
-                                <div className={b('item')}>{renderedChild}</div>
-                            </Tooltip>
+                            <div key={getChildKey(child, index)} className={b('item')}>
+                                {child}
+                            </div>
                         );
-                    }
-
-                    return (
-                        <div key={getChildKey(child, index)} className={b('item')}>
-                            {renderedChild}
-                        </div>
-                    );
-                })}
+                    })}
+                </FooterLayoutContext.Provider>
 
                 {hiddenChildren.length > 0 && (
                     <div className={b('item', {more: true})}>
