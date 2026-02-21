@@ -51,7 +51,7 @@ $border-color: var(--gn-aside-bottom-divider-color, var(--g-color-line-generic))
     &__after {
         width: 100%;
         height: var(--_--item-height);
-        margin-top: 2px;
+        margin-block: 2px;
     }
 
     &__dropdown-switcher {
