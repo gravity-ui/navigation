@@ -70,7 +70,7 @@ $block: '.#{variables.$ns}aside-header';
 
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
+            overflow: hidden;
             width: inherit;
             height: inherit;
             position: relative;
