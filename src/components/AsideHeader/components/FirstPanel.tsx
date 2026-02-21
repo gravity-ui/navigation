@@ -41,9 +41,9 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         qa,
         onExpand,
         onFold,
+        setCollapseBlocker,
         isExpanded,
         isCompactMode,
-        hasPanelOpen,
     } = useAsideHeaderInnerContext();
 
     const flatListItems = useGroupedMenuItems(menuItems, menuGroups);
@@ -71,6 +71,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     isPinned={pinned}
                     isExpanded={isExpanded}
                     renderAfter={renderFooterAfter}
+                    setCollapseBlocker={setCollapseBlocker}
                 >
                     {footerResult}
                 </FooterBar>
@@ -78,7 +79,14 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         }
 
         return footerResult;
-    }, [footerResult, pinned, isExpanded, canRenderFooterInHorizontalMode, renderFooterAfter]);
+    }, [
+        footerResult,
+        pinned,
+        isExpanded,
+        canRenderFooterInHorizontalMode,
+        setCollapseBlocker,
+        renderFooterAfter,
+    ]);
 
     return (
         <React.Fragment>
@@ -91,8 +99,8 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     className={b('aside', {['compact-mode']: isCompactMode}, className)}
                     style={{width: size}}
                     data-qa={qa}
-                    onMouseEnter={hasPanelOpen ? undefined : onExpand}
-                    onMouseLeave={hasPanelOpen ? undefined : onFold}
+                    onMouseEnter={onExpand}
+                    onMouseLeave={onFold}
                 >
                     <div className={b('aside-popup-anchor')} ref={asideRef} />
                     {customBackground && (
