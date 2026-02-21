@@ -62,7 +62,7 @@ export default {
 
 const Template: StoryFn<FooterBarProps> = (args) => <FooterBar {...args} />;
 
-// In horizontal mode (isPinned=true), FooterBar automatically sets  (hides title)
+// In horizontal mode (isPinned=true), FooterBar automatically sets renders items as icons only (hides title)
 export const HorizontalPinned = Template.bind({});
 HorizontalPinned.args = {
     children: [
@@ -99,7 +99,7 @@ VerticalExpanded.args = {
     isExpanded: true,
 };
 
-// Horizontal mode with overflow - FooterBar sets for visible items
+// Horizontal mode with overflow - FooterBar limits visible items and shows overflow menu
 export const HorizontalWithOverflow = Template.bind({});
 HorizontalWithOverflow.args = {
     children: [
