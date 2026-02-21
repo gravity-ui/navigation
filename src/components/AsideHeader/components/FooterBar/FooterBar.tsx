@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {Ellipsis} from '@gravity-ui/icons';
 import {DropdownMenu, Tooltip} from '@gravity-ui/uikit';
@@ -8,11 +8,17 @@ import {ASIDE_HEADER_EXPAND_DELAY} from '../../../constants';
 import {createBlock} from '../../../utils/cn';
 import {FooterLayoutContext, FooterLayoutContextValue} from '../../FooterLayoutContext';
 import i18n from '../../i18n';
-import {FooterItem} from '../FooterItem/FooterItem';
+import {FooterItem, FooterItemProps} from '../FooterItem/FooterItem';
 
 import {MAX_VISIBLE_ITEMS} from './constants';
 
 import styles from './FooterBar.module.scss';
+
+const isValidFooterElement = (
+    child: React.ReactNode,
+): child is React.ReactElement<FooterItemProps> => {
+    return React.isValidElement(child);
+};
 
 const getChildKey = (child: React.ReactNode, fallbackIndex: number): string | number => {
     if (React.isValidElement(child) && child.key) {
@@ -49,6 +55,18 @@ export const FooterBar: React.FC<FooterBarProps> = ({
     // If only 1 element, render in vertical mode regardless of isPinned
     const isHorizontal = isPinned && childArray.length > 1;
 
+    const renderDropdownChild = useCallback((child: React.ReactNode): React.ReactNode => {
+        if (!isValidFooterElement(child)) {
+            return child;
+        }
+
+        // In dropdown, always show text
+        return React.cloneElement(child, {
+            isExpanded: true,
+            layout: 'vertical',
+        });
+    }, []);
+
     const {visibleChildren, hiddenChildren} = useMemo(() => {
         if (childArray.length <= maxVisibleItems) {
             return {
@@ -76,10 +94,10 @@ export const FooterBar: React.FC<FooterBarProps> = ({
     const dropdownItems: DropdownMenuItem[] = useMemo(
         () =>
             hiddenChildren.map((child) => ({
-                text: child,
+                text: renderDropdownChild(child),
                 action: () => {}, // clicks are handled by the child itself
             })),
-        [hiddenChildren],
+        [hiddenChildren, renderDropdownChild],
     );
 
     // Get title from child props for tooltip
