@@ -63,7 +63,7 @@ $border-color: var(--gn-aside-bottom-divider-color, var(--g-color-line-generic))
         padding: var(--g-spacing-1);
 
         // Style dropdown menu items with consistent height
-        :global(.g-menu__item) {
+        :global(.g-menu) :global(.g-menu__list-item) :global(.g-menu__item) {
             height: var(--_--item-height);
             padding: 0;
         }
