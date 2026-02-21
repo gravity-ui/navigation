@@ -6,7 +6,7 @@ import type {DropdownMenuItem} from '@gravity-ui/uikit';
 
 import {ASIDE_HEADER_EXPAND_DELAY} from '../../../constants';
 import {createBlock} from '../../../utils/cn';
-import {FooterLayoutContext} from '../../FooterLayoutContext';
+import {FooterLayoutContext, FooterLayoutContextValue} from '../../FooterLayoutContext';
 import i18n from '../../i18n';
 import {FooterItem} from '../FooterItem/FooterItem';
 
@@ -65,6 +65,14 @@ export const FooterBar: React.FC<FooterBarProps> = ({
         };
     }, [childArray, maxVisibleItems]);
 
+    const value: FooterLayoutContextValue = useMemo(
+        () => ({
+            layout: isHorizontal ? 'horizontal' : 'vertical',
+            isExpanded,
+        }),
+        [isHorizontal, isExpanded],
+    );
+
     const dropdownItems: DropdownMenuItem[] = useMemo(
         () =>
             hiddenChildren.map((child) => ({
@@ -85,12 +93,7 @@ export const FooterBar: React.FC<FooterBarProps> = ({
     return (
         <div className={b()}>
             <div className={b('items', {horizontal: isHorizontal})}>
-                <FooterLayoutContext.Provider
-                    value={{
-                        layout: isHorizontal ? 'horizontal' : 'vertical',
-                        isExpanded,
-                    }}
-                >
+                <FooterLayoutContext.Provider value={value}>
                     {visibleChildren.map((child, index) => {
                         const title = getChildTitle(child);
 
