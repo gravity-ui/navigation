@@ -27,6 +27,14 @@ const getChildKey = (child: React.ReactNode, fallbackIndex: number): string | nu
     return fallbackIndex;
 };
 
+// Get title from child props for tooltip
+const getChildTitle = (child: React.ReactNode): React.ReactNode => {
+    if (React.isValidElement(child) && child.props) {
+        return (child.props as {title?: React.ReactNode}).title;
+    }
+    return undefined;
+};
+
 const b = createBlock('footer-bar', styles);
 
 export interface FooterBarProps {
@@ -99,14 +107,6 @@ export const FooterBar: React.FC<FooterBarProps> = ({
             })),
         [hiddenChildren, renderDropdownChild],
     );
-
-    // Get title from child props for tooltip
-    const getChildTitle = (child: React.ReactNode): React.ReactNode => {
-        if (React.isValidElement(child) && child.props) {
-            return (child.props as {title?: React.ReactNode}).title;
-        }
-        return undefined;
-    };
 
     return (
         <div className={b()}>
