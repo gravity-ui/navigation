@@ -145,7 +145,7 @@ $block: '.#{variables.$ns}aside-header';
     }
 
     &__content {
-        width: calc(100% - var(--gn-aside-header-size));
+        width: 100%;
         margin-top: var(--gn-top-alert-height, 0);
         z-index: var(--gn-aside-header-content-z-index, 95);
 
