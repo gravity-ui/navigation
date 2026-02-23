@@ -4,7 +4,13 @@ import {MenuItem} from '../types';
 
 import {AsideHeaderInnerContextType} from './AsideHeaderContext';
 import {AllPagesPanel, getAllPagesMenuItem} from './components/AllPagesPanel';
-import {AsideHeaderItem, AsideHeaderProps, InnerPanels, PanelItemProps} from './types';
+import {
+    AsideHeaderItem,
+    AsideHeaderProps,
+    InnerPanels,
+    PanelItemProps,
+    SetCollapseBlocker,
+} from './types';
 
 const EMPTY_MENU_ITEMS: AsideHeaderItem[] = [];
 
@@ -15,6 +21,7 @@ export const useAsideHeaderInnerContextValue = (
         isExpanded: boolean;
         onExpand?: () => void;
         onFold?: () => void;
+        setCollapseBlocker?: SetCollapseBlocker;
     },
 ): AsideHeaderInnerContextType => {
     const {
@@ -25,6 +32,7 @@ export const useAsideHeaderInnerContextValue = (
         defaultMenuGroups,
         panelItems,
         isCompactMode = false,
+        setCollapseBlocker,
         onMenuItemsChanged,
         onMenuGroupsChanged,
         onAllPagesClick,
@@ -116,8 +124,21 @@ export const useAsideHeaderInnerContextValue = (
 
     const hasPanelOpen = innerPanelItems?.some((p) => p.open) ?? false;
 
+    useEffect(() => {
+        if (hasPanelOpen) {
+            setCollapseBlocker?.(true);
+        } else {
+            setCollapseBlocker?.(false);
+        }
+
+        return () => {
+            setCollapseBlocker?.(false);
+        };
+    }, [hasPanelOpen, setCollapseBlocker]);
+
     return {
         ...props,
+        setCollapseBlocker,
         isCompactMode,
         onClosePanel: innerOnClosePanel,
         allPagesIsAvailable,
@@ -129,6 +150,5 @@ export const useAsideHeaderInnerContextValue = (
         size,
         onItemClick,
         onToggleGroupCollapsed,
-        hasPanelOpen,
     };
 };

@@ -44,7 +44,7 @@ const Layout = ({
     onChangePinned,
     isCompactMode,
 }: PageLayoutProps) => {
-    const {isExpanded, onExpand, onFold} = useIsExpanded(pinned);
+    const {isExpanded, onExpand, onFold, setCollapseBlocker} = useIsExpanded(pinned);
 
     const size = isExpanded ? ASIDE_HEADER_EXPANDED_WIDTH : getCollapsedWidth(isCompactMode);
 
@@ -56,8 +56,9 @@ const Layout = ({
             onChangePinned,
             onExpand,
             onFold,
+            setCollapseBlocker,
         }),
-        [size, pinned, isExpanded, onChangePinned, onExpand, onFold],
+        [size, pinned, isExpanded, onChangePinned, onExpand, onFold, setCollapseBlocker],
     );
 
     const estimatedTopAlertHeight = calcEstimatedTopAlertHeight(topAlert);

@@ -2,7 +2,7 @@ import React from 'react';
 
 import {MenuGroup} from '../types';
 
-import {AsideHeaderInnerProps, AsideHeaderItem} from './types';
+import {AsideHeaderInnerProps, AsideHeaderItem, SetCollapseBlocker} from './types';
 
 export interface AsideHeaderInnerContextType extends AsideHeaderInnerProps {
     menuItems: AsideHeaderItem[];
@@ -20,8 +20,8 @@ export interface AsideHeaderInnerContextType extends AsideHeaderInnerProps {
     onExpand?: () => void;
     onFold?: () => void;
     isExpanded: boolean;
-    /** True when at least one panel (Drawer) is open. */
-    hasPanelOpen?: boolean;
+    /** Registers a temporary block on collapse (e.g. while dropdown is open). Returns release function. */
+    setCollapseBlocker?: SetCollapseBlocker;
 }
 
 const AsideHeaderInnerContext = React.createContext<AsideHeaderInnerContextType | undefined>(
@@ -48,6 +48,8 @@ export interface AsideHeaderContextType {
     onChangePinned?: (pinned: boolean) => void;
     onExpand?: () => void;
     onFold?: () => void;
+    /** Registers a temporary block on collapse (e.g. while dropdown is open). Returns release function. */
+    setCollapseBlocker?: SetCollapseBlocker;
 }
 
 const AsideHeaderContext = React.createContext<AsideHeaderContextType | undefined>(undefined);

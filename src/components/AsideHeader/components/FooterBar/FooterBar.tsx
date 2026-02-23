@@ -1,13 +1,14 @@
 import React, {useCallback, useMemo} from 'react';
 
 import {Ellipsis} from '@gravity-ui/icons';
-import {DropdownMenu, Tooltip} from '@gravity-ui/uikit';
 import type {DropdownMenuItem} from '@gravity-ui/uikit';
+import {DropdownMenu, Tooltip} from '@gravity-ui/uikit';
 
 import {ASIDE_HEADER_EXPAND_DELAY} from '../../../constants';
 import {createBlock} from '../../../utils/cn';
 import {FooterLayoutContext, FooterLayoutContextValue} from '../../FooterLayoutContext';
 import i18n from '../../i18n';
+import {SetCollapseBlocker} from '../../types';
 import {FooterItem, FooterItemProps} from '../FooterItem/FooterItem';
 
 import {MAX_VISIBLE_ITEMS} from './constants';
@@ -42,6 +43,8 @@ export interface FooterBarProps {
     children: React.ReactNode[];
     /** Render function for additional content after items (e.g., user profile) */
     renderAfter?: () => React.ReactNode;
+    /** Registers a temporary block on collapse (e.g. while dropdown is open). Returns release function. */
+    setCollapseBlocker?: SetCollapseBlocker;
     /** When `true`, the navigation is pinned (expanded). Items render horizontally. */
     isPinned: boolean;
     /** When `true`, the navigation is expanded (hover or pinned). */
@@ -53,15 +56,22 @@ export interface FooterBarProps {
 export const FooterBar: React.FC<FooterBarProps> = ({
     children,
     renderAfter,
+    setCollapseBlocker,
     isPinned,
     isExpanded,
     maxVisibleItems = MAX_VISIBLE_ITEMS,
 }) => {
-    // Convert children to array and filter out nulls
     const childArray = React.Children.toArray(children).filter(Boolean);
 
     // If only 1 element, render in vertical mode regardless of isPinned
     const isHorizontal = isPinned && childArray.length > 1;
+
+    const handleDropdownOpenToggle = useCallback(
+        (isOpened: boolean) => {
+            setCollapseBlocker?.(isOpened);
+        },
+        [setCollapseBlocker],
+    );
 
     const renderDropdownChild = useCallback((child: React.ReactNode): React.ReactNode => {
         if (!isValidFooterElement(child)) {
@@ -140,6 +150,7 @@ export const FooterBar: React.FC<FooterBarProps> = ({
                 {hiddenChildren.length > 0 && (
                     <div className={b('item', {more: true})}>
                         <DropdownMenu
+                            onOpenToggle={handleDropdownOpenToggle}
                             items={dropdownItems}
                             popupProps={{
                                 placement: isHorizontal ? 'top' : 'right',
