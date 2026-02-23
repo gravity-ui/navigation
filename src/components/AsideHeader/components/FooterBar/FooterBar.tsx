@@ -7,8 +7,8 @@ import {DropdownMenu, Tooltip} from '@gravity-ui/uikit';
 import {ASIDE_HEADER_EXPAND_DELAY} from '../../../constants';
 import {createBlock} from '../../../utils/cn';
 import {FooterLayoutContext, FooterLayoutContextValue} from '../../FooterLayoutContext';
-import {SetCollapseBlocker} from '../../hooks/useIsExpanded';
 import i18n from '../../i18n';
+import {SetCollapseBlocker} from '../../types';
 import {FooterItem, FooterItemProps} from '../FooterItem/FooterItem';
 
 import {MAX_VISIBLE_ITEMS} from './constants';

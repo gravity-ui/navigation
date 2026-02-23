@@ -2,8 +2,7 @@ import React from 'react';
 
 import {MenuGroup} from '../types';
 
-import {SetCollapseBlocker} from './hooks/useIsExpanded';
-import {AsideHeaderInnerProps, AsideHeaderItem} from './types';
+import {AsideHeaderInnerProps, AsideHeaderItem, SetCollapseBlocker} from './types';
 
 export interface AsideHeaderInnerContextType extends AsideHeaderInnerProps {
     menuItems: AsideHeaderItem[];

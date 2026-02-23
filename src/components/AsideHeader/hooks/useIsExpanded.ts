@@ -1,11 +1,9 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 
 import {ASIDE_HEADER_EXPAND_DELAY, ASIDE_HEADER_EXPAND_TRANSITION_DELAY} from '../../constants';
+import {SetCollapseBlocker} from '../types';
 
 import {useDelayedToggle} from './useDelayedToggle';
-
-/** Returns a release function to remove the block. */
-export type SetCollapseBlocker = (isBlocked: boolean) => void;
 
 interface UseIsExpandedResult {
     isExpanded: boolean;

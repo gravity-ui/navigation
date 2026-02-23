@@ -4,8 +4,13 @@ import {MenuItem} from '../types';
 
 import {AsideHeaderInnerContextType} from './AsideHeaderContext';
 import {AllPagesPanel, getAllPagesMenuItem} from './components/AllPagesPanel';
-import {SetCollapseBlocker} from './hooks/useIsExpanded';
-import {AsideHeaderItem, AsideHeaderProps, InnerPanels, PanelItemProps} from './types';
+import {
+    AsideHeaderItem,
+    AsideHeaderProps,
+    InnerPanels,
+    PanelItemProps,
+    SetCollapseBlocker,
+} from './types';
 
 const EMPTY_MENU_ITEMS: AsideHeaderItem[] = [];
 

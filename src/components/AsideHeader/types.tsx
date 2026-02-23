@@ -152,3 +152,6 @@ export interface GroupedMenuItem extends MenuItem {
 }
 
 export type MenuItemsWithGroups = MenuItem | GroupedMenuItem;
+
+/** Toggles a collapse blocker: pass `true` to block collapsing, `false` to unblock. */
+export type SetCollapseBlocker = (isBlocked: boolean) => void;
