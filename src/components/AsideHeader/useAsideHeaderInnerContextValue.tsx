@@ -130,6 +130,10 @@ export const useAsideHeaderInnerContextValue = (
         } else {
             setCollapseBlocker?.(false);
         }
+
+        return () => {
+            setCollapseBlocker?.(false);
+        };
     }, [hasPanelOpen, setCollapseBlocker]);
 
     return {
