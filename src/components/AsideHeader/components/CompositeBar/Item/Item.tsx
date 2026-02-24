@@ -90,15 +90,22 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const ref = React.useRef<HTMLAnchorElement & HTMLButtonElement>(null);
     const anchorRef = anchoreRefProp?.current ? anchoreRefProp : ref;
     const highlightedRef = React.useRef<HTMLDivElement>(null);
-    const collapseBlockedByPopupRef = React.useRef(false);
 
     React.useEffect(() => {
+        let didBlock = false;
+
+        if (popupVisible) {
+            didBlock = true;
+
+            setCollapseBlocker?.(true);
+        }
+
         return () => {
-            if (collapseBlockedByPopupRef.current) {
+            if (didBlock) {
                 setCollapseBlocker?.(false);
             }
         };
-    }, [setCollapseBlocker]);
+    }, [popupVisible, setCollapseBlocker]);
 
     const type = props.type || ITEM_TYPE_REGULAR;
     const current = props.current || false;
@@ -125,12 +132,9 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 return;
             }
 
-            collapseBlockedByPopupRef.current = newOpen;
-            setCollapseBlocker?.(newOpen);
-
             onOpenChangePopup?.(newOpen, event, reason);
         },
-        [onOpenChangePopup, setCollapseBlocker],
+        [onOpenChangePopup],
     );
 
     if (type === 'divider') {
@@ -155,7 +159,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     data-type={type}
                     aria-label={ariaLabel}
                     onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-                        onItemClick?.(props, false, event);
+                        onItemClick?.(props, false, event, {setCollapseBlocker});
                     }}
                     onClickCapture={onItemClickCapture}
                     onMouseEnter={() => {
@@ -250,7 +254,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     iconNode={highlightedNode}
                     iconRef={highlightedRef}
                     onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) =>
-                        onItemClick?.(props, false, event)
+                        onItemClick?.(props, false, event, {setCollapseBlocker})
                     }
                     onClickCapture={onItemClickCapture}
                 />
