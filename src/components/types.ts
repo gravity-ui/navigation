@@ -34,6 +34,8 @@ export interface MenuItem extends QAProps {
             pinned: boolean;
             item: MenuItem;
             ref: React.RefObject<HTMLElement>;
+            /** Call with `true` when a popup opens, `false` when it closes, to block sidebar collapse while open. */
+            setCollapseBlocker?: (isBlocked: boolean) => void;
         },
     ) => React.ReactNode;
     preventUserRemoving?: boolean;

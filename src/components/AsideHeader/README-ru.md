@@ -94,7 +94,10 @@ const menuItems: AsideHeaderItem[] = [
           <Popup
             open={popupOpen}
             anchorRef={anchorRef}
-            onOpenChange={setPopupOpen}
+            onOpenChange={(open) => {
+              setPopupOpen(open);
+              opts.setCollapseBlocker?.(open); // блокировать сворачивание сайдбара пока попап открыт
+            }}
             placement="right-start"
           >
             <div style={{padding: '12px'}}>Содержимое попапа</div>
@@ -105,6 +108,8 @@ const menuItems: AsideHeaderItem[] = [
   },
 ];
 ```
+
+Третий аргумент `opts` содержит `setCollapseBlocker(isBlocked: boolean)`. Вызывайте `opts.setCollapseBlocker(true)` при открытии попапа и `opts.setCollapseBlocker(false)` при закрытии, чтобы сайдбар не сворачивался пока попап открыт. Можно не использовать, если такое поведение не нужно.
 
 #### Выделение элемента
 

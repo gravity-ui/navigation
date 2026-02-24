@@ -41,8 +41,8 @@ const b = createBlock('footer-bar', styles);
 export interface FooterBarProps {
     /** Array of footer elements (ReactNode[]) */
     children: React.ReactNode[];
-    /** Render function for additional content after items (e.g., user profile) */
-    renderAfter?: () => React.ReactNode;
+    /** Render function for additional content after items (e.g., user profile). Receives options with setCollapseBlocker. */
+    renderAfter?: (options?: {setCollapseBlocker?: SetCollapseBlocker}) => React.ReactNode;
     /** Registers a temporary block on collapse (e.g. while dropdown is open). Returns release function. */
     setCollapseBlocker?: SetCollapseBlocker;
     /** When `true`, the navigation is pinned (expanded). Items render horizontally. */
@@ -175,7 +175,9 @@ export const FooterBar: React.FC<FooterBarProps> = ({
             </div>
 
             {renderAfter && (
-                <div className={b('after', {horizontal: isHorizontal})}>{renderAfter()}</div>
+                <div className={b('after', {horizontal: isHorizontal})}>
+                    {renderAfter({setCollapseBlocker})}
+                </div>
             )}
         </div>
     );

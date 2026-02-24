@@ -4,7 +4,7 @@ import {ChevronDown, ChevronRight} from '@gravity-ui/icons';
 import {List, ListSortParams} from '@gravity-ui/uikit';
 
 import {createBlock} from '../../../utils/cn';
-import {AsideHeaderItem, MenuItemsWithGroups} from '../../types';
+import {AsideHeaderItem, MenuItemsWithGroups, SetCollapseBlocker} from '../../types';
 import {UNGROUPED_ID} from '../AllPagesPanel/constants';
 
 import {Item, ItemProps} from './Item/Item';
@@ -18,7 +18,7 @@ const b = createBlock('composite-bar', styles);
 
 type CompositeBarProps = {
     type: 'menu' | 'subheader';
-
+    setCollapseBlocker?: SetCollapseBlocker;
     items?: MenuItemsWithGroups[];
     onItemClick?: (
         item: AsideHeaderItem,
@@ -71,6 +71,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
     onToggleMenuItemVisibility,
     onFirstLevelSortEnd,
     onSecondLevelSortEnd,
+    setCollapseBlocker,
     isCompactMode,
 }) => {
     const ref = useRef<List<AsideHeaderItem>>(null);
@@ -151,6 +152,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                                 editMode={editMode}
                                 onMouseLeave={onMouseLeave}
                                 onItemClick={onItemClickByIndex(itemIndex, item.onItemClick)}
+                                setCollapseBlocker={setCollapseBlocker}
                                 onToggleVisibility={
                                     onToggleMenuItemVisibility
                                         ? () => onToggleMenuItemVisibility(item)
@@ -183,6 +185,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                                     icon={groupIcon}
                                     isExpanded={isExpanded}
                                     editMode={editMode}
+                                    setCollapseBlocker={setCollapseBlocker}
                                     onMouseEnter={() => {
                                         setHoveredGroupId(item.id);
                                     }}
@@ -227,6 +230,7 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
                                                 isExpanded={isExpanded}
                                                 className={b('group-item')}
                                                 editMode={editMode}
+                                                setCollapseBlocker={setCollapseBlocker}
                                                 onMouseEnter={() => {
                                                     setHoveredGroupId(nestedItem.id);
                                                 }}
@@ -263,6 +267,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     onItemClick,
     onMoreClick,
     onToggleGroupCollapsed,
+    setCollapseBlocker,
     isExpanded,
     compositeId,
     className,
@@ -286,6 +291,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                     onItemClick={onItemClick}
                     onMoreClick={onMoreClick}
                     onToggleGroupCollapsed={onToggleGroupCollapsed}
+                    setCollapseBlocker={setCollapseBlocker}
                     editMode={editMode}
                     isCompactMode={isCompactMode}
                 />
@@ -301,6 +307,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                 isExpanded={isExpanded}
                 items={items}
                 onItemClick={onItemClick}
+                setCollapseBlocker={setCollapseBlocker}
                 editMode={editMode}
                 isCompactMode={isCompactMode}
             />

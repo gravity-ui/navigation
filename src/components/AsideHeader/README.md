@@ -94,7 +94,10 @@ const menuItems: AsideHeaderItem[] = [
           <Popup
             open={popupOpen}
             anchorRef={anchorRef}
-            onOpenChange={setPopupOpen}
+            onOpenChange={(open) => {
+              setPopupOpen(open);
+              opts.setCollapseBlocker?.(open); // block sidebar collapse while popup is open
+            }}
             placement="right-start"
           >
             <div style={{padding: '12px'}}>Popup content</div>
@@ -105,6 +108,8 @@ const menuItems: AsideHeaderItem[] = [
   },
 ];
 ```
+
+The third argument `opts` includes `setCollapseBlocker(isBlocked: boolean)`. Call `opts.setCollapseBlocker(true)` when your popup opens and `opts.setCollapseBlocker(false)` when it closes so the sidebar does not collapse while the popup is open. Omit if you do not need this behavior.
 
 #### Highlighting element
 

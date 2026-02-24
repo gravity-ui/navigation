@@ -53,8 +53,8 @@ interface AsideHeaderGeneralProps extends QAProps {
         asideRef: React.RefObject<HTMLDivElement>;
         isCompactMode?: boolean;
     }) => React.ReactNode | React.ReactNode[];
-    /** Render function for additional content after items (e.g., user profile) */
-    renderFooterAfter?: () => React.ReactNode;
+    /** Render function for additional content after items (e.g., user profile). Receives options with setCollapseBlocker to block sidebar collapse while a popup is open. */
+    renderFooterAfter?: (options?: {setCollapseBlocker?: SetCollapseBlocker}) => React.ReactNode;
     collapseButtonWrapper?: (
         defaultButton: React.ReactNode,
         data: {

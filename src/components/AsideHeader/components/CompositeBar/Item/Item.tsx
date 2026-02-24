@@ -4,11 +4,10 @@ import {Pin, PinFill} from '@gravity-ui/icons';
 import {Button, Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
 import {CSSTransition} from 'react-transition-group';
 
-import {AsideHeaderItem} from 'src/components/AsideHeader/types';
-
 import {ASIDE_HEADER_EXPAND_TRANSITION_DELAY, ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
 import {MakeItemParams} from '../../../../types';
 import {createBlock} from '../../../../utils/cn';
+import {AsideHeaderItem, SetCollapseBlocker} from '../../../types';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {ITEM_TYPE_REGULAR} from '../constants';
 
@@ -28,6 +27,8 @@ const itemTransitionClasses = {
 export interface ItemProps extends AsideHeaderItem {}
 
 interface ItemInnerProps extends ItemProps {
+    /** Registers a temporary block on collapse (e.g. while dropdown is open). Returns release function. */
+    setCollapseBlocker?: SetCollapseBlocker;
     /** When `true`, the item is displayed in expanded form. */
     isExpanded?: boolean;
     /** Layout mode: 'horizontal' shows icon only, 'vertical' shows icon and title. Used in FooterBar. */
@@ -81,6 +82,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         layout = 'vertical',
         editMode = false,
         onToggleVisibility,
+        setCollapseBlocker,
         hidden,
         preventUserRemoving,
     } = props;
@@ -88,6 +90,15 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const ref = React.useRef<HTMLAnchorElement & HTMLButtonElement>(null);
     const anchorRef = anchoreRefProp?.current ? anchoreRefProp : ref;
     const highlightedRef = React.useRef<HTMLDivElement>(null);
+    const collapseBlockedByPopupRef = React.useRef(false);
+
+    React.useEffect(() => {
+        return () => {
+            if (collapseBlockedByPopupRef.current) {
+                setCollapseBlocker?.(false);
+            }
+        };
+    }, [setCollapseBlocker]);
 
     const type = props.type || ITEM_TYPE_REGULAR;
     const current = props.current || false;
@@ -113,9 +124,13 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             ) {
                 return;
             }
+
+            collapseBlockedByPopupRef.current = newOpen;
+            setCollapseBlocker?.(newOpen);
+
             onOpenChangePopup?.(newOpen, event, reason);
         },
-        [onOpenChangePopup],
+        [onOpenChangePopup, setCollapseBlocker],
     );
 
     if (type === 'divider') {
@@ -206,7 +221,13 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     let highlightedNode = null;
     let node;
 
-    const opts = {pinned: Boolean(isExpanded), collapsed: false, item: props, ref};
+    const opts = {
+        pinned: Boolean(isExpanded),
+        collapsed: false,
+        item: props,
+        ref,
+        setCollapseBlocker,
+    };
 
     if (typeof itemWrapper === 'function') {
         node = itemWrapper(params, makeNode, opts) as React.ReactElement;

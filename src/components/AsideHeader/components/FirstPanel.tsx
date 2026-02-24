@@ -124,6 +124,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                                 onMoreClick={onMenuMoreClick}
                                 onToggleGroupCollapsed={onToggleGroupCollapsed}
                                 isCompactMode={isCompactMode}
+                                setCollapseBlocker={setCollapseBlocker}
                             />
                         ) : (
                             <div className={b('menu-items')} />
