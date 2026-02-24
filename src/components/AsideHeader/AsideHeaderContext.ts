@@ -16,6 +16,7 @@ export interface AsideHeaderInnerContextType extends AsideHeaderInnerProps {
         item: AsideHeaderItem,
         collapsed: boolean,
         event: React.MouseEvent<HTMLElement, MouseEvent>,
+        options: {setCollapseBlocker: SetCollapseBlocker | undefined},
     ) => void;
     onExpand?: () => void;
     onFold?: () => void;

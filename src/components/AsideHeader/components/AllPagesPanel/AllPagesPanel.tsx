@@ -5,7 +5,7 @@ import {Button, Flex, Icon, ListSortParams, Text, Tooltip} from '@gravity-ui/uik
 
 import {createBlock} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
-import {AsideHeaderItem, MenuItemsWithGroups} from '../../types';
+import {AsideHeaderItem, MenuItemsWithGroups, SetCollapseBlocker} from '../../types';
 import {CompositeBarView} from '../CompositeBar/CompositeBar';
 
 import {ALL_PAGES_ID} from './constants';
@@ -80,9 +80,15 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
             item: AsideHeaderItem,
             collapsed: boolean,
             event: React.MouseEvent<HTMLElement, MouseEvent>,
+            options: {setCollapseBlocker: SetCollapseBlocker | undefined},
         ) => {
             // TODO: make event an optional argument
-            item.onItemClick?.(item, collapsed, event as React.MouseEvent<HTMLElement, MouseEvent>);
+            item.onItemClick?.(
+                item,
+                collapsed,
+                event as React.MouseEvent<HTMLElement, MouseEvent>,
+                options,
+            );
         },
         [],
     );

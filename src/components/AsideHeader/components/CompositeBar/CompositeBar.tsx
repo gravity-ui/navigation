@@ -24,7 +24,7 @@ type CompositeBarProps = {
         item: AsideHeaderItem,
         collapsed: boolean,
         event: React.MouseEvent<HTMLElement, MouseEvent>,
-        options: {setCollapseBlocker?: SetCollapseBlocker},
+        options: {setCollapseBlocker: SetCollapseBlocker | undefined},
     ) => void;
     menuMoreTitle?: string;
     onMoreClick?: () => void;
