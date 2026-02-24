@@ -2,6 +2,8 @@ import React, {HTMLAttributeAnchorTarget} from 'react';
 
 import {AlertProps, IconProps, QAProps} from '@gravity-ui/uikit';
 
+import {SetCollapseBlocker} from './AsideHeader/types';
+
 export type MenuItemType = 'regular' | 'action' | 'divider';
 
 export type OpenModalSubscriber = (open: boolean) => void;
@@ -24,6 +26,7 @@ export interface MenuItem extends QAProps {
         item: MenuItem,
         collapsed: boolean,
         event: React.MouseEvent<HTMLElement, MouseEvent>,
+        options: {setCollapseBlocker: SetCollapseBlocker | undefined},
     ) => void;
     onItemClickCapture?: (event: React.SyntheticEvent) => void;
     itemWrapper?: (
@@ -35,7 +38,7 @@ export interface MenuItem extends QAProps {
             item: MenuItem;
             ref: React.RefObject<HTMLElement>;
             /** Call with `true` when a popup opens, `false` when it closes, to block sidebar collapse while open. */
-            setCollapseBlocker?: (isBlocked: boolean) => void;
+            setCollapseBlocker: SetCollapseBlocker | undefined;
         },
     ) => React.ReactNode;
     preventUserRemoving?: boolean;

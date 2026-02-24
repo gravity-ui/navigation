@@ -24,6 +24,7 @@ type CompositeBarProps = {
         item: AsideHeaderItem,
         collapsed: boolean,
         event: React.MouseEvent<HTMLElement, MouseEvent>,
+        options: {setCollapseBlocker?: SetCollapseBlocker},
     ) => void;
     menuMoreTitle?: string;
     onMoreClick?: () => void;
@@ -88,12 +89,17 @@ export const CompositeBarView: FC<CompositeBarViewProps> = ({
             _itemIndex: number,
             orginalItemClick: AsideHeaderItem['onItemClick'],
         ): ItemProps['onItemClick'] =>
-            (item, collapsed, event) => {
+            (item, collapsed, event, options) => {
                 // Handle clicks on the "more" button (collapse item)
                 if (item.id === COLLAPSE_ITEM_ID && collapsed) {
                     onMoreClick?.();
                 } else {
-                    onItemClick?.({...item, onItemClick: orginalItemClick}, collapsed, event);
+                    onItemClick?.(
+                        {...item, onItemClick: orginalItemClick},
+                        collapsed,
+                        event,
+                        options,
+                    );
                 }
             },
         [onItemClick, onMoreClick],

@@ -101,6 +101,7 @@ export interface AsideHeaderItem extends MenuItem {
         item: AsideHeaderItem,
         collapsed: boolean,
         event: React.MouseEvent<HTMLElement, MouseEvent>,
+        options: {setCollapseBlocker: SetCollapseBlocker | undefined},
     ) => void;
     bringForward?: boolean;
     /** When `true`, forces the item to display in expanded form. */

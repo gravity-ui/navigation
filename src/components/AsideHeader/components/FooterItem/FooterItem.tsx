@@ -32,6 +32,7 @@ export function FooterItem(props: FooterItemProps) {
             layout={effectiveLayout}
             iconSize={ASIDE_HEADER_ICON_SIZE}
             isExpanded={effectiveIsExpanded}
+            setCollapseBlocker={context?.setCollapseBlocker}
             className={`${b({collapsed: !effectiveIsExpanded, layout: effectiveLayout})} ${bGlobal()}`}
         />
     );

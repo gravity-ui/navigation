@@ -25,6 +25,7 @@ export const Header = () => {
         isExpanded,
         onItemClick,
         onClosePanel,
+        setCollapseBlocker,
         headerDecoration,
         subheaderItems,
         hideCollapseButton,
@@ -72,6 +73,7 @@ export const Header = () => {
                 items={items}
                 onItemClick={onItemClick}
                 isCompactMode={isCompactMode}
+                setCollapseBlocker={setCollapseBlocker}
             />
 
             {headerDecoration && (
