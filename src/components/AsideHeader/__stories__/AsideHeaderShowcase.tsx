@@ -173,12 +173,14 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
                                 </div>
                             }
                             tooltipText={'Minor issue (Now)'}
-                            onItemClick={() => {
+                            onItemClick={(_, __, ___, {setCollapseBlocker}) => {
+                                setCollapseBlocker?.(true);
+
                                 setOpenPanel(undefined);
                                 setPopupVisible(!popupVisible);
                             }}
                             enableTooltip={false}
-                            itemWrapper={(params, makeItem) => (
+                            itemWrapper={(params, makeItem, {setCollapseBlocker}) => (
                                 <React.Fragment>
                                     {makeItem(params)}
                                     <Popup
@@ -189,6 +191,8 @@ export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderSh
                                         offset={{mainAxis: 10, crossAxis: 10}}
                                         anchorElement={asideRef.current}
                                         onOpenChange={(open) => {
+                                            setCollapseBlocker?.(open);
+
                                             if (!open) setPopupVisible(false);
                                         }}
                                     >
