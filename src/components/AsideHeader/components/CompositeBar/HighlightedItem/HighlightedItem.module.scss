@@ -13,8 +13,8 @@ $block: '.#{variables.$ns}composite-bar-highlighted-item';
     justify-content: center;
 
     &__icon {
-        width: var(--_--item-height);
-        height: var(--_--item-height);
+        width: var(--_--item-height, variables.$item-height);
+        height: var(--_--item-height, variables.$item-height);
         border-radius: 7px;
         cursor: pointer;
         background-color: var(--gn-aside-header-background-color, var(--_--background-color));
