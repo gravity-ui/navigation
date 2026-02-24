@@ -39,6 +39,12 @@ $border-color: var(--gn-aside-bottom-divider-color, var(--g-color-line-generic))
             }
         }
 
+        #{$block}__items_vertical & {
+            &:not(:last-child) {
+                margin-bottom: 2px;
+            }
+        }
+
         #{$block}__items:not(#{$block}__items_horizontal) & {
             width: 100%;
             height: var(--_--item-height);
