@@ -62,7 +62,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         asideRef,
         isCompactMode,
     });
-    const canRenderFooterInHorizontalMode = Array.isArray(footerResult);
+    const canRenderFooterInHorizontalMode = Array.isArray(footerResult) && footerResult.length > 1;
 
     const renderFooterContent = useCallback(() => {
         if (canRenderFooterInHorizontalMode) {
