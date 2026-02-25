@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {memo, useCallback, useMemo} from 'react';
 
 import {Ellipsis} from '@gravity-ui/icons';
 import type {DropdownMenuItem} from '@gravity-ui/uikit';
@@ -53,134 +53,139 @@ export interface FooterBarProps {
     maxVisibleItems?: number;
 }
 
-export const FooterBar: React.FC<FooterBarProps> = ({
-    children,
-    renderAfter,
-    setCollapseBlocker,
-    isPinned,
-    isExpanded,
-    maxVisibleItems = MAX_VISIBLE_ITEMS,
-}) => {
-    const childArray = React.Children.toArray(children).filter(Boolean);
+export const FooterBar = memo<FooterBarProps>(
+    ({
+        children,
+        renderAfter,
+        setCollapseBlocker,
+        isPinned,
+        isExpanded,
+        maxVisibleItems = MAX_VISIBLE_ITEMS,
+    }) => {
+        const childArray = React.Children.toArray(children).filter(Boolean);
 
-    // If only 1 element, render in vertical mode regardless of isPinned
-    const isHorizontal = isPinned && childArray.length > 1;
+        // If only 1 element, render in vertical mode regardless of isPinned
+        const isHorizontal = isPinned && childArray.length > 1;
 
-    const handleDropdownOpenToggle = useCallback(
-        (isOpened: boolean) => {
-            setCollapseBlocker?.(isOpened);
-        },
-        [setCollapseBlocker],
-    );
+        const handleDropdownOpenToggle = useCallback(
+            (isOpened: boolean) => {
+                setCollapseBlocker?.(isOpened);
+            },
+            [setCollapseBlocker],
+        );
 
-    const renderDropdownChild = useCallback((child: React.ReactNode): React.ReactNode => {
-        if (!isValidFooterElement(child)) {
-            return child;
-        }
+        const renderDropdownChild = useCallback((child: React.ReactNode): React.ReactNode => {
+            if (!isValidFooterElement(child)) {
+                return child;
+            }
 
-        // In dropdown, always show text
-        return React.cloneElement(child, {
-            isExpanded: true,
-            layout: 'vertical',
-        });
-    }, []);
+            // In dropdown, always show text
+            return React.cloneElement(child, {
+                isExpanded: true,
+                layout: 'vertical',
+            });
+        }, []);
 
-    const {visibleChildren, hiddenChildren} = useMemo(() => {
-        if (childArray.length <= maxVisibleItems) {
+        const {visibleChildren, hiddenChildren} = useMemo(() => {
+            if (childArray.length <= maxVisibleItems) {
+                return {
+                    visibleChildren: childArray,
+                    hiddenChildren: [],
+                };
+            }
+
+            // Reserve one slot for "more" button
+            const visibleCount = maxVisibleItems - 1;
             return {
-                visibleChildren: childArray,
-                hiddenChildren: [],
+                visibleChildren: childArray.slice(0, visibleCount),
+                hiddenChildren: childArray.slice(visibleCount),
             };
-        }
+        }, [childArray, maxVisibleItems]);
 
-        // Reserve one slot for "more" button
-        const visibleCount = maxVisibleItems - 1;
-        return {
-            visibleChildren: childArray.slice(0, visibleCount),
-            hiddenChildren: childArray.slice(visibleCount),
-        };
-    }, [childArray, maxVisibleItems]);
+        const value: FooterLayoutContextValue = useMemo(
+            () => ({
+                layout: isHorizontal ? 'horizontal' : 'vertical',
+                isExpanded,
+            }),
+            [isHorizontal, isExpanded],
+        );
 
-    const value: FooterLayoutContextValue = useMemo(
-        () => ({
-            layout: isHorizontal ? 'horizontal' : 'vertical',
-            isExpanded,
-        }),
-        [isHorizontal, isExpanded],
-    );
+        const dropdownItems: DropdownMenuItem[] = useMemo(
+            () =>
+                hiddenChildren.map((child) => ({
+                    text: renderDropdownChild(child),
+                    action: () => {}, // clicks are handled by the child itself
+                })),
+            [hiddenChildren, renderDropdownChild],
+        );
 
-    const dropdownItems: DropdownMenuItem[] = useMemo(
-        () =>
-            hiddenChildren.map((child) => ({
-                text: renderDropdownChild(child),
-                action: () => {}, // clicks are handled by the child itself
-            })),
-        [hiddenChildren, renderDropdownChild],
-    );
+        const afterContent = React.useMemo(
+            () => (renderAfter ? renderAfter({setCollapseBlocker}) : null),
+            [renderAfter, setCollapseBlocker],
+        );
 
-    return (
-        <div className={b()}>
-            <div className={b('items', {horizontal: isHorizontal})}>
-                <FooterLayoutContext.Provider value={value}>
-                    {visibleChildren.map((child, index) => {
-                        const title = getChildTitle(child);
+        return (
+            <div className={b()}>
+                <div className={b('items', {horizontal: isHorizontal})}>
+                    <FooterLayoutContext.Provider value={value}>
+                        {visibleChildren.map((child, index) => {
+                            const title = getChildTitle(child);
 
-                        // In horizontal mode, wrap in Tooltip to show title on hover
-                        if (isHorizontal && title) {
+                            // In horizontal mode, wrap in Tooltip to show title on hover
+                            if (isHorizontal && title) {
+                                return (
+                                    <Tooltip
+                                        key={getChildKey(child, index)}
+                                        content={title}
+                                        placement="top"
+                                        openDelay={ASIDE_HEADER_EXPAND_DELAY}
+                                    >
+                                        <div className={b('item')}>{child}</div>
+                                    </Tooltip>
+                                );
+                            }
+
                             return (
-                                <Tooltip
-                                    key={getChildKey(child, index)}
-                                    content={title}
-                                    placement="top"
-                                    openDelay={ASIDE_HEADER_EXPAND_DELAY}
-                                >
-                                    <div className={b('item')}>{child}</div>
-                                </Tooltip>
+                                <div key={getChildKey(child, index)} className={b('item')}>
+                                    {child}
+                                </div>
                             );
-                        }
+                        })}
+                    </FooterLayoutContext.Provider>
 
-                        return (
-                            <div key={getChildKey(child, index)} className={b('item')}>
-                                {child}
-                            </div>
-                        );
-                    })}
-                </FooterLayoutContext.Provider>
+                    {hiddenChildren.length > 0 && (
+                        <div className={b('item', {more: true})}>
+                            <DropdownMenu
+                                onOpenToggle={handleDropdownOpenToggle}
+                                items={dropdownItems}
+                                popupProps={{
+                                    placement: isHorizontal ? 'top' : 'right',
+                                    className: b('dropdown-popup'),
+                                }}
+                                switcherWrapperClassName={b('dropdown-switcher')}
+                                renderSwitcher={({onClick}) => (
+                                    <FooterItem
+                                        id="more"
+                                        title={i18n('label_others')}
+                                        icon={Ellipsis}
+                                        isExpanded={!isHorizontal && isExpanded}
+                                        layout={isHorizontal ? 'horizontal' : 'vertical'}
+                                        onItemClick={(_, __, event) => {
+                                            onClick(event as React.MouseEvent<HTMLElement>);
+                                        }}
+                                    />
+                                )}
+                            />
+                        </div>
+                    )}
+                </div>
 
-                {hiddenChildren.length > 0 && (
-                    <div className={b('item', {more: true})}>
-                        <DropdownMenu
-                            onOpenToggle={handleDropdownOpenToggle}
-                            items={dropdownItems}
-                            popupProps={{
-                                placement: isHorizontal ? 'top' : 'right',
-                                className: b('dropdown-popup'),
-                            }}
-                            switcherWrapperClassName={b('dropdown-switcher')}
-                            renderSwitcher={({onClick}) => (
-                                <FooterItem
-                                    id="more"
-                                    title={i18n('label_others')}
-                                    icon={Ellipsis}
-                                    isExpanded={!isHorizontal && isExpanded}
-                                    layout={isHorizontal ? 'horizontal' : 'vertical'}
-                                    onItemClick={(_, __, event) => {
-                                        onClick(event as React.MouseEvent<HTMLElement>);
-                                    }}
-                                />
-                            )}
-                        />
-                    </div>
+                {afterContent && (
+                    <div className={b('after', {horizontal: isHorizontal})}>{afterContent}</div>
                 )}
             </div>
-
-            {renderAfter && (
-                <div className={b('after', {horizontal: isHorizontal})}>
-                    {renderAfter({setCollapseBlocker})}
-                </div>
-            )}
-        </div>
-    );
-};
+        );
+    },
+);
 
 FooterBar.displayName = 'FooterBar';
