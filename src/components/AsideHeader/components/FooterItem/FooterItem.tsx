@@ -25,6 +25,7 @@ export function FooterItem(props: FooterItemProps) {
     const footerLayoutCtx = useFooterLayout();
     const effectiveLayout = layout ?? footerLayoutCtx?.layout ?? 'vertical';
     const effectiveIsExpanded = isExpandedProp ?? footerLayoutCtx?.isExpanded ?? contextIsExpanded;
+    const isInFooterBar = Boolean(footerLayoutCtx);
 
     return (
         <Item
@@ -33,7 +34,7 @@ export function FooterItem(props: FooterItemProps) {
             iconSize={ASIDE_HEADER_ICON_SIZE}
             isExpanded={effectiveIsExpanded}
             setCollapseBlocker={context?.setCollapseBlocker}
-            className={`${b({collapsed: !effectiveIsExpanded, layout: effectiveLayout})} ${bGlobal()}`}
+            className={`${b({collapsed: !effectiveIsExpanded, layout: effectiveLayout, 'footer-bar': isInFooterBar})} ${bGlobal()}`}
         />
     );
 }

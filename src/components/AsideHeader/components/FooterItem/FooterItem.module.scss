@@ -16,6 +16,9 @@ $block: '.#{variables.$ns}footer-item';
         &_vertical {
             width: 100%;
             border-radius: var(--gn-aside-header-item-expanded-radius);
+        }
+
+        &_vertical:not(#{$class}_footer-bar) {
             margin-bottom: 2px;
         }
     }
