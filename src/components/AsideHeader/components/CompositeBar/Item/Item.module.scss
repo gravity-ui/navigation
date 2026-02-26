@@ -142,14 +142,6 @@ $block: '.#{variables.$ns}composite-bar-item';
         background-color: var(--_--zone-bg-hover);
     }
 
-    &__icon {
-        // FIXME: fix hack in the next major
-        &-tooltip .g-action-tooltip__description {
-            color: var(--g-color-text-light-primary);
-            margin-block-start: 0px;
-        }
-    }
-
     &__icon-place {
         flex-shrink: 0;
         width: var(--_--item-height, #{variables.$item-height});
@@ -376,25 +368,6 @@ $block: '.#{variables.$ns}composite-bar-item';
         &:global(.#{variables.$ns}footer-item) {
             width: calc(100% - 2 * var(--_--item-margin-inline));
         }
-    }
-
-    &__icon-tooltip {
-        display: flex;
-        box-sizing: border-box;
-        height: 30px;
-        padding: 8px 12px;
-        align-items: center;
-
-        :global(.g-action-tooltip__description) {
-            margin: 0;
-            margin-block: 0;
-
-            color: var(--g-color-text-light-primary);
-        }
-    }
-
-    &__icon-tooltip_item-type_action {
-        margin-left: 10px;
     }
 
     &_collapsed {
