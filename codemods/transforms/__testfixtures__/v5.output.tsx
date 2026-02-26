@@ -3,12 +3,12 @@
 import React from 'react';
 import {AsideHeader, FooterItem, MobileLogo} from '@gravity-ui/navigation';
 
-// Basic FooterItem with compact prop
+// Basic FooterItem with isExpanded prop
 function BasicExample() {
     return <FooterItem isExpanded={false} id="item1" title="Item 1" />;
 }
 
-// MobileLogo with compact prop
+// MobileLogo with isExpanded prop
 function MobileExample() {
     return <MobileLogo isExpanded={true} text="Logo" />;
 }
