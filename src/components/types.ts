@@ -33,8 +33,7 @@ export interface MenuItem extends QAProps {
         p: MakeItemParams,
         makeItem: (p: MakeItemParams) => React.ReactNode,
         opts: {
-            collapsed: boolean;
-            pinned: boolean;
+            isExpanded: boolean;
             item: MenuItem;
             ref: React.RefObject<HTMLElement>;
             /** Call with `true` when a popup opens, `false` when it closes, to block sidebar collapse while open. */

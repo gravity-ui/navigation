@@ -50,7 +50,7 @@ The `compact` prop and related APIs have been renamed to use clearer semantics w
 | `AsideHeaderItem.compact`                     | `AsideHeaderItem.isExpanded`               | Used by `FooterItem`                            |
 | `renderFooter({ compact })`                   | `renderFooter({ isExpanded })`             | Parameter renamed (AsideHeader)                 |
 | `collapseButtonWrapper(_, { compact })`       | `collapseButtonWrapper(_, { isExpanded })` | Parameter renamed                               |
-| `MenuItem.itemWrapper opts.compact`           | `MenuItem.itemWrapper opts.pinned`         | In itemWrapper callback                         |
+| `MenuItem.itemWrapper opts.compact`           | `MenuItem.itemWrapper opts.isExpanded`     | In itemWrapper callback                         |
 | `LogoProps.wrapper(_, compact)`               | `LogoProps.wrapper(_, isExpanded)`         | Second parameter renamed                        |
 | `MobileLogoProps.compact`                     | `MobileLogoProps.isExpanded`               | MobileLogo prop renamed                         |
 | `BurgerMenuProps.renderFooter({ isCompact })` | `renderFooter({ isExpanded })`             | MobileHeader burger menu                        |
@@ -200,17 +200,17 @@ collapseButtonWrapper={(button, { isExpanded, onChangePinned }) => (
 itemWrapper={(params, makeItem, { compact }) => makeItem(params)}
 
 // After (v5.0)
-itemWrapper={(params, makeItem, { pinned }) => makeItem(params)}
+itemWrapper={(params, makeItem, { isExpanded }) => makeItem(params)}
 ```
 
 The `opts` object in `itemWrapper` now contains:
 
-| Property    | Type                           | Description                         |
-| ----------- | ------------------------------ | ----------------------------------- |
-| `pinned`    | `boolean`                      | Replaces `compact` (inverted logic) |
-| `collapsed` | `boolean`                      | Whether item is in collapsed view   |
-| `item`      | `MenuItem`                     | The menu item being rendered        |
-| `ref`       | `React.RefObject<HTMLElement>` | Reference to the item element       |
+| Property             | Type                                          | Description                                                                                       |
+| -------------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `isExpanded`         | `boolean`                                     | Current visual state — whether the sidebar is expanded                                            |
+| `item`               | `MenuItem`                                    | The menu item being rendered                                                                      |
+| `ref`                | `React.RefObject<HTMLElement>`                | Reference to the item element                                                                     |
+| `setCollapseBlocker` | `((isBlocked: boolean) => void) \| undefined` | Call with `true` when a popup opens, `false` when it closes, to block sidebar collapse while open |
 
 ---
 
