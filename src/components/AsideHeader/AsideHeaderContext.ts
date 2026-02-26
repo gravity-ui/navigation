@@ -59,6 +59,7 @@ AsideHeaderContext.displayName = 'AsideHeaderContext';
 
 export const AsideHeaderContextProvider = AsideHeaderContext.Provider;
 
+/** Returns context value or throws error when used outside AsideHeader. Use when component must be wrapped with provider. */
 export const useAsideHeaderContext = (): AsideHeaderContextType => {
     const contextValue = React.useContext(AsideHeaderContext);
     if (contextValue === undefined) {

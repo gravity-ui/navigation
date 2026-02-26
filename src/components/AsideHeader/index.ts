@@ -6,7 +6,11 @@ export type {
     MenuItemsWithGroups,
     SetCollapseBlocker,
 } from './types';
-export {AsideHeaderContextProvider, useAsideHeaderContext} from './AsideHeaderContext';
+export {
+    AsideHeaderContextProvider,
+    useAsideHeaderContext,
+    useAsideHeaderContextOptional,
+} from './AsideHeaderContext';
 export {FooterItem, type FooterItemProps} from './components/FooterItem/FooterItem';
 export {PageLayout, type PageLayoutProps} from './components/PageLayout/PageLayout';
 export {PageLayoutAside} from './components/PageLayout/PageLayoutAside';
