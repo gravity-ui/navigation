@@ -9,16 +9,14 @@ import {createBlock} from '../../../utils/cn';
 import {FooterLayoutContext, FooterLayoutContextValue} from '../../FooterLayoutContext';
 import i18n from '../../i18n';
 import {SetCollapseBlocker} from '../../types';
-import {FooterItem, FooterItemProps} from '../FooterItem/FooterItem';
+import {FooterItem} from '../FooterItem/FooterItem';
 
 import {MAX_VISIBLE_ITEMS} from './constants';
 
 import styles from './FooterBar.module.scss';
 
-const isValidFooterElement = (
-    child: React.ReactNode,
-): child is React.ReactElement<FooterItemProps> => {
-    return React.isValidElement(child);
+const isValidFooterElement = (child: React.ReactNode): child is React.ReactElement => {
+    return React.isValidElement(child) && child.type === FooterItem;
 };
 
 const getChildKey = (child: React.ReactNode, fallbackIndex: number): string | number => {
