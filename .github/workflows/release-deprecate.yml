@@ -1,0 +1,30 @@
+# Deprecate a version of @gravity-ui/navigation on npm
+# Runs manually in Actions tab in github
+
+name: Deprecate release
+
+on:
+    workflow_dispatch:
+        inputs:
+            version:
+                type: string
+                required: true
+                description: 'Version to deprecate, e.g. 3.0.0-beta.0'
+            message:
+                type: string
+                required: false
+                default: 'This version has been deprecated'
+                description: 'Deprecation message'
+
+jobs:
+    deprecate:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: 18
+                  registry-url: 'https://registry.npmjs.org'
+            - name: Deprecate version
+              run: npm deprecate @gravity-ui/navigation@${{ github.event.inputs.version }} "${{ github.event.inputs.message }}"
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.GRAVITY_UI_BOT_NPM_TOKEN }}

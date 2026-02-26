@@ -1,5 +1,52 @@
 # Changelog
 
+## [4.0.11](https://github.com/gravity-ui/navigation/compare/v4.0.10...v4.0.11) (2026-02-11)
+
+
+### Bug Fixes
+
+* **HotkeysPanel:** add props for Drawer ([#567](https://github.com/gravity-ui/navigation/issues/567)) ([1d99965](https://github.com/gravity-ui/navigation/commit/1d9996551c192ed2a29e7e99c52032d6961ff1b2))
+
+## [4.0.10](https://github.com/gravity-ui/navigation/compare/v4.0.9...v4.0.10) (2026-01-24)
+
+
+### Bug Fixes
+
+* exclude __tests__ folder from build output ([#564](https://github.com/gravity-ui/navigation/issues/564)) ([4a279b1](https://github.com/gravity-ui/navigation/commit/4a279b15ed67d4cb1f62786009bb95dfe37b7b51))
+
+## [4.0.9](https://github.com/gravity-ui/navigation/compare/v4.0.8...v4.0.9) (2026-01-23)
+
+
+### Bug Fixes
+
+* correcting the desynchr. of the compact state, css variables for action colors have been added ([#562](https://github.com/gravity-ui/navigation/issues/562)) ([2de7528](https://github.com/gravity-ui/navigation/commit/2de7528a0e6a62eff54280cbe4c996969b3d0a5b))
+
+## [4.0.8](https://github.com/gravity-ui/navigation/compare/v4.0.7...v4.0.8) (2026-01-21)
+
+
+### Bug Fixes
+
+* **MultipleTooltip:** fix background ([#560](https://github.com/gravity-ui/navigation/issues/560)) ([2af3d73](https://github.com/gravity-ui/navigation/commit/2af3d732b29f40d745ccaacaf51df08abdcbabce))
+
+## [4.0.7](https://github.com/gravity-ui/navigation/compare/v4.0.6...v4.0.7) (2026-01-20)
+
+
+### Bug Fixes
+
+* **Item:** fix icon color overriding if Item has itemWrapper ([#558](https://github.com/gravity-ui/navigation/issues/558)) ([9463297](https://github.com/gravity-ui/navigation/commit/9463297d75469208f9fdae6bddfad0c8b898ab31))
+
+## [4.0.6](https://github.com/gravity-ui/navigation/compare/v4.0.4...v4.0.6) (2026-01-19)
+
+
+### Bug Fixes
+
+* **FooterItem:** fix height overriding ([#553](https://github.com/gravity-ui/navigation/issues/553)) ([7bf844f](https://github.com/gravity-ui/navigation/commit/7bf844f716fda927a6bac4376ab8057318c2772d))
+
+
+## [4.0.5](https://github.com/gravity-ui/navigation/compare/v4.0.4...v4.0.5) (2026-01-19)
+
+This version was deprecated due to a release pipeline issue. Please use 4.0.6 instead.
+
 ## [4.0.4](https://github.com/gravity-ui/navigation/compare/v4.0.3...v4.0.4) (2026-01-15)
 
 

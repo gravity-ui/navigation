@@ -28,8 +28,12 @@ export default {
     },
 } as Meta;
 
-const ShowcaseTemplate: StoryFn = () => <HotkeysPanelShowcase />;
+const ShowcaseTemplate: StoryFn<{platform?: 'pc' | 'mac'; filterable?: boolean}> = (args) => (
+    <HotkeysPanelShowcase {...args} />
+);
 export const Showcase = ShowcaseTemplate.bind({});
 
-const WithoutFilterTemplate: StoryFn = () => <HotkeysPanelShowcase filterable={false} />;
+const WithoutFilterTemplate: StoryFn<{platform?: 'pc' | 'mac'}> = (args) => (
+    <HotkeysPanelShowcase filterable={false} {...args} />
+);
 export const WithoutFilter = WithoutFilterTemplate.bind({});

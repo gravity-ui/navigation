@@ -19,6 +19,9 @@ $block: '.#{variables.$ns}composite-bar-item';
     --_--item-text-color: var(--g-color-text-primary);
     --_--item-collapsed-radius: 7px;
 
+    --_--item-action-color: var(--g-color-base-float);
+    --_--item-action-color-hover: var(--g-color-base-float-hover);
+
     // selected item
     --_--item-selected-text-color: var(--g-color-text-primary);
     --_--item-selected-background-color: var(--g-color-base-selection);
@@ -340,7 +343,7 @@ $block: '.#{variables.$ns}composite-bar-item';
         justify-content: center;
         height: var(--gn-composite-bar-item-action-size);
         margin-bottom: var(--g-spacing-2);
-        background: var(--g-color-base-float);
+        background: var(--gn-aside-header-item-action-color, var(--_--item-action-color));
         box-shadow:
             0px 0px 0px 1px rgba(0, 0, 0, 0.03),
             0px 5px 6px rgba(0, 0, 0, 0.12);
@@ -354,7 +357,10 @@ $block: '.#{variables.$ns}composite-bar-item';
         }
 
         &:hover {
-            background-color: var(--g-color-base-float-hover);
+            background-color: var(
+                --gn-aside-header-item-action-color-hover,
+                var(--_--item-action-color-hover)
+            );
         }
 
         &:active {

@@ -13,24 +13,28 @@ import {HotkeysPanel} from '@gravity-ui/navigation';
 
 ### PropTypes
 
-| Свойство             | Тип             | Обязательное | Значение по умолчанию | Описание                                    |
-| :------------------- | :-------------- | :----------: | :-------------------- | :------------------------------------------ |
-| hotkeys              | `Array`         |      Да      |                       | Список групп горячих клавиш.                |
-| title                | `ReactNode`     |              |                       | Заголовок панели.                           |
-| togglePanelHotkey    | `String`        |              |                       | Хоткей для открытия панели.                 |
-| open                 | `Boolean`       |      Да      |                       | Определяет видимость выдвижной панели.      |
-| onClose              | `Function`      |              |                       | Обработчик закрытия выдвижной панели.       |
-| filterable           | `Boolean`       |              | true                  | Определяет видимость поля поиска.           |
-| filterPlaceholder    | `String`        |              |                       | Заглушка для поля поиска.                   |
-| filterClassName      | `String`        |              |                       | Имя класса поля поиска.                     |
-| leftOffset           | `Number/String` |              | 0                     | Отступ слева для выдвижной панели.          |
-| topOffset            | `Number/String` |              | 0                     | Отступ сверху для выдвижной панели.         |
-| emptyState           | `ReactNode`     |              |                       | Заглушка при отсутствии результатов поиска. |
-| className            | `String`        |              |                       | Имя класса выдвижной панели.                |
-| drawerItemClassName  | `String`        |              |                       | Имя класса элемента выдвижной панели.       |
-| titleClassName       | `String`        |              |                       | Имя класса заголовка.                       |
-| itemContentClassName | `String`        |              |                       | Имя класса содержимого элементов списка.    |
-| listClassName        | `String`        |              |                       | Имя класса списка.                          |
+| Свойство             | Тип             | Обязательное | Значение по умолчанию | Описание                                       |
+| :------------------- | :-------------- | :----------: | :-------------------- | :--------------------------------------------- |
+| hotkeys              | `Array`         |      Да      |                       | Список групп горячих клавиш.                   |
+| title                | `ReactNode`     |              |                       | Заголовок панели.                              |
+| togglePanelHotkey    | `String`        |              |                       | Хоткей для открытия панели.                    |
+| open                 | `Boolean`       |      Да      |                       | Определяет видимость выдвижной панели.         |
+| onClose              | `Function`      |              |                       | Обработчик закрытия выдвижной панели.          |
+| filterable           | `Boolean`       |              | true                  | Определяет видимость поля поиска.              |
+| filterPlaceholder    | `String`        |              |                       | Заглушка для поля поиска.                      |
+| filterClassName      | `String`        |              |                       | Имя класса поля поиска.                        |
+| leftOffset           | `Number/String` |              | 0                     | Отступ слева для выдвижной панели.             |
+| topOffset            | `Number/String` |              | 0                     | Отступ сверху для выдвижной панели.            |
+| emptyState           | `ReactNode`     |              |                       | Заглушка при отсутствии результатов поиска.    |
+| className            | `String`        |              |                       | Имя класса выдвижной панели.                   |
+| drawerItemClassName  | `String`        |              |                       | Имя класса элемента выдвижной панели.          |
+| titleClassName       | `String`        |              |                       | Имя класса заголовка.                          |
+| itemContentClassName | `String`        |              |                       | Имя класса содержимого элементов списка.       |
+| listClassName        | `String`        |              |                       | Имя класса списка.                             |
+| style                | `CSSProperties` |              |                       | Пользовательские стили для выдвижной панели.   |
+| container            | `HTMLElement`   |              |                       | DOM-элемент для рендеринга выдвижной панели.   |
+| hideVeil             | `Boolean`       |              |                       | Скрытие оверлея (затемнения) выдвижной панели. |
+| platform             | `'pc'`/`'mac'`  |              | auto                  | Платформа для формата отображения хоткеев.     |
 
 Свойства `HotkeysPanel` также включают все PropTypes компонента `List`, кроме `items` и `filter` (свойства `List` см. [здесь](https://github.com/gravity-ui/uikit/blob/main/src/components/List/README.md)).
 
