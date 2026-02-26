@@ -1,30 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // @ts-nocheck
 import React from 'react';
-import {AsideHeader, FooterItem, MobileLogo, PageLayout, PageLayoutAside} from '@gravity-ui/navigation';
+import {AsideHeader, PageLayout, PageLayoutAside, FooterItem} from '@gravity-ui/navigation';
 
-// Basic FooterItem with compact prop
-function BasicExample() {
-    return <FooterItem compact={true} id="item1" title="Item 1" />;
-}
-
-// MobileLogo with compact prop
-function MobileExample() {
-    return <MobileLogo compact={false} text="Logo" />;
-}
-
-// renderFooter callback with destructuring
-function CallbackExample() {
-    return (
-        <AsideHeader
-            renderFooter={({compact}) => (
-                <FooterItem compact={compact} id="footer" title="Footer" />
-            )}
-        />
-    );
-}
-
-// AsideHeader: compact → pinned, onChangeCompact → onChangePinned
+// AsideHeader: compact → pinned (inverted), onChangeCompact → onChangePinned
 function AsideHeaderExample() {
     const [compact, setCompact] = React.useState(false);
     return (
@@ -46,4 +25,22 @@ function PageLayoutExample() {
             <PageLayout.Content>Content</PageLayout.Content>
         </PageLayout>
     );
+}
+
+// Literals
+function Literals() {
+    return (
+        <>
+            <AsideHeader compact={true} menuItems={[]} renderContent={() => null} />
+            <AsideHeader compact={false} menuItems={[]} renderContent={() => null} />
+            <PageLayout compact={false}>
+                <PageLayout.Content />
+            </PageLayout>
+        </>
+    );
+}
+
+// FooterItem compact is NOT transformed by this codemod (stays compact)
+function Unchanged() {
+    return <FooterItem compact={true} id="x" title="Y" />;
 }

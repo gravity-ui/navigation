@@ -1,12 +1,16 @@
 import type {API, FileInfo, Options} from 'jscodeshift';
 
 import compactToIsExpanded from './compactToIsExpanded';
+import compactToPinned from './compactToPinned';
 
 export default function transform(file: FileInfo, api: API, options: Options) {
     let source = file.source;
     let hasChanges = false;
 
-    const transforms = [{name: 'compact-to-is-expanded', transform: compactToIsExpanded}];
+    const transforms = [
+        {name: 'compact-to-is-expanded', transform: compactToIsExpanded},
+        {name: 'compact-to-pinned', transform: compactToPinned},
+    ];
 
     for (const {name, transform: transformFn} of transforms) {
         try {
