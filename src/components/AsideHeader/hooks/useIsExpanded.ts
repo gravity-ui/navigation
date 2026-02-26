@@ -38,9 +38,9 @@ export const useIsExpanded = (externalPinned: boolean): UseIsExpandedResult => {
         if (!externalPinned) {
             setIsExpanded(delayedShouldExpand);
         }
-        // We need to run this effect only when delayedShouldExpand changes
+        // Re-run when externalPinned changes so we sync to hover state after pin/unpin
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [delayedShouldExpand]);
+    }, [delayedShouldExpand, externalPinned]);
 
     const performFold = useCallback(() => {
         setIsMouseInside(false);
