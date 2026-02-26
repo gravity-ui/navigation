@@ -111,6 +111,12 @@ interface AsideHeaderContextType {
 }
 ```
 
+**`useAsideHeaderContext` and `useAsideHeaderContextOptional`:**
+
+`useAsideHeaderContext()` throws an error when used outside of `AsideHeaderContext.Provider` (e.g. outside `AsideHeader` or `PageLayout`). Use it when your component must always be rendered inside the provider.
+
+For components that can work with or without the provider (e.g. `FooterItem`), use `useAsideHeaderContextOptional()`, which returns `AsideHeaderContextType | undefined` and does not throw when outside the provider.
+
 #### Migration Examples
 
 **AsideHeader component:**
@@ -403,6 +409,7 @@ Our codemod handles most cases automatically, but may not cover:
 - [ ] **Review Conditionals**: Manually check ternary expressions using renamed variables
 - [ ] **Update `renderFooter`**: Check for new parameters and adjust logic if needed
 - [ ] **Update `collapseButtonWrapper`**: Adjust callback signature if used
+- [ ] **`useAsideHeaderContext`**: Use only inside `AsideHeader`/`PageLayout` (it throws otherwise); use `useAsideHeaderContextOptional()` for optional context
 - [ ] **MobileHeader**: Update `BurgerMenuProps.renderFooter` from `isCompact` to `isExpanded`
 - [ ] **CSS Variables**: Update deprecated CSS variable names to zone-specific alternatives
 - [ ] **Context Usage**: Update any direct usage of `AsideHeaderContext` with new prop names
