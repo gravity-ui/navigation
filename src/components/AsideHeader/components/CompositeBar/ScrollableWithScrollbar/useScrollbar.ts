@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-export type ScrollbarState = {
+type ScrollbarState = {
     scrollTop: number;
     scrollHeight: number;
     clientHeight: number;
 };
 
-export type UseScrollbarOptions = {
+type UseScrollbarOptions = {
     recalcDeps?: React.DependencyList;
 };
 
