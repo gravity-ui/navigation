@@ -1,14 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // @ts-nocheck
 import React from 'react';
-import {AsideHeader, FooterItem, MobileLogo, PageLayout, PageLayoutAside} from '@gravity-ui/navigation';
+import {
+    AsideHeader,
+    FooterItem,
+    MobileLogo,
+    PageLayout,
+    PageLayoutAside,
+} from '@gravity-ui/navigation';
 
-// Basic FooterItem with compact prop
+// Basic FooterItem with compact -> isExpanded prop
 function BasicExample() {
     return <FooterItem compact={true} id="item1" title="Item 1" />;
 }
 
-// MobileLogo with compact prop
+// MobileLogo with compact -> isExpanded prop
 function MobileExample() {
     return <MobileLogo compact={false} text="Logo" />;
 }
