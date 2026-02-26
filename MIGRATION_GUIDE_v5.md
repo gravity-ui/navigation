@@ -37,7 +37,25 @@ If you were using `multipleTooltip={true}`:
 
 ---
 
-### 2. Prop Renaming (`compact` → `pinned`/`isExpanded`)
+### 2. Removed AsideHeaderItem Props and Exports
+
+The following have been removed and are not available in v5:
+
+**AsideHeaderItem props (removed):**
+
+- `afterMoreButton` — no longer supported
+- `category` — use `groupId` for grouping
+- `order` — order is determined by array position
+- `pinned` (item-level) — replaced by `isExpanded` on items (e.g. `FooterItem`)
+
+**Removed exports:**
+
+- `useVisibleMenuItems` — no longer exported; use menu items state from your component
+- `AllPagesListItem` — type/helper removed; use `AsideHeaderItem` and `onMenuItemsChanged` as needed
+
+---
+
+### 3. Prop Renaming (`compact` → `pinned`/`isExpanded`)
 
 The `compact` prop and related APIs have been renamed to use clearer semantics with **inverted boolean logic**.
 
@@ -395,11 +413,12 @@ Replace deprecated CSS variables with zone-specific alternatives (see CSS Variab
 
 Our codemod handles most cases automatically, but may not cover:
 
-1. **Conditional expressions using renamed variables**: Ternary operators like `compact ? 'a' : 'b'` need manual logic inversion
-2. **Dynamic property access**: `item['compact']`
-3. **Computed property names**: `item[propName]`
-4. **Spread patterns with compact**: `{...props, compact: true}`
-5. **Non-target components**: Only `FooterItem`, `MobileLogo`, and `Item` components are transformed
+1. **AsideHeader / PageLayout**: `<AsideHeader compact={...}>` → `<AsideHeader pinned={...}>` and `onChangeCompact` → `onChangePinned` are not automated; migrate these manually (invert the boolean for `compact` → `pinned`).
+2. **Conditional expressions using renamed variables**: Ternary operators like `compact ? 'a' : 'b'` need manual logic inversion
+3. **Dynamic property access**: `item['compact']`
+4. **Computed property names**: `item[propName]`
+5. **Spread patterns with compact**: `{...props, compact: true}`
+6. **Non-target components**: Only `FooterItem`, `MobileLogo`, and `Item` components are transformed for compact → isExpanded
 
 ## Migration Checklist
 
