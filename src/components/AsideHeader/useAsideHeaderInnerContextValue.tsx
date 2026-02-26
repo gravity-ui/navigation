@@ -128,16 +128,22 @@ export const useAsideHeaderInnerContextValue = (
     }, [allPagesIsAvailable, panelItems, innerVisiblePanel]);
 
     const hasPanelOpen = innerPanelItems?.some((p) => p.open) ?? false;
+    const didBlockRef = React.useRef(false);
 
     useEffect(() => {
         if (hasPanelOpen) {
             setCollapseBlocker?.(true);
-        } else {
+            didBlockRef.current = true;
+        } else if (didBlockRef.current) {
             setCollapseBlocker?.(false);
+            didBlockRef.current = false;
         }
 
         return () => {
-            setCollapseBlocker?.(false);
+            if (didBlockRef.current) {
+                setCollapseBlocker?.(false);
+                didBlockRef.current = false;
+            }
         };
     }, [hasPanelOpen, setCollapseBlocker]);
 
