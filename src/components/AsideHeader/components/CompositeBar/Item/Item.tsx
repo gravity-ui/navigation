@@ -226,8 +226,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     let node;
 
     const opts = {
-        pinned: Boolean(isExpanded),
-        collapsed: false,
+        isExpanded,
         item: props,
         ref,
         setCollapseBlocker,
