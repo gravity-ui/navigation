@@ -419,7 +419,7 @@ const CustomThemesWithNewColorsTemplate: StoryFn = (args) => {
 
 export const CustomThemesWithNewColors = CustomThemesWithNewColorsTemplate.bind({});
 CustomThemesWithNewColors.args = {
-    initialCompact: false,
+    initialPinned: true,
 };
 
 const FooterBarTemplate: StoryFn = (args) => {
