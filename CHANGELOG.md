@@ -1,5 +1,16 @@
 # Changelog
 
+## [5.0.0](https://github.com/gravity-ui/navigation/compare/v4.0.11...v5.0.0) (2026-02-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* release v5 ([#581](https://github.com/gravity-ui/navigation/issues/581))
+
+### Features
+
+* release v5 ([#581](https://github.com/gravity-ui/navigation/issues/581)) ([32f11a1](https://github.com/gravity-ui/navigation/commit/32f11a1e3c6d09f067287289bdeb215f3831f76b))
+
 ## [4.0.11](https://github.com/gravity-ui/navigation/compare/v4.0.10...v4.0.11) (2026-02-11)
 
 
