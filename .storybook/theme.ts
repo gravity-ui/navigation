@@ -1,4 +1,4 @@
-import {create} from '@storybook/theming';
+import {create} from 'storybook/theming';
 
 const CloudThemeLight = create({
     base: 'light',
