@@ -82,9 +82,11 @@ export const useAsideHeaderInnerContextValue = (
         (groupId: string) => {
             const updatedMenuGroups = menuGroups?.map((group) => {
                 if (group.id === groupId) {
+                    const effectiveCollapsed = group.collapsed ?? group.collapsedByDefault ?? false;
+
                     return {
                         ...group,
-                        collapsed: !group.collapsed,
+                        collapsed: !effectiveCollapsed,
                     };
                 }
                 return group;

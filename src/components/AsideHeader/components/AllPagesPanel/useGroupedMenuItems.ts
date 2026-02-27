@@ -78,6 +78,9 @@ export const useGroupedMenuItems = (
                             ? true
                             : (group?.hidden ?? false);
 
+                        const effectiveCollapsed =
+                            group?.collapsed ?? group?.collapsedByDefault ?? false;
+
                         flatListItems.push({
                             id: groupId,
                             title: group?.title ?? groupId,
@@ -85,7 +88,7 @@ export const useGroupedMenuItems = (
                             hidden: isGroupHidden,
                             collapsible: group?.collapsible,
                             collapsedByDefault: group?.collapsedByDefault,
-                            isCollapsed: group?.collapsed,
+                            isCollapsed: effectiveCollapsed,
                             groupId: groupId,
                             items,
                         });

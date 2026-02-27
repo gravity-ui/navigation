@@ -64,8 +64,8 @@ export interface MenuGroup {
     collapsible?: boolean;
     /** Initial collapsed state when collapsible is true */
     collapsedByDefault?: boolean;
-    /** Current collapsed state */
-    collapsed: boolean;
+    /** Current collapsed state. When undefined, collapsedByDefault is used for display. */
+    collapsed?: boolean;
 }
 
 export interface LogoProps {
