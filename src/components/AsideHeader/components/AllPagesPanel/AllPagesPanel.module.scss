@@ -5,30 +5,11 @@
     height: 100%;
     padding: var(--g-spacing-4) var(--g-spacing-6);
     box-sizing: border-box;
+    --gn-aside-header-item-expanded-radius: #{variables.$item-expanded-radius};
+    --_--item-height: #{variables.$item-height};
 
     &__content {
         overflow: auto;
         flex: 1;
-
-        margin: 0 calc(var(--g-spacing-6) * -1);
-    }
-
-    &__category {
-        padding: 0 var(--g-spacing-6);
-    }
-
-    &__discoverable-feature-wrapper {
-        display: flex;
-    }
-
-    &__item_editMode {
-        padding: 0 var(--g-spacing-6);
-    }
-
-    &__drag-placeholder {
-        padding-left: 88px;
-        padding-right: 68px;
-        text-wrap: nowrap;
-        visibility: hidden;
     }
 }

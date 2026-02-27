@@ -1,0 +1,10 @@
+.footer-bar-showcase {
+    --_--item-height: 36px;
+    --_--item-margin-inline: 6px;
+    --gn-aside-header-item-expanded-radius: 6px;
+
+    background-color: var(--g-color-base-background);
+    border: 1px solid var(--g-color-line-generic);
+    padding: var(--g-spacing-2) 10px;
+    box-sizing: border-box;
+}

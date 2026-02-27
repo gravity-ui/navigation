@@ -1,16 +1,24 @@
 import React from 'react';
 
-import {Xmark} from '@gravity-ui/icons';
+import {Bug, Gear, Magnifier, Person, Star, Xmark} from '@gravity-ui/icons';
 import {Button, Flex, Icon, Text, spacing} from '@gravity-ui/uikit';
 import type {Meta, StoryFn} from '@storybook/react';
 
 import {AsideHeader} from '../AsideHeader';
+import {FooterItem} from '../components/FooterItem/FooterItem';
 import {AsideFallback} from '../components/PageLayout/AsideFallback';
 import {PageLayout} from '../components/PageLayout/PageLayout';
 import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
 
 import {AsideHeaderShowcase, AsideHeaderShowcaseProps} from './AsideHeaderShowcase';
-import {DEFAULT_LOGO, menuItemsClamped, menuItemsShowcase} from './moc';
+import {
+    DEFAULT_LOGO,
+    menuGroupsWithIcons,
+    menuItemsClamped,
+    menuItemsMany,
+    menuItemsShowcase,
+    menuItemsWithGroups,
+} from './moc';
 
 import logoIcon from '../../../../.storybook/assets/logo.svg';
 
@@ -44,18 +52,11 @@ export default {
 const ShowcaseTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
 export const Showcase = ShowcaseTemplate.bind({});
 
-const CompactTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
-export const Compact = CompactTemplate.bind({});
-Compact.args = {
-    initialCompact: true,
+const CollapsedNavigationTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
+export const CollapsedNavigation = CollapsedNavigationTemplate.bind({});
+CollapsedNavigation.args = {
+    initialPinned: false,
     hideCollapseButton: true,
-};
-
-const MultipleTooltipTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
-export const MultipleTooltip = MultipleTooltipTemplate.bind({});
-MultipleTooltip.args = {
-    multipleTooltip: true,
-    initialCompact: true,
 };
 
 const CustomThemeTemplate: StoryFn = (args) => (
@@ -102,15 +103,14 @@ CustomBackground.args = {
 };
 
 const AdvancedUsageTemplate: StoryFn = (args) => {
-    const [compact, setCompact] = React.useState(args.initialCompact);
+    const [pinned, setPinned] = React.useState(args.initialPinned);
 
     return (
-        <PageLayout compact={compact}>
+        <PageLayout pinned={pinned} onChangePinned={setPinned}>
             <PageLayoutAside
                 headerDecoration
                 menuItems={menuItemsShowcase}
                 logo={DEFAULT_LOGO}
-                onChangeCompact={setCompact}
                 qa={'pl-aside'}
                 {...args}
             />
@@ -123,8 +123,7 @@ const AdvancedUsageTemplate: StoryFn = (args) => {
 export const AdvancedUsage = AdvancedUsageTemplate.bind({});
 
 AdvancedUsage.args = {
-    multipleTooltip: false,
-    initialCompact: true,
+    initialPinned: false,
 };
 
 const TopAlertTemplate: StoryFn<AsideHeaderShowcaseProps> = (args) => (
@@ -198,10 +197,10 @@ const FallbackTemplate: StoryFn<typeof fallbackArgs> = ({
     headerDecoration,
     subheaderItemsCount,
 }) => {
-    const [compact, setCompact] = React.useState(false);
+    const [pinned, setPinned] = React.useState(true);
 
     return (
-        <PageLayout compact={compact}>
+        <PageLayout pinned={pinned} onChangePinned={setPinned}>
             <AsideFallback
                 headerDecoration={headerDecoration}
                 subheaderItemsCount={subheaderItemsCount}
@@ -210,7 +209,7 @@ const FallbackTemplate: StoryFn<typeof fallbackArgs> = ({
 
             <PageLayout.Content>
                 <div style={{padding: 16}}>
-                    <Button onClick={() => setCompact((prev) => !prev)}>Toggle compact</Button>
+                    <Button onClick={() => setPinned((prev) => !prev)}>Toggle pinned</Button>
                 </div>
             </PageLayout.Content>
         </PageLayout>
@@ -222,13 +221,13 @@ Fallback.args = fallbackArgs;
 
 /** @type {StoryFn} */
 export function LineClamp() {
-    const [compact, setCompact] = React.useState(false);
+    const [pinned, setPinned] = React.useState(true);
+
     return (
-        <PageLayout compact={compact}>
+        <PageLayout pinned={pinned} onChangePinned={setPinned}>
             <PageLayoutAside
                 logo={{icon: logoIcon, text: 'Line clamp', 'aria-label': 'Line clamp'}}
                 menuItems={menuItemsClamped}
-                onChangeCompact={setCompact}
                 headerDecoration
             />
         </PageLayout>
@@ -236,16 +235,15 @@ export function LineClamp() {
 }
 
 const CollapseButtonWrapperTemplate: StoryFn = (args) => {
-    const [compact, setCompact] = React.useState(args.initialCompact);
+    const [pinned, setPinned] = React.useState(args.initialPinned);
 
     return (
-        <PageLayout compact={compact}>
+        <PageLayout pinned={pinned} onChangePinned={setPinned}>
             <PageLayoutAside
                 headerDecoration
                 menuItems={menuItemsShowcase}
                 logo={DEFAULT_LOGO}
-                onChangeCompact={setCompact}
-                collapseButtonWrapper={(defaultButton, {compact}) => (
+                collapseButtonWrapper={(defaultButton, {isExpanded}) => (
                     <React.Fragment>
                         {defaultButton}
                         <div
@@ -259,10 +257,10 @@ const CollapseButtonWrapperTemplate: StoryFn = (args) => {
                                     <Icon
                                         size={14}
                                         data={logoIcon}
-                                        className={compact ? undefined : spacing({mr: 1})}
+                                        className={isExpanded ? spacing({mr: 1}) : undefined}
                                     />
                                 }
-                                {compact ? null : <Text color="secondary">{'Gravity UI'}</Text>}
+                                {isExpanded ? <Text color="secondary">{'Gravity UI'}</Text> : null}
                             </Flex>
                         </div>
                     </React.Fragment>
@@ -276,5 +274,245 @@ const CollapseButtonWrapperTemplate: StoryFn = (args) => {
 
 export const CollapseButtonWrapper = CollapseButtonWrapperTemplate.bind({});
 CollapseButtonWrapper.args = {
-    initialCompact: false,
+    initialPinned: true,
+};
+
+const ManyItemsTemplate: StoryFn = (args) => {
+    const [pinned, setPinned] = React.useState<boolean>(args.initialPinned);
+
+    return (
+        <PageLayout pinned={pinned} onChangePinned={setPinned}>
+            <PageLayoutAside
+                headerDecoration
+                menuItems={menuItemsMany}
+                logo={DEFAULT_LOGO}
+                {...args}
+            />
+
+            <PageLayout.Content>
+                <div style={{padding: 16}}>
+                    <Button onClick={() => setPinned((prev) => !prev)}>Toggle pinned</Button>
+                    <div style={{marginTop: 16}}>
+                        <Text variant="subheader-2">
+                            Scroll demonstration with many navigation items
+                        </Text>
+                        <Text color="secondary" style={{marginTop: 8}}>
+                            Total items: {menuItemsMany?.length || 0}. On low screens, items scroll
+                            with invisible scrollbar instead of collapsing into &quot;...&quot;
+                        </Text>
+                    </div>
+                </div>
+            </PageLayout.Content>
+        </PageLayout>
+    );
+};
+
+export const ManyItems = ManyItemsTemplate.bind({});
+ManyItems.args = {
+    initialPinned: true,
+};
+ManyItems.parameters = {
+    docs: {
+        description: {
+            story:
+                'Demonstration of scroll functionality with many navigation items. ' +
+                'On low screens, all items remain accessible through scrolling with invisible scrollbar.',
+        },
+    },
+};
+
+const GroupedMenuCollapsibleTemplate: StoryFn = (args) => {
+    const [pinned, setPinned] = React.useState(true);
+    const [menuItems, setMenuItems] = React.useState(menuItemsWithGroups);
+    const [currentMenuGroups, setCurrentMenuGroups] = React.useState(menuGroupsWithIcons);
+
+    return (
+        <PageLayout pinned={pinned} onChangePinned={setPinned} isCompactMode={args.isCompactMode}>
+            <PageLayoutAside
+                headerDecoration
+                logo={DEFAULT_LOGO}
+                menuItems={menuItems}
+                defaultMenuItems={menuItemsWithGroups}
+                editMenuProps={{enableSorting: true}}
+                menuGroups={currentMenuGroups}
+                defaultMenuGroups={menuGroupsWithIcons}
+                subheaderItems={[
+                    {
+                        id: 'services',
+                        title: 'Services',
+                        icon: Gear,
+                        popupPlacement: ['right-start'],
+                        popupOffset: {mainAxis: 10, crossAxis: 10},
+                    },
+                    {
+                        id: 'search',
+                        title: 'Search',
+                        qa: 'subheader-item-search',
+                        icon: Magnifier,
+                    },
+                ]}
+                onMenuItemsChanged={setMenuItems}
+                onMenuGroupsChanged={setCurrentMenuGroups}
+                {...args}
+            />
+        </PageLayout>
+    );
+};
+
+export const GroupedMenuCollapsible = GroupedMenuCollapsibleTemplate.bind({});
+GroupedMenuCollapsible.args = {
+    initialPinned: true,
+};
+
+export const CompactItemSizing = GroupedMenuCollapsibleTemplate.bind({});
+CompactItemSizing.args = {
+    isCompactMode: true,
+};
+
+const CustomThemesWithNewColorsTemplate: StoryFn = (args) => {
+    return (
+        <>
+            <style>
+                {`.g-root {
+                    /* Top zone (subheader) */
+                    --gn-aside-top-item-icon-color: #ff0000;
+                    --gn-aside-top-item-text-color: #ff6600;
+                    --gn-aside-top-item-background-color: rgba(255, 255, 0, 0.3);
+                    --gn-aside-top-item-background-color-hover: rgba(255, 255, 0, 0.7);
+                    --gn-aside-top-item-current-icon-color: #00ff00;
+                    --gn-aside-top-item-current-text-color: #00cc00;
+                    --gn-aside-top-item-current-background-color: rgba(0, 255, 0, 0.2);
+                    --gn-aside-top-item-current-background-color-hover: rgba(0, 255, 0, 0.4);
+
+                    /* Main zone (groups) */
+                    --gn-aside-main-background-color: transparent;
+                    --gn-aside-main-group-item-background-color: rgba(255, 255, 255, 0.6);
+                    --gn-aside-main-group-item-background-color-hover: rgba(0, 255, 255, 0.7);
+                    --gn-aside-main-group-item-current-background-color: rgba(0, 0, 255, 0.2);
+                    --gn-aside-main-group-item-current-background-color-hover: rgba(0, 0, 255, 0.4);
+
+                    /* Bottom zone (footer) */
+                    --gn-aside-bottom-background-color: rgba(128, 0, 128, 0.1);
+                    --gn-aside-bottom-divider-color: #ff00ff;
+                    --gn-aside-bottom-item-icon-color: #ff00ff;
+                    --gn-aside-bottom-item-text-color: #cc00cc;
+                    --gn-aside-bottom-item-background-color-hover: rgba(255, 0, 255, 0.3);
+                    --gn-aside-bottom-item-current-icon-color: #00ffff;
+                    --gn-aside-bottom-item-current-text-color: #00cccc;
+                    --gn-aside-bottom-item-current-background-color: rgba(0, 255, 255, 0.2);
+                    --gn-aside-bottom-item-current-background-color-hover: rgba(0, 255, 255, 0.4);
+            }`}
+            </style>
+
+            <AsideHeaderShowcase
+                {...args}
+                externalMenuItems={menuItemsWithGroups}
+                externalMenuGroups={menuGroupsWithIcons}
+            >
+                <div>
+                    <Text>Custom content</Text>
+                </div>
+            </AsideHeaderShowcase>
+        </>
+    );
+};
+
+export const CustomThemesWithNewColors = CustomThemesWithNewColorsTemplate.bind({});
+CustomThemesWithNewColors.args = {
+    initialPinned: true,
+};
+
+const FooterBarTemplate: StoryFn = (args) => {
+    const [pinned, setPinned] = React.useState<boolean>(args.initialPinned ?? true);
+
+    return (
+        <PageLayout pinned={pinned} onChangePinned={setPinned}>
+            <PageLayoutAside
+                headerDecoration
+                menuItems={menuItemsShowcase}
+                logo={DEFAULT_LOGO}
+                renderFooter={() => [
+                    <FooterItem key="settings" id="settings" title="Settings" icon={Gear} />,
+                    <FooterItem key="favorites" id="favorites" title="Favorites" icon={Star} />,
+                    <FooterItem key="profile" id="profile" title="Profile" icon={Person} />,
+                    <FooterItem key="bug" id="bug" title="Report Bug" icon={Bug} />,
+                ]}
+                {...args}
+            />
+
+            <PageLayout.Content>
+                <div style={{padding: 16}}>
+                    <Text variant="subheader-2">FooterBar Demo</Text>{' '}
+                    <Text color="secondary" style={{marginTop: 8}}>
+                        When pinned=true, footer items render horizontally with tooltips. When
+                        pinned=false, they render vertically. Try toggling the pinned state!
+                    </Text>
+                </div>
+            </PageLayout.Content>
+        </PageLayout>
+    );
+};
+
+export const FooterBarArray = FooterBarTemplate.bind({});
+FooterBarArray.args = {
+    initialPinned: true,
+};
+FooterBarArray.parameters = {
+    docs: {
+        description: {
+            story:
+                'Demonstrates renderFooter returning an array of FooterItem elements. ' +
+                'When pinned, items display horizontally with tooltips. When collapsed, they display vertically.',
+        },
+    },
+};
+
+const FooterBarWithOverflowTemplate: StoryFn = (args) => {
+    const [pinned, setPinned] = React.useState<boolean>(args.initialPinned ?? true);
+
+    return (
+        <PageLayout pinned={pinned} onChangePinned={setPinned}>
+            <PageLayoutAside
+                headerDecoration
+                menuItems={menuItemsShowcase}
+                logo={DEFAULT_LOGO}
+                renderFooter={() => [
+                    <FooterItem key="settings" id="settings" title="Settings" icon={Gear} />,
+                    <FooterItem key="favorites" id="favorites" title="Favorites" icon={Star} />,
+                    <FooterItem key="bug" id="bug" title="Report Bug" icon={Bug} />,
+                    <FooterItem key="search" id="search" title="Search" icon={Magnifier} />,
+                    <FooterItem key="settings2" id="settings2" title="More Settings" icon={Gear} />,
+                    <FooterItem key="extra" id="extra" title="Extra Item" icon={Star} />,
+                ]}
+                renderFooterAfter={() => (
+                    <FooterItem key="profile" id="profile" title="Profile" icon={Person} />
+                )}
+                {...args}
+            />
+
+            <PageLayout.Content>
+                <div style={{padding: 16}}>
+                    <Text variant="subheader-2">FooterBar with Overflow</Text>{' '}
+                    <Text color="secondary" style={{marginTop: 8}}>
+                        When there are more than 5 items, extra items are collapsed into a dropdown
+                        menu accessible via the &quot;...&quot; button.
+                    </Text>
+                </div>
+            </PageLayout.Content>
+        </PageLayout>
+    );
+};
+
+export const FooterBarWithOverflow = FooterBarWithOverflowTemplate.bind({});
+FooterBarWithOverflow.args = {
+    initialPinned: true,
+};
+FooterBarWithOverflow.parameters = {
+    docs: {
+        description: {
+            story:
+                'Demonstrates FooterBar overflow behavior. When more than 5 items are provided, ' +
+                'extra items collapse into a dropdown menu.',
+        },
+    },
 };

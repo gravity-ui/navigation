@@ -129,6 +129,7 @@ function updateImports(root: Collection, j: JSCodeshift): boolean {
             });
 
             if (hasBeenModified) {
+                // eslint-disable-next-line no-param-reassign
                 path.node.specifiers = newSpecifiers;
                 hasChanges = true;
             }

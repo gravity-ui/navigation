@@ -1,23 +1,16 @@
-import React, {FC, ReactNode, useCallback, useContext, useRef} from 'react';
+import React, {FC, useCallback, useRef, useState} from 'react';
 
-import {List} from '@gravity-ui/uikit';
-import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
+import {ChevronDown, ChevronRight} from '@gravity-ui/icons';
+import {List, ListSortParams} from '@gravity-ui/uikit';
 
-import {ASIDE_HEADER_COMPACT_WIDTH} from '../../../constants';
 import {createBlock} from '../../../utils/cn';
-import {AsideHeaderItem} from '../../types';
+import {AsideHeaderItem, MenuItemsWithGroups, SetCollapseBlocker} from '../../types';
+import {UNGROUPED_ID} from '../AllPagesPanel/constants';
 
 import {Item, ItemProps} from './Item/Item';
-import {MultipleTooltip, MultipleTooltipContext, MultipleTooltipProvider} from './MultipleTooltip';
-import {COLLAPSE_ITEM_ID} from './constants';
-import {
-    getAutosizeListItems,
-    getItemHeight,
-    getItemsHeight,
-    getItemsMinHeight,
-    getMoreButtonItem,
-    getSelectedItemIndex,
-} from './utils';
+import {ScrollableWithScrollbar} from './ScrollableWithScrollbar';
+import {COLLAPSE_ITEM_ID, ITEM_TYPE_REGULAR} from './constants';
+import {getItemHeight, getItemsHeight, getSelectedItemIndex} from './utils';
 
 import styles from './CompositeBar.module.scss';
 
@@ -25,279 +18,305 @@ const b = createBlock('composite-bar', styles);
 
 type CompositeBarProps = {
     type: 'menu' | 'subheader';
-    items: AsideHeaderItem[];
+    setCollapseBlocker?: SetCollapseBlocker;
+    items?: MenuItemsWithGroups[];
     onItemClick?: (
         item: AsideHeaderItem,
         collapsed: boolean,
         event: React.MouseEvent<HTMLElement, MouseEvent>,
+        options: {setCollapseBlocker: SetCollapseBlocker | undefined},
     ) => void;
-    multipleTooltip?: boolean;
     menuMoreTitle?: string;
     onMoreClick?: () => void;
-    compact: boolean;
+    /** When `true`, the navigation is expanded. When `false`, it is collapsed. */
+    isExpanded: boolean;
     compositeId?: string;
+    className?: string;
+    menuItemClassName?: string;
+    editMode?: boolean;
+    onToggleGroupCollapsed?: (groupId: string) => void;
+    /** When `true`, menu items use compact height. */
+    isCompactMode?: boolean;
 };
 
 type CompositeBarViewProps = CompositeBarProps & {
-    collapseItems?: AsideHeaderItem[];
+    compositeId?: string;
+    items?: MenuItemsWithGroups[];
+    collapsedIds?: Record<string, boolean>;
+    enableSorting?: boolean;
+    editMode?: boolean;
+    onToggleGroupCollapsed?: (groupId: string) => void;
+    onToggleMenuItemVisibility?: (item: AsideHeaderItem) => void;
+    onToggleMenuGroupVisibility?: (groupId: string) => void;
+    onFirstLevelSortEnd?: (params: {oldIndex: number; newIndex: number}) => void;
+    onSecondLevelSortEnd?: (
+        groupIndex: number,
+    ) => (params: {oldIndex: number; newIndex: number}) => void;
+    /** When `true`, menu items use compact height. */
+    isCompactMode?: boolean;
 };
 
-const CompositeBarView: FC<CompositeBarViewProps> = ({
+export const CompositeBarView: FC<CompositeBarViewProps> = ({
     type,
     items,
     onItemClick,
     onMoreClick,
-    collapseItems,
-    multipleTooltip = false,
-    compact,
     compositeId,
+    className,
+    menuItemClassName,
+    enableSorting = false,
+    editMode = false,
+    isExpanded,
+    onToggleGroupCollapsed,
+    onToggleMenuGroupVisibility,
+    onToggleMenuItemVisibility,
+    onFirstLevelSortEnd,
+    onSecondLevelSortEnd,
+    setCollapseBlocker,
+    isCompactMode,
 }) => {
     const ref = useRef<List<AsideHeaderItem>>(null);
-    const tooltipRef = useRef<HTMLDivElement>(null);
-
-    const {
-        setValue: setMultipleTooltipContextValue,
-        active: multipleTooltipActive,
-        activeIndex,
-        lastClickedItemIndex,
-    } = useContext(MultipleTooltipContext);
-
-    React.useEffect(() => {
-        function handleBlurWindow() {
-            if (multipleTooltip && multipleTooltipActive) {
-                setMultipleTooltipContextValue({active: false});
-            }
-        }
-
-        window.addEventListener('blur', handleBlurWindow);
-
-        return () => {
-            window.removeEventListener('blur', handleBlurWindow);
-        };
-    }, [multipleTooltip, multipleTooltipActive, setMultipleTooltipContextValue]);
-
-    const onTooltipMouseEnter = useCallback(
-        (e: {clientX: number}) => {
-            if (
-                multipleTooltip &&
-                compact &&
-                !multipleTooltipActive &&
-                document.hasFocus() &&
-                activeIndex !== lastClickedItemIndex &&
-                e.clientX <= ASIDE_HEADER_COMPACT_WIDTH
-            ) {
-                setMultipleTooltipContextValue?.({
-                    active: true,
-                });
-            }
-        },
-        [
-            multipleTooltip,
-            compact,
-            multipleTooltipActive,
-            activeIndex,
-            lastClickedItemIndex,
-            setMultipleTooltipContextValue,
-        ],
-    );
-
-    const onTooltipMouseLeave = useCallback(() => {
-        if (multipleTooltip && multipleTooltipActive && document.hasFocus()) {
-            setMultipleTooltipContextValue?.({
-                active: false,
-                lastClickedItemIndex: undefined,
-            });
-        }
-    }, [multipleTooltip, multipleTooltipActive, setMultipleTooltipContextValue]);
-
-    const onMouseEnterByIndex = useCallback(
-        (itemIndex: number) => () => {
-            if (multipleTooltip && document.hasFocus()) {
-                let multipleTooltipActiveValue = multipleTooltipActive;
-                if (!multipleTooltipActive && itemIndex !== lastClickedItemIndex) {
-                    multipleTooltipActiveValue = true;
-                }
-                if (
-                    activeIndex === itemIndex &&
-                    multipleTooltipActive === multipleTooltipActiveValue
-                ) {
-                    return;
-                }
-                setMultipleTooltipContextValue({
-                    activeIndex: itemIndex,
-                    active: multipleTooltipActiveValue,
-                });
-            }
-        },
-        [
-            multipleTooltip,
-            multipleTooltipActive,
-            lastClickedItemIndex,
-            activeIndex,
-            setMultipleTooltipContextValue,
-        ],
-    );
+    const [hoveredGroupId, setHoveredGroupId] = useState<string | null>(null);
 
     const onMouseLeave = useCallback(() => {
-        if (compact && document.hasFocus()) {
+        if (!isExpanded && document.hasFocus()) {
             ref.current?.activateItem(undefined as unknown as number);
-            if (
-                multipleTooltip &&
-                (activeIndex !== undefined || lastClickedItemIndex !== undefined)
-            ) {
-                setMultipleTooltipContextValue({
-                    activeIndex: undefined,
-                    lastClickedItemIndex: undefined,
-                });
-            }
         }
-    }, [
-        activeIndex,
-        compact,
-        lastClickedItemIndex,
-        multipleTooltip,
-        setMultipleTooltipContextValue,
-    ]);
+    }, [isExpanded]);
 
     const onItemClickByIndex = useCallback(
         (
-            itemIndex: number,
+            _itemIndex: number,
             orginalItemClick: AsideHeaderItem['onItemClick'],
         ): ItemProps['onItemClick'] =>
-            (item, collapsed, event) => {
-                if (
-                    compact &&
-                    multipleTooltip &&
-                    itemIndex !== lastClickedItemIndex &&
-                    item.id !== COLLAPSE_ITEM_ID
-                ) {
-                    setMultipleTooltipContextValue({
-                        lastClickedItemIndex: itemIndex,
-                        active: false,
-                    });
-                }
-
+            (item, collapsed, event, options) => {
                 // Handle clicks on the "more" button (collapse item)
                 if (item.id === COLLAPSE_ITEM_ID && collapsed) {
                     onMoreClick?.();
                 } else {
-                    onItemClick?.({...item, onItemClick: orginalItemClick}, collapsed, event);
+                    onItemClick?.(
+                        {...item, onItemClick: orginalItemClick},
+                        collapsed,
+                        event,
+                        options,
+                    );
                 }
             },
-        [
-            compact,
-            lastClickedItemIndex,
-            multipleTooltip,
-            onItemClick,
-            onMoreClick,
-            setMultipleTooltipContextValue,
-        ],
+        [onItemClick, onMoreClick],
     );
 
+    const handleFirstLevelSortEnd = useCallback(
+        ({oldIndex, newIndex}: ListSortParams) => {
+            if (onFirstLevelSortEnd) {
+                onFirstLevelSortEnd({oldIndex, newIndex});
+            }
+        },
+        [onFirstLevelSortEnd],
+    );
+
+    const handleSecondLevelSortEnd = useCallback(
+        (groupIndex: number) =>
+            ({oldIndex, newIndex}: ListSortParams) => {
+                if (onSecondLevelSortEnd) {
+                    onSecondLevelSortEnd(groupIndex)({oldIndex, newIndex});
+                }
+            },
+        [onSecondLevelSortEnd],
+    );
+
+    if (!items || items.length === 0) {
+        return null;
+    }
+
     return (
-        <React.Fragment>
-            <div
-                ref={tooltipRef}
-                onMouseEnter={onTooltipMouseEnter}
-                onMouseLeave={onTooltipMouseLeave}
-            >
-                <List<AsideHeaderItem>
-                    id={compositeId}
-                    ref={ref}
-                    items={items}
-                    selectedItemIndex={type === 'menu' ? getSelectedItemIndex(items) : undefined}
-                    itemHeight={getItemHeight}
-                    itemsHeight={getItemsHeight}
-                    itemClassName={b('root-menu-item')}
-                    virtualized={false}
-                    filterable={false}
-                    sortable={false}
-                    renderItem={(item, _isItemActive, itemIndex) => (
-                        <Item
-                            {...item}
-                            enableTooltip={multipleTooltip ? false : item.enableTooltip}
-                            compact={compact}
-                            onMouseEnter={onMouseEnterByIndex(itemIndex)}
-                            onMouseLeave={onMouseLeave}
-                            onItemClick={onItemClickByIndex(itemIndex, item.onItemClick)}
-                            collapseItems={collapseItems}
-                        />
-                    )}
-                />
-            </div>
-            {type === 'menu' && multipleTooltip && (
-                <MultipleTooltip
-                    open={compact && multipleTooltipActive}
-                    anchorRef={tooltipRef}
-                    placement={['right-start']}
-                    items={items}
-                />
-            )}
-        </React.Fragment>
+        <div className={className}>
+            <List<MenuItemsWithGroups>
+                id={compositeId}
+                ref={ref}
+                items={items}
+                selectedItemIndex={type === 'menu' ? getSelectedItemIndex(items) : undefined}
+                itemHeight={(item) => getItemHeight(item, isCompactMode)}
+                itemsHeight={(items) => getItemsHeight(items, isCompactMode)}
+                itemClassName={b('root-menu-item', {collapsed: !isExpanded}, menuItemClassName)}
+                virtualized={false}
+                filterable={false}
+                sortable={enableSorting}
+                onSortEnd={enableSorting ? handleFirstLevelSortEnd : undefined}
+                renderItem={(item, _isItemActive, itemIndex) => {
+                    const groupId = item.groupId;
+                    const itemType = item.type || ITEM_TYPE_REGULAR;
+
+                    if (!groupId) {
+                        return (
+                            <Item
+                                {...item}
+                                className={b('menu-item', {
+                                    collapsed: !isExpanded,
+                                    type: itemType,
+                                })}
+                                isExpanded={isExpanded}
+                                editMode={editMode}
+                                onMouseLeave={onMouseLeave}
+                                onItemClick={onItemClickByIndex(itemIndex, item.onItemClick)}
+                                setCollapseBlocker={setCollapseBlocker}
+                                onToggleVisibility={
+                                    onToggleMenuItemVisibility
+                                        ? () => onToggleMenuItemVisibility(item)
+                                        : undefined
+                                }
+                            />
+                        );
+                    }
+
+                    const isCollapsible = Boolean('collapsible' in item && item.collapsible);
+                    const isCollapsed = Boolean('isCollapsed' in item && item.isCollapsed);
+                    const groupListItems = ('items' in item && item.items) || [];
+                    const hasHeader = item.title || item.icon || isCollapsible;
+
+                    const isUngrouped = item.id === UNGROUPED_ID;
+                    const isGroupHovered = hoveredGroupId === item.id;
+
+                    let groupIcon = item.icon;
+
+                    if (isGroupHovered) {
+                        groupIcon = isCollapsed ? ChevronRight : ChevronDown;
+                    }
+
+                    return (
+                        <div className={b('menu-group', {expanded: !isCollapsed, wrapper: true})}>
+                            {hasHeader && !isUngrouped && (
+                                <Item
+                                    {...item}
+                                    className={b('menu-group-header', {collapsed: isCollapsed})}
+                                    icon={groupIcon}
+                                    isExpanded={isExpanded}
+                                    editMode={editMode}
+                                    setCollapseBlocker={setCollapseBlocker}
+                                    onMouseEnter={() => {
+                                        setHoveredGroupId(item.id);
+                                    }}
+                                    onMouseLeave={() => {
+                                        setHoveredGroupId(null);
+                                    }}
+                                    onItemClick={onItemClickByIndex(
+                                        itemIndex,
+                                        onToggleGroupCollapsed
+                                            ? () => onToggleGroupCollapsed(groupId)
+                                            : undefined,
+                                    )}
+                                    onToggleVisibility={
+                                        onToggleMenuGroupVisibility
+                                            ? () => onToggleMenuGroupVisibility(groupId)
+                                            : undefined
+                                    }
+                                />
+                            )}
+
+                            {!isCollapsed && (
+                                <List<MenuItemsWithGroups>
+                                    items={groupListItems}
+                                    sortable={enableSorting}
+                                    onSortEnd={handleSecondLevelSortEnd(itemIndex)}
+                                    virtualized={false}
+                                    filterable={false}
+                                    itemClassName={b('menu-group-item', {
+                                        edit: enableSorting,
+                                        collapsed: !isExpanded,
+                                    })}
+                                    itemHeight={(item) => getItemHeight(item, isCompactMode)}
+                                    itemsHeight={(items) => getItemsHeight(items, isCompactMode)}
+                                    renderItem={(
+                                        nestedItem,
+                                        _isNestedItemActive,
+                                        nestedItemIndex,
+                                    ) => {
+                                        return (
+                                            <Item
+                                                {...nestedItem}
+                                                isExpanded={isExpanded}
+                                                className={b('group-item')}
+                                                editMode={editMode}
+                                                setCollapseBlocker={setCollapseBlocker}
+                                                onMouseEnter={() => {
+                                                    setHoveredGroupId(nestedItem.id);
+                                                }}
+                                                onMouseLeave={() => {
+                                                    setHoveredGroupId(null);
+                                                }}
+                                                onItemClick={onItemClickByIndex(
+                                                    // +1 because the first item is the group header
+                                                    itemIndex + nestedItemIndex + 1,
+                                                    nestedItem.onItemClick,
+                                                )}
+                                                onToggleVisibility={
+                                                    onToggleMenuItemVisibility
+                                                        ? () =>
+                                                              onToggleMenuItemVisibility(nestedItem)
+                                                        : undefined
+                                                }
+                                            />
+                                        );
+                                    }}
+                                />
+                            )}
+                        </div>
+                    );
+                }}
+            />
+        </div>
     );
 };
 
 export const CompositeBar: FC<CompositeBarProps> = ({
     type,
     items,
-    menuMoreTitle,
     onItemClick,
     onMoreClick,
-    multipleTooltip = false,
-    compact,
+    onToggleGroupCollapsed,
+    setCollapseBlocker,
+    isExpanded,
     compositeId,
+    className,
+    menuItemClassName,
+    editMode = false,
+    isCompactMode,
 }) => {
-    if (items.length === 0) {
+    if (!items || items.length === 0) {
         return null;
     }
-    let node: ReactNode;
 
     if (type === 'menu') {
-        const minHeight = getItemsMinHeight(items);
-        const collapseItem = getMoreButtonItem(menuMoreTitle);
-        node = (
-            <div className={b({autosizer: true})} style={{minHeight}}>
-                {items.length !== 0 && (
-                    <AutoSizer>
-                        {(size: Size) => {
-                            const width = Number.isNaN(size.width) ? 0 : size.width;
-                            const height = Number.isNaN(size.height) ? 0 : size.height;
-
-                            const {listItems, collapseItems} = getAutosizeListItems(
-                                items,
-                                height,
-                                collapseItem,
-                            );
-                            return (
-                                <div style={{width, height}}>
-                                    <CompositeBarView
-                                        compositeId={compositeId}
-                                        type="menu"
-                                        compact={compact}
-                                        items={listItems}
-                                        onItemClick={onItemClick}
-                                        onMoreClick={onMoreClick}
-                                        collapseItems={collapseItems}
-                                        multipleTooltip={multipleTooltip}
-                                    />
-                                </div>
-                            );
-                        }}
-                    </AutoSizer>
-                )}
-            </div>
-        );
-    } else {
-        node = (
-            <div className={b({subheader: true})}>
+        return (
+            <ScrollableWithScrollbar className={b(null, className)} recalcDeps={[items.length]}>
                 <CompositeBarView
-                    type="subheader"
-                    compact={compact}
+                    compositeId={compositeId}
+                    menuItemClassName={menuItemClassName}
+                    type="menu"
+                    isExpanded={isExpanded}
                     items={items}
                     onItemClick={onItemClick}
+                    onMoreClick={onMoreClick}
+                    onToggleGroupCollapsed={onToggleGroupCollapsed}
+                    setCollapseBlocker={setCollapseBlocker}
+                    editMode={editMode}
+                    isCompactMode={isCompactMode}
                 />
-            </div>
+            </ScrollableWithScrollbar>
         );
     }
-    return <MultipleTooltipProvider>{node}</MultipleTooltipProvider>;
+
+    return (
+        <div className={b({subheader: true}, className)}>
+            <CompositeBarView
+                menuItemClassName={menuItemClassName}
+                type="subheader"
+                isExpanded={isExpanded}
+                items={items}
+                onItemClick={onItemClick}
+                setCollapseBlocker={setCollapseBlocker}
+                editMode={editMode}
+                isCompactMode={isCompactMode}
+            />
+        </div>
+    );
 };

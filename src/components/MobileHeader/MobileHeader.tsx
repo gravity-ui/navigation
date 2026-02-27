@@ -36,7 +36,7 @@ const b = createBlock('mobile-header', styles);
 type PanelName = string | null;
 
 interface BurgerMenuProps extends Omit<BurgerMenuInnerProps, 'renderFooter'> {
-    renderFooter?: (data: {size: number; isCompact: boolean}) => React.ReactNode;
+    renderFooter?: (data: {size: number; isExpanded: boolean}) => React.ReactNode;
 }
 
 type OverlapPanelProps = Omit<CommonOverlapPanelProps, 'onClose' | 'open'>;
@@ -77,12 +77,12 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
         ref,
     ): React.ReactElement => {
         const targetRef = useForwardRef<HTMLDivElement>(ref);
-        const [compact] = useState(true);
+        const [pinned] = useState(false);
         const [openPanel, setOpenPanel] = useState<PanelName>(null);
         const [overlapPanelVisible, setOverlapPanelVisible] = useState(false);
 
         // for expand top panel cases (i.e. switch service panel). Will be removed if not used in future design
-        const size = compact ? MOBILE_HEADER_COMPACT_HEIGHT : MOBILE_HEADER_EXPANDED_HEIGHT;
+        const size = pinned ? MOBILE_HEADER_EXPANDED_HEIGHT : MOBILE_HEADER_COMPACT_HEIGHT;
 
         const onPanelToggle = useCallback(
             (name: PanelName) => {
@@ -179,9 +179,9 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
             () =>
                 burgerMenu.renderFooter?.({
                     size,
-                    isCompact: compact,
+                    isExpanded: pinned,
                 }),
-            [burgerMenu, size, compact],
+            [burgerMenu, size, pinned],
         );
 
         const onLogoClick = useCallback(
@@ -275,7 +275,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
         const allPanelItems = [burgerPanelItem, ...panelItems];
 
         return (
-            <div className={b({compact}, className)} ref={targetRef}>
+            <div className={b(null, className)} ref={targetRef}>
                 <div className={b('header-container')}>
                     {topAlert && (
                         <Suspense fallback={null}>
@@ -290,7 +290,7 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                             closeTitle={burgerCloseTitle}
                             openTitle={burgerOpenTitle}
                         />
-                        <MobileLogo {...logo} compact={compact} onClick={onLogoClick} />
+                        <MobileLogo {...logo} isExpanded={pinned} onClick={onLogoClick} />
 
                         <div className={b('side-item')}>{sideItemRenderContent?.({size})}</div>
                     </header>

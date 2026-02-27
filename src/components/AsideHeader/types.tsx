@@ -3,7 +3,7 @@ import * as React from 'react';
 import {DrawerProps, PopupProps, QAProps} from '@gravity-ui/uikit';
 
 import {RenderContentType} from '../Content';
-import {LogoProps, MenuItem, OpenModalSubscriber, TopAlertProps} from '../types';
+import {LogoProps, MenuGroup, MenuItem, OpenModalSubscriber, TopAlertProps} from '../types';
 
 import {AsideHeaderContextType} from './AsideHeaderContext';
 
@@ -12,7 +12,8 @@ export interface PanelItemProps extends DrawerProps {
 }
 
 export interface LayoutProps {
-    compact: boolean;
+    /** Navigation visual state. When `true`, the navigation is expanded (pinned open). When `false`, it is collapsed. */
+    pinned: boolean;
     className?: string;
     topAlert?: TopAlertProps;
 }
@@ -27,7 +28,6 @@ interface EditMenuProps {
 
 interface AsideHeaderGeneralProps extends QAProps {
     logo?: LogoProps;
-    multipleTooltip?: boolean;
     className?: string;
     collapseTitle?: string;
     expandTitle?: string;
@@ -36,22 +36,35 @@ interface AsideHeaderGeneralProps extends QAProps {
     customBackground?: React.ReactNode;
     customBackgroundClassName?: string;
     hideCollapseButton?: boolean;
+    /** When `true`, menu items use compact height. */
+    isCompactMode?: boolean;
     renderContent?: RenderContentType;
+    /**
+     * Render function for the footer section.
+     *
+     * Return types:
+     * - `React.ReactNode` - Renders custom content as-is
+     * - `React.ReactNode[]` - Wraps in FooterBar with horizontal/vertical layout based on isPinned
+     */
     renderFooter?: (data: {
         size: number;
-        compact: boolean;
+        isExpanded: boolean;
+        isPinned: boolean;
         asideRef: React.RefObject<HTMLDivElement>;
-    }) => React.ReactNode;
+        isCompactMode?: boolean;
+    }) => React.ReactNode | React.ReactNode[];
+    /** Render function for additional content after items (e.g., user profile). Receives options with setCollapseBlocker to block sidebar collapse while a popup is open. */
+    renderFooterAfter?: (options?: {setCollapseBlocker?: SetCollapseBlocker}) => React.ReactNode;
     collapseButtonWrapper?: (
         defaultButton: React.ReactNode,
         data: {
-            compact: boolean;
-            onChangeCompact?: (compact: boolean) => void;
+            isExpanded: boolean;
+            onChangePinned?: (pinned: boolean) => void;
         },
     ) => React.ReactNode;
     editMenuProps?: EditMenuProps;
     onClosePanel?: () => void;
-    onChangeCompact?: (compact: boolean) => void;
+    onChangePinned?: (pinned: boolean) => void;
     onMenuMoreClick?: () => void;
     onAllPagesClick?: () => void;
     openModalSubscriber?: (subscriber: OpenModalSubscriber) => void;
@@ -62,7 +75,10 @@ interface AsideHeaderDefaultProps {
     subheaderItems?: AsideHeaderItem[];
     menuItems?: AsideHeaderItem[];
     defaultMenuItems?: AsideHeaderItem[];
+    menuGroups?: MenuGroup[];
+    defaultMenuGroups?: MenuGroup[];
     onMenuItemsChanged?: (items: AsideHeaderItem[]) => void;
+    onMenuGroupsChanged?: (groups: MenuGroup[]) => void;
     headerDecoration?: boolean;
 }
 
@@ -85,9 +101,11 @@ export interface AsideHeaderItem extends MenuItem {
         item: AsideHeaderItem,
         collapsed: boolean,
         event: React.MouseEvent<HTMLElement, MouseEvent>,
+        options: {setCollapseBlocker: SetCollapseBlocker | undefined},
     ) => void;
     bringForward?: boolean;
-    compact?: boolean;
+    /** When `true`, forces the item to display in expanded form. */
+    isExpanded?: boolean;
 
     /**
      * @deprecated Use itemWrapper instead for popup functionality
@@ -124,3 +142,16 @@ export interface AsideHeaderItem extends MenuItem {
      */
     onOpenChangePopup?: PopupProps['onOpenChange'];
 }
+
+export interface GroupedMenuItem extends MenuItem {
+    groupId: string;
+    collapsible: boolean;
+    isCollapsed: boolean;
+    collapsedByDefault?: boolean;
+    items: MenuItemsWithGroups[];
+}
+
+export type MenuItemsWithGroups = MenuItem | GroupedMenuItem;
+
+/** Toggles a collapse blocker: pass `true` to block collapsing, `false` to unblock. */
+export type SetCollapseBlocker = (isBlocked: boolean) => void;

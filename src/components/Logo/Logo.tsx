@@ -1,7 +1,9 @@
 import React from 'react';
 
 import {Icon} from '@gravity-ui/uikit';
+import {CSSTransition} from 'react-transition-group';
 
+import {ASIDE_HEADER_EXPAND_TRANSITION_DELAY} from '../constants';
 import {LogoProps} from '../types';
 import {createBlock} from '../utils/cn';
 
@@ -9,27 +11,46 @@ import styles from './Logo.module.scss';
 
 const b = createBlock('logo', styles);
 
-export const Logo: React.FC<
-    LogoProps & {compact?: boolean; buttonClassName?: string; iconPlaceClassName?: string}
-> = ({
+const logoTransitionClasses = {
+    enter: b('logo-enter'),
+    enterActive: b('logo-enter-active'),
+    enterDone: b('logo-enter-done'),
+    exit: b('logo-exit'),
+    exitActive: b('logo-exit-active'),
+    exitDone: b('logo-exit-done'),
+};
+
+interface Props extends LogoProps {
+    placement: 'header' | 'footer';
+    isCompactMode?: boolean;
+    isExpanded?: boolean;
+    buttonClassName?: string;
+    iconPlaceClassName?: string;
+}
+
+export const Logo: React.FC<Props> = ({
     text,
     icon,
     iconSrc,
     iconClassName,
     iconPlaceClassName,
-    iconSize = 24,
     textSize = 15,
     href,
     target = '_self',
     wrapper,
     onClick,
-    compact,
+    isExpanded = true,
     className,
     buttonClassName,
+    isCompactMode,
+    placement,
     'aria-label': ariaLabel,
     'aria-labelledby': ariaLabelledby,
+    ...props
 }) => {
     const hasWrapper = typeof wrapper === 'function';
+    const defaultIconSize = isCompactMode === false ? 32 : 24;
+    const iconSize = props.iconSize || defaultIconSize;
 
     let buttonIcon;
 
@@ -49,7 +70,10 @@ export const Logo: React.FC<
         logo = text();
     } else {
         logo = (
-            <div className={b('logo')} style={{fontSize: textSize}}>
+            <div
+                className={b('logo', {collapsed: !isExpanded, placement})}
+                style={{fontSize: textSize}}
+            >
                 {text}
             </div>
         );
@@ -69,13 +93,20 @@ export const Logo: React.FC<
     const button = (
         <Button {...buttonProps} className={b('btn-logo', buttonClassName)} onClick={onClick}>
             <span className={b('logo-icon-place', iconPlaceClassName)}>{buttonIcon}</span>
-            {!compact && logo}
+
+            <CSSTransition
+                in={isExpanded}
+                timeout={ASIDE_HEADER_EXPAND_TRANSITION_DELAY}
+                classNames={logoTransitionClasses}
+            >
+                {logo}
+            </CSSTransition>
         </Button>
     );
 
     return (
         <div className={b(null, className)}>
-            {hasWrapper ? wrapper(button, Boolean(compact)) : button}
+            {hasWrapper ? wrapper(button, Boolean(isExpanded)) : button}
         </div>
     );
 };

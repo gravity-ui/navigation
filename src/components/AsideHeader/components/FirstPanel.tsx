@@ -1,36 +1,52 @@
-import React, {useRef} from 'react';
+import React, {useCallback, useRef} from 'react';
 
 import {setRef} from '@gravity-ui/uikit';
+import {CSSTransition} from 'react-transition-group';
 
+import {ASIDE_HEADER_EXPAND_TRANSITION_DELAY} from '../../constants';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
-import i18n from '../i18n';
 import {b} from '../utils';
 
-import {useVisibleMenuItems} from './AllPagesPanel';
-import {CollapseButton} from './CollapseButton/CollapseButton';
+import {useGroupedMenuItems} from './AllPagesPanel/useGroupedMenuItems';
 import {CompositeBar} from './CompositeBar';
+import {FooterBar} from './FooterBar';
 import {Header} from './Header';
 import {Panels} from './Panels';
 
 const MENU_ITEMS_COMPOSITE_ID = 'gravity-ui/navigation-menu-items-composite-bar';
+
+const asideTransitionClassNames = {
+    enter: b('aside-transition-enter'),
+    enterActive: b('aside-transition-enter-active'),
+    enterDone: b('aside-transition-enter-done'),
+    exit: b('aside-transition-exit'),
+    exitActive: b('aside-transition-exit-active'),
+};
 
 export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
     const {
         size,
         onItemClick,
         headerDecoration,
-        multipleTooltip,
-        menuMoreTitle,
         onMenuMoreClick,
         renderFooter,
-        compact,
+        onToggleGroupCollapsed,
+        renderFooterAfter,
+        pinned,
         customBackground,
         customBackgroundClassName,
         className,
-        hideCollapseButton,
+        menuItems,
+        menuGroups,
         qa,
+        onExpand,
+        onFold,
+        setCollapseBlocker,
+        isExpanded,
+        isCompactMode,
     } = useAsideHeaderInnerContext();
-    const visibleMenuItems = useVisibleMenuItems();
+
+    const flatListItems = useGroupedMenuItems(menuItems, menuGroups);
 
     const asideRef = useRef<HTMLDivElement>(null);
 
@@ -38,42 +54,92 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         setRef<HTMLDivElement>(ref, asideRef.current);
     }, [ref]);
 
+    const isExpandedByHover = !pinned && isExpanded;
+    const footerResult = renderFooter?.({
+        size,
+        isExpanded,
+        isPinned: pinned,
+        asideRef,
+        isCompactMode,
+    });
+    const canRenderFooterInHorizontalMode = Array.isArray(footerResult) && footerResult.length > 1;
+
+    const renderFooterContent = useCallback(() => {
+        if (canRenderFooterInHorizontalMode) {
+            return (
+                <FooterBar
+                    isPinned={pinned}
+                    isExpanded={isExpanded}
+                    renderAfter={renderFooterAfter}
+                    setCollapseBlocker={setCollapseBlocker}
+                >
+                    {footerResult}
+                </FooterBar>
+            );
+        }
+
+        return footerResult;
+    }, [
+        footerResult,
+        pinned,
+        isExpanded,
+        canRenderFooterInHorizontalMode,
+        setCollapseBlocker,
+        renderFooterAfter,
+    ]);
+
     return (
         <React.Fragment>
-            <div className={b('aside', className)} style={{width: size}} data-qa={qa}>
-                <div className={b('aside-popup-anchor')} ref={asideRef} />
-                {customBackground && (
-                    <div className={b('aside-custom-background', customBackgroundClassName)}>
-                        {customBackground}
-                    </div>
-                )}
-
-                <div className={b('aside-content', {['with-decoration']: headerDecoration})}>
-                    <Header />
-                    {visibleMenuItems?.length ? (
-                        <CompositeBar
-                            compositeId={MENU_ITEMS_COMPOSITE_ID}
-                            type="menu"
-                            compact={compact}
-                            items={visibleMenuItems}
-                            menuMoreTitle={menuMoreTitle ?? i18n('label_more')}
-                            onItemClick={onItemClick}
-                            onMoreClick={onMenuMoreClick}
-                            multipleTooltip={multipleTooltip}
-                        />
-                    ) : (
-                        <div className={b('menu-items')} />
+            <CSSTransition
+                in={isExpandedByHover}
+                timeout={ASIDE_HEADER_EXPAND_TRANSITION_DELAY}
+                classNames={asideTransitionClassNames}
+            >
+                <div
+                    className={b('aside', {['compact-mode']: isCompactMode}, className)}
+                    style={{width: size}}
+                    data-qa={qa}
+                    onMouseEnter={onExpand}
+                    onMouseLeave={onFold}
+                >
+                    <div className={b('aside-popup-anchor')} ref={asideRef} />
+                    {customBackground && (
+                        <div className={b('aside-custom-background', customBackgroundClassName)}>
+                            {customBackground}
+                        </div>
                     )}
-                    <div className={b('footer')}>
-                        {renderFooter?.({
-                            size,
-                            compact: Boolean(compact),
-                            asideRef,
-                        })}
+
+                    <div className={b('aside-content', {['with-decoration']: headerDecoration})}>
+                        <Header />
+
+                        {flatListItems?.length ? (
+                            <CompositeBar
+                                compositeId={MENU_ITEMS_COMPOSITE_ID}
+                                className={b('menu-items')}
+                                menuItemClassName={b('menu-item')}
+                                isExpanded={isExpanded}
+                                type="menu"
+                                items={flatListItems}
+                                onItemClick={onItemClick}
+                                onMoreClick={onMenuMoreClick}
+                                onToggleGroupCollapsed={onToggleGroupCollapsed}
+                                isCompactMode={isCompactMode}
+                                setCollapseBlocker={setCollapseBlocker}
+                            />
+                        ) : (
+                            <div className={b('menu-items')} />
+                        )}
+
+                        <div
+                            className={b('footer', {
+                                horizontal: canRenderFooterInHorizontalMode && pinned,
+                            })}
+                        >
+                            {renderFooterContent()}
+                        </div>
                     </div>
-                    {!hideCollapseButton && <CollapseButton />}
                 </div>
-            </div>
+            </CSSTransition>
             <Panels />
         </React.Fragment>
     );

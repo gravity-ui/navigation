@@ -6,13 +6,13 @@ import {AsideHeaderProps} from '../types';
 import logoIcon from '../../../../.storybook/assets/logo.svg';
 
 const AsideHeaderWrapper = ({Story, ...props}: AsideHeaderProps & {Story: FC}) => {
-    const [compact, setCompact] = React.useState(props.compact);
+    const [pinned, setPinned] = React.useState(props.pinned);
 
     return (
         <AsideHeader
             {...props}
-            compact={compact}
-            onChangeCompact={setCompact}
+            pinned={pinned}
+            onChangePinned={setPinned}
             renderContent={() => <Story />}
         />
     );
@@ -22,11 +22,11 @@ export function getAsideHeaderWrapper(
     props: AsideHeaderProps = {
         logo: {
             icon: logoIcon,
-            iconSize: 24,
+            iconSize: 32,
             text: 'My Service',
             'aria-label': 'My Service',
         },
-        compact: true,
+        pinned: false,
     },
 ) {
     return function withAsideHeaderWrapper(Story: FC) {

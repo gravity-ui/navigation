@@ -23,3 +23,31 @@
         outline-offset: -2px;
     }
 }
+
+@mixin opacity-transition($duration: 50ms, $easing: ease-in-out) {
+    &-enter {
+        opacity: 0;
+    }
+
+    &-enter-active {
+        opacity: 0;
+    }
+
+    &-enter-done {
+        opacity: 1;
+        transition: opacity $duration $easing;
+    }
+
+    &-exit {
+        opacity: 1;
+        transition: opacity $duration $easing;
+    }
+
+    &-exit-active {
+        opacity: 0;
+    }
+
+    &-exit-done {
+        opacity: 0;
+    }
+}

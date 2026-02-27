@@ -2,7 +2,7 @@ import React from 'react';
 
 import {Icon, QAProps} from '@gravity-ui/uikit';
 
-import {ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT, ITEM_HEIGHT} from '../../../constants';
+import {ASIDE_HEADER_COLLAPSED_WIDTH, HEADER_DIVIDER_HEIGHT, ITEM_HEIGHT} from '../../../constants';
 import {useAsideHeaderContext} from '../../AsideHeaderContext';
 import {b} from '../../utils';
 
@@ -14,9 +14,9 @@ interface Props extends QAProps {
 }
 
 export const AsideFallback: React.FC<Props> = ({headerDecoration, subheaderItemsCount = 0, qa}) => {
-    const {compact} = useAsideHeaderContext();
+    const {pinned} = useAsideHeaderContext();
 
-    const widthVar = compact ? '--gn-aside-header-min-width' : '--gn-aside-header-size';
+    const widthVar = pinned ? '--gn-aside-header-size' : '--gn-aside-header-min-width';
 
     const subheaderHeight = (1 + subheaderItemsCount) * ITEM_HEIGHT;
 
@@ -25,11 +25,11 @@ export const AsideFallback: React.FC<Props> = ({headerDecoration, subheaderItems
             <div className={b('aside-content', {'with-decoration': headerDecoration})}>
                 <div className={b('header', {'with-decoration': headerDecoration})}>
                     <div style={{height: subheaderHeight}} />
-                    {compact && headerDecoration ? (
+                    {!pinned && headerDecoration ? (
                         <Icon
                             data={headerDividerCollapsedIcon}
                             className={b('header-divider')}
-                            width={ASIDE_HEADER_COMPACT_WIDTH}
+                            width={ASIDE_HEADER_COLLAPSED_WIDTH}
                             height={HEADER_DIVIDER_HEIGHT}
                         />
                     ) : null}

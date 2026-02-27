@@ -14,7 +14,8 @@ function renderTag(tag: string) {
 
 export const EMPTY_CONTEXT_VALUE: AsideHeaderContextType = {
     size: ASIDE_HEADER_EXPANDED_WIDTH,
-    compact: true,
+    pinned: false,
+    isExpanded: false,
 };
 
 export const menuItemsShowcase: AsideHeaderProps['menuItems'] = [
@@ -69,12 +70,11 @@ export const menuItemsShowcase: AsideHeaderProps['menuItems'] = [
         title: 'Objects',
         tooltipText: 'Custom tooltip text',
         icon: Gear,
-        pinned: true,
         onItemClick({id, title, current}) {
             alert(JSON.stringify({id, title, current}));
         },
-        itemWrapper(params, makeItem, {collapsed, compact}) {
-            return !collapsed && !compact ? (
+        itemWrapper(params, makeItem, {isExpanded}) {
+            return isExpanded ? (
                 <div className="composite-bar-showcase__item-accent aside-header-showcase__item-accent">
                     {makeItem(params)}
                 </div>
@@ -88,7 +88,6 @@ export const menuItemsShowcase: AsideHeaderProps['menuItems'] = [
         title: 'Create smth',
         type: 'action',
         icon: Plus,
-        afterMoreButton: true,
         onItemClick({id, title, current}) {
             alert(JSON.stringify({id, title, current}));
         },
@@ -158,3 +157,179 @@ export const menuItemsClamped = MENU_ITEMS_CLAMPED.concat({
         rightAdornment: renderTag('new'),
     })),
 );
+
+export const generateManyMenuItems = (count = 20): AsideHeaderProps['menuItems'] => {
+    const items: AsideHeaderProps['menuItems'] = [];
+
+    const sections = [
+        'Dashboard',
+        'Analytics',
+        'Reports',
+        'Settings',
+        'Users',
+        'Projects',
+        'Tasks',
+        'Calendar',
+        'Messages',
+        'Files',
+        'Help',
+        'Support',
+    ];
+
+    sections.forEach((section, index) => {
+        items.push({
+            id: `section-${index}`,
+            title: section,
+            icon: Gear,
+            current: index === 0,
+            onItemClick(_item) {},
+        });
+
+        if (index % 3 === 0) {
+            const subItems = [`${section} Overview`, `${section} Details`, `${section} Settings`];
+
+            subItems.forEach((subItem, subIndex) => {
+                items.push({
+                    id: `section-${index}-sub-${subIndex}`,
+                    title: subItem,
+                    icon: Gear,
+                    onItemClick(_item) {},
+                });
+            });
+        }
+
+        if ((index + 1) % 4 === 0 && index < sections.length - 1) {
+            items.push({
+                id: `divider-${index}`,
+                title: '-',
+                type: 'divider',
+            });
+        }
+    });
+
+    const additionalCount = Math.max(0, count - items.length);
+    for (let i = 0; i < additionalCount; i++) {
+        items.push({
+            id: `additional-${i}`,
+            title: `Additional Item ${i + 1}`,
+            icon: Gear,
+            rightAdornment: i % 5 === 0 ? renderTag('New') : undefined,
+            onItemClick(_item) {},
+        });
+    }
+
+    return items;
+};
+
+export const menuItemsMany = generateManyMenuItems(25);
+export const menuItemsWithGroups: AsideHeaderProps['menuItems'] = [
+    {
+        id: 'overview',
+        title: 'Overview',
+        icon: Gear,
+        qa: 'menu-item-gear',
+        iconQa: 'menu-item-icon-gear',
+        groupId: 'main',
+    },
+    {
+        id: 'operations',
+        title: 'Operations',
+        icon: Gear,
+        rightAdornment: renderTag('New'),
+        groupId: 'main',
+    },
+    {
+        id: 'templates',
+        title: 'Main notifications long menu title',
+        icon: Gear,
+        groupId: 'main',
+    },
+    {
+        id: 'divider',
+        title: '-',
+        type: 'divider',
+    },
+    {
+        id: 'notifications',
+        title: 'Main notifications long long long long menu title',
+        icon: Plus,
+        current: true,
+        onItemClick({id, title, current}) {
+            alert(JSON.stringify({id, title, current}));
+        },
+        groupId: 'main',
+    },
+    {
+        id: 'dashboard',
+        title: 'Dashboard',
+        icon: Gear,
+        rightAdornment: renderTag('New'),
+        onItemClick({id, title, current}) {
+            alert(JSON.stringify({id, title, current}));
+        },
+        groupId: 'admin',
+    },
+    {
+        id: 'divider2',
+        title: '-',
+        type: 'divider',
+    },
+    {
+        id: 'id1',
+        title: 'Objects',
+        tooltipText: 'Custom tooltip text',
+        icon: Plus,
+        groupId: 'admin',
+        onItemClick({id, title, current}) {
+            alert(JSON.stringify({id, title, current}));
+        },
+        itemWrapper(params, makeItem, {isExpanded}) {
+            return isExpanded ? (
+                <div className="composite-bar-showcase__item-accent aside-header-showcase__item-accent">
+                    {makeItem(params)}
+                </div>
+            ) : (
+                makeItem(params)
+            );
+        },
+    },
+    {
+        id: 'action2',
+        title: 'Create smth',
+        type: 'action',
+        icon: Plus,
+        onItemClick({id, title, current}) {
+            alert(JSON.stringify({id, title, current}));
+        },
+    },
+    {
+        id: 'dashboard2',
+        title: 'Dashboard2',
+        icon: Gear,
+        rightAdornment: renderTag('New'),
+        onItemClick({id, title, current}) {
+            alert(JSON.stringify({id, title, current}));
+        },
+    },
+];
+
+export const menuGroupsWithIcons: AsideHeaderProps['menuGroups'] = [
+    {
+        id: 'main',
+        title: 'Main',
+        icon: Gear,
+        collapsible: true,
+        collapsedByDefault: false,
+        collapsed: false,
+        hidden: false,
+    },
+    {
+        id: 'admin',
+        title: 'Administration',
+        icon: Gear,
+        collapsible: true,
+        collapsedByDefault: false,
+        collapsed: false,
+        hidden: false,
+    },
+];

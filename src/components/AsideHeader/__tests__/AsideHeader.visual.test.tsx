@@ -5,8 +5,8 @@ import {test} from '~playwright/core';
 import {AsideHeaderStories} from './helpersPlaywright';
 
 test.describe('AsideHeader', () => {
-    test('render story: <AdvancedUsage>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.AdvancedUsage />, undefined, {
+    test('render story: <Showcase>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.Showcase />, undefined, {
             width: 1200,
             height: 720,
         });
@@ -14,17 +14,8 @@ test.describe('AsideHeader', () => {
         await expectScreenshot();
     });
 
-    test('render story: <Compact>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.Compact />, undefined, {
-            width: 1200,
-            height: 720,
-        });
-
-        await expectScreenshot();
-    });
-
-    test('render story: <CustomBackground>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.CustomBackground />, undefined, {
+    test('render story: <CollapsedNavigation>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.CollapsedNavigation />, undefined, {
             width: 1200,
             height: 720,
         });
@@ -41,8 +32,17 @@ test.describe('AsideHeader', () => {
         await expectScreenshot();
     });
 
-    test('render story: <Fallback>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.Fallback />, undefined, {
+    test('render story: <CustomBackground>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.CustomBackground />, undefined, {
+            width: 1200,
+            height: 720,
+        });
+
+        await expectScreenshot();
+    });
+
+    test('render story: <AdvancedUsage>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.AdvancedUsage />, undefined, {
             width: 1200,
             height: 720,
         });
@@ -77,17 +77,8 @@ test.describe('AsideHeader', () => {
         await expectScreenshot();
     });
 
-    test('render story: <MultipleTooltip>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.MultipleTooltip />, undefined, {
-            width: 1200,
-            height: 720,
-        });
-
-        await expectScreenshot();
-    });
-
-    test('render story: <Showcase>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.Showcase />, undefined, {
+    test('render story: <Fallback>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.Fallback />, undefined, {
             width: 1200,
             height: 720,
         });
@@ -97,6 +88,69 @@ test.describe('AsideHeader', () => {
 
     test('render story: <LineClamp>', async ({mount, expectScreenshot}) => {
         await mount(<AsideHeaderStories.LineClamp />, undefined, {
+            width: 1200,
+            height: 720,
+        });
+
+        await expectScreenshot();
+    });
+
+    test('render story: <CollapseButtonWrapper>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.CollapseButtonWrapper />, undefined, {
+            width: 1200,
+            height: 720,
+        });
+
+        await expectScreenshot();
+    });
+
+    test('render story: <ManyItems>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.ManyItems />, undefined, {
+            width: 1200,
+            height: 720,
+        });
+
+        await expectScreenshot();
+    });
+
+    test('render story: <GroupedMenuCollapsible>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.GroupedMenuCollapsible />, undefined, {
+            width: 1200,
+            height: 720,
+        });
+
+        await expectScreenshot();
+    });
+
+    test('render story: <CompactItemSizing>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.CompactItemSizing />, undefined, {
+            width: 1200,
+            height: 720,
+        });
+
+        await expectScreenshot();
+    });
+
+    test('render story: <CustomThemesWithNewColors>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.CustomThemesWithNewColors />, undefined, {
+            width: 1200,
+            height: 720,
+        });
+
+        await expectScreenshot();
+    });
+
+    test('render story: <FooterBarArray>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.FooterBarArray />, undefined, {
+            width: 1200,
+            height: 720,
+        });
+
+        await expectScreenshot();
+    });
+
+    test('render story: <FooterBarWithOverflow>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.FooterBarWithOverflow />, undefined, {
             width: 1200,
             height: 720,
         });

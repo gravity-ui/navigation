@@ -37,33 +37,39 @@ enum Panel {
 }
 
 export interface AsideHeaderShowcaseProps {
-    multipleTooltip?: boolean;
-    initialCompact?: boolean;
+    initialPinned?: boolean;
     topAlert?: TopAlertProps;
     customBackground?: React.ReactNode;
     customBackgroundClassName?: string;
     headerDecoration?: boolean;
     hideCollapseButton?: boolean;
+    isCompactMode?: boolean;
+    externalMenuItems?: AsideHeaderProps['menuItems'];
+    externalMenuGroups?: AsideHeaderProps['menuGroups'];
 }
 
-export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
-    multipleTooltip = false,
-    initialCompact = false,
+export const AsideHeaderShowcase: React.FC<React.PropsWithChildren<AsideHeaderShowcaseProps>> = ({
+    initialPinned = true,
     topAlert,
     customBackground,
     customBackgroundClassName,
     headerDecoration,
     hideCollapseButton,
+    isCompactMode,
+    externalMenuItems,
+    externalMenuGroups,
+    children,
 }) => {
     const ref = React.useRef<HTMLDivElement>(null);
     const [popupVisible, setPopupVisible] = React.useState(false);
     const [subheaderPopupVisible, setSubheaderPopupVisible] = React.useState(false);
     const [openPanel, setOpenPanel] = React.useState<Panel>();
-    const [compact, setCompact] = React.useState(initialCompact);
+    const [pinned, setPinned] = React.useState(initialPinned);
     const [addonHeaderDecoration, setHeaderDecoration] = React.useState<string>(
         BOOLEAN_OPTIONS.Yes,
     );
     const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
+    const [currentMenuGroups, setCurrentMenuGroups] = React.useState(externalMenuGroups);
 
     const openModalSubscriber = (callback: OpenModalSubscriber) => {
         // @ts-ignore
@@ -77,8 +83,9 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
         });
     };
 
-    const [menuItems, setMenuItems] =
-        React.useState<AsideHeaderProps['menuItems']>(menuItemsShowcase);
+    const [menuItems, setMenuItems] = React.useState<AsideHeaderProps['menuItems']>(
+        externalMenuItems || menuItemsShowcase,
+    );
 
     return (
         <div className={b()}>
@@ -104,6 +111,8 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                 }
                 onMenuItemsChanged={setMenuItems}
                 menuItems={menuItems}
+                menuGroups={currentMenuGroups}
+                onMenuGroupsChanged={setCurrentMenuGroups}
                 defaultMenuItems={menuItemsShowcase}
                 customBackground={customBackground}
                 customBackgroundClassName={customBackgroundClassName}
@@ -144,15 +153,14 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                             setOpenPanel(openPanel === Panel.Search ? undefined : Panel.Search),
                     },
                 ]}
-                compact={compact}
+                pinned={pinned}
                 hideCollapseButton={hideCollapseButton}
-                multipleTooltip={multipleTooltip}
+                isCompactMode={isCompactMode}
                 openModalSubscriber={openModalSubscriber}
                 topAlert={topAlert}
-                renderFooter={({compact, asideRef}) => (
+                renderFooter={({asideRef}) => (
                     <React.Fragment>
                         <FooterItem
-                            compact={compact}
                             id={'infra'}
                             icon={Gear}
                             current={popupVisible}
@@ -165,12 +173,14 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                                 </div>
                             }
                             tooltipText={'Minor issue (Now)'}
-                            onItemClick={() => {
+                            onItemClick={(_, __, ___, {setCollapseBlocker}) => {
+                                setCollapseBlocker?.(true);
+
                                 setOpenPanel(undefined);
                                 setPopupVisible(!popupVisible);
                             }}
                             enableTooltip={false}
-                            itemWrapper={(params, makeItem) => (
+                            itemWrapper={(params, makeItem, {setCollapseBlocker}) => (
                                 <React.Fragment>
                                     {makeItem(params)}
                                     <Popup
@@ -181,6 +191,8 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                                         offset={{mainAxis: 10, crossAxis: 10}}
                                         anchorElement={asideRef.current}
                                         onOpenChange={(open) => {
+                                            setCollapseBlocker?.(open);
+
                                             if (!open) setPopupVisible(false);
                                         }}
                                     >
@@ -219,7 +231,6 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                                 );
                             }}
                             bringForward
-                            compact={compact}
                         />
                         <FooterItem
                             id={'user-settings'}
@@ -234,31 +245,32 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                                         : Panel.UserSettings,
                                 );
                             }}
-                            compact={compact}
                         />
                     </React.Fragment>
                 )}
                 renderContent={() => {
                     return (
-                        <div className={b('content')}>
-                            <pre>{placeholderText}</pre>
-                            <SegmentedRadioGroup
-                                value={addonHeaderDecoration}
-                                onChange={(event) => {
-                                    setHeaderDecoration(event.target.value);
-                                }}
-                            >
-                                <SegmentedRadioGroup.Option value={BOOLEAN_OPTIONS.No}>
-                                    No
-                                </SegmentedRadioGroup.Option>
-                                <SegmentedRadioGroup.Option value={BOOLEAN_OPTIONS.Yes}>
-                                    Yes
-                                </SegmentedRadioGroup.Option>
-                            </SegmentedRadioGroup>
-                            <br />
-                            <br />
-                            <Button onClick={() => setIsModalOpen(true)}>Open Modal</Button>
-                        </div>
+                        children || (
+                            <div className={b('content')}>
+                                <pre>{placeholderText}</pre>
+                                <SegmentedRadioGroup
+                                    value={addonHeaderDecoration}
+                                    onChange={(event) => {
+                                        setHeaderDecoration(event.target.value);
+                                    }}
+                                >
+                                    <SegmentedRadioGroup.Option value={BOOLEAN_OPTIONS.No}>
+                                        No
+                                    </SegmentedRadioGroup.Option>
+                                    <SegmentedRadioGroup.Option value={BOOLEAN_OPTIONS.Yes}>
+                                        Yes
+                                    </SegmentedRadioGroup.Option>
+                                </SegmentedRadioGroup>
+                                <br />
+                                <br />
+                                <Button onClick={() => setIsModalOpen(true)}>Open Modal</Button>
+                            </div>
+                        )
                     );
                 }}
                 panelItems={[
@@ -288,8 +300,8 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                     },
                 ]}
                 onClosePanel={() => setOpenPanel(undefined)}
-                onChangeCompact={(v) => {
-                    setCompact(v);
+                onChangePinned={(v) => {
+                    setPinned(v);
                 }}
                 onMenuMoreClick={() => console.log('onMenuMoreClick')}
                 onAllPagesClick={() => console.log('onAllPagesClick')}

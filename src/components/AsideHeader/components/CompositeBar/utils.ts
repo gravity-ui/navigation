@@ -1,11 +1,18 @@
-import {Ellipsis} from '@gravity-ui/icons';
+import {ITEM_GAP, ITEM_HEIGHT, ITEM_HEIGHT_COMPACT} from '../../../constants';
+import {AsideHeaderItem, GroupedMenuItem, MenuItemsWithGroups} from '../../types';
+import {getGroupBlockHeight} from '../../utils/getGroupHeight';
 
-import {ITEM_HEIGHT} from '../../../constants';
-import {AsideHeaderItem} from '../../types';
+function getGroupHeight(compositeItem: GroupedMenuItem, isCompactMode?: boolean) {
+    const visibleGroupItems = compositeItem.isCollapsed ? [] : compositeItem.items;
 
-import {COLLAPSE_ITEM_ID} from './constants';
+    return getGroupBlockHeight(visibleGroupItems, isCompactMode);
+}
 
-export function getItemHeight(compositeItem: AsideHeaderItem) {
+export function getItemHeight(compositeItem: MenuItemsWithGroups, isCompactMode?: boolean) {
+    if ('items' in compositeItem && compositeItem.items && compositeItem.items?.length > 0) {
+        return getGroupHeight(compositeItem, isCompactMode);
+    }
+
     switch (compositeItem.type) {
         case 'action':
             return 50;
@@ -13,12 +20,14 @@ export function getItemHeight(compositeItem: AsideHeaderItem) {
             return 15;
 
         default:
-            return ITEM_HEIGHT;
+            return isCompactMode ? ITEM_HEIGHT_COMPACT : ITEM_HEIGHT;
     }
 }
 
-export function getItemsHeight<T extends AsideHeaderItem>(items: T[]) {
-    return items.reduce((sum, item) => sum + getItemHeight(item), 0);
+export function getItemsHeight<T extends AsideHeaderItem>(items: T[], isCompactMode?: boolean) {
+    const gaps = items.length > 1 ? (items.length - 1) * ITEM_GAP : 0;
+
+    return items.reduce((sum, item) => sum + getItemHeight(item, isCompactMode), 0) + gaps;
 }
 
 export function getSelectedItemIndex(compositeItems: AsideHeaderItem[]) {
@@ -26,94 +35,77 @@ export function getSelectedItemIndex(compositeItems: AsideHeaderItem[]) {
     return index === -1 ? undefined : index;
 }
 
-function getPinnedItems(compositeItems: AsideHeaderItem[]) {
-    const pinnedItems: AsideHeaderItem[] = [];
-    for (const compositeItem of compositeItems) {
-        if (compositeItem.pinned) {
-            pinnedItems.push(compositeItem);
-        } else if (compositeItem.type === 'divider') {
-            if (pinnedItems.length > 0 && pinnedItems[pinnedItems.length - 1].type !== 'divider') {
-                pinnedItems.push(compositeItem);
-            }
+/** Removes consecutive dividers so that at most one divider is shown between other items. */
+function filterConsecutiveDividers<T extends AsideHeaderItem>(items: T[]): T[] {
+    return items.filter((item, index) => {
+        if (item.type !== 'divider') {
+            return true;
         }
-    }
-    return pinnedItems;
+
+        const prev = items[index - 1];
+
+        return prev?.type !== 'divider';
+    });
 }
 
-export function getItemsMinHeight(compositeItems: AsideHeaderItem[]) {
-    const pinnedItems = getPinnedItems(compositeItems);
-    const afterMoreButtonItems = compositeItems.filter(({afterMoreButton}) => afterMoreButton);
+/** Removes dividers from the start and end of the list. */
+function filterLeadingAndTrailingDividers<T extends MenuItemsWithGroups>(items: T[]): T[] {
+    const firstNonDividerIndex = items.findIndex((item) => item.type !== 'divider');
 
-    return (
-        getItemsHeight(pinnedItems) +
-        getItemsHeight(afterMoreButtonItems) +
-        (pinnedItems.length === compositeItems.length ? 0 : ITEM_HEIGHT)
-    );
-}
-
-export function getMoreButtonItem(menuMoreTitle?: string): AsideHeaderItem {
-    return {
-        id: COLLAPSE_ITEM_ID,
-        title: menuMoreTitle,
-        icon: Ellipsis,
-        iconSize: 18,
-    };
-}
-
-export function getAutosizeListItems(
-    compositeItems: AsideHeaderItem[],
-    height: number,
-    collapseItem: AsideHeaderItem,
-): {
-    listItems: AsideHeaderItem[];
-    collapseItems: AsideHeaderItem[];
-} {
-    const afterMoreButtonItems = compositeItems.filter(({afterMoreButton}) => afterMoreButton);
-    const regularItems = compositeItems.filter(({afterMoreButton}) => !afterMoreButton);
-    const listItems = [...regularItems, ...afterMoreButtonItems];
-
-    const allItemsHeight = getItemsHeight(listItems);
-    if (allItemsHeight <= height) {
-        return {listItems, collapseItems: []};
+    if (firstNonDividerIndex === -1) {
+        return [];
     }
 
-    const collapseItemHeight = getItemHeight(collapseItem);
+    let lastNonDividerIndex = items.length - 1;
 
-    listItems.splice(regularItems.length, 0, collapseItem);
-    const collapseItems: AsideHeaderItem[] = [];
-
-    let listHeight = allItemsHeight + collapseItemHeight;
-    let index = listItems.length;
-    while (listHeight > height) {
-        if (index === 0) {
-            break;
-        }
-        index--;
-
-        const compositeItem = listItems[index];
-        if (
-            compositeItem.pinned ||
-            compositeItem.id === COLLAPSE_ITEM_ID ||
-            compositeItem.afterMoreButton
-        ) {
-            continue;
-        }
-        if (compositeItem.type === 'divider') {
-            if (index + 1 < listItems.length && listItems[index + 1]?.type === 'divider') {
-                listHeight -= getItemHeight(compositeItem);
-                listItems.splice(index, 1);
-            }
-            continue;
-        }
-        listHeight -= getItemHeight(compositeItem);
-        collapseItems.unshift(...listItems.splice(index, 1));
-    }
-    if (
-        listItems[index]?.type === 'divider' &&
-        (index === 0 || listItems[index - 1]?.type === 'divider')
+    while (
+        lastNonDividerIndex >= firstNonDividerIndex &&
+        items[lastNonDividerIndex].type === 'divider'
     ) {
-        listItems.splice(index, 1);
+        lastNonDividerIndex--;
     }
 
-    return {listItems, collapseItems};
+    if (lastNonDividerIndex < firstNonDividerIndex) {
+        return [];
+    }
+    return items.slice(firstNonDividerIndex, lastNonDividerIndex + 1);
+}
+
+export function getVisibleItemsWithFilteredDividers(
+    items: MenuItemsWithGroups[],
+    allPagesId?: string,
+) {
+    const visible = items
+        .filter((item) => !item.hidden)
+        .map((item) => {
+            if ('items' in item && item.items) {
+                return {
+                    ...item,
+                    items: filterRedundantDividers(
+                        item.items.filter((nested) => !nested.hidden),
+                        allPagesId,
+                    ),
+                };
+            }
+            return item;
+        });
+
+    return filterRedundantDividers(visible, allPagesId);
+}
+
+export function filterRedundantDividers<T extends MenuItemsWithGroups>(
+    items: T[],
+    allPagesId?: string,
+) {
+    const nonDividers = items.filter((item) => item.type !== 'divider');
+    const hasNoNonDividers = nonDividers.length === 0;
+    const isOnlyAllPagesItem =
+        nonDividers.length === 1 && allPagesId !== undefined && nonDividers[0].id === allPagesId;
+    const hasNoRealContent = hasNoNonDividers || isOnlyAllPagesItem;
+
+    if (hasNoRealContent) {
+        return nonDividers;
+    }
+
+    return filterLeadingAndTrailingDividers(filterConsecutiveDividers(items));
 }

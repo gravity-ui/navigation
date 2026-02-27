@@ -5,6 +5,7 @@ import {AsideHeaderItem} from '../../types';
 import i18n from './i18n';
 
 export const ALL_PAGES_ID = 'all-pages' as const;
+export const UNGROUPED_ID = 'ungrouped' as const;
 
 export function getAllPagesMenuItem(): AsideHeaderItem {
     return {

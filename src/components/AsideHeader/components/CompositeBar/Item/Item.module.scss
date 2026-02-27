@@ -3,13 +3,12 @@
 
 $block: '.#{variables.$ns}composite-bar-item';
 
-$actionLeftRightMargin: 10px;
-
 #{$block} {
     @include mixins.accessibility-button;
 
     $class: &;
-    --gn-composite-bar-item-action-size: 36px;
+
+    --gn-composite-bar-item-action-size: var(--_--item-height);
 
     --_--horizontal-divider-line-color: var(--g-color-line-generic);
 
@@ -27,67 +26,205 @@ $actionLeftRightMargin: 10px;
     --_--item-selected-text-color: var(--g-color-text-primary);
     --_--item-selected-background-color: var(--g-color-base-selection);
 
+    // Zone-aware background variables (overridden by zone context)
+    // Default values use --gn-aside-header-item-* for root items compatibility
+    --_--zone-bg: transparent;
+    --_--zone-bg-hover: var(
+        --gn-aside-header-item-background-color-hover,
+        var(--_--item-background-color-hover)
+    );
+    --_--zone-current-bg: var(
+        --gn-aside-header-item-current-background-color,
+        var(--_--item-selected-background-color)
+    );
+    --_--zone-current-bg-hover: var(
+        --gn-aside-header-item-current-background-color-hover,
+        var(--_--zone-current-bg)
+    );
+
     display: flex;
     min-width: 0;
     width: 100%;
-    height: 100%;
+    height: var(--_--item-height, #{variables.$item-height});
     align-items: center;
     cursor: pointer;
     padding: 0;
 
-    &:global(.#{variables.$ns}footer-item) {
-        height: 40px;
+    // Top zone (subheader) variable overrides
+    :global(.#{variables.$ns}composite-bar_subheader) & {
+        --_--zone-bg: var(--gn-aside-top-item-background-color, transparent);
+        --_--zone-bg-hover: var(
+            --gn-aside-top-item-background-color-hover,
+            var(--_--item-background-color-hover)
+        );
+        --_--zone-current-bg: var(
+            --gn-aside-top-item-current-background-color,
+            var(--_--item-selected-background-color)
+        );
+        --_--zone-current-bg-hover: var(
+            --gn-aside-top-item-current-background-color-hover,
+            var(--_--zone-current-bg)
+        );
     }
 
-    &__icon {
+    // Main zone (group items) variable overrides
+    :global(.#{variables.$ns}composite-bar__menu-group_wrapper) & {
+        --_--zone-bg-hover: var(
+            --gn-aside-main-group-item-background-color-hover,
+            var(--_--item-background-color-hover)
+        );
+        --_--zone-current-bg: var(
+            --gn-aside-main-group-item-current-background-color,
+            var(--_--item-selected-background-color)
+        );
+        --_--zone-current-bg-hover: var(
+            --gn-aside-main-group-item-current-background-color-hover,
+            var(--_--zone-current-bg)
+        );
+    }
+
+    // Bottom zone (footer) variable overrides
+    :global(.#{variables.$ns}footer-item) & {
+        --_--zone-bg-hover: var(
+            --gn-aside-bottom-item-background-color-hover,
+            var(--_--item-background-color-hover)
+        );
+        --_--zone-current-bg: var(
+            --gn-aside-bottom-item-current-background-color,
+            var(--_--item-selected-background-color)
+        );
+        --_--zone-current-bg-hover: var(
+            --gn-aside-bottom-item-current-background-color-hover,
+            var(--_--zone-current-bg)
+        );
+    }
+
+    // Mixin for compact mode background
+    @mixin item-bg {
+        position: relative;
+        background-color: transparent;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            z-index: -1;
+            width: var(--_--item-height);
+            height: var(--_--item-height);
+            margin-top: calc(var(--_--item-height) / -2);
+            margin-left: calc(var(--_--item-height) / -2);
+            border-radius: var(
+                --gn-aside-header-item-collapsed-radius,
+                var(--_--item-collapsed-radius)
+            );
+        }
+    }
+
+    // Background styles - applies to all items (zone variables are overridden by zone context)
+    &#{$class}_type_regular {
+        background-color: var(--_--zone-bg);
+
+        #{$class}__btn-icon {
+            @include item-bg();
+        }
+    }
+
+    &#{$class}_current#{$class}_type_regular {
+        background-color: var(--_--zone-current-bg);
+    }
+
+    &:hover#{$class}_type_regular {
+        background-color: var(--_--zone-current-bg-hover);
+    }
+
+    &:not(#{$class}_current):hover#{$class}_type_regular {
+        background-color: var(--_--zone-bg-hover);
+    }
+
+    &__icon-place {
+        flex-shrink: 0;
+        width: var(--_--item-height, #{variables.$item-height});
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
         color: var(--gn-aside-header-item-icon-color, var(--_--item-icon-color));
 
         #{$class}_current & {
             color: var(
-                --gn-aside-header-item-current-icon-color,
-                var(--gn-aside-header-item-icon-color, var(--_--item-icon-color))
+                --gn-aside-main-group-item-current-background-color,
+                var(
+                    --gn-aside-header-item-current-icon-color,
+                    var(--gn-aside-header-item-icon-color, var(--_--item-icon-color))
+                )
             );
         }
 
-        :global(.#{variables.$ns}footer-item) &,
-        :global(.#{variables.$ns}composite-bar-highlighted-item) &,
-        :global(.#{variables.$ns}composite-bar_subheader) & {
+        :global(.#{variables.$ns}composite-bar-highlighted-item) & {
             color: var(
                 --gn-aside-header-general-item-icon-color,
                 var(--_--item-general-icon-color)
             );
         }
 
-        :global(.#{variables.$ns}footer-item) #{$class}_current &,
-        :global(.#{variables.$ns}composite-bar-highlighted-item) #{$class}_current &,
-        :global(.#{variables.$ns}composite-bar_subheader) #{$class}_current & {
+        :global(.#{variables.$ns}composite-bar-highlighted-item) #{$class}_current & {
             color: var(
                 --gn-aside-header-item-current-icon-color,
                 var(--gn-aside-header-general-item-icon-color, var(--_--item-general-icon-color))
             );
         }
 
-        // FIXME: fix hack in the next major
-        &-tooltip .g-action-tooltip__description {
-            color: var(--g-color-text-light-primary);
-            margin-block-start: 0px;
+        :global(.#{variables.$ns}composite-bar_subheader) & {
+            color: var(
+                --gn-aside-top-item-icon-color,
+                var(--gn-aside-header-general-item-icon-color, var(--_--item-general-icon-color))
+            );
         }
-    }
 
-    &__icon-place {
-        flex-shrink: 0;
-        width: var(--gn-aside-header-min-width);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
+        :global(.#{variables.$ns}composite-bar_subheader) #{$class}_current & {
+            color: var(
+                --gn-aside-top-item-current-icon-color,
+                var(
+                    --gn-aside-header-item-current-icon-color,
+                    var(
+                        --gn-aside-header-general-item-icon-color,
+                        var(--_--item-general-icon-color)
+                    )
+                )
+            );
+        }
+
+        // Footer (Bottom zone) icon color
+        :global(.#{variables.$ns}footer-item) & {
+            color: var(
+                --gn-aside-bottom-item-icon-color,
+                var(--gn-aside-header-general-item-icon-color, var(--_--item-general-icon-color))
+            );
+        }
+
+        :global(.#{variables.$ns}footer-item) #{$class}_current & {
+            color: var(
+                --gn-aside-bottom-item-current-icon-color,
+                var(--gn-aside-header-item-current-icon-color, var(--_--item-general-icon-color))
+            );
+        }
     }
 
     &__title {
         display: flex;
         align-items: center;
         overflow: hidden;
-        margin-right: 16px;
+        justify-content: space-between;
+        margin: 0 var(--g-spacing-4) 0 var(--g-spacing-2);
+    }
+
+    &__transition-title {
+        @include mixins.opacity-transition(50ms, ease-in-out);
+    }
+
+    &__visibility-button {
+        margin-left: auto;
     }
 
     &__title-text {
@@ -98,12 +235,34 @@ $actionLeftRightMargin: 10px;
         -webkit-line-clamp: 2;
         overflow: hidden;
         text-align: start;
+        font-size: var(--g-text-body-short-font-size);
+        line-height: var(--g-text-body-short-line-height);
 
         color: var(--gn-aside-header-item-text-color, var(--_--item-text-color));
 
         #{$class}_current & {
             color: var(
                 --gn-aside-header-item-current-text-color,
+                var(--_--item-selected-text-color)
+            );
+        }
+
+        :global(.#{variables.$ns}composite-bar_subheader) & {
+            color: var(--gn-aside-top-item-text-color, var(--_--item-text-color));
+        }
+
+        :global(.#{variables.$ns}composite-bar_subheader) #{$class}_current & {
+            color: var(--gn-aside-top-item-current-text-color, var(--_--item-selected-text-color));
+        }
+
+        // Footer (Bottom zone) text color
+        :global(.#{variables.$ns}footer-item) & {
+            color: var(--gn-aside-bottom-item-text-color, var(--_--item-text-color));
+        }
+
+        :global(.#{variables.$ns}footer-item) #{$class}_current & {
+            color: var(
+                --gn-aside-bottom-item-current-text-color,
                 var(--_--item-selected-text-color)
             );
         }
@@ -136,7 +295,7 @@ $actionLeftRightMargin: 10px;
     }
 
     &__menu-divider {
-        margin: 0 8px;
+        margin: 0 10px;
         width: 100%;
         border-top: 1px solid
             var(--gn-aside-header-divider-horizontal-color, var(--_--horizontal-divider-line-color));
@@ -175,7 +334,7 @@ $actionLeftRightMargin: 10px;
     &_type_action {
         justify-content: center;
         height: var(--gn-composite-bar-item-action-size);
-        margin: 0 $actionLeftRightMargin 8px;
+        margin-bottom: var(--g-spacing-2);
         background: var(--gn-aside-header-item-action-color, var(--_--item-action-color));
         box-shadow:
             0px 0px 0px 1px rgba(0, 0, 0, 0.03),
@@ -207,148 +366,16 @@ $actionLeftRightMargin: 10px;
         }
 
         &:global(.#{variables.$ns}footer-item) {
-            width: calc(100% - 2 * $actionLeftRightMargin);
+            width: calc(100% - 2 * var(--_--item-margin-inline));
         }
     }
 
-    &__icon-tooltip {
-        display: flex;
-        box-sizing: border-box;
-        height: 30px;
-        padding: 8px 12px;
-        align-items: center;
-
-        :global(.g-action-tooltip__description) {
-            margin: 0;
-            margin-block: 0;
-
-            color: var(--g-color-text-light-primary);
-        }
-    }
-
-    &__icon-tooltip_item-type_action {
-        margin-left: 10px;
-    }
-
-    &:not(&_compact) {
-        &#{$class}_current {
-            &#{$class}_type_regular {
-                background-color: var(
-                    --gn-aside-header-item-current-background-color,
-                    var(--_--item-selected-background-color)
-                );
-
-                border-radius: var(--gn-aside-header-item-expanded-radius);
-            }
-        }
-
-        &:hover {
-            &#{$class}_type_regular {
-                background-color: var(
-                    --gn-aside-header-item-current-background-color-hover,
-                    var(
-                        --gn-aside-header-item-current-background-color,
-                        var(--_--item-selected-background-color)
-                    )
-                );
-
-                border-radius: var(--gn-aside-header-item-expanded-radius);
-            }
-        }
-
-        &:not(#{$class}_current):hover {
-            &#{$class}_type_regular {
-                background-color: var(
-                    --gn-aside-header-item-background-color-hover,
-                    var(--_--item-background-color-hover)
-                );
-
-                border-radius: var(--gn-aside-header-item-expanded-radius);
-            }
-        }
-    }
-
-    &_compact {
-        @mixin item-bg {
-            position: relative;
-            background-color: transparent;
-
-            &::before {
-                content: '';
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                z-index: -1;
-                width: var(
-                    --gn-aside-header-item-icon-background-size,
-                    var(--_--item-icon-background-size)
-                );
-                height: var(
-                    --gn-aside-header-item-icon-background-size,
-                    var(--_--item-icon-background-size)
-                );
-                margin-top: -19px;
-                margin-left: -19px;
-                border-radius: var(
-                    --gn-aside-header-item-collapsed-radius,
-                    var(--_--item-collapsed-radius)
-                );
-            }
-        }
-
+    &_collapsed {
         &#{$class}_type_action {
             width: var(--gn-composite-bar-item-action-size);
 
             & #{$class}__title {
                 margin: 0;
-            }
-        }
-
-        &#{$class}_current {
-            &#{$class}_type_regular {
-                #{$class}__btn-icon {
-                    @include item-bg();
-
-                    &::before {
-                        background-color: var(
-                            --gn-aside-header-item-current-background-color,
-                            var(--_--item-selected-background-color)
-                        );
-                    }
-                }
-            }
-        }
-
-        &:hover {
-            &#{$class}_type_regular {
-                #{$class}__btn-icon {
-                    @include item-bg();
-
-                    &::before {
-                        background-color: var(
-                            --gn-aside-header-item-current-background-color-hover,
-                            var(
-                                --gn-aside-header-item-current-background-color,
-                                var(--_--item-selected-background-color)
-                            )
-                        );
-                    }
-                }
-            }
-        }
-
-        &:not(#{$class}_current):hover {
-            &#{$class}_type_regular {
-                #{$class}__btn-icon {
-                    @include item-bg();
-
-                    &::before {
-                        background-color: var(
-                            --gn-aside-header-item-background-color-hover,
-                            var(--_--item-background-color-hover)
-                        );
-                    }
-                }
             }
         }
     }

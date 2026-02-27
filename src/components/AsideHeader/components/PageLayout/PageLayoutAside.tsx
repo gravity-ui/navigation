@@ -5,12 +5,21 @@ import {AsideHeaderInnerContextProvider, useAsideHeaderContext} from '../../Asid
 import {AsideHeaderProps} from '../../types';
 import {useAsideHeaderInnerContextValue} from '../../useAsideHeaderInnerContextValue';
 
-type Props = Omit<AsideHeaderProps, 'compact' | 'size'>;
+type Props = Omit<AsideHeaderProps, 'pinned' | 'size'>;
 
 export const PageLayoutAside = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
-    const {size, compact} = useAsideHeaderContext();
+    const {size, pinned, isExpanded, onExpand, onFold, setCollapseBlocker} =
+        useAsideHeaderContext();
 
-    const asideHeaderInnerContextValue = useAsideHeaderInnerContextValue({...props, size, compact});
+    const asideHeaderInnerContextValue = useAsideHeaderInnerContextValue({
+        size,
+        pinned,
+        isExpanded,
+        onExpand,
+        onFold,
+        setCollapseBlocker,
+        ...props,
+    });
 
     return (
         <AsideHeaderInnerContextProvider value={asideHeaderInnerContextValue}>
