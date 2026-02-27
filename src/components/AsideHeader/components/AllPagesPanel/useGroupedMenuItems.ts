@@ -83,7 +83,6 @@ export const useGroupedMenuItems = (
                             title: group?.title ?? groupId,
                             icon: group?.icon,
                             hidden: isGroupHidden,
-                            isDisabled: isAllGroupItemsHidden,
                             collapsible: group?.collapsible,
                             collapsedByDefault: group?.collapsedByDefault,
                             isCollapsed: group?.collapsed,

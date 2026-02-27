@@ -34,7 +34,6 @@ const group = (
     items,
     collapsible: true,
     isCollapsed: false,
-    isDisabled: false,
 });
 
 describe('getFlatListIndexForSortableIndex', () => {

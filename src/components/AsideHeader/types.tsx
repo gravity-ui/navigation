@@ -147,7 +147,6 @@ export interface GroupedMenuItem extends MenuItem {
     groupId: string;
     collapsible: boolean;
     isCollapsed: boolean;
-    isDisabled: boolean;
     collapsedByDefault?: boolean;
     items: MenuItemsWithGroups[];
 }
