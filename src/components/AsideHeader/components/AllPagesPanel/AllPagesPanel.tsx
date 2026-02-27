@@ -12,9 +12,9 @@ import {ALL_PAGES_ID} from './constants';
 import i18n from './i18n';
 import {useGroupedMenuItems} from './useGroupedMenuItems';
 import {buildExpandedFromFlatList} from './utils/buildExpandedFromFlatList';
+import {getExpandedIndexForSortableIndex} from './utils/getExpandedIndexForSortableIndex';
 import {getIsMenuItem} from './utils/getIsMenuItem';
-import {getRealIndexInGroup} from './utils/getRealIndexInGroup';
-import {sortMenuItems} from './utils/sortMenuItems';
+import {applySecondLevelSort} from './utils/getRealIndexInGroup';
 import {sortMenuItemsWithDividers} from './utils/sortMenuItemsWithDividers';
 
 import styles from './AllPagesPanel.module.scss';
@@ -174,15 +174,20 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
 
             const currentFlatList = menuItemsRef.current || [];
             const sortedResult = sortMenuItemsWithDividers(oldIndex, newIndex, currentFlatList);
-
-            // convert to expanded list and pass to onMenuItemsChanged
+            const expandedItems = buildExpandedFromFlatList(currentFlatList);
             const updatedItems = buildExpandedFromFlatList(sortedResult);
 
-            if (updatedItems) {
-                onMenuItemsChanged?.(updatedItems);
+            const realOldIndex = getExpandedIndexForSortableIndex(oldIndex, currentFlatList);
+            const realNewIndex = getExpandedIndexForSortableIndex(newIndex, sortedResult);
+            const changedItem = expandedItems[realOldIndex];
+
+            onMenuItemsChanged?.(updatedItems);
+
+            if (changedItem && getIsMenuItem(changedItem)) {
+                editMenuProps?.onChangeItemsOrder?.(changedItem, realOldIndex, realNewIndex);
             }
         },
-        [onMenuItemsChanged],
+        [onMenuItemsChanged, editMenuProps],
     );
 
     const onSecondLevelSortEnd = useCallback(
@@ -193,17 +198,26 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                 }
 
                 const currentFlatList = menuItemsRef.current || [];
-                const realOldIndex = getRealIndexInGroup(groupIndex, oldIndex, currentFlatList);
-                const realNewIndex = getRealIndexInGroup(groupIndex, newIndex, currentFlatList);
-                const expandedItems = buildExpandedFromFlatList(currentFlatList);
+                const result = applySecondLevelSort(
+                    groupIndex,
+                    oldIndex,
+                    newIndex,
+                    currentFlatList,
+                );
 
-                const updatedItems = sortMenuItems(realOldIndex, realNewIndex, expandedItems);
+                if (!result) {
+                    return;
+                }
 
-                if (updatedItems) {
-                    onMenuItemsChanged?.(updatedItems);
+                const {expandedItems, realOldIndex, realNewIndex, changedItem} = result;
+
+                onMenuItemsChanged(expandedItems);
+
+                if (changedItem && getIsMenuItem(changedItem)) {
+                    editMenuProps?.onChangeItemsOrder?.(changedItem, realOldIndex, realNewIndex);
                 }
             },
-        [onMenuItemsChanged],
+        [onMenuItemsChanged, editMenuProps],
     );
 
     const itemsWithLocalCollapsed = useMemo(() => {

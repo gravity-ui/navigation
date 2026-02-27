@@ -2,49 +2,49 @@ import {MenuItemsWithGroups} from '../../../types';
 
 import {getIsMenuItem} from './getIsMenuItem';
 
-/** Sorts menu items while preserving divider positions at their original locations. */
+/** Items that stay at their position when sorting (not draggable). */
+function isFixedPositionItem(item: MenuItemsWithGroups): boolean {
+    return item.type === 'divider' || item.type === 'action';
+}
+
+/**
+ * Sorts menu items while preserving divider and action positions at their original locations.
+ */
 export function sortMenuItemsWithDividers(
     oldIndex: number,
     newIndex: number,
     currentFlatList: MenuItemsWithGroups[],
 ): MenuItemsWithGroups[] {
-    // Single pass: collect dividers and items
-    const dividerPositions: Array<{index: number; item: MenuItemsWithGroups}> = [];
-    const itemsWithoutDividers: MenuItemsWithGroups[] = [];
+    const fixedPositionItems: Array<{index: number; item: MenuItemsWithGroups}> = [];
+    const sortableItems: MenuItemsWithGroups[] = [];
 
     currentFlatList.forEach((item, index) => {
-        if (item.type === 'divider') {
-            dividerPositions.push({index, item});
+        if (isFixedPositionItem(item)) {
+            fixedPositionItems.push({index, item});
         } else if (getIsMenuItem(item)) {
-            itemsWithoutDividers.push(item);
+            sortableItems.push(item);
         }
     });
 
-    if (
-        itemsWithoutDividers[oldIndex] === undefined ||
-        itemsWithoutDividers[newIndex] === undefined
-    ) {
+    if (sortableItems[oldIndex] === undefined || sortableItems[newIndex] === undefined) {
         return currentFlatList;
     }
 
-    const sortedItemsWithoutDividers = [...itemsWithoutDividers];
-    const [movedElement] = sortedItemsWithoutDividers.splice(oldIndex, 1);
-    sortedItemsWithoutDividers.splice(newIndex, 0, movedElement);
+    const sortedItems = [...sortableItems];
+    const [movedElement] = sortedItems.splice(oldIndex, 1);
+    sortedItems.splice(newIndex, 0, movedElement);
 
-    // Insert dividers back at their original positions in currentFlatList
     const result: MenuItemsWithGroups[] = [];
-    const dividerMap = new Map(dividerPositions.map((d) => [d.index, d.item]));
-    let sortedIndex = 0;
+    const fixedMap = new Map(fixedPositionItems.map((f) => [f.index, f.item]));
+    let sortableIndex = 0;
 
     for (let originalIndex = 0; originalIndex < currentFlatList.length; originalIndex++) {
-        const dividerItem = dividerMap.get(originalIndex);
+        const fixedItem = fixedMap.get(originalIndex);
 
-        if (dividerItem) {
-            // Insert divider at its original position
-            result.push(dividerItem);
-        } else if (sortedIndex < sortedItemsWithoutDividers.length) {
-            // Insert item from sorted array (without dividers)
-            result.push(sortedItemsWithoutDividers[sortedIndex++]);
+        if (fixedItem) {
+            result.push(fixedItem);
+        } else if (sortableIndex < sortedItems.length) {
+            result.push(sortedItems[sortableIndex++]);
         }
     }
 
