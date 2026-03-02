@@ -33,6 +33,7 @@ export type HotkeysPanelProps<T> = {
     topOffset?: number | string;
     style?: React.CSSProperties;
     platform?: HotkeyProps['platform'];
+    drawerProps?: Omit<DrawerProps, 'contentClassName' | 'open' | 'className'>;
 } & Omit<
     ListProps<HotkeysListItem>,
     | 'items'
@@ -48,8 +49,7 @@ export type HotkeysPanelProps<T> = {
     | 'filterItem'
     | 'onFilterEnd'
     | 'onFilterUpdate'
-> &
-    Pick<DrawerProps, 'container' | 'hideVeil'>;
+>;
 
 export function HotkeysPanel<T = {}>({
     open,
@@ -69,10 +69,8 @@ export function HotkeysPanel<T = {}>({
     title,
     togglePanelHotkey,
     emptyState,
-    style,
-    container,
-    hideVeil,
     platform,
+    drawerProps,
     ...listProps
 }: HotkeysPanelProps<T>) {
     const [filter, setFilter] = useState('');
@@ -143,20 +141,35 @@ export function HotkeysPanel<T = {}>({
         </React.Fragment>
     );
 
+    const onOpenChange = useCallback(
+        (newOpen: boolean) => {
+            if (!newOpen) {
+                onClose?.();
+            }
+
+            drawerProps?.onOpenChange?.(newOpen);
+        },
+        [drawerProps, onClose],
+    );
+
+    const style = useMemo<React.CSSProperties>(
+        () => ({
+            position: 'absolute',
+            ...drawerProps?.style,
+            ...(leftOffset !== undefined && {left: leftOffset}),
+            ...(topOffset !== undefined && {top: topOffset}),
+        }),
+        [drawerProps?.style, leftOffset, topOffset],
+    );
+
     return (
         <Drawer
-            container={container}
-            hideVeil={hideVeil}
             className={b(null, className)}
             open={open}
-            onOpenChange={(open) => !open && onClose?.()}
-            style={{
-                position: 'absolute',
-                ...style,
-                ...(leftOffset !== undefined && {left: leftOffset}),
-                ...(topOffset !== undefined && {top: topOffset}),
-            }}
+            onOpenChange={onOpenChange}
+            style={style}
             contentClassName={b('drawer-item', drawerItemClassName)}
+            {...drawerProps}
         >
             {drawerItemContent}
         </Drawer>
