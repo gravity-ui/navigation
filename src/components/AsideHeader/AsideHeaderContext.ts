@@ -52,3 +52,9 @@ export const useAsideHeaderContext = (): AsideHeaderContextType => {
     }
     return contextValue;
 };
+
+export const useSafeAsideHeaderContext = (): AsideHeaderContextType | undefined => {
+    const contextValue = React.useContext(AsideHeaderContext);
+
+    return contextValue;
+};

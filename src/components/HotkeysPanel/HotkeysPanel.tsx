@@ -4,6 +4,7 @@ import type {ReactNode} from 'react';
 import {Drawer, HelpMark, Hotkey, List, Text, TextInput} from '@gravity-ui/uikit';
 import type {DrawerProps, HotkeyProps, ListProps} from '@gravity-ui/uikit';
 
+import {useSafeAsideHeaderContext} from '../AsideHeader/AsideHeaderContext';
 import {createBlock} from '../utils/cn';
 
 import type {HotkeysGroup, HotkeysListItem} from './types';
@@ -33,7 +34,8 @@ export type HotkeysPanelProps<T> = {
     topOffset?: number | string;
     style?: React.CSSProperties;
     platform?: HotkeyProps['platform'];
-    drawerProps?: Omit<DrawerProps, 'contentClassName' | 'open' | 'className'>;
+    drawerProps?: Omit<DrawerProps, 'style' | 'contentClassName' | 'open' | 'className'>;
+    disableNavigationOffset?: boolean;
 } & Omit<
     ListProps<HotkeysListItem>,
     | 'items'
@@ -71,9 +73,13 @@ export function HotkeysPanel<T = {}>({
     emptyState,
     platform,
     drawerProps,
+    style: styleProp,
+    disableNavigationOffset = false,
     ...listProps
 }: HotkeysPanelProps<T>) {
     const [filter, setFilter] = useState('');
+
+    const {size} = useSafeAsideHeaderContext() ?? {size: 0};
 
     const hotkeysList = useMemo(() => {
         const filteredHotkeys = filterHotkeys(hotkeys, filter);
@@ -154,12 +160,13 @@ export function HotkeysPanel<T = {}>({
 
     const style = useMemo<React.CSSProperties>(
         () => ({
-            position: 'absolute',
-            ...drawerProps?.style,
+            position: 'fixed',
+            left: disableNavigationOffset ? undefined : size,
+            ...styleProp,
             ...(leftOffset !== undefined && {left: leftOffset}),
             ...(topOffset !== undefined && {top: topOffset}),
         }),
-        [drawerProps?.style, leftOffset, topOffset],
+        [disableNavigationOffset, styleProp, leftOffset, size, topOffset],
     );
 
     return (

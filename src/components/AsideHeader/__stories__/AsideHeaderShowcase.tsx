@@ -34,6 +34,7 @@ enum Panel {
     Search = 'search',
     UserSettings = 'userSettings',
     Components = 'components',
+    Hotkeys = 'hotkeys',
 }
 
 export interface AsideHeaderShowcaseProps {
