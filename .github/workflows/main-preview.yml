@@ -3,6 +3,7 @@ name: Main Preview
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   main:
