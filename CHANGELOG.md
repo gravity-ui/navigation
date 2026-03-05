@@ -11,6 +11,13 @@
 
 * release v5 ([#581](https://github.com/gravity-ui/navigation/issues/581)) ([32f11a1](https://github.com/gravity-ui/navigation/commit/32f11a1e3c6d09f067287289bdeb215f3831f76b))
 
+## [4.0.12](https://github.com/gravity-ui/navigation/compare/v4.0.11...v4.0.12) (2026-02-11)
+
+
+### Bug Fixes
+
+* Full control over the drawer, automatic indenting from the navigation bar from the context.([#583]https://github.com/gravity-ui/navigation/pull/583)
+
 ## [4.0.11](https://github.com/gravity-ui/navigation/compare/v4.0.10...v4.0.11) (2026-02-11)
 
 
