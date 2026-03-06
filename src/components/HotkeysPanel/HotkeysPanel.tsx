@@ -125,7 +125,6 @@ export function HotkeysPanel<T = {}>({
                     value={filter}
                     onUpdate={setFilter}
                     placeholder={filterPlaceholder}
-                    autoFocus
                     className={b('search', filterClassName)}
                     hasClear
                 />
@@ -147,6 +146,7 @@ export function HotkeysPanel<T = {}>({
         <Drawer
             container={container}
             hideVeil={hideVeil}
+            initialFocus={0}
             className={b(null, className)}
             open={open}
             onOpenChange={(open) => !open && onClose?.()}
