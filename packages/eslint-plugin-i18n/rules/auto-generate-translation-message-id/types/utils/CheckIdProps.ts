@@ -14,4 +14,5 @@ export interface CheckIdProps extends BaseRuleOptions {
     currentIdValue: string;
     translationObjectKey?: string;
     node: Node;
+    validateId?: boolean;
 }

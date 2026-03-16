@@ -23,6 +23,7 @@ export const rule: Rule.RuleModule = {
                     callExpressions: {type: 'array'},
                     idName: {type: 'string'},
                     namespaceMatchers: {type: 'array'},
+                    validateId: {type: 'boolean'},
                 },
             },
         ],
@@ -39,6 +40,7 @@ export const rule: Rule.RuleModule = {
             invalidCharsPattern,
             invalidCharsReplacement,
             invalidCharsReplacer,
+            validateId,
         }: RuleOptions = context.options[0] || {};
 
         const baseParameters: BaseRuleOptions = {
@@ -50,6 +52,7 @@ export const rule: Rule.RuleModule = {
             invalidCharsPattern,
             invalidCharsReplacement,
             invalidCharsReplacer,
+            validateId,
         };
 
         const handler = getMessagesExpression({

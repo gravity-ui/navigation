@@ -338,6 +338,285 @@ describe('Rule auto-generate-translation-message-id', () => {
         // });
     });
 
+    describe('validation of existing IDs', () => {
+        const options: Partial<RuleOptions>[] = [
+            {
+                memberExpressions: [{member: 'intl', property: 'createMessages'}],
+                namespaceMatchers: [/\/([^/]+)\/[^/]*i18n\.ts$/],
+                validateId: true, // Enable validation for these tests
+            },
+        ];
+
+        describe('should not validate by default (validateId not specified)', () => {
+            const defaultOptions: Partial<RuleOptions>[] = [
+                {
+                    memberExpressions: [{member: 'intl', property: 'createMessages'}],
+                    namespaceMatchers: [/\/([^/]+)\/[^/]*i18n\.ts$/],
+                    // validateId not specified - should default to false
+                },
+            ];
+
+            const validCases = [
+                {
+                    name: 'wrong namespace but validation disabled by default',
+                    code: `intl.createMessages({
+                        field_description: {
+                            en: 'Description',
+                            meta: {
+                                id: 'agent.field_description:9ntzU',
+                            }
+                        }
+                    })`,
+                    filename: '/src/ui/modules/issue/i18n.ts',
+                    options: defaultOptions,
+                },
+            ];
+
+            runTests(validCases, []);
+        });
+
+        describe('should detect invalid namespace prefix', () => {
+            const invalidCases = [
+                {
+                    name: 'wrong namespace in id',
+                    code: `intl.createMessages({
+                        field_description: {
+                            en: 'Description',
+                            meta: {
+                                id: 'agent.field_description:9ntzU',
+                            }
+                        }
+                    })`,
+                    filename: '/src/ui/modules/issue/i18n.ts',
+                    options,
+                    errors: [
+                        {
+                            message:
+                                'Invalid namespace "agent" in ID. Expected "issue" based on file path "/src/ui/modules/issue/i18n.ts"',
+                        },
+                    ],
+                    output: `intl.createMessages({
+                        field_description: {
+                            en: 'Description',
+                            meta: {
+                                id: 'issue.field_description${TRANSLATION_OBJECT_KEY_AND_UUID_SEPARATOR}${UUID}',
+                            }
+                        }
+                    })`,
+                },
+            ];
+
+            runTests([], invalidCases);
+        });
+
+        describe('should detect invalid key in id', () => {
+            const invalidCases = [
+                {
+                    name: 'key mismatch',
+                    code: `intl.createMessages({
+                        field_description: {
+                            en: 'Description',
+                            meta: {
+                                id: 'issue.field_title:9ntzU',
+                            }
+                        }
+                    })`,
+                    filename: '/src/ui/modules/issue/i18n.ts',
+                    options,
+                    errors: [
+                        {
+                            message:
+                                'Invalid key "field_title" in ID. Expected "field_description" to match translation key "field_description"',
+                        },
+                    ],
+                    output: `intl.createMessages({
+                        field_description: {
+                            en: 'Description',
+                            meta: {
+                                id: 'issue.field_description${TRANSLATION_OBJECT_KEY_AND_UUID_SEPARATOR}${UUID}',
+                            }
+                        }
+                    })`,
+                },
+            ];
+
+            runTests([], invalidCases);
+        });
+
+        describe('should detect invalid ID format', () => {
+            const invalidCases = [
+                {
+                    name: 'malformed id',
+                    code: `intl.createMessages({
+                        field_description: {
+                            en: 'Description',
+                            meta: {
+                                id: 'invalid-format',
+                            }
+                        }
+                    })`,
+                    filename: '/src/ui/modules/issue/i18n.ts',
+                    options,
+                    errors: [
+                        {
+                            message:
+                                'Invalid ID format "invalid-format". Expected format: namespace.key:uuid',
+                        },
+                    ],
+                    output: `intl.createMessages({
+                        field_description: {
+                            en: 'Description',
+                            meta: {
+                                id: 'issue.field_description${TRANSLATION_OBJECT_KEY_AND_UUID_SEPARATOR}${UUID}',
+                            }
+                        }
+                    })`,
+                },
+            ];
+
+            runTests([], invalidCases);
+        });
+
+        describe('should replace existing id value, not add duplicate', () => {
+            const invalidCases = [
+                {
+                    name: 'copied key with wrong id',
+                    code: `intl.createMessages({
+                        'action_close-issue': {
+                            en: 'Close issue',
+                            meta: {
+                                id: 'issue.action_close-issue:xd1Kb',
+                            }
+                        },
+                        'action_close-issue3': {
+                            en: 'Close issue',
+                            meta: {
+                                id: 'issue.action_close-issue:xd1Kb',
+                            }
+                        }
+                    })`,
+                    filename: '/src/ui/modules/issue/i18n.ts',
+                    options,
+                    errors: [
+                        {
+                            message:
+                                'Invalid key "action_close-issue" in ID. Expected "action_close-issue3" to match translation key "action_close-issue3"',
+                        },
+                    ],
+                    output: `intl.createMessages({
+                        'action_close-issue': {
+                            en: 'Close issue',
+                            meta: {
+                                id: 'issue.action_close-issue:xd1Kb',
+                            }
+                        },
+                        'action_close-issue3': {
+                            en: 'Close issue',
+                            meta: {
+                                id: 'issue.action_close-issue3${TRANSLATION_OBJECT_KEY_AND_UUID_SEPARATOR}${UUID}',
+                            }
+                        }
+                    })`,
+                },
+            ];
+
+            runTests([], invalidCases);
+        });
+
+        describe('should not error on valid IDs', () => {
+            const validCases = [
+                {
+                    name: 'correct namespace and key',
+                    code: `intl.createMessages({
+                        field_description: {
+                            en: 'Description',
+                            meta: {
+                                id: 'issue.field_description:9ntzU',
+                            }
+                        }
+                    })`,
+                    filename: '/src/ui/modules/issue/i18n.ts',
+                    options,
+                },
+            ];
+
+            runTests(validCases, []);
+        });
+
+        describe('should handle kebab-case keys with underscores in IDs', () => {
+            const validCases = [
+                {
+                    name: 'kebab-case key with underscore in id',
+                    code: `intl.createMessages({
+                        'action_close-issue': {
+                            en: 'Close issue',
+                            meta: {
+                                id: 'issue.action_close-issue:xd1Kb',
+                            }
+                        }
+                    })`,
+                    filename: '/src/ui/modules/issue/i18n.ts',
+                    options,
+                },
+            ];
+
+            runTests(validCases, []);
+        });
+
+        describe('with validateId disabled', () => {
+            const testOptions: Partial<RuleOptions>[] = [
+                {
+                    memberExpressions: [{member: 'intl', property: 'createMessages'}],
+                    namespaceMatchers: [/\/([^/]+)\/[^/]*i18n\.ts$/],
+                    validateId: false,
+                },
+            ];
+
+            describe('should allow wrong namespace and key when validation disabled', () => {
+                const validCases = [
+                    {
+                        name: 'wrong namespace and key but validation disabled',
+                        code: `intl.createMessages({
+                            field_description: {
+                                en: 'Description',
+                                meta: {
+                                    id: 'agent.field_title:9ntzU',
+                                }
+                            }
+                        })`,
+                        filename: '/src/ui/modules/issue/i18n.ts',
+                        options: testOptions,
+                    },
+                ];
+
+                runTests(validCases, []);
+            });
+
+            describe('should still add missing IDs when validation disabled', () => {
+                const invalidCases = [
+                    {
+                        name: 'missing id, validation disabled',
+                        code: `intl.createMessages({
+                            field_description: {
+                                en: 'Description',
+                            }
+                        })`,
+                        filename: '/src/ui/modules/issue/i18n.ts',
+                        options: testOptions,
+                        errors: [{message: 'Expression should have id property'}],
+                        output: `intl.createMessages({
+                            field_description: {meta:{id:'issue.field_description${TRANSLATION_OBJECT_KEY_AND_UUID_SEPARATOR}${UUID}'},
+                                en: 'Description',
+                            }
+                        })`,
+                    },
+                ];
+
+                runTests([], invalidCases);
+            });
+        });
+    });
+
     // Skipped: ESLint 9 requires rule options to be serializable, functions cannot be cloned
     // describe('with generateId function', () => {
     //     const generatedIdMock = 'generated';

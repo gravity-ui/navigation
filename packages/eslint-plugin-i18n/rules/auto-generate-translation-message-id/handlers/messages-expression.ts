@@ -115,14 +115,16 @@ export const getMessagesExpression = ({
                 ...rest,
                 context,
 
-                reportLackId({context, node, id}) {
+                reportLackId({context, node, id, message}) {
                     if (translation && !isArgumentObject) {
                         return;
                     }
 
+                    const reportMessage = message || `Expression should have ${idName} property`;
+
                     context.report({
                         node,
-                        message: `Expression should have ${idName} property`,
+                        message: reportMessage,
                         fix(fixer) {
                             if (!translation) {
                                 return null;
@@ -135,6 +137,18 @@ export const getMessagesExpression = ({
                                 );
                             }
 
+                            // Re-check for id property in case it was added by another fix
+                            const currentIdProperty = getObjectProperty({
+                                argument: metaProperty?.value,
+                                propertyName: idName,
+                            });
+
+                            // If there's an existing id property, replace its value
+                            if (currentIdProperty) {
+                                return fixer.replaceText(currentIdProperty.value, `'${id}'`);
+                            }
+
+                            // Otherwise add the id property to the meta object
                             return fixer.replaceText(
                                 metaProperty,
                                 `${sourceCode.getText(metaProperty).replace('{', `{${idName}:'${id}',`)}`,

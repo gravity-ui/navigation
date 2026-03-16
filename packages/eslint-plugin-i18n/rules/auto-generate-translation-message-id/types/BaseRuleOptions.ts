@@ -12,4 +12,5 @@ export interface BaseRuleOptions {
     invalidCharsPattern: RegExp;
     invalidCharsReplacement: string;
     invalidCharsReplacer: (substring: string) => string;
+    validateId?: boolean;
 }
