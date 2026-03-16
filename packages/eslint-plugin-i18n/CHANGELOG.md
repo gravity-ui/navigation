@@ -1,3 +1,17 @@
+## 2.5.0 (2026-03-16)
+
+### 🚀 Features
+
+- validate namespace and key ([#68](https://github.com/gravity-ui/i18n/pull/68))
+
+### 🧱 Updated Dependencies
+
+- Updated @gravity-ui/i18n-cli to 1.4.0
+
+### ❤️ Thank You
+
+- 8alery
+
 ## 2.4.2 (2026-02-13)
 
 ### 🧱 Updated Dependencies
