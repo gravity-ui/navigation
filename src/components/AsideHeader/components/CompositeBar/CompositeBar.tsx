@@ -181,7 +181,16 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                 if (item.id === COLLAPSE_ITEM_ID && collapsed) {
                     onMoreClick?.();
                 } else {
-                    onItemClick?.({...item, onItemClick: orginalItemClick}, collapsed, event);
+                    onItemClick?.(
+                        {
+                            ...item,
+                            // For collapsed popup items, preserve the item's own onItemClick
+                            // since orginalItemClick belongs to the collapse button, not the item
+                            onItemClick: collapsed ? item.onItemClick : orginalItemClick,
+                        },
+                        collapsed,
+                        event,
+                    );
                 }
             },
         [
