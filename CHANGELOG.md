@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.1](https://github.com/gravity-ui/navigation/compare/v5.0.0...v5.0.1) (2026-03-25)
+
+
+### Bug Fixes
+
+* **MobileHeader:** render Drawer in portal to prevent content overlap ([#593](https://github.com/gravity-ui/navigation/issues/593)) ([50c8ae4](https://github.com/gravity-ui/navigation/commit/50c8ae475ace7efd29fc75cae887f07fefec66be)), closes [#591](https://github.com/gravity-ui/navigation/issues/591)
+
 ## [5.0.0](https://github.com/gravity-ui/navigation/compare/v4.0.11...v5.0.0) (2026-02-27)
 
 
