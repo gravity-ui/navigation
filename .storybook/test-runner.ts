@@ -14,21 +14,34 @@ const config: TestRunnerConfig = {
         // Get the entire context of a story, including parameters, args, argTypes, etc.
         const storyContext = await getStoryContext(page, context);
 
-        // Apply story-level a11y rules
-        await configureAxe(page, {
-            rules: storyContext.parameters?.a11y?.config?.rules,
-            reporter: 'no-passes',
-        });
+        const MAX_RETRIES = 1;
 
-        // hack for prevent error "Axe is already running"
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        await checkA11y(page, '#storybook-root', {
-            verbose: false,
-            detailedReport: true,
-            detailedReportOptions: {
-                html: true,
-            },
-        });
+        for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+            try {
+                // Apply story-level a11y rules
+                await configureAxe(page, {
+                    rules: storyContext.parameters?.a11y?.config?.rules,
+                    reporter: 'no-passes',
+                });
+
+                await checkA11y(page, '#storybook-root', {
+                    verbose: false,
+                    detailedReport: true,
+                    detailedReportOptions: {
+                        html: true,
+                    },
+                });
+
+                break;
+            } catch (error) {
+                // Retry if axe was still running from a previous story (e.g. after navigation retry)
+                const isAxeRunning = String(error).includes('Axe is already running');
+                if (!isAxeRunning || attempt === MAX_RETRIES) {
+                    throw error;
+                }
+                await injectAxe(page);
+            }
+        }
     },
 };
 
