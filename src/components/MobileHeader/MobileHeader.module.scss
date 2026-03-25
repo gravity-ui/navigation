@@ -7,13 +7,9 @@ $block: '.#{variables.$ns}mobile-header';
     --mobile-header-min-heigth: 50px;
     --mobile-header-icon-size: 20px;
 
-    display: flex;
-    flex-direction: column;
-    height: 100%;
     background-color: var(--g-color-base-background);
 
     &__header-container {
-        flex: none;
         position: sticky;
         top: 0;
         background-color: var(--g-color-base-background);
@@ -66,8 +62,6 @@ $block: '.#{variables.$ns}mobile-header';
     }
 
     &__content {
-        flex: 1;
-        min-height: 0;
         overflow: auto;
     }
 }
