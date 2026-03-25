@@ -306,7 +306,6 @@ export const MobileHeader = React.forwardRef<HTMLDivElement, MobileHeaderProps>(
                         style={{top: `calc(${size}px + var(--gn-top-alert-height, 0px))`}}
                         contentClassName={b('panel-item', className)}
                         size={320}
-                        disablePortal
                     />
                 ))}
                 {overlapPanel && (
