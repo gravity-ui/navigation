@@ -9,6 +9,11 @@
         "createRelease": "github"
       }
     },
+    "git": {
+      "push": false,
+      "tag": true,
+      "commit": true
+    },
     "projectsRelationship": "independent"
   },
   "tasksRunnerOptions": {

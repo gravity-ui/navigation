@@ -1,10 +1,10 @@
-# This workflow is used to create draft releases on GitHub. Releases are not published to npm!
-# The publication to npm happens automatically after the releases are finalized (in publish.yml).
+# This workflow creates a release branch with version bumps and changelogs,
+# pushes tags, creates GitHub releases, and opens a PR to merge back into main.
+# After the PR is merged, run publish.yml to publish packages to npm.
 
 name: Release
 
 on:
-  # Manually trigger the release workflow
   workflow_dispatch:
 
 jobs:
@@ -13,12 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      id-token: write # needed for provenance data generation
+      pull-requests: write
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # need to fetch all the tags
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -42,17 +43,49 @@ jobs:
           app-id: ${{ secrets.GRAVITY_UI_APP_ID }}
           private-key: ${{ secrets.GRAVITY_UI_APP_PRIVATE_KEY }}
 
-      - name: Create release
+      - name: Run nx release
         run: |
-          # Configure git user
           git config --local user.email "111915794+gravity-ui-bot@users.noreply.github.com"
           git config --local user.name "gravity-ui-bot"
 
-          # Configure git to use token for push (override remote URL)
-          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
-
-          # Use nx release - handles versioning, changelog, and GitHub release
+          # nx release will version, changelog, commit, and tag locally (no push)
           pnpm exec nx release --skip-publish --verbose
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+
+      - name: Check for changes
+        id: check-changes
+        run: |
+          if git diff --quiet HEAD origin/main; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create release branch and PR
+        if: steps.check-changes.outputs.has_changes == 'true'
+        run: |
+          BRANCH="release/$(date +%Y-%m-%d-%H%M%S)"
+          git checkout -b "$BRANCH"
+
+          # Push the release branch with tags
+          git push origin "$BRANCH" --follow-tags
+
+          # Create PR
+          gh pr create \
+            --title "chore(release): publish" \
+            --body "$(cat <<'EOF'
+          ## Release
+
+          This PR was automatically created by the release workflow.
+          It contains version bumps, changelog updates, and release tags.
+
+          **After merging, run the Publish workflow to publish packages to npm.**
+          EOF
+          )" \
+            --label "release" \
+            --base main \
+            --head "$BRANCH"
+        env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
