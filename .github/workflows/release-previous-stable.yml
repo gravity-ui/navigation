@@ -109,6 +109,7 @@ jobs:
           github-token: ${{ secrets.GRAVITY_UI_BOT_GITHUB_TOKEN }}
           script: |
             const tag = `v${process.env.PUBLISH_VERSION}`;
+            const makeLatest = process.env.SET_LATEST === 'true' ? 'true' : 'false';
 
             await github.rest.repos.createRelease({
               owner: context.repo.owner,
@@ -116,6 +117,8 @@ jobs:
               tag_name: tag,
               name: tag,
               generate_release_notes: true,
+              make_latest: makeLatest,
             });
         env:
           PUBLISH_VERSION: ${{ env.PUBLISH_VERSION }}
+          SET_LATEST: ${{ inputs.set_latest }}
