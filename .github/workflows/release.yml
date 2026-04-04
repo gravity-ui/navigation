@@ -48,6 +48,9 @@ jobs:
           git config --local user.email "111915794+gravity-ui-bot@users.noreply.github.com"
           git config --local user.name "gravity-ui-bot"
 
+          # Save tags before release to detect new ones later
+          git tag -l > /tmp/tags-before.txt
+
           # nx release will version, changelog, commit, and tag locally (no push)
           pnpm exec nx release --skip-publish --verbose
         env:
@@ -69,6 +72,9 @@ jobs:
           BRANCH="release/$(date +%Y-%m-%d-%H%M%S)"
           git checkout -b "$BRANCH"
 
+          # Configure git to use token for push
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
+
           # Push the release branch with tags
           git push origin "$BRANCH" --follow-tags
 
@@ -87,5 +93,23 @@ jobs:
             --label "release" \
             --base main \
             --head "$BRANCH"
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+
+      - name: Create GitHub releases for new tags
+        if: steps.check-changes.outputs.has_changes == 'true'
+        run: |
+          # Find new tags created by nx release
+          git tag -l > /tmp/tags-after.txt
+          NEW_TAGS=$(comm -13 /tmp/tags-before.txt /tmp/tags-after.txt)
+
+          for TAG in $NEW_TAGS; do
+            echo "Creating GitHub release for $TAG"
+            # Extract changelog entry for this version from the tag's package
+            gh release create "$TAG" \
+              --title "$TAG" \
+              --generate-notes \
+              --target "$(git rev-parse HEAD)" || echo "Warning: failed to create release for $TAG"
+          done
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}

@@ -5,9 +5,12 @@
       "conventionalCommits": true
     },
     "changelog": {
-      "projectChangelogs": {
-        "createRelease": "github"
-      }
+      "projectChangelogs": true
+    },
+    "git": {
+      "push": false,
+      "tag": true,
+      "commit": true
     },
     "git": {
       "push": false,
