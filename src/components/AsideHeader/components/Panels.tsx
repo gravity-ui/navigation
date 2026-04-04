@@ -37,7 +37,7 @@ export const Panels: React.FC = () => {
                     key={id}
                     className={b('panels')}
                     onOpenChange={handleOpenChange}
-                    style={{left: size}}
+                    style={{left: size, top: 'var(--gn-top-alert-height, 0px)'}}
                     contentClassName={b('panel', className)}
                 >
                     {children}
