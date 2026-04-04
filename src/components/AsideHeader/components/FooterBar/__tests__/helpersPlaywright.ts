@@ -1,4 +1,4 @@
-import {composeStories} from '@storybook/react';
+import {composeStories} from '@storybook/react-webpack5';
 
 import * as DefaultFooterBarStories from '../__stories__/FooterBar.stories';
 
