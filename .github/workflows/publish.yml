@@ -1,16 +1,21 @@
 # This workflow is used to publish the packages to npm.
-# Before running this workflow, the release workflow (release.yml) must be run to create the draft release on GitHub.
-# This workflow must be run manually after the release workflow is run.
+# It runs automatically after a release PR is merged, or can be triggered manually.
 
 name: Publish
 
 on:
-  # Manually trigger the publish workflow
+  pull_request:
+    types: [closed]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
   publish:
     name: Publish
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.merged == true &&
+       contains(github.event.pull_request.labels.*.name, 'release'))
     runs-on: ubuntu-latest
     permissions: write-all
 
