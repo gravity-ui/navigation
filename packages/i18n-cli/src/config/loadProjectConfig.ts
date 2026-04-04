@@ -1,4 +1,5 @@
 import {cosmiconfigSync} from 'cosmiconfig';
+import {TypeScriptLoaderSync} from 'cosmiconfig-typescript-loader';
 import {log, MODULE_NAME} from '../shared';
 import {ProjectConfig} from './types';
 
@@ -45,6 +46,9 @@ export const loadProjectConfig = (searchPlaces?: string[]): NormalizedProjectCon
         cache: false,
         stopDir: searchPlaces ? undefined : process.cwd(),
         searchPlaces: searchPlaces ?? DEFAULT_SEARCH_PLACES,
+        loaders: {
+            '.ts': TypeScriptLoaderSync(),
+        },
     });
 
     const cfg = explorer.search();
