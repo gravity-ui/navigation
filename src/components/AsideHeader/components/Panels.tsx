@@ -16,7 +16,7 @@ export const Panels = () => {
                     key={id}
                     className={b('panels')}
                     onOpenChange={(open) => !open && onClosePanel?.()}
-                    style={{left: size}}
+                    style={{left: size, top: 'var(--gn-top-alert-height, 0px)'}}
                     contentClassName={b('panel', className)}
                 />
             ))}
