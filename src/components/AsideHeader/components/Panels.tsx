@@ -10,13 +10,13 @@ export const Panels = () => {
 
     return panelItems ? (
         <React.Fragment>
-            {panelItems.map(({id, className, ...rest}) => (
+            {panelItems.map(({id, className, style: itemStyle, ...rest}) => (
                 <Drawer
                     {...rest}
                     key={id}
                     className={b('panels')}
                     onOpenChange={(open) => !open && onClosePanel?.()}
-                    style={{left: size, top: 'var(--gn-top-alert-height, 0px)'}}
+                    style={{...itemStyle, left: size, top: 'var(--gn-top-alert-height, 0px)'}}
                     contentClassName={b('panel', className)}
                 />
             ))}
