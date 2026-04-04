@@ -103,3 +103,22 @@ jobs:
           git commit -m "chore(v${{ env.PUBLISH_VERSION_MAJOR }}): release ${{ env.PUBLISH_VERSION }}"
           git tag "v${{ env.PUBLISH_VERSION }}"
           git push origin HEAD --tags
+      - name: Create GitHub release
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GRAVITY_UI_BOT_GITHUB_TOKEN }}
+          script: |
+            const tag = `v${process.env.PUBLISH_VERSION}`;
+            const makeLatest = process.env.SET_LATEST === 'true' ? 'true' : 'false';
+
+            await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: tag,
+              name: tag,
+              generate_release_notes: true,
+              make_latest: makeLatest,
+            });
+        env:
+          PUBLISH_VERSION: ${{ env.PUBLISH_VERSION }}
+          SET_LATEST: ${{ inputs.set_latest }}
