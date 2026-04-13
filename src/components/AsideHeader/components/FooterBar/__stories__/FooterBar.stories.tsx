@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {Bell, Gear, Heart, Magnifier, Person, Star} from '@gravity-ui/icons';
-import type {Meta, StoryFn} from '@storybook/react';
+import type {Meta, StoryFn} from '@storybook/react-webpack5';
 
 import {
     ASIDE_HEADER_COLLAPSED_WIDTH,
