@@ -10,6 +10,7 @@ $block: '.#{variables.$ns}aside-header';
     $class: &;
     --gn-aside-header-min-width: 56px;
     --_--item-margin-inline: #{variables.$item-margin-inline};
+    --gn-aside-header-item-expanded-radius: #{variables.$item-expanded-radius};
 
     --_--item-icon-background-size: 38px;
     --_--background-color: var(--g-color-base-background);
@@ -198,6 +199,12 @@ $block: '.#{variables.$ns}aside-header';
 
     &__menu-item:not(:has([data-type='action'])) {
         margin-inline: var(--_--item-margin-inline);
+    }
+
+    &__menu-item_type_regular,
+    &__menu-item:has([data-type='regular']),
+    &__root-menu-item[class]:hover {
+        border-radius: var(--gn-aside-header-item-expanded-radius);
     }
 
     &__footer {
