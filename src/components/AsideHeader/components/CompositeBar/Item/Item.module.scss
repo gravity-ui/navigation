@@ -36,7 +36,7 @@ $actionLeftRightMargin: 10px;
     padding: 0;
 
     &:global(.#{variables.$ns}footer-item) {
-        height: 40px;
+        height: #{variables.$item-height};
     }
 
     &__icon {
@@ -76,18 +76,18 @@ $actionLeftRightMargin: 10px;
 
     &__icon-place {
         flex-shrink: 0;
-        width: var(--gn-aside-header-min-width);
         display: flex;
         align-items: center;
         justify-content: center;
         height: 100%;
+        width: var(--_--item-height, #{variables.$item-height});
     }
 
     &__title {
         display: flex;
         align-items: center;
         overflow: hidden;
-        margin-right: 16px;
+        margin: 0 var(--g-spacing-4) 0 var(--g-spacing-2);
     }
 
     &__title-text {

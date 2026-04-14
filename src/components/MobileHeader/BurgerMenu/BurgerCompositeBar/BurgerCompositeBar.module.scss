@@ -22,7 +22,7 @@ $block: '.#{variables.$ns}burger-composite-bar';
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        width: 40px;
+        width: #{variables.$item-height};
         margin-right: 8px;
     }
 

@@ -4,4 +4,6 @@ $block: '.#{variables.$ns}footer-item';
 
 #{$block} {
     width: 100%;
+
+    border-radius: var(--gn-aside-header-item-expanded-radius);
 }
