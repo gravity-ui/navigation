@@ -10,9 +10,6 @@ const isMessageDefined = (message: MessageValue | undefined): message is Message
     return message !== null && typeof message !== 'undefined';
 };
 
-/** Shared empty message object for keys missing from the keyset (stable reference for memoization). */
-const EMPTY_MULTI_LOCALE_MESSAGE = {} as MultiLocaleMessage<string>;
-
 export function factoryCreateMessagesFunction<TBase, AvailableLocale extends string>(
     config: Pick<
         ResolvedIntlConfigWithLocale<TBase, AvailableLocale>,
@@ -90,15 +87,18 @@ export function factoryCreateMessagesFunction<TBase, AvailableLocale extends str
                 const baseMsg = msgs[key as K];
 
                 if (typeof baseMsg === 'undefined') {
-                    if (
-                        config.defaultFallback === 'key' ||
-                        config.defaultFallback === 'empty-string'
-                    ) {
-                        return getMessageDescriptor({
-                            key,
-                            message: EMPTY_MULTI_LOCALE_MESSAGE as Messages<AvailableLocale, K>[K],
-                            currentLocale: config.getLocale(),
-                        });
+                    if (config.defaultFallback === 'key') {
+                        return {
+                            id: String(key),
+                            defaultMessage: String(key),
+                        };
+                    }
+
+                    if (config.defaultFallback === 'empty-string') {
+                        return {
+                            id: String(key),
+                            defaultMessage: '',
+                        };
                     }
 
                     throw new MissingTranslationError(
