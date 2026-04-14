@@ -42,6 +42,7 @@ export const Header = () => {
             <CompositeBar
                 compositeId={HEADER_COMPOSITE_ID}
                 type="subheader"
+                menuItemClassName={b('menu-item')}
                 compact={compact}
                 items={subheaderItems || DEFAULT_SUBHEADER_ITEMS}
                 onItemClick={onItemClick}

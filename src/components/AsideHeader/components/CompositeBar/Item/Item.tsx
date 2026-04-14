@@ -136,6 +136,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     {...tagProps}
                     className={b({type, current, compact}, className)}
                     ref={ref}
+                    data-type={type}
                     data-qa={qa}
                     onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
                         if (collapsedItem) {

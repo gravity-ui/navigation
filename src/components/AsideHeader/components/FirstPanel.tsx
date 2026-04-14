@@ -52,6 +52,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     <Header />
                     {visibleMenuItems?.length ? (
                         <CompositeBar
+                            menuItemClassName={b('menu-item')}
                             compositeId={MENU_ITEMS_COMPOSITE_ID}
                             type="menu"
                             compact={compact}

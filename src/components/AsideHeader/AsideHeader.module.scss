@@ -9,6 +9,7 @@ $block: '.#{variables.$ns}aside-header';
 #{$block} {
     $class: &;
     --gn-aside-header-min-width: 56px;
+    --_--item-margin-inline: #{variables.$item-margin-inline};
 
     --_--item-icon-background-size: 38px;
     --_--background-color: var(--g-color-base-background);
@@ -195,12 +196,15 @@ $block: '.#{variables.$ns}aside-header';
         flex-grow: 1;
     }
 
+    &__menu-item:not(:has([data-type='action'])) {
+        margin-inline: var(--_--item-margin-inline);
+    }
+
     &__footer {
         flex-shrink: 0;
-        width: 100%;
-        margin: 8px 0;
         display: flex;
         flex-direction: column;
+        margin: var(--g-spacing-2) var(--_--item-margin-inline);
     }
 
     &__panels {

@@ -36,6 +36,7 @@ type CompositeBarProps = {
     onMoreClick?: () => void;
     compact: boolean;
     compositeId?: string;
+    menuItemClassName?: string;
 };
 
 type CompositeBarViewProps = CompositeBarProps & {
@@ -51,6 +52,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     multipleTooltip = false,
     compact,
     compositeId,
+    menuItemClassName,
 }) => {
     const ref = useRef<List<AsideHeaderItem>>(null);
     const tooltipRef = useRef<HTMLDivElement>(null);
@@ -217,7 +219,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                     selectedItemIndex={type === 'menu' ? getSelectedItemIndex(items) : undefined}
                     itemHeight={getItemHeight}
                     itemsHeight={getItemsHeight}
-                    itemClassName={b('root-menu-item')}
+                    itemClassName={b('root-menu-item', menuItemClassName)}
                     virtualized={false}
                     filterable={false}
                     sortable={false}
@@ -255,6 +257,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     multipleTooltip = false,
     compact,
     compositeId,
+    menuItemClassName,
 }) => {
     if (items.length === 0) {
         return null;
@@ -286,6 +289,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                                         items={listItems}
                                         onItemClick={onItemClick}
                                         onMoreClick={onMoreClick}
+                                        menuItemClassName={menuItemClassName}
                                         collapseItems={collapseItems}
                                         multipleTooltip={multipleTooltip}
                                     />
@@ -301,6 +305,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
             <div className={b({subheader: true})}>
                 <CompositeBarView
                     type="subheader"
+                    menuItemClassName={menuItemClassName}
                     compact={compact}
                     items={items}
                     onItemClick={onItemClick}
