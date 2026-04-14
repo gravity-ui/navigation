@@ -83,13 +83,7 @@ $block: '.#{variables.$ns}group-item';
         }
     }
 
-    > #{$block}__icon-place > .#{variables.$ns}group-item__popup-item-icon,
-    > #{$block}__icon-place > * > * > .#{variables.$ns}group-item__popup-item-icon {
-        color: var(--gn-aside-header-item-icon-color, var(--_--item-icon-color));
-    }
-
-    &_current > #{$block}__icon-place > .#{variables.$ns}group-item__popup-item-icon,
-    &_current > #{$block}__icon-place > * > * > .#{variables.$ns}group-item__popup-item-icon {
+    &_current #{$block}__popup-item-icon {
         color: var(
             --gn-aside-header-item-current-icon-color,
             var(--gn-aside-header-item-icon-color, var(--_--item-icon-color))
