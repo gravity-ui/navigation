@@ -132,7 +132,51 @@ describe('factoryCreateMessagesFunction', () => {
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             messages['unknown'];
         } catch (e) {
-            expect(String(e)).toMatchSnapshot('6');
+            expect(e).toMatchSnapshot('6');
         }
+    });
+
+    it('missing key with defaultFallback key', () => {
+        const createMessagesF = factoryCreateMessagesFunction({
+            allowedLocales: ['en'],
+            getLocale: () => 'en',
+            fallbackLocales: {},
+            defaultFallback: 'key',
+            disableUseLocaleLangAsFallback: true,
+        });
+
+        const messages = createMessagesF({
+            create: {
+                en: 'Create',
+            },
+        });
+
+        // @ts-ignore — deliberate unknown key
+        expect(messages['not_in_keyset']).toEqual({
+            defaultMessage: 'not_in_keyset',
+            id: 'not_in_keyset',
+        });
+    });
+
+    it('missing key with defaultFallback empty-string', () => {
+        const createMessagesF = factoryCreateMessagesFunction({
+            allowedLocales: ['en'],
+            getLocale: () => 'en',
+            fallbackLocales: {},
+            defaultFallback: 'empty-string',
+            disableUseLocaleLangAsFallback: true,
+        });
+
+        const messages = createMessagesF({
+            create: {
+                en: 'Create',
+            },
+        });
+
+        // @ts-ignore — deliberate unknown key
+        expect(messages['not_in_keyset']).toEqual({
+            defaultMessage: '',
+            id: 'not_in_keyset',
+        });
     });
 });

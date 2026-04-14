@@ -5,4 +5,7 @@ exports[`factoryCreateMessagesFunction 5: 5 1`] = `
 ]
 `;
 
-exports[`factoryCreateMessagesFunction 6: 6 1`] = `"Error: Not found message for key unknown"`;
+exports[`factoryCreateMessagesFunction 6: 6 1`] = `
+[Error: [@formatjs/intl Error MISSING_TRANSLATION] Missing message: "unknown" for locale "unknown", using id as fallback.
+]
+`;
