@@ -7,9 +7,10 @@ import {MenuGroup} from '../../../types';
 import {createBlock} from '../../../utils/cn';
 import {AsideHeaderItem} from '../../types';
 
+import {GroupItem} from './GroupItem/GroupItem';
 import {Item, ItemProps} from './Item/Item';
 import {COLLAPSE_ITEM_ID} from './constants';
-import {getGroupedItems} from './grouping';
+import {getGroupedItems, isGroupHeaderItem} from './grouping';
 import {
     getAutosizeListItems,
     getItemHeight,
@@ -95,15 +96,24 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
             virtualized={false}
             filterable={false}
             sortable={false}
-            renderItem={(item) => (
-                <Item
-                    {...item}
-                    compact={compact}
-                    onMouseLeave={onMouseLeave}
-                    onItemClick={onItemClickByIndex(item.onItemClick)}
-                    collapseItems={collapseItems}
-                />
-            )}
+            renderItem={(item) =>
+                isGroupHeaderItem(item) ? (
+                    <GroupItem
+                        {...item}
+                        compact={compact}
+                        onMouseLeave={onMouseLeave}
+                        onItemClick={onItemClickByIndex(item.onItemClick)}
+                    />
+                ) : (
+                    <Item
+                        {...item}
+                        compact={compact}
+                        onMouseLeave={onMouseLeave}
+                        onItemClick={onItemClickByIndex(item.onItemClick)}
+                        collapseItems={collapseItems}
+                    />
+                )
+            }
         />
     );
 };
