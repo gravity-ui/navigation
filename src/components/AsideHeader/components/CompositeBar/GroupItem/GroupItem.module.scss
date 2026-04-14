@@ -1,0 +1,214 @@
+@use '../../../../variables';
+@use '../../../../../../styles/mixins';
+
+$block: '.#{variables.$ns}group-item';
+
+#{$block} {
+    @include mixins.accessibility-button;
+
+    --_--item-icon-color: var(--g-color-text-complementary);
+    --_--item-text-color: var(--g-color-text-primary);
+    --_--item-background-color-hover: var(--g-color-base-simple-hover);
+    --_--item-selected-text-color: var(--g-color-text-primary);
+    --_--item-selected-background-color: var(--g-color-base-selection);
+    --_--item-collapsed-radius: 7px;
+
+    display: flex;
+    min-width: 0;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    cursor: pointer;
+    padding: 0;
+
+    &__icon-place {
+        flex-shrink: 0;
+        width: var(--gn-aside-header-min-width);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+
+    &__btn-icon {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__title {
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        margin-right: 16px;
+    }
+
+    &__title-text {
+        /* stylelint-disable-next-line value-no-vendor-prefix */
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        text-align: start;
+
+        color: var(--gn-aside-header-item-text-color, var(--_--item-text-color));
+
+        #{$block}_current & {
+            color: var(
+                --gn-aside-header-item-current-text-color,
+                var(--_--item-selected-text-color)
+            );
+        }
+    }
+
+    > #{$block}__icon-place > .#{variables.$ns}group-item__popup-item-icon,
+    > #{$block}__icon-place > * > * > .#{variables.$ns}group-item__popup-item-icon {
+        color: var(--gn-aside-header-item-icon-color, var(--_--item-icon-color));
+    }
+
+    &_current > #{$block}__icon-place > .#{variables.$ns}group-item__popup-item-icon,
+    &_current > #{$block}__icon-place > * > * > .#{variables.$ns}group-item__popup-item-icon {
+        color: var(
+            --gn-aside-header-item-current-icon-color,
+            var(--gn-aside-header-item-icon-color, var(--_--item-icon-color))
+        );
+    }
+
+    &:not(&_compact) {
+        &#{$block}_current {
+            background-color: var(
+                --gn-aside-header-item-current-background-color,
+                var(--_--item-selected-background-color)
+            );
+            border-radius: var(--gn-aside-header-item-expanded-radius);
+        }
+
+        &:hover {
+            background-color: var(
+                --gn-aside-header-item-current-background-color-hover,
+                var(
+                    --gn-aside-header-item-current-background-color,
+                    var(--_--item-selected-background-color)
+                )
+            );
+            border-radius: var(--gn-aside-header-item-expanded-radius);
+        }
+
+        &:not(#{$block}_current):hover {
+            background-color: var(
+                --gn-aside-header-item-background-color-hover,
+                var(--_--item-background-color-hover)
+            );
+            border-radius: var(--gn-aside-header-item-expanded-radius);
+        }
+    }
+
+    &_compact {
+        @mixin item-bg {
+            position: relative;
+            background-color: transparent;
+
+            &::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                z-index: -1;
+                width: var(
+                    --gn-aside-header-item-icon-background-size,
+                    var(--_--item-icon-background-size)
+                );
+                height: var(
+                    --gn-aside-header-item-icon-background-size,
+                    var(--_--item-icon-background-size)
+                );
+                margin-top: -19px;
+                margin-left: -19px;
+                border-radius: var(
+                    --gn-aside-header-item-collapsed-radius,
+                    var(--_--item-collapsed-radius)
+                );
+            }
+        }
+
+        &#{$block}_current {
+            #{$block}__btn-icon {
+                @include item-bg();
+
+                &::before {
+                    background-color: var(
+                        --gn-aside-header-item-current-background-color,
+                        var(--_--item-selected-background-color)
+                    );
+                }
+            }
+        }
+
+        &:hover {
+            #{$block}__btn-icon {
+                @include item-bg();
+
+                &::before {
+                    background-color: var(
+                        --gn-aside-header-item-current-background-color-hover,
+                        var(
+                            --gn-aside-header-item-current-background-color,
+                            var(--_--item-selected-background-color)
+                        )
+                    );
+                }
+            }
+        }
+
+        &:not(#{$block}_current):hover {
+            #{$block}__btn-icon {
+                @include item-bg();
+
+                &::before {
+                    background-color: var(
+                        --gn-aside-header-item-background-color-hover,
+                        var(--_--item-background-color-hover)
+                    );
+                }
+            }
+        }
+    }
+
+    &__popup-content {
+        padding: 4px 0;
+    }
+
+    &__popup-item {
+        @include mixins.accessibility-button;
+
+        display: flex;
+        padding: 0 16px;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+
+        --_--popup-item-icon-color: var(--g-color-text-complementary);
+        --_--popup-item-text-color: var(--g-color-text-primary);
+        --_--popup-item-background-color-hover: var(--g-color-base-simple-hover);
+
+        &:hover {
+            background-color: var(--_--popup-item-background-color-hover);
+        }
+    }
+
+    &__popup-item-icon {
+        color: var(--gn-aside-header-item-icon-color, var(--_--popup-item-icon-color));
+        margin-right: 10px;
+        flex-shrink: 0;
+    }
+
+    &__popup-item-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--gn-aside-header-item-text-color, var(--_--popup-item-text-color));
+    }
+}
