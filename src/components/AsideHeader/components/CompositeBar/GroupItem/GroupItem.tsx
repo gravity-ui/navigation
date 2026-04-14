@@ -38,7 +38,7 @@ export const GroupItem: React.FC<GroupItemProps> = ({
     current = false,
     compact,
     enableTooltip = true,
-    _groupChildren,
+    groupChildren,
     onItemClick,
     onMouseEnter,
     onMouseLeave,
@@ -80,24 +80,31 @@ export const GroupItem: React.FC<GroupItemProps> = ({
     const popoverContent = (
         <div className={b('popup-content')}>
             <List
-                items={_groupChildren}
-                selectedItemIndex={getSelectedItemIndex(_groupChildren)}
+                items={groupChildren}
+                selectedItemIndex={getSelectedItemIndex(groupChildren)}
                 itemHeight={ITEM_HEIGHT}
-                itemsHeight={_groupChildren.length * ITEM_HEIGHT}
+                itemsHeight={groupChildren.length * ITEM_HEIGHT}
                 virtualized={false}
                 filterable={false}
                 sortable={false}
-                renderItem={(item) => (
-                    <Item
-                        {...item}
-                        compact={false}
-                        onItemClick={(clickedItem, _collapsed, event) => {
-                            onItemClick?.(clickedItem, false, event);
-                            clickedItem.onItemClick?.(clickedItem, false, event);
-                            setPopoverOpen(false);
-                        }}
-                    />
-                )}
+                renderItem={(item) => {
+                    const {onItemClick: itemOnItemClick, ...itemProps} = item;
+
+                    return (
+                        <Item
+                            {...itemProps}
+                            compact={false}
+                            onItemClick={(clickedItem, _collapsed, event) => {
+                                onItemClick?.(
+                                    {...clickedItem, onItemClick: itemOnItemClick},
+                                    false,
+                                    event,
+                                );
+                                setPopoverOpen(false);
+                            }}
+                        />
+                    );
+                }}
             />
         </div>
     );

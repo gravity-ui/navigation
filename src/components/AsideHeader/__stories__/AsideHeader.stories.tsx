@@ -280,12 +280,51 @@ const menuGroupsData: MenuGroup[] = [
 
 const menuItemsWithGroups: AsideHeaderProps['menuItems'] = [
     {id: 'home', title: 'Home', icon: Gear},
-    {id: 'analytics-overview', title: 'Overview', icon: Gear, groupId: 'analytics'},
-    {id: 'analytics-reports', title: 'Reports', icon: Gear, groupId: 'analytics'},
-    {id: 'analytics-dashboards', title: 'Dashboards', icon: Gear, groupId: 'analytics'},
+    {
+        id: 'analytics-overview',
+        title: 'Overview',
+        icon: Gear,
+        groupId: 'analytics',
+        onItemClick: () => {
+            console.log('analytics-overview');
+        },
+    },
+    {
+        id: 'analytics-reports',
+        title: 'Reports',
+        icon: Gear,
+        groupId: 'analytics',
+        onItemClick: () => {
+            console.log('analytics-reports');
+        },
+    },
+    {
+        id: 'analytics-dashboards',
+        title: 'Dashboards',
+        icon: Gear,
+        groupId: 'analytics',
+        onItemClick: () => {
+            console.log('analytics-dashboards');
+        },
+    },
     {id: 'general-settings', title: 'General', icon: Gear, groupId: 'settings'},
-    {id: 'user-settings', title: 'Users', icon: Gear, groupId: 'settings'},
-    {id: 'help', title: 'Help', icon: Gear},
+    {
+        id: 'user-settings',
+        title: 'Users',
+        icon: Gear,
+        groupId: 'settings',
+        onItemClick: () => {
+            console.log('user-settings');
+        },
+    },
+    {
+        id: 'help',
+        title: 'Help',
+        icon: Gear,
+        onItemClick: () => {
+            console.log('help');
+        },
+    },
 ];
 
 const MenuGroupsTemplate: StoryFn = (args) => {
