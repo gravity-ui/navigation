@@ -27,6 +27,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         customBackgroundClassName,
         className,
         hideCollapseButton,
+        menuGroups,
         qa,
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
@@ -56,6 +57,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             type="menu"
                             compact={compact}
                             items={visibleMenuItems}
+                            menuGroups={menuGroups}
                             menuMoreTitle={menuMoreTitle ?? i18n('label_more')}
                             onItemClick={onItemClick}
                             onMoreClick={onMenuMoreClick}

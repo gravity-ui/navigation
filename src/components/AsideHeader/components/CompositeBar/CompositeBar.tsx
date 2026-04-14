@@ -1,13 +1,15 @@
-import React, {FC, ReactNode, useCallback, useRef} from 'react';
+import React, {FC, ReactNode, useCallback, useMemo, useRef} from 'react';
 
 import {List} from '@gravity-ui/uikit';
 import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
 
+import {MenuGroup} from '../../../types';
 import {createBlock} from '../../../utils/cn';
 import {AsideHeaderItem} from '../../types';
 
 import {Item, ItemProps} from './Item/Item';
 import {COLLAPSE_ITEM_ID} from './constants';
+import {getGroupedItems} from './grouping';
 import {
     getAutosizeListItems,
     getItemHeight,
@@ -24,6 +26,7 @@ const b = createBlock('composite-bar', styles);
 type CompositeBarProps = {
     type: 'menu' | 'subheader';
     items: AsideHeaderItem[];
+    menuGroups?: MenuGroup[];
     onItemClick?: (
         item: AsideHeaderItem,
         collapsed: boolean,
@@ -108,6 +111,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
 export const CompositeBar: FC<CompositeBarProps> = ({
     type,
     items,
+    menuGroups,
     menuMoreTitle,
     onItemClick,
     onMoreClick,
@@ -115,24 +119,26 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     compositeId,
     menuItemClassName,
 }) => {
-    if (items.length === 0) {
+    const groupedItems = useMemo(() => getGroupedItems(items, menuGroups), [items, menuGroups]);
+
+    if (groupedItems.length === 0) {
         return null;
     }
     let node: ReactNode;
 
     if (type === 'menu') {
-        const minHeight = getItemsMinHeight(items);
+        const minHeight = getItemsMinHeight(groupedItems);
         const collapseItem = getMoreButtonItem(menuMoreTitle);
         node = (
             <div className={b({autosizer: true})} style={{minHeight}}>
-                {items.length !== 0 && (
+                {groupedItems.length !== 0 && (
                     <AutoSizer>
                         {(size: Size) => {
                             const width = Number.isNaN(size.width) ? 0 : size.width;
                             const height = Number.isNaN(size.height) ? 0 : size.height;
 
                             const {listItems, collapseItems} = getAutosizeListItems(
-                                items,
+                                groupedItems,
                                 height,
                                 collapseItem,
                             );
@@ -162,7 +168,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                     type="subheader"
                     menuItemClassName={menuItemClassName}
                     compact={compact}
-                    items={items}
+                    items={groupedItems}
                     onItemClick={onItemClick}
                 />
             </div>
