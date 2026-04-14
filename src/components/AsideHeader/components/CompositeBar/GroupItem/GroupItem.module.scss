@@ -13,6 +13,7 @@ $block: '.#{variables.$ns}group-item';
     --_--item-selected-background-color: var(--g-color-base-selection);
     --_--item-collapsed-radius: 7px;
 
+    position: relative;
     display: flex;
     min-width: 0;
     width: 100%;
@@ -43,6 +44,25 @@ $block: '.#{variables.$ns}group-item';
         align-items: center;
         overflow: hidden;
         margin-right: 16px;
+    }
+
+    &__chevron {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+        margin-right: 12px;
+        flex-shrink: 0;
+    }
+
+    &_compact &__chevron {
+        position: absolute;
+        right: 8px;
+        margin: 0;
+
+        svg {
+            stroke: currentColor;
+            stroke-width: 1;
+        }
     }
 
     &__title-text {
@@ -201,8 +221,11 @@ $block: '.#{variables.$ns}group-item';
 
     &__popup-item-icon {
         color: var(--gn-aside-header-item-icon-color, var(--_--popup-item-icon-color));
-        margin-right: 10px;
         flex-shrink: 0;
+
+        #{$block}__popup-item & {
+            margin-right: 10px;
+        }
     }
 
     &__popup-item-title {

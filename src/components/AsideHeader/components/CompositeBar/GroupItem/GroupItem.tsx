@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {ChevronRight} from '@gravity-ui/icons';
 import {ActionTooltip, Icon, List, Popover} from '@gravity-ui/uikit';
 
 import {ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
@@ -14,6 +15,8 @@ import styles from './GroupItem.module.scss';
 const b = createBlock('group-item', styles);
 
 const POPUP_ICON_SIZE = 16;
+const CHEVRON_SIZE = 16;
+const CHEVRON_SIZE_COMPACT = 10;
 const POPOVER_OPEN_DELAY_MS = 150;
 
 export interface GroupItemProps extends GroupHeaderItem {
@@ -126,8 +129,16 @@ export const GroupItem: React.FC<GroupItemProps> = ({
         >
             <button className={b({current, compact})} data-qa={qa}>
                 <div className={b('icon-place')}>{itemIconNode}</div>
+
                 <div className={b('title')} title={typeof title === 'string' ? title : undefined}>
                     <div className={b('title-text')}>{title}</div>
+                </div>
+
+                <div className={b('chevron')}>
+                    <Icon
+                        data={ChevronRight}
+                        size={compact ? CHEVRON_SIZE_COMPACT : CHEVRON_SIZE}
+                    />
                 </div>
             </button>
         </Popover>
