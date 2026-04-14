@@ -87,7 +87,7 @@ $actionLeftRightMargin: 10px;
         display: flex;
         align-items: center;
         overflow: hidden;
-        margin-right: 16px;
+        margin: 0 var(--g-spacing-4) 0 var(--g-spacing-2);
     }
 
     &__title-text {
