@@ -87,7 +87,23 @@ export function factoryCreateMessagesFunction<TBase, AvailableLocale extends str
                 const baseMsg = msgs[key as K];
 
                 if (typeof baseMsg === 'undefined') {
-                    throw new Error(`Not found message for key ${String(key)}`);
+                    const id = String(key);
+
+                    if (config.defaultFallback === 'key') {
+                        return {
+                            id,
+                            defaultMessage: id,
+                        };
+                    }
+
+                    if (config.defaultFallback === 'empty-string') {
+                        return {
+                            id,
+                            defaultMessage: '',
+                        };
+                    }
+
+                    throw new MissingTranslationError({id}, config.getLocale());
                 }
 
                 return getMessageDescriptor({

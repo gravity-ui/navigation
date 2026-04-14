@@ -27,6 +27,7 @@ The **i18n-core** library is the foundation for internationalization (i18n) libr
     - `empty-string` - fallback to empty string.
     - `key` - fallback to translation key.
     - One of the locales used in the project `allowedLocales`, or their list.
+- For `defaultFallback` `empty-string` or `key`, the same behavior applies when a **key is missing from the keyset** passed to `createMessages` (there is no entry for that key at all). If `defaultFallback` is a locale or a list of locales, a missing key still cannot be resolved and results in a missing-translation error, same as when a key exists but has no string in any fallback locale.
 - `disableUseLocaleLangAsFallback` - disable using locale language as its fallback. More details can be found in the fallback search section.
 
 #### Fallback Search:
