@@ -5,7 +5,7 @@ $block: '.#{variables.$ns}logo';
 #{$block} {
     display: flex;
     align-items: center;
-    height: 40px;
+    height: #{variables.$item-height};
 
     &__btn-logo {
         display: flex;

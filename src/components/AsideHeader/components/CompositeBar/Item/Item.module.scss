@@ -36,7 +36,7 @@ $actionLeftRightMargin: 10px;
     padding: 0;
 
     &:global(.#{variables.$ns}footer-item) {
-        height: 40px;
+        height: #{variables.$item-height};
     }
 
     &__icon {
