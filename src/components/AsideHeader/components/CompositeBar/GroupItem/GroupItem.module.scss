@@ -197,41 +197,12 @@ $block: '.#{variables.$ns}group-item';
     }
 
     &__popup-content {
+        --gn-aside-header-min-width: 56px;
         padding: 8px;
     }
 
-    &__popup-item {
-        @include mixins.accessibility-button;
-
-        display: flex;
-        padding: 0 16px;
-        align-items: center;
-        width: 100%;
-        height: 100%;
-        cursor: pointer;
-
-        --_--popup-item-icon-color: var(--g-color-text-complementary);
-        --_--popup-item-text-color: var(--g-color-text-primary);
-        --_--popup-item-background-color-hover: var(--g-color-base-simple-hover);
-
-        &:hover {
-            background-color: var(--_--popup-item-background-color-hover);
-        }
-    }
-
     &__popup-item-icon {
-        color: var(--gn-aside-header-item-icon-color, var(--_--popup-item-icon-color));
+        color: var(--gn-aside-header-item-icon-color, var(--_--item-icon-color));
         flex-shrink: 0;
-
-        #{$block}__popup-item & {
-            margin-right: 10px;
-        }
-    }
-
-    &__popup-item-title {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        color: var(--gn-aside-header-item-text-color, var(--_--popup-item-text-color));
     }
 }

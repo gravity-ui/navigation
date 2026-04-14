@@ -3,10 +3,11 @@ import React from 'react';
 import {ChevronRight} from '@gravity-ui/icons';
 import {ActionTooltip, Icon, List, Popover} from '@gravity-ui/uikit';
 
-import {ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
+import {ASIDE_HEADER_ICON_SIZE, ITEM_HEIGHT} from '../../../../constants';
 import {createBlock} from '../../../../utils/cn';
 import {AsideHeaderItem} from '../../../types';
-import {POPUP_ITEM_HEIGHT, POPUP_PLACEMENT} from '../constants';
+import {Item} from '../Item/Item';
+import {POPUP_PLACEMENT} from '../constants';
 import {GroupHeaderItem} from '../grouping';
 import {getSelectedItemIndex} from '../utils';
 
@@ -14,7 +15,6 @@ import styles from './GroupItem.module.scss';
 
 const b = createBlock('group-item', styles);
 
-const POPUP_ICON_SIZE = 16;
 const CHEVRON_SIZE = 16;
 const CHEVRON_SIZE_COMPACT = 10;
 const POPOVER_OPEN_DELAY_MS = 150;
@@ -82,37 +82,22 @@ export const GroupItem: React.FC<GroupItemProps> = ({
             <List
                 items={_groupChildren}
                 selectedItemIndex={getSelectedItemIndex(_groupChildren)}
-                itemHeight={POPUP_ITEM_HEIGHT}
-                itemsHeight={_groupChildren.length * POPUP_ITEM_HEIGHT}
+                itemHeight={ITEM_HEIGHT}
+                itemsHeight={_groupChildren.length * ITEM_HEIGHT}
                 virtualized={false}
                 filterable={false}
                 sortable={false}
-                renderItem={(item) => {
-                    const [Tag, tagProps] = item.href
-                        ? (['a', {href: item.href}] as const)
-                        : (['button', {}] as const);
-
-                    return (
-                        <Tag
-                            {...tagProps}
-                            className={b('popup-item')}
-                            onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-                                onItemClick?.(item, false, event);
-                                item.onItemClick?.(item, false, event);
-                                setPopoverOpen(false);
-                            }}
-                        >
-                            {item.icon && (
-                                <Icon
-                                    data={item.icon}
-                                    size={POPUP_ICON_SIZE}
-                                    className={b('popup-item-icon')}
-                                />
-                            )}
-                            <span className={b('popup-item-title')}>{item.title}</span>
-                        </Tag>
-                    );
-                }}
+                renderItem={(item) => (
+                    <Item
+                        {...item}
+                        compact={false}
+                        onItemClick={(clickedItem, _collapsed, event) => {
+                            onItemClick?.(clickedItem, false, event);
+                            clickedItem.onItemClick?.(clickedItem, false, event);
+                            setPopoverOpen(false);
+                        }}
+                    />
+                )}
             />
         </div>
     );
