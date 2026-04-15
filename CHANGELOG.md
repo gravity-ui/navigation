@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### ⚠ BREAKING CHANGES
+
+* **AsideHeader:** removed the `multipleTooltip` prop and the aggregated collapsed-menu labels popup. Rely on per-item `enableTooltip` / `tooltipText` (and other menu item props), or implement custom UI if you need a replacement for the old behavior.
+
 ## [4.0.11](https://github.com/gravity-ui/navigation/compare/v4.0.10...v4.0.11) (2026-02-11)
 
 
