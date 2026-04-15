@@ -6,7 +6,8 @@ import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
 import {createBlock} from '../../../utils/cn';
 import {AsideHeaderItem} from '../../types';
 
-import {Item, ItemProps} from './Item/Item';
+import {Item} from './Item/Item';
+import {ItemProps} from './Item/Item.types';
 import {COLLAPSE_ITEM_ID} from './constants';
 import {
     getAutosizeListItems,
