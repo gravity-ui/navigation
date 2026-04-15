@@ -1,34 +1,21 @@
 import React from 'react';
 
-import {ActionTooltip, Icon, List, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
+import {ActionTooltip, Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
 
 import {AsideHeaderItem} from 'src/components/AsideHeader/types';
 
 import {ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
 import {MakeItemParams} from '../../../../types';
 import {createBlock} from '../../../../utils/cn';
-import {useAsideHeaderInnerContext} from '../../../AsideHeaderContext';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
-import {
-    COLLAPSE_ITEM_ID,
-    ITEM_TYPE_REGULAR,
-    POPUP_ITEM_HEIGHT,
-    POPUP_PLACEMENT,
-} from '../constants';
-import {getSelectedItemIndex} from '../utils';
+import {COLLAPSE_ITEM_ID, ITEM_TYPE_REGULAR} from '../constants';
+
+import {CollapsedPopup} from './CollapsedPopup';
+import {ItemInnerProps, ItemProps} from './Item.types';
 
 import styles from './Item.module.scss';
 
 const b = createBlock('composite-bar-item', styles);
-
-export interface ItemProps extends AsideHeaderItem {}
-
-interface ItemInnerProps extends ItemProps {
-    className?: string;
-    collapseItems?: AsideHeaderItem[];
-    onMouseEnter?: () => void;
-    onMouseLeave?: () => void;
-}
 
 function renderItemTitle(params: Pick<AsideHeaderItem, 'title' | 'rightAdornment'>) {
     let titleNode = <div className={b('title-text')}>{params.title}</div>;
@@ -241,81 +228,3 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 };
 
 Item.displayName = 'Item';
-
-interface CollapsedPopupProps {
-    anchorRef: React.RefObject<HTMLElement>;
-    onOpenChange: () => void;
-}
-
-function CollapsedPopup({
-    onItemClick,
-    collapseItems,
-    anchorRef,
-    onOpenChange,
-}: ItemInnerProps & CollapsedPopupProps) {
-    const {compact} = useAsideHeaderInnerContext();
-    return collapseItems?.length ? (
-        <Popup
-            strategy="fixed"
-            placement={POPUP_PLACEMENT}
-            open={true}
-            anchorElement={anchorRef.current}
-            onOpenChange={onOpenChange}
-        >
-            <div className={b('collapse-items-popup-content')}>
-                <List
-                    itemClassName={b('root-collapse-item')}
-                    items={collapseItems}
-                    selectedItemIndex={getSelectedItemIndex(collapseItems)}
-                    itemHeight={POPUP_ITEM_HEIGHT}
-                    itemsHeight={collapseItems.length * POPUP_ITEM_HEIGHT}
-                    virtualized={false}
-                    filterable={false}
-                    sortable={false}
-                    onItemClick={onOpenChange}
-                    renderItem={(item) => {
-                        const makeCollapseNode = ({
-                            title: titleEl,
-                            icon: iconEl,
-                        }: MakeItemParams) => {
-                            const [Tag, tagProps] = item.href
-                                ? ['a' as const, {href: item.href}]
-                                : ['button' as const, {}];
-
-                            return (
-                                <Tag
-                                    {...tagProps}
-                                    className={b('collapse-item')}
-                                    onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-                                        onItemClick?.(item, true, event);
-                                    }}
-                                >
-                                    {iconEl}
-                                    {titleEl}
-                                </Tag>
-                            );
-                        };
-
-                        const titleNode = renderItemTitle(item);
-                        const iconNode = item.icon && (
-                            <Icon data={item.icon} size={14} className={b('collapse-item-icon')} />
-                        );
-
-                        const params = {title: titleNode, icon: iconNode};
-                        const opts = {
-                            compact: Boolean(compact),
-                            collapsed: true,
-                            item,
-                            ref: anchorRef,
-                        };
-                        if (typeof item.itemWrapper === 'function') {
-                            return item.itemWrapper(params, makeCollapseNode, opts);
-                        } else {
-                            return makeCollapseNode(params);
-                        }
-                    }}
-                />
-            </div>
-        </Popup>
-    ) : null;
-}

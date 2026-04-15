@@ -8,7 +8,7 @@ import {useAsideHeaderInnerContext} from '../../../AsideHeaderContext';
 import {POPUP_ITEM_HEIGHT, POPUP_PLACEMENT} from '../constants';
 import {getSelectedItemIndex} from '../utils';
 
-import type {ItemInnerProps} from './Item';
+import type {ItemInnerProps} from './Item.types';
 import {renderItemTitle} from './renderItemTitle';
 
 import styles from './Item.module.scss';
