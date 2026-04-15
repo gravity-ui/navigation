@@ -38,7 +38,6 @@ enum Panel {
 }
 
 export interface AsideHeaderShowcaseProps {
-    multipleTooltip?: boolean;
     initialCompact?: boolean;
     topAlert?: TopAlertProps;
     customBackground?: React.ReactNode;
@@ -48,7 +47,6 @@ export interface AsideHeaderShowcaseProps {
 }
 
 export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
-    multipleTooltip = false,
     initialCompact = false,
     topAlert,
     customBackground,
@@ -147,7 +145,6 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
                 ]}
                 compact={compact}
                 hideCollapseButton={hideCollapseButton}
-                multipleTooltip={multipleTooltip}
                 openModalSubscriber={openModalSubscriber}
                 topAlert={topAlert}
                 renderFooter={({compact, asideRef}) => (
