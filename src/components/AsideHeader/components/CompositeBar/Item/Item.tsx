@@ -47,6 +47,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     } = props;
 
     const [open, toggleOpen] = React.useState<boolean>(false);
+    const [compactNavPopoverOpen, setCompactNavPopoverOpen] = React.useState(false);
 
     const ref = React.useRef<HTMLAnchorElement & HTMLButtonElement>(null);
     const anchorRef = anchoreRefProp?.current ? anchoreRefProp : ref;
@@ -68,6 +69,9 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 ref.current?.contains(event.target as Node)
             ) {
                 return;
+            }
+            if (newOpen) {
+                setCompactNavPopoverOpen(false);
             }
             onOpenChangePopup?.(newOpen, event, reason);
         },
@@ -112,6 +116,14 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         return (
             <Popover
                 disabled={compactPopoverDisabled}
+                open={compactNavPopoverOpen}
+                onOpenChange={(nextOpen) => {
+                    if (nextOpen && compactPopoverDisabled) {
+                        return;
+                    }
+
+                    setCompactNavPopoverOpen(nextOpen);
+                }}
                 placement="right"
                 strategy="fixed"
                 offset={defaultPopupOffset}
@@ -134,6 +146,10 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                             renderPopupContent={undefined}
                             onOpenChangePopup={undefined}
                             popupRef={undefined}
+                            onItemClick={(item, collapsed, event) => {
+                                setCompactNavPopoverOpen(false);
+                                onItemClick?.(item, collapsed, event);
+                            }}
                         />
                     </div>
                 }
@@ -157,6 +173,10 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
                         if (stopClickPropagation) {
                             event.stopPropagation();
+                        }
+
+                        if (compact) {
+                            setCompactNavPopoverOpen(false);
                         }
 
                         if (collapsedItem) {
