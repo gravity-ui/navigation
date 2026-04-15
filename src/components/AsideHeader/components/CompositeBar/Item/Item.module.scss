@@ -10,6 +10,7 @@ $actionLeftRightMargin: 10px;
 
     $class: &;
     --gn-composite-bar-item-action-size: 36px;
+    --gn-aside-header-item-expanded-radius: #{variables.$item-expanded-radius};
 
     --_--horizontal-divider-line-color: var(--g-color-line-generic);
 
@@ -228,6 +229,43 @@ $actionLeftRightMargin: 10px;
 
     &__icon-tooltip_item-type_action {
         margin-left: 10px;
+    }
+
+    &__icon-popover {
+        display: flex;
+        box-sizing: border-box;
+        padding: var(--g-spacing-1) var(--g-spacing-2);
+        align-items: center;
+        border-radius: 12px;
+    }
+
+    &__icon-popover_item-type_action {
+        margin-left: 10px;
+    }
+
+    &__compact-popover-content {
+        box-sizing: border-box;
+        min-width: var(--gn-aside-header-size, 240px);
+        border-radius: var(--gn-aside-header-item-expanded-radius);
+    }
+
+    &__compact-popover-item {
+        box-sizing: border-box;
+        height: #{variables.$item-height};
+
+        &#{$class}_type_regular {
+            border-radius: var(--gn-aside-header-item-expanded-radius);
+        }
+    }
+
+    &_hide-icon {
+        #{$class}__icon-place {
+            display: none;
+        }
+
+        #{$class}__title {
+            margin-left: var(--g-spacing-4);
+        }
     }
 
     &:not(&_compact) {
