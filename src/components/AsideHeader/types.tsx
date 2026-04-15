@@ -27,7 +27,6 @@ interface EditMenuProps {
 
 interface AsideHeaderGeneralProps extends QAProps {
     logo?: LogoProps;
-    multipleTooltip?: boolean;
     className?: string;
     collapseTitle?: string;
     expandTitle?: string;

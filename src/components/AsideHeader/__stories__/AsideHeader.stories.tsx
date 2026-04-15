@@ -51,13 +51,6 @@ Compact.args = {
     hideCollapseButton: true,
 };
 
-const MultipleTooltipTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
-export const MultipleTooltip = MultipleTooltipTemplate.bind({});
-MultipleTooltip.args = {
-    multipleTooltip: true,
-    initialCompact: true,
-};
-
 const CustomThemeTemplate: StoryFn = (args) => (
     <React.Fragment>
         <style>
@@ -123,7 +116,6 @@ const AdvancedUsageTemplate: StoryFn = (args) => {
 export const AdvancedUsage = AdvancedUsageTemplate.bind({});
 
 AdvancedUsage.args = {
-    multipleTooltip: false,
     initialCompact: true,
 };
 
