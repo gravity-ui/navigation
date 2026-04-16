@@ -109,6 +109,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                     <Item
                         {...item}
                         compact={compact}
+                        popupItemClassName={menuItemClassName}
                         menuPopupItems={menuPopupItems}
                         onMouseLeave={onMouseLeave}
                         onItemClick={onItemClickByIndex(item.onItemClick)}

@@ -24,6 +24,7 @@ interface Props {
     type?: string;
     collapsed?: boolean;
     hideIcon?: boolean;
+    itemClassName?: string;
     children: React.ReactElement;
     onOpenChange?: (open: boolean) => void;
     onItemClick?: AsideHeaderItem['onItemClick'];
@@ -31,6 +32,7 @@ interface Props {
 
 export const ItemPopup: React.FC<Props> = ({
     items,
+    itemClassName,
     open,
     disabled,
     type,
@@ -51,6 +53,7 @@ export const ItemPopup: React.FC<Props> = ({
                 selectedItemIndex={getSelectedItemIndex(items)}
                 itemHeight={ITEM_HEIGHT}
                 itemsHeight={items.length * ITEM_HEIGHT}
+                itemClassName={itemClassName}
                 virtualized={false}
                 filterable={false}
                 sortable={false}

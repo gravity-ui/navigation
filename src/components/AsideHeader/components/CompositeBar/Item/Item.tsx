@@ -26,6 +26,7 @@ const CHEVRON_SIZE_COMPACT = 10;
 export const Item: React.FC<ItemInnerProps> = (props) => {
     const {
         className,
+        popupItemClassName,
         menuPopupItems,
         compact,
         onMouseLeave,
@@ -187,6 +188,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 <ItemPopup
                     items={expandedMenuRows}
                     open={compactNavPopoverOpen}
+                    itemClassName={popupItemClassName}
                     onOpenChange={setCompactNavPopoverOpen}
                     collapsed={collapsedItem ? true : compact}
                     onItemClick={onItemClick}

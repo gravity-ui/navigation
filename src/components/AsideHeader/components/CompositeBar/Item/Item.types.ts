@@ -4,6 +4,7 @@ export interface ItemProps extends AsideHeaderItem {}
 
 export interface ItemInnerProps extends ItemProps {
     className?: string;
+    popupItemClassName?: string;
     /** Items shown in the compact (or expanded overflow) popover: group children or overflow list. */
     menuPopupItems?: AsideHeaderItem[];
     onMouseEnter?: () => void;
