@@ -15,37 +15,37 @@ const b = createBlock('composite-bar-item', styles);
 
 const defaultPopupOffset: NonNullable<PopupProps['offset']> = {mainAxis: 14};
 
-export interface CollapsedPopupProps {
+interface Props {
     items: AsideHeaderItem[];
     open?: boolean;
-    onOpenChange?: (open: boolean) => void;
     disabled?: boolean;
     type?: string;
     collapsed?: boolean;
     hideIcon?: boolean;
     trigger?: 'click';
-    onItemClick?: AsideHeaderItem['onItemClick'];
     children: React.ReactElement;
+    onOpenChange?: (open: boolean) => void;
+    onItemClick?: AsideHeaderItem['onItemClick'];
 }
 
-export function CollapsedPopup({
+export const ItemPopup: React.FC<Props> = ({
     items,
     open,
-    onOpenChange,
     disabled,
     type,
     collapsed = false,
     hideIcon = true,
     trigger,
-    onItemClick,
     children,
-}: CollapsedPopupProps) {
+    onItemClick,
+    onOpenChange,
+}) => {
     if (!items.length) {
         return children;
     }
 
     const content = (
-        <div className={b('compact-popover-content', {collapsed})}>
+        <div className={b('popup-content', {collapsed})}>
             <List
                 items={items}
                 selectedItemIndex={getSelectedItemIndex(items)}
@@ -59,7 +59,7 @@ export function CollapsedPopup({
                         {...item}
                         qa={undefined}
                         compact={false}
-                        className={b('compact-popover-item')}
+                        className={b('popup-item')}
                         hideIcon={hideIcon}
                         stopClickPropagation
                         enableTooltip={false}
@@ -97,6 +97,6 @@ export function CollapsedPopup({
             {children}
         </Popover>
     );
-}
+};
 
-CollapsedPopup.displayName = 'CollapsedPopup';
+ItemPopup.displayName = 'ItemPopup';

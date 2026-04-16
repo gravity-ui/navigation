@@ -8,8 +8,8 @@ import {createBlock} from '../../../../utils/cn';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {COLLAPSE_ITEM_ID, ITEM_TYPE_REGULAR} from '../constants';
 
-import {CollapsedPopup} from './CollapsedPopup';
 import {ItemInnerProps, ItemProps} from './Item.types';
+import {ItemPopup} from './ItemPopup';
 import {renderItemTitle} from './renderItemTitle';
 
 import styles from './Item.module.scss';
@@ -99,7 +99,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
         if (collapsedItem) {
             return (
-                <CollapsedPopup
+                <ItemPopup
                     items={collapseItems || []}
                     open={compactNavPopoverOpen}
                     onOpenChange={setCompactNavPopoverOpen}
@@ -110,12 +110,12 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     onItemClick={onItemClick}
                 >
                     {iconButton}
-                </CollapsedPopup>
+                </ItemPopup>
             );
         }
 
         return (
-            <CollapsedPopup
+            <ItemPopup
                 items={[props]}
                 open={compactNavPopoverOpen}
                 onOpenChange={(nextOpen) => {
@@ -127,7 +127,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 onItemClick={onItemClick}
             >
                 {iconButton}
-            </CollapsedPopup>
+            </ItemPopup>
         );
     };
 
@@ -180,7 +180,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
         const wrappedTagNode =
             collapsedItem && !compact && collapseItems?.length ? (
-                <CollapsedPopup
+                <ItemPopup
                     items={collapseItems}
                     collapsed
                     hideIcon={false}
@@ -188,7 +188,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     onItemClick={onItemClick}
                 >
                     {tagNode}
-                </CollapsedPopup>
+                </ItemPopup>
             ) : (
                 tagNode
             );
