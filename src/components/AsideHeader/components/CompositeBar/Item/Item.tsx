@@ -105,7 +105,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     onOpenChange={setCompactNavPopoverOpen}
                     type={type}
                     collapsed
-                    hideIcon={false}
                     onItemClick={onItemClick}
                 >
                     {iconButton}
@@ -121,6 +120,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     if (nextOpen && compactPopoverDisabled) return;
                     setCompactNavPopoverOpen(nextOpen);
                 }}
+                hideIcon
                 disabled={compactPopoverDisabled}
                 type={type}
                 onItemClick={onItemClick}
@@ -180,7 +180,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     open={compactNavPopoverOpen}
                     onOpenChange={setCompactNavPopoverOpen}
                     collapsed
-                    hideIcon={false}
                     onItemClick={onItemClick}
                 >
                     {tagNode}

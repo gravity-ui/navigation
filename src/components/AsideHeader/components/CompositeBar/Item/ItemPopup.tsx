@@ -33,7 +33,7 @@ export const ItemPopup: React.FC<Props> = ({
     disabled,
     type,
     collapsed = false,
-    hideIcon = true,
+    hideIcon = false,
     children,
     onItemClick,
     onOpenChange,
