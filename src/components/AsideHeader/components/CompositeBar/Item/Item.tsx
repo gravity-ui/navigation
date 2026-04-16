@@ -106,7 +106,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     type={type}
                     collapsed
                     hideIcon={false}
-                    trigger="click"
                     onItemClick={onItemClick}
                 >
                     {iconButton}
@@ -178,9 +177,10 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             collapsedItem && !compact && collapseItems?.length ? (
                 <ItemPopup
                     items={collapseItems}
+                    open={compactNavPopoverOpen}
+                    onOpenChange={setCompactNavPopoverOpen}
                     collapsed
                     hideIcon={false}
-                    trigger="click"
                     onItemClick={onItemClick}
                 >
                     {tagNode}
