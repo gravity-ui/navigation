@@ -80,7 +80,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         return <div className={b('menu-divider')} />;
     }
 
-    const compactPopoverDisabled = !enableTooltip || popupVisible;
+    const compactPopoverDisabled = !enableTooltip || popupVisible || type === 'action';
 
     const makeIconNode = (iconEl: React.ReactNode): React.ReactNode => {
         if (!compact) {
