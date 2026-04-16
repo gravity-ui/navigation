@@ -102,7 +102,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                 if (item.id === COLLAPSE_ITEM_ID) {
                     menuPopupItems = collapseItems;
                 } else if (isGroupHeaderItem(item)) {
-                    menuPopupItems = item._groupChildren;
+                    menuPopupItems = item.groupChildren;
                 }
 
                 return (

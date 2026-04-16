@@ -73,9 +73,11 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             ) {
                 return;
             }
+
             if (newOpen) {
                 setCompactNavPopoverOpen(false);
             }
+
             onOpenChangePopup?.(newOpen, event, reason);
         },
         [onOpenChangePopup],

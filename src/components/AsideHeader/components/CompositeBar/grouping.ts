@@ -1,15 +1,17 @@
 import {MenuGroup} from '../../../types';
 import {AsideHeaderItem} from '../../types';
 
-export const GROUP_HEADER_ITEM_PREFIX = '__group-header-';
+const GROUP_HEADER_ITEM_PREFIX = '__group-header-';
 
 export interface GroupHeaderItem extends AsideHeaderItem {
-    _isGroupHeader: true;
-    _groupChildren: AsideHeaderItem[];
+    isGroupHeader: true;
+    groupChildren: AsideHeaderItem[];
 }
 
-export function isGroupHeaderItem(item: AsideHeaderItem): item is GroupHeaderItem {
-    return '_isGroupHeader' in item && (item as GroupHeaderItem)._isGroupHeader === true;
+export function isGroupHeaderItem(
+    item: AsideHeaderItem | GroupHeaderItem,
+): item is GroupHeaderItem {
+    return 'isGroupHeader' in item && item.isGroupHeader === true;
 }
 
 export function getGroupedItems(
@@ -43,8 +45,13 @@ export function getGroupedItems(
                 groupChildrenMap.set(groupId, []);
                 groupFirstIndex.set(groupId, i);
             }
+
             if (!item.hidden) {
-                groupChildrenMap.get(groupId)!.push(item);
+                const groupChildren = groupChildrenMap.get(groupId);
+
+                if (groupChildren) {
+                    groupChildren.push(item);
+                }
             }
         } else {
             ungroupedItems.push({index: i, item});
@@ -56,7 +63,13 @@ export function getGroupedItems(
     for (const [groupId, children] of groupChildrenMap.entries()) {
         if (children.length === 0) continue;
 
-        const group = groupMap.get(groupId)!;
+        const group = groupMap.get(groupId);
+        const firstIndex = groupFirstIndex.get(groupId);
+
+        if (!group || firstIndex === undefined) {
+            continue;
+        }
+
         const hasCurrent = children.some((child) => child.current);
 
         const groupHeaderItem: GroupHeaderItem = {
@@ -64,11 +77,11 @@ export function getGroupedItems(
             title: group.title,
             icon: group.icon,
             current: hasCurrent,
-            _isGroupHeader: true,
-            _groupChildren: children,
+            isGroupHeader: true,
+            groupChildren: children,
         };
 
-        result.push({index: groupFirstIndex.get(groupId)!, item: groupHeaderItem});
+        result.push({index: firstIndex, item: groupHeaderItem});
     }
 
     result.sort((a, b) => a.index - b.index);
