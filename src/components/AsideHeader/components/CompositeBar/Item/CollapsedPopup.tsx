@@ -1,96 +1,102 @@
 import React from 'react';
 
-import {Icon, List, Popup} from '@gravity-ui/uikit';
+import {List, Popover, PopupProps} from '@gravity-ui/uikit';
 
-import {MakeItemParams} from '../../../../types';
+import {ITEM_HEIGHT} from '../../../../constants';
 import {createBlock} from '../../../../utils/cn';
-import {useAsideHeaderInnerContext} from '../../../AsideHeaderContext';
-import {POPUP_ITEM_HEIGHT, POPUP_PLACEMENT} from '../constants';
+import {AsideHeaderItem} from '../../../types';
 import {getSelectedItemIndex} from '../utils';
 
-import type {ItemInnerProps} from './Item.types';
-import {renderItemTitle} from './renderItemTitle';
+import {Item} from './Item';
 
 import styles from './Item.module.scss';
 
 const b = createBlock('composite-bar-item', styles);
 
+const defaultPopupOffset: NonNullable<PopupProps['offset']> = {mainAxis: 14};
+
 export interface CollapsedPopupProps {
-    anchorRef: React.RefObject<HTMLElement>;
-    onOpenChange: () => void;
+    items: AsideHeaderItem[];
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
+    disabled?: boolean;
+    type?: string;
+    collapsed?: boolean;
+    hideIcon?: boolean;
+    trigger?: 'click';
+    onItemClick?: AsideHeaderItem['onItemClick'];
+    children: React.ReactElement;
 }
 
 export function CollapsedPopup({
-    onItemClick,
-    collapseItems,
-    anchorRef,
+    items,
+    open,
     onOpenChange,
-}: ItemInnerProps & CollapsedPopupProps) {
-    const {compact} = useAsideHeaderInnerContext();
-    return collapseItems?.length ? (
-        <Popup
+    disabled,
+    type,
+    collapsed = false,
+    hideIcon = true,
+    trigger,
+    onItemClick,
+    children,
+}: CollapsedPopupProps) {
+    if (!items.length) {
+        return children;
+    }
+
+    const content = (
+        <div className={b('compact-popover-content', {collapsed})}>
+            <List
+                items={items}
+                selectedItemIndex={getSelectedItemIndex(items)}
+                itemHeight={ITEM_HEIGHT}
+                itemsHeight={items.length * ITEM_HEIGHT}
+                virtualized={false}
+                filterable={false}
+                sortable={false}
+                renderItem={(item) => (
+                    <Item
+                        {...item}
+                        qa={undefined}
+                        compact={false}
+                        className={b('compact-popover-item')}
+                        hideIcon={hideIcon}
+                        stopClickPropagation
+                        enableTooltip={false}
+                        bringForward={false}
+                        popupVisible={false}
+                        renderPopupContent={undefined}
+                        onOpenChangePopup={undefined}
+                        popupRef={undefined}
+                        onItemClick={(_innerItem, _innerCollapsed, event) => {
+                            onOpenChange?.(false);
+                            onItemClick?.(item, collapsed, event);
+                        }}
+                    />
+                )}
+            />
+        </div>
+    );
+
+    return (
+        <Popover
+            disabled={disabled}
+            open={open}
+            onOpenChange={(nextOpen) => {
+                if (nextOpen && disabled) return;
+                onOpenChange?.(nextOpen);
+            }}
+            placement="right"
             strategy="fixed"
-            placement={POPUP_PLACEMENT}
-            open={true}
-            anchorElement={anchorRef.current}
-            onOpenChange={onOpenChange}
+            offset={defaultPopupOffset}
+            enableSafePolygon
+            trigger={trigger}
+            className={collapsed ? undefined : b('icon-popover', {'item-type': type})}
+            content={content}
         >
-            <div className={b('collapse-items-popup-content')}>
-                <List
-                    itemClassName={b('root-collapse-item')}
-                    items={collapseItems}
-                    selectedItemIndex={getSelectedItemIndex(collapseItems)}
-                    itemHeight={POPUP_ITEM_HEIGHT}
-                    itemsHeight={collapseItems.length * POPUP_ITEM_HEIGHT}
-                    virtualized={false}
-                    filterable={false}
-                    sortable={false}
-                    onItemClick={onOpenChange}
-                    renderItem={(item) => {
-                        const makeCollapseNode = ({
-                            title: titleEl,
-                            icon: iconEl,
-                        }: MakeItemParams) => {
-                            const [Tag, tagProps] = item.href
-                                ? ['a' as const, {href: item.href}]
-                                : ['button' as const, {}];
-
-                            return (
-                                <Tag
-                                    {...tagProps}
-                                    className={b('collapse-item')}
-                                    onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-                                        onItemClick?.(item, true, event);
-                                    }}
-                                >
-                                    {iconEl}
-                                    {titleEl}
-                                </Tag>
-                            );
-                        };
-
-                        const titleNode = renderItemTitle(item);
-                        const iconNode = item.icon && (
-                            <Icon data={item.icon} size={14} className={b('collapse-item-icon')} />
-                        );
-
-                        const params = {title: titleNode, icon: iconNode};
-                        const opts = {
-                            compact: Boolean(compact),
-                            collapsed: true,
-                            item,
-                            ref: anchorRef,
-                        };
-                        if (typeof item.itemWrapper === 'function') {
-                            return item.itemWrapper(params, makeCollapseNode, opts);
-                        } else {
-                            return makeCollapseNode(params);
-                        }
-                    }}
-                />
-            </div>
-        </Popup>
-    ) : null;
+            {children}
+        </Popover>
+    );
 }
 
 CollapsedPopup.displayName = 'CollapsedPopup';

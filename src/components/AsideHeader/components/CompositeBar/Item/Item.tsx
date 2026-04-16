@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {ActionTooltip, Icon, Popover, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
+import {Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
 
 import {ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
 import {MakeItemParams} from '../../../../types';
@@ -46,7 +46,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         stopClickPropagation = false,
     } = props;
 
-    const [open, toggleOpen] = React.useState<boolean>(false);
     const [compactNavPopoverOpen, setCompactNavPopoverOpen] = React.useState(false);
 
     const ref = React.useRef<HTMLAnchorElement & HTMLButtonElement>(null);
@@ -55,7 +54,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const type = props.type || ITEM_TYPE_REGULAR;
     const current = props.current || false;
-    const tooltipText = props.tooltipText || props.title;
     const icon = props.icon;
     const iconSize = props.iconSize || ASIDE_HEADER_ICON_SIZE;
     const iconQa = props.iconQa;
@@ -82,7 +80,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         return <div className={b('menu-divider')} />;
     }
 
-    const compactPopoverDisabled = !enableTooltip || (collapsedItem && open) || popupVisible;
+    const compactPopoverDisabled = !enableTooltip || popupVisible;
 
     const makeIconNode = (iconEl: React.ReactNode): React.ReactNode => {
         if (!compact) {
@@ -101,118 +99,103 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
         if (collapsedItem) {
             return (
-                <ActionTooltip
-                    title=""
-                    description={tooltipText}
-                    disabled={compactPopoverDisabled}
-                    placement="right"
-                    className={b('icon-tooltip', {'item-type': type})}
+                <CollapsedPopup
+                    items={collapseItems || []}
+                    open={compactNavPopoverOpen}
+                    onOpenChange={setCompactNavPopoverOpen}
+                    type={type}
+                    collapsed
+                    hideIcon={false}
+                    trigger="click"
+                    onItemClick={onItemClick}
                 >
                     {iconButton}
-                </ActionTooltip>
+                </CollapsedPopup>
             );
         }
 
         return (
-            <Popover
-                disabled={compactPopoverDisabled}
+            <CollapsedPopup
+                items={[props]}
                 open={compactNavPopoverOpen}
                 onOpenChange={(nextOpen) => {
-                    if (nextOpen && compactPopoverDisabled) {
-                        return;
-                    }
-
+                    if (nextOpen && compactPopoverDisabled) return;
                     setCompactNavPopoverOpen(nextOpen);
                 }}
-                placement="right"
-                strategy="fixed"
-                offset={defaultPopupOffset}
-                enableSafePolygon
-                openDelay={100}
-                closeDelay={100}
-                className={b('icon-popover', {'item-type': type})}
-                content={
-                    <div className={b('compact-popover-content')}>
-                        <Item
-                            {...props}
-                            qa={undefined}
-                            compact={false}
-                            className={b('compact-popover-item', props.className)}
-                            hideIcon
-                            stopClickPropagation
-                            enableTooltip={false}
-                            bringForward={false}
-                            popupVisible={false}
-                            renderPopupContent={undefined}
-                            onOpenChangePopup={undefined}
-                            popupRef={undefined}
-                            onItemClick={(item, collapsed, event) => {
-                                setCompactNavPopoverOpen(false);
-                                onItemClick?.(item, collapsed, event);
-                            }}
-                        />
-                    </div>
-                }
+                disabled={compactPopoverDisabled}
+                type={type}
+                onItemClick={onItemClick}
             >
                 {iconButton}
-            </Popover>
+            </CollapsedPopup>
         );
     };
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
         const [Tag, tagProps] = href ? ['a' as const, {href}] : ['button' as const, {}];
 
+        const tagNode = (
+            <Tag
+                {...tagProps}
+                className={b({type, current, compact, 'hide-icon': hideIcon}, className)}
+                ref={ref}
+                data-type={type}
+                data-qa={qa}
+                onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+                    if (stopClickPropagation) {
+                        event.stopPropagation();
+                    }
+
+                    if (compact && !collapsedItem) {
+                        setCompactNavPopoverOpen(false);
+                    }
+
+                    if (collapsedItem) {
+                        onItemClick?.(props, true, event);
+                    } else {
+                        onItemClick?.(props, false, event);
+                    }
+                }}
+                onClickCapture={onItemClickCapture}
+                onMouseEnter={() => {
+                    if (!compact) {
+                        onMouseEnter?.();
+                    }
+                }}
+                onMouseLeave={() => {
+                    if (!compact) {
+                        onMouseLeave?.();
+                    }
+                }}
+            >
+                <div className={b('icon-place')} ref={highlightedRef}>
+                    {makeIconNode(iconEl)}
+                </div>
+
+                <div className={b('title')} title={typeof title === 'string' ? title : undefined}>
+                    {titleEl}
+                </div>
+            </Tag>
+        );
+
+        const wrappedTagNode =
+            collapsedItem && !compact && collapseItems?.length ? (
+                <CollapsedPopup
+                    items={collapseItems}
+                    collapsed
+                    hideIcon={false}
+                    trigger="click"
+                    onItemClick={onItemClick}
+                >
+                    {tagNode}
+                </CollapsedPopup>
+            ) : (
+                tagNode
+            );
+
         const createdNode = (
             <React.Fragment>
-                <Tag
-                    {...tagProps}
-                    className={b({type, current, compact, 'hide-icon': hideIcon}, className)}
-                    ref={ref}
-                    data-type={type}
-                    data-qa={qa}
-                    onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-                        if (stopClickPropagation) {
-                            event.stopPropagation();
-                        }
-
-                        if (compact) {
-                            setCompactNavPopoverOpen(false);
-                        }
-
-                        if (collapsedItem) {
-                            /**
-                             * This is the "more" button (three dots) that shows additional menu items in a popup.
-                             * We call onItemClick with collapsed=true to indicate this is a collapse action.
-                             */
-                            toggleOpen(!open);
-                            onItemClick?.(props, true, event);
-                        } else {
-                            onItemClick?.(props, false, event);
-                        }
-                    }}
-                    onClickCapture={onItemClickCapture}
-                    onMouseEnter={() => {
-                        if (!compact) {
-                            onMouseEnter?.();
-                        }
-                    }}
-                    onMouseLeave={() => {
-                        if (!compact) {
-                            onMouseLeave?.();
-                        }
-                    }}
-                >
-                    <div className={b('icon-place')} ref={highlightedRef}>
-                        {makeIconNode(iconEl)}
-                    </div>
-
-                    <div
-                        className={b('title')}
-                        title={typeof title === 'string' ? title : undefined}
-                    >
-                        {titleEl}
-                    </div>
-                </Tag>
+                {wrappedTagNode}
                 {renderPopupContent && Boolean(anchorRef?.current) && (
                     <Popup
                         strategy="fixed"
@@ -270,13 +253,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 />
             )}
             {node}
-            {open && collapsedItem && collapseItems?.length && Boolean(anchorRef?.current) && (
-                <CollapsedPopup
-                    {...props}
-                    anchorRef={anchorRef}
-                    onOpenChange={() => toggleOpen(false)}
-                />
-            )}
         </React.Fragment>
     );
 };
