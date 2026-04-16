@@ -3,7 +3,7 @@ import {AsideHeaderItem} from '../../types';
 
 const GROUP_HEADER_ITEM_PREFIX = '__group-header-';
 
-export interface GroupHeaderItem extends AsideHeaderItem {
+interface GroupHeaderItem extends AsideHeaderItem {
     isGroupHeader: true;
     groupChildren: AsideHeaderItem[];
 }
