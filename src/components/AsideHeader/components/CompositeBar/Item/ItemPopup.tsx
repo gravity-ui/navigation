@@ -91,7 +91,7 @@ export const ItemPopup: React.FC<Props> = ({
             offset={defaultPopupOffset}
             enableSafePolygon
             trigger={trigger}
-            className={collapsed ? undefined : b('icon-popover', {'item-type': type})}
+            className={b('icon-popover', {'item-type': type})}
             content={content}
         >
             {children}
