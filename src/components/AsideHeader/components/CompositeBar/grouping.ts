@@ -1,7 +1,7 @@
 import {MenuGroup} from '../../../types';
 import {AsideHeaderItem} from '../../types';
 
-const GROUP_HEADER_ITEM_PREFIX = '__group-header-';
+const GROUP_HEADER_ITEM_PREFIX = '__gn-composite-bar__group-header__';
 
 interface GroupHeaderItem extends AsideHeaderItem {
     isGroupHeader: true;
