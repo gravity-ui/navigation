@@ -177,7 +177,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     {titleEl}
                 </div>
 
-                {isGroupHeader && menuPopupItems && menuPopupItems.length > 0 && (
+                {Boolean(menuPopupItems?.length) && (isGroupHeader || collapsedItem) && (
                     <div className={b('chevron')}>
                         <Icon
                             data={ChevronRight}
