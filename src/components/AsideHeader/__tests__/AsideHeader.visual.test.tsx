@@ -96,7 +96,7 @@ test.describe('AsideHeader', () => {
     });
 
     test('render story: <MenuGroups>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.LineClamp />, undefined, {
+        await mount(<AsideHeaderStories.MenuGroups />, undefined, {
             width: 1200,
             height: 720,
         });
@@ -105,7 +105,7 @@ test.describe('AsideHeader', () => {
     });
 
     test('render story: <MenuGroupsCompact>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.LineClamp />, undefined, {
+        await mount(<AsideHeaderStories.MenuGroupsCompact />, undefined, {
             width: 1200,
             height: 720,
         });
