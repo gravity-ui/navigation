@@ -103,18 +103,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         );
 
         if (menuPopupItems?.length) {
-            return (
-                <ItemPopup
-                    items={menuPopupItems}
-                    open={compactNavPopoverOpen}
-                    onOpenChange={setCompactNavPopoverOpen}
-                    type={type}
-                    collapsed={collapsedItem ? true : compact}
-                    onItemClick={onItemClick}
-                >
-                    {iconButton}
-                </ItemPopup>
-            );
+            return iconButton;
         }
 
         return (
@@ -189,11 +178,10 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         );
 
         const expandedMenuRows = menuPopupItems;
-        const showExpandedMenuPopup =
-            !compact && Boolean(expandedMenuRows?.length) && (collapsedItem || isGroupHeader);
+        const showMenuPopup = Boolean(expandedMenuRows?.length) && (collapsedItem || isGroupHeader);
 
         const wrappedTagNode =
-            showExpandedMenuPopup && expandedMenuRows ? (
+            showMenuPopup && expandedMenuRows ? (
                 <ItemPopup
                     items={expandedMenuRows}
                     open={compactNavPopoverOpen}
