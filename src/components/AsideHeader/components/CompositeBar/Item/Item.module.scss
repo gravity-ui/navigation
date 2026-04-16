@@ -243,13 +243,18 @@ $actionLeftRightMargin: 10px;
         margin-left: 10px;
     }
 
-    &__compact-popover-content {
+    &__popup-content {
         box-sizing: border-box;
         min-width: var(--gn-aside-header-size, 240px);
         border-radius: var(--gn-aside-header-item-expanded-radius);
+
+        &_collapsed {
+            min-width: auto;
+            width: var(--gn-aside-header-size, 240px);
+        }
     }
 
-    &__compact-popover-item {
+    &__popup-item {
         box-sizing: border-box;
         height: #{variables.$item-height};
 
