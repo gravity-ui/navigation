@@ -43,13 +43,15 @@ export function getGroupedItems(
         if (groupId && groupMap.has(groupId)) {
             if (!groupChildrenMap.has(groupId)) {
                 groupChildrenMap.set(groupId, []);
-                groupFirstIndex.set(groupId, i);
             }
 
             if (!item.hidden) {
                 const groupChildren = groupChildrenMap.get(groupId);
 
                 if (groupChildren) {
+                    if (groupChildren.length === 0) {
+                        groupFirstIndex.set(groupId, i);
+                    }
                     groupChildren.push(item);
                 }
             }
