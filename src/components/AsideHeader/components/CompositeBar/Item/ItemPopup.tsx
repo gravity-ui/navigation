@@ -86,7 +86,7 @@ export const ItemPopup: React.FC<Props> = ({
                 if (nextOpen && disabled) return;
                 onOpenChange?.(nextOpen);
             }}
-            placement="right"
+            placement="right-start"
             strategy="fixed"
             openDelay={DEFAULT_POPUP_DELAY}
             closeDelay={DEFAULT_POPUP_DELAY}

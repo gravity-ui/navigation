@@ -1,14 +1,16 @@
-import React, {FC, ReactNode, useCallback, useRef} from 'react';
+import React, {FC, ReactNode, useCallback, useMemo, useRef} from 'react';
 
 import {List} from '@gravity-ui/uikit';
 import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
 
+import {MenuGroup} from '../../../types';
 import {createBlock} from '../../../utils/cn';
 import {AsideHeaderItem} from '../../types';
 
 import {Item} from './Item/Item';
 import {ItemProps} from './Item/Item.types';
 import {COLLAPSE_ITEM_ID} from './constants';
+import {getGroupedItems, isGroupHeaderItem} from './grouping';
 import {
     getAutosizeListItems,
     getItemHeight,
@@ -25,6 +27,7 @@ const b = createBlock('composite-bar', styles);
 type CompositeBarProps = {
     type: 'menu' | 'subheader';
     items: AsideHeaderItem[];
+    menuGroups?: MenuGroup[];
     onItemClick?: (
         item: AsideHeaderItem,
         collapsed: boolean,
@@ -93,15 +96,25 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
             virtualized={false}
             filterable={false}
             sortable={false}
-            renderItem={(item) => (
-                <Item
-                    {...item}
-                    compact={compact}
-                    onMouseLeave={onMouseLeave}
-                    onItemClick={onItemClickByIndex(item.onItemClick)}
-                    collapseItems={collapseItems}
-                />
-            )}
+            renderItem={(item) => {
+                let menuPopupItems: AsideHeaderItem[] | undefined;
+
+                if (item.id === COLLAPSE_ITEM_ID) {
+                    menuPopupItems = collapseItems;
+                } else if (isGroupHeaderItem(item)) {
+                    menuPopupItems = item.groupChildren;
+                }
+
+                return (
+                    <Item
+                        {...item}
+                        compact={compact}
+                        menuPopupItems={menuPopupItems}
+                        onMouseLeave={onMouseLeave}
+                        onItemClick={onItemClickByIndex(item.onItemClick)}
+                    />
+                );
+            }}
         />
     );
 };
@@ -109,6 +122,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
 export const CompositeBar: FC<CompositeBarProps> = ({
     type,
     items,
+    menuGroups,
     menuMoreTitle,
     onItemClick,
     onMoreClick,
@@ -116,24 +130,26 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     compositeId,
     menuItemClassName,
 }) => {
-    if (items.length === 0) {
+    const groupedItems = useMemo(() => getGroupedItems(items, menuGroups), [items, menuGroups]);
+
+    if (groupedItems.length === 0) {
         return null;
     }
     let node: ReactNode;
 
     if (type === 'menu') {
-        const minHeight = getItemsMinHeight(items);
+        const minHeight = getItemsMinHeight(groupedItems);
         const collapseItem = getMoreButtonItem(menuMoreTitle);
         node = (
             <div className={b({autosizer: true})} style={{minHeight}}>
-                {items.length !== 0 && (
+                {groupedItems.length !== 0 && (
                     <AutoSizer>
                         {(size: Size) => {
                             const width = Number.isNaN(size.width) ? 0 : size.width;
                             const height = Number.isNaN(size.height) ? 0 : size.height;
 
                             const {listItems, collapseItems} = getAutosizeListItems(
-                                items,
+                                groupedItems,
                                 height,
                                 collapseItem,
                             );
@@ -163,7 +179,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                     type="subheader"
                     menuItemClassName={menuItemClassName}
                     compact={compact}
-                    items={items}
+                    items={groupedItems}
                     onItemClick={onItemClick}
                 />
             </div>

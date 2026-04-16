@@ -3,7 +3,7 @@ import * as React from 'react';
 import {DrawerProps, PopupProps, QAProps} from '@gravity-ui/uikit';
 
 import {RenderContentType} from '../Content';
-import {LogoProps, MenuItem, OpenModalSubscriber, TopAlertProps} from '../types';
+import {LogoProps, MenuGroup, MenuItem, OpenModalSubscriber, TopAlertProps} from '../types';
 
 import {AsideHeaderContextType} from './AsideHeaderContext';
 
@@ -60,6 +60,7 @@ interface AsideHeaderDefaultProps {
     panelItems?: PanelItemProps[];
     subheaderItems?: AsideHeaderItem[];
     menuItems?: AsideHeaderItem[];
+    menuGroups?: MenuGroup[];
     defaultMenuItems?: AsideHeaderItem[];
     onMenuItemsChanged?: (items: AsideHeaderItem[]) => void;
     headerDecoration?: boolean;
