@@ -15,6 +15,8 @@ const b = createBlock('composite-bar-item', styles);
 
 const defaultPopupOffset: NonNullable<PopupProps['offset']> = {mainAxis: 14};
 
+const DEFAULT_POPUP_DELAY = 100;
+
 interface Props {
     items: AsideHeaderItem[];
     open?: boolean;
@@ -86,6 +88,8 @@ export const ItemPopup: React.FC<Props> = ({
             }}
             placement="right"
             strategy="fixed"
+            openDelay={DEFAULT_POPUP_DELAY}
+            closeDelay={DEFAULT_POPUP_DELAY}
             offset={defaultPopupOffset}
             enableSafePolygon
             className={b('icon-popover', {'item-type': type})}
