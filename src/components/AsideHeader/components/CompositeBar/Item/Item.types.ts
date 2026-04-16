@@ -4,7 +4,8 @@ export interface ItemProps extends AsideHeaderItem {}
 
 export interface ItemInnerProps extends ItemProps {
     className?: string;
-    collapseItems?: AsideHeaderItem[];
+    /** Items shown in the compact (or expanded overflow) popover: group children or overflow list. */
+    menuPopupItems?: AsideHeaderItem[];
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
     /** When true, the icon slot is not rendered (e.g. compact popover: icon stays in the bar). */

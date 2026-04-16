@@ -10,7 +10,7 @@ import {AsideHeaderItem} from '../../types';
 import {Item} from './Item/Item';
 import {ItemProps} from './Item/Item.types';
 import {COLLAPSE_ITEM_ID} from './constants';
-import {getGroupedItems} from './grouping';
+import {getGroupedItems, isGroupHeaderItem} from './grouping';
 import {
     getAutosizeListItems,
     getItemHeight,
@@ -96,15 +96,25 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
             virtualized={false}
             filterable={false}
             sortable={false}
-            renderItem={(item) => (
-                <Item
-                    {...item}
-                    compact={compact}
-                    onMouseLeave={onMouseLeave}
-                    onItemClick={onItemClickByIndex(item.onItemClick)}
-                    collapseItems={collapseItems}
-                />
-            )}
+            renderItem={(item) => {
+                let menuPopupItems: AsideHeaderItem[] | undefined;
+
+                if (item.id === COLLAPSE_ITEM_ID) {
+                    menuPopupItems = collapseItems;
+                } else if (isGroupHeaderItem(item)) {
+                    menuPopupItems = item._groupChildren;
+                }
+
+                return (
+                    <Item
+                        {...item}
+                        compact={compact}
+                        menuPopupItems={menuPopupItems}
+                        onMouseLeave={onMouseLeave}
+                        onItemClick={onItemClickByIndex(item.onItemClick)}
+                    />
+                );
+            }}
         />
     );
 };

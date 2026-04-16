@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {ChevronRight} from '@gravity-ui/icons';
 import {Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
 
 import {ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
@@ -7,6 +8,7 @@ import {MakeItemParams} from '../../../../types';
 import {createBlock} from '../../../../utils/cn';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {COLLAPSE_ITEM_ID, ITEM_TYPE_REGULAR} from '../constants';
+import {isGroupHeaderItem} from '../grouping';
 
 import {ItemInnerProps, ItemProps} from './Item.types';
 import {ItemPopup} from './ItemPopup';
@@ -18,11 +20,13 @@ const b = createBlock('composite-bar-item', styles);
 
 const defaultPopupPlacement: PopupPlacement = ['right-end'];
 const defaultPopupOffset: NonNullable<PopupProps['offset']> = {mainAxis: 14};
+const CHEVRON_SIZE = 16;
+const CHEVRON_SIZE_COMPACT = 10;
 
 export const Item: React.FC<ItemInnerProps> = (props) => {
     const {
         className,
-        collapseItems,
+        menuPopupItems,
         compact,
         onMouseLeave,
         onMouseEnter,
@@ -58,6 +62,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const iconSize = props.iconSize || ASIDE_HEADER_ICON_SIZE;
     const iconQa = props.iconQa;
     const collapsedItem = props.id === COLLAPSE_ITEM_ID;
+    const isGroupHeader = isGroupHeaderItem(props);
 
     const handleOpenChangePopup = React.useCallback<NonNullable<ItemProps['onOpenChangePopup']>>(
         (newOpen, event, reason) => {
@@ -97,14 +102,14 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             </div>
         );
 
-        if (collapsedItem) {
+        if (menuPopupItems?.length) {
             return (
                 <ItemPopup
-                    items={collapseItems || []}
+                    items={menuPopupItems}
                     open={compactNavPopoverOpen}
                     onOpenChange={setCompactNavPopoverOpen}
                     type={type}
-                    collapsed
+                    collapsed={collapsedItem ? true : compact}
                     onItemClick={onItemClick}
                 >
                     {iconButton}
@@ -123,6 +128,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 hideIcon
                 disabled={compactPopoverDisabled}
                 type={type}
+                collapsed={compact}
                 onItemClick={onItemClick}
             >
                 {iconButton}
@@ -170,16 +176,29 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 <div className={b('title')} title={typeof title === 'string' ? title : undefined}>
                     {titleEl}
                 </div>
+
+                {isGroupHeader && menuPopupItems && menuPopupItems.length > 0 && (
+                    <div className={b('chevron')}>
+                        <Icon
+                            data={ChevronRight}
+                            size={compact ? CHEVRON_SIZE_COMPACT : CHEVRON_SIZE}
+                        />
+                    </div>
+                )}
             </Tag>
         );
 
+        const expandedMenuRows = menuPopupItems;
+        const showExpandedMenuPopup =
+            !compact && Boolean(expandedMenuRows?.length) && (collapsedItem || isGroupHeader);
+
         const wrappedTagNode =
-            collapsedItem && !compact && collapseItems?.length ? (
+            showExpandedMenuPopup && expandedMenuRows ? (
                 <ItemPopup
-                    items={collapseItems}
+                    items={expandedMenuRows}
                     open={compactNavPopoverOpen}
                     onOpenChange={setCompactNavPopoverOpen}
-                    collapsed
+                    collapsed={collapsedItem ? true : compact}
                     onItemClick={onItemClick}
                 >
                     {tagNode}

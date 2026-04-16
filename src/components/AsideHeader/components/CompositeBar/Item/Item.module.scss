@@ -311,6 +311,25 @@ $actionLeftRightMargin: 10px;
         }
     }
 
+    &__chevron {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+        margin-right: 12px;
+        flex-shrink: 0;
+    }
+
+    &_compact &__chevron {
+        position: absolute;
+        right: 8px;
+        margin: 0;
+
+        svg {
+            stroke: currentColor;
+            stroke-width: 1;
+        }
+    }
+
     &_compact {
         @mixin item-bg {
             position: relative;
