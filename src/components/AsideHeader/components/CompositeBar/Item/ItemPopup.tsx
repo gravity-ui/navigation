@@ -22,7 +22,6 @@ interface Props {
     type?: string;
     collapsed?: boolean;
     hideIcon?: boolean;
-    trigger?: 'click';
     children: React.ReactElement;
     onOpenChange?: (open: boolean) => void;
     onItemClick?: AsideHeaderItem['onItemClick'];
@@ -35,7 +34,6 @@ export const ItemPopup: React.FC<Props> = ({
     type,
     collapsed = false,
     hideIcon = true,
-    trigger,
     children,
     onItemClick,
     onOpenChange,
@@ -90,7 +88,6 @@ export const ItemPopup: React.FC<Props> = ({
             strategy="fixed"
             offset={defaultPopupOffset}
             enableSafePolygon
-            trigger={trigger}
             className={b('icon-popover', {'item-type': type})}
             content={content}
         >
