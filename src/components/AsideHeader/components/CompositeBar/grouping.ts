@@ -11,7 +11,7 @@ interface GroupHeaderItem extends AsideHeaderItem {
 export function isGroupHeaderItem(
     item: AsideHeaderItem | GroupHeaderItem,
 ): item is GroupHeaderItem {
-    return 'isGroupHeader' in item && item.isGroupHeader === true;
+    return 'isGroupHeader' in item && item.isGroupHeader;
 }
 
 export function getGroupedItems(
