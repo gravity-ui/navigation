@@ -94,4 +94,22 @@ test.describe('AsideHeader', () => {
 
         await expectScreenshot();
     });
+
+    test('render story: <MenuGroups>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.LineClamp />, undefined, {
+            width: 1200,
+            height: 720,
+        });
+
+        await expectScreenshot();
+    });
+
+    test('render story: <MenuGroupsCompact>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.LineClamp />, undefined, {
+            width: 1200,
+            height: 720,
+        });
+
+        await expectScreenshot();
+    });
 });
