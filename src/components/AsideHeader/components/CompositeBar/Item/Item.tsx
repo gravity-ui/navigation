@@ -150,11 +150,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                         setCompactNavPopoverOpen(false);
                     }
 
-                    if (collapsedItem) {
-                        onItemClick?.(props, true, event);
-                    } else {
-                        onItemClick?.(props, false, event);
-                    }
+                    onItemClick?.(props, collapsedItem, event);
                 }}
                 onClickCapture={onItemClickCapture}
                 onMouseEnter={() => {
