@@ -118,6 +118,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     setCompactNavPopoverOpen(nextOpen);
                 }}
                 hideIcon
+                itemClassName={popupItemClassName}
                 disabled={compactPopoverDisabled}
                 type={type}
                 collapsed={compact}
