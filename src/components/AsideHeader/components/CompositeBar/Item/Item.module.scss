@@ -39,6 +39,7 @@ $actionLeftRightMargin: 10px;
 
     &:global(.#{variables.$ns}footer-item)#{$class}_type_regular {
         height: #{variables.$compact-item-height};
+        --_--item-icon-background-size: 32px;
     }
 
     &__icon {
@@ -350,8 +351,7 @@ $actionLeftRightMargin: 10px;
                     --gn-aside-header-item-icon-background-size,
                     var(--_--item-icon-background-size)
                 );
-                margin-top: -19px;
-                margin-left: -19px;
+                transform: translate(-50%, -50%);
                 border-radius: var(
                     --gn-aside-header-item-collapsed-radius,
                     var(--_--item-collapsed-radius)
