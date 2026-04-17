@@ -315,7 +315,7 @@ $actionLeftRightMargin: 10px;
         display: flex;
         align-items: center;
         margin-left: auto;
-        margin-right: 12px;
+        margin-right: var(--g-spacing-1);
         flex-shrink: 0;
     }
 
