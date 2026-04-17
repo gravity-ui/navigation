@@ -38,9 +38,10 @@ $actionLeftRightMargin: 10px;
     margin-inline: auto;
 
     &:global(.#{variables.$ns}footer-item)#{$class}_type_regular {
-        height: #{variables.$compact-item-height};
         --_--item-height: #{variables.$compact-item-height};
-        width: #{variables.$compact-item-height};
+
+        height: var(--_--item-height);
+        width: var(--_--item-height);
     }
 
     &__icon {
