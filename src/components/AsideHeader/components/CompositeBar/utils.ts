@@ -1,6 +1,6 @@
 import {Ellipsis} from '@gravity-ui/icons';
 
-import {ITEM_HEIGHT} from '../../../constants';
+import {ITEM_HEIGHT, POPUP_REGULAR_ITEM_HEIGHT} from '../../../constants';
 import {AsideHeaderItem} from '../../types';
 
 import {COLLAPSE_ITEM_ID} from './constants';
@@ -17,8 +17,24 @@ export function getItemHeight(compositeItem: AsideHeaderItem) {
     }
 }
 
+export function getPopupItemHeight(compositeItem: AsideHeaderItem) {
+    switch (compositeItem.type) {
+        case 'action':
+            return 50;
+        case 'divider':
+            return 15;
+
+        default:
+            return POPUP_REGULAR_ITEM_HEIGHT;
+    }
+}
+
 export function getItemsHeight<T extends AsideHeaderItem>(items: T[]) {
     return items.reduce((sum, item) => sum + getItemHeight(item), 0);
+}
+
+export function getPopupItemsHeight<T extends AsideHeaderItem>(items: T[]) {
+    return items.reduce((sum, item) => sum + getPopupItemHeight(item), 0);
 }
 
 export function getSelectedItemIndex(compositeItems: AsideHeaderItem[]) {

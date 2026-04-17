@@ -2,10 +2,9 @@ import React from 'react';
 
 import {List, Popover, PopupProps} from '@gravity-ui/uikit';
 
-import {ITEM_HEIGHT} from '../../../../constants';
 import {createBlock} from '../../../../utils/cn';
 import {AsideHeaderItem} from '../../../types';
-import {getSelectedItemIndex} from '../utils';
+import {getPopupItemHeight, getPopupItemsHeight, getSelectedItemIndex} from '../utils';
 
 import {Item} from './Item';
 
@@ -51,8 +50,8 @@ export const ItemPopup: React.FC<Props> = ({
             <List
                 items={items}
                 selectedItemIndex={getSelectedItemIndex(items)}
-                itemHeight={ITEM_HEIGHT}
-                itemsHeight={items.length * ITEM_HEIGHT}
+                itemHeight={getPopupItemHeight}
+                itemsHeight={getPopupItemsHeight}
                 itemClassName={itemClassName}
                 virtualized={false}
                 filterable={false}

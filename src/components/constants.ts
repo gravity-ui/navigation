@@ -2,4 +2,5 @@ export const ASIDE_HEADER_ICON_SIZE = 18;
 export const ASIDE_HEADER_COMPACT_WIDTH = 56;
 export const ASIDE_HEADER_EXPANDED_WIDTH = 236;
 export const ITEM_HEIGHT = 40;
+export const POPUP_REGULAR_ITEM_HEIGHT = 32;
 export const HEADER_DIVIDER_HEIGHT = 29;

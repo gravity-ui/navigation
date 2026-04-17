@@ -36,8 +36,9 @@ $actionLeftRightMargin: 10px;
     cursor: pointer;
     padding: 0;
 
-    &:global(.#{variables.$ns}footer-item) {
-        height: #{variables.$item-height};
+    &:global(.#{variables.$ns}footer-item)#{$class}_type_regular {
+        height: #{variables.$compact-item-height};
+        --_--item-height: #{variables.$compact-item-height};
     }
 
     &__icon {
@@ -256,9 +257,9 @@ $actionLeftRightMargin: 10px;
 
     &__popup-item {
         box-sizing: border-box;
-        height: #{variables.$item-height};
 
         &#{$class}_type_regular {
+            height: #{variables.$compact-item-height};
             border-radius: var(--gn-aside-header-item-expanded-radius);
         }
     }
