@@ -347,8 +347,14 @@ $actionLeftRightMargin: 10px;
                 top: 50%;
                 left: 50%;
                 z-index: -1;
-                width: var(--gn-aside-header-item-icon-background-size);
-                height: var(--gn-aside-header-item-icon-background-size);
+                width: var(
+                    --gn-aside-header-item-icon-background-size,
+                    var(--_--item-icon-background-size)
+                );
+                height: var(
+                    --gn-aside-header-item-icon-background-size,
+                    var(--_--item-icon-background-size)
+                );
                 transform: translate(-50%, -50%);
                 border-radius: var(
                     --gn-aside-header-item-collapsed-radius,
