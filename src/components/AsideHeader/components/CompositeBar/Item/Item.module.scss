@@ -256,6 +256,10 @@ $actionLeftRightMargin: 10px;
         }
     }
 
+    &__popup-content &__root-menu-item[class] {
+        background-color: transparent;
+    }
+
     &__popup-item {
         box-sizing: border-box;
 

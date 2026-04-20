@@ -52,7 +52,7 @@ export const ItemPopup: React.FC<Props> = ({
                 selectedItemIndex={getSelectedItemIndex(items)}
                 itemHeight={getPopupItemHeight}
                 itemsHeight={getPopupItemsHeight}
-                itemClassName={itemClassName}
+                itemClassName={b('root-menu-item', itemClassName)}
                 virtualized={false}
                 filterable={false}
                 sortable={false}
@@ -93,6 +93,7 @@ export const ItemPopup: React.FC<Props> = ({
             openDelay={DEFAULT_POPUP_DELAY}
             closeDelay={DEFAULT_POPUP_DELAY}
             offset={defaultPopupOffset}
+            trigger="click"
             enableSafePolygon
             className={b('icon-popover', {'item-type': type})}
             content={content}
