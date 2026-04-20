@@ -39,7 +39,7 @@ $actionLeftRightMargin: 10px;
 
     &:global(.#{variables.$ns}footer-item)#{$class}_type_regular {
         height: #{variables.$compact-item-height};
-        --_--item-icon-background-size: 32px;
+        --gn-aside-header-item-icon-background-size: 32px;
     }
 
     &__icon {
@@ -347,14 +347,8 @@ $actionLeftRightMargin: 10px;
                 top: 50%;
                 left: 50%;
                 z-index: -1;
-                width: var(
-                    --gn-aside-header-item-icon-background-size,
-                    var(--_--item-icon-background-size)
-                );
-                height: var(
-                    --gn-aside-header-item-icon-background-size,
-                    var(--_--item-icon-background-size)
-                );
+                width: var(--gn-aside-header-item-icon-background-size);
+                height: var(--gn-aside-header-item-icon-background-size);
                 transform: translate(-50%, -50%);
                 border-radius: var(
                     --gn-aside-header-item-collapsed-radius,
