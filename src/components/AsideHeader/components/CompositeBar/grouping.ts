@@ -38,23 +38,24 @@ export function getGroupedItems(
 
     for (let i = 0; i < items.length; i++) {
         const item = items[i];
+
+        if (item.hidden) {
+            continue;
+        }
+
         const groupId = item.groupId;
 
         if (groupId && groupMap.has(groupId)) {
-            if (!groupChildrenMap.has(groupId)) {
-                groupChildrenMap.set(groupId, []);
+            let groupChildren = groupChildrenMap.get(groupId);
+
+            if (!groupChildren) {
+                groupChildren = [];
+
+                groupChildrenMap.set(groupId, groupChildren);
+                groupFirstIndex.set(groupId, i);
             }
 
-            if (!item.hidden) {
-                const groupChildren = groupChildrenMap.get(groupId);
-
-                if (groupChildren) {
-                    if (groupChildren.length === 0) {
-                        groupFirstIndex.set(groupId, i);
-                    }
-                    groupChildren.push(item);
-                }
-            }
+            groupChildren.push(item);
         } else {
             ungroupedItems.push({index: i, item});
         }
