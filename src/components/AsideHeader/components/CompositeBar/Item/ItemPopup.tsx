@@ -93,7 +93,6 @@ export const ItemPopup: React.FC<Props> = ({
             openDelay={DEFAULT_POPUP_DELAY}
             closeDelay={DEFAULT_POPUP_DELAY}
             offset={defaultPopupOffset}
-            trigger="click"
             enableSafePolygon
             className={b('icon-popover', {'item-type': type})}
             content={content}
