@@ -35,9 +35,11 @@ $actionLeftRightMargin: 10px;
     align-items: center;
     cursor: pointer;
     padding: 0;
+    margin-inline: auto;
 
-    &:global(.#{variables.$ns}footer-item) {
-        height: #{variables.$item-height};
+    &:global(.#{variables.$ns}footer-item)#{$class}_type_regular {
+        height: #{variables.$compact-item-height};
+        --gn-aside-header-item-icon-background-size: 32px;
     }
 
     &__icon {
@@ -234,7 +236,7 @@ $actionLeftRightMargin: 10px;
     &__icon-popover {
         display: flex;
         box-sizing: border-box;
-        padding: var(--g-spacing-1) var(--g-spacing-2);
+        padding: var(--g-spacing-2);
         align-items: center;
         border-radius: 12px;
     }
@@ -254,11 +256,15 @@ $actionLeftRightMargin: 10px;
         }
     }
 
+    &__popup-content &__root-menu-item[class] {
+        background-color: transparent;
+    }
+
     &__popup-item {
         box-sizing: border-box;
-        height: #{variables.$item-height};
 
         &#{$class}_type_regular {
+            height: #{variables.$compact-item-height};
             border-radius: var(--gn-aside-header-item-expanded-radius);
         }
     }
@@ -311,6 +317,25 @@ $actionLeftRightMargin: 10px;
         }
     }
 
+    &__chevron {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+        margin-right: var(--g-spacing-1);
+        flex-shrink: 0;
+    }
+
+    &_compact &__chevron {
+        position: absolute;
+        right: 8px;
+        margin: 0;
+
+        svg {
+            stroke: currentColor;
+            stroke-width: 1;
+        }
+    }
+
     &_compact {
         @mixin item-bg {
             position: relative;
@@ -330,8 +355,7 @@ $actionLeftRightMargin: 10px;
                     --gn-aside-header-item-icon-background-size,
                     var(--_--item-icon-background-size)
                 );
-                margin-top: -19px;
-                margin-left: -19px;
+                transform: translate(-50%, -50%);
                 border-radius: var(
                     --gn-aside-header-item-collapsed-radius,
                     var(--_--item-collapsed-radius)

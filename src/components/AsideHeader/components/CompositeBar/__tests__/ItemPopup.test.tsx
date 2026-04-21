@@ -25,7 +25,6 @@ function renderItemPopup(props: {
     collapsed?: boolean;
     hideIcon?: boolean;
     open?: boolean;
-    trigger?: 'click';
 }) {
     return render(
         <ThemeProvider theme="light">
@@ -36,7 +35,6 @@ function renderItemPopup(props: {
                     onOpenChange={() => {}}
                     collapsed={props.collapsed}
                     hideIcon={props.hideIcon}
-                    trigger={props.trigger}
                     onItemClick={props.onItemClick}
                 >
                     <button data-testid="trigger">Trigger</button>
@@ -110,12 +108,12 @@ describe('ItemPopup', () => {
         expect(document.querySelector('[data-qa="icon-item1"]')).toBeTruthy();
     });
 
-    it('hides icons by default (hideIcon=true)', () => {
+    it('hides icons when hideIcon is true', () => {
         const items: AsideHeaderItem[] = [
             {id: 'item1', title: 'No Icon', icon: Gear, iconQa: 'icon-item1'},
         ];
 
-        renderItemPopup({items, open: true});
+        renderItemPopup({items, open: true, hideIcon: true});
 
         // eslint-disable-next-line testing-library/no-node-access
         expect(document.querySelector('[data-qa="icon-item1"]')).toBeNull();

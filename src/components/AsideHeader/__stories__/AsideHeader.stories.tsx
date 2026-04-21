@@ -1,13 +1,15 @@
 import React from 'react';
 
-import {Xmark} from '@gravity-ui/icons';
+import {Gear, Xmark} from '@gravity-ui/icons';
 import {Button, Flex, Icon, Text, spacing} from '@gravity-ui/uikit';
 import type {Meta, StoryFn} from '@storybook/react';
 
+import {MenuGroup} from '../../types';
 import {AsideHeader} from '../AsideHeader';
 import {AsideFallback} from '../components/PageLayout/AsideFallback';
 import {PageLayout} from '../components/PageLayout/PageLayout';
 import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
+import {AsideHeaderProps} from '../types';
 
 import {AsideHeaderShowcase, AsideHeaderShowcaseProps} from './AsideHeaderShowcase';
 import {DEFAULT_LOGO, menuItemsClamped, menuItemsShowcase} from './moc';
@@ -269,4 +271,48 @@ const CollapseButtonWrapperTemplate: StoryFn = (args) => {
 export const CollapseButtonWrapper = CollapseButtonWrapperTemplate.bind({});
 CollapseButtonWrapper.args = {
     initialCompact: false,
+};
+
+const menuGroupsData: MenuGroup[] = [
+    {id: 'analytics', title: 'Analytics', icon: Gear},
+    {id: 'settings', title: 'Settings', icon: Gear},
+];
+
+const menuItemsWithGroups: AsideHeaderProps['menuItems'] = [
+    {id: 'home', title: 'Home', icon: Gear},
+    {id: 'analytics-overview', title: 'Overview', icon: Gear, groupId: 'analytics'},
+    {id: 'analytics-reports', title: 'Reports', icon: Gear, groupId: 'analytics'},
+    {id: 'analytics-dashboards', title: 'Dashboards', icon: Gear, groupId: 'analytics'},
+    {id: 'general-settings', title: 'General', icon: Gear, groupId: 'settings'},
+    {id: 'user-settings', title: 'Users', icon: Gear, groupId: 'settings'},
+    {id: 'help', title: 'Help', icon: Gear},
+];
+
+const MenuGroupsTemplate: StoryFn = (args) => {
+    const [compact, setCompact] = React.useState(args.initialCompact ?? false);
+
+    return (
+        <PageLayout compact={compact}>
+            <PageLayoutAside
+                headerDecoration
+                logo={DEFAULT_LOGO}
+                menuItems={menuItemsWithGroups}
+                menuGroups={menuGroupsData}
+                onChangeCompact={setCompact}
+            />
+            <PageLayout.Content>
+                <div style={{padding: 16}}>Menu Groups Demo</div>
+            </PageLayout.Content>
+        </PageLayout>
+    );
+};
+
+export const MenuGroups = MenuGroupsTemplate.bind({});
+MenuGroups.args = {
+    initialCompact: false,
+};
+
+export const MenuGroupsCompact = MenuGroupsTemplate.bind({});
+MenuGroupsCompact.args = {
+    initialCompact: true,
 };

@@ -2,10 +2,9 @@ import React from 'react';
 
 import {List, Popover, PopupProps} from '@gravity-ui/uikit';
 
-import {ITEM_HEIGHT} from '../../../../constants';
 import {createBlock} from '../../../../utils/cn';
 import {AsideHeaderItem} from '../../../types';
-import {getSelectedItemIndex} from '../utils';
+import {getPopupItemHeight, getPopupItemsHeight, getSelectedItemIndex} from '../utils';
 
 import {Item} from './Item';
 
@@ -24,6 +23,7 @@ interface Props {
     type?: string;
     collapsed?: boolean;
     hideIcon?: boolean;
+    itemClassName?: string;
     children: React.ReactElement;
     onOpenChange?: (open: boolean) => void;
     onItemClick?: AsideHeaderItem['onItemClick'];
@@ -31,6 +31,7 @@ interface Props {
 
 export const ItemPopup: React.FC<Props> = ({
     items,
+    itemClassName,
     open,
     disabled,
     type,
@@ -49,8 +50,9 @@ export const ItemPopup: React.FC<Props> = ({
             <List
                 items={items}
                 selectedItemIndex={getSelectedItemIndex(items)}
-                itemHeight={ITEM_HEIGHT}
-                itemsHeight={items.length * ITEM_HEIGHT}
+                itemHeight={getPopupItemHeight}
+                itemsHeight={getPopupItemsHeight}
+                itemClassName={b('root-menu-item', itemClassName)}
                 virtualized={false}
                 filterable={false}
                 sortable={false}
@@ -86,7 +88,7 @@ export const ItemPopup: React.FC<Props> = ({
                 if (nextOpen && disabled) return;
                 onOpenChange?.(nextOpen);
             }}
-            placement="right"
+            placement="right-start"
             strategy="fixed"
             openDelay={DEFAULT_POPUP_DELAY}
             closeDelay={DEFAULT_POPUP_DELAY}

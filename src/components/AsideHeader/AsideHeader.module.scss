@@ -204,7 +204,7 @@ $block: '.#{variables.$ns}aside-header';
     &__menu-item_type_regular,
     &__menu-item:has([data-type='regular']),
     &__root-menu-item[class]:hover {
-        border-radius: var(--gn-aside-header-item-expanded-radius);
+        border-radius: var(--gn-aside-header-item-expanded-radius, 8px);
     }
 
     &__footer {
