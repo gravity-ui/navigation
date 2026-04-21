@@ -5,10 +5,11 @@ import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
 
 import {MenuGroup} from '../../../types';
 import {createBlock} from '../../../utils/cn';
-import {AsideHeaderItem} from '../../types';
+import {AsideHeaderItem, AsideHeaderMode} from '../../types';
 
 import {Item} from './Item/Item';
 import {ItemProps} from './Item/Item.types';
+import {ScrollableWithScrollbar} from './ScrollableWithScrollbar';
 import {COLLAPSE_ITEM_ID} from './constants';
 import {getGroupedItems, isGroupHeaderItem} from './grouping';
 import {
@@ -17,6 +18,7 @@ import {
     getItemsHeight,
     getItemsMinHeight,
     getMoreButtonItem,
+    getReorderedItems,
     getSelectedItemIndex,
 } from './utils';
 
@@ -38,9 +40,15 @@ type CompositeBarProps = {
     compact: boolean;
     compositeId?: string;
     menuItemClassName?: string;
+    /**
+     * Menu overflow mode.
+     * - `v1` — extra items collapse under a "More" popup (default).
+     * - `v2` — all items remain visible inside a scrollable container with a custom scrollbar.
+     */
+    mode?: AsideHeaderMode;
 };
 
-type CompositeBarViewProps = CompositeBarProps & {
+type CompositeBarViewProps = Omit<CompositeBarProps, 'mode'> & {
     collapseItems?: AsideHeaderItem[];
 };
 
@@ -133,6 +141,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     compact,
     compositeId,
     menuItemClassName,
+    mode = 'v1',
 }) => {
     const groupedItems = useMemo(() => getGroupedItems(items, menuGroups), [items, menuGroups]);
 
@@ -142,40 +151,60 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     let node: ReactNode;
 
     if (type === 'menu') {
-        const minHeight = getItemsMinHeight(groupedItems);
-        const collapseItem = getMoreButtonItem(menuMoreTitle);
-        node = (
-            <div className={b({autosizer: true})} style={{minHeight}}>
-                {groupedItems.length !== 0 && (
-                    <AutoSizer>
-                        {(size: Size) => {
-                            const width = Number.isNaN(size.width) ? 0 : size.width;
-                            const height = Number.isNaN(size.height) ? 0 : size.height;
+        // Scrollbar mode is intentionally disabled in `compact` mode — there the
+        // classic "More" popup (v1) gives a better UX for icon-only items.
+        if (mode === 'v2' && !compact) {
+            // In `v2` mode every item stays mounted inside a scrollable container.
+            // We still respect `afterMoreButton` ordering for DOM stability.
+            const scrollableItems = getReorderedItems(groupedItems);
+            node = (
+                <ScrollableWithScrollbar recalcDeps={[scrollableItems.length]}>
+                    <CompositeBarView
+                        compositeId={compositeId}
+                        type="menu"
+                        compact={compact}
+                        items={scrollableItems}
+                        onItemClick={onItemClick}
+                        menuItemClassName={menuItemClassName}
+                    />
+                </ScrollableWithScrollbar>
+            );
+        } else {
+            const minHeight = getItemsMinHeight(groupedItems);
+            const collapseItem = getMoreButtonItem(menuMoreTitle);
+            node = (
+                <div className={b({autosizer: true})} style={{minHeight}}>
+                    {groupedItems.length !== 0 && (
+                        <AutoSizer>
+                            {(size: Size) => {
+                                const width = Number.isNaN(size.width) ? 0 : size.width;
+                                const height = Number.isNaN(size.height) ? 0 : size.height;
 
-                            const {listItems, collapseItems} = getAutosizeListItems(
-                                groupedItems,
-                                height,
-                                collapseItem,
-                            );
-                            return (
-                                <div style={{width, height}}>
-                                    <CompositeBarView
-                                        compositeId={compositeId}
-                                        type="menu"
-                                        compact={compact}
-                                        items={listItems}
-                                        onItemClick={onItemClick}
-                                        onMoreClick={onMoreClick}
-                                        menuItemClassName={menuItemClassName}
-                                        collapseItems={collapseItems}
-                                    />
-                                </div>
-                            );
-                        }}
-                    </AutoSizer>
-                )}
-            </div>
-        );
+                                const {listItems, collapseItems} = getAutosizeListItems(
+                                    groupedItems,
+                                    height,
+                                    collapseItem,
+                                );
+                                return (
+                                    <div style={{width, height}}>
+                                        <CompositeBarView
+                                            compositeId={compositeId}
+                                            type="menu"
+                                            compact={compact}
+                                            items={listItems}
+                                            onItemClick={onItemClick}
+                                            onMoreClick={onMoreClick}
+                                            menuItemClassName={menuItemClassName}
+                                            collapseItems={collapseItems}
+                                        />
+                                    </div>
+                                );
+                            }}
+                        </AutoSizer>
+                    )}
+                </div>
+            );
+        }
     } else {
         node = (
             <div className={b({subheader: true})}>
