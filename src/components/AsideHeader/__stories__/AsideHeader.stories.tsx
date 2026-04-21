@@ -379,12 +379,3 @@ export const MenuScrollbar = ScrollableModeTemplate.bind({});
 MenuScrollbar.args = {
     initialCompact: false,
 };
-
-/**
- * `mode="v2"` intentionally falls back to the classic "More"-popup behavior
- * in compact mode because a scrollbar over icon-only items is awkward.
- */
-export const MenuScrollbarCompact = ScrollableModeTemplate.bind({});
-MenuScrollbarCompact.args = {
-    initialCompact: true,
-};
