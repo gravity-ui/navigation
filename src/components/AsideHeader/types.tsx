@@ -25,12 +25,24 @@ interface EditMenuProps {
     onChangeItemsOrder?: (changedItem: AsideHeaderItem, oldIndex: number, newIndex: number) => void;
 }
 
+/**
+ * Menu overflow behavior.
+ * - `v1` — extra items collapse under a "More" popup (default).
+ * - `v2` — all items remain visible inside a scrollable container with a custom scrollbar.
+ */
+export type AsideHeaderMode = 'v1' | 'v2';
+
 interface AsideHeaderGeneralProps extends QAProps {
     logo?: LogoProps;
     className?: string;
     collapseTitle?: string;
     expandTitle?: string;
     menuMoreTitle?: string;
+    /**
+     * Menu overflow mode. Defaults to `v1`.
+     * @see AsideHeaderMode
+     */
+    mode?: AsideHeaderMode;
     topAlert?: TopAlertProps;
     customBackground?: React.ReactNode;
     customBackgroundClassName?: string;
