@@ -23,6 +23,7 @@ const config: KnipConfig = {
         'css-loader',
         'sass-loader',
         'style-loader',
+        'jest-environment-jsdom',
     ],
     ignoreBinaries: [
         // These are false positives from GitHub Actions workflow
