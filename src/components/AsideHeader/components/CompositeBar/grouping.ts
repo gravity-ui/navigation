@@ -6,6 +6,8 @@ const GROUP_HEADER_ITEM_PREFIX = '__gn-composite-bar__group-header__';
 interface GroupHeaderItem extends AsideHeaderItem {
     isGroupHeader: true;
     groupChildren: AsideHeaderItem[];
+    /** Optional title shown at the top of the compact popup listing group children. */
+    groupPopupTitle?: string;
 }
 
 export function isGroupHeaderItem(
@@ -82,6 +84,7 @@ export function getGroupedItems(
             current: hasCurrent,
             isGroupHeader: true,
             groupChildren: children,
+            groupPopupTitle: group.popupTitle,
         };
 
         result.push({index: firstIndex, item: groupHeaderItem});

@@ -7,6 +7,7 @@ import {Gear} from '@gravity-ui/icons';
 import {ThemeProvider} from '@gravity-ui/uikit';
 import {fireEvent, render, screen} from '@testing-library/react';
 
+import {MenuGroup} from '../../../../types';
 import {AsideHeaderInnerContextProvider} from '../../../AsideHeaderContext';
 import {AsideHeaderItem} from '../../../types';
 import {CompositeBar} from '../CompositeBar';
@@ -31,6 +32,7 @@ function renderCompositeBar(props: {
     onItemClick: jest.Mock;
     compact?: boolean;
     menuMoreTitle?: string;
+    menuGroups?: MenuGroup[];
 }) {
     return render(
         <ThemeProvider theme="light">
@@ -38,6 +40,7 @@ function renderCompositeBar(props: {
                 <CompositeBar
                     type="menu"
                     items={props.items}
+                    menuGroups={props.menuGroups}
                     compact={props.compact ?? false}
                     onItemClick={props.onItemClick}
                     menuMoreTitle={props.menuMoreTitle ?? 'More'}
@@ -79,5 +82,40 @@ describe('CompositeBar', () => {
             true,
             expect.any(Object),
         );
+    });
+
+    it('renders MenuGroup.popupTitle as the heading of the group popup', () => {
+        const onItemClick = jest.fn();
+        const items: AsideHeaderItem[] = [
+            {id: 'wb-1', title: 'Workbook 1', icon: Gear, groupId: 'resources'},
+            {id: 'wb-2', title: 'Workbook 2', icon: Gear, groupId: 'resources'},
+        ];
+        const menuGroups: MenuGroup[] = [
+            {id: 'resources', title: 'Resources Group', popupTitle: 'Ресурсы', icon: Gear},
+        ];
+
+        renderCompositeBar({items, onItemClick, menuGroups});
+
+        // Expand the group header to open the popup
+        const groupHeader = screen.getByText('Resources Group');
+        fireEvent.click(groupHeader);
+
+        expect(screen.getByText('Ресурсы')).toBeTruthy();
+    });
+
+    it('does not render popupTitle when it is not set on the MenuGroup', () => {
+        const onItemClick = jest.fn();
+        const items: AsideHeaderItem[] = [
+            {id: 'wb-1', title: 'Workbook 1', icon: Gear, groupId: 'resources'},
+        ];
+        const menuGroups: MenuGroup[] = [{id: 'resources', title: 'Resources Group', icon: Gear}];
+
+        renderCompositeBar({items, onItemClick, menuGroups});
+
+        const groupHeader = screen.getByText('Resources Group');
+        fireEvent.click(groupHeader);
+
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(document.querySelector('.gn-composite-bar-item__popup-title')).toBeNull();
     });
 });

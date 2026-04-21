@@ -25,12 +25,14 @@ function renderItemPopup(props: {
     collapsed?: boolean;
     hideIcon?: boolean;
     open?: boolean;
+    title?: string;
 }) {
     return render(
         <ThemeProvider theme="light">
             <AsideHeaderInnerContextProvider value={contextValue}>
                 <ItemPopup
                     items={props.items}
+                    title={props.title}
                     open={props.open ?? true}
                     onOpenChange={() => {}}
                     collapsed={props.collapsed}
@@ -108,7 +110,7 @@ describe('ItemPopup', () => {
         expect(document.querySelector('[data-qa="icon-item1"]')).toBeTruthy();
     });
 
-    it('hides icons when hideIcon is true', () => {
+    it('hides icons when hideIcon=true', () => {
         const items: AsideHeaderItem[] = [
             {id: 'item1', title: 'No Icon', icon: Gear, iconQa: 'icon-item1'},
         ];
@@ -117,5 +119,34 @@ describe('ItemPopup', () => {
 
         // eslint-disable-next-line testing-library/no-node-access
         expect(document.querySelector('[data-qa="icon-item1"]')).toBeNull();
+    });
+
+    it('renders title at the top of the popup when title prop is provided', () => {
+        const items: AsideHeaderItem[] = [
+            {id: 'item1', title: 'Child 1', icon: Gear},
+            {id: 'item2', title: 'Child 2', icon: Gear},
+        ];
+
+        renderItemPopup({items, open: true, title: 'Ресурсы'});
+
+        expect(screen.getByText('Ресурсы')).toBeTruthy();
+    });
+
+    it('does not render a title element when title prop is not provided', () => {
+        const items: AsideHeaderItem[] = [{id: 'item1', title: 'Child 1', icon: Gear}];
+
+        renderItemPopup({items, open: true});
+
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(document.querySelector('.gn-composite-bar-item__popup-title')).toBeNull();
+    });
+
+    it('does not render a title element when title is an empty string', () => {
+        const items: AsideHeaderItem[] = [{id: 'item1', title: 'Child 1', icon: Gear}];
+
+        renderItemPopup({items, open: true, title: ''});
+
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(document.querySelector('.gn-composite-bar-item__popup-title')).toBeNull();
     });
 });

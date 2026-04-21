@@ -98,11 +98,13 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
             sortable={false}
             renderItem={(item) => {
                 let menuPopupItems: AsideHeaderItem[] | undefined;
+                let menuPopupTitle: string | undefined;
 
                 if (item.id === COLLAPSE_ITEM_ID) {
                     menuPopupItems = collapseItems;
                 } else if (isGroupHeaderItem(item)) {
                     menuPopupItems = item.groupChildren;
+                    menuPopupTitle = item.groupPopupTitle;
                 }
 
                 return (
@@ -111,6 +113,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                         compact={compact}
                         popupItemClassName={menuItemClassName}
                         menuPopupItems={menuPopupItems}
+                        menuPopupTitle={menuPopupTitle}
                         onMouseLeave={onMouseLeave}
                         onItemClick={onItemClickByIndex(item.onItemClick)}
                     />
