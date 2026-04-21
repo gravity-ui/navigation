@@ -348,3 +348,43 @@ export const MenuGroupsWithPopupTitle = MenuGroupsWithPopupTitleTemplate.bind({}
 MenuGroupsWithPopupTitle.args = {
     initialCompact: true,
 };
+
+const manyMenuItems: AsideHeaderProps['menuItems'] = Array.from({length: 25}, (_, index) => ({
+    id: `item-${index + 1}`,
+    title: `Item ${index + 1}`,
+    icon: Gear,
+    current: index === 0,
+}));
+
+const ScrollableModeTemplate: StoryFn<{initialCompact?: boolean}> = (args) => {
+    const [compact, setCompact] = React.useState(args.initialCompact ?? false);
+
+    return (
+        <PageLayout compact={compact}>
+            <PageLayoutAside
+                headerDecoration
+                logo={DEFAULT_LOGO}
+                menuItems={manyMenuItems}
+                mode="v2"
+                onChangeCompact={setCompact}
+            />
+            <PageLayout.Content>
+                <div style={{padding: 16}}>Scrollable navigation (mode=&quot;v2&quot;)</div>
+            </PageLayout.Content>
+        </PageLayout>
+    );
+};
+
+export const MenuScrollbar = ScrollableModeTemplate.bind({});
+MenuScrollbar.args = {
+    initialCompact: false,
+};
+
+/**
+ * `mode="v2"` intentionally falls back to the classic "More"-popup behavior
+ * in compact mode because a scrollbar over icon-only items is awkward.
+ */
+export const MenuScrollbarCompact = ScrollableModeTemplate.bind({});
+MenuScrollbarCompact.args = {
+    initialCompact: true,
+};

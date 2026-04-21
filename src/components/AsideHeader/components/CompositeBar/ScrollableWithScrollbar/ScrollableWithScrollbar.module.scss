@@ -1,0 +1,100 @@
+@use '../../../../variables';
+
+$block: '.#{variables.$ns}scrollable-with-scrollbar';
+
+#{$block} {
+    flex: 1 1 auto;
+    position: relative;
+    width: 100%;
+    min-height: 0;
+
+    &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 100%;
+        pointer-events: none;
+        background: var(
+            --gn-aside-bottom-shadow-color,
+            linear-gradient(to bottom, transparent 0%, transparent 50%, rgba(0, 0, 0, 0.08) 100%)
+        );
+        transition: opacity 0.3s ease-in-out;
+        opacity: 0;
+    }
+
+    &#{$block}_bottom-shadow::before {
+        opacity: 1;
+    }
+
+    &__scrollable-inner {
+        width: 100%;
+        height: 100%;
+        overflow: hidden auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    &__scrollbar {
+        position: absolute;
+        top: 0;
+        right: 2px;
+        bottom: 0;
+        width: var(--g-spacing-1);
+        padding: 2px 0;
+        box-sizing: border-box;
+    }
+
+    &__scrollbar-track {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        cursor: pointer;
+        background: var(--gn-aside-scrollbar-track-color, transparent);
+    }
+
+    &__scrollbar-thumb {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        min-height: 20px;
+        background: var(--gn-aside-scrollbar-handle-color, var(--g-color-line-generic-solid));
+        cursor: grab;
+
+        &:hover {
+            background: var(
+                --gn-aside-scrollbar-handle-color-hover,
+                var(--gn-aside-scrollbar-handle-color, var(--g-color-line-generic-solid))
+            );
+        }
+
+        &:active {
+            cursor: grabbing;
+        }
+    }
+}
+
+:global(.g-root_theme_light) #{$block},
+:global(.g-root_theme_light-hc) #{$block} {
+    --gn-aside-bottom-shadow-color: linear-gradient(
+        to bottom,
+        transparent 0%,
+        transparent 50%,
+        rgba(0, 0, 0, 0.08) 100%
+    );
+}
+
+:global(.g-root_theme_dark) #{$block},
+:global(.g-root_theme_dark-hc) #{$block} {
+    --gn-aside-bottom-shadow-color: linear-gradient(
+        to bottom,
+        transparent 80%,
+        transparent 80%,
+        rgba(0, 0, 0, 0.4) 100%
+    );
+}
