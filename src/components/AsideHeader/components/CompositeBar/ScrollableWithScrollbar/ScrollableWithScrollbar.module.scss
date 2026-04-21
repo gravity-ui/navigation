@@ -43,10 +43,9 @@ $block: '.#{variables.$ns}scrollable-with-scrollbar';
     &__scrollbar {
         position: absolute;
         top: 0;
-        right: 2px;
+        right: 1px;
         bottom: 0;
-        width: var(--g-spacing-1);
-        padding: 2px 0;
+        width: var(--g-spacing-3);
         box-sizing: border-box;
     }
 
