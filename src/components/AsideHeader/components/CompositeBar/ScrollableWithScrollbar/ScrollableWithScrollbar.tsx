@@ -13,11 +13,15 @@ type ScrollableWithScrollbarProps = {
     className?: string;
     /**
      * Extra dependencies that should trigger a bottom-shadow recalculation
-     * (e.g. when the list of rendered items changes).
+     * (e.g. when the rendered items list changes).
      */
     recalcDeps?: React.DependencyList;
 };
 
+// Thin wrapper around a native scrollable container with:
+// - a thin themed native scrollbar (via `scrollbar-width` / `scrollbar-color`);
+// - a stable gutter so content does not shift when the scrollbar appears;
+// - a decorative bottom-shadow that fades in while there is content below.
 export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
     children,
     className,
@@ -26,35 +30,52 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
     const scrollRef = useRef<HTMLDivElement>(null);
     const [hasContentBelow, setHasContentBelow] = useState(false);
 
-    const updateShadow = useCallback(() => {
-        const el = scrollRef.current;
-        if (!el) return;
+    // rAF-throttle the shadow recalculation so rapid scroll ticks coalesce into
+    // at most one React update per frame.
+    const rafIdRef = useRef<number | null>(null);
+    const scheduleShadowUpdate = useCallback(() => {
+        if (rafIdRef.current !== null) return;
 
-        const overflows = el.scrollHeight > el.clientHeight;
-        // `-1` guards against subpixel rounding at the bottom of the scroll area.
-        const notAtBottom = el.scrollTop + el.clientHeight < el.scrollHeight - 1;
-        setHasContentBelow(overflows && notAtBottom);
+        rafIdRef.current = requestAnimationFrame(() => {
+            rafIdRef.current = null;
+            const el = scrollRef.current;
+            if (!el) return;
+
+            const overflows = el.scrollHeight > el.clientHeight;
+            // `-1` guards against subpixel rounding at the bottom of the scroll area.
+            const notAtBottom = el.scrollTop + el.clientHeight < el.scrollHeight - 1;
+            setHasContentBelow(overflows && notAtBottom);
+        });
     }, []);
 
     useEffect(() => {
         const el = scrollRef.current;
         if (!el) return undefined;
 
-        updateShadow();
+        scheduleShadowUpdate();
 
         if (typeof ResizeObserver === 'undefined') {
             return undefined;
         }
 
-        const observer = new ResizeObserver(updateShadow);
+        const observer = new ResizeObserver(scheduleShadowUpdate);
         observer.observe(el);
         return () => observer.disconnect();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [updateShadow, ...recalcDeps]);
+    }, [scheduleShadowUpdate, ...recalcDeps]);
+
+    useEffect(() => {
+        return () => {
+            if (rafIdRef.current !== null) {
+                cancelAnimationFrame(rafIdRef.current);
+                rafIdRef.current = null;
+            }
+        };
+    }, []);
 
     return (
         <div className={b({'bottom-shadow': hasContentBelow}, className)}>
-            <div ref={scrollRef} className={b('scrollable-inner')} onScroll={updateShadow}>
+            <div ref={scrollRef} className={b('scrollable-inner')} onScroll={scheduleShadowUpdate}>
                 {children}
             </div>
         </div>

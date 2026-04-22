@@ -8,11 +8,11 @@ import {ThemeProvider} from '@gravity-ui/uikit';
 import {fireEvent, render, screen} from '@testing-library/react';
 
 import {AsideHeaderInnerContextProvider} from '../../../AsideHeaderContext';
-import {AsideHeaderItem} from '../../../types';
+import {AsideHeaderItem, AsideHeaderMenuOverflow} from '../../../types';
 import {CompositeBar} from '../CompositeBar';
 
-// AutoSizer would confuse the snapshot assertions for `v2`; we still mock it
-// just in case, but the component should not invoke it for `mode="v2"`.
+// AutoSizer is only hit by the `collapse` fallback branch; we still mock it so
+// that branch produces deterministic sizes regardless of the jsdom viewport.
 jest.mock('react-virtualized-auto-sizer', () => ({
     __esModule: true,
     default: ({children}: {children: (size: {width: number; height: number}) => React.ReactNode}) =>
@@ -31,7 +31,7 @@ function renderBar(props: {
     items: AsideHeaderItem[];
     onItemClick?: jest.Mock;
     onMoreClick?: jest.Mock;
-    mode?: 'v1' | 'v2';
+    menuOverflow?: AsideHeaderMenuOverflow;
     compact?: boolean;
     menuMoreTitle?: string;
 }) {
@@ -45,14 +45,14 @@ function renderBar(props: {
                     onItemClick={props.onItemClick ?? jest.fn()}
                     onMoreClick={props.onMoreClick}
                     menuMoreTitle={props.menuMoreTitle ?? 'More'}
-                    mode={props.mode ?? 'v2'}
+                    menuOverflow={props.menuOverflow ?? 'scroll'}
                 />
             </AsideHeaderInnerContextProvider>
         </ThemeProvider>,
     );
 }
 
-describe('CompositeBar mode="v2"', () => {
+describe('CompositeBar menuOverflow="scroll"', () => {
     const items: AsideHeaderItem[] = [
         {id: 'item1', title: 'Item 1', icon: Gear},
         {id: 'item2', title: 'Item 2', icon: Gear},
@@ -62,7 +62,6 @@ describe('CompositeBar mode="v2"', () => {
     it('renders all items directly, without the "More" collapse button', () => {
         renderBar({items});
 
-        // getByText throws if not found, so these assert presence.
         expect(screen.getByText('Item 1')).toBeTruthy();
         expect(screen.getByText('Item 2')).toBeTruthy();
         expect(screen.getByText('Item 3')).toBeTruthy();
@@ -93,7 +92,7 @@ describe('CompositeBar mode="v2"', () => {
         );
     });
 
-    it('falls back to v1 behavior (with "More" collapse) when compact is true', () => {
+    it('falls back to the "collapse" behavior (with "More" popup) when compact is true', () => {
         // AutoSizer mock returns height=80, which with ITEM_HEIGHT=40 keeps only
         // the first item + the collapse button, so "More" is expected to appear.
         const manyItems: AsideHeaderItem[] = [
@@ -102,7 +101,12 @@ describe('CompositeBar mode="v2"', () => {
             {id: 'i3', title: 'Item 3', icon: Gear},
         ];
 
-        renderBar({items: manyItems, mode: 'v2', compact: true, menuMoreTitle: 'More'});
+        renderBar({
+            items: manyItems,
+            menuOverflow: 'scroll',
+            compact: true,
+            menuMoreTitle: 'More',
+        });
 
         expect(screen.getByText('More')).toBeTruthy();
     });

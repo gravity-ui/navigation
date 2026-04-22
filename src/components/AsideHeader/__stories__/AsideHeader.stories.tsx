@@ -365,11 +365,13 @@ const ScrollableModeTemplate: StoryFn<{initialCompact?: boolean}> = (args) => {
                 headerDecoration
                 logo={DEFAULT_LOGO}
                 menuItems={manyMenuItems}
-                mode="v2"
+                menuOverflow="scroll"
                 onChangeCompact={setCompact}
             />
             <PageLayout.Content>
-                <div style={{padding: 16}}>Scrollable navigation (mode=&quot;v2&quot;)</div>
+                <div style={{padding: 16}}>
+                    Scrollable navigation (menuOverflow=&quot;scroll&quot;)
+                </div>
             </PageLayout.Content>
         </PageLayout>
     );

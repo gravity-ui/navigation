@@ -53,7 +53,7 @@ $block: '.#{variables.$ns}scrollable-with-scrollbar';
 :global(.g-root_theme_dark-hc) #{$block} {
     --gn-aside-bottom-shadow-color: linear-gradient(
         to bottom,
-        transparent 80%,
+        transparent 0%,
         transparent 80%,
         rgba(0, 0, 0, 0.4) 100%
     );

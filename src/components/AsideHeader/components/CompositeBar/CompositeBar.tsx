@@ -5,7 +5,7 @@ import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
 
 import {MenuGroup} from '../../../types';
 import {createBlock} from '../../../utils/cn';
-import {AsideHeaderItem, AsideHeaderMode} from '../../types';
+import {AsideHeaderItem, AsideHeaderMenuOverflow} from '../../types';
 
 import {Item} from './Item/Item';
 import {ItemProps} from './Item/Item.types';
@@ -41,14 +41,12 @@ type CompositeBarProps = {
     compositeId?: string;
     menuItemClassName?: string;
     /**
-     * Menu overflow mode.
-     * - `v1` — extra items collapse under a "More" popup (default).
-     * - `v2` — all items remain visible inside a scrollable container with a custom scrollbar.
+     * @see AsideHeaderMenuOverflow
      */
-    mode?: AsideHeaderMode;
+    menuOverflow?: AsideHeaderMenuOverflow;
 };
 
-type CompositeBarViewProps = Omit<CompositeBarProps, 'mode'> & {
+type CompositeBarViewProps = Omit<CompositeBarProps, 'menuOverflow'> & {
     collapseItems?: AsideHeaderItem[];
 };
 
@@ -141,9 +139,13 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     compact,
     compositeId,
     menuItemClassName,
-    mode = 'v1',
+    menuOverflow = 'collapse',
 }) => {
     const groupedItems = useMemo(() => getGroupedItems(items, menuGroups), [items, menuGroups]);
+
+    // Respect `afterMoreButton` ordering for DOM stability when items are rendered
+    // inside a scroll container (no collapse button to anchor them against).
+    const scrollableItems = useMemo(() => getReorderedItems(groupedItems), [groupedItems]);
 
     if (groupedItems.length === 0) {
         return null;
@@ -151,14 +153,11 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     let node: ReactNode;
 
     if (type === 'menu') {
-        // Scrollbar mode is intentionally disabled in `compact` mode — there the
-        // classic "More" popup (v1) gives a better UX for icon-only items.
-        if (mode === 'v2' && !compact) {
-            // In `v2` mode every item stays mounted inside a scrollable container.
-            // We still respect `afterMoreButton` ordering for DOM stability.
-            const scrollableItems = getReorderedItems(groupedItems);
+        // `scroll` mode is intentionally disabled in `compact` mode — there the
+        // classic "More" popup gives a better UX for icon-only items.
+        if (menuOverflow === 'scroll' && !compact) {
             node = (
-                <ScrollableWithScrollbar recalcDeps={[scrollableItems.length]}>
+                <ScrollableWithScrollbar recalcDeps={[scrollableItems]}>
                     <CompositeBarView
                         compositeId={compositeId}
                         type="menu"
