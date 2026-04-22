@@ -7,6 +7,8 @@ export interface ItemInnerProps extends ItemProps {
     popupItemClassName?: string;
     /** Items shown in the compact (or expanded overflow) popover: group children or overflow list. */
     menuPopupItems?: AsideHeaderItem[];
+    /** Optional title rendered at the top of the popup listing `menuPopupItems`. */
+    menuPopupTitle?: string;
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
     /** When true, the icon slot is not rendered (e.g. compact popover: icon stays in the bar). */

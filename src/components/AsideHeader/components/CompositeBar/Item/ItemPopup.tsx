@@ -18,6 +18,8 @@ const DEFAULT_POPUP_DELAY = 100;
 
 interface Props {
     items: AsideHeaderItem[];
+    /** Optional title rendered at the top of the popup. */
+    title?: string;
     open?: boolean;
     disabled?: boolean;
     type?: string;
@@ -32,6 +34,7 @@ interface Props {
 export const ItemPopup: React.FC<Props> = ({
     items,
     itemClassName,
+    title,
     open,
     disabled,
     type,
@@ -47,6 +50,7 @@ export const ItemPopup: React.FC<Props> = ({
 
     const content = (
         <div className={b('popup-content', {collapsed})}>
+            {title && <div className={b('popup-title')}>{title}</div>}
             <List
                 items={items}
                 selectedItemIndex={getSelectedItemIndex(items)}

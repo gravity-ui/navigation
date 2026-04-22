@@ -28,6 +28,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         className,
         popupItemClassName,
         menuPopupItems,
+        menuPopupTitle,
         compact,
         onMouseLeave,
         onMouseEnter,
@@ -188,6 +189,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             showMenuPopup && expandedMenuRows ? (
                 <ItemPopup
                     items={expandedMenuRows}
+                    title={isGroupHeader ? menuPopupTitle : undefined}
                     open={compactNavPopoverOpen}
                     itemClassName={popupItemClassName}
                     onOpenChange={setCompactNavPopoverOpen}

@@ -316,3 +316,35 @@ export const MenuGroupsCompact = MenuGroupsTemplate.bind({});
 MenuGroupsCompact.args = {
     initialCompact: true,
 };
+
+const menuGroupsWithPopupTitle: MenuGroup[] = [
+    {id: 'analytics', title: 'Analytics', icon: Gear, popupTitle: 'Analytics'},
+    {id: 'settings', title: 'Settings', icon: Gear, popupTitle: 'Settings'},
+];
+
+const MenuGroupsWithPopupTitleTemplate: StoryFn = (args) => {
+    const [compact, setCompact] = React.useState(args.initialCompact ?? true);
+
+    return (
+        <PageLayout compact={compact}>
+            <PageLayoutAside
+                headerDecoration
+                logo={DEFAULT_LOGO}
+                menuItems={menuItemsWithGroups}
+                menuGroups={menuGroupsWithPopupTitle}
+                onChangeCompact={setCompact}
+            />
+            <PageLayout.Content>
+                <div style={{padding: 16}}>
+                    Hover the group icon in the compact sidebar to see the popup heading
+                    `MenuGroup.popupTitle`.
+                </div>
+            </PageLayout.Content>
+        </PageLayout>
+    );
+};
+
+export const MenuGroupsWithPopupTitle = MenuGroupsWithPopupTitleTemplate.bind({});
+MenuGroupsWithPopupTitle.args = {
+    initialCompact: true,
+};
