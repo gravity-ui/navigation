@@ -1,8 +1,6 @@
-import React, {FC, ReactNode, useId} from 'react';
+import React, {FC, ReactNode, useCallback, useEffect, useRef, useState} from 'react';
 
 import {createBlock} from '../../../../utils/cn';
-
-import {useScrollbar} from './useScrollbar';
 
 import styles from './ScrollableWithScrollbar.module.scss';
 
@@ -13,6 +11,10 @@ const EMPTY_DEPS: React.DependencyList = [];
 type ScrollableWithScrollbarProps = {
     children: ReactNode;
     className?: string;
+    /**
+     * Extra dependencies that should trigger a bottom-shadow recalculation
+     * (e.g. when the list of rendered items changes).
+     */
     recalcDeps?: React.DependencyList;
 };
 
@@ -21,58 +23,40 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
     className,
     recalcDeps = EMPTY_DEPS,
 }) => {
-    const scrollableContentId = useId();
-    const {
-        scrollRef,
-        scrollState,
-        updateScrollState,
-        showScrollbar,
-        thumbHeight,
-        thumbTop,
-        handleThumbMouseDown,
-        handleTrackClick,
-        handleScrollbarKeyDown,
-    } = useScrollbar({recalcDeps});
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const [hasContentBelow, setHasContentBelow] = useState(false);
 
-    const hasContentBelow =
-        scrollState.scrollHeight > scrollState.clientHeight &&
-        scrollState.scrollTop + scrollState.clientHeight < scrollState.scrollHeight - 1;
+    const updateShadow = useCallback(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+
+        const overflows = el.scrollHeight > el.clientHeight;
+        // `-1` guards against subpixel rounding at the bottom of the scroll area.
+        const notAtBottom = el.scrollTop + el.clientHeight < el.scrollHeight - 1;
+        setHasContentBelow(overflows && notAtBottom);
+    }, []);
+
+    useEffect(() => {
+        const el = scrollRef.current;
+        if (!el) return undefined;
+
+        updateShadow();
+
+        if (typeof ResizeObserver === 'undefined') {
+            return undefined;
+        }
+
+        const observer = new ResizeObserver(updateShadow);
+        observer.observe(el);
+        return () => observer.disconnect();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [updateShadow, ...recalcDeps]);
 
     return (
         <div className={b({'bottom-shadow': hasContentBelow}, className)}>
-            <div
-                id={scrollableContentId}
-                ref={scrollRef}
-                className={b('scrollable-inner')}
-                onScroll={updateScrollState}
-            >
+            <div ref={scrollRef} className={b('scrollable-inner')} onScroll={updateShadow}>
                 {children}
             </div>
-
-            {showScrollbar && (
-                <div
-                    className={b('scrollbar')}
-                    role="scrollbar"
-                    aria-controls={scrollableContentId}
-                    aria-orientation="vertical"
-                    aria-valuenow={scrollState.scrollTop}
-                    aria-valuemin={0}
-                    aria-valuemax={scrollState.scrollHeight - scrollState.clientHeight}
-                    tabIndex={0}
-                    onKeyDown={handleScrollbarKeyDown}
-                >
-                    <div className={b('scrollbar-track')} onClick={handleTrackClick}>
-                        <div
-                            className={b('scrollbar-thumb')}
-                            style={{
-                                height: thumbHeight,
-                                transform: `translateY(${thumbTop}px)`,
-                            }}
-                            onMouseDown={handleThumbMouseDown}
-                        />
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
