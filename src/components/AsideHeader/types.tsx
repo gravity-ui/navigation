@@ -27,10 +27,13 @@ interface EditMenuProps {
 
 /**
  * Menu overflow behavior.
- * - `v1` — extra items collapse under a "More" popup (default).
- * - `v2` — all items remain visible inside a scrollable container with a custom scrollbar.
+ * - `collapse` — extra items collapse under a "More" popup (default).
+ * - `scroll` — all items remain visible inside a scrollable container with a native thin scrollbar.
+ *
+ * In compact mode the menu always falls back to `collapse` regardless of this value
+ * because a scrollbar over icon-only items is awkward.
  */
-export type AsideHeaderMode = 'v1' | 'v2';
+export type AsideHeaderMenuOverflow = 'collapse' | 'scroll';
 
 interface AsideHeaderGeneralProps extends QAProps {
     logo?: LogoProps;
@@ -39,10 +42,10 @@ interface AsideHeaderGeneralProps extends QAProps {
     expandTitle?: string;
     menuMoreTitle?: string;
     /**
-     * Menu overflow mode. Defaults to `v1`.
-     * @see AsideHeaderMode
+     * @see AsideHeaderMenuOverflow
+     * @default 'collapse'
      */
-    mode?: AsideHeaderMode;
+    menuOverflow?: AsideHeaderMenuOverflow;
     topAlert?: TopAlertProps;
     customBackground?: React.ReactNode;
     customBackgroundClassName?: string;
