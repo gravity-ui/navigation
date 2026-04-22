@@ -47,6 +47,20 @@ $block: '.#{variables.$ns}scrollable-with-scrollbar';
         bottom: 0;
         width: var(--g-spacing-3);
         box-sizing: border-box;
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    &:hover &__scrollbar,
+    &:focus-within &__scrollbar,
+    &:has(&__scrollbar-thumb:active) &__scrollbar {
+        opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &__scrollbar {
+            transition: none;
+        }
     }
 
     &__scrollbar-track {
