@@ -1,4 +1,4 @@
-import React, {FC, ReactNode, useCallback, useMemo, useRef} from 'react';
+import React, {FC, ReactNode, useCallback, useMemo, useRef, useState} from 'react';
 
 import {List} from '@gravity-ui/uikit';
 import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
@@ -11,15 +11,18 @@ import {Item} from './Item/Item';
 import {ItemProps} from './Item/Item.types';
 import {ScrollableWithScrollbar} from './ScrollableWithScrollbar';
 import {COLLAPSE_ITEM_ID} from './constants';
-import {getGroupedItems, isGroupHeaderItem} from './grouping';
+import {buildCompositeBarRows} from './grouping';
+import type {CompositeBarRow} from './grouping';
 import {
-    getAutosizeListItems,
+    getAutosizeCompositeBarRows,
+    getCompositeBarRowsMinHeight,
     getItemHeight,
     getItemsHeight,
-    getItemsMinHeight,
     getMoreButtonItem,
-    getReorderedItems,
+    getReorderedCompositeBarRows,
+    getSelectedCompositeBarRowIndex,
     getSelectedItemIndex,
+    makeGroupHeaderAsideItem,
 } from './utils';
 
 import styles from './CompositeBar.module.scss';
@@ -29,6 +32,7 @@ const b = createBlock('composite-bar', styles);
 type CompositeBarProps = {
     type: 'menu' | 'subheader';
     items: AsideHeaderItem[];
+    className?: string;
     menuGroups?: MenuGroup[];
     onItemClick?: (
         item: AsideHeaderItem,
@@ -44,23 +48,40 @@ type CompositeBarProps = {
      * @see AsideHeaderMenuOverflow
      */
     menuOverflow?: AsideHeaderMenuOverflow;
+    collapsedMenuGroupIds?: Record<string, boolean>;
+    defaultCollapsedMenuGroupIds?: Record<string, boolean>;
+    onToggleMenuGroupCollapsed?: (groupId: string) => void;
 };
 
-type CompositeBarViewProps = Omit<CompositeBarProps, 'menuOverflow'> & {
+type CompositeBarViewProps = {
+    type: 'menu' | 'subheader';
+    compositeId?: string;
+    compact: boolean;
+    menuItemClassName?: string;
+    rows: CompositeBarRow[];
+    onItemClick?: CompositeBarProps['onItemClick'];
+    onMoreClick?: () => void;
     collapseItems?: AsideHeaderItem[];
+    /** Nested group list + tree connectors (expanded menu + scroll overflow only). */
+    inlineGroupChildren: boolean;
+    isGroupCollapsed: (groupId: string) => boolean;
+    onToggleGroupCollapsed: (groupId: string) => void;
 };
 
 const CompositeBarView: FC<CompositeBarViewProps> = ({
     type,
-    items,
+    rows,
     onItemClick,
     onMoreClick,
     collapseItems,
     compact,
     compositeId,
     menuItemClassName,
+    inlineGroupChildren,
+    isGroupCollapsed,
+    onToggleGroupCollapsed,
 }) => {
-    const ref = useRef<List<AsideHeaderItem>>(null);
+    const ref = useRef<List<CompositeBarRow>>(null);
 
     const onMouseLeave = useCallback(() => {
         if (compact && document.hasFocus()) {
@@ -71,15 +92,12 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     const onItemClickByIndex = useCallback(
         (orginalItemClick: AsideHeaderItem['onItemClick']): ItemProps['onItemClick'] =>
             (item, collapsed, event) => {
-                // Handle clicks on the "more" button (collapse item)
                 if (item.id === COLLAPSE_ITEM_ID && collapsed) {
                     onMoreClick?.();
                 } else {
                     onItemClick?.(
                         {
                             ...item,
-                            // For collapsed popup items, preserve the item's own onItemClick
-                            // since orginalItemClick belongs to the collapse button, not the item
                             onItemClick: collapsed ? item.onItemClick : orginalItemClick,
                         },
                         collapsed,
@@ -90,39 +108,132 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
         [onItemClick, onMoreClick],
     );
 
+    const onSyntheticHeaderItemClick = useMemo(
+        () => onItemClickByIndex(undefined) as NonNullable<ItemProps['onItemClick']>,
+        [onItemClickByIndex],
+    );
+
+    const itemHeight = useCallback(
+        (row: CompositeBarRow) => {
+            if (row.kind === 'item') {
+                return getItemHeight(row.item);
+            }
+            const headerH = getItemHeight(makeGroupHeaderAsideItem(row.group, row.items));
+            if (!inlineGroupChildren || isGroupCollapsed(row.group.id)) {
+                return headerH;
+            }
+            return headerH + getItemsHeight(row.items);
+        },
+        [inlineGroupChildren, isGroupCollapsed],
+    );
+
+    const itemsHeight = useCallback(
+        (listRows: CompositeBarRow[]) => listRows.reduce((sum, row) => sum + itemHeight(row), 0),
+        [itemHeight],
+    );
+
     return (
-        <List<AsideHeaderItem>
+        <List<CompositeBarRow>
             id={compositeId}
             ref={ref}
-            items={items}
-            selectedItemIndex={type === 'menu' ? getSelectedItemIndex(items) : undefined}
-            itemHeight={getItemHeight}
-            itemsHeight={getItemsHeight}
+            items={rows}
+            selectedItemIndex={type === 'menu' ? getSelectedCompositeBarRowIndex(rows) : undefined}
+            itemHeight={itemHeight}
+            itemsHeight={itemsHeight}
             itemClassName={b('root-menu-item', menuItemClassName)}
             virtualized={false}
             filterable={false}
             sortable={false}
-            renderItem={(item) => {
-                let menuPopupItems: AsideHeaderItem[] | undefined;
-                let menuPopupTitle: string | undefined;
+            renderItem={(row) => {
+                if (row.kind === 'item') {
+                    const item = row.item;
+                    let menuPopupItems: AsideHeaderItem[] | undefined;
+                    let menuPopupTitle: string | undefined;
 
-                if (item.id === COLLAPSE_ITEM_ID) {
-                    menuPopupItems = collapseItems;
-                } else if (isGroupHeaderItem(item)) {
-                    menuPopupItems = item.groupChildren;
-                    menuPopupTitle = item.groupPopupTitle;
+                    if (item.id === COLLAPSE_ITEM_ID) {
+                        menuPopupItems = collapseItems;
+                    } else {
+                        menuPopupItems = item.compositeBarMenuPopupItems;
+                        menuPopupTitle = item.compositeBarMenuPopupTitle;
+                    }
+
+                    return (
+                        <Item
+                            {...item}
+                            compact={compact}
+                            popupItemClassName={menuItemClassName}
+                            menuPopupItems={menuPopupItems}
+                            menuPopupTitle={menuPopupTitle}
+                            onMouseLeave={onMouseLeave}
+                            onItemClick={onItemClickByIndex(item.onItemClick)}
+                        />
+                    );
+                }
+
+                const headerItem = makeGroupHeaderAsideItem(row.group, row.items);
+                const groupIsCollapsed = isGroupCollapsed(row.group.id);
+
+                if (!inlineGroupChildren) {
+                    return (
+                        <Item
+                            {...headerItem}
+                            compact={compact}
+                            popupItemClassName={menuItemClassName}
+                            menuPopupItems={row.items}
+                            menuPopupTitle={row.group.popupTitle}
+                            className={b('menu-group-header')}
+                            onMouseLeave={onMouseLeave}
+                            onItemClick={onItemClickByIndex(undefined)}
+                        />
+                    );
                 }
 
                 return (
-                    <Item
-                        {...item}
-                        compact={compact}
-                        popupItemClassName={menuItemClassName}
-                        menuPopupItems={menuPopupItems}
-                        menuPopupTitle={menuPopupTitle}
-                        onMouseLeave={onMouseLeave}
-                        onItemClick={onItemClickByIndex(item.onItemClick)}
-                    />
+                    <div
+                        className={b('menu-group', {
+                            expanded: !groupIsCollapsed,
+                            collapsed: groupIsCollapsed,
+                        })}
+                    >
+                        <Item
+                            {...headerItem}
+                            compact={compact}
+                            popupItemClassName={menuItemClassName}
+                            className={b('menu-group-header')}
+                            groupHeaderExpanded={!groupIsCollapsed}
+                            onMouseLeave={onMouseLeave}
+                            onItemClick={(item, isItemCollapsed, event) => {
+                                onToggleGroupCollapsed(row.group.id);
+                                onSyntheticHeaderItemClick(item, isItemCollapsed, event);
+                            }}
+                        />
+                        {!groupIsCollapsed && (
+                            <div className={b('menu-group-tree')}>
+                                <List<AsideHeaderItem>
+                                    items={row.items}
+                                    selectedItemIndex={getSelectedItemIndex(row.items)}
+                                    itemHeight={getItemHeight}
+                                    itemsHeight={getItemsHeight}
+                                    itemClassName={b('menu-group-nested-list-item')}
+                                    virtualized={false}
+                                    filterable={false}
+                                    sortable={false}
+                                    renderItem={(nestedItem, _active, nestedIndex) => (
+                                        <Item
+                                            {...nestedItem}
+                                            compact={compact}
+                                            className={b('menu-group-nested-item', {
+                                                first: nestedIndex === 0,
+                                                last: nestedIndex === row.items.length - 1,
+                                            })}
+                                            onMouseLeave={onMouseLeave}
+                                            onItemClick={onItemClickByIndex(nestedItem.onItemClick)}
+                                        />
+                                    )}
+                                />
+                            </div>
+                        )}
+                    </div>
                 );
             }}
         />
@@ -131,6 +242,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
 
 export const CompositeBar: FC<CompositeBarProps> = ({
     type,
+    className,
     items,
     menuGroups,
     menuMoreTitle,
@@ -140,47 +252,89 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     compositeId,
     menuItemClassName,
     menuOverflow = 'collapse',
+    collapsedMenuGroupIds: collapsedMenuGroupIdsProp,
+    defaultCollapsedMenuGroupIds,
+    onToggleMenuGroupCollapsed,
 }) => {
-    const groupedItems = useMemo(() => getGroupedItems(items, menuGroups), [items, menuGroups]);
+    const rows = useMemo(() => buildCompositeBarRows(items, menuGroups), [items, menuGroups]);
 
-    // Respect `afterMoreButton` ordering for DOM stability when items are rendered
-    // inside a scroll container (no collapse button to anchor them against).
-    const scrollableItems = useMemo(() => getReorderedItems(groupedItems), [groupedItems]);
+    const isCollapsedControlled = collapsedMenuGroupIdsProp !== undefined;
+    const [uncontrolledCollapsed, setUncontrolledCollapsed] = useState<Record<string, boolean>>(
+        () => defaultCollapsedMenuGroupIds ?? {},
+    );
 
-    if (groupedItems.length === 0) {
+    const collapsedMap = isCollapsedControlled ? collapsedMenuGroupIdsProp : uncontrolledCollapsed;
+
+    const onToggleGroupCollapsed = useCallback(
+        (groupId: string) => {
+            onToggleMenuGroupCollapsed?.(groupId);
+            if (!isCollapsedControlled) {
+                setUncontrolledCollapsed((prev) => ({...prev, [groupId]: !prev[groupId]}));
+            }
+        },
+        [isCollapsedControlled, onToggleMenuGroupCollapsed],
+    );
+
+    const isGroupCollapsed = useCallback(
+        (groupId: string) => Boolean(collapsedMap[groupId]),
+        [collapsedMap],
+    );
+
+    const inlineGroupChildren =
+        !compact && menuOverflow === 'scroll' && type === 'menu' && Boolean(menuGroups?.length);
+
+    const scrollableRows = useMemo(() => getReorderedCompositeBarRows(rows), [rows]);
+
+    const scrollRecalcKey = useMemo(
+        () =>
+            `${items.length}:${menuGroups?.length ?? 0}:${JSON.stringify(
+                Object.keys(collapsedMap)
+                    .sort()
+                    .reduce<Record<string, boolean>>((acc, k) => {
+                        acc[k] = Boolean(collapsedMap[k]);
+                        return acc;
+                    }, {}),
+            )}`,
+        [items.length, menuGroups?.length, collapsedMap],
+    );
+
+    if (rows.length === 0) {
         return null;
     }
+
     let node: ReactNode;
 
     if (type === 'menu') {
-        // `scroll` mode is intentionally disabled in `compact` mode — there the
-        // classic "More" popup gives a better UX for icon-only items.
         if (menuOverflow === 'scroll' && !compact) {
             node = (
-                <ScrollableWithScrollbar recalcDeps={[scrollableItems]}>
+                <ScrollableWithScrollbar className={className} recalcDeps={[scrollRecalcKey]}>
                     <CompositeBarView
                         compositeId={compositeId}
                         type="menu"
                         compact={compact}
-                        items={scrollableItems}
+                        rows={scrollableRows}
                         onItemClick={onItemClick}
+                        onMoreClick={onMoreClick}
                         menuItemClassName={menuItemClassName}
+                        inlineGroupChildren={inlineGroupChildren}
+                        isGroupCollapsed={isGroupCollapsed}
+                        onToggleGroupCollapsed={onToggleGroupCollapsed}
                     />
                 </ScrollableWithScrollbar>
             );
         } else {
-            const minHeight = getItemsMinHeight(groupedItems);
+            const minHeight = getCompositeBarRowsMinHeight(rows);
             const collapseItem = getMoreButtonItem(menuMoreTitle);
             node = (
                 <div className={b({autosizer: true})} style={{minHeight}}>
-                    {groupedItems.length !== 0 && (
+                    {rows.length !== 0 && (
                         <AutoSizer>
                             {(size: Size) => {
                                 const width = Number.isNaN(size.width) ? 0 : size.width;
                                 const height = Number.isNaN(size.height) ? 0 : size.height;
 
-                                const {listItems, collapseItems} = getAutosizeListItems(
-                                    groupedItems,
+                                const {listRows, collapseItems} = getAutosizeCompositeBarRows(
+                                    rows,
                                     height,
                                     collapseItem,
                                 );
@@ -190,11 +344,14 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                                             compositeId={compositeId}
                                             type="menu"
                                             compact={compact}
-                                            items={listItems}
+                                            rows={listRows}
                                             onItemClick={onItemClick}
                                             onMoreClick={onMoreClick}
                                             menuItemClassName={menuItemClassName}
                                             collapseItems={collapseItems}
+                                            inlineGroupChildren={false}
+                                            isGroupCollapsed={isGroupCollapsed}
+                                            onToggleGroupCollapsed={onToggleGroupCollapsed}
                                         />
                                     </div>
                                 );
@@ -211,8 +368,11 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                     type="subheader"
                     menuItemClassName={menuItemClassName}
                     compact={compact}
-                    items={groupedItems}
+                    rows={rows}
                     onItemClick={onItemClick}
+                    inlineGroupChildren={false}
+                    isGroupCollapsed={isGroupCollapsed}
+                    onToggleGroupCollapsed={onToggleGroupCollapsed}
                 />
             </div>
         );

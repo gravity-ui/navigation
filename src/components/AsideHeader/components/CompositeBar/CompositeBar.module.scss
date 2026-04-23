@@ -3,13 +3,82 @@
 $block: '.#{variables.$ns}composite-bar';
 
 #{$block} {
-    $class: &;
-
     flex: 1 0 auto;
     width: 100%;
     min-height: #{variables.$item-height};
 
     & &__root-menu-item[class] {
         background-color: transparent;
+    }
+
+    &__menu-group {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    /**
+     * Group header must stay one navigation row tall; the outer List row can span
+     * header + nested items, and Item uses height: 100% which would stretch without this.
+     */
+    &__menu-group-header[class] {
+        flex: 0 0 #{variables.$item-height};
+        box-sizing: border-box;
+        width: 100%;
+        height: #{variables.$item-height};
+        max-height: #{variables.$item-height};
+    }
+
+    &__menu-group-tree {
+        position: relative;
+        margin-inline-start: 18px;
+        padding-inline-start: 14px;
+        border-inline-start: 1px solid var(--g-color-line-generic);
+    }
+
+    &__menu-group-nested-list-item[class] {
+        background-color: transparent;
+    }
+
+    &__menu-group-nested-item {
+        position: relative;
+        width: 100%;
+
+        &::after {
+            content: '';
+            position: absolute;
+            inset-inline-start: -14px;
+            top: 50%;
+            width: 11px;
+            height: 11px;
+            margin-top: -6px;
+            border-inline-start: 1px solid var(--g-color-line-generic);
+            border-block-end: 1px solid var(--g-color-line-generic);
+            border-end-start-radius: 6px;
+        }
+
+        &_first::before {
+            content: '';
+            position: absolute;
+            inset-inline-start: -15px;
+            top: 0;
+            width: 1px;
+            height: 50%;
+            background: var(--g-color-line-generic);
+        }
+
+        &_last::before {
+            content: '';
+            position: absolute;
+            inset-inline-start: -15px;
+            top: 50%;
+            bottom: 0;
+            width: 1px;
+            background: var(--g-color-line-generic);
+        }
+
+        &_first#{&}_last::before {
+            display: none;
+        }
     }
 }

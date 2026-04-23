@@ -79,6 +79,20 @@ interface AsideHeaderDefaultProps {
     defaultMenuItems?: AsideHeaderItem[];
     onMenuItemsChanged?: (items: AsideHeaderItem[]) => void;
     headerDecoration?: boolean;
+    /**
+     * When provided, the map is the source of truth for which menu groups are collapsed
+     * in inline (`menuOverflow: 'scroll'`) layout. Keys are `MenuGroup.id`, values mean collapsed.
+     */
+    collapsedMenuGroupIds?: Record<string, boolean>;
+    /**
+     * Initial collapsed state for groups when `collapsedMenuGroupIds` is not controlled.
+     */
+    defaultCollapsedMenuGroupIds?: Record<string, boolean>;
+    /**
+     * Called when the user toggles a group in inline layout. The parent should update
+     * `collapsedMenuGroupIds` when using controlled mode.
+     */
+    onToggleMenuGroupCollapsed?: (groupId: string) => void;
 }
 
 export type AsideHeaderInnerProps = AsideHeaderGeneralProps &
@@ -95,6 +109,14 @@ export enum InnerPanels {
 }
 
 export interface AsideHeaderItem extends MenuItem {
+    /**
+     * @internal CompositeBar: group children rendered from the "More" overflow popover.
+     */
+    compositeBarMenuPopupItems?: AsideHeaderItem[];
+    /**
+     * @internal CompositeBar: optional heading in the overflow popover for a group row.
+     */
+    compositeBarMenuPopupTitle?: string;
     enableTooltip?: boolean;
     onItemClick?: (
         item: AsideHeaderItem,

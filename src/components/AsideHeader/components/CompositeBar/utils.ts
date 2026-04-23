@@ -1,9 +1,11 @@
 import {Ellipsis} from '@gravity-ui/icons';
 
 import {ITEM_HEIGHT, POPUP_REGULAR_ITEM_HEIGHT} from '../../../constants';
+import {MenuGroup} from '../../../types';
 import {AsideHeaderItem} from '../../types';
 
 import {COLLAPSE_ITEM_ID} from './constants';
+import type {CompositeBarRow} from './grouping';
 
 export function getItemHeight(compositeItem: AsideHeaderItem) {
     switch (compositeItem.type) {
@@ -95,6 +97,160 @@ export function getReorderedItems(compositeItems: AsideHeaderItem[]): AsideHeade
     const regularItems = compositeItems.filter(({afterMoreButton}) => !afterMoreButton);
 
     return [...regularItems, ...afterMoreButtonItems];
+}
+
+export function makeGroupHeaderAsideItem(
+    group: MenuGroup,
+    children: AsideHeaderItem[],
+): AsideHeaderItem {
+    return {
+        id: `__gn-composite-bar__group-header__${group.id}`,
+        title: group.title,
+        icon: group.icon,
+        current: children.some((c) => Boolean(c.current)),
+    };
+}
+
+export function makeOverflowGroupAsideItem(
+    group: MenuGroup,
+    children: AsideHeaderItem[],
+): AsideHeaderItem {
+    return {
+        id: `__gn-composite-bar__group-overflow__${group.id}`,
+        title: group.title,
+        icon: group.icon,
+        current: children.some((c) => Boolean(c.current)),
+        compositeBarMenuPopupItems: children,
+        compositeBarMenuPopupTitle: group.popupTitle,
+    };
+}
+
+export function getCompositeBarRowLayoutHeight(row: CompositeBarRow): number {
+    if (row.kind === 'item') {
+        return getItemHeight(row.item);
+    }
+    return getItemHeight(makeGroupHeaderAsideItem(row.group, row.items));
+}
+
+export function getReorderedCompositeBarRows(rows: CompositeBarRow[]): CompositeBarRow[] {
+    const afterMoreRows = rows.filter((r) => r.kind === 'item' && r.item.afterMoreButton);
+
+    if (afterMoreRows.length === 0) {
+        return rows;
+    }
+
+    const regularRows = rows.filter((r) => !(r.kind === 'item' && r.item.afterMoreButton));
+
+    return [...regularRows, ...afterMoreRows];
+}
+
+export function compositeBarRowsToFlatForMinHeight(rows: CompositeBarRow[]): AsideHeaderItem[] {
+    const out: AsideHeaderItem[] = [];
+    for (const row of rows) {
+        if (row.kind === 'item') {
+            out.push(row.item);
+        } else {
+            out.push(makeGroupHeaderAsideItem(row.group, row.items));
+        }
+    }
+    return out;
+}
+
+export function getCompositeBarRowsMinHeight(rows: CompositeBarRow[]): number {
+    return getItemsMinHeight(compositeBarRowsToFlatForMinHeight(rows));
+}
+
+export function getSelectedCompositeBarRowIndex(rows: CompositeBarRow[]): number | undefined {
+    const index = rows.findIndex((row) => {
+        if (row.kind === 'item') {
+            return Boolean(row.item.current);
+        }
+        return row.items.some((c) => Boolean(c.current));
+    });
+    return index === -1 ? undefined : index;
+}
+
+export function getAutosizeCompositeBarRows(
+    rows: CompositeBarRow[],
+    height: number,
+    collapseItem: AsideHeaderItem,
+): {
+    listRows: CompositeBarRow[];
+    collapseItems: AsideHeaderItem[];
+} {
+    const ordered = getReorderedCompositeBarRows(rows);
+    const afterMoreRows = ordered.filter((r) => r.kind === 'item' && r.item.afterMoreButton);
+    const regularRows = ordered.filter((r) => !(r.kind === 'item' && r.item.afterMoreButton));
+    const listRows: CompositeBarRow[] = [...regularRows, ...afterMoreRows];
+
+    const allRowsHeight = listRows.reduce(
+        (sum, row) => sum + getCompositeBarRowLayoutHeight(row),
+        0,
+    );
+    if (allRowsHeight <= height) {
+        return {listRows, collapseItems: []};
+    }
+
+    const collapseItemHeight = getItemHeight(collapseItem);
+
+    listRows.splice(regularRows.length, 0, {kind: 'item', item: collapseItem});
+    const collapseItems: AsideHeaderItem[] = [];
+
+    let listHeight = allRowsHeight + collapseItemHeight;
+    let index = listRows.length;
+    while (listHeight > height) {
+        if (index === 0) {
+            break;
+        }
+        index--;
+
+        const row = listRows[index];
+        if (row.kind === 'item') {
+            const compositeItem = row.item;
+            if (
+                compositeItem.pinned ||
+                compositeItem.id === COLLAPSE_ITEM_ID ||
+                compositeItem.afterMoreButton
+            ) {
+                continue;
+            }
+            if (compositeItem.type === 'divider') {
+                const nextRow = listRows[index + 1];
+                if (
+                    index + 1 < listRows.length &&
+                    nextRow?.kind === 'item' &&
+                    nextRow.item.type === 'divider'
+                ) {
+                    listHeight -= getItemHeight(compositeItem);
+                    listRows.splice(index, 1);
+                }
+                continue;
+            }
+            listHeight -= getItemHeight(compositeItem);
+            collapseItems.unshift(
+                ...listRows
+                    .splice(index, 1)
+                    .map((r) => (r as Extract<CompositeBarRow, {kind: 'item'}>).item),
+            );
+        } else {
+            listHeight -= getCompositeBarRowLayoutHeight(row);
+            const [removed] = listRows.splice(index, 1);
+            if (removed?.kind === 'group') {
+                collapseItems.unshift(makeOverflowGroupAsideItem(removed.group, removed.items));
+            }
+        }
+    }
+    const at = listRows[index];
+    const prev = listRows[index - 1];
+    if (
+        at?.kind === 'item' &&
+        at.item.type === 'divider' &&
+        (index === 0 || (prev?.kind === 'item' && prev.item.type === 'divider'))
+    ) {
+        listRows.splice(index, 1);
+    }
+
+    return {listRows, collapseItems};
 }
 
 export function getAutosizeListItems(

@@ -7,6 +7,7 @@ import {Gear} from '@gravity-ui/icons';
 import {ThemeProvider} from '@gravity-ui/uikit';
 import {fireEvent, render, screen} from '@testing-library/react';
 
+import {MenuGroup} from '../../../../types';
 import {AsideHeaderInnerContextProvider} from '../../../AsideHeaderContext';
 import {AsideHeaderItem, AsideHeaderMenuOverflow} from '../../../types';
 import {CompositeBar} from '../CompositeBar';
@@ -25,7 +26,7 @@ const contextValue = {
     menuItems: [],
     allPagesIsAvailable: false,
     onItemClick: () => {},
-} as any;
+};
 
 function renderBar(props: {
     items: AsideHeaderItem[];
@@ -34,6 +35,9 @@ function renderBar(props: {
     menuOverflow?: AsideHeaderMenuOverflow;
     compact?: boolean;
     menuMoreTitle?: string;
+    menuGroups?: MenuGroup[];
+    collapsedMenuGroupIds?: Record<string, boolean>;
+    onToggleMenuGroupCollapsed?: jest.Mock;
 }) {
     return render(
         <ThemeProvider theme="light">
@@ -41,11 +45,14 @@ function renderBar(props: {
                 <CompositeBar
                     type="menu"
                     items={props.items}
+                    menuGroups={props.menuGroups}
                     compact={props.compact ?? false}
                     onItemClick={props.onItemClick ?? jest.fn()}
                     onMoreClick={props.onMoreClick}
                     menuMoreTitle={props.menuMoreTitle ?? 'More'}
                     menuOverflow={props.menuOverflow ?? 'scroll'}
+                    collapsedMenuGroupIds={props.collapsedMenuGroupIds}
+                    onToggleMenuGroupCollapsed={props.onToggleMenuGroupCollapsed}
                 />
             </AsideHeaderInnerContextProvider>
         </ThemeProvider>,
@@ -126,5 +133,38 @@ describe('CompositeBar menuOverflow="scroll"', () => {
             .filter(Boolean);
 
         expect(titles).toEqual(['Alpha', 'Bravo', 'Create']);
+    });
+
+    it('renders group children inline in the main list when scroll mode is active', () => {
+        const menuGroups: MenuGroup[] = [{id: 'g1', title: 'Access', icon: Gear}];
+        const groupItems: AsideHeaderItem[] = [
+            {id: 'ssh', title: 'SSH Keys', icon: Gear, groupId: 'g1'},
+            {id: 'pat', title: 'Personal access tokens', icon: Gear, groupId: 'g1'},
+        ];
+
+        renderBar({items: groupItems, menuGroups, menuOverflow: 'scroll', compact: false});
+
+        expect(screen.getByText('Access')).toBeTruthy();
+        expect(screen.getByText('SSH Keys')).toBeTruthy();
+        expect(screen.getByText('Personal access tokens')).toBeTruthy();
+    });
+
+    it('calls onToggleMenuGroupCollapsed when clicking an inline group header', () => {
+        const onToggleMenuGroupCollapsed = jest.fn();
+        const menuGroups: MenuGroup[] = [{id: 'g1', title: 'Access', icon: Gear}];
+        const groupItems: AsideHeaderItem[] = [
+            {id: 'ssh', title: 'SSH Keys', icon: Gear, groupId: 'g1'},
+        ];
+
+        renderBar({
+            items: groupItems,
+            menuGroups,
+            menuOverflow: 'scroll',
+            compact: false,
+            onToggleMenuGroupCollapsed,
+        });
+
+        fireEvent.click(screen.getByText('Access'));
+        expect(onToggleMenuGroupCollapsed).toHaveBeenCalledWith('g1');
     });
 });

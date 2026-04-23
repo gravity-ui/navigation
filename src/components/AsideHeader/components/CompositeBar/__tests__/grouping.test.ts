@@ -1,25 +1,31 @@
 import {MenuGroup} from '../../../../types';
 import {AsideHeaderItem} from '../../../types';
-import {getGroupedItems, isGroupHeaderItem} from '../grouping';
+import {buildCompositeBarRows} from '../grouping';
 
-describe('getGroupedItems', () => {
+describe('buildCompositeBarRows', () => {
     describe('pass-through paths (no grouping applied)', () => {
-        it('returns items as-is when groups is undefined', () => {
+        it('returns items as rows when groups is undefined', () => {
             const items: AsideHeaderItem[] = [
                 {id: 'a', title: 'A'},
                 {id: 'b', title: 'B', hidden: true},
             ];
 
-            expect(getGroupedItems(items, undefined)).toBe(items);
+            expect(buildCompositeBarRows(items, undefined)).toEqual([
+                {kind: 'item', item: items[0]},
+                {kind: 'item', item: items[1]},
+            ]);
         });
 
-        it('returns items as-is when groups is empty', () => {
+        it('returns items as rows when groups is empty', () => {
             const items: AsideHeaderItem[] = [
                 {id: 'a', title: 'A'},
                 {id: 'b', title: 'B', hidden: true},
             ];
 
-            expect(getGroupedItems(items, [])).toBe(items);
+            expect(buildCompositeBarRows(items, [])).toEqual([
+                {kind: 'item', item: items[0]},
+                {kind: 'item', item: items[1]},
+            ]);
         });
 
         it('returns items as-is when all provided groups are hidden', () => {
@@ -29,7 +35,10 @@ describe('getGroupedItems', () => {
             ];
             const groups: MenuGroup[] = [{id: 'g1', title: 'G1', hidden: true}];
 
-            expect(getGroupedItems(items, groups)).toBe(items);
+            expect(buildCompositeBarRows(items, groups)).toEqual([
+                {kind: 'item', item: items[0]},
+                {kind: 'item', item: items[1]},
+            ]);
         });
     });
 
@@ -42,14 +51,15 @@ describe('getGroupedItems', () => {
                 {id: 'h', title: 'Hidden', groupId: 'g1', hidden: true},
             ];
 
-            const result = getGroupedItems(items, groups);
+            const result = buildCompositeBarRows(items, groups);
 
             expect(result).toHaveLength(1);
-            const header = result[0];
-            expect(isGroupHeaderItem(header)).toBe(true);
-            if (isGroupHeaderItem(header)) {
-                expect(header.groupChildren.map((c) => c.id)).toEqual(['v']);
-            }
+            const row = result[0];
+            expect(row).toEqual({
+                kind: 'group',
+                group: groups[0],
+                items: [{id: 'v', title: 'Visible', groupId: 'g1'}],
+            });
         });
 
         it('filters hidden items without a groupId from ungrouped output', () => {
@@ -59,8 +69,10 @@ describe('getGroupedItems', () => {
                 {id: 'g-child', title: 'Child', groupId: 'g1'},
             ];
 
-            const result = getGroupedItems(items, groups);
-            const ids = result.map((r) => r.id);
+            const result = buildCompositeBarRows(items, groups);
+            const ids = result.flatMap((r) =>
+                r.kind === 'item' ? [r.item.id] : r.items.map((c) => c.id),
+            );
 
             expect(ids).not.toContain('hidden-top');
             expect(ids).toContain('top');
@@ -73,8 +85,10 @@ describe('getGroupedItems', () => {
                 {id: 'orphan-visible', title: 'Orphan visible', groupId: 'unknown'},
             ];
 
-            const result = getGroupedItems(items, groups);
-            const ids = result.map((r) => r.id);
+            const result = buildCompositeBarRows(items, groups);
+            const ids = result.flatMap((r) =>
+                r.kind === 'item' ? [r.item.id] : [r.group.id, ...r.items.map((c) => c.id)],
+            );
 
             expect(ids).not.toContain('orphan-hidden');
             expect(ids).toContain('orphan-visible');
@@ -87,10 +101,14 @@ describe('getGroupedItems', () => {
                 {id: 'h2', title: 'H2', groupId: 'g1', hidden: true},
             ];
 
-            const result = getGroupedItems(items, groups);
+            const result = buildCompositeBarRows(items, groups);
 
-            expect(result.some((r) => isGroupHeaderItem(r))).toBe(false);
-            expect(result.map((r) => r.id)).toEqual(['top']);
+            expect(result.some((r) => r.kind === 'group')).toBe(false);
+            expect(
+                result
+                    .filter((r): r is Extract<typeof r, {kind: 'item'}> => r.kind === 'item')
+                    .map((r) => r.item.id),
+            ).toEqual(['top']);
         });
 
         it('places the group header at the index of its first visible child', () => {
@@ -102,21 +120,25 @@ describe('getGroupedItems', () => {
                 {id: 'd', title: 'D', groupId: 'g1'},
             ];
 
-            const result = getGroupedItems(items, groups);
+            const result = buildCompositeBarRows(items, groups);
 
-            expect(result.map((r) => r.id)).toEqual(['a', 'b', expect.stringContaining('g1')]);
+            expect(
+                result.map((r) =>
+                    r.kind === 'item' ? r.item.id : `group:${r.group.id}:${r.items[0]?.id}`,
+                ),
+            ).toEqual(['a', 'b', 'group:g1:c']);
         });
 
-        it('marks group header as current if any non-hidden child is current', () => {
+        it('marks group header row as having current child if any non-hidden child is current', () => {
             const items: AsideHeaderItem[] = [
                 {id: 'a', title: 'A', groupId: 'g1'},
                 {id: 'b', title: 'B', groupId: 'g1', current: true},
             ];
 
-            const result = getGroupedItems(items, groups);
-            const header = result.find((r) => isGroupHeaderItem(r));
+            const result = buildCompositeBarRows(items, groups);
+            const groupRow = result.find((r) => r.kind === 'group');
 
-            expect(header?.current).toBe(true);
+            expect(groupRow?.kind === 'group' && groupRow.items.some((c) => c.current)).toBe(true);
         });
 
         it('does not propagate current from a hidden child', () => {
@@ -125,11 +147,13 @@ describe('getGroupedItems', () => {
                 {id: 'b', title: 'B', groupId: 'g1', current: true, hidden: true},
             ];
 
-            const result = getGroupedItems(items, groups);
-            const header = result.find((r) => isGroupHeaderItem(r));
+            const result = buildCompositeBarRows(items, groups);
+            const groupRow = result.find((r) => r.kind === 'group');
 
-            expect(header).toBeDefined();
-            expect(header?.current).toBeFalsy();
+            expect(groupRow?.kind === 'group').toBe(true);
+            if (groupRow?.kind === 'group') {
+                expect(groupRow.items.some((c) => Boolean(c.current))).toBe(false);
+            }
         });
     });
 });

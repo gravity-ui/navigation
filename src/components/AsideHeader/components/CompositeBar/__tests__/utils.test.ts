@@ -1,8 +1,12 @@
 import {POPUP_REGULAR_ITEM_HEIGHT} from '../../../../constants';
+import {MenuGroup} from '../../../../types';
 import {AsideHeaderItem} from '../../../types';
+import {buildCompositeBarRows} from '../grouping';
 import {
+    getAutosizeCompositeBarRows,
     getItemHeight,
     getItemsHeight,
+    getMoreButtonItem,
     getPopupItemHeight,
     getPopupItemsHeight,
     getReorderedItems,
@@ -63,6 +67,23 @@ describe('CompositeBar utils', () => {
                 'action',
                 'action2',
             ]);
+        });
+    });
+
+    describe('getAutosizeCompositeBarRows', () => {
+        it('moves a whole group into overflow as one synthetic row with popup children', () => {
+            const groups: MenuGroup[] = [{id: 'g1', title: 'G1'}];
+            const items: AsideHeaderItem[] = [
+                {id: 'a', title: 'A'},
+                {id: 'c1', title: 'C1', groupId: 'g1'},
+            ];
+            const rows = buildCompositeBarRows(items, groups);
+            const collapseItem = getMoreButtonItem('More');
+
+            const {collapseItems} = getAutosizeCompositeBarRows(rows, 1, collapseItem);
+
+            const overflowGroup = collapseItems.find((i) => i.compositeBarMenuPopupItems?.length);
+            expect(overflowGroup?.compositeBarMenuPopupItems?.map((c) => c.id)).toEqual(['c1']);
         });
     });
 });

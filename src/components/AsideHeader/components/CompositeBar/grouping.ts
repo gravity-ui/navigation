@@ -1,32 +1,25 @@
 import {MenuGroup} from '../../../types';
 import {AsideHeaderItem} from '../../types';
 
-const GROUP_HEADER_ITEM_PREFIX = '__gn-composite-bar__group-header__';
+export type CompositeBarRow =
+    | {kind: 'item'; item: AsideHeaderItem}
+    | {kind: 'group'; group: MenuGroup; items: AsideHeaderItem[]};
 
-interface GroupHeaderItem extends AsideHeaderItem {
-    isGroupHeader: true;
-    groupChildren: AsideHeaderItem[];
-    /** Optional title shown at the top of the compact popup listing group children. */
-    groupPopupTitle?: string;
-}
-
-export function isGroupHeaderItem(
-    item: AsideHeaderItem | GroupHeaderItem,
-): item is GroupHeaderItem {
-    return 'isGroupHeader' in item && item.isGroupHeader;
-}
-
-export function getGroupedItems(
+/**
+ * Builds ordered rows for CompositeBar: flat items and grouped sections.
+ * Hidden items are omitted; group rows are placed at the index of the first visible child.
+ */
+export function buildCompositeBarRows(
     items: AsideHeaderItem[],
     groups: MenuGroup[] | undefined,
-): AsideHeaderItem[] {
+): CompositeBarRow[] {
     if (!groups || groups.length === 0) {
-        return items;
+        return items.map((item) => ({kind: 'item' as const, item}));
     }
 
     const visibleGroups = groups.filter((g) => !g.hidden);
     if (visibleGroups.length === 0) {
-        return items;
+        return items.map((item) => ({kind: 'item' as const, item}));
     }
 
     const groupMap = new Map<string, MenuGroup>();
@@ -35,7 +28,7 @@ export function getGroupedItems(
     }
 
     const groupChildrenMap = new Map<string, AsideHeaderItem[]>();
-    const ungroupedItems: Array<{index: number; item: AsideHeaderItem}> = [];
+    const ungroupedItems: Array<{index: number; row: CompositeBarRow}> = [];
     const groupFirstIndex = new Map<string, number>();
 
     for (let i = 0; i < items.length; i++) {
@@ -52,21 +45,23 @@ export function getGroupedItems(
 
             if (!groupChildren) {
                 groupChildren = [];
-
                 groupChildrenMap.set(groupId, groupChildren);
                 groupFirstIndex.set(groupId, i);
             }
 
             groupChildren.push(item);
         } else {
-            ungroupedItems.push({index: i, item});
+            ungroupedItems.push({index: i, row: {kind: 'item' as const, item}});
         }
     }
 
-    const result: Array<{index: number; item: AsideHeaderItem}> = [...ungroupedItems];
+    const result: Array<{index: number; row: CompositeBarRow}> = [...ungroupedItems];
 
     for (const [groupId, children] of groupChildrenMap.entries()) {
-        if (children.length === 0) continue;
+        const visibleChildren = children.filter((c) => !c.hidden);
+        if (visibleChildren.length === 0) {
+            continue;
+        }
 
         const group = groupMap.get(groupId);
         const firstIndex = groupFirstIndex.get(groupId);
@@ -75,21 +70,12 @@ export function getGroupedItems(
             continue;
         }
 
-        const hasCurrent = children.some((child) => child.current);
-
-        const groupHeaderItem: GroupHeaderItem = {
-            id: `${GROUP_HEADER_ITEM_PREFIX}${groupId}`,
-            title: group.title,
-            icon: group.icon,
-            current: hasCurrent,
-            isGroupHeader: true,
-            groupChildren: children,
-            groupPopupTitle: group.popupTitle,
-        };
-
-        result.push({index: firstIndex, item: groupHeaderItem});
+        result.push({
+            index: firstIndex,
+            row: {kind: 'group' as const, group, items: visibleChildren},
+        });
     }
 
     result.sort((a, b) => a.index - b.index);
-    return result.map((r) => r.item);
+    return result.map((r) => r.row);
 }
