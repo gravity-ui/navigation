@@ -25,7 +25,8 @@ type UseScrollableScrollbarSyncResult = {
  * Keeps a custom scrollbar thumb and bottom shadow in sync with a native
  * scroll layer. The scroll element handles touch/keyboard; wheel events on the
  * overlay track are forwarded to it (the track sits above the scroller, so
- * they would not scroll otherwise).
+ * they would not scroll otherwise). Wheel, touch, and keyboard on the
+ * scrollable area itself are unchanged.
  *
  * @param recalcDeps - extra deps that should trigger thumb/shadow recalculation
  * @returns refs, scroll state, thumb geometry, and pointer handlers for the UI
