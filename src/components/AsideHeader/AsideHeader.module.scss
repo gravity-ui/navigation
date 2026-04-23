@@ -201,6 +201,22 @@ $block: '.#{variables.$ns}aside-header';
         margin-inline: var(--_--item-margin-inline);
     }
 
+    // In menuOverflow="scroll" (expanded) the list uses a native scrollbar with
+    // `scrollbar-gutter: stable` — nudge the right margin smaller so text aligns
+    // with the rest of the panel. Overridable via --gn-aside-scroll-menu-*
+    &__aside_menu-overflow-scroll &__menu-item:not(:has([data-type='action'])) {
+        margin-inline: var(--_--item-margin-inline)
+            var(
+                --gn-aside-scroll-menu-item-margin-inline-end,
+                calc(
+                    var(--_--item-margin-inline) - var(
+                            --gn-aside-scroll-menu-margin-end-compensation,
+                            6px
+                        )
+                )
+            );
+    }
+
     &__menu-item_type_regular,
     &__menu-item:has([data-type='regular']),
     &__root-menu-item[class]:hover {
