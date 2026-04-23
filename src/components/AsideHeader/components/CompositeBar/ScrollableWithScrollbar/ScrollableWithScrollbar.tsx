@@ -1,6 +1,8 @@
-import React, {FC, ReactNode, useCallback, useEffect, useRef, useState} from 'react';
+import React, {FC, ReactNode} from 'react';
 
 import {createBlock} from '../../../../utils/cn';
+
+import {useScrollableScrollbarSync} from './useScrollableScrollbarSync';
 
 import styles from './ScrollableWithScrollbar.module.scss';
 
@@ -12,76 +14,53 @@ type ScrollableWithScrollbarProps = {
     children: ReactNode;
     className?: string;
     /**
-     * Extra dependencies that should trigger a bottom-shadow recalculation
-     * (e.g. when the rendered items list changes).
+     * Extra dependencies that should trigger a recalculation of the bottom
+     * shadow and custom scrollbar thumb (e.g. when the rendered items change).
      */
     recalcDeps?: React.DependencyList;
 };
 
-// Native thin scrollbar + `scrollbar-gutter: stable` (constant gutter) and a
+// Hides the native scrollbar and renders a custom thumb synced with the
+// underlying scroll position. The scroll itself stays native (wheel / touch /
+// keyboard) — only the visual indicator and drag handling are custom, so the
+// reserved gutter width is identical across OS / browser scrollbar settings.
 export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
     children,
     className,
     recalcDeps = EMPTY_DEPS,
 }) => {
-    const scrollRef = useRef<HTMLDivElement>(null);
-    const [hasContentBelow, setHasContentBelow] = useState(false);
-
-    const rafIdRef = useRef<number | null>(null);
-    const scheduleShadowUpdate = useCallback(() => {
-        if (rafIdRef.current !== null) {
-            return;
-        }
-
-        rafIdRef.current = requestAnimationFrame(() => {
-            rafIdRef.current = null;
-
-            const el = scrollRef.current;
-
-            if (!el) {
-                return;
-            }
-
-            const overflows = el.scrollHeight > el.clientHeight;
-            // `-1` guards against subpixel rounding at the bottom of the scroll area.
-            const notAtBottom = el.scrollTop + el.clientHeight < el.scrollHeight - 1;
-            setHasContentBelow(overflows && notAtBottom);
-        });
-    }, []);
-
-    useEffect(() => {
-        const el = scrollRef.current;
-
-        if (!el) {
-            return undefined;
-        }
-
-        scheduleShadowUpdate();
-
-        if (typeof ResizeObserver === 'undefined') {
-            return undefined;
-        }
-
-        const observer = new ResizeObserver(scheduleShadowUpdate);
-        observer.observe(el);
-        return () => observer.disconnect();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [scheduleShadowUpdate, ...recalcDeps]);
-
-    useEffect(() => {
-        return () => {
-            if (rafIdRef.current !== null) {
-                cancelAnimationFrame(rafIdRef.current);
-                rafIdRef.current = null;
-            }
-        };
-    }, []);
+    const {
+        scrollRef,
+        thumbRef,
+        hasContentBelow,
+        overflows,
+        thumb,
+        isDragging,
+        scheduleUpdate,
+        handleThumbPointerDown,
+        handleTrackPointerDown,
+    } = useScrollableScrollbarSync(recalcDeps);
 
     return (
         <div className={b({'bottom-shadow': hasContentBelow}, className)}>
-            <div ref={scrollRef} className={b('scrollable-inner')} onScroll={scheduleShadowUpdate}>
+            <div ref={scrollRef} className={b('scrollable-inner')} onScroll={scheduleUpdate}>
                 {children}
             </div>
+
+            {overflows ? (
+                <div
+                    className={b('scrollbar-track')}
+                    onPointerDown={handleTrackPointerDown}
+                    aria-hidden="true"
+                >
+                    <div
+                        ref={thumbRef}
+                        className={b('scrollbar-thumb', {dragging: isDragging})}
+                        style={{transform: `translateY(${thumb.top}px)`, height: thumb.height}}
+                        onPointerDown={handleThumbPointerDown}
+                    />
+                </div>
+            ) : null}
         </div>
     );
 };
