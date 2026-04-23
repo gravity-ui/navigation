@@ -348,3 +348,36 @@ export const MenuGroupsWithPopupTitle = MenuGroupsWithPopupTitleTemplate.bind({}
 MenuGroupsWithPopupTitle.args = {
     initialCompact: true,
 };
+
+const manyMenuItems: AsideHeaderProps['menuItems'] = Array.from({length: 25}, (_, index) => ({
+    id: `item-${index + 1}`,
+    title: `Item ${index + 1}`,
+    icon: Gear,
+    current: index === 0,
+}));
+
+const ScrollableModeTemplate: StoryFn<{initialCompact?: boolean}> = (args) => {
+    const [compact, setCompact] = React.useState(args.initialCompact ?? false);
+
+    return (
+        <PageLayout compact={compact}>
+            <PageLayoutAside
+                headerDecoration
+                logo={DEFAULT_LOGO}
+                menuItems={manyMenuItems}
+                menuOverflow="scroll"
+                onChangeCompact={setCompact}
+            />
+            <PageLayout.Content>
+                <div style={{padding: 16}}>
+                    Scrollable navigation (menuOverflow=&quot;scroll&quot;)
+                </div>
+            </PageLayout.Content>
+        </PageLayout>
+    );
+};
+
+export const MenuScrollbar = ScrollableModeTemplate.bind({});
+MenuScrollbar.args = {
+    initialCompact: false,
+};

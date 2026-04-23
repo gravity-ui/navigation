@@ -28,6 +28,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         className,
         hideCollapseButton,
         menuGroups,
+        menuOverflow,
         qa,
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
@@ -61,6 +62,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             menuMoreTitle={menuMoreTitle ?? i18n('label_more')}
                             onItemClick={onItemClick}
                             onMoreClick={onMenuMoreClick}
+                            menuOverflow={menuOverflow}
                         />
                     ) : (
                         <div className={b('menu-items')} />

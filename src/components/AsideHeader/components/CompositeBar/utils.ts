@@ -76,6 +76,27 @@ export function getMoreButtonItem(menuMoreTitle?: string): AsideHeaderItem {
     };
 }
 
+/**
+ * Reorders items so that entries flagged with `afterMoreButton` are pushed
+ * to the end. This keeps the DOM order consistent between `v1` (collapse
+ * into "More") and `v2` (scrollable) modes.
+ *
+ * @param compositeItems items to reorder
+ * @returns new array with `afterMoreButton` items moved to the end, or the
+ *          same reference when no reordering is needed
+ */
+export function getReorderedItems(compositeItems: AsideHeaderItem[]): AsideHeaderItem[] {
+    const afterMoreButtonItems = compositeItems.filter(({afterMoreButton}) => afterMoreButton);
+
+    if (afterMoreButtonItems.length === 0) {
+        return compositeItems;
+    }
+
+    const regularItems = compositeItems.filter(({afterMoreButton}) => !afterMoreButton);
+
+    return [...regularItems, ...afterMoreButtonItems];
+}
+
 export function getAutosizeListItems(
     compositeItems: AsideHeaderItem[],
     height: number,

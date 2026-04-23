@@ -5,10 +5,11 @@ import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
 
 import {MenuGroup} from '../../../types';
 import {createBlock} from '../../../utils/cn';
-import {AsideHeaderItem} from '../../types';
+import {AsideHeaderItem, AsideHeaderMenuOverflow} from '../../types';
 
 import {Item} from './Item/Item';
 import {ItemProps} from './Item/Item.types';
+import {ScrollableWithScrollbar} from './ScrollableWithScrollbar';
 import {COLLAPSE_ITEM_ID} from './constants';
 import {getGroupedItems, isGroupHeaderItem} from './grouping';
 import {
@@ -17,6 +18,7 @@ import {
     getItemsHeight,
     getItemsMinHeight,
     getMoreButtonItem,
+    getReorderedItems,
     getSelectedItemIndex,
 } from './utils';
 
@@ -38,9 +40,13 @@ type CompositeBarProps = {
     compact: boolean;
     compositeId?: string;
     menuItemClassName?: string;
+    /**
+     * @see AsideHeaderMenuOverflow
+     */
+    menuOverflow?: AsideHeaderMenuOverflow;
 };
 
-type CompositeBarViewProps = CompositeBarProps & {
+type CompositeBarViewProps = Omit<CompositeBarProps, 'menuOverflow'> & {
     collapseItems?: AsideHeaderItem[];
 };
 
@@ -133,8 +139,13 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     compact,
     compositeId,
     menuItemClassName,
+    menuOverflow = 'collapse',
 }) => {
     const groupedItems = useMemo(() => getGroupedItems(items, menuGroups), [items, menuGroups]);
+
+    // Respect `afterMoreButton` ordering for DOM stability when items are rendered
+    // inside a scroll container (no collapse button to anchor them against).
+    const scrollableItems = useMemo(() => getReorderedItems(groupedItems), [groupedItems]);
 
     if (groupedItems.length === 0) {
         return null;
@@ -142,40 +153,57 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     let node: ReactNode;
 
     if (type === 'menu') {
-        const minHeight = getItemsMinHeight(groupedItems);
-        const collapseItem = getMoreButtonItem(menuMoreTitle);
-        node = (
-            <div className={b({autosizer: true})} style={{minHeight}}>
-                {groupedItems.length !== 0 && (
-                    <AutoSizer>
-                        {(size: Size) => {
-                            const width = Number.isNaN(size.width) ? 0 : size.width;
-                            const height = Number.isNaN(size.height) ? 0 : size.height;
+        // `scroll` mode is intentionally disabled in `compact` mode — there the
+        // classic "More" popup gives a better UX for icon-only items.
+        if (menuOverflow === 'scroll' && !compact) {
+            node = (
+                <ScrollableWithScrollbar recalcDeps={[scrollableItems]}>
+                    <CompositeBarView
+                        compositeId={compositeId}
+                        type="menu"
+                        compact={compact}
+                        items={scrollableItems}
+                        onItemClick={onItemClick}
+                        menuItemClassName={menuItemClassName}
+                    />
+                </ScrollableWithScrollbar>
+            );
+        } else {
+            const minHeight = getItemsMinHeight(groupedItems);
+            const collapseItem = getMoreButtonItem(menuMoreTitle);
+            node = (
+                <div className={b({autosizer: true})} style={{minHeight}}>
+                    {groupedItems.length !== 0 && (
+                        <AutoSizer>
+                            {(size: Size) => {
+                                const width = Number.isNaN(size.width) ? 0 : size.width;
+                                const height = Number.isNaN(size.height) ? 0 : size.height;
 
-                            const {listItems, collapseItems} = getAutosizeListItems(
-                                groupedItems,
-                                height,
-                                collapseItem,
-                            );
-                            return (
-                                <div style={{width, height}}>
-                                    <CompositeBarView
-                                        compositeId={compositeId}
-                                        type="menu"
-                                        compact={compact}
-                                        items={listItems}
-                                        onItemClick={onItemClick}
-                                        onMoreClick={onMoreClick}
-                                        menuItemClassName={menuItemClassName}
-                                        collapseItems={collapseItems}
-                                    />
-                                </div>
-                            );
-                        }}
-                    </AutoSizer>
-                )}
-            </div>
-        );
+                                const {listItems, collapseItems} = getAutosizeListItems(
+                                    groupedItems,
+                                    height,
+                                    collapseItem,
+                                );
+                                return (
+                                    <div style={{width, height}}>
+                                        <CompositeBarView
+                                            compositeId={compositeId}
+                                            type="menu"
+                                            compact={compact}
+                                            items={listItems}
+                                            onItemClick={onItemClick}
+                                            onMoreClick={onMoreClick}
+                                            menuItemClassName={menuItemClassName}
+                                            collapseItems={collapseItems}
+                                        />
+                                    </div>
+                                );
+                            }}
+                        </AutoSizer>
+                    )}
+                </div>
+            );
+        }
     } else {
         node = (
             <div className={b({subheader: true})}>
