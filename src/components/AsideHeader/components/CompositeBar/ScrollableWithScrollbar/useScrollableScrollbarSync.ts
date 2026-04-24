@@ -16,7 +16,6 @@ type UseScrollableScrollbarSyncResult = {
     hasContentBelow: boolean;
     overflows: boolean;
     thumb: ThumbGeometry;
-    isDragging: boolean;
     scheduleUpdate: () => void;
     handleThumbPointerDown: (event: React.PointerEvent<HTMLDivElement>) => void;
     handleTrackPointerDown: (event: React.PointerEvent<HTMLDivElement>) => void;
@@ -24,7 +23,9 @@ type UseScrollableScrollbarSyncResult = {
 
 /**
  * Keeps a custom scrollbar thumb and bottom shadow in sync with a native
- * scroll container (wheel / touch / keyboard unchanged).
+ * scroll layer. The scroll element handles touch/keyboard; wheel events on the
+ * overlay track are forwarded to it (the track sits above the scroller, so
+ * they would not scroll otherwise).
  *
  * @param recalcDeps - extra deps that should trigger thumb/shadow recalculation
  * @returns refs, scroll state, thumb geometry, and pointer handlers for the UI
@@ -39,7 +40,6 @@ export function useScrollableScrollbarSync(
     const [hasContentBelow, setHasContentBelow] = useState(false);
     const [overflows, setOverflows] = useState(false);
     const [thumb, setThumb] = useState<ThumbGeometry>({top: 0, height: 0});
-    const [isDragging, setIsDragging] = useState(false);
 
     const rafIdRef = useRef<number | null>(null);
     const scheduleUpdate = useCallback(() => {
@@ -164,8 +164,6 @@ export function useScrollableScrollbarSync(
                 return;
             }
 
-            setIsDragging(true);
-
             const handlePointerMove = (moveEvent: PointerEvent) => {
                 const deltaY = moveEvent.clientY - startY;
                 const deltaScroll = (deltaY / maxThumbTop) * maxScrollTop;
@@ -173,7 +171,6 @@ export function useScrollableScrollbarSync(
             };
 
             const handlePointerUp = () => {
-                setIsDragging(false);
                 window.removeEventListener('pointermove', handlePointerMove);
                 window.removeEventListener('pointerup', handlePointerUp);
                 window.removeEventListener('pointercancel', handlePointerUp);
@@ -233,7 +230,6 @@ export function useScrollableScrollbarSync(
         hasContentBelow,
         overflows,
         thumb,
-        isDragging,
         scheduleUpdate,
         handleThumbPointerDown,
         handleTrackPointerDown,

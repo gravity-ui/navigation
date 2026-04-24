@@ -36,7 +36,6 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
         hasContentBelow,
         overflows,
         thumb,
-        isDragging,
         scheduleUpdate,
         handleThumbPointerDown,
         handleTrackPointerDown,
@@ -57,7 +56,7 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
                 >
                     <div
                         ref={thumbRef}
-                        className={b('scrollbar-thumb', {dragging: isDragging})}
+                        className={b('scrollbar-thumb')}
                         style={{transform: `translateY(${thumb.top}px)`, height: thumb.height}}
                         onPointerDown={handleThumbPointerDown}
                     />
