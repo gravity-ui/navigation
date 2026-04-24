@@ -41,15 +41,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
     return (
         <React.Fragment>
-            <div
-                className={b(
-                    'aside',
-                    {'menu-overflow-scroll': menuOverflow === 'scroll' && !compact},
-                    className,
-                )}
-                style={{width: size}}
-                data-qa={qa}
-            >
+            <div className={b('aside', className)} style={{width: size}} data-qa={qa}>
                 <div className={b('aside-popup-anchor')} ref={asideRef} />
                 {customBackground && (
                     <div className={b('aside-custom-background', customBackgroundClassName)}>
