@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 
 const EMPTY_DEPS: React.DependencyList = [];
 
@@ -11,6 +11,7 @@ type ThumbGeometry = {
 
 type UseScrollableScrollbarSyncResult = {
     scrollRef: React.RefObject<HTMLDivElement>;
+    trackRef: React.RefObject<HTMLDivElement>;
     thumbRef: React.RefObject<HTMLDivElement>;
     hasContentBelow: boolean;
     overflows: boolean;
@@ -32,6 +33,7 @@ export function useScrollableScrollbarSync(
     recalcDeps: React.DependencyList = EMPTY_DEPS,
 ): UseScrollableScrollbarSyncResult {
     const scrollRef = useRef<HTMLDivElement>(null);
+    const trackRef = useRef<HTMLDivElement>(null);
     const thumbRef = useRef<HTMLDivElement>(null);
 
     const [hasContentBelow, setHasContentBelow] = useState(false);
@@ -107,79 +109,126 @@ export function useScrollableScrollbarSync(
         };
     }, []);
 
-    const handleThumbPointerDown = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    // Wheel events do not reach the native scroll layer when the cursor is over
+    // the overlay track — forward them explicitly. `passive: false` is required
+    // so `preventDefault` works in all browsers.
+    useLayoutEffect(() => {
+        if (!overflows) {
+            return undefined;
+        }
+
+        const track = trackRef.current;
         const scrollEl = scrollRef.current;
-        const thumbEl = thumbRef.current;
 
-        if (!scrollEl || !thumbEl || event.button !== 0) {
-            return;
+        if (!track || !scrollEl) {
+            return undefined;
         }
 
-        event.preventDefault();
-        event.stopPropagation();
-
-        const startY = event.clientY;
-        const startScrollTop = scrollEl.scrollTop;
-        const {scrollHeight, clientHeight} = scrollEl;
-        const thumbHeight = thumbEl.getBoundingClientRect().height;
-        const trackHeight = clientHeight;
-        const maxThumbTop = trackHeight - thumbHeight;
-        const maxScrollTop = scrollHeight - clientHeight;
-
-        if (maxThumbTop <= 0 || maxScrollTop <= 0) {
-            return;
-        }
-
-        setIsDragging(true);
-
-        const handlePointerMove = (moveEvent: PointerEvent) => {
-            const deltaY = moveEvent.clientY - startY;
-            const deltaScroll = (deltaY / maxThumbTop) * maxScrollTop;
-            scrollEl.scrollTop = startScrollTop + deltaScroll;
+        const onWheel = (e: WheelEvent) => {
+            e.preventDefault();
+            scrollEl.scrollTop += e.deltaY;
         };
 
-        const handlePointerUp = () => {
-            setIsDragging(false);
-            window.removeEventListener('pointermove', handlePointerMove);
-            window.removeEventListener('pointerup', handlePointerUp);
-            window.removeEventListener('pointercancel', handlePointerUp);
-        };
+        track.addEventListener('wheel', onWheel, {passive: false});
+        return () => track.removeEventListener('wheel', onWheel);
+    }, [overflows]);
 
-        window.addEventListener('pointermove', handlePointerMove);
-        window.addEventListener('pointerup', handlePointerUp);
-        window.addEventListener('pointercancel', handlePointerUp);
+    const cancelProgrammaticSmoothScroll = useCallback((scrollEl: HTMLDivElement) => {
+        const top = scrollEl.scrollTop;
+        scrollEl.scrollTo({top, behavior: 'auto'});
     }, []);
 
-    const handleTrackPointerDown = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
-        const scrollEl = scrollRef.current;
-        const thumbEl = thumbRef.current;
+    const handleThumbPointerDown = useCallback(
+        (event: React.PointerEvent<HTMLDivElement>) => {
+            const scrollEl = scrollRef.current;
+            const thumbEl = thumbRef.current;
 
-        if (!scrollEl || !thumbEl || event.button !== 0 || event.target !== event.currentTarget) {
-            return;
-        }
+            if (!scrollEl || !thumbEl || event.button !== 0) {
+                return;
+            }
 
-        const trackRect = event.currentTarget.getBoundingClientRect();
-        const thumbHeight = thumbEl.getBoundingClientRect().height;
-        const clickY = event.clientY - trackRect.top;
-        const targetThumbTop = Math.max(
-            0,
-            Math.min(clickY - thumbHeight / 2, trackRect.height - thumbHeight),
-        );
-        const maxThumbTop = trackRect.height - thumbHeight;
-        const maxScrollTop = scrollEl.scrollHeight - scrollEl.clientHeight;
+            event.preventDefault();
+            event.stopPropagation();
 
-        if (maxThumbTop <= 0 || maxScrollTop <= 0) {
-            return;
-        }
+            cancelProgrammaticSmoothScroll(scrollEl);
 
-        scrollEl.scrollTo({
-            top: (targetThumbTop / maxThumbTop) * maxScrollTop,
-            behavior: 'smooth',
-        });
-    }, []);
+            const startY = event.clientY;
+            const startScrollTop = scrollEl.scrollTop;
+            const {scrollHeight, clientHeight} = scrollEl;
+            const thumbHeight = thumbEl.getBoundingClientRect().height;
+            const trackHeight = clientHeight;
+            const maxThumbTop = trackHeight - thumbHeight;
+            const maxScrollTop = scrollHeight - clientHeight;
+
+            if (maxThumbTop <= 0 || maxScrollTop <= 0) {
+                return;
+            }
+
+            setIsDragging(true);
+
+            const handlePointerMove = (moveEvent: PointerEvent) => {
+                const deltaY = moveEvent.clientY - startY;
+                const deltaScroll = (deltaY / maxThumbTop) * maxScrollTop;
+                scrollEl.scrollTop = startScrollTop + deltaScroll;
+            };
+
+            const handlePointerUp = () => {
+                setIsDragging(false);
+                window.removeEventListener('pointermove', handlePointerMove);
+                window.removeEventListener('pointerup', handlePointerUp);
+                window.removeEventListener('pointercancel', handlePointerUp);
+            };
+
+            window.addEventListener('pointermove', handlePointerMove);
+            window.addEventListener('pointerup', handlePointerUp);
+            window.addEventListener('pointercancel', handlePointerUp);
+        },
+        [cancelProgrammaticSmoothScroll],
+    );
+
+    const handleTrackPointerDown = useCallback(
+        (event: React.PointerEvent<HTMLDivElement>) => {
+            const scrollEl = scrollRef.current;
+            const thumbEl = thumbRef.current;
+
+            if (
+                !scrollEl ||
+                !thumbEl ||
+                event.button !== 0 ||
+                event.target !== event.currentTarget
+            ) {
+                return;
+            }
+
+            cancelProgrammaticSmoothScroll(scrollEl);
+
+            const trackRect = event.currentTarget.getBoundingClientRect();
+            const thumbHeight = thumbEl.getBoundingClientRect().height;
+            const clickY = event.clientY - trackRect.top;
+            const targetThumbTop = Math.max(
+                0,
+                Math.min(clickY - thumbHeight / 2, trackRect.height - thumbHeight),
+            );
+            const maxThumbTop = trackRect.height - thumbHeight;
+            const maxScrollTop = scrollEl.scrollHeight - scrollEl.clientHeight;
+
+            if (maxThumbTop <= 0 || maxScrollTop <= 0) {
+                return;
+            }
+
+            // `auto` avoids racing with a subsequent thumb drag (smooth scroll would
+            // still animate while pointer handlers update `scrollTop`).
+            scrollEl.scrollTo({
+                top: (targetThumbTop / maxThumbTop) * maxScrollTop,
+                behavior: 'auto',
+            });
+        },
+        [cancelProgrammaticSmoothScroll],
+    );
 
     return {
         scrollRef,
+        trackRef,
         thumbRef,
         hasContentBelow,
         overflows,

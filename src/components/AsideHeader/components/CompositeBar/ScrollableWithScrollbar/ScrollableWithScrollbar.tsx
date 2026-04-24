@@ -31,6 +31,7 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
 }) => {
     const {
         scrollRef,
+        trackRef,
         thumbRef,
         hasContentBelow,
         overflows,
@@ -49,6 +50,7 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
 
             {overflows ? (
                 <div
+                    ref={trackRef}
                     className={b('scrollbar-track')}
                     onPointerDown={handleTrackPointerDown}
                     aria-hidden="true"
