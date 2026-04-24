@@ -29,55 +29,77 @@ $block: '.#{variables.$ns}composite-bar';
         max-height: #{variables.$item-height};
     }
 
+    // Horizontal inset of nested rows; spine is drawn at -1 × this offset from row start.
+    $tree-nested-padding-inline: 22px;
+
     &__menu-group-tree {
         position: relative;
         margin-inline-start: 18px;
-        padding-inline-start: 14px;
-        border-inline-start: 1px solid var(--g-color-line-generic);
+        padding-inline-start: $tree-nested-padding-inline;
+
+        // Short vertical from tree top to middle of first row (continues from parent header).
+        &::before {
+            content: '';
+            position: absolute;
+            inset-inline-start: 0;
+            top: 0;
+            width: 1px;
+            height: calc(#{variables.$item-height} / 2);
+            background: var(--g-color-line-generic);
+            pointer-events: none;
+        }
     }
 
     &__menu-group-nested-list-item[class] {
-        background-color: transparent;
-    }
+        $tree-line: var(--g-color-line-generic);
+        $elbow-size: 12px;
+        $elbow-radius: 6px;
 
-    &__menu-group-nested-item {
         position: relative;
-        width: 100%;
+        background-color: transparent;
 
+        // Rounded elbow + horizontal branch toward the row icon (tree “tick”).
+        &::before {
+            content: '';
+            position: absolute;
+            inset-inline-start: -1 * $tree-nested-padding-inline;
+            top: 50%;
+            width: $elbow-size;
+            height: $elbow-size;
+            margin-top: calc(-1 * $elbow-size / 2);
+            box-sizing: border-box;
+            border-inline-start: 1px solid $tree-line;
+            border-block-end: 1px solid $tree-line;
+            border-end-start-radius: $elbow-radius;
+            pointer-events: none;
+        }
+
+        // Vertical guide between rows (straight segments; `::before` carries the curve).
         &::after {
             content: '';
             position: absolute;
-            inset-inline-start: -14px;
-            top: 50%;
-            width: 11px;
-            height: 11px;
-            margin-top: -6px;
-            border-inline-start: 1px solid var(--g-color-line-generic);
-            border-block-end: 1px solid var(--g-color-line-generic);
-            border-end-start-radius: 6px;
-        }
-
-        &_first::before {
-            content: '';
-            position: absolute;
-            inset-inline-start: -15px;
-            top: 0;
+            inset-inline-start: -1 * $tree-nested-padding-inline;
             width: 1px;
-            height: 50%;
-            background: var(--g-color-line-generic);
+            background: $tree-line;
+            pointer-events: none;
         }
 
-        &_last::before {
-            content: '';
-            position: absolute;
-            inset-inline-start: -15px;
+        &:first-child:not(:last-child)::after {
             top: 50%;
             bottom: 0;
-            width: 1px;
-            background: var(--g-color-line-generic);
         }
 
-        &_first#{&}_last::before {
+        &:last-child:not(:first-child)::after {
+            top: 0;
+            height: 50%;
+        }
+
+        &:not(:first-child):not(:last-child)::after {
+            top: 0;
+            bottom: 0;
+        }
+
+        &:first-child:last-child::after {
             display: none;
         }
     }

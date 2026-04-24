@@ -218,14 +218,10 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                                     virtualized={false}
                                     filterable={false}
                                     sortable={false}
-                                    renderItem={(nestedItem, _active, nestedIndex) => (
+                                    renderItem={(nestedItem, _active, _nestedIndex) => (
                                         <Item
                                             {...nestedItem}
                                             compact={compact}
-                                            className={b('menu-group-nested-item', {
-                                                first: nestedIndex === 0,
-                                                last: nestedIndex === row.items.length - 1,
-                                            })}
                                             onMouseLeave={onMouseLeave}
                                             onItemClick={onItemClickByIndex(nestedItem.onItemClick)}
                                         />
