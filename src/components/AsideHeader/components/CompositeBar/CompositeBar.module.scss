@@ -30,12 +30,13 @@ $block: '.#{variables.$ns}composite-bar';
     }
 
     // Horizontal inset of nested rows; spine is drawn at -1 × this offset from row start.
-    $tree-nested-padding-inline: 22px;
+    $tree-nested-padding-inline: 16px;
 
     &__menu-group-tree {
         position: relative;
         margin-inline-start: 18px;
         padding-inline-start: $tree-nested-padding-inline;
+        $tree-line: #c1c3c7;
 
         // Short vertical from tree top to middle of first row (continues from parent header).
         &::before {
@@ -45,31 +46,32 @@ $block: '.#{variables.$ns}composite-bar';
             top: 0;
             width: 1px;
             height: calc(#{variables.$item-height} / 2);
-            background: var(--g-color-line-generic);
+            background: $tree-line;
             pointer-events: none;
         }
     }
 
     &__menu-group-nested-list-item[class] {
-        $tree-line: var(--g-color-line-generic);
-        $elbow-size: 12px;
-        $elbow-radius: 6px;
+        $tree-line: #c1c3c7;
+        $elbow-size: 8px;
+        $elbow-radius: 8px;
 
         position: relative;
         background-color: transparent;
+        overflow: visible;
 
         // Rounded elbow + horizontal branch toward the row icon (tree “tick”).
         &::before {
             content: '';
             position: absolute;
             inset-inline-start: -1 * $tree-nested-padding-inline;
-            top: 50%;
+            top: 42%;
             width: $elbow-size;
             height: $elbow-size;
             margin-top: calc(-1 * $elbow-size / 2);
             box-sizing: border-box;
-            border-inline-start: 1px solid $tree-line;
-            border-block-end: 1px solid $tree-line;
+            border-inline-start: 1.5px solid $tree-line;
+            border-block-end: 1.5px solid $tree-line;
             border-end-start-radius: $elbow-radius;
             pointer-events: none;
         }
@@ -90,7 +92,7 @@ $block: '.#{variables.$ns}composite-bar';
         }
 
         &:last-child:not(:first-child)::after {
-            top: 0;
+            top: -7px;
             height: 50%;
         }
 
