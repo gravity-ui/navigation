@@ -7,7 +7,6 @@ $block: '.#{variables.$ns}composite-bar';
     width: 100%;
     min-height: #{variables.$item-height};
     $tree-line: #c1c3c7;
-    // Horizontal inset: group margin + nested row padding; spine at -1 × padding on connector.
     $tree-nested-padding-inline: 12px;
 
     & &__root-menu-item[class] {
@@ -18,7 +17,6 @@ $block: '.#{variables.$ns}composite-bar';
         display: flex;
         flex-direction: column;
         width: 100%;
-        // margin-inline-start: $tree-nested-padding-inline;
     }
 
     /**
@@ -35,7 +33,6 @@ $block: '.#{variables.$ns}composite-bar';
 
     &__menu-group-nested-item[class] {
         position: relative;
-        margin-inline-start: 12px;
         padding-inline-start: $tree-nested-padding-inline;
     }
 
@@ -46,8 +43,7 @@ $block: '.#{variables.$ns}composite-bar';
     }
 
     &__menu-group-nested-connector {
-        position: absolute;
-        inset-inline-start: -1 * $tree-nested-padding-inline;
+        position: relative;
         top: 0;
         bottom: 0;
         width: 16px;
