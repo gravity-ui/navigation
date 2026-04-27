@@ -280,14 +280,13 @@ const menuGroupsData: MenuGroup[] = [
 
 const menuItemsWithGroups: AsideHeaderProps['menuItems'] = [
     {id: 'home', title: 'Home', icon: Gear},
-    {id: 'analytics-overview', title: 'Overview', icon: Gear, groupId: 'analytics'},
+    {id: 'analytics-overview', title: 'Overview', icon: Gear, groupId: 'analytics', current: true},
     {id: 'analytics-reports', title: 'Reports', icon: Gear, groupId: 'analytics'},
     {
         id: 'analytics-dashboards',
         title: 'Dashboards',
         icon: Gear,
         groupId: 'analytics',
-        current: true,
     },
     {id: 'general-settings', title: 'General', icon: Gear, groupId: 'settings'},
     {id: 'user-settings', title: 'Users', icon: Gear, groupId: 'settings'},
