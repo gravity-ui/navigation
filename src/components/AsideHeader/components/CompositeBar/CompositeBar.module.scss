@@ -8,6 +8,7 @@ $block: '.#{variables.$ns}composite-bar';
     min-height: #{variables.$item-height};
     $tree-line: #c1c3c7;
     $tree-nested-padding-inline: 12px;
+    $tree-line-active: #e9ae56;
 
     & &__root-menu-item[class] {
         background-color: transparent;
@@ -63,6 +64,11 @@ $block: '.#{variables.$ns}composite-bar';
             background: $tree-line;
             pointer-events: none;
         }
+
+        &_spine-active::before {
+            background: $tree-line-active;
+            z-index: 1;
+        }
     }
 
     &__menu-group-nested-list-item:last-child &__menu-group-nested-connector::before {
@@ -78,6 +84,10 @@ $block: '.#{variables.$ns}composite-bar';
         max-width: 16px;
         height: 40px;
         stroke: var(--context-navigation-stroke-color, #{$tree-line});
+
+        &_active {
+            stroke: $tree-line-active;
+        }
     }
 
     &__menu-group-nested-row-inner {
