@@ -21,15 +21,15 @@ $block: '.#{variables.$ns}composite-bar';
     }
 
     /**
-     * Group header must stay one navigation row tall; the outer List row can span
-     * header + nested items, and Item uses height: 100% which would stretch without this.
+     * The list row is as tall as the whole group (header + nested items). Item uses
+     * height: 100%, so the header button would stretch to that full height unless we
+     * pin it to intrinsic height. Avoid a fixed max-height so multi-line titles are not clipped.
      */
     &__menu-group-header[class] {
-        flex: 0 0 #{variables.$item-height};
+        flex: 0 0 auto;
         box-sizing: border-box;
         width: 100%;
-        height: #{variables.$item-height};
-        max-height: #{variables.$item-height};
+        min-height: #{variables.$item-height};
     }
 
     &__menu-group-nested-item[class] {

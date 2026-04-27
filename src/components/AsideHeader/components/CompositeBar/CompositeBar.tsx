@@ -122,7 +122,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
             if (row.kind === 'item') {
                 return getItemHeight(row.item);
             }
-            const headerH = getItemHeight(makeGroupHeaderAsideItem(row.group, row.items));
+            const headerH = getItemHeight(makeGroupHeaderAsideItem(row.group));
             if (!inlineGroupChildren || isGroupCollapsed(row.group.id)) {
                 return headerH;
             }
@@ -174,7 +174,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                     );
                 }
 
-                const headerItem = makeGroupHeaderAsideItem(row.group, row.items);
+                const headerItem = makeGroupHeaderAsideItem(row.group);
                 const groupIsCollapsed = isGroupCollapsed(row.group.id);
 
                 if (!inlineGroupChildren) {
