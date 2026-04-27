@@ -99,15 +99,13 @@ export function getReorderedItems(compositeItems: AsideHeaderItem[]): AsideHeade
     return [...regularItems, ...afterMoreButtonItems];
 }
 
-export function makeGroupHeaderAsideItem(
-    group: MenuGroup,
-    children: AsideHeaderItem[],
-): AsideHeaderItem {
+export function makeGroupHeaderAsideItem(group: MenuGroup): AsideHeaderItem {
     return {
         id: `__gn-composite-bar__group-header__${group.id}`,
         title: group.title,
         icon: group.icon,
-        current: children.some((c) => Boolean(c.current)),
+        // Do not set `current` from children: only nested items should show selection;
+        // otherwise the group header and root List row highlight the whole group block.
     };
 }
 
@@ -119,7 +117,6 @@ export function makeOverflowGroupAsideItem(
         id: `__gn-composite-bar__group-overflow__${group.id}`,
         title: group.title,
         icon: group.icon,
-        current: children.some((c) => Boolean(c.current)),
         compositeBarMenuPopupItems: children,
         compositeBarMenuPopupTitle: group.popupTitle,
     };
@@ -129,7 +126,7 @@ export function getCompositeBarRowLayoutHeight(row: CompositeBarRow): number {
     if (row.kind === 'item') {
         return getItemHeight(row.item);
     }
-    return getItemHeight(makeGroupHeaderAsideItem(row.group, row.items));
+    return getItemHeight(makeGroupHeaderAsideItem(row.group));
 }
 
 export function getReorderedCompositeBarRows(rows: CompositeBarRow[]): CompositeBarRow[] {
@@ -150,7 +147,7 @@ export function compositeBarRowsToFlatForMinHeight(rows: CompositeBarRow[]): Asi
         if (row.kind === 'item') {
             out.push(row.item);
         } else {
-            out.push(makeGroupHeaderAsideItem(row.group, row.items));
+            out.push(makeGroupHeaderAsideItem(row.group));
         }
     }
     return out;
@@ -165,7 +162,8 @@ export function getSelectedCompositeBarRowIndex(rows: CompositeBarRow[]): number
         if (row.kind === 'item') {
             return Boolean(row.item.current);
         }
-        return row.items.some((c) => Boolean(c.current));
+        // Group rows embed their own List; selection is on nested items, not this root row.
+        return false;
     });
     return index === -1 ? undefined : index;
 }

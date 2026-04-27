@@ -10,6 +10,8 @@ import {
     getPopupItemHeight,
     getPopupItemsHeight,
     getReorderedItems,
+    getSelectedCompositeBarRowIndex,
+    makeGroupHeaderAsideItem,
 } from '../utils';
 
 describe('CompositeBar utils', () => {
@@ -67,6 +69,25 @@ describe('CompositeBar utils', () => {
                 'action',
                 'action2',
             ]);
+        });
+    });
+
+    describe('group header selection', () => {
+        it('makeGroupHeaderAsideItem does not set current from children', () => {
+            const groups: MenuGroup[] = [{id: 'g1', title: 'G1'}];
+            const header = makeGroupHeaderAsideItem(groups[0]);
+            expect(header.current).toBeFalsy();
+        });
+
+        it('getSelectedCompositeBarRowIndex ignores current on group children', () => {
+            const rows = buildCompositeBarRows(
+                [
+                    {id: 'a', title: 'A'},
+                    {id: 'c', title: 'C', groupId: 'g1', current: true},
+                ],
+                [{id: 'g1', title: 'G1'}],
+            );
+            expect(getSelectedCompositeBarRowIndex(rows)).toBeUndefined();
         });
     });
 
