@@ -8,6 +8,9 @@ $block: '.#{variables.$ns}scrollable-with-scrollbar';
     width: 100%;
     min-height: 0;
 
+    --_--scrollbar-width: var(--gn-aside-scrollbar-width, 8px);
+    --_--scrollbar-thumb-width: var(--gn-aside-scrollbar-thumb-width, 4px);
+
     &::before {
         content: '';
         position: absolute;
@@ -32,10 +35,42 @@ $block: '.#{variables.$ns}scrollable-with-scrollbar';
         width: 100%;
         height: 100%;
         overflow-y: auto;
-        scrollbar-width: thin;
-        scrollbar-color: var(--gn-aside-scrollbar-handle-color, var(--g-color-line-generic-solid))
-            var(--gn-aside-scrollbar-track-color, transparent);
-        scrollbar-gutter: stable;
+        // Hide native scrollbar — we render a custom one synced with scroll.
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            height: 0;
+        }
+    }
+
+    &__scrollbar-track {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: var(--_--scrollbar-width);
+        z-index: 3;
+        pointer-events: auto;
+        background: var(--gn-aside-scrollbar-track-color, transparent);
+    }
+
+    &__scrollbar-thumb {
+        position: absolute;
+        top: 0;
+        right: calc((var(--_--scrollbar-width) - var(--_--scrollbar-thumb-width)) / 2);
+        width: var(--_--scrollbar-thumb-width);
+        border-radius: calc(var(--_--scrollbar-thumb-width) / 2);
+        background: var(--gn-aside-scrollbar-handle-color, var(--g-color-base-simple-hover));
+        opacity: 0;
+        transition: opacity 0.15s ease-in-out;
+        touch-action: none;
+    }
+
+    &:hover &__scrollbar-thumb {
+        opacity: 1;
     }
 }
 
