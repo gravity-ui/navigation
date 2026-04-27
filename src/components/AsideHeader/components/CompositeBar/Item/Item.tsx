@@ -12,6 +12,7 @@ import {isGroupHeaderItem} from '../grouping';
 
 import {ItemInnerProps, ItemProps} from './Item.types';
 import {ItemPopup} from './ItemPopup';
+import {ItemPopupNestContext} from './ItemPopupNestContext';
 import {renderItemTitle} from './renderItemTitle';
 
 import styles from './Item.module.scss';
@@ -66,6 +67,13 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const collapsedItem = props.id === COLLAPSE_ITEM_ID;
     const isGroupHeader = isGroupHeaderItem(props);
 
+    let resolvedMenuPopupItems = menuPopupItems;
+    let resolvedMenuPopupTitle = menuPopupTitle;
+    if (isGroupHeaderItem(props)) {
+        resolvedMenuPopupItems = menuPopupItems ?? props.groupChildren;
+        resolvedMenuPopupTitle = menuPopupTitle ?? props.groupPopupTitle;
+    }
+
     const handleOpenChangePopup = React.useCallback<NonNullable<ItemProps['onOpenChangePopup']>>(
         (newOpen, event, reason) => {
             if (
@@ -85,7 +93,25 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         [onOpenChangePopup],
     );
 
-    if (type === 'divider') {
+    const isDivider = type === 'divider';
+    const hasSubmenuPopup =
+        !isDivider && Boolean(resolvedMenuPopupItems?.length) && (collapsedItem || isGroupHeader);
+
+    const submenuNest = React.useContext(ItemPopupNestContext);
+
+    React.useEffect(() => {
+        if (!submenuNest || !hasSubmenuPopup || !compactNavPopoverOpen) {
+            return undefined;
+        }
+
+        submenuNest.registerNestedOpen(1);
+
+        return () => {
+            submenuNest.registerNestedOpen(-1);
+        };
+    }, [submenuNest, hasSubmenuPopup, compactNavPopoverOpen]);
+
+    if (isDivider) {
         return <div className={b('menu-divider')} />;
     }
 
@@ -106,7 +132,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             </div>
         );
 
-        if (menuPopupItems?.length) {
+        if (resolvedMenuPopupItems?.length) {
             return iconButton;
         }
 
@@ -171,7 +197,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     {titleEl}
                 </div>
 
-                {Boolean(menuPopupItems?.length) && (isGroupHeader || collapsedItem) && (
+                {Boolean(resolvedMenuPopupItems?.length) && (isGroupHeader || collapsedItem) && (
                     <div className={b('chevron')}>
                         <Icon
                             data={ChevronRight}
@@ -182,14 +208,13 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             </Tag>
         );
 
-        const expandedMenuRows = menuPopupItems;
-        const showMenuPopup = Boolean(expandedMenuRows?.length) && (collapsedItem || isGroupHeader);
+        const expandedMenuRows = resolvedMenuPopupItems;
 
         const wrappedTagNode =
-            showMenuPopup && expandedMenuRows ? (
+            hasSubmenuPopup && expandedMenuRows ? (
                 <ItemPopup
                     items={expandedMenuRows}
-                    title={isGroupHeader ? menuPopupTitle : undefined}
+                    title={isGroupHeader ? resolvedMenuPopupTitle : undefined}
                     open={compactNavPopoverOpen}
                     itemClassName={popupItemClassName}
                     onOpenChange={setCompactNavPopoverOpen}
