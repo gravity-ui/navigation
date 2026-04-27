@@ -7,7 +7,6 @@ $block: '.#{variables.$ns}composite-bar';
     width: 100%;
     min-height: #{variables.$item-height};
     $tree-line: #c1c3c7;
-    $tree-nested-padding-inline: 12px;
     $tree-line-active: #e9ae56;
 
     & &__root-menu-item[class] {
@@ -34,7 +33,7 @@ $block: '.#{variables.$ns}composite-bar';
 
     &__menu-group-nested-item[class] {
         position: relative;
-        padding-inline-start: $tree-nested-padding-inline;
+        padding-inline-start: var(--g-spacing-3);
     }
 
     &__menu-group-nested-list-item[class] {
