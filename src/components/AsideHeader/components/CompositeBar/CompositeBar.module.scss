@@ -83,7 +83,7 @@ $block: '.#{variables.$ns}composite-bar';
         min-width: 16px;
         max-width: 16px;
         height: 40px;
-        stroke: var(--context-navigation-stroke-color, #{$tree-line});
+        stroke: #{$tree-line};
 
         &_active {
             stroke: $tree-line-active;
