@@ -274,7 +274,7 @@ CollapseButtonWrapper.args = {
 };
 
 const menuGroupsData: MenuGroup[] = [
-    {id: 'analytics', title: 'Analytics', icon: Gear},
+    {id: 'analytics', title: 'Analytics', icon: Gear, popupTitle: 'Analytics'},
     {id: 'settings', title: 'Settings', icon: Gear},
 ];
 

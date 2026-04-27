@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import {AsideHeaderItem} from 'src/components/AsideHeader/types';
 
 export interface ItemProps extends AsideHeaderItem {}
@@ -23,4 +25,6 @@ export interface ItemInnerProps extends ItemProps {
      * the parent Item's onClick in the React tree.
      */
     stopClickPropagation?: boolean;
+    /** Inline menu-group tree (L-connector) rendered inside the row, before the icon slot. */
+    menuGroupNestedTreeConnector?: React.ReactNode;
 }

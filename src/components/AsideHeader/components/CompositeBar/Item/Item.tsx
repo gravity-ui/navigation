@@ -51,6 +51,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         qa,
         hideIcon = false,
         stopClickPropagation = false,
+        menuGroupNestedTreeConnector,
     } = props;
 
     const [compactNavPopoverOpen, setCompactNavPopoverOpen] = React.useState(false);
@@ -186,6 +187,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     }
                 }}
             >
+                {menuGroupNestedTreeConnector}
                 <div className={b('icon-place')} ref={highlightedRef}>
                     {makeIconNode(iconEl)}
                 </div>

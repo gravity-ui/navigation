@@ -29,6 +29,10 @@ import styles from './CompositeBar.module.scss';
 
 const b = createBlock('composite-bar', styles);
 
+/** Row L-connector: vertical segment + rounded hook. viewBox matches `variables.$item-height`. */
+const MENU_GROUP_NESTED_TREE_CONNECTOR_PATH =
+    'M8.03125 0V10.07935C8.03125 15.558375 11.5846 20 15.9678 20';
+
 type CompositeBarProps = {
     type: 'menu' | 'subheader';
     items: AsideHeaderItem[];
@@ -208,26 +212,54 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                             }}
                         />
                         {!groupIsCollapsed && (
-                            <div className={b('menu-group-tree')}>
-                                <List<AsideHeaderItem>
-                                    items={row.items}
-                                    selectedItemIndex={getSelectedItemIndex(row.items)}
-                                    itemHeight={getItemHeight}
-                                    itemsHeight={getItemsHeight}
-                                    itemClassName={b('menu-group-nested-list-item')}
-                                    virtualized={false}
-                                    filterable={false}
-                                    sortable={false}
-                                    renderItem={(nestedItem, _active, _nestedIndex) => (
+                            <List<AsideHeaderItem>
+                                items={row.items}
+                                selectedItemIndex={getSelectedItemIndex(row.items)}
+                                itemHeight={getItemHeight}
+                                itemsHeight={getItemsHeight}
+                                itemClassName={b('menu-group-nested-list-item')}
+                                virtualized={false}
+                                filterable={false}
+                                sortable={false}
+                                renderItem={(nestedItem, _active, _nestedIndex) => (
+                                    <div className={b('menu-group-nested-row-inner')}>
                                         <Item
                                             {...nestedItem}
+                                            className={[
+                                                nestedItem.className,
+                                                b('menu-group-nested-item'),
+                                            ]
+                                                .filter(Boolean)
+                                                .join(' ')}
                                             compact={compact}
+                                            menuGroupNestedTreeConnector={
+                                                <span
+                                                    className={b('menu-group-nested-connector')}
+                                                    aria-hidden
+                                                >
+                                                    <svg
+                                                        className={b('menu-group-nested-tree-svg')}
+                                                        viewBox="0 0 16 40"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            d={
+                                                                MENU_GROUP_NESTED_TREE_CONNECTOR_PATH
+                                                            }
+                                                            fill="none"
+                                                            strokeLinecap="butt"
+                                                            strokeWidth="1"
+                                                            vectorEffect="non-scaling-stroke"
+                                                        />
+                                                    </svg>
+                                                </span>
+                                            }
                                             onMouseLeave={onMouseLeave}
                                             onItemClick={onItemClickByIndex(nestedItem.onItemClick)}
                                         />
-                                    )}
-                                />
-                            </div>
+                                    </div>
+                                )}
+                            />
                         )}
                     </div>
                 );

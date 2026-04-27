@@ -6,6 +6,9 @@ $block: '.#{variables.$ns}composite-bar';
     flex: 1 0 auto;
     width: 100%;
     min-height: #{variables.$item-height};
+    $tree-line: #c1c3c7;
+    // Horizontal inset: group margin + nested row padding; spine at -1 × padding on connector.
+    $tree-nested-padding-inline: 12px;
 
     & &__root-menu-item[class] {
         background-color: transparent;
@@ -15,6 +18,7 @@ $block: '.#{variables.$ns}composite-bar';
         display: flex;
         flex-direction: column;
         width: 100%;
+        // margin-inline-start: $tree-nested-padding-inline;
     }
 
     /**
@@ -29,80 +33,60 @@ $block: '.#{variables.$ns}composite-bar';
         max-height: #{variables.$item-height};
     }
 
-    // Horizontal inset of nested rows; spine is drawn at -1 × this offset from row start.
-    $tree-nested-padding-inline: 16px;
-
-    &__menu-group-tree {
+    &__menu-group-nested-item[class] {
         position: relative;
-        margin-inline-start: 18px;
+        margin-inline-start: 12px;
         padding-inline-start: $tree-nested-padding-inline;
-        $tree-line: #c1c3c7;
+    }
 
-        // Short vertical from tree top to middle of first row (continues from parent header).
+    &__menu-group-nested-list-item[class] {
+        position: relative;
+        background-color: transparent;
+        overflow: visible;
+    }
+
+    &__menu-group-nested-connector {
+        position: absolute;
+        inset-inline-start: -1 * $tree-nested-padding-inline;
+        top: 0;
+        bottom: 0;
+        width: 16px;
+        box-sizing: content-box;
+        pointer-events: none;
+        display: flex;
+
+        // Vertical spine between rows (straight segments; elbow is SVG path).
         &::before {
             content: '';
             position: absolute;
-            inset-inline-start: 0;
+            inset-inline-start: calc(50% - 0.5px);
             top: 0;
+            bottom: 0;
             width: 1px;
-            height: calc(#{variables.$item-height} / 2);
+            height: 100%;
             background: $tree-line;
             pointer-events: none;
         }
     }
 
-    &__menu-group-nested-list-item[class] {
-        $tree-line: #c1c3c7;
-        $elbow-size: 8px;
-        $elbow-radius: 8px;
+    &__menu-group-nested-list-item:last-child &__menu-group-nested-connector::before {
+        display: none;
+    }
 
+    &__menu-group-nested-tree-svg {
+        fill: none;
         position: relative;
-        background-color: transparent;
-        overflow: visible;
+        display: block;
+        flex-shrink: 0;
+        min-width: 16px;
+        max-width: 16px;
+        height: 40px;
+        stroke: var(--context-navigation-stroke-color, #{$tree-line});
+    }
 
-        // Rounded elbow + horizontal branch toward the row icon (tree “tick”).
-        &::before {
-            content: '';
-            position: absolute;
-            inset-inline-start: -1 * $tree-nested-padding-inline;
-            top: 42%;
-            width: $elbow-size;
-            height: $elbow-size;
-            margin-top: calc(-1 * $elbow-size / 2);
-            box-sizing: border-box;
-            border-inline-start: 1.5px solid $tree-line;
-            border-block-end: 1.5px solid $tree-line;
-            border-end-start-radius: $elbow-radius;
-            pointer-events: none;
-        }
-
-        // Vertical guide between rows (straight segments; `::before` carries the curve).
-        &::after {
-            content: '';
-            position: absolute;
-            inset-inline-start: -1 * $tree-nested-padding-inline;
-            width: 1px;
-            background: $tree-line;
-            pointer-events: none;
-        }
-
-        &:first-child:not(:last-child)::after {
-            top: 50%;
-            bottom: 0;
-        }
-
-        &:last-child:not(:first-child)::after {
-            top: -7px;
-            height: 50%;
-        }
-
-        &:not(:first-child):not(:last-child)::after {
-            top: 0;
-            bottom: 0;
-        }
-
-        &:first-child:last-child::after {
-            display: none;
-        }
+    &__menu-group-nested-row-inner {
+        width: 100%;
+        min-width: 0;
+        height: 100%;
     }
 }
