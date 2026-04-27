@@ -118,4 +118,26 @@ describe('CompositeBar', () => {
         // eslint-disable-next-line testing-library/no-node-access
         expect(document.querySelector('.gn-composite-bar-item__popup-title')).toBeNull();
     });
+
+    it('opens the group submenu when the group header is inside the "More" popup', () => {
+        const onItemClick = jest.fn();
+        const items: AsideHeaderItem[] = [
+            {id: 'a', title: 'A', icon: Gear},
+            {id: 'b', title: 'B', icon: Gear},
+            {id: 'wb-1', title: 'Workbook 1', icon: Gear, groupId: 'resources'},
+            {id: 'wb-2', title: 'Workbook 2', icon: Gear, groupId: 'resources'},
+        ];
+        const menuGroups: MenuGroup[] = [
+            {id: 'resources', title: 'Resources Group', popupTitle: 'Ресурсы', icon: Gear},
+        ];
+
+        renderCompositeBar({items, onItemClick, menuGroups});
+
+        fireEvent.click(screen.getByText('More'));
+        fireEvent.click(screen.getByText('Resources Group'));
+
+        expect(screen.getByText('Ресурсы')).toBeTruthy();
+        expect(screen.getByText('Workbook 1')).toBeTruthy();
+        expect(screen.getByText('Workbook 2')).toBeTruthy();
+    });
 });

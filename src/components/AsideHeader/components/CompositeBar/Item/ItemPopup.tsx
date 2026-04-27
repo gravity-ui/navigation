@@ -7,6 +7,7 @@ import {AsideHeaderItem} from '../../../types';
 import {getPopupItemHeight, getPopupItemsHeight, getSelectedItemIndex} from '../utils';
 
 import {Item} from './Item';
+import {ItemPopupNestContext} from './ItemPopupNestContext';
 
 import styles from './Item.module.scss';
 
@@ -44,44 +45,65 @@ export const ItemPopup: React.FC<Props> = ({
     onItemClick,
     onOpenChange,
 }) => {
+    const nestedOpenCountRef = React.useRef(0);
+
+    const registerNestedOpen = React.useCallback((delta: number) => {
+        nestedOpenCountRef.current = Math.max(0, nestedOpenCountRef.current + delta);
+    }, []);
+
+    const nestContextValue = React.useMemo(() => ({registerNestedOpen}), [registerNestedOpen]);
+
+    const wrappedOnOpenChange = React.useCallback(
+        (next: boolean) => {
+            if (!next && nestedOpenCountRef.current > 0) {
+                return;
+            }
+
+            onOpenChange?.(next);
+        },
+        [onOpenChange],
+    );
+
     if (!items.length) {
         return children;
     }
 
     const content = (
-        <div className={b('popup-content', {collapsed})}>
-            {title && <div className={b('popup-title')}>{title}</div>}
-            <List
-                items={items}
-                selectedItemIndex={getSelectedItemIndex(items)}
-                itemHeight={getPopupItemHeight}
-                itemsHeight={getPopupItemsHeight}
-                itemClassName={b('root-menu-item', itemClassName)}
-                virtualized={false}
-                filterable={false}
-                sortable={false}
-                renderItem={(item) => (
-                    <Item
-                        {...item}
-                        qa={undefined}
-                        compact={false}
-                        className={b('popup-item')}
-                        hideIcon={hideIcon}
-                        stopClickPropagation
-                        enableTooltip={false}
-                        bringForward={false}
-                        popupVisible={false}
-                        renderPopupContent={undefined}
-                        onOpenChangePopup={undefined}
-                        popupRef={undefined}
-                        onItemClick={(_innerItem, _innerCollapsed, event) => {
-                            onOpenChange?.(false);
-                            onItemClick?.(item, collapsed, event);
-                        }}
-                    />
-                )}
-            />
-        </div>
+        <ItemPopupNestContext.Provider value={nestContextValue}>
+            <div className={b('popup-content', {collapsed})}>
+                {title && <div className={b('popup-title')}>{title}</div>}
+                <List
+                    items={items}
+                    selectedItemIndex={getSelectedItemIndex(items)}
+                    itemHeight={getPopupItemHeight}
+                    itemsHeight={getPopupItemsHeight}
+                    itemClassName={b('root-menu-item', itemClassName)}
+                    virtualized={false}
+                    filterable={false}
+                    sortable={false}
+                    renderItem={(item) => (
+                        <Item
+                            {...item}
+                            qa={undefined}
+                            compact={false}
+                            className={b('popup-item')}
+                            hideIcon={hideIcon}
+                            stopClickPropagation
+                            enableTooltip={false}
+                            bringForward={false}
+                            popupVisible={false}
+                            renderPopupContent={undefined}
+                            onOpenChangePopup={undefined}
+                            popupRef={undefined}
+                            onItemClick={(_innerItem, _innerCollapsed, event) => {
+                                onOpenChange?.(false);
+                                onItemClick?.(item, collapsed, event);
+                            }}
+                        />
+                    )}
+                />
+            </div>
+        </ItemPopupNestContext.Provider>
     );
 
     return (
@@ -90,7 +112,7 @@ export const ItemPopup: React.FC<Props> = ({
             open={open}
             onOpenChange={(nextOpen) => {
                 if (nextOpen && disabled) return;
-                onOpenChange?.(nextOpen);
+                wrappedOnOpenChange(nextOpen);
             }}
             placement="right-start"
             strategy="fixed"
