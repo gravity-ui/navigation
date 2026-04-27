@@ -69,7 +69,8 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     let resolvedMenuPopupItems = menuPopupItems;
     let resolvedMenuPopupTitle = menuPopupTitle;
-    if (isGroupHeaderItem(props)) {
+
+    if (isGroupHeader) {
         resolvedMenuPopupItems = menuPopupItems ?? props.groupChildren;
         resolvedMenuPopupTitle = menuPopupTitle ?? props.groupPopupTitle;
     }
