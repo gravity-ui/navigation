@@ -1,11 +1,17 @@
 import {POPUP_REGULAR_ITEM_HEIGHT} from '../../../../constants';
+import {MenuGroup} from '../../../../types';
 import {AsideHeaderItem} from '../../../types';
+import {type CompositeBarRow, buildCompositeBarRows} from '../grouping';
 import {
+    getAutosizeCompositeBarRows,
     getItemHeight,
     getItemsHeight,
+    getMoreButtonItem,
     getPopupItemHeight,
     getPopupItemsHeight,
-    getReorderedItems,
+    getReorderedCompositeBarRows,
+    getSelectedCompositeBarRowIndex,
+    makeGroupHeaderAsideItem,
 } from '../utils';
 
 describe('CompositeBar utils', () => {
@@ -38,31 +44,71 @@ describe('CompositeBar utils', () => {
         });
     });
 
-    describe('getReorderedItems', () => {
+    describe('getReorderedCompositeBarRows', () => {
         it('returns the same array reference when there are no afterMoreButton items', () => {
-            const items: AsideHeaderItem[] = [
-                {id: 'a', title: 'A'},
-                {id: 'b', title: 'B'},
+            const rows: CompositeBarRow[] = [
+                {kind: 'item', item: {id: 'a', title: 'A'}},
+                {kind: 'item', item: {id: 'b', title: 'B'}},
             ];
-            expect(getReorderedItems(items)).toBe(items);
+            expect(getReorderedCompositeBarRows(rows)).toBe(rows);
         });
 
-        it('moves items with afterMoreButton to the end while preserving relative order', () => {
-            const items: AsideHeaderItem[] = [
-                {id: 'a', title: 'A'},
-                {id: 'action', title: 'Create', type: 'action', afterMoreButton: true},
-                {id: 'b', title: 'B'},
-                {id: 'c', title: 'C'},
-                {id: 'action2', title: 'Create 2', type: 'action', afterMoreButton: true},
+        it('moves afterMoreButton rows to the end while preserving relative order', () => {
+            const rows: CompositeBarRow[] = [
+                {kind: 'item', item: {id: 'a', title: 'A'}},
+                {
+                    kind: 'item',
+                    item: {id: 'action', title: 'Create', type: 'action', afterMoreButton: true},
+                },
+                {kind: 'item', item: {id: 'b', title: 'B'}},
+                {kind: 'item', item: {id: 'c', title: 'C'}},
+                {
+                    kind: 'item',
+                    item: {id: 'action2', title: 'Create 2', type: 'action', afterMoreButton: true},
+                },
             ];
 
-            expect(getReorderedItems(items).map((it) => it.id)).toEqual([
-                'a',
-                'b',
-                'c',
-                'action',
-                'action2',
-            ]);
+            expect(
+                getReorderedCompositeBarRows(rows)
+                    .filter((r): r is Extract<CompositeBarRow, {kind: 'item'}> => r.kind === 'item')
+                    .map((r) => r.item.id),
+            ).toEqual(['a', 'b', 'c', 'action', 'action2']);
+        });
+    });
+
+    describe('group header selection', () => {
+        it('makeGroupHeaderAsideItem does not set current from children', () => {
+            const groups: MenuGroup[] = [{id: 'g1', title: 'G1'}];
+            const header = makeGroupHeaderAsideItem(groups[0]);
+            expect(header.current).toBeFalsy();
+        });
+
+        it('getSelectedCompositeBarRowIndex ignores current on group children', () => {
+            const rows = buildCompositeBarRows(
+                [
+                    {id: 'a', title: 'A'},
+                    {id: 'c', title: 'C', groupId: 'g1', current: true},
+                ],
+                [{id: 'g1', title: 'G1'}],
+            );
+            expect(getSelectedCompositeBarRowIndex(rows)).toBeUndefined();
+        });
+    });
+
+    describe('getAutosizeCompositeBarRows', () => {
+        it('moves a whole group into overflow as one synthetic row with popup children', () => {
+            const groups: MenuGroup[] = [{id: 'g1', title: 'G1'}];
+            const items: AsideHeaderItem[] = [
+                {id: 'a', title: 'A'},
+                {id: 'c1', title: 'C1', groupId: 'g1'},
+            ];
+            const rows = buildCompositeBarRows(items, groups);
+            const collapseItem = getMoreButtonItem('More');
+
+            const {collapseItems} = getAutosizeCompositeBarRows(rows, 1, collapseItem);
+
+            const overflowGroup = collapseItems.find((i) => i.compositeBarMenuPopupItems?.length);
+            expect(overflowGroup?.compositeBarMenuPopupItems?.map((c) => c.id)).toEqual(['c1']);
         });
     });
 });

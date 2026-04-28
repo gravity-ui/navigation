@@ -274,15 +274,20 @@ CollapseButtonWrapper.args = {
 };
 
 const menuGroupsData: MenuGroup[] = [
-    {id: 'analytics', title: 'Analytics', icon: Gear},
+    {id: 'analytics', title: 'Analytics', icon: Gear, popupTitle: 'Analytics'},
     {id: 'settings', title: 'Settings', icon: Gear},
 ];
 
 const menuItemsWithGroups: AsideHeaderProps['menuItems'] = [
     {id: 'home', title: 'Home', icon: Gear},
-    {id: 'analytics-overview', title: 'Overview', icon: Gear, groupId: 'analytics'},
+    {id: 'analytics-overview', title: 'Overview', icon: Gear, groupId: 'analytics', current: true},
     {id: 'analytics-reports', title: 'Reports', icon: Gear, groupId: 'analytics'},
-    {id: 'analytics-dashboards', title: 'Dashboards', icon: Gear, groupId: 'analytics'},
+    {
+        id: 'analytics-dashboards',
+        title: 'Dashboards',
+        icon: Gear,
+        groupId: 'analytics',
+    },
     {id: 'general-settings', title: 'General', icon: Gear, groupId: 'settings'},
     {id: 'user-settings', title: 'Users', icon: Gear, groupId: 'settings'},
     {id: 'help', title: 'Help', icon: Gear},
@@ -347,6 +352,34 @@ const MenuGroupsWithPopupTitleTemplate: StoryFn = (args) => {
 export const MenuGroupsWithPopupTitle = MenuGroupsWithPopupTitleTemplate.bind({});
 MenuGroupsWithPopupTitle.args = {
     initialCompact: true,
+};
+
+const MenuGroupsScrollbarTemplate: StoryFn = (args) => {
+    const [compact, setCompact] = React.useState(args.initialCompact ?? false);
+
+    return (
+        <PageLayout compact={compact}>
+            <PageLayoutAside
+                headerDecoration
+                logo={DEFAULT_LOGO}
+                menuItems={menuItemsWithGroups}
+                menuGroups={menuGroupsData}
+                menuOverflow="scroll"
+                onChangeCompact={setCompact}
+            />
+            <PageLayout.Content>
+                <div style={{padding: 16}}>
+                    Expanded sidebar with <code>menuOverflow=&quot;scroll&quot;</code>: groups
+                    render as nested lists with tree connectors.
+                </div>
+            </PageLayout.Content>
+        </PageLayout>
+    );
+};
+
+export const MenuGroupsScrollbar = MenuGroupsScrollbarTemplate.bind({});
+MenuGroupsScrollbar.args = {
+    initialCompact: false,
 };
 
 const manyMenuItems: AsideHeaderProps['menuItems'] = Array.from({length: 25}, (_, index) => ({

@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import {AsideHeaderItem} from 'src/components/AsideHeader/types';
 
 export interface ItemProps extends AsideHeaderItem {}
@@ -9,6 +11,11 @@ export interface ItemInnerProps extends ItemProps {
     menuPopupItems?: AsideHeaderItem[];
     /** Optional title rendered at the top of the popup listing `menuPopupItems`. */
     menuPopupTitle?: string;
+    /**
+     * When set, the row is an inline (expanded sidebar) group header: chevron up/down
+     * instead of a flyout chevron, and children render in a nested list.
+     */
+    groupHeaderExpanded?: boolean;
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
     /** When true, the icon slot is not rendered (e.g. compact popover: icon stays in the bar). */
@@ -18,4 +25,6 @@ export interface ItemInnerProps extends ItemProps {
      * the parent Item's onClick in the React tree.
      */
     stopClickPropagation?: boolean;
+    /** Inline menu-group tree (L-connector) rendered inside the row, before the icon slot. */
+    menuGroupNestedTreeConnector?: React.ReactNode;
 }

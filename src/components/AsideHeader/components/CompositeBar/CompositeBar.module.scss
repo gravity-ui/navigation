@@ -3,13 +3,93 @@
 $block: '.#{variables.$ns}composite-bar';
 
 #{$block} {
-    $class: &;
-
     flex: 1 0 auto;
     width: 100%;
     min-height: #{variables.$item-height};
+    $tree-line: #c1c3c7;
+    $tree-line-active: #e9ae56;
 
     & &__root-menu-item[class] {
         background-color: transparent;
+    }
+
+    &__menu-group {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    /**
+     * The list row is as tall as the whole group (header + nested items). Item uses
+     * height: 100%, so the header button would stretch to that full height unless we
+     * pin it to intrinsic height. Avoid a fixed max-height so multi-line titles are not clipped.
+     */
+    &__menu-group-header[class] {
+        flex: 0 0 auto;
+        box-sizing: border-box;
+        width: 100%;
+        min-height: #{variables.$item-height};
+    }
+
+    &__menu-group-nested-item[class] {
+        position: relative;
+        padding-inline-start: var(--g-spacing-3);
+    }
+
+    &__menu-group-nested-list-item[class] {
+        position: relative;
+        background-color: transparent;
+        overflow: visible;
+    }
+
+    &__menu-group-nested-connector {
+        position: relative;
+        width: 16px;
+        box-sizing: content-box;
+        pointer-events: none;
+        display: flex;
+
+        // Vertical spine between rows (straight segments; elbow is SVG path).
+        &::before {
+            content: '';
+            position: absolute;
+            inset-inline-start: calc(50% - 0.5px);
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            height: 100%;
+            background: $tree-line;
+            pointer-events: none;
+        }
+
+        &_spine-active::before {
+            background: $tree-line-active;
+            z-index: 1;
+        }
+    }
+
+    &__menu-group-nested-list-item:last-child &__menu-group-nested-connector::before {
+        display: none;
+    }
+
+    &__menu-group-nested-tree-svg {
+        fill: none;
+        position: relative;
+        display: block;
+        flex-shrink: 0;
+        min-width: 16px;
+        max-width: 16px;
+        height: #{variables.$item-height};
+        stroke: #{$tree-line};
+
+        &_active {
+            stroke: $tree-line-active;
+        }
+    }
+
+    &__menu-group-nested-row-inner {
+        width: 100%;
+        min-width: 0;
+        height: 100%;
     }
 }

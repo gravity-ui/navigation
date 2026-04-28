@@ -1,6 +1,6 @@
 import React from 'react';
 
-export type ItemPopupNestContextValue = {
+type ItemPopupNestContextValue = {
     registerNestedOpen: (delta: number) => void;
 };
 

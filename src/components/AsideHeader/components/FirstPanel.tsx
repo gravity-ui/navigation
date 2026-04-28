@@ -29,6 +29,9 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         hideCollapseButton,
         menuGroups,
         menuOverflow,
+        collapsedMenuGroupIds,
+        defaultCollapsedMenuGroupIds,
+        onToggleMenuGroupCollapsed,
         qa,
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
@@ -41,7 +44,15 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
     return (
         <React.Fragment>
-            <div className={b('aside', className)} style={{width: size}} data-qa={qa}>
+            <div
+                className={b(
+                    'aside',
+                    {'menu-overflow-scroll': menuOverflow === 'scroll' && !compact},
+                    className,
+                )}
+                style={{width: size}}
+                data-qa={qa}
+            >
                 <div className={b('aside-popup-anchor')} ref={asideRef} />
                 {customBackground && (
                     <div className={b('aside-custom-background', customBackgroundClassName)}>
@@ -63,6 +74,9 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             onItemClick={onItemClick}
                             onMoreClick={onMenuMoreClick}
                             menuOverflow={menuOverflow}
+                            collapsedMenuGroupIds={collapsedMenuGroupIds}
+                            defaultCollapsedMenuGroupIds={defaultCollapsedMenuGroupIds}
+                            onToggleMenuGroupCollapsed={onToggleMenuGroupCollapsed}
                         />
                     ) : (
                         <div className={b('menu-items')} />

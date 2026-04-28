@@ -81,6 +81,15 @@ $block: '.#{variables.$ns}aside-header';
             }
         }
 
+        /**
+         * Scrollable menu: keep overflow inside the custom scrollbar host (not the aside / page).
+         * Requires min-height: 0 so flex children can shrink below content height.
+         */
+        &_menu-overflow-scroll #{$class}__aside-content {
+            min-height: 0;
+            overflow: hidden;
+        }
+
         &-content_with-decoration {
             background: linear-gradient(
                 180deg,
