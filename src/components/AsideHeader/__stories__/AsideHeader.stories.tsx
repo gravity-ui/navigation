@@ -335,7 +335,7 @@ function MenuGroupsWithAllPagesDemo(props: {
     return (
         <PageLayout compact={compact}>
             <PageLayoutAside
-                headerDecoration
+                headerDecoration={false}
                 logo={DEFAULT_LOGO}
                 menuItems={menuItems}
                 defaultMenuItems={menuItemsWithGroupsForAllPages}
