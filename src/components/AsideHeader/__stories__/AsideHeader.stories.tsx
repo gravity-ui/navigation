@@ -293,6 +293,48 @@ const menuItemsWithGroups: AsideHeaderProps['menuItems'] = [
     {id: 'help', title: 'Help', icon: Gear},
 ];
 
+/** Same items as `menuItemsWithGroups` with `category` for the All pages panel grouping. */
+const menuItemsWithGroupsForAllPages: AsideHeaderProps['menuItems'] = [
+    {id: 'home', title: 'Home', icon: Gear, category: 'General'},
+    {
+        id: 'analytics-overview',
+        title: 'Overview',
+        icon: Gear,
+        groupId: 'analytics',
+        category: 'Analytics',
+        current: true,
+    },
+    {
+        id: 'analytics-reports',
+        title: 'Reports',
+        icon: Gear,
+        groupId: 'analytics',
+        category: 'Analytics',
+    },
+    {
+        id: 'analytics-dashboards',
+        title: 'Dashboards',
+        icon: Gear,
+        groupId: 'analytics',
+        category: 'Analytics',
+    },
+    {
+        id: 'general-settings',
+        title: 'General',
+        icon: Gear,
+        groupId: 'settings',
+        category: 'Settings',
+    },
+    {
+        id: 'user-settings',
+        title: 'Users',
+        icon: Gear,
+        groupId: 'settings',
+        category: 'Settings',
+    },
+    {id: 'help', title: 'Help', icon: Gear, category: 'General'},
+];
+
 const MenuGroupsTemplate: StoryFn = (args) => {
     const [compact, setCompact] = React.useState(args.initialCompact ?? false);
 
@@ -379,6 +421,39 @@ const MenuGroupsScrollbarTemplate: StoryFn = (args) => {
 
 export const MenuGroupsScrollbar = MenuGroupsScrollbarTemplate.bind({});
 MenuGroupsScrollbar.args = {
+    initialCompact: false,
+};
+
+const AllPagesMenuGroupsTemplate: StoryFn = (args) => {
+    const [compact, setCompact] = React.useState(args.initialCompact ?? false);
+    const [menuItems, setMenuItems] = React.useState<AsideHeaderProps['menuItems']>(
+        menuItemsWithGroupsForAllPages,
+    );
+
+    return (
+        <PageLayout compact={compact}>
+            <PageLayoutAside
+                headerDecoration
+                logo={DEFAULT_LOGO}
+                menuItems={menuItems}
+                defaultMenuItems={menuItemsWithGroupsForAllPages}
+                onMenuItemsChanged={setMenuItems}
+                menuGroups={menuGroupsData}
+                editMenuProps={{enableSorting: true}}
+                onChangeCompact={setCompact}
+            />
+            <PageLayout.Content>
+                <div style={{padding: 16}}>
+                    Open <strong>All pages</strong> from the bottom of the menu. In edit mode, use
+                    the pin control to show or hide items (same as in Showcase).
+                </div>
+            </PageLayout.Content>
+        </PageLayout>
+    );
+};
+
+export const AllPagesMenuGroups = AllPagesMenuGroupsTemplate.bind({});
+AllPagesMenuGroups.args = {
     initialCompact: false,
 };
 
