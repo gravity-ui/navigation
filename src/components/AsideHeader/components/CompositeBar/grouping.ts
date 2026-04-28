@@ -58,8 +58,7 @@ export function buildCompositeBarRows(
     const result: Array<{index: number; row: CompositeBarRow}> = [...ungroupedItems];
 
     for (const [groupId, children] of groupChildrenMap.entries()) {
-        const visibleChildren = children.filter((c) => !c.hidden);
-        if (visibleChildren.length === 0) {
+        if (children.length === 0) {
             continue;
         }
 
@@ -72,7 +71,7 @@ export function buildCompositeBarRows(
 
         result.push({
             index: firstIndex,
-            row: {kind: 'group' as const, group, items: visibleChildren},
+            row: {kind: 'group' as const, group, items: children},
         });
     }
 
