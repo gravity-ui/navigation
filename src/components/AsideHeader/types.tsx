@@ -82,7 +82,8 @@ interface AsideHeaderDefaultProps {
     menuItems?: AsideHeaderItem[];
     menuGroups?: MenuGroup[];
     /**
-     * Controlled update for `menuGroups` (e.g. toggling `MenuGroup.hidden` from All pages).
+     * Called only from **All pages** edit mode when the user toggles visibility of a **menu group** (group header pin), updating `menuGroup.hidden`.
+     * Use with controlled `menuGroups`; not emitted for programmatic `menuGroups` changes outside All pages.
      */
     onMenuGroupsChanged?: (menuGroups: MenuGroup[]) => void;
     defaultMenuItems?: AsideHeaderItem[];
