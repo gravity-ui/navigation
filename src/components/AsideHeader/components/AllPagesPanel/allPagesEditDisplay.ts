@@ -7,7 +7,7 @@ import {
 } from '../CompositeBar/grouping';
 import {makeGroupHeaderAsideItem} from '../CompositeBar/utils';
 
-export const COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX = '__gn-composite-bar__group-header__' as const;
+const COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX = '__gn-composite-bar__group-header__' as const;
 
 /** Options passed to {@link buildCompositeBarRows} for All pages panel (edit-mode rows). */
 export const ALL_PAGES_PANEL_ROW_BUILD_OPTIONS = {
