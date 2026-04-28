@@ -6,8 +6,6 @@ $block: '.#{variables.$ns}composite-bar';
     flex: 1 0 auto;
     width: 100%;
     min-height: #{variables.$item-height};
-    $tree-line: #c1c3c7;
-    $tree-line-active: var(--g-color-base-brand);
 
     & &__root-menu-item[class] {
         background-color: transparent;
@@ -58,12 +56,15 @@ $block: '.#{variables.$ns}composite-bar';
             bottom: 0;
             width: 1px;
             height: 100%;
-            background: $tree-line;
+            background: var(--gn-aside-header-menu-group-tree-line-color, #c1c3c7);
             pointer-events: none;
         }
 
         &_spine-active::before {
-            background: $tree-line-active;
+            background: var(
+                --gn-aside-header-menu-group-tree-line-active-color,
+                var(--g-color-base-brand)
+            );
             z-index: 1;
         }
     }
@@ -80,10 +81,13 @@ $block: '.#{variables.$ns}composite-bar';
         min-width: 16px;
         max-width: 16px;
         height: #{variables.$item-height};
-        stroke: #{$tree-line};
+        stroke: var(--gn-aside-header-menu-group-tree-line-color, #c1c3c7);
 
         &_active {
-            stroke: $tree-line-active;
+            stroke: var(
+                --gn-aside-header-menu-group-tree-line-active-color,
+                var(--g-color-base-brand)
+            );
         }
     }
 
