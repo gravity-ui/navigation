@@ -1,7 +1,7 @@
 import {POPUP_REGULAR_ITEM_HEIGHT} from '../../../../constants';
 import {MenuGroup} from '../../../../types';
 import {AsideHeaderItem} from '../../../types';
-import {buildCompositeBarRows} from '../grouping';
+import {type CompositeBarRow, buildCompositeBarRows} from '../grouping';
 import {
     getAutosizeCompositeBarRows,
     getItemHeight,
@@ -9,7 +9,7 @@ import {
     getMoreButtonItem,
     getPopupItemHeight,
     getPopupItemsHeight,
-    getReorderedItems,
+    getReorderedCompositeBarRows,
     getSelectedCompositeBarRowIndex,
     makeGroupHeaderAsideItem,
 } from '../utils';
@@ -44,31 +44,35 @@ describe('CompositeBar utils', () => {
         });
     });
 
-    describe('getReorderedItems', () => {
+    describe('getReorderedCompositeBarRows', () => {
         it('returns the same array reference when there are no afterMoreButton items', () => {
-            const items: AsideHeaderItem[] = [
-                {id: 'a', title: 'A'},
-                {id: 'b', title: 'B'},
+            const rows: CompositeBarRow[] = [
+                {kind: 'item', item: {id: 'a', title: 'A'}},
+                {kind: 'item', item: {id: 'b', title: 'B'}},
             ];
-            expect(getReorderedItems(items)).toBe(items);
+            expect(getReorderedCompositeBarRows(rows)).toBe(rows);
         });
 
-        it('moves items with afterMoreButton to the end while preserving relative order', () => {
-            const items: AsideHeaderItem[] = [
-                {id: 'a', title: 'A'},
-                {id: 'action', title: 'Create', type: 'action', afterMoreButton: true},
-                {id: 'b', title: 'B'},
-                {id: 'c', title: 'C'},
-                {id: 'action2', title: 'Create 2', type: 'action', afterMoreButton: true},
+        it('moves afterMoreButton rows to the end while preserving relative order', () => {
+            const rows: CompositeBarRow[] = [
+                {kind: 'item', item: {id: 'a', title: 'A'}},
+                {
+                    kind: 'item',
+                    item: {id: 'action', title: 'Create', type: 'action', afterMoreButton: true},
+                },
+                {kind: 'item', item: {id: 'b', title: 'B'}},
+                {kind: 'item', item: {id: 'c', title: 'C'}},
+                {
+                    kind: 'item',
+                    item: {id: 'action2', title: 'Create 2', type: 'action', afterMoreButton: true},
+                },
             ];
 
-            expect(getReorderedItems(items).map((it) => it.id)).toEqual([
-                'a',
-                'b',
-                'c',
-                'action',
-                'action2',
-            ]);
+            expect(
+                getReorderedCompositeBarRows(rows)
+                    .filter((r): r is Extract<CompositeBarRow, {kind: 'item'}> => r.kind === 'item')
+                    .map((r) => r.item.id),
+            ).toEqual(['a', 'b', 'c', 'action', 'action2']);
         });
     });
 

@@ -58,7 +58,7 @@ function getPinnedItems(compositeItems: AsideHeaderItem[]) {
     return pinnedItems;
 }
 
-export function getItemsMinHeight(compositeItems: AsideHeaderItem[]) {
+function getItemsMinHeight(compositeItems: AsideHeaderItem[]) {
     const pinnedItems = getPinnedItems(compositeItems);
     const afterMoreButtonItems = compositeItems.filter(({afterMoreButton}) => afterMoreButton);
 
@@ -78,27 +78,6 @@ export function getMoreButtonItem(menuMoreTitle?: string): AsideHeaderItem {
     };
 }
 
-/**
- * Reorders items so that entries flagged with `afterMoreButton` are pushed
- * to the end. This keeps the DOM order consistent between `v1` (collapse
- * into "More") and `v2` (scrollable) modes.
- *
- * @param compositeItems items to reorder
- * @returns new array with `afterMoreButton` items moved to the end, or the
- *          same reference when no reordering is needed
- */
-export function getReorderedItems(compositeItems: AsideHeaderItem[]): AsideHeaderItem[] {
-    const afterMoreButtonItems = compositeItems.filter(({afterMoreButton}) => afterMoreButton);
-
-    if (afterMoreButtonItems.length === 0) {
-        return compositeItems;
-    }
-
-    const regularItems = compositeItems.filter(({afterMoreButton}) => !afterMoreButton);
-
-    return [...regularItems, ...afterMoreButtonItems];
-}
-
 export function makeGroupHeaderAsideItem(group: MenuGroup): AsideHeaderItem {
     return {
         id: `__gn-composite-bar__group-header__${group.id}`,
@@ -109,7 +88,7 @@ export function makeGroupHeaderAsideItem(group: MenuGroup): AsideHeaderItem {
     };
 }
 
-export function makeOverflowGroupAsideItem(
+function makeOverflowGroupAsideItem(
     group: MenuGroup,
     children: AsideHeaderItem[],
 ): AsideHeaderItem {
@@ -122,13 +101,19 @@ export function makeOverflowGroupAsideItem(
     };
 }
 
-export function getCompositeBarRowLayoutHeight(row: CompositeBarRow): number {
+function getCompositeBarRowLayoutHeight(row: CompositeBarRow): number {
     if (row.kind === 'item') {
         return getItemHeight(row.item);
     }
     return getItemHeight(makeGroupHeaderAsideItem(row.group));
 }
 
+/**
+ * Moves rows whose item has `afterMoreButton` to the end (parity with scroll vs collapse DOM order).
+ *
+ * @param rows Composite bar rows before ordering.
+ * @returns Rows with `afterMoreButton` item rows last, or the same array reference when none.
+ */
 export function getReorderedCompositeBarRows(rows: CompositeBarRow[]): CompositeBarRow[] {
     const afterMoreRows = rows.filter((r) => r.kind === 'item' && r.item.afterMoreButton);
 
@@ -141,7 +126,7 @@ export function getReorderedCompositeBarRows(rows: CompositeBarRow[]): Composite
     return [...regularRows, ...afterMoreRows];
 }
 
-export function compositeBarRowsToFlatForMinHeight(rows: CompositeBarRow[]): AsideHeaderItem[] {
+function compositeBarRowsToFlatForMinHeight(rows: CompositeBarRow[]): AsideHeaderItem[] {
     const out: AsideHeaderItem[] = [];
     for (const row of rows) {
         if (row.kind === 'item') {
@@ -249,62 +234,4 @@ export function getAutosizeCompositeBarRows(
     }
 
     return {listRows, collapseItems};
-}
-
-export function getAutosizeListItems(
-    compositeItems: AsideHeaderItem[],
-    height: number,
-    collapseItem: AsideHeaderItem,
-): {
-    listItems: AsideHeaderItem[];
-    collapseItems: AsideHeaderItem[];
-} {
-    const afterMoreButtonItems = compositeItems.filter(({afterMoreButton}) => afterMoreButton);
-    const regularItems = compositeItems.filter(({afterMoreButton}) => !afterMoreButton);
-    const listItems = [...regularItems, ...afterMoreButtonItems];
-
-    const allItemsHeight = getItemsHeight(listItems);
-    if (allItemsHeight <= height) {
-        return {listItems, collapseItems: []};
-    }
-
-    const collapseItemHeight = getItemHeight(collapseItem);
-
-    listItems.splice(regularItems.length, 0, collapseItem);
-    const collapseItems: AsideHeaderItem[] = [];
-
-    let listHeight = allItemsHeight + collapseItemHeight;
-    let index = listItems.length;
-    while (listHeight > height) {
-        if (index === 0) {
-            break;
-        }
-        index--;
-
-        const compositeItem = listItems[index];
-        if (
-            compositeItem.pinned ||
-            compositeItem.id === COLLAPSE_ITEM_ID ||
-            compositeItem.afterMoreButton
-        ) {
-            continue;
-        }
-        if (compositeItem.type === 'divider') {
-            if (index + 1 < listItems.length && listItems[index + 1]?.type === 'divider') {
-                listHeight -= getItemHeight(compositeItem);
-                listItems.splice(index, 1);
-            }
-            continue;
-        }
-        listHeight -= getItemHeight(compositeItem);
-        collapseItems.unshift(...listItems.splice(index, 1));
-    }
-    if (
-        listItems[index]?.type === 'divider' &&
-        (index === 0 || listItems[index - 1]?.type === 'divider')
-    ) {
-        listItems.splice(index, 1);
-    }
-
-    return {listItems, collapseItems};
 }
