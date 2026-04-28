@@ -7,7 +7,7 @@ $block: '.#{variables.$ns}composite-bar';
     width: 100%;
     min-height: #{variables.$item-height};
     $tree-line: #c1c3c7;
-    $tree-line-active: #e9ae56;
+    $tree-line-active: var(--g-color-base-brand);
 
     & &__root-menu-item[class] {
         background-color: transparent;
