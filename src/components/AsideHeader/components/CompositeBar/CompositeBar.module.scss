@@ -44,8 +44,6 @@ $block: '.#{variables.$ns}composite-bar';
 
     &__menu-group-nested-connector {
         position: relative;
-        top: 0;
-        bottom: 0;
         width: 16px;
         box-sizing: content-box;
         pointer-events: none;
@@ -81,7 +79,7 @@ $block: '.#{variables.$ns}composite-bar';
         flex-shrink: 0;
         min-width: 16px;
         max-width: 16px;
-        height: 40px;
+        height: #{variables.$item-height};
         stroke: #{$tree-line};
 
         &_active {
