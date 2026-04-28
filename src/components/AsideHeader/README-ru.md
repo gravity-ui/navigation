@@ -256,6 +256,8 @@ export const Aside: FC = () => {
 | `--gn-aside-header-expanded-background-color`             | Цвет фона элемента навигации в развернутом состоянии.                                             |  `--g-color-base-background`   |
 | `--gn-aside-header-divider-horizontal-color`              | Цвет всех горизонтальных разделителей.                                                            |    `--g-color-line-generic`    |
 | `--gn-aside-header-divider-vertical-color`                | Цвет вертикального разделителя между `AsideHeader` и содержимым.                                  |    `--g-color-line-generic`    |
+| `--gn-aside-header-menu-group-tree-line-color`            | Цвет линий дерева вложенных групп меню (неактивные сегменты).                                     |           `#c1c3c7`            |
+| `--gn-aside-header-menu-group-tree-line-active-color`     | Цвет линий дерева для активной ветки во вложенных группах меню.                                   |     `--g-color-base-brand`     |
 | `--gn-aside-top-panel-height`                             | Высота верхнего алерта `AsideHeader` (**только для чтения**).                                     |              0 px              |
 | `--gn-aside-header-padding-top`                           | Отступ сверху для элемента навигации. Используется при скрытии элементов логотипа и подзаголовка. |                                |
 | Элемент                                                   |                                                                                                   |                                |

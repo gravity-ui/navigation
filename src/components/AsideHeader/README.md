@@ -266,6 +266,8 @@ You can customize the inner content, make alert closeable if necessary. For read
 | `--gn-aside-header-expanded-background-color`             | Expanded navigation background color                                      |
 | `--gn-aside-header-divider-horizontal-color`              | All horizontal divider line color                                         |
 | `--gn-aside-header-divider-vertical-color`                | Vertical divider line color between `AsideHeader` and content             |
+| `--gn-aside-header-menu-group-tree-line-color`            | Tree connector lines for nested menu groups (inactive segments)           |
+| `--gn-aside-header-menu-group-tree-line-active-color`     | Tree connector lines for the active branch in nested menu groups          |
 | `--gn-top-alert-height`                                   | **Read only**.`AsideHeader` top alert height                              |
 | `--gn-aside-header-padding-top`                           | Navigation top padding. May be helpful when logo and subheader items hide |
 | Item                                                      |                                                                           |
