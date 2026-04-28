@@ -275,25 +275,10 @@ CollapseButtonWrapper.args = {
 
 const menuGroupsData: MenuGroup[] = [
     {id: 'analytics', title: 'Analytics', icon: Gear, popupTitle: 'Analytics'},
-    {id: 'settings', title: 'Settings', icon: Gear},
+    {id: 'settings', title: 'Settings', icon: Gear, popupTitle: 'Settings'},
 ];
 
-const menuItemsWithGroups: AsideHeaderProps['menuItems'] = [
-    {id: 'home', title: 'Home', icon: Gear},
-    {id: 'analytics-overview', title: 'Overview', icon: Gear, groupId: 'analytics', current: true},
-    {id: 'analytics-reports', title: 'Reports', icon: Gear, groupId: 'analytics'},
-    {
-        id: 'analytics-dashboards',
-        title: 'Dashboards',
-        icon: Gear,
-        groupId: 'analytics',
-    },
-    {id: 'general-settings', title: 'General', icon: Gear, groupId: 'settings'},
-    {id: 'user-settings', title: 'Users', icon: Gear, groupId: 'settings'},
-    {id: 'help', title: 'Help', icon: Gear},
-];
-
-/** Same items as `menuItemsWithGroups` with `category` for the All pages panel grouping. */
+/** Demo menu with `groupId`/`category` for All pages grouping; default matches `defaultMenuItems`. */
 const menuItemsWithGroupsForAllPages: AsideHeaderProps['menuItems'] = [
     {id: 'home', title: 'Home', icon: Gear, category: 'General'},
     {
@@ -335,97 +320,12 @@ const menuItemsWithGroupsForAllPages: AsideHeaderProps['menuItems'] = [
     {id: 'help', title: 'Help', icon: Gear, category: 'General'},
 ];
 
-const MenuGroupsTemplate: StoryFn = (args) => {
-    const [compact, setCompact] = React.useState(args.initialCompact ?? false);
-
-    return (
-        <PageLayout compact={compact}>
-            <PageLayoutAside
-                headerDecoration
-                logo={DEFAULT_LOGO}
-                menuItems={menuItemsWithGroups}
-                menuGroups={menuGroupsData}
-                onChangeCompact={setCompact}
-            />
-            <PageLayout.Content>
-                <div style={{padding: 16}}>Menu Groups Demo</div>
-            </PageLayout.Content>
-        </PageLayout>
-    );
-};
-
-export const MenuGroups = MenuGroupsTemplate.bind({});
-MenuGroups.args = {
-    initialCompact: false,
-};
-
-export const MenuGroupsCompact = MenuGroupsTemplate.bind({});
-MenuGroupsCompact.args = {
-    initialCompact: true,
-};
-
-const menuGroupsWithPopupTitle: MenuGroup[] = [
-    {id: 'analytics', title: 'Analytics', icon: Gear, popupTitle: 'Analytics'},
-    {id: 'settings', title: 'Settings', icon: Gear, popupTitle: 'Settings'},
-];
-
-const MenuGroupsWithPopupTitleTemplate: StoryFn = (args) => {
-    const [compact, setCompact] = React.useState(args.initialCompact ?? true);
-
-    return (
-        <PageLayout compact={compact}>
-            <PageLayoutAside
-                headerDecoration
-                logo={DEFAULT_LOGO}
-                menuItems={menuItemsWithGroups}
-                menuGroups={menuGroupsWithPopupTitle}
-                onChangeCompact={setCompact}
-            />
-            <PageLayout.Content>
-                <div style={{padding: 16}}>
-                    Hover the group icon in the compact sidebar to see the popup heading
-                    `MenuGroup.popupTitle`.
-                </div>
-            </PageLayout.Content>
-        </PageLayout>
-    );
-};
-
-export const MenuGroupsWithPopupTitle = MenuGroupsWithPopupTitleTemplate.bind({});
-MenuGroupsWithPopupTitle.args = {
-    initialCompact: true,
-};
-
-const MenuGroupsScrollbarTemplate: StoryFn = (args) => {
-    const [compact, setCompact] = React.useState(args.initialCompact ?? false);
-
-    return (
-        <PageLayout compact={compact}>
-            <PageLayoutAside
-                headerDecoration
-                logo={DEFAULT_LOGO}
-                menuItems={menuItemsWithGroups}
-                menuGroups={menuGroupsData}
-                menuOverflow="scroll"
-                onChangeCompact={setCompact}
-            />
-            <PageLayout.Content>
-                <div style={{padding: 16}}>
-                    Expanded sidebar with <code>menuOverflow=&quot;scroll&quot;</code>: groups
-                    render as nested lists with tree connectors.
-                </div>
-            </PageLayout.Content>
-        </PageLayout>
-    );
-};
-
-export const MenuGroupsScrollbar = MenuGroupsScrollbarTemplate.bind({});
-MenuGroupsScrollbar.args = {
-    initialCompact: false,
-};
-
-const AllPagesMenuGroupsTemplate: StoryFn = (args) => {
-    const [compact, setCompact] = React.useState(args.initialCompact ?? false);
+function MenuGroupsWithAllPagesDemo(props: {
+    initialCompact?: boolean;
+    menuOverflow?: AsideHeaderProps['menuOverflow'];
+    description: React.ReactNode;
+}) {
+    const [compact, setCompact] = React.useState(props.initialCompact ?? false);
     const [menuItems, setMenuItems] = React.useState<AsideHeaderProps['menuItems']>(
         menuItemsWithGroupsForAllPages,
     );
@@ -444,20 +344,70 @@ const AllPagesMenuGroupsTemplate: StoryFn = (args) => {
                 onMenuGroupsChanged={setMenuGroupsState}
                 editMenuProps={{enableSorting: true}}
                 onChangeCompact={setCompact}
+                {...(props.menuOverflow === undefined ? {} : {menuOverflow: props.menuOverflow})}
             />
             <PageLayout.Content>
-                <div style={{padding: 16}}>
-                    Open <strong>All pages</strong>, then edit mode. Pin items or{' '}
-                    <strong>group headers</strong> to toggle visibility (pass{' '}
-                    <code>onMenuGroupsChanged</code>).
-                </div>
+                <div style={{padding: 16}}>{props.description}</div>
             </PageLayout.Content>
         </PageLayout>
     );
+}
+
+/** Default overflow (collapse / &quot;More&quot;). Includes All pages + group <code>popupTitle</code> in data. */
+const MenuGroupsTemplate: StoryFn = (args) => (
+    <MenuGroupsWithAllPagesDemo
+        initialCompact={args.initialCompact}
+        description={
+            <>
+                Default <code>menuOverflow</code> (overflow items move under &quot;More&quot;).
+                Groups use <code>MenuGroup.popupTitle</code> as the compact popup heading. Open{' '}
+                <strong>All pages</strong>, then edit mode: pin items or group headers (with{' '}
+                <code>onMenuGroupsChanged</code>).
+            </>
+        }
+    />
+);
+
+export const MenuGroups = MenuGroupsTemplate.bind({});
+MenuGroups.args = {
+    initialCompact: false,
 };
 
-export const AllPagesMenuGroups = AllPagesMenuGroupsTemplate.bind({});
-AllPagesMenuGroups.args = {
+const MenuGroupsCompactTemplate: StoryFn = (args) => (
+    <MenuGroupsWithAllPagesDemo
+        initialCompact={args.initialCompact}
+        description={
+            <>
+                Compact sidebar: same overflow behavior as <code>MenuGroups</code> when the rail is
+                narrow. Hover a group icon to see <code>MenuGroup.popupTitle</code>.{' '}
+                <strong>All pages</strong> editing matches the non-compact story.
+            </>
+        }
+    />
+);
+
+export const MenuGroupsCompact = MenuGroupsCompactTemplate.bind({});
+MenuGroupsCompact.args = {
+    initialCompact: true,
+};
+
+const MenuGroupsScrollbarTemplate: StoryFn = (args) => (
+    <MenuGroupsWithAllPagesDemo
+        menuOverflow="scroll"
+        initialCompact={args.initialCompact}
+        description={
+            <>
+                Non-compact: <code>menuOverflow=&quot;scroll&quot;</code> — groups render as nested
+                lists with tree connectors (in compact, behavior matches the collapse stories). Open{' '}
+                <strong>All pages</strong> for the same edit flow; <code>popupTitle</code> applies
+                when you switch to compact via the header control.
+            </>
+        }
+    />
+);
+
+export const MenuGroupsScrollbar = MenuGroupsScrollbarTemplate.bind({});
+MenuGroupsScrollbar.args = {
     initialCompact: false,
 };
 
