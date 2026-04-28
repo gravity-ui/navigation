@@ -187,7 +187,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                             menuPopupTitle={row.group.popupTitle}
                             className={b('menu-group-header')}
                             onMouseLeave={onMouseLeave}
-                            onItemClick={onItemClickByIndex(undefined)}
+                            onItemClick={onSyntheticHeaderItemClick}
                         />
                     );
                 }
