@@ -4,112 +4,35 @@ import {test} from '~playwright/core';
 
 import {AsideHeaderStories} from './helpersPlaywright';
 
+/** Order matches exports in `@stories__/AsideHeader.stories.tsx`. */
+const ASIDE_HEADER_STORY_KEYS = [
+    'Showcase',
+    'Compact',
+    'CustomTheme',
+    'CustomBackground',
+    'AdvancedUsage',
+    'HeaderAlert',
+    'HeaderAlertCentered',
+    'HeaderAlertCustom',
+    'Fallback',
+    'LineClamp',
+    'CollapseButtonWrapper',
+    'MenuGroups',
+    'MenuGroupsCompact',
+    'MenuGroupsScrollbar',
+    'MenuScrollbar',
+] as const satisfies ReadonlyArray<keyof typeof AsideHeaderStories>;
+
 test.describe('AsideHeader', () => {
-    test('render story: <AdvancedUsage>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.AdvancedUsage />, undefined, {
-            width: 1200,
-            height: 720,
+    for (const storyKey of ASIDE_HEADER_STORY_KEYS) {
+        test(`render story: <${storyKey}>`, async ({mount, expectScreenshot}) => {
+            const Story = AsideHeaderStories[storyKey];
+            await mount(<Story />, undefined, {
+                width: 1200,
+                height: 720,
+            });
+
+            await expectScreenshot();
         });
-
-        await expectScreenshot();
-    });
-
-    test('render story: <Compact>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.Compact />, undefined, {
-            width: 1200,
-            height: 720,
-        });
-
-        await expectScreenshot();
-    });
-
-    test('render story: <CustomBackground>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.CustomBackground />, undefined, {
-            width: 1200,
-            height: 720,
-        });
-
-        await expectScreenshot();
-    });
-
-    test('render story: <CustomTheme>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.CustomTheme />, undefined, {
-            width: 1200,
-            height: 720,
-        });
-
-        await expectScreenshot();
-    });
-
-    test('render story: <Fallback>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.Fallback />, undefined, {
-            width: 1200,
-            height: 720,
-        });
-
-        await expectScreenshot();
-    });
-
-    test('render story: <HeaderAlert>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.HeaderAlert />, undefined, {
-            width: 1200,
-            height: 720,
-        });
-
-        await expectScreenshot();
-    });
-
-    test('render story: <HeaderAlertCentered>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.HeaderAlertCentered />, undefined, {
-            width: 1200,
-            height: 720,
-        });
-
-        await expectScreenshot();
-    });
-
-    test('render story: <HeaderAlertCustom>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.HeaderAlertCustom />, undefined, {
-            width: 1200,
-            height: 720,
-        });
-
-        await expectScreenshot();
-    });
-
-    test('render story: <Showcase>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.Showcase />, undefined, {
-            width: 1200,
-            height: 720,
-        });
-
-        await expectScreenshot();
-    });
-
-    test('render story: <LineClamp>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.LineClamp />, undefined, {
-            width: 1200,
-            height: 720,
-        });
-
-        await expectScreenshot();
-    });
-
-    test('render story: <MenuGroups>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.MenuGroups />, undefined, {
-            width: 1200,
-            height: 720,
-        });
-
-        await expectScreenshot();
-    });
-
-    test('render story: <MenuGroupsCompact>', async ({mount, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.MenuGroupsCompact />, undefined, {
-            width: 1200,
-            height: 720,
-        });
-
-        await expectScreenshot();
-    });
+    }
 });
