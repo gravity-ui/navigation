@@ -1,13 +1,12 @@
 import type {MenuGroup} from '../../../types';
 import {AsideHeaderItem} from '../../types';
+import {COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX} from '../CompositeBar/constants';
 import {
     type CompositeBarRow,
     buildCompositeBarRows,
     flattenCompositeBarRows,
 } from '../CompositeBar/grouping';
 import {makeGroupHeaderAsideItem} from '../CompositeBar/utils';
-
-const COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX = '__gn-composite-bar__group-header__' as const;
 
 /** Options passed to {@link buildCompositeBarRows} for All pages panel (edit-mode rows). */
 export const ALL_PAGES_PANEL_ROW_BUILD_OPTIONS = {
@@ -78,6 +77,12 @@ export function reorderMenuItemsByCompositeBarRows(
     );
     const reordered = [...rows];
     const [moved] = reordered.splice(oldIndex, 1);
-    reordered.splice(newIndex, 0, moved!);
+
+    if (moved === undefined) {
+        return flattenCompositeBarRows(rows);
+    }
+
+    reordered.splice(newIndex, 0, moved);
+
     return flattenCompositeBarRows(reordered);
 }
