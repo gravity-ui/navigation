@@ -353,16 +353,15 @@ function MenuGroupsWithAllPagesDemo(props: {
     );
 }
 
-/** Default overflow (collapse / &quot;More&quot;). Includes All pages + group <code>popupTitle</code> in data. */
+/** Default overflow (collapse / &quot;More&quot;). Includes All pages + group popupTitle in data. */
 const MenuGroupsTemplate: StoryFn = (args) => (
     <MenuGroupsWithAllPagesDemo
         initialCompact={args.initialCompact}
         description={
             <>
-                Default <code>menuOverflow</code> (overflow items move under &quot;More&quot;).
-                Groups use <code>MenuGroup.popupTitle</code> as the compact popup heading. Open{' '}
-                <strong>All pages</strong>, then edit mode: pin items or group headers (with{' '}
-                <code>onMenuGroupsChanged</code>).
+                Default menuOverflow (overflow items move under &quot;More&quot;). Groups use
+                MenuGroup.popupTitle as the compact popup heading. Open <strong>All pages</strong>,
+                then edit mode: pin items or group headers (with onMenuGroupsChanged).
             </>
         }
     />
@@ -378,9 +377,9 @@ const MenuGroupsCompactTemplate: StoryFn = (args) => (
         initialCompact={args.initialCompact}
         description={
             <>
-                Compact sidebar: same overflow behavior as <code>MenuGroups</code> when the rail is
-                narrow. Hover a group icon to see <code>MenuGroup.popupTitle</code>.{' '}
-                <strong>All pages</strong> editing matches the non-compact story.
+                Compact sidebar: same overflow behavior as MenuGroups when the rail is narrow. Hover
+                a group icon to see MenuGroup.popupTitle. <strong>All pages</strong> editing matches
+                the non-compact story.
             </>
         }
     />
@@ -397,10 +396,10 @@ const MenuGroupsScrollbarTemplate: StoryFn = (args) => (
         initialCompact={args.initialCompact}
         description={
             <>
-                Non-compact: <code>menuOverflow=&quot;scroll&quot;</code> — groups render as nested
-                lists with tree connectors (in compact, behavior matches the collapse stories). Open{' '}
-                <strong>All pages</strong> for the same edit flow; <code>popupTitle</code> applies
-                when you switch to compact via the header control.
+                Non-compact: menuOverflow=&quot;scroll&quot; — groups render as nested lists with
+                tree connectors (in compact, behavior matches the collapse stories). Open{' '}
+                <strong>All pages</strong> for the same edit flow; popupTitle applies when you
+                switch to compact via the header control.
             </>
         }
     />
