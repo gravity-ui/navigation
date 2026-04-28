@@ -4,35 +4,83 @@ import {test} from '~playwright/core';
 
 import {AsideHeaderStories} from './helpersPlaywright';
 
-/** Order matches exports in `@stories__/AsideHeader.stories.tsx`. */
-const ASIDE_HEADER_STORY_KEYS = [
-    'Showcase',
-    'Compact',
-    'CustomTheme',
-    'CustomBackground',
-    'AdvancedUsage',
-    'HeaderAlert',
-    'HeaderAlertCentered',
-    'HeaderAlertCustom',
-    'Fallback',
-    'LineClamp',
-    'CollapseButtonWrapper',
-    'MenuGroups',
-    'MenuGroupsCompact',
-    'MenuGroupsScrollbar',
-    'MenuScrollbar',
-] as const satisfies ReadonlyArray<keyof typeof AsideHeaderStories>;
+const mountOptions = undefined;
+const viewport = {width: 1200, height: 720};
 
 test.describe('AsideHeader', () => {
-    for (const storyKey of ASIDE_HEADER_STORY_KEYS) {
-        test(`render story: <${storyKey}>`, async ({mount, expectScreenshot}) => {
-            const Story = AsideHeaderStories[storyKey];
-            await mount(<Story />, undefined, {
-                width: 1200,
-                height: 720,
-            });
+    /** Order matches exports in `@stories__/AsideHeader.stories.tsx`. Explicit components — dynamic `Stories[key]` breaks Playwright CT. */
+    test('render story: <Showcase>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.Showcase />, mountOptions, viewport);
+        await expectScreenshot();
+    });
 
-            await expectScreenshot();
-        });
-    }
+    test('render story: <Compact>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.Compact />, mountOptions, viewport);
+        await expectScreenshot();
+    });
+
+    test('render story: <CustomTheme>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.CustomTheme />, mountOptions, viewport);
+        await expectScreenshot();
+    });
+
+    test('render story: <CustomBackground>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.CustomBackground />, mountOptions, viewport);
+        await expectScreenshot();
+    });
+
+    test('render story: <AdvancedUsage>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.AdvancedUsage />, mountOptions, viewport);
+        await expectScreenshot();
+    });
+
+    test('render story: <HeaderAlert>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.HeaderAlert />, mountOptions, viewport);
+        await expectScreenshot();
+    });
+
+    test('render story: <HeaderAlertCentered>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.HeaderAlertCentered />, mountOptions, viewport);
+        await expectScreenshot();
+    });
+
+    test('render story: <HeaderAlertCustom>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.HeaderAlertCustom />, mountOptions, viewport);
+        await expectScreenshot();
+    });
+
+    test('render story: <Fallback>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.Fallback />, mountOptions, viewport);
+        await expectScreenshot();
+    });
+
+    test('render story: <LineClamp>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.LineClamp />, mountOptions, viewport);
+        await expectScreenshot();
+    });
+
+    test('render story: <CollapseButtonWrapper>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.CollapseButtonWrapper />, mountOptions, viewport);
+        await expectScreenshot();
+    });
+
+    test('render story: <MenuGroups>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.MenuGroups />, mountOptions, viewport);
+        await expectScreenshot();
+    });
+
+    test('render story: <MenuGroupsCompact>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.MenuGroupsCompact />, mountOptions, viewport);
+        await expectScreenshot();
+    });
+
+    test('render story: <MenuGroupsScrollbar>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.MenuGroupsScrollbar />, mountOptions, viewport);
+        await expectScreenshot();
+    });
+
+    test('render story: <MenuScrollbar>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.MenuScrollbar />, mountOptions, viewport);
+        await expectScreenshot();
+    });
 });
