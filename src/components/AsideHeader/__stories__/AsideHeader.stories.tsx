@@ -275,7 +275,7 @@ CollapseButtonWrapper.args = {
 
 const menuGroupsData: MenuGroup[] = [
     {id: 'analytics', title: 'Analytics', icon: Gear, popupTitle: 'Analytics'},
-    {id: 'settings', title: 'Settings', icon: Gear, popupTitle: 'Settings'},
+    {id: 'settings', title: 'Settings', icon: Gear},
 ];
 
 /** Demo menu with `groupId`/`category` for All pages grouping; default matches `defaultMenuItems`. */
