@@ -5,13 +5,35 @@ export type CompositeBarRow =
     | {kind: 'item'; item: AsideHeaderItem}
     | {kind: 'group'; group: MenuGroup; items: AsideHeaderItem[]};
 
+export function flattenCompositeBarRows(rows: CompositeBarRow[]): AsideHeaderItem[] {
+    const out: AsideHeaderItem[] = [];
+    for (const row of rows) {
+        if (row.kind === 'item') {
+            out.push(row.item);
+        } else {
+            out.push(...row.items);
+        }
+    }
+    return out;
+}
+
+type BuildCompositeBarRowsOptions = {
+    /**
+     * When true, items with `hidden: true` are still included (e.g. All pages edit list).
+     * @default false — hidden items are omitted from CompositeBar like today.
+     */
+    includeHidden?: boolean;
+};
+
 /**
  * Builds ordered rows for CompositeBar: flat items and grouped sections.
- * Hidden items are omitted; group rows are placed at the index of the first visible child.
+ * By default hidden items are omitted; pass `includeHidden` to keep them (All pages edit).
+ * Group rows are placed at the index of the first visible (or first included) child.
  */
 export function buildCompositeBarRows(
     items: AsideHeaderItem[],
     groups: MenuGroup[] | undefined,
+    options?: BuildCompositeBarRowsOptions,
 ): CompositeBarRow[] {
     if (!groups || groups.length === 0) {
         return items.map((item) => ({kind: 'item' as const, item}));
@@ -34,7 +56,7 @@ export function buildCompositeBarRows(
     for (let i = 0; i < items.length; i++) {
         const item = items[i];
 
-        if (item.hidden) {
+        if (!options?.includeHidden && item.hidden) {
             continue;
         }
 

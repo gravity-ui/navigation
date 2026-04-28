@@ -6,8 +6,16 @@ import {Button, Flex, Icon, List, ListItemData, ListProps, Text, Tooltip} from '
 import {createBlock} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
 import {AsideHeaderItem} from '../../types';
+import {buildCompositeBarRows} from '../CompositeBar/grouping';
 
 import {AllPagesListItem} from './AllPagesListItem';
+import {
+    getAllPagesEditModeFlatItems,
+    isCompositeBarGroupHeaderItem,
+    reorderMenuItemsByCompositeBarRows,
+    rowsToAllPagesDisplayItems,
+} from './allPagesEditDisplay';
+import {isAllPagesSortableItem, reorderAllPagesSortableItems} from './allPagesSortable';
 import {ALL_PAGES_ID} from './constants';
 import i18n from './i18n';
 import {useGroupedMenuItems} from './useGroupedMenuItems';
@@ -24,7 +32,7 @@ interface AllPagesPanelProps {
 
 export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     const {startEditIcon, onEditModeChanged, className} = props;
-    const {menuItems, defaultMenuItems, onMenuItemsChanged, editMenuProps} =
+    const {menuItems, defaultMenuItems, onMenuItemsChanged, editMenuProps, menuGroups} =
         useAsideHeaderInnerContext();
 
     const menuItemsRef = useRef(menuItems);
@@ -38,7 +46,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         setIsEditMode((prev) => !prev);
     }, []);
 
-    const groupedItems = useGroupedMenuItems(menuItems);
+    const groupedItems = useGroupedMenuItems(menuItems, isEditMode, menuGroups);
 
     useEffect(() => {
         onEditModeChanged?.(isEditMode);
@@ -59,6 +67,9 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     const togglePageVisibility = useCallback(
         (item: AsideHeaderItem) => {
             if (!onMenuItemsChanged) {
+                return;
+            }
+            if (isCompositeBarGroupHeaderItem(item)) {
                 return;
             }
             const changedItem: AsideHeaderItem = {
@@ -124,25 +135,48 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
 
     const changeItemsOrder = useCallback(
         ({oldIndex, newIndex}: {oldIndex: number; newIndex: number}) => {
-            const newItems = menuItemsRef.current.filter(({id}) => id !== ALL_PAGES_ID);
+            const withoutAllPages = menuItemsRef.current.filter(
+                ({id, type}) => id !== ALL_PAGES_ID && type !== 'divider',
+            );
 
-            const element = newItems.splice(oldIndex, 1)[0];
-            newItems.splice(newIndex, 0, element);
+            let element: AsideHeaderItem | undefined;
+            let reordered: AsideHeaderItem[];
 
-            onMenuItemsChanged?.(newItems.filter(({type}) => type !== 'divider'));
+            if (menuGroups?.length) {
+                const rows = buildCompositeBarRows(withoutAllPages, menuGroups, {
+                    includeHidden: true,
+                });
+                const display = rowsToAllPagesDisplayItems(rows);
+                element = display[oldIndex];
+                reordered = reorderMenuItemsByCompositeBarRows(
+                    withoutAllPages,
+                    menuGroups,
+                    oldIndex,
+                    newIndex,
+                );
+            } else {
+                const sortableBefore = withoutAllPages.filter(isAllPagesSortableItem);
+                element = sortableBefore[oldIndex];
+                reordered = reorderAllPagesSortableItems(withoutAllPages, oldIndex, newIndex);
+            }
+
+            onMenuItemsChanged?.(reordered);
 
             setDraggingItemTitle(null);
-            editMenuProps?.onChangeItemsOrder?.(element, oldIndex, newIndex);
+            if (element) {
+                editMenuProps?.onChangeItemsOrder?.(element, oldIndex, newIndex);
+            }
         },
-        [onMenuItemsChanged, editMenuProps],
+        [onMenuItemsChanged, editMenuProps, menuGroups],
     );
 
     const sortableItems = useMemo(() => {
-        return menuItems.filter(
-            ({id, afterMoreButton, type}) =>
-                id !== ALL_PAGES_ID && !afterMoreButton && type !== 'divider',
-        );
-    }, [menuItems]);
+        const without = menuItems.filter(({id, type}) => id !== ALL_PAGES_ID && type !== 'divider');
+        if (menuGroups?.length) {
+            return getAllPagesEditModeFlatItems(without, menuGroups);
+        }
+        return without.filter(isAllPagesSortableItem);
+    }, [menuItems, menuGroups]);
 
     return (
         <Flex className={b(null, className)} gap="5" direction="column">

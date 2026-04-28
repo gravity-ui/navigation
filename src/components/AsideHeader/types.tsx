@@ -108,6 +108,9 @@ export enum InnerPanels {
     AllPages = 'all-pages',
 }
 
+/** Menu item id for the All pages row (same value as {@link InnerPanels.AllPages}). */
+export const ALL_PAGES_ID = InnerPanels.AllPages;
+
 export interface AsideHeaderItem extends MenuItem {
     /**
      * @internal CompositeBar: group children rendered from the "More" overflow popover.
