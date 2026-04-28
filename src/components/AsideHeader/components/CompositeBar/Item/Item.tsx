@@ -204,8 +204,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                         />
                     </div>
                 ) : (
-                    Boolean(resolvedMenuPopupItems?.length) &&
-                    (collapsedItem || !inlineGroupHeader) && (
+                    Boolean(resolvedMenuPopupItems?.length) && (
                         <div className={b('chevron')}>
                             <Icon
                                 data={ChevronRight}
