@@ -18,18 +18,23 @@ export const useGroupedMenuItems = (
     asideHeaderItems: AsideHeaderItem[],
     editMode?: boolean,
     menuGroups?: MenuGroup[],
+    onMenuGroupsChanged?: (menuGroups: MenuGroup[]) => void,
 ) => {
     const allPagesMenuItems = useMemo(() => {
         const base = asideHeaderItems.filter(
             ({id, type}) => type !== 'divider' && id !== ALL_PAGES_ID,
         );
 
+        const groupHeaderPins = Boolean(onMenuGroupsChanged);
+
         let flatForGrouping: AsideHeaderItem[];
 
         if (!editMode) {
             flatForGrouping = base;
         } else if (menuGroups?.length) {
-            flatForGrouping = getAllPagesEditModeFlatItems(base, menuGroups);
+            flatForGrouping = getAllPagesEditModeFlatItems(base, menuGroups, {
+                enableGroupHeaderPins: groupHeaderPins,
+            });
         } else {
             flatForGrouping = base.filter((item) => !item.groupId);
         }
@@ -56,7 +61,7 @@ export const useGroupedMenuItems = (
             {} as {[key: string]: AsideHeaderItem[]},
         );
         return groupedItems;
-    }, [asideHeaderItems, editMode, menuGroups]);
+    }, [asideHeaderItems, editMode, menuGroups, onMenuGroupsChanged]);
 
     return allPagesMenuItems;
 };

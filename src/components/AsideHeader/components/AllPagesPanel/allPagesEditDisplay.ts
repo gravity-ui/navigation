@@ -7,13 +7,30 @@ import {
 } from '../CompositeBar/grouping';
 import {makeGroupHeaderAsideItem} from '../CompositeBar/utils';
 
-const COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX = '__gn-composite-bar__group-header__' as const;
+export const COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX = '__gn-composite-bar__group-header__' as const;
+
+/** Options passed to {@link buildCompositeBarRows} for All pages panel (edit-mode rows). */
+export const ALL_PAGES_PANEL_ROW_BUILD_OPTIONS = {
+    includeHidden: true,
+    includeHiddenGroups: true,
+} as const;
 
 export function isCompositeBarGroupHeaderItem(item: AsideHeaderItem): boolean {
     return item.id.startsWith(COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX);
 }
 
-export function rowsToAllPagesDisplayItems(rows: CompositeBarRow[]): AsideHeaderItem[] {
+export function getCompositeBarHeaderGroupId(itemId: string): string | undefined {
+    if (!itemId.startsWith(COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX)) {
+        return undefined;
+    }
+    return itemId.slice(COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX.length);
+}
+
+export function rowsToAllPagesDisplayItems(
+    rows: CompositeBarRow[],
+    options?: {enableGroupHeaderPins?: boolean},
+): AsideHeaderItem[] {
+    const showPins = Boolean(options?.enableGroupHeaderPins);
     return rows.map((row) => {
         if (row.kind === 'item') {
             return row.item;
@@ -23,7 +40,8 @@ export function rowsToAllPagesDisplayItems(rows: CompositeBarRow[]): AsideHeader
         return {
             ...header,
             category: firstCategory ?? row.group.title,
-            preventUserRemoving: true,
+            hidden: Boolean(row.group.hidden),
+            preventUserRemoving: !showPins,
         };
     });
 }
@@ -34,12 +52,17 @@ export function rowsToAllPagesDisplayItems(rows: CompositeBarRow[]): AsideHeader
 export function getAllPagesEditModeFlatItems(
     asideHeaderItems: AsideHeaderItem[],
     menuGroups: MenuGroup[] | undefined,
+    options?: {enableGroupHeaderPins?: boolean},
 ): AsideHeaderItem[] {
     if (!menuGroups?.length) {
         return asideHeaderItems.filter((item) => !item.groupId);
     }
-    const rows = buildCompositeBarRows(asideHeaderItems, menuGroups, {includeHidden: true});
-    return rowsToAllPagesDisplayItems(rows);
+    const rows = buildCompositeBarRows(
+        asideHeaderItems,
+        menuGroups,
+        ALL_PAGES_PANEL_ROW_BUILD_OPTIONS,
+    );
+    return rowsToAllPagesDisplayItems(rows, options);
 }
 
 export function reorderMenuItemsByCompositeBarRows(
@@ -48,9 +71,11 @@ export function reorderMenuItemsByCompositeBarRows(
     oldIndex: number,
     newIndex: number,
 ): AsideHeaderItem[] {
-    const rows = buildCompositeBarRows(withoutAllPagesNoDividers, menuGroups, {
-        includeHidden: true,
-    });
+    const rows = buildCompositeBarRows(
+        withoutAllPagesNoDividers,
+        menuGroups,
+        ALL_PAGES_PANEL_ROW_BUILD_OPTIONS,
+    );
     const reordered = [...rows];
     const [moved] = reordered.splice(oldIndex, 1);
     reordered.splice(newIndex, 0, moved!);

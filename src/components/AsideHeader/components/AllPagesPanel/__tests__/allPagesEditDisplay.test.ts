@@ -4,6 +4,7 @@ import type {MenuGroup} from '../../../../types';
 import type {AsideHeaderItem} from '../../../types';
 import {buildCompositeBarRows} from '../../CompositeBar/grouping';
 import {
+    ALL_PAGES_PANEL_ROW_BUILD_OPTIONS,
     getAllPagesEditModeFlatItems,
     isCompositeBarGroupHeaderItem,
     rowsToAllPagesDisplayItems,
@@ -39,6 +40,15 @@ describe('allPagesEditDisplay', () => {
         ]);
     });
 
+    it('getAllPagesEditModeFlatItems keeps MenuGroup.hidden groups as header rows', () => {
+        const mixed: MenuGroup[] = [
+            {id: 'analytics', title: 'Analytics', icon: Gear, hidden: true},
+            {id: 'settings', title: 'Settings', icon: Gear},
+        ];
+        const flat = getAllPagesEditModeFlatItems(items, mixed);
+        expect(flat.some((r) => r.id.includes('analytics'))).toBe(true);
+    });
+
     it('isCompositeBarGroupHeaderItem detects synthetic header ids', () => {
         expect(
             isCompositeBarGroupHeaderItem({
@@ -48,12 +58,20 @@ describe('allPagesEditDisplay', () => {
         ).toBe(true);
     });
 
-    it('rowsToAllPagesDisplayItems sets preventUserRemoving on headers', () => {
-        const rows = buildCompositeBarRows(items, groups);
+    it('rowsToAllPagesDisplayItems sets preventUserRemoving when group pins disabled', () => {
+        const rows = buildCompositeBarRows(items, groups, ALL_PAGES_PANEL_ROW_BUILD_OPTIONS);
         const display = rowsToAllPagesDisplayItems(rows);
         expect(
             display.find((i) => i.id.startsWith('__gn-composite-bar__group-header__'))
                 ?.preventUserRemoving,
         ).toBe(true);
+    });
+
+    it('rowsToAllPagesDisplayItems maps MenuGroup.hidden to item.hidden and enables pins', () => {
+        const rows = buildCompositeBarRows(items, groups, ALL_PAGES_PANEL_ROW_BUILD_OPTIONS);
+        const display = rowsToAllPagesDisplayItems(rows, {enableGroupHeaderPins: true});
+        const header = display.find((i) => i.id.startsWith('__gn-composite-bar__group-header__'));
+        expect(header?.preventUserRemoving).toBe(false);
+        expect(header?.hidden).toBe(false);
     });
 });

@@ -23,6 +23,11 @@ type BuildCompositeBarRowsOptions = {
      * @default false — hidden items are omitted from CompositeBar like today.
      */
     includeHidden?: boolean;
+    /**
+     * When true, `MenuGroup` entries with `hidden: true` still form a group row (All pages edit).
+     * @default false — hidden groups are omitted; their items are not rendered in CompositeBar.
+     */
+    includeHiddenGroups?: boolean;
 };
 
 /**
@@ -39,9 +44,30 @@ export function buildCompositeBarRows(
         return items.map((item) => ({kind: 'item' as const, item}));
     }
 
-    const visibleGroups = groups.filter((g) => !g.hidden);
+    /** Full group metadata (needed to omit children when `MenuGroup.hidden` is true). */
+    const allGroupDefsById = new Map<string, MenuGroup>(
+        groups.map((groupDefinition) => [groupDefinition.id, groupDefinition]),
+    );
+
+    const visibleGroups = options?.includeHiddenGroups ? groups : groups.filter((g) => !g.hidden);
+
+    /** No visible group definitions — only render rows that still belong on the bar */
     if (visibleGroups.length === 0) {
-        return items.map((item) => ({kind: 'item' as const, item}));
+        return items
+            .filter((item) => {
+                if (!options?.includeHidden && item.hidden) {
+                    return false;
+                }
+                if (
+                    item.groupId &&
+                    !options?.includeHiddenGroups &&
+                    allGroupDefsById.get(item.groupId)?.hidden
+                ) {
+                    return false;
+                }
+                return true;
+            })
+            .map((item) => ({kind: 'item' as const, item}));
     }
 
     const groupMap = new Map<string, MenuGroup>();
@@ -72,6 +98,12 @@ export function buildCompositeBarRows(
             }
 
             groupChildren.push(item);
+        } else if (
+            groupId &&
+            !options?.includeHiddenGroups &&
+            allGroupDefsById.get(groupId)?.hidden
+        ) {
+            continue;
         } else {
             ungroupedItems.push({index: i, row: {kind: 'item' as const, item}});
         }

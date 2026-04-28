@@ -23,6 +23,11 @@ interface EditMenuProps {
     onResetSettingsToDefault?: () => void;
     enableSorting?: boolean;
     onChangeItemsOrder?: (changedItem: AsideHeaderItem, oldIndex: number, newIndex: number) => void;
+    /**
+     * Fired when visibility of a menu group is toggled from the All pages panel (pin on group header).
+     * Use with `onMenuGroupsChanged` / controlled `menuGroups`.
+     */
+    onToggleMenuGroup?: (changedGroup: MenuGroup) => void;
 }
 
 /**
@@ -76,6 +81,10 @@ interface AsideHeaderDefaultProps {
     subheaderItems?: AsideHeaderItem[];
     menuItems?: AsideHeaderItem[];
     menuGroups?: MenuGroup[];
+    /**
+     * Controlled update for `menuGroups` (e.g. toggling `MenuGroup.hidden` from All pages).
+     */
+    onMenuGroupsChanged?: (menuGroups: MenuGroup[]) => void;
     defaultMenuItems?: AsideHeaderItem[];
     onMenuItemsChanged?: (items: AsideHeaderItem[]) => void;
     headerDecoration?: boolean;

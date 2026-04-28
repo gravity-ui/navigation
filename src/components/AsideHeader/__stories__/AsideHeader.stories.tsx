@@ -429,6 +429,8 @@ const AllPagesMenuGroupsTemplate: StoryFn = (args) => {
     const [menuItems, setMenuItems] = React.useState<AsideHeaderProps['menuItems']>(
         menuItemsWithGroupsForAllPages,
     );
+    const [menuGroupsState, setMenuGroupsState] =
+        React.useState<AsideHeaderProps['menuGroups']>(menuGroupsData);
 
     return (
         <PageLayout compact={compact}>
@@ -438,14 +440,16 @@ const AllPagesMenuGroupsTemplate: StoryFn = (args) => {
                 menuItems={menuItems}
                 defaultMenuItems={menuItemsWithGroupsForAllPages}
                 onMenuItemsChanged={setMenuItems}
-                menuGroups={menuGroupsData}
+                menuGroups={menuGroupsState}
+                onMenuGroupsChanged={setMenuGroupsState}
                 editMenuProps={{enableSorting: true}}
                 onChangeCompact={setCompact}
             />
             <PageLayout.Content>
                 <div style={{padding: 16}}>
-                    Open <strong>All pages</strong> from the bottom of the menu. In edit mode, use
-                    the pin control to show or hide items (same as in Showcase).
+                    Open <strong>All pages</strong>, then edit mode. Pin items or{' '}
+                    <strong>group headers</strong> to toggle visibility (pass{' '}
+                    <code>onMenuGroupsChanged</code>).
                 </div>
             </PageLayout.Content>
         </PageLayout>
