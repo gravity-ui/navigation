@@ -344,7 +344,7 @@ function MenuGroupsWithAllPagesDemo(props: {
                 onMenuGroupsChanged={setMenuGroupsState}
                 editMenuProps={{enableSorting: true}}
                 onChangeCompact={setCompact}
-                {...(props.menuOverflow === undefined ? {} : {menuOverflow: props.menuOverflow})}
+                menuOverflow={props.menuOverflow}
             />
             <PageLayout.Content>
                 <div style={{padding: 16}}>{props.description}</div>
