@@ -462,6 +462,10 @@ The library uses CSS variables for theming. Set these on `.g-root` or a parent e
   --gn-aside-header-divider-horizontal-color: #e5e5e5;
   --gn-aside-header-divider-vertical-color: #e5e5e5;
 
+  /* Nested menu groups (tree connectors: vertical spine + elbow SVG stroke) */
+  --gn-aside-header-menu-group-tree-line-color: #c1c3c7;
+  --gn-aside-header-menu-group-tree-line-active-color: var(--g-color-base-brand);
+
   /* Item colors */
   --gn-aside-header-general-item-icon-color: #666;
   --gn-aside-header-item-icon-color: #333;
