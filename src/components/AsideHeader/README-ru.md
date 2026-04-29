@@ -180,7 +180,7 @@ export const Aside: FC = () => {
 | menuOverflow                 | Поведение при переполнении меню; см. [`menuOverflow`](#composite-menu-overflow-menuoverflow). **`collapse`** (по умолчанию): не поместившиеся пункты — под **«Ещё»** (**«More»**). **`scroll`**: прокручиваемый столбец. В режиме **`compact`** всегда **`collapse`**. |                                                   `'collapse' \| 'scroll'`                                                    |       `'collapse'`        |
 | collapsedMenuGroupIds        | Контролируемое состояние свёрнутости групп (`MenuGroup.id` → свёрнуто) при `menuOverflow === 'scroll'`.                                                                                                                                                                |                                                   `Record<string, boolean>`                                                   |                           |
 | defaultCollapsedMenuGroupIds | Начальное состояние свёрнутости групп, если `collapsedMenuGroupIds` не контролируется снаружи.                                                                                                                                                                         |                                                   `Record<string, boolean>`                                                   |                           |
-| editMenuProps                | Настройки редактора **Все страницы**: сортировка, `onToggleMenuGroup` (пин заголовка группы вместе с `onMenuGroupsChanged`) и др.                                                                                                                                      |                                     см. `AsideHeaderProps` / `editMenuProps` в исходниках                                     |                           |
+| editMenuProps                | Колбэки редактора **Все страницы**; см. [`editMenuProps`](#editmenuprops).                                                                                                                                                                                             |                                                               —                                                               |                           |
 | menuMoreTitle                | Дополнительный заголовок для `menuItems`, если элементы не помещаются.                                                                                                                                                                                                 |                                                           `string`                                                            |     `"Ещё"` `"More"`      |
 | onChangeCompact              | Обратный вызов, срабатывающий при изменении визуального состояния элемента навигации.                                                                                                                                                                                  |                                                 `(compact: boolean) => void;`                                                 |                           |
 | onClosePanel                 | Обратный вызов, срабатывающий при закрытии панели. Панели можно добавлять через свойство `PanelItems`.                                                                                                                                                                 |                                                         `() => void;`                                                         |                           |
@@ -211,7 +211,7 @@ export const Aside: FC = () => {
 
 При **`menuOverflow="scroll"`** и заданных **`menuGroups`** заголовки групп можно сворачивать и разворачивать внутри списка. Управляйте этим через **`collapsedMenuGroupIds`** / **`defaultCollapsedMenuGroupIds`** и **`onToggleMenuGroupCollapsed`** (ключи — `MenuGroup.id`).
 
-**`defaultMenuItems`** — базовый список для сброса правок в режиме **Все страницы**. **`editMenuProps`** — параметры редактора **Все страницы** (сортировка, пины, **`onToggleMenuGroup`** у заголовка группы вместе с **`onMenuGroupsChanged`**).
+**`defaultMenuItems`** — базовый список для сброса правок в режиме **Все страницы**. Сортировку, пины, переключение видимости групп и сброс задавайте через **[`editMenuProps`](#editmenuprops)** ниже.
 
 В компактном режиме группы сворачиваются до одной строки-якоря с иконкой (`MenuGroup.icon`); дочерние пункты группы открываются во всплывающем окне, заголовок которого берётся из `MenuGroup.popupTitle`.
 Инлайн-сворачивание и разворачивание (**`collapsedMenuGroupIds`** / **`onToggleMenuGroupCollapsed`**) здесь не применяется — только при раскладке **`menuOverflow="scroll"`**.
@@ -227,6 +227,19 @@ export const Aside: FC = () => {
 | `icon`       | Опциональные данные для иконки заголовка группы ([`Icon`](https://github.com/gravity-ui/uikit/tree/main/src/components/Icon) из UIKit).                                                                                      |
 | `hidden`     | Если `true`, группа скрыта в основной навигации, пункты группы там не показываются. В режиме **Все страницы** строка группы может отображаться для управления видимостью, если переданы колбэки вроде `onMenuGroupsChanged`. |
 | `popupTitle` | Опциональный заголовок **только** для компактного всплывающего списка дочерних пунктов группы. Не подменяет `title` у инлайн-заголовка группы и в остальных местах.                                                          |
+
+### `editMenuProps`
+
+Необязательные параметры панели **Все страницы** (перетаскивание, пины, сброс). Колбэк **`onToggleMenuGroup`** используйте вместе с корневым **`onMenuGroupsChanged`** и контролируемым **`menuGroups`** при смене видимости группы пином на заголовке.
+
+| Имя                        | Описание                                                                                                                                        |
+| :------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `enableSorting`            | Включает изменение порядка пунктов перетаскиванием в редакторе **Все страницы**.                                                                |
+| `onChangeItemsOrder`       | `(changedItem, oldIndex, newIndex)` — после изменения порядка пользователем при включённой сортировке.                                          |
+| `onOpenEditMode`           | Вызывается при входе в режим редактирования **Все страницы**.                                                                                   |
+| `onToggleMenuItem`         | Переключение видимости пункта в **Все страницы** (пины и скрытие).                                                                              |
+| `onResetSettingsToDefault` | Сброс сохранённых настроек меню к значениям по умолчанию (из UI редактора).                                                                     |
+| `onToggleMenuGroup`        | Переключение видимости **группы** пином на заголовке в **Все страницы** — обновляйте **`menuGroups`** согласованно с **`onMenuGroupsChanged`**. |
 
 ### `AsideHeaderItem`
 
