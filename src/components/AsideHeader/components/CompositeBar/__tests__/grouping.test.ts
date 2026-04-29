@@ -1,8 +1,62 @@
 import {MenuGroup} from '../../../../types';
 import {AsideHeaderItem} from '../../../types';
-import {buildCompositeBarRows} from '../grouping';
+import {buildCompositeBarRows, flattenCompositeBarRows} from '../grouping';
+
+describe('flattenCompositeBarRows', () => {
+    it('concatenates ungrouped items followed by grouped children', () => {
+        const groups: MenuGroup[] = [{id: 'g1', title: 'G1'}];
+        const rows = buildCompositeBarRows(
+            [
+                {id: 'home', title: 'Home'},
+                {id: 'c1', title: 'C1', groupId: 'g1'},
+                {id: 'c2', title: 'C2', groupId: 'g1'},
+            ],
+            groups,
+        );
+        expect(flattenCompositeBarRows(rows).map(({id}) => id)).toEqual(['home', 'c1', 'c2']);
+    });
+});
 
 describe('buildCompositeBarRows', () => {
+    describe('hidden MenuGroup with includeHiddenGroups', () => {
+        it('still builds a group row when the group is hidden and includeHiddenGroups is true', () => {
+            const groups: MenuGroup[] = [{id: 'g1', title: 'Hidden G', hidden: true}];
+            const items: AsideHeaderItem[] = [
+                {id: 'home', title: 'Home'},
+                {id: 'c1', title: 'Child', groupId: 'g1'},
+            ];
+            const rows = buildCompositeBarRows(items, groups, {includeHiddenGroups: true});
+            expect(rows).toHaveLength(2);
+            expect(rows[1]).toEqual({
+                kind: 'group',
+                group: groups[0],
+                items: [{id: 'c1', title: 'Child', groupId: 'g1'}],
+            });
+        });
+    });
+
+    describe('hidden MenuGroup (default CompositeBar)', () => {
+        it('omits items whose groupId refers to a hidden group when other groups remain visible', () => {
+            const groups: MenuGroup[] = [
+                {id: 'g-visible', title: 'Visible'},
+                {id: 'g-hidden', title: 'Hidden', hidden: true},
+            ];
+            const items: AsideHeaderItem[] = [
+                {id: 'home', title: 'Home'},
+                {id: 'in-visible', title: 'In visible', groupId: 'g-visible'},
+                {id: 'in-hidden', title: 'In hidden', groupId: 'g-hidden'},
+            ];
+
+            const rows = buildCompositeBarRows(items, groups);
+            const ids = rows.flatMap((r) =>
+                r.kind === 'item' ? [r.item.id] : r.items.map((c) => c.id),
+            );
+
+            expect(ids).toEqual(['home', 'in-visible']);
+            expect(ids).not.toContain('in-hidden');
+        });
+    });
+
     describe('pass-through paths (no grouping applied)', () => {
         it('returns items as rows when groups is undefined', () => {
             const items: AsideHeaderItem[] = [
@@ -28,22 +82,56 @@ describe('buildCompositeBarRows', () => {
             ]);
         });
 
-        it('returns items as-is when all provided groups are hidden', () => {
+        it('when every MenuGroup is hidden, omits items with those groupIds and filters item.hidden', () => {
             const items: AsideHeaderItem[] = [
-                {id: 'a', title: 'A'},
-                {id: 'b', title: 'B', hidden: true},
+                {id: 'home', title: 'Home'},
+                {id: 'child', title: 'Child', groupId: 'g1'},
+                {id: 'orphan', title: 'Orphan', hidden: true},
             ];
             const groups: MenuGroup[] = [{id: 'g1', title: 'G1', hidden: true}];
 
-            expect(buildCompositeBarRows(items, groups)).toEqual([
-                {kind: 'item', item: items[0]},
-                {kind: 'item', item: items[1]},
-            ]);
+            expect(buildCompositeBarRows(items, groups)).toEqual([{kind: 'item', item: items[0]}]);
         });
     });
 
     describe('grouping with hidden items', () => {
         const groups: MenuGroup[] = [{id: 'g1', title: 'G1'}];
+
+        it('includes hidden group children when includeHidden is true', () => {
+            const items: AsideHeaderItem[] = [
+                {id: 'v', title: 'Visible', groupId: 'g1'},
+                {id: 'h', title: 'Hidden', groupId: 'g1', hidden: true},
+            ];
+
+            const result = buildCompositeBarRows(items, groups, {includeHidden: true});
+
+            expect(result).toHaveLength(1);
+            const row = result[0];
+            expect(row).toEqual({
+                kind: 'group',
+                group: groups[0],
+                items: [
+                    {id: 'v', title: 'Visible', groupId: 'g1'},
+                    {id: 'h', title: 'Hidden', groupId: 'g1', hidden: true},
+                ],
+            });
+        });
+
+        it('includes ungrouped hidden items when includeHidden is true', () => {
+            const items: AsideHeaderItem[] = [
+                {id: 'top', title: 'Top'},
+                {id: 'hidden-top', title: 'Hidden top', hidden: true},
+                {id: 'g-child', title: 'Child', groupId: 'g1'},
+            ];
+
+            const result = buildCompositeBarRows(items, groups, {includeHidden: true});
+            const ids = result.flatMap((r) =>
+                r.kind === 'item' ? [r.item.id] : r.items.map((c) => c.id),
+            );
+
+            expect(ids).toContain('hidden-top');
+            expect(ids).toContain('top');
+        });
 
         it('filters hidden items with a valid groupId from group children', () => {
             const items: AsideHeaderItem[] = [

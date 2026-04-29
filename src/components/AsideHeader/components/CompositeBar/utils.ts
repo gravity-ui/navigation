@@ -4,7 +4,7 @@ import {ITEM_HEIGHT, POPUP_REGULAR_ITEM_HEIGHT} from '../../../constants';
 import {MenuGroup} from '../../../types';
 import {AsideHeaderItem} from '../../types';
 
-import {COLLAPSE_ITEM_ID} from './constants';
+import {COLLAPSE_ITEM_ID, COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX} from './constants';
 import type {CompositeBarRow} from './grouping';
 
 export function getItemHeight(compositeItem: AsideHeaderItem) {
@@ -80,7 +80,7 @@ export function getMoreButtonItem(menuMoreTitle?: string): AsideHeaderItem {
 
 export function makeGroupHeaderAsideItem(group: MenuGroup): AsideHeaderItem {
     return {
-        id: `__gn-composite-bar__group-header__${group.id}`,
+        id: `${COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX}${group.id}`,
         title: group.title,
         icon: group.icon,
         // Do not set `current` from children: only nested items should show selection;

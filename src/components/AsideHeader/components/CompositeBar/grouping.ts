@@ -5,21 +5,69 @@ export type CompositeBarRow =
     | {kind: 'item'; item: AsideHeaderItem}
     | {kind: 'group'; group: MenuGroup; items: AsideHeaderItem[]};
 
+export function flattenCompositeBarRows(rows: CompositeBarRow[]): AsideHeaderItem[] {
+    const out: AsideHeaderItem[] = [];
+    for (const row of rows) {
+        if (row.kind === 'item') {
+            out.push(row.item);
+        } else {
+            out.push(...row.items);
+        }
+    }
+    return out;
+}
+
+type BuildCompositeBarRowsOptions = {
+    /**
+     * When true, items with `hidden: true` are still included (e.g. All pages edit list).
+     * @default false — hidden items are omitted from CompositeBar like today.
+     */
+    includeHidden?: boolean;
+    /**
+     * When true, `MenuGroup` entries with `hidden: true` still form a group row (All pages edit).
+     * @default false — hidden groups are omitted; their items are not rendered in CompositeBar.
+     */
+    includeHiddenGroups?: boolean;
+};
+
 /**
  * Builds ordered rows for CompositeBar: flat items and grouped sections.
- * Hidden items are omitted; group rows are placed at the index of the first visible child.
+ * By default hidden items are omitted; pass `includeHidden` to keep them (All pages edit).
+ * Group rows are placed at the index of the first visible (or first included) child.
  */
 export function buildCompositeBarRows(
     items: AsideHeaderItem[],
     groups: MenuGroup[] | undefined,
+    options?: BuildCompositeBarRowsOptions,
 ): CompositeBarRow[] {
     if (!groups || groups.length === 0) {
         return items.map((item) => ({kind: 'item' as const, item}));
     }
 
-    const visibleGroups = groups.filter((g) => !g.hidden);
+    /** Full group metadata (needed to omit children when `MenuGroup.hidden` is true). */
+    const allGroupDefsById = new Map<string, MenuGroup>(
+        groups.map((groupDefinition) => [groupDefinition.id, groupDefinition]),
+    );
+
+    const visibleGroups = options?.includeHiddenGroups ? groups : groups.filter((g) => !g.hidden);
+
+    /** No visible group definitions — only render rows that still belong on the bar */
     if (visibleGroups.length === 0) {
-        return items.map((item) => ({kind: 'item' as const, item}));
+        return items
+            .filter((item) => {
+                if (!options?.includeHidden && item.hidden) {
+                    return false;
+                }
+                if (
+                    item.groupId &&
+                    !options?.includeHiddenGroups &&
+                    allGroupDefsById.get(item.groupId)?.hidden
+                ) {
+                    return false;
+                }
+                return true;
+            })
+            .map((item) => ({kind: 'item' as const, item}));
     }
 
     const groupMap = new Map<string, MenuGroup>();
@@ -34,7 +82,7 @@ export function buildCompositeBarRows(
     for (let i = 0; i < items.length; i++) {
         const item = items[i];
 
-        if (item.hidden) {
+        if (!options?.includeHidden && item.hidden) {
             continue;
         }
 
@@ -50,6 +98,12 @@ export function buildCompositeBarRows(
             }
 
             groupChildren.push(item);
+        } else if (
+            groupId &&
+            !options?.includeHiddenGroups &&
+            allGroupDefsById.get(groupId)?.hidden
+        ) {
+            continue;
         } else {
             ungroupedItems.push({index: i, row: {kind: 'item' as const, item}});
         }

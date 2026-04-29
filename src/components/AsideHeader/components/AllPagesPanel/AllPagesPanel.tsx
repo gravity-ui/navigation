@@ -3,11 +3,21 @@ import React, {ReactNode, useCallback, useEffect, useMemo, useRef, useState} fro
 import {Gear} from '@gravity-ui/icons';
 import {Button, Flex, Icon, List, ListItemData, ListProps, Text, Tooltip} from '@gravity-ui/uikit';
 
+import type {MenuGroup} from '../../../types';
 import {createBlock} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
 import {AsideHeaderItem} from '../../types';
+import {buildCompositeBarRows} from '../CompositeBar/grouping';
 
 import {AllPagesListItem} from './AllPagesListItem';
+import {
+    ALL_PAGES_PANEL_ROW_BUILD_OPTIONS,
+    getAllPagesEditModeFlatItems,
+    getCompositeBarHeaderGroupId,
+    reorderMenuItemsByCompositeBarRows,
+    rowsToAllPagesDisplayItems,
+} from './allPagesEditDisplay';
+import {isAllPagesSortableItem, reorderAllPagesSortableItems} from './allPagesSortable';
 import {ALL_PAGES_ID} from './constants';
 import i18n from './i18n';
 import {useGroupedMenuItems} from './useGroupedMenuItems';
@@ -24,8 +34,14 @@ interface AllPagesPanelProps {
 
 export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     const {startEditIcon, onEditModeChanged, className} = props;
-    const {menuItems, defaultMenuItems, onMenuItemsChanged, editMenuProps} =
-        useAsideHeaderInnerContext();
+    const {
+        menuItems,
+        defaultMenuItems,
+        onMenuItemsChanged,
+        editMenuProps,
+        menuGroups,
+        onMenuGroupsChanged,
+    } = useAsideHeaderInnerContext();
 
     const menuItemsRef = useRef(menuItems);
     menuItemsRef.current = menuItems;
@@ -38,7 +54,12 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         setIsEditMode((prev) => !prev);
     }, []);
 
-    const groupedItems = useGroupedMenuItems(menuItems);
+    const groupedItems = useGroupedMenuItems(
+        menuItems,
+        isEditMode,
+        menuGroups,
+        onMenuGroupsChanged,
+    );
 
     useEffect(() => {
         onEditModeChanged?.(isEditMode);
@@ -58,9 +79,27 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
 
     const togglePageVisibility = useCallback(
         (item: AsideHeaderItem) => {
+            const groupIdFromHeader = getCompositeBarHeaderGroupId(item.id);
+            if (groupIdFromHeader && menuGroups && onMenuGroupsChanged) {
+                const previousGroup = menuGroups.find((g) => g.id === groupIdFromHeader);
+                if (!previousGroup) {
+                    return;
+                }
+                const changedGroup: MenuGroup = {
+                    ...previousGroup,
+                    hidden: !previousGroup.hidden,
+                };
+                editMenuProps?.onToggleMenuGroup?.(changedGroup);
+                onMenuGroupsChanged(
+                    menuGroups.map((g) => (g.id === groupIdFromHeader ? changedGroup : g)),
+                );
+                return;
+            }
+
             if (!onMenuItemsChanged) {
                 return;
             }
+
             const changedItem: AsideHeaderItem = {
                 ...item,
                 hidden: !item.hidden,
@@ -79,7 +118,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                 }),
             );
         },
-        [onMenuItemsChanged, editMenuProps],
+        [onMenuItemsChanged, editMenuProps, menuGroups, onMenuGroupsChanged],
     );
 
     const onDragEnd = useCallback(() => {
@@ -124,25 +163,55 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
 
     const changeItemsOrder = useCallback(
         ({oldIndex, newIndex}: {oldIndex: number; newIndex: number}) => {
-            const newItems = menuItemsRef.current.filter(({id}) => id !== ALL_PAGES_ID);
+            const withoutAllPages = menuItemsRef.current.filter(
+                ({id, type}) => id !== ALL_PAGES_ID && type !== 'divider',
+            );
 
-            const element = newItems.splice(oldIndex, 1)[0];
-            newItems.splice(newIndex, 0, element);
+            let element: AsideHeaderItem | undefined;
+            let reordered: AsideHeaderItem[];
 
-            onMenuItemsChanged?.(newItems.filter(({type}) => type !== 'divider'));
+            if (menuGroups?.length) {
+                const rows = buildCompositeBarRows(
+                    withoutAllPages,
+                    menuGroups,
+                    ALL_PAGES_PANEL_ROW_BUILD_OPTIONS,
+                );
+                const display = rowsToAllPagesDisplayItems(rows, {
+                    enableGroupHeaderPins: Boolean(onMenuGroupsChanged),
+                });
+                element = display[oldIndex];
+                reordered = reorderMenuItemsByCompositeBarRows(
+                    withoutAllPages,
+                    menuGroups,
+                    oldIndex,
+                    newIndex,
+                );
+            } else {
+                const sortableBefore = withoutAllPages.filter(isAllPagesSortableItem);
+                element = sortableBefore[oldIndex];
+                reordered = reorderAllPagesSortableItems(withoutAllPages, oldIndex, newIndex);
+            }
+
+            onMenuItemsChanged?.(reordered);
 
             setDraggingItemTitle(null);
-            editMenuProps?.onChangeItemsOrder?.(element, oldIndex, newIndex);
+            if (element) {
+                editMenuProps?.onChangeItemsOrder?.(element, oldIndex, newIndex);
+            }
         },
-        [onMenuItemsChanged, editMenuProps],
+        [onMenuItemsChanged, editMenuProps, menuGroups, onMenuGroupsChanged],
     );
 
     const sortableItems = useMemo(() => {
-        return menuItems.filter(
-            ({id, afterMoreButton, type}) =>
-                id !== ALL_PAGES_ID && !afterMoreButton && type !== 'divider',
-        );
-    }, [menuItems]);
+        const without = menuItems.filter(({id, type}) => id !== ALL_PAGES_ID && type !== 'divider');
+        const pinHeaders = Boolean(onMenuGroupsChanged);
+        if (menuGroups?.length) {
+            return getAllPagesEditModeFlatItems(without, menuGroups, {
+                enableGroupHeaderPins: pinHeaders,
+            });
+        }
+        return without.filter(isAllPagesSortableItem);
+    }, [menuItems, menuGroups, onMenuGroupsChanged]);
 
     return (
         <Flex className={b(null, className)} gap="5" direction="column">

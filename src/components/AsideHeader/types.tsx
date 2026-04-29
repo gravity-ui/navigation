@@ -23,6 +23,11 @@ interface EditMenuProps {
     onResetSettingsToDefault?: () => void;
     enableSorting?: boolean;
     onChangeItemsOrder?: (changedItem: AsideHeaderItem, oldIndex: number, newIndex: number) => void;
+    /**
+     * Fired when visibility of a menu group is toggled from the All pages panel (pin on group header).
+     * Use with `onMenuGroupsChanged` / controlled `menuGroups`.
+     */
+    onToggleMenuGroup?: (changedGroup: MenuGroup) => void;
 }
 
 /**
@@ -76,6 +81,11 @@ interface AsideHeaderDefaultProps {
     subheaderItems?: AsideHeaderItem[];
     menuItems?: AsideHeaderItem[];
     menuGroups?: MenuGroup[];
+    /**
+     * Called only from **All pages** edit mode when the user toggles visibility of a **menu group** (group header pin), updating `menuGroup.hidden`.
+     * Use with controlled `menuGroups`; not emitted for programmatic `menuGroups` changes outside All pages.
+     */
+    onMenuGroupsChanged?: (menuGroups: MenuGroup[]) => void;
     defaultMenuItems?: AsideHeaderItem[];
     onMenuItemsChanged?: (items: AsideHeaderItem[]) => void;
     headerDecoration?: boolean;
@@ -107,6 +117,9 @@ export interface AsideHeaderProps
 export enum InnerPanels {
     AllPages = 'all-pages',
 }
+
+/** Menu item id for the All pages row (same value as {@link InnerPanels.AllPages}). */
+export const ALL_PAGES_ID = InnerPanels.AllPages;
 
 export interface AsideHeaderItem extends MenuItem {
     /**

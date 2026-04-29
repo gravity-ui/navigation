@@ -278,104 +278,132 @@ const menuGroupsData: MenuGroup[] = [
     {id: 'settings', title: 'Settings', icon: Gear},
 ];
 
-const menuItemsWithGroups: AsideHeaderProps['menuItems'] = [
-    {id: 'home', title: 'Home', icon: Gear},
-    {id: 'analytics-overview', title: 'Overview', icon: Gear, groupId: 'analytics', current: true},
-    {id: 'analytics-reports', title: 'Reports', icon: Gear, groupId: 'analytics'},
+/** Demo menu with `groupId`/`category` for All pages grouping; default matches `defaultMenuItems`. */
+const menuItemsWithGroupsForAllPages: AsideHeaderProps['menuItems'] = [
+    {id: 'home', title: 'Home', icon: Gear, category: 'General'},
+    {
+        id: 'analytics-overview',
+        title: 'Overview',
+        icon: Gear,
+        groupId: 'analytics',
+        category: 'Analytics',
+        current: true,
+    },
+    {
+        id: 'analytics-reports',
+        title: 'Reports',
+        icon: Gear,
+        groupId: 'analytics',
+        category: 'Analytics',
+    },
     {
         id: 'analytics-dashboards',
         title: 'Dashboards',
         icon: Gear,
         groupId: 'analytics',
+        category: 'Analytics',
     },
-    {id: 'general-settings', title: 'General', icon: Gear, groupId: 'settings'},
-    {id: 'user-settings', title: 'Users', icon: Gear, groupId: 'settings'},
-    {id: 'help', title: 'Help', icon: Gear},
+    {
+        id: 'general-settings',
+        title: 'General',
+        icon: Gear,
+        groupId: 'settings',
+        category: 'Settings',
+    },
+    {
+        id: 'user-settings',
+        title: 'Users',
+        icon: Gear,
+        groupId: 'settings',
+        category: 'Settings',
+    },
+    {id: 'help', title: 'Help', icon: Gear, category: 'General'},
 ];
 
-const MenuGroupsTemplate: StoryFn = (args) => {
-    const [compact, setCompact] = React.useState(args.initialCompact ?? false);
+function MenuGroupsWithAllPagesDemo(props: {
+    initialCompact?: boolean;
+    menuOverflow?: AsideHeaderProps['menuOverflow'];
+    description: React.ReactNode;
+}) {
+    const [compact, setCompact] = React.useState(props.initialCompact ?? false);
+    const [menuItems, setMenuItems] = React.useState<AsideHeaderProps['menuItems']>(
+        menuItemsWithGroupsForAllPages,
+    );
+    const [menuGroupsState, setMenuGroupsState] =
+        React.useState<AsideHeaderProps['menuGroups']>(menuGroupsData);
 
     return (
         <PageLayout compact={compact}>
             <PageLayoutAside
                 headerDecoration
                 logo={DEFAULT_LOGO}
-                menuItems={menuItemsWithGroups}
-                menuGroups={menuGroupsData}
+                menuItems={menuItems}
+                defaultMenuItems={menuItemsWithGroupsForAllPages}
+                onMenuItemsChanged={setMenuItems}
+                menuGroups={menuGroupsState}
+                onMenuGroupsChanged={setMenuGroupsState}
+                editMenuProps={{enableSorting: true}}
                 onChangeCompact={setCompact}
+                menuOverflow={props.menuOverflow}
             />
             <PageLayout.Content>
-                <div style={{padding: 16}}>Menu Groups Demo</div>
+                <div style={{padding: 16}}>{props.description}</div>
             </PageLayout.Content>
         </PageLayout>
     );
-};
+}
+
+/** Default overflow (collapse / &quot;More&quot;). Includes All pages + group popupTitle in data. */
+const MenuGroupsTemplate: StoryFn = (args) => (
+    <MenuGroupsWithAllPagesDemo
+        initialCompact={args.initialCompact}
+        description={
+            <>
+                Default menuOverflow (overflow items move under &quot;More&quot;). Groups use
+                MenuGroup.popupTitle as the compact popup heading. Open <strong>All pages</strong>,
+                then edit mode: pin items or group headers (with onMenuGroupsChanged).
+            </>
+        }
+    />
+);
 
 export const MenuGroups = MenuGroupsTemplate.bind({});
 MenuGroups.args = {
     initialCompact: false,
 };
 
-export const MenuGroupsCompact = MenuGroupsTemplate.bind({});
+const MenuGroupsCompactTemplate: StoryFn = (args) => (
+    <MenuGroupsWithAllPagesDemo
+        initialCompact={args.initialCompact}
+        description={
+            <>
+                Compact sidebar: same overflow behavior as MenuGroups when the rail is narrow. Hover
+                a group icon to see MenuGroup.popupTitle. <strong>All pages</strong> editing matches
+                the non-compact story.
+            </>
+        }
+    />
+);
+
+export const MenuGroupsCompact = MenuGroupsCompactTemplate.bind({});
 MenuGroupsCompact.args = {
     initialCompact: true,
 };
 
-const menuGroupsWithPopupTitle: MenuGroup[] = [
-    {id: 'analytics', title: 'Analytics', icon: Gear, popupTitle: 'Analytics'},
-    {id: 'settings', title: 'Settings', icon: Gear, popupTitle: 'Settings'},
-];
-
-const MenuGroupsWithPopupTitleTemplate: StoryFn = (args) => {
-    const [compact, setCompact] = React.useState(args.initialCompact ?? true);
-
-    return (
-        <PageLayout compact={compact}>
-            <PageLayoutAside
-                headerDecoration
-                logo={DEFAULT_LOGO}
-                menuItems={menuItemsWithGroups}
-                menuGroups={menuGroupsWithPopupTitle}
-                onChangeCompact={setCompact}
-            />
-            <PageLayout.Content>
-                <div style={{padding: 16}}>
-                    Hover the group icon in the compact sidebar to see the popup heading
-                    `MenuGroup.popupTitle`.
-                </div>
-            </PageLayout.Content>
-        </PageLayout>
-    );
-};
-
-export const MenuGroupsWithPopupTitle = MenuGroupsWithPopupTitleTemplate.bind({});
-MenuGroupsWithPopupTitle.args = {
-    initialCompact: true,
-};
-
-const MenuGroupsScrollbarTemplate: StoryFn = (args) => {
-    const [compact, setCompact] = React.useState(args.initialCompact ?? false);
-
-    return (
-        <PageLayout compact={compact}>
-            <PageLayoutAside
-                headerDecoration
-                logo={DEFAULT_LOGO}
-                menuItems={menuItemsWithGroups}
-                menuGroups={menuGroupsData}
-                menuOverflow="scroll"
-                onChangeCompact={setCompact}
-            />
-            <PageLayout.Content>
-                <div style={{padding: 16}}>
-                    Expanded sidebar with <code>menuOverflow=&quot;scroll&quot;</code>: groups
-                    render as nested lists with tree connectors.
-                </div>
-            </PageLayout.Content>
-        </PageLayout>
-    );
-};
+const MenuGroupsScrollbarTemplate: StoryFn = (args) => (
+    <MenuGroupsWithAllPagesDemo
+        menuOverflow="scroll"
+        initialCompact={args.initialCompact}
+        description={
+            <>
+                Non-compact: menuOverflow=&quot;scroll&quot; — groups render as nested lists with
+                tree connectors (in compact, behavior matches the collapse stories). Open{' '}
+                <strong>All pages</strong> for the same edit flow; popupTitle applies when you
+                switch to compact via the header control.
+            </>
+        }
+    />
+);
 
 export const MenuGroupsScrollbar = MenuGroupsScrollbarTemplate.bind({});
 MenuGroupsScrollbar.args = {
