@@ -213,6 +213,9 @@ export const Aside: FC = () => {
 
 **`defaultMenuItems`** — базовый список для сброса правок в режиме **Все страницы**. **`editMenuProps`** — параметры редактора **Все страницы** (сортировка, пины, **`onToggleMenuGroup`** у заголовка группы вместе с **`onMenuGroupsChanged`**).
 
+В компактном режиме группы сворачиваются до одной строки-якоря с иконкой (`MenuGroup.icon`); дочерние пункты группы открываются во всплывающем окне, заголовок которого берётся из `MenuGroup.popupTitle`.
+Инлайн-сворачивание и разворачивание (**`collapsedMenuGroupIds`** / **`onToggleMenuGroupCollapsed`**) здесь не применяется — только при раскладке **`menuOverflow="scroll"`**.
+
 ### `MenuGroup`
 
 Структура элементов массива `menuGroups`. Если `menuGroups` задан, элементы средней колонки привязываются к группе через [`AsideHeaderItem.groupId`](#asideheaderitem), совпадающий с `MenuGroup.id`. Заголовки групп, вложенность и режимы «Все страницы» / свёрнутый сайдбар настраиваются свойствами `AsideHeader` (см. `menuOverflow`, `onMenuGroupsChanged`, `collapsedMenuGroupIds` и др.).
