@@ -1,0 +1,220 @@
+import {RuleTester} from 'eslint';
+
+import {rule} from '../sort-i18n-message-keys';
+
+const ruleTester = new RuleTester({languageOptions: {ecmaVersion: 2022}});
+
+const I18N_FILE = '/project/src/widget/i18n.ts';
+const OTHER_FILE = '/project/src/widget/Component.tsx';
+
+const defaultOptions = [
+    {
+        memberExpressions: [{member: 'intl', property: 'createMessages'}],
+        callExpressions: ['createMessages'],
+    },
+];
+
+ruleTester.run('sort-i18n-message-keys', rule, {
+    valid: [
+        {
+            name: 'correct order ru, en, meta',
+            code: `
+intl.createMessages({
+    key: {
+        ru: '',
+        en: '',
+        meta: { id: 'x', markdown: false },
+    },
+});
+`,
+            filename: I18N_FILE,
+            options: defaultOptions,
+        },
+        {
+            name: 'other locale between en and meta',
+            code: `
+intl.createMessages({
+    key: {
+        ru: '',
+        en: '',
+        kk: '',
+        meta: {},
+    },
+});
+`,
+            filename: I18N_FILE,
+            options: defaultOptions,
+        },
+        {
+            name: 'misleading basename not-i18n.ts — ignored',
+            code: `
+intl.createMessages({
+    key: {
+        en: '',
+        ru: '',
+    },
+});
+`,
+            filename: '/project/widgets/not-i18n.ts',
+            options: defaultOptions,
+        },
+        {
+            name: 'wrong order but not i18n.ts — ignored',
+            code: `
+intl.createMessages({
+    key: {
+        en: '',
+        ru: '',
+        meta: {},
+    },
+});
+`,
+            filename: OTHER_FILE,
+            options: defaultOptions,
+        },
+        {
+            name: 'spread in message object — skip',
+            code: `
+intl.createMessages({
+    key: {
+        ...base,
+        en: '',
+        ru: '',
+    },
+});
+`,
+            filename: I18N_FILE,
+            options: defaultOptions,
+        },
+        {
+            name: 'single property — skip',
+            code: `
+intl.createMessages({
+    key: {
+        ru: '',
+    },
+});
+`,
+            filename: I18N_FILE,
+            options: defaultOptions,
+        },
+        {
+            name: 'standalone createMessages call',
+            code: `
+createMessages({
+    x: {
+        ru: '',
+        en: '',
+    },
+});
+`,
+            filename: I18N_FILE,
+            options: defaultOptions,
+        },
+    ],
+
+    invalid: [
+        {
+            name: 'reorder en, ru, meta → ru, en, meta',
+            code: `
+intl.createMessages({
+    key: {
+        en: '',
+        ru: '',
+        meta: {},
+    },
+});
+`,
+            filename: I18N_FILE,
+            options: defaultOptions,
+            errors: [{messageId: 'wrongKeyOrder'}],
+            output: `
+intl.createMessages({
+    key: {
+        ru: '',
+        en: '',
+        meta: {},
+    },
+});
+`,
+        },
+        {
+            name: 'en, meta, fr → en, fr, meta',
+            code: `
+intl.createMessages({
+    key: {
+        en: 'e',
+        meta: { id: '1' },
+        fr: 'f',
+        ru: 'r',
+    },
+});
+`,
+            filename: I18N_FILE,
+            options: defaultOptions,
+            errors: [{messageId: 'wrongKeyOrder'}],
+            output: `
+intl.createMessages({
+    key: {
+        ru: 'r',
+        en: 'e',
+        fr: 'f',
+        meta: { id: '1' },
+    },
+});
+`,
+        },
+        {
+            name: 'preserve dangling comma inside message object',
+            code: `
+intl.createMessages({
+    key: {
+        en: '',
+        ru: '',
+    },
+});
+`,
+            filename: I18N_FILE,
+            options: defaultOptions,
+            errors: [{messageId: 'wrongKeyOrder'}],
+            output: `
+intl.createMessages({
+    key: {
+        ru: '',
+        en: '',
+    },
+});
+`,
+        },
+        {
+            name: 'meta stays last — inner keys untouched',
+            code: `
+intl.createMessages({
+    key: {
+        meta: {
+            markdown: true,
+            id: 'a',
+        },
+        ru: '',
+        en: '',
+    },
+});
+`,
+            filename: I18N_FILE,
+            options: defaultOptions,
+            errors: [{messageId: 'wrongKeyOrder'}],
+            output: `
+intl.createMessages({
+    key: {
+        ru: '',
+        en: '',
+        meta: {
+            markdown: true,
+            id: 'a',
+        },
+    },
+});
+`,
+        },
+    ],
+});
