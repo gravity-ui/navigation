@@ -1,30 +1,22 @@
-import type {Rule, SourceCode} from 'eslint';
+import type {Rule} from 'eslint';
 import type {CallExpression, ObjectExpression, Property} from 'estree';
 
-import {clearSpaceCharacters} from '../auto-generate-translation-message-id/utils/clear-space-characters';
+import {
+    DEFAULT_CALL_EXPRESSIONS,
+    DEFAULT_FILENAME_MATCHER,
+    DEFAULT_MEMBER_EXPRESSIONS,
+    defaultFilenameMatch,
+    isCreateMessagesCall,
+} from '../shared/create-messages-call';
 
-type MemberExpressionPattern = {member: string; property: string};
-
-type SortI18nMessageKeysOptions = {
-    memberExpressions?: MemberExpressionPattern[];
+export type SortI18nMessageKeysOptions = {
+    memberExpressions?: {member: string; property: string}[];
     callExpressions?: string[];
-    /** Match `context.filename`; default: path ends with `i18n.ts` */
     filenameMatcher?: string;
 };
 
-const DEFAULT_MEMBER_EXPRESSIONS: MemberExpressionPattern[] = [
-    {member: 'intl', property: 'createMessages'},
-];
-const DEFAULT_CALL_EXPRESSIONS = ['createMessages'];
-const DEFAULT_FILENAME_MATCHER = 'i18n.ts';
-
 const MESSAGE =
     'Locale keys in i18n message objects must be ordered: ru, en, then other locales (source order), then meta.';
-
-function defaultFilenameMatch(filename: string, suffix: string): boolean {
-    const norm = filename.replaceAll('\\', '/');
-    return norm.endsWith(`/${suffix}`) || norm === suffix;
-}
 
 function getPropertyKeyName(key: Property['key']): string | null {
     if (key.type === 'Identifier') {
@@ -37,34 +29,6 @@ function getPropertyKeyName(key: Property['key']): string | null {
         return String(key.value);
     }
     return null;
-}
-
-function isCreateMessagesCall(
-    node: CallExpression,
-    sourceCode: SourceCode,
-    memberExpressions: MemberExpressionPattern[],
-    callExpressions: string[],
-): boolean {
-    const {callee} = node;
-
-    if (callee.type === 'Identifier' && callExpressions.includes(callee.name)) {
-        return true;
-    }
-
-    if (callee.type === 'MemberExpression' && !callee.optional) {
-        const objectText = clearSpaceCharacters(sourceCode.getText(callee.object));
-        const rawProperty =
-            callee.property.type === 'Identifier' || callee.property.type === 'Literal'
-                ? sourceCode.getText(callee.property)
-                : '';
-        const propertyText = clearSpaceCharacters(rawProperty);
-
-        return memberExpressions.some(
-            ({member, property}) => member === objectText && property === propertyText,
-        );
-    }
-
-    return false;
 }
 
 function getObjectProperties(objectExpr: ObjectExpression): Property[] | null {
