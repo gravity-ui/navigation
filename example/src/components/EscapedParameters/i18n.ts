@@ -7,6 +7,8 @@ export const {t, Message} = intl.createMessages({
         'ru-kz': null,
         'en-kz': null,
         'en-tr': null,
-        meta: {id: 'components.escaped:89YXa'},
+        meta: {
+            id: 'components.escaped:89YXa',
+        },
     },
 });
