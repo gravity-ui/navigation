@@ -14,6 +14,16 @@ const defaultOptions = [
     },
 ];
 
+const regexpDotI18nTsOptions = [
+    {
+        memberExpressions: [{member: 'intl', property: 'createMessages'}],
+        callExpressions: ['createMessages'],
+        filenameMatcher: {type: 'regexp' as const, pattern: String.raw`\.i18n\.ts$`},
+    },
+];
+
+const I18N_DOT_FILE = '/project/src/widget/strings.i18n.ts';
+
 ruleTester.run('sort-i18n-message-keys', rule, {
     valid: [
         {
@@ -110,6 +120,34 @@ createMessages({
 `,
             filename: I18N_FILE,
             options: defaultOptions,
+        },
+        {
+            name: 'regexp filenameMatcher — *.i18n.ts path, correct order',
+            code: `
+intl.createMessages({
+    key: {
+        ru: '',
+        en: '',
+        meta: {},
+    },
+});
+`,
+            filename: I18N_DOT_FILE,
+            options: regexpDotI18nTsOptions,
+        },
+        {
+            name: 'regexp filenameMatcher — plain i18n.ts path ignored',
+            code: `
+intl.createMessages({
+    key: {
+        en: '',
+        ru: '',
+        meta: {},
+    },
+});
+`,
+            filename: I18N_FILE,
+            options: regexpDotI18nTsOptions,
         },
     ],
 
@@ -212,6 +250,30 @@ intl.createMessages({
             markdown: true,
             id: 'a',
         },
+    },
+});
+`,
+        },
+        {
+            name: 'regexp filenameMatcher — reorder on *.i18n.ts file',
+            code: `
+intl.createMessages({
+    key: {
+        en: '',
+        ru: '',
+        meta: {},
+    },
+});
+`,
+            filename: I18N_DOT_FILE,
+            options: regexpDotI18nTsOptions,
+            errors: [{messageId: 'wrongKeyOrder'}],
+            output: `
+intl.createMessages({
+    key: {
+        ru: '',
+        en: '',
+        meta: {},
     },
 });
 `,

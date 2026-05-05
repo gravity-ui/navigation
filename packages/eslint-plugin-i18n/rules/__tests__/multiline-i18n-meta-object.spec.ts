@@ -14,6 +14,16 @@ const defaultOptions = [
     },
 ];
 
+const regexpDotI18nTsOptions = [
+    {
+        memberExpressions: [{member: 'intl', property: 'createMessages'}],
+        callExpressions: ['createMessages'],
+        filenameMatcher: {type: 'regexp' as const, pattern: String.raw`\.i18n\.ts$`},
+    },
+];
+
+const I18N_DOT_FILE = '/project/src/widget/strings.i18n.ts';
+
 ruleTester.run('multiline-i18n-meta-object', rule, {
     valid: [
         {
@@ -59,6 +69,22 @@ intl.createMessages({
 `,
             filename: OTHER_FILE,
             options: defaultOptions,
+        },
+        {
+            name: 'regexp matcher — *.i18n.ts path ignored when meta multiline',
+            code: `
+intl.createMessages({
+    key: {
+        ru: '',
+        en: '',
+        meta: {
+            id: 'x',
+        },
+    },
+});
+`,
+            filename: I18N_DOT_FILE,
+            options: regexpDotI18nTsOptions,
         },
     ],
 
@@ -162,6 +188,32 @@ intl.createMessages({
         meta: {
             id: 'a',
             markdown: true,
+        },
+    },
+});
+`,
+        },
+        {
+            name: 'regexp filenameMatcher — inline meta on *.i18n.ts',
+            code: `
+intl.createMessages({
+    key: {
+        ru: '',
+        en: '',
+        meta: { id: 'foo' },
+    },
+});
+`,
+            filename: I18N_DOT_FILE,
+            options: regexpDotI18nTsOptions,
+            errors: [{messageId: 'inlineMeta'}],
+            output: `
+intl.createMessages({
+    key: {
+        ru: '',
+        en: '',
+        meta: {
+            id: 'foo',
         },
     },
 });
