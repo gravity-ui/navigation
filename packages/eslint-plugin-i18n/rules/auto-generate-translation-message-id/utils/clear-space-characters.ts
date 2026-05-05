@@ -1,1 +1,1 @@
-export const clearSpaceCharacters = (string: string) => string.replaceAll(/(\n|^\s+)/gm, '');
+export {clearSpaceCharacters} from '../../shared/clear-space-characters';

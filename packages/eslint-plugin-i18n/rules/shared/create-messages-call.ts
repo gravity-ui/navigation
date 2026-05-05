@@ -1,7 +1,7 @@
 import type {SourceCode} from 'eslint';
 import type {CallExpression} from 'estree';
 
-import {clearSpaceCharacters} from '../auto-generate-translation-message-id/utils/clear-space-characters';
+import {clearSpaceCharacters} from './clear-space-characters';
 
 export type MemberExpressionPattern = {member: string; property: string};
 
