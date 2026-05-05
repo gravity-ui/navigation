@@ -8,14 +8,8 @@ import {
     FILENAME_MATCHER_SCHEMA_PROPERTY,
     createFilenamePredicate,
     isCreateMessagesCall,
-    type FilenameMatcher,
+    type I18nCreateMessagesFilenamesOptions,
 } from '../shared/create-messages-call';
-
-export type SortI18nMessageKeysOptions = {
-    memberExpressions?: {member: string; property: string}[];
-    callExpressions?: string[];
-    filenameMatcher?: FilenameMatcher;
-};
 
 const MESSAGE =
     'Locale keys in i18n message objects must be ordered: ru, en, then other locales (source order), then meta.';
@@ -76,7 +70,14 @@ function propertiesAreInOrder(current: Property[], desired: Property[]): boolean
     return desired.every((node, index) => node === current[index]);
 }
 
-function pickPropertySeparator(sourceCodeText: string, properties: Property[]): string {
+const COMMENT_RE = /\/\/|\/\*/;
+
+/**
+ * Returns the raw text between the first two properties (preserving indentation),
+ * or `null` when that text contains a comment — in which case the fixer must bail out
+ * to avoid moving comments to the wrong position.
+ */
+function pickPropertySeparator(sourceCodeText: string, properties: Property[]): string | null {
     if (properties.length < 2) {
         return ', ';
     }
@@ -95,7 +96,13 @@ function pickPropertySeparator(sourceCodeText: string, properties: Property[]): 
         return ', ';
     }
 
-    return sourceCodeText.slice(start, end);
+    const sep = sourceCodeText.slice(start, end);
+
+    if (COMMENT_RE.test(sep)) {
+        return null;
+    }
+
+    return sep;
 }
 
 export const rule: Rule.RuleModule = {
@@ -122,7 +129,7 @@ export const rule: Rule.RuleModule = {
     },
 
     create(context) {
-        const options: SortI18nMessageKeysOptions = context.options[0] || {};
+        const options: I18nCreateMessagesFilenamesOptions = context.options[0] || {};
         const memberExpressions = options.memberExpressions ?? DEFAULT_MEMBER_EXPRESSIONS;
         const callExpressions = options.callExpressions ?? DEFAULT_CALL_EXPRESSIONS;
         const filenameMatcher = options.filenameMatcher ?? DEFAULT_FILENAME_MATCHER;
@@ -189,6 +196,9 @@ export const rule: Rule.RuleModule = {
                             : last.range[1];
 
                         const sep = pickPropertySeparator(sourceCode.getText(), properties);
+                        if (sep === null) {
+                            return null;
+                        }
                         const body = desired.map((p) => sourceCode.getText(p)).join(sep);
                         const newText = body + (trailingCommaMatch ? ',' : '');
 

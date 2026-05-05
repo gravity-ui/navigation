@@ -255,6 +255,22 @@ intl.createMessages({
 `,
         },
         {
+            name: 'wrong order with inline comments between properties — error but no autofix',
+            code: `
+intl.createMessages({
+    key: {
+        en: '', // English
+        ru: '', // Russian
+        meta: {},
+    },
+});
+`,
+            filename: I18N_FILE,
+            options: defaultOptions,
+            errors: [{messageId: 'wrongKeyOrder'}],
+            output: null,
+        },
+        {
             name: 'regexp filenameMatcher — reorder on *.i18n.ts file',
             code: `
 intl.createMessages({
