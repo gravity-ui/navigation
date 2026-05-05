@@ -5,7 +5,8 @@ import {
     DEFAULT_CALL_EXPRESSIONS,
     DEFAULT_FILENAME_MATCHER,
     DEFAULT_MEMBER_EXPRESSIONS,
-    defaultFilenameMatch,
+    FILENAME_MATCHER_SCHEMA_PROPERTY,
+    createFilenamePredicate,
     isCreateMessagesCall,
     type I18nCreateMessagesFilenamesOptions,
 } from '../shared/create-messages-call';
@@ -102,8 +103,9 @@ export const rule: Rule.RuleModule = {
                 properties: {
                     memberExpressions: {type: 'array'},
                     callExpressions: {type: 'array'},
-                    filenameMatcher: {type: 'string'},
+                    filenameMatcher: FILENAME_MATCHER_SCHEMA_PROPERTY,
                 },
+                additionalProperties: false,
             },
         ],
     },
@@ -113,10 +115,11 @@ export const rule: Rule.RuleModule = {
         const memberExpressions = options.memberExpressions ?? DEFAULT_MEMBER_EXPRESSIONS;
         const callExpressions = options.callExpressions ?? DEFAULT_CALL_EXPRESSIONS;
         const filenameMatcher = options.filenameMatcher ?? DEFAULT_FILENAME_MATCHER;
+        const matchesFilename = createFilenamePredicate(filenameMatcher);
 
         const filename = context.getFilename();
 
-        if (!defaultFilenameMatch(filename, filenameMatcher)) {
+        if (!matchesFilename(filename)) {
             return {};
         }
 
