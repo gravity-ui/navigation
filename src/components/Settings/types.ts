@@ -28,6 +28,11 @@ export interface SettingsMenuProps {
     className?: string;
 }
 
+export type SettingsMenuMobileProps = Omit<
+    SettingsMenuProps,
+    'activeItemId' | 'focusItemId' | 'onChange'
+>;
+
 export interface SettingsProps {
     children: React.ReactNode;
     title?: string;
