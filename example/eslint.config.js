@@ -29,6 +29,7 @@ export default [
                     },
                 },
             ],
+            'i18n-eslint-plugin/multiline-i18n-meta-object': 'error',
             'i18n-eslint-plugin/sort-i18n-message-keys': 'error',
             'i18n-eslint-plugin/string-literal-keys': [
                 'error',

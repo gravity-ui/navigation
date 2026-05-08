@@ -1,5 +1,6 @@
 import {rule as autoGenerateTranslationMessageId} from './rules/auto-generate-translation-message-id';
 import {rule as detectIncorrectCalls} from './rules/detectIncorrectCalls';
+import {rule as multilineI18nMetaObject} from './rules/multiline-i18n-meta-object';
 import {rule as restrictI18nImports} from './rules/restrict-i18n-imports';
 import {rule as sortI18nMessageKeys} from './rules/sort-i18n-message-keys';
 import {rule as stringLiteralKeys} from './rules/string-literal-keys';
@@ -14,6 +15,7 @@ export const meta = {
 export const rules = {
     'auto-generate-translation-message-id': autoGenerateTranslationMessageId,
     'detect-incorrect-calls': detectIncorrectCalls,
+    'multiline-i18n-meta-object': multilineI18nMetaObject,
     'restrict-i18n-imports': restrictI18nImports,
     'sort-i18n-message-keys': sortI18nMessageKeys,
     'string-literal-keys': stringLiteralKeys,
