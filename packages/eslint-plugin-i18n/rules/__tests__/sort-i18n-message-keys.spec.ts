@@ -24,6 +24,30 @@ const regexpDotI18nTsOptions = [
 
 const I18N_DOT_FILE = '/project/src/widget/strings.i18n.ts';
 
+const enFirstOrderOptions = [
+    {
+        memberExpressions: [{member: 'intl', property: 'createMessages'}],
+        callExpressions: ['createMessages'],
+        localesOrder: ['en', 'ru'],
+    },
+];
+
+const customLocaleOrderOptions = [
+    {
+        memberExpressions: [{member: 'intl', property: 'createMessages'}],
+        callExpressions: ['createMessages'],
+        localesOrder: ['en', 'kk', 'ru'],
+    },
+];
+
+const emptyLocalesOrderOptions = [
+    {
+        memberExpressions: [{member: 'intl', property: 'createMessages'}],
+        callExpressions: ['createMessages'],
+        localesOrder: [],
+    },
+];
+
 ruleTester.run('sort-i18n-message-keys', rule, {
     valid: [
         {
@@ -120,6 +144,51 @@ createMessages({
 `,
             filename: I18N_FILE,
             options: defaultOptions,
+        },
+        {
+            name: 'localesOrder [en, ru] — already in this order',
+            code: `
+intl.createMessages({
+    key: {
+        en: '',
+        ru: '',
+        meta: {},
+    },
+});
+`,
+            filename: I18N_FILE,
+            options: enFirstOrderOptions,
+        },
+        {
+            name: 'localesOrder [en, kk, ru] — explicit locales first, others (de) preserved',
+            code: `
+intl.createMessages({
+    key: {
+        en: '',
+        kk: '',
+        ru: '',
+        de: '',
+        meta: {},
+    },
+});
+`,
+            filename: I18N_FILE,
+            options: customLocaleOrderOptions,
+        },
+        {
+            name: 'empty localesOrder — only meta-last enforced; locales kept in source order',
+            code: `
+intl.createMessages({
+    key: {
+        de: '',
+        en: '',
+        ru: '',
+        meta: {},
+    },
+});
+`,
+            filename: I18N_FILE,
+            options: emptyLocalesOrderOptions,
         },
         {
             name: 'regexp filenameMatcher — *.i18n.ts path, correct order',
@@ -269,6 +338,82 @@ intl.createMessages({
             options: defaultOptions,
             errors: [{messageId: 'wrongKeyOrder'}],
             output: null,
+        },
+        {
+            name: 'localesOrder [en, ru] — reorder ru, en, meta → en, ru, meta',
+            code: `
+intl.createMessages({
+    key: {
+        ru: 'r',
+        en: 'e',
+        meta: {},
+    },
+});
+`,
+            filename: I18N_FILE,
+            options: enFirstOrderOptions,
+            errors: [{messageId: 'wrongKeyOrder'}],
+            output: `
+intl.createMessages({
+    key: {
+        en: 'e',
+        ru: 'r',
+        meta: {},
+    },
+});
+`,
+        },
+        {
+            name: 'localesOrder [en, kk, ru] — explicit locales first, others stay in source order',
+            code: `
+intl.createMessages({
+    key: {
+        de: 'd',
+        ru: 'r',
+        kk: 'k',
+        en: 'e',
+        meta: {},
+    },
+});
+`,
+            filename: I18N_FILE,
+            options: customLocaleOrderOptions,
+            errors: [{messageId: 'wrongKeyOrder'}],
+            output: `
+intl.createMessages({
+    key: {
+        en: 'e',
+        kk: 'k',
+        ru: 'r',
+        de: 'd',
+        meta: {},
+    },
+});
+`,
+        },
+        {
+            name: 'empty localesOrder — only forces meta to last',
+            code: `
+intl.createMessages({
+    key: {
+        ru: 'r',
+        meta: {},
+        en: 'e',
+    },
+});
+`,
+            filename: I18N_FILE,
+            options: emptyLocalesOrderOptions,
+            errors: [{messageId: 'wrongKeyOrder'}],
+            output: `
+intl.createMessages({
+    key: {
+        ru: 'r',
+        en: 'e',
+        meta: {},
+    },
+});
+`,
         },
         {
             name: 'regexp filenameMatcher — reorder on *.i18n.ts file',

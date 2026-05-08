@@ -11,8 +11,21 @@ import {
     type I18nCreateMessagesFilenamesOptions,
 } from '../shared/create-messages-call';
 
-const MESSAGE =
-    'Locale keys in i18n message objects must be ordered: ru, en, then other locales (source order), then meta.';
+type SortI18nMessageKeysOptions = I18nCreateMessagesFilenamesOptions & {
+    localesOrder?: string[];
+};
+
+const DEFAULT_LOCALES_ORDER = ['ru', 'en'];
+
+const META_KEY = 'meta';
+
+function buildOrderMessage(localesOrder: readonly string[]): string {
+    const localesPart = localesOrder.length
+        ? `${localesOrder.join(', ')}, then other locales (source order)`
+        : 'locales (source order)';
+
+    return `Locale keys in i18n message objects must be ordered: ${localesPart}, then ${META_KEY}.`;
+}
 
 function getPropertyKeyName(key: Property['key']): string | null {
     if (key.type === 'Identifier') {
@@ -42,28 +55,46 @@ function getObjectProperties(objectExpr: ObjectExpression): Property[] | null {
     return result;
 }
 
-function getDesiredPropertyOrder(properties: Property[]): Property[] {
-    const ru: Property[] = [];
-    const en: Property[] = [];
+function getDesiredPropertyOrder(
+    properties: Property[],
+    localesOrder: readonly string[],
+): Property[] {
+    const buckets = new Map<string, Property[]>();
+
+    for (const locale of localesOrder) {
+        buckets.set(locale, []);
+    }
+
     const meta: Property[] = [];
     const others: Property[] = [];
 
     for (const prop of properties) {
         const name = getPropertyKeyName(prop.key);
-        if (name === 'ru') {
-            ru.push(prop);
-        } else if (name === 'en') {
-            en.push(prop);
-        } else if (name === 'meta') {
+        if (name === META_KEY) {
             meta.push(prop);
+            continue;
+        }
+
+        const bucket = name === null ? undefined : buckets.get(name);
+
+        if (bucket) {
+            bucket.push(prop);
         } else {
             others.push(prop);
         }
     }
 
-    const desired = [...ru, ...en, ...others, ...meta];
+    const ordered: Property[] = [];
 
-    return desired;
+    for (const locale of localesOrder) {
+        const bucket = buckets.get(locale);
+
+        if (bucket) {
+            ordered.push(...bucket);
+        }
+    }
+
+    return [...ordered, ...others, ...meta];
 }
 
 function propertiesAreInOrder(current: Property[], desired: Property[]): boolean {
@@ -105,15 +136,18 @@ function pickPropertySeparator(sourceCodeText: string, properties: Property[]): 
     return sep;
 }
 
+const RULE_DESCRIPTION =
+    'Enforce key order in i18n message objects: configurable locales first, then other locales (source order), then meta.';
+
 export const rule: Rule.RuleModule = {
     meta: {
         type: 'layout',
         fixable: 'code',
         docs: {
-            description: MESSAGE,
+            description: RULE_DESCRIPTION,
         },
         messages: {
-            wrongKeyOrder: MESSAGE,
+            wrongKeyOrder: '{{message}}',
         },
         schema: [
             {
@@ -122,6 +156,11 @@ export const rule: Rule.RuleModule = {
                     memberExpressions: {type: 'array'},
                     callExpressions: {type: 'array'},
                     filenameMatcher: FILENAME_MATCHER_SCHEMA_PROPERTY,
+                    localesOrder: {
+                        type: 'array',
+                        items: {type: 'string'},
+                        uniqueItems: true,
+                    },
                 },
                 additionalProperties: false,
             },
@@ -129,11 +168,15 @@ export const rule: Rule.RuleModule = {
     },
 
     create(context) {
-        const options: I18nCreateMessagesFilenamesOptions = context.options[0] || {};
+        const options: SortI18nMessageKeysOptions = context.options[0] || {};
         const memberExpressions = options.memberExpressions ?? DEFAULT_MEMBER_EXPRESSIONS;
         const callExpressions = options.callExpressions ?? DEFAULT_CALL_EXPRESSIONS;
         const filenameMatcher = options.filenameMatcher ?? DEFAULT_FILENAME_MATCHER;
+        const localesOrder = (options.localesOrder ?? DEFAULT_LOCALES_ORDER).filter(
+            (l) => l !== META_KEY,
+        );
         const matchesFilename = createFilenamePredicate(filenameMatcher);
+        const messageText = buildOrderMessage(localesOrder);
 
         const filename = context.getFilename();
 
@@ -168,7 +211,7 @@ export const rule: Rule.RuleModule = {
                     continue;
                 }
 
-                const desired = getDesiredPropertyOrder(properties);
+                const desired = getDesiredPropertyOrder(properties, localesOrder);
                 if (propertiesAreInOrder(properties, desired)) {
                     continue;
                 }
@@ -176,6 +219,7 @@ export const rule: Rule.RuleModule = {
                 context.report({
                     node: value,
                     messageId: 'wrongKeyOrder',
+                    data: {message: messageText},
                     fix(fixer) {
                         const first = properties[0]!;
                         const last = properties[properties.length - 1]!;
