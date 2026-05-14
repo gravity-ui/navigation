@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {ListUl} from '@gravity-ui/icons';
 import last from 'lodash/last';
 
@@ -14,25 +12,14 @@ import i18n from '../i18n';
 
 const allSearchResultsId = 'allSearchResults';
 
-export function useAllResultsPage({
-    pages,
-    handlePageChange,
-}: {
-    pages: SettingsDescription['pages'];
-    handlePageChange: (page: string | undefined) => void;
-}) {
+export function useAllResultsPage({pages}: {pages: SettingsDescription['pages']}) {
     const allSearchResultsPage = pages[allSearchResultsId];
     const hasAllSearchResultsPage = Boolean(allSearchResultsPage);
 
-    React.useEffect(() => {
-        if (hasAllSearchResultsPage) {
-            handlePageChange(allSearchResultsId);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [hasAllSearchResultsPage]);
-
     return {
         isAllSearchPage: (page: string | undefined) => page === allSearchResultsId,
+        hasAllSearchResultsPage,
+        allSearchResultsId,
     };
 }
 

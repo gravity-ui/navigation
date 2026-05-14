@@ -1,41 +1,38 @@
 import React from 'react';
 
-import {
-    Tabs as LegacyTabs,
-    type TabsItemProps as LegacyTabsItemProps,
-} from '@gravity-ui/uikit/legacy';
+import {Tab, TabList, TabProps} from '@gravity-ui/uikit';
 
 import {createBlock} from '../../utils/cn';
-import {SettingsMenuProps} from '../types';
+import {SettingsMenuMobileProps} from '../types';
 
 import styles from './SettingsMenuMobile.module.scss';
 
 const b = createBlock('settings-menu-mobile', styles);
 
-export const SettingsMenuMobile = ({
-    items,
-    onChange,
-    activeItemId,
-    className,
-}: SettingsMenuProps) => {
+export const SettingsMenuMobile = ({items, className}: SettingsMenuMobileProps) => {
     const ref = React.useRef<HTMLDivElement>(null);
 
     const tabItems = React.useMemo(() => {
-        const result: LegacyTabsItemProps[] = [];
+        const result: TabProps[] = [];
 
         items.forEach((firstLevelItem) => {
             if ('groupTitle' in firstLevelItem) {
                 result.push(
                     ...firstLevelItem.items.map(({id, title, disabled, withBadge}) => ({
-                        id,
-                        title,
+                        value: id,
+                        children: title,
                         disabled,
                         className: b('item', {badge: withBadge}),
                     })),
                 );
             } else {
                 const {id, title, disabled, withBadge} = firstLevelItem;
-                result.push({id, title, disabled, className: b('item', {badge: withBadge})});
+                result.push({
+                    value: id,
+                    children: title,
+                    disabled,
+                    className: b('item', {badge: withBadge}),
+                });
             }
         });
         return result;
@@ -47,13 +44,11 @@ export const SettingsMenuMobile = ({
 
     return (
         <div ref={ref} onTouchMove={handleTouchMove}>
-            <LegacyTabs
-                items={tabItems}
-                className={b(null, className)}
-                size="l"
-                activeTab={activeItemId}
-                onSelectTab={onChange}
-            />
+            <TabList size="l" className={b(null, className)}>
+                {tabItems.map((item) => (
+                    <Tab key={item.value} {...item} />
+                ))}
+            </TabList>
         </div>
     );
 };
