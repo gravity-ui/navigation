@@ -13,7 +13,9 @@ import styles from './Item.module.scss';
 
 const b = createBlock('composite-bar-item', styles);
 
-const defaultPopupOffset: NonNullable<PopupProps['offset']> = {mainAxis: 14};
+const POPUP_MAIN_AXIS_OFFSET = 14;
+const POPUP_CROSS_AXIS_OFFSET_WITH_TITLE = -30;
+const POPUP_CROSS_AXIS_OFFSET_WITHOUT_TITLE = 0;
 
 const DEFAULT_POPUP_DELAY = 100;
 
@@ -46,6 +48,16 @@ export const ItemPopup: React.FC<Props> = ({
     onOpenChange,
 }) => {
     const nestedOpenCountRef = React.useRef(0);
+
+    const popoverOffset = React.useMemo<NonNullable<PopupProps['offset']>>(
+        () => ({
+            mainAxis: POPUP_MAIN_AXIS_OFFSET,
+            crossAxis: title
+                ? POPUP_CROSS_AXIS_OFFSET_WITH_TITLE
+                : POPUP_CROSS_AXIS_OFFSET_WITHOUT_TITLE,
+        }),
+        [title],
+    );
 
     const registerNestedOpen = React.useCallback((delta: number) => {
         nestedOpenCountRef.current = Math.max(0, nestedOpenCountRef.current + delta);
@@ -118,7 +130,7 @@ export const ItemPopup: React.FC<Props> = ({
             strategy="fixed"
             openDelay={DEFAULT_POPUP_DELAY}
             closeDelay={DEFAULT_POPUP_DELAY}
-            offset={defaultPopupOffset}
+            offset={popoverOffset}
             enableSafePolygon
             className={b('icon-popover', {'item-type': type})}
             content={content}
