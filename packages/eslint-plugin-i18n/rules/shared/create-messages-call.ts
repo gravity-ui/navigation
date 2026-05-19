@@ -38,8 +38,9 @@ export type I18nCreateMessagesFilenamesOptions = {
 
 export const DEFAULT_MEMBER_EXPRESSIONS: MemberExpressionPattern[] = [
     {member: 'intl', property: 'createMessages'},
+    {member: 'intl', property: 'declareMessages'},
 ];
-export const DEFAULT_CALL_EXPRESSIONS = ['createMessages'];
+export const DEFAULT_CALL_EXPRESSIONS = ['createMessages', 'declareMessages'];
 export const DEFAULT_FILENAME_MATCHER = 'i18n.ts';
 
 export function createFilenamePredicate(matcher: FilenameMatcher): (filename: string) => boolean {
