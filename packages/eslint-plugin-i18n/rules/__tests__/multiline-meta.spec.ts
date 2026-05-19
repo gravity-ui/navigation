@@ -1,6 +1,6 @@
 import {RuleTester} from 'eslint';
 
-import {rule} from '../multiline-i18n-meta-object';
+import {rule} from '../multiline-meta';
 
 const ruleTester = new RuleTester({languageOptions: {ecmaVersion: 2022}});
 
@@ -24,7 +24,7 @@ const regexpDotI18nTsOptions = [
 
 const I18N_DOT_FILE = '/project/src/widget/strings.i18n.ts';
 
-ruleTester.run('multiline-i18n-meta-object', rule, {
+ruleTester.run('multiline-meta', rule, {
     valid: [
         {
             name: 'multiline meta already',

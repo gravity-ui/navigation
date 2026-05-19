@@ -1,4 +1,4 @@
-# multiline-i18n-meta-object
+# multiline-meta
 
 В файлах, для которых срабатывает `filenameMatcher`, требует, чтобы объект `meta` в записях `createMessages` был записан многострочно (с переносами строк внутри фигурных скобок), а не в одну строку вида `meta: { id: '…' }`. Правило автоматически исправляет форматирование.
 
@@ -10,7 +10,7 @@
 
 ```javascript
 module.exports = {
-    "@gravity-ui/eslint-plugin-i18n/multiline-i18n-meta-object": ["error", {}],
+    "@gravity-ui/eslint-plugin-i18n/multiline-meta": ["error", {}],
 };
 ```
 
@@ -24,7 +24,7 @@ module.exports = {
 
 ```javascript
 module.exports = {
-    "@gravity-ui/eslint-plugin-i18n/multiline-i18n-meta-object": [
+    "@gravity-ui/eslint-plugin-i18n/multiline-meta": [
         "error",
         {
             memberExpressions: [{member: "intl", property: "createMessages"}],
