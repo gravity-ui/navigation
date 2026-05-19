@@ -1,12 +1,12 @@
 # sort-message-locales
 
-В файлах, для которых срабатывает `filenameMatcher`, проверяет порядок полей в объектах сообщений внутри `createMessages`: сначала локали из `localesOrder` (по умолчанию `['ru', 'en']`) в указанном порядке, затем остальные локали (в том порядке, в каком они были в исходном коде), затем `meta`. Правило автоматически переупорядочивает свойства.
+In files matched by `filenameMatcher`, enforces property order in message objects inside `createMessages` / `declareMessages`: locales listed in `localesOrder` first (default `['ru', 'en']`), then any other locales (preserving their source order), then `meta`. The rule auto-fixes property order.
 
-Если в объекте сообщения есть spread (`...`), правило такой объект пропускает. Объекты с одним свойством тоже не трогаются.
+Message objects that contain a spread (`...`) are skipped. Objects with a single property are also skipped.
 
-## Подключение
+## Setup
 
-Пример подключения правила:
+Example rule configuration:
 
 ```javascript
 module.exports = {
@@ -14,30 +14,33 @@ module.exports = {
 };
 ```
 
-## Опции
+## Options
 
-- `memberExpressions`: массив шаблонов вызова вида `{ member: 'intl', property: 'createMessages' }`. По умолчанию `[{ member: 'intl', property: 'createMessages' }]`.
+- `memberExpressions`: array of call patterns like `{ member: 'intl', property: 'createMessages' }`. Default: `[{ member: 'intl', property: 'createMessages' }, { member: 'intl', property: 'declareMessages' }]`.
 
-- `callExpressions`: имена функций без получателя, которые считаются вызовом `createMessages`. По умолчанию `['createMessages']`.
+- `callExpressions`: bare function names treated as message-definition calls. Default: `['createMessages', 'declareMessages']`.
 
-- `localesOrder`: массив имён локалей в желаемом порядке. По умолчанию `['ru', 'en']`. Локали, не упомянутые в этом массиве, ставятся после в том порядке, в котором они идут в исходном коде. `meta` всегда идёт последним и в этот массив не включается (даже если указать — будет проигнорировано).
+- `localesOrder`: array of locale names in the desired order. Default: `['ru', 'en']`. Locales not listed here are placed after the ordered ones, in their original source order. `meta` is always last and is ignored if included in this array.
 
-- `filenameMatcher`: по умолчанию строка `'i18n.ts'` — срабатывает, если нормализованный путь (слэши как `/`) заканчивается на `/${filenameMatcher}` или равен `filenameMatcher`. Либо объект **`{ type: 'regexp', pattern: string, flags?: string }`** — совпадение с полным нормализованным путём. Пример только для `*.i18n.ts`: `pattern: '\\.i18n\\.ts$'` (классический `i18n.ts` так не попадёт; для обоих случаев см. строковый суффикс или паттерн ниже).
+- `filenameMatcher`: default string `'i18n.ts'` — matches when the normalized path (with `/` separators) ends with `/${filenameMatcher}` or equals `filenameMatcher`. Alternatively, an object **`{ type: 'regexp', pattern: string, flags?: string }`** — matches against the full normalized path. Example for `*.i18n.ts` only: `pattern: '\\.i18n\\.ts$'` (plain `i18n.ts` won't match; see string suffix or pattern below for both cases).
 
 ```javascript
 module.exports = {
     "@gravity-ui/eslint-plugin-i18n/sort-message-locales": [
         "error",
         {
-            memberExpressions: [{member: "intl", property: "createMessages"}],
-            callExpressions: ["createMessages"],
+            memberExpressions: [
+                {member: "intl", property: "createMessages"},
+                {member: "intl", property: "declareMessages"},
+            ],
+            callExpressions: ["createMessages", "declareMessages"],
             filenameMatcher: "i18n.ts",
         },
     ],
 };
 ```
 
-Объект для путей, оканчивающихся на `.i18n.ts`:
+Object matcher for paths ending in `.i18n.ts`:
 
 ```javascript
 filenameMatcher: {
@@ -46,7 +49,7 @@ filenameMatcher: {
 },
 ```
 
-Универсальный паттерн и для `i18n.ts`, и для `something.i18n.ts`:
+Universal pattern for both `i18n.ts` and `something.i18n.ts`:
 
 ```javascript
 filenameMatcher: {
@@ -55,7 +58,7 @@ filenameMatcher: {
 },
 ```
 
-Пример с кастомным порядком локалей:
+Example with a custom locale order:
 
 ```javascript
 module.exports = {
@@ -68,12 +71,12 @@ module.exports = {
 };
 ```
 
-## Примеры работы правила
+## Examples
 
-Пример **некорректного** кода для этого правила:
+**Incorrect** code for this rule:
 
 ```js
-// ⛔️ en перед ru (в i18n.ts)
+// ⛔️ en before ru (in i18n.ts)
 intl.createMessages({
     key: {
         en: "",
@@ -83,10 +86,10 @@ intl.createMessages({
 });
 ```
 
-Пример **корректного** кода для этого правила:
+**Correct** code for this rule:
 
 ```js
-// ✅ ru, en, затем прочие локали по исходному порядку, затем meta
+// ✅ ru, en, then other locales in source order, then meta
 intl.createMessages({
     key: {
         ru: "",

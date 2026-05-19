@@ -1,12 +1,12 @@
 # multiline-meta
 
-В файлах, для которых срабатывает `filenameMatcher`, требует, чтобы объект `meta` в записях `createMessages` был записан многострочно (с переносами строк внутри фигурных скобок), а не в одну строку вида `meta: { id: '…' }`. Правило автоматически исправляет форматирование.
+In files matched by `filenameMatcher`, requires the `meta` object in `createMessages` / `declareMessages` entries to be written multiline (with line breaks inside the braces), not inlined as `meta: { id: '…' }`. The rule auto-fixes formatting.
 
-Объекты `meta` со spread (`meta: { ...base }`) не проверяются.
+`meta` objects with a spread (`meta: { ...base }`) are not checked.
 
-## Подключение
+## Setup
 
-Пример подключения правила:
+Example rule configuration:
 
 ```javascript
 module.exports = {
@@ -14,28 +14,31 @@ module.exports = {
 };
 ```
 
-## Опции
+## Options
 
-- `memberExpressions`: массив шаблонов вызова вида `{ member: 'intl', property: 'createMessages' }`. По умолчанию `[{ member: 'intl', property: 'createMessages' }]`.
+- `memberExpressions`: array of call patterns like `{ member: 'intl', property: 'createMessages' }`. Default: `[{ member: 'intl', property: 'createMessages' }, { member: 'intl', property: 'declareMessages' }]`.
 
-- `callExpressions`: имена функций без получателя, которые считаются вызовом `createMessages`. По умолчанию `['createMessages']`.
+- `callExpressions`: bare function names treated as message-definition calls. Default: `['createMessages', 'declareMessages']`.
 
-- `filenameMatcher`: по умолчанию строка `'i18n.ts'` — см. выше. Либо объект **`{ type: 'regexp', pattern, flags? }`** для совпадения с полным нормализованным путём.
+- `filenameMatcher`: default string `'i18n.ts'` — see above. Alternatively, an object **`{ type: 'regexp', pattern, flags? }`** for matching against the full normalized path.
 
 ```javascript
 module.exports = {
     "@gravity-ui/eslint-plugin-i18n/multiline-meta": [
         "error",
         {
-            memberExpressions: [{member: "intl", property: "createMessages"}],
-            callExpressions: ["createMessages"],
+            memberExpressions: [
+                {member: "intl", property: "createMessages"},
+                {member: "intl", property: "declareMessages"},
+            ],
+            callExpressions: ["createMessages", "declareMessages"],
             filenameMatcher: "i18n.ts",
         },
     ],
 };
 ```
 
-Объект для имён вида `*.i18n.ts`:
+Object matcher for `*.i18n.ts` paths:
 
 ```javascript
 filenameMatcher: {
@@ -44,7 +47,7 @@ filenameMatcher: {
 },
 ```
 
-Универсальный паттерн (и `i18n.ts`, и `something.i18n.ts`):
+Universal pattern (both `i18n.ts` and `something.i18n.ts`):
 
 ```javascript
 filenameMatcher: {
@@ -53,12 +56,12 @@ filenameMatcher: {
 },
 ```
 
-## Примеры работы правила
+## Examples
 
-Пример **некорректного** кода для этого правила:
+**Incorrect** code for this rule:
 
 ```js
-// ⛔️ meta в одну строку (в i18n.ts)
+// ⛔️ single-line meta (in i18n.ts)
 intl.createMessages({
     key: {
         ru: "",
@@ -68,10 +71,10 @@ intl.createMessages({
 });
 ```
 
-Пример **корректного** кода для этого правила:
+**Correct** code for this rule:
 
 ```js
-// ✅ meta с переносами строк внутри объекта
+// ✅ meta with line breaks inside the object
 intl.createMessages({
     key: {
         ru: "",
