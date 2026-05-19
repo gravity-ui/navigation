@@ -1,4 +1,4 @@
-import {clearSpaceCharacters} from '../clear-space-characters';
+import {clearSpaceCharacters} from '../../../shared/clear-space-characters';
 
 describe('clearSpaceCharacters', () => {
     it('should remove newlines and leading spaces', () => {

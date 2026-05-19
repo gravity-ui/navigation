@@ -5,7 +5,7 @@ import {getLiteralString} from '../ast-helpers';
 import {BaseRuleOptions} from '../types';
 import {BaseHandler} from '../types/handlers';
 import {checkId} from '../utils/check-id';
-import {clearSpaceCharacters} from '../utils/clear-space-characters';
+import {clearSpaceCharacters} from '../../shared/clear-space-characters';
 import {getObjectProperty} from '../utils/get-object-property';
 
 type GetMessagesExpressionProps = BaseHandler &
