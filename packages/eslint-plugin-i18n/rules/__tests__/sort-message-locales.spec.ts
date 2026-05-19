@@ -1,6 +1,6 @@
 import {RuleTester} from 'eslint';
 
-import {rule} from '../sort-i18n-message-keys';
+import {rule} from '../sort-message-locales';
 
 const ruleTester = new RuleTester({languageOptions: {ecmaVersion: 2022}});
 
@@ -48,7 +48,7 @@ const emptyLocalesOrderOptions = [
     },
 ];
 
-ruleTester.run('sort-i18n-message-keys', rule, {
+ruleTester.run('sort-message-locales', rule, {
     valid: [
         {
             name: 'correct order ru, en, meta',

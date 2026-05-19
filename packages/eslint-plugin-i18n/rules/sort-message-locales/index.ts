@@ -11,7 +11,7 @@ import {
     type I18nCreateMessagesFilenamesOptions,
 } from '../shared/create-messages-call';
 
-type SortI18nMessageKeysOptions = I18nCreateMessagesFilenamesOptions & {
+type SortMessageLocalesOptions = I18nCreateMessagesFilenamesOptions & {
     localesOrder?: string[];
 };
 
@@ -168,7 +168,7 @@ export const rule: Rule.RuleModule = {
     },
 
     create(context) {
-        const options: SortI18nMessageKeysOptions = context.options[0] || {};
+        const options: SortMessageLocalesOptions = context.options[0] || {};
         const memberExpressions = options.memberExpressions ?? DEFAULT_MEMBER_EXPRESSIONS;
         const callExpressions = options.callExpressions ?? DEFAULT_CALL_EXPRESSIONS;
         const filenameMatcher = options.filenameMatcher ?? DEFAULT_FILENAME_MATCHER;

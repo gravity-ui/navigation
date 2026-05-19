@@ -1,4 +1,4 @@
-# sort-i18n-message-keys
+# sort-message-locales
 
 В файлах, для которых срабатывает `filenameMatcher`, проверяет порядок полей в объектах сообщений внутри `createMessages`: сначала локали из `localesOrder` (по умолчанию `['ru', 'en']`) в указанном порядке, затем остальные локали (в том порядке, в каком они были в исходном коде), затем `meta`. Правило автоматически переупорядочивает свойства.
 
@@ -10,7 +10,7 @@
 
 ```javascript
 module.exports = {
-    "@gravity-ui/eslint-plugin-i18n/sort-i18n-message-keys": ["error", {}],
+    "@gravity-ui/eslint-plugin-i18n/sort-message-locales": ["error", {}],
 };
 ```
 
@@ -26,7 +26,7 @@ module.exports = {
 
 ```javascript
 module.exports = {
-    "@gravity-ui/eslint-plugin-i18n/sort-i18n-message-keys": [
+    "@gravity-ui/eslint-plugin-i18n/sort-message-locales": [
         "error",
         {
             memberExpressions: [{member: "intl", property: "createMessages"}],
@@ -59,7 +59,7 @@ filenameMatcher: {
 
 ```javascript
 module.exports = {
-    "@gravity-ui/eslint-plugin-i18n/sort-i18n-message-keys": [
+    "@gravity-ui/eslint-plugin-i18n/sort-message-locales": [
         "error",
         {
             localesOrder: ["en", "ru"],
