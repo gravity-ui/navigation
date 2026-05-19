@@ -61,7 +61,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const highlightedRef = React.useRef<HTMLDivElement>(null);
 
     const type = props.type || ITEM_TYPE_REGULAR;
-    const current = props.current || false;
     const icon = props.icon;
     const iconSize = props.iconSize || ASIDE_HEADER_ICON_SIZE;
     const iconQa = props.iconQa;
@@ -69,6 +68,8 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const inlineGroupHeader = groupHeaderExpanded !== undefined;
     const resolvedMenuPopupItems = menuPopupItems ?? props.compositeBarMenuPopupItems;
     const resolvedMenuPopupTitle = menuPopupTitle ?? props.compositeBarMenuPopupTitle;
+
+    const current = props.current || resolvedMenuPopupItems?.some((item) => item.current) || false;
 
     const handleOpenChangePopup = React.useCallback<NonNullable<ItemProps['onOpenChangePopup']>>(
         (newOpen, event, reason) => {

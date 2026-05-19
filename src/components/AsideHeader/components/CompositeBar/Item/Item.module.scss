@@ -247,13 +247,7 @@ $actionLeftRightMargin: 10px;
 
     &__popup-content {
         box-sizing: border-box;
-        min-width: var(--gn-aside-header-size, 240px);
         border-radius: var(--gn-aside-header-item-expanded-radius);
-
-        &_collapsed {
-            min-width: auto;
-            width: var(--gn-aside-header-size, 240px);
-        }
     }
 
     &__popup-content &__root-menu-item[class] {
@@ -261,7 +255,7 @@ $actionLeftRightMargin: 10px;
     }
 
     &__popup-title {
-        padding: var(--g-spacing-2) var(--g-spacing-2) 2px;
+        padding: var(--g-spacing-1) var(--g-spacing-2) 6px;
         color: var(--g-color-text-primary);
         font-weight: var(--g-text-subheader-font-weight);
         font-size: var(--g-text-subheader-2-font-size);
