@@ -24,7 +24,7 @@ interface AllPagesPanelProps {
 
 export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     const {startEditIcon, onEditModeChanged, className} = props;
-    const {menuItems, defaultMenuItems, onMenuItemsChanged, editMenuProps} =
+    const {menuItems, defaultMenuItems, onMenuItemsChanged, editMenuProps, onClosePanel} =
         useAsideHeaderInnerContext();
 
     const menuItemsRef = useRef(menuItems);
@@ -52,8 +52,9 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         (item, _index, _forwardKey, event) => {
             // TODO: make event an optional argument
             item.onItemClick?.(item, false, event as React.MouseEvent<HTMLElement, MouseEvent>);
+            onClosePanel?.();
         },
-        [],
+        [onClosePanel],
     );
 
     const togglePageVisibility = useCallback(
