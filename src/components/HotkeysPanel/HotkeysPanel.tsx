@@ -1,8 +1,8 @@
-import React, {useCallback, useMemo, useState} from 'react';
 import type {ReactNode} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 
-import {Drawer, HelpMark, Hotkey, List, Text, TextInput} from '@gravity-ui/uikit';
 import type {DrawerProps, HotkeyProps, ListProps} from '@gravity-ui/uikit';
+import {Drawer, HelpMark, Hotkey, List, Text, TextInput} from '@gravity-ui/uikit';
 
 import {createBlock} from '../utils/cn';
 
@@ -77,6 +77,8 @@ export function HotkeysPanel<T = {}>({
 }: HotkeysPanelProps<T>) {
     const [filter, setFilter] = useState('');
 
+    const textInputRef = useRef<HTMLInputElement>(null);
+
     const hotkeysList = useMemo(() => {
         const filteredHotkeys = filterHotkeys(hotkeys, filter);
         return flattenHotkeyGroups(filteredHotkeys);
@@ -122,10 +124,10 @@ export function HotkeysPanel<T = {}>({
             </Text>
             {filterable && (
                 <TextInput
+                    ref={textInputRef}
                     value={filter}
                     onUpdate={setFilter}
                     placeholder={filterPlaceholder}
-                    autoFocus
                     className={b('search', filterClassName)}
                     hasClear
                 />
@@ -147,6 +149,7 @@ export function HotkeysPanel<T = {}>({
         <Drawer
             container={container}
             hideVeil={hideVeil}
+            initialFocus={filterable ? textInputRef : undefined}
             className={b(null, className)}
             open={open}
             onOpenChange={(open) => !open && onClose?.()}
