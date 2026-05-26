@@ -128,7 +128,7 @@ export function HotkeysPanel<T = {}>({
             </Text>
             {filterable && (
                 <TextInput
-                    ref={textInputRef}
+                    controlRef={textInputRef}
                     value={filter}
                     onUpdate={setFilter}
                     placeholder={filterPlaceholder}
