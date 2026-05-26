@@ -149,7 +149,7 @@ export function HotkeysPanel<T = {}>({
         <Drawer
             container={container}
             hideVeil={hideVeil}
-            initialFocus={textInputRef}
+            initialFocus={filterable ? textInputRef : undefined}
             className={b(null, className)}
             open={open}
             onOpenChange={(open) => !open && onClose?.()}
