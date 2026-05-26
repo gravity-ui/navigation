@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import type {ReactNode} from 'react';
 
 import {Drawer, HelpMark, Hotkey, List, Text, TextInput} from '@gravity-ui/uikit';
@@ -77,6 +77,8 @@ export function HotkeysPanel<T = {}>({
     disableNavigationOffset = false,
     ...listProps
 }: HotkeysPanelProps<T>) {
+    const textInputRef = useRef<HTMLInputElement>(null);
+
     const [filter, setFilter] = useState('');
 
     const {size} = useSafeAsideHeaderContext() ?? {size: 0};
@@ -126,6 +128,7 @@ export function HotkeysPanel<T = {}>({
             </Text>
             {filterable && (
                 <TextInput
+                    ref={textInputRef}
                     value={filter}
                     onUpdate={setFilter}
                     placeholder={filterPlaceholder}
@@ -173,6 +176,7 @@ export function HotkeysPanel<T = {}>({
         <Drawer
             className={b(null, className)}
             open={open}
+            initialFocus={filterable ? textInputRef : undefined}
             onOpenChange={onOpenChange}
             style={style}
             contentClassName={b('drawer-item', drawerItemClassName)}
