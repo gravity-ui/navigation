@@ -42,6 +42,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         renderPopupContent,
         onOpenChangePopup,
         onItemClick,
+        onPopupItemClick,
         onItemClickCapture,
         itemWrapper,
         bringForward,
@@ -56,7 +57,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const [compactNavPopoverOpen, setCompactNavPopoverOpen] = React.useState(false);
 
-    const ref = React.useRef<HTMLAnchorElement & HTMLButtonElement>(null);
+    const ref = React.useRef<HTMLElement>(null);
     const anchorRef = anchoreRefProp?.current ? anchoreRefProp : ref;
     const highlightedRef = React.useRef<HTMLDivElement>(null);
 
@@ -116,7 +117,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const compactPopoverDisabled = !enableTooltip || popupVisible || type === 'action';
 
-    const makeIconNode = (iconEl: React.ReactNode): React.ReactNode => {
+    const makeIconNode = (iconEl: React.ReactNode, withCompactPopover = true): React.ReactNode => {
         if (!compact) {
             return iconEl;
         }
@@ -131,7 +132,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             </div>
         );
 
-        if (resolvedMenuPopupItems?.length) {
+        if (!withCompactPopover || resolvedMenuPopupItems?.length) {
             return iconButton;
         }
 
@@ -148,6 +149,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 disabled={compactPopoverDisabled}
                 type={type}
                 collapsed={compact}
+                onPopupItemClick={onPopupItemClick}
                 onItemClick={onItemClick}
             >
                 {iconButton}
@@ -156,38 +158,23 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     };
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
-        const [Tag, tagProps] = href ? ['a' as const, {href}] : ['button' as const, {}];
+        const wrappedByItemWrapper = typeof itemWrapper === 'function';
+        const rowClassName = b({type, current, compact, 'hide-icon': hideIcon}, className);
 
-        const tagNode = (
-            <Tag
-                {...tagProps}
-                className={b({type, current, compact, 'hide-icon': hideIcon}, className)}
-                ref={ref}
-                data-type={type}
-                data-qa={qa}
-                onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-                    if (stopClickPropagation) {
-                        event.stopPropagation();
-                    }
+        const handleRowClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+            if (compact && !collapsedItem && !showMenuPopup && !current) {
+                setCompactNavPopoverOpen(false);
+            }
 
-                    if (compact && !collapsedItem) {
-                        setCompactNavPopoverOpen(false);
-                    }
+            onItemClick?.(props, collapsedItem, event);
 
-                    onItemClick?.(props, collapsedItem, event);
-                }}
-                onClickCapture={onItemClickCapture}
-                onMouseEnter={() => {
-                    if (!compact) {
-                        onMouseEnter?.();
-                    }
-                }}
-                onMouseLeave={() => {
-                    if (!compact) {
-                        onMouseLeave?.();
-                    }
-                }}
-            >
+            if (stopClickPropagation) {
+                event.stopPropagation();
+            }
+        };
+
+        const rowChildren = (
+            <>
                 {menuGroupNestedTreeConnector}
                 <div className={b('icon-place')} ref={highlightedRef}>
                     {makeIconNode(iconEl)}
@@ -214,8 +201,48 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                         </div>
                     )
                 )}
-            </Tag>
+            </>
         );
+
+        const rowEventProps = {
+            className: rowClassName,
+            'data-type': type,
+            'data-qa': qa,
+            onClick: handleRowClick,
+            onClickCapture: onItemClickCapture,
+            onMouseEnter: () => {
+                if (!compact) {
+                    onMouseEnter?.();
+                }
+            },
+            onMouseLeave: () => {
+                if (!compact) {
+                    onMouseLeave?.();
+                }
+            },
+        };
+
+        let tagNode: React.ReactNode;
+
+        if (href) {
+            tagNode = (
+                <a {...rowEventProps} href={href} ref={ref as React.RefObject<HTMLAnchorElement>}>
+                    {rowChildren}
+                </a>
+            );
+        } else if (wrappedByItemWrapper) {
+            tagNode = (
+                <div {...rowEventProps} role="button" ref={ref as React.RefObject<HTMLDivElement>}>
+                    {rowChildren}
+                </div>
+            );
+        } else {
+            tagNode = (
+                <button {...rowEventProps} ref={ref as React.RefObject<HTMLButtonElement>}>
+                    {rowChildren}
+                </button>
+            );
+        }
 
         const expandedMenuRows = resolvedMenuPopupItems;
 
@@ -228,6 +255,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     itemClassName={popupItemClassName}
                     onOpenChange={setCompactNavPopoverOpen}
                     collapsed={collapsedItem ? true : compact}
+                    onPopupItemClick={onPopupItemClick}
                     onItemClick={onItemClick}
                 >
                     {tagNode}
@@ -275,12 +303,12 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             bringForward &&
             (itemWrapper(
                 params,
-                ({icon: iconEl}) => makeIconNode(iconEl),
+                ({icon: iconEl}) => makeIconNode(iconEl, false),
                 opts,
             ) as React.ReactElement);
     } else {
         node = makeNode(params);
-        highlightedNode = bringForward && makeIconNode(iconNode);
+        highlightedNode = bringForward && makeIconNode(iconNode, false);
     }
 
     return (

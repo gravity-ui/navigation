@@ -31,6 +31,7 @@ interface Props {
     itemClassName?: string;
     children: React.ReactElement;
     onOpenChange?: (open: boolean) => void;
+    onPopupItemClick?: AsideHeaderItem['onItemClick'];
     onItemClick?: AsideHeaderItem['onItemClick'];
 }
 
@@ -44,6 +45,7 @@ export const ItemPopup: React.FC<Props> = ({
     collapsed = false,
     hideIcon = false,
     children,
+    onPopupItemClick,
     onItemClick,
     onOpenChange,
 }) => {
@@ -76,13 +78,17 @@ export const ItemPopup: React.FC<Props> = ({
         [onOpenChange],
     );
 
+    const handlePopupContentClick = React.useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+        event.stopPropagation();
+    }, []);
+
     if (!items.length) {
         return children;
     }
 
     const content = (
         <ItemPopupNestContext.Provider value={nestContextValue}>
-            <div className={b('popup-content', {collapsed})}>
+            <div className={b('popup-content', {collapsed})} onClick={handlePopupContentClick}>
                 {title && <div className={b('popup-title')}>{title}</div>}
                 <List
                     items={items}
@@ -100,7 +106,7 @@ export const ItemPopup: React.FC<Props> = ({
                             compact={false}
                             className={b('popup-item')}
                             hideIcon={hideIcon}
-                            stopClickPropagation
+                            stopClickPropagation={!item.itemWrapper}
                             enableTooltip={false}
                             bringForward={false}
                             popupVisible={false}
@@ -108,8 +114,11 @@ export const ItemPopup: React.FC<Props> = ({
                             onOpenChangePopup={undefined}
                             popupRef={undefined}
                             onItemClick={(_innerItem, _innerCollapsed, event) => {
-                                onOpenChange?.(false);
-                                onItemClick?.(item, collapsed, event);
+                                if (!item.current) {
+                                    onOpenChange?.(false);
+                                }
+
+                                (onPopupItemClick ?? onItemClick)?.(item, collapsed, event);
                             }}
                         />
                     )}

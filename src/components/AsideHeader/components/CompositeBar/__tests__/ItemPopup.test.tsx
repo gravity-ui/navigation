@@ -22,6 +22,7 @@ const contextValue = {
 function renderItemPopup(props: {
     items: AsideHeaderItem[];
     onItemClick?: jest.Mock;
+    onOpenChange?: jest.Mock;
     collapsed?: boolean;
     hideIcon?: boolean;
     open?: boolean;
@@ -34,7 +35,7 @@ function renderItemPopup(props: {
                     items={props.items}
                     title={props.title}
                     open={props.open ?? true}
-                    onOpenChange={() => {}}
+                    onOpenChange={props.onOpenChange ?? (() => {})}
                     collapsed={props.collapsed}
                     hideIcon={props.hideIcon}
                     onItemClick={props.onItemClick}
@@ -99,6 +100,32 @@ describe('ItemPopup', () => {
         );
     });
 
+    it('does not close popup when clicking the current item inside popup', () => {
+        const onOpenChange = jest.fn();
+        const onItemClick = jest.fn();
+        const items: AsideHeaderItem[] = [
+            {id: 'item1', title: 'Current Item', icon: Gear, current: true},
+        ];
+
+        renderItemPopup({items, onItemClick, onOpenChange, open: true});
+
+        fireEvent.click(screen.getByText('Current Item'));
+
+        expect(onItemClick).toHaveBeenCalled();
+        expect(onOpenChange).not.toHaveBeenCalledWith(false);
+    });
+
+    it('closes popup when clicking a non-current item inside popup', () => {
+        const onOpenChange = jest.fn();
+        const items: AsideHeaderItem[] = [{id: 'item1', title: 'Other Item', icon: Gear}];
+
+        renderItemPopup({items, onOpenChange, open: true});
+
+        fireEvent.click(screen.getByText('Other Item'));
+
+        expect(onOpenChange).toHaveBeenCalledWith(false);
+    });
+
     it('renders items with icons when hideIcon is false', () => {
         const items: AsideHeaderItem[] = [
             {id: 'item1', title: 'With Icon', icon: Gear, iconQa: 'icon-item1'},
@@ -148,5 +175,112 @@ describe('ItemPopup', () => {
 
         // eslint-disable-next-line testing-library/no-node-access
         expect(document.querySelector('.gn-composite-bar-item__popup-title')).toBeNull();
+    });
+
+    it('lets itemWrapper receive bubbled clicks in popup', () => {
+        const onWrapperClick = jest.fn();
+        const items: AsideHeaderItem[] = [
+            {
+                id: 'item1',
+                title: 'Wrapped item',
+                icon: Gear,
+                itemWrapper: (params, makeItem) => (
+                    <a href="/test" data-testid="item-wrapper" onClick={onWrapperClick}>
+                        {makeItem(params)}
+                    </a>
+                ),
+            },
+        ];
+
+        renderItemPopup({items, open: true});
+
+        fireEvent.click(screen.getByText('Wrapped item'));
+
+        expect(onWrapperClick).toHaveBeenCalledTimes(1);
+        // itemWrapper uses a div (not a nested button) so the link can handle navigation.
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(screen.getByText('Wrapped item').closest('[role="button"]')?.tagName).toBe('DIV');
+    });
+
+    it('uses onPopupItemClick for popup rows when provided', () => {
+        const onPopupItemClick = jest.fn();
+        const onItemClick = jest.fn();
+        const items: AsideHeaderItem[] = [{id: 'item1', title: 'Child', icon: Gear}];
+
+        render(
+            <ThemeProvider theme="light">
+                <AsideHeaderInnerContextProvider value={contextValue}>
+                    <ItemPopup
+                        items={items}
+                        open
+                        onOpenChange={() => {}}
+                        onPopupItemClick={onPopupItemClick}
+                        onItemClick={onItemClick}
+                    >
+                        <button type="button">Trigger</button>
+                    </ItemPopup>
+                </AsideHeaderInnerContextProvider>
+            </ThemeProvider>,
+        );
+
+        fireEvent.click(screen.getByText('Child'));
+
+        expect(onPopupItemClick).toHaveBeenCalledWith(
+            expect.objectContaining({id: 'item1'}),
+            false,
+            expect.any(Object),
+        );
+        expect(onItemClick).not.toHaveBeenCalled();
+    });
+
+    it('stops click propagation at the popup content boundary when itemWrapper is not provided', () => {
+        const onParentClick = jest.fn();
+        const items: AsideHeaderItem[] = [{id: 'item1', title: 'Plain item', icon: Gear}];
+
+        render(
+            <ThemeProvider theme="light">
+                <AsideHeaderInnerContextProvider value={contextValue}>
+                    <div data-testid="parent" onClick={onParentClick}>
+                        <ItemPopup items={items} open onOpenChange={() => {}}>
+                            <button type="button">Trigger</button>
+                        </ItemPopup>
+                    </div>
+                </AsideHeaderInnerContextProvider>
+            </ThemeProvider>,
+        );
+
+        fireEvent.click(screen.getByText('Plain item'));
+
+        expect(onParentClick).not.toHaveBeenCalled();
+    });
+
+    it('stops click propagation at the popup content boundary when itemWrapper is provided', () => {
+        const onParentClick = jest.fn();
+        const items: AsideHeaderItem[] = [
+            {
+                id: 'item1',
+                title: 'Wrapped item',
+                icon: Gear,
+                itemWrapper: (params, makeItem) => (
+                    <div data-testid="item-wrapper">{makeItem(params)}</div>
+                ),
+            },
+        ];
+
+        render(
+            <ThemeProvider theme="light">
+                <AsideHeaderInnerContextProvider value={contextValue}>
+                    <div data-testid="parent" onClick={onParentClick}>
+                        <ItemPopup items={items} open onOpenChange={() => {}}>
+                            <button type="button">Trigger</button>
+                        </ItemPopup>
+                    </div>
+                </AsideHeaderInnerContextProvider>
+            </ThemeProvider>,
+        );
+
+        fireEvent.click(screen.getByText('Wrapped item'));
+
+        expect(onParentClick).not.toHaveBeenCalled();
     });
 });
