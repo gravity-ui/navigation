@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import {AsideHeaderItem} from 'src/components/AsideHeader/types';
+import type {AsideHeaderItem} from 'src/components/AsideHeader/types';
 
 export interface ItemProps extends AsideHeaderItem {}
 
@@ -21,10 +21,12 @@ export interface ItemInnerProps extends ItemProps {
     /** When true, the icon slot is not rendered (e.g. compact popover: icon stays in the bar). */
     hideIcon?: boolean;
     /**
-     * Stops click bubbling so portaled content (e.g. compact popover duplicate) does not trigger
-     * the parent Item's onClick in the React tree.
+     * Stops click bubbling so portaled popup rows do not trigger the parent Item's onClick.
+     * Off when `itemWrapper` is set so the wrapper (e.g. react-router Link) receives the click.
      */
     stopClickPropagation?: boolean;
+    /** Direct AsideHeader `onItemClick` for rows rendered inside {@link ItemPopup}. */
+    onPopupItemClick?: AsideHeaderItem['onItemClick'];
     /** Inline menu-group tree (L-connector) rendered inside the row, before the icon slot. */
     menuGroupNestedTreeConnector?: React.ReactNode;
 }

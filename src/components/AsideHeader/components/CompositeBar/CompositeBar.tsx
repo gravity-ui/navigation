@@ -93,6 +93,17 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
         }
     }, [compact]);
 
+    const onPopupItemClick = useCallback(
+        (
+            item: AsideHeaderItem,
+            collapsed: boolean,
+            event: React.MouseEvent<HTMLElement, MouseEvent>,
+        ) => {
+            onItemClick?.(item, collapsed, event);
+        },
+        [onItemClick],
+    );
+
     const onItemClickByIndex = useCallback(
         (orginalItemClick: AsideHeaderItem['onItemClick']): ItemProps['onItemClick'] =>
             (item, collapsed, event) => {
@@ -102,7 +113,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                     onItemClick?.(
                         {
                             ...item,
-                            onItemClick: collapsed ? item.onItemClick : orginalItemClick,
+                            onItemClick: orginalItemClick,
                         },
                         collapsed,
                         event,
@@ -169,6 +180,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                             menuPopupItems={menuPopupItems}
                             menuPopupTitle={menuPopupTitle}
                             onMouseLeave={onMouseLeave}
+                            onPopupItemClick={onPopupItemClick}
                             onItemClick={onItemClickByIndex(item.onItemClick)}
                         />
                     );
@@ -187,6 +199,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                             menuPopupTitle={row.group.popupTitle}
                             className={b('menu-group-header')}
                             onMouseLeave={onMouseLeave}
+                            onPopupItemClick={onPopupItemClick}
                             onItemClick={onSyntheticHeaderItemClick}
                         />
                     );

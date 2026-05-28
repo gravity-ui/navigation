@@ -5,7 +5,7 @@ import React from 'react';
 
 import {Gear} from '@gravity-ui/icons';
 import {ThemeProvider} from '@gravity-ui/uikit';
-import {fireEvent, render, screen} from '@testing-library/react';
+import {act, fireEvent, render, screen} from '@testing-library/react';
 
 import {MenuGroup} from '../../../../types';
 import {AsideHeaderInnerContextProvider} from '../../../AsideHeaderContext';
@@ -96,11 +96,56 @@ describe('CompositeBar', () => {
 
         renderCompositeBar({items, onItemClick, menuGroups});
 
-        // Expand the group header to open the popup
         const groupHeader = screen.getByText('Resources Group');
         fireEvent.click(groupHeader);
 
         expect(screen.getByText('Ресурсы')).toBeTruthy();
+    });
+
+    it('does not close compact icon tooltip when clicking the current leaf menu item', () => {
+        jest.useFakeTimers();
+
+        const onItemClick = jest.fn();
+        const items: AsideHeaderItem[] = [{id: 'home', title: 'Home', icon: Gear, current: true}];
+
+        renderCompositeBar({items, onItemClick, compact: true});
+
+        const itemButton = screen.getByRole('button');
+
+        fireEvent.mouseEnter(itemButton);
+
+        act(() => {
+            jest.advanceTimersByTime(150);
+        });
+
+        expect(screen.getByText('Home')).toBeTruthy();
+
+        fireEvent.click(itemButton);
+
+        expect(screen.getByText('Home')).toBeTruthy();
+
+        jest.useRealTimers();
+    });
+
+    it('keeps the group popup open when clicking the group header in compact mode', () => {
+        const onItemClick = jest.fn();
+        const items: AsideHeaderItem[] = [
+            {id: 'wb-1', title: 'Workbook 1', icon: Gear, groupId: 'resources'},
+            {id: 'wb-2', title: 'Workbook 2', icon: Gear, groupId: 'resources'},
+        ];
+        const menuGroups: MenuGroup[] = [
+            {id: 'resources', title: 'Resources Group', popupTitle: 'Ресурсы', icon: Gear},
+        ];
+
+        renderCompositeBar({items, onItemClick, menuGroups, compact: true});
+
+        const groupHeader = screen.getByText('Resources Group');
+        fireEvent.click(groupHeader);
+        expect(screen.getByText('Ресурсы')).toBeTruthy();
+
+        fireEvent.click(groupHeader);
+        expect(screen.getByText('Ресурсы')).toBeTruthy();
+        expect(screen.getByText('Workbook 1')).toBeTruthy();
     });
 
     it('does not render popupTitle when it is not set on the MenuGroup', () => {
