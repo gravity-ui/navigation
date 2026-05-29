@@ -9,4 +9,5 @@ export type {
     SettingsPageProps,
     SettingsSectionProps,
     SettingsItemProps,
+    SettingsMenuItemAriaProps,
 } from './types';
