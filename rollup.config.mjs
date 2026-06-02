@@ -21,19 +21,21 @@ const cssAliases = {
     'AsideHeader/components/PageLayout/AsideFallback.js': 'AsideHeader',
 };
 
-// External dependency checker - shared between ESM and CJS builds
-const peerDeps = [
+// External dependency checker - shared between ESM and CJS builds.
+const externalPackages = [
     'react',
     'react-dom',
     '@bem-react/classname',
     '@gravity-ui/components',
     '@gravity-ui/icons',
     '@gravity-ui/uikit',
+    'tslib',
+    'lodash',
+    'react-virtualized-auto-sizer',
 ];
 
 const isExternal = (id) => {
-    // Mark peer dependencies as external
-    return peerDeps.some((dep) => id.startsWith(dep));
+    return externalPackages.some((dep) => id === dep || id.startsWith(`${dep}/`));
 };
 
 // Single input file - Rollup will automatically detect and split components
