@@ -26,7 +26,6 @@ const externalPackages = [
     'react',
     'react-dom',
     '@bem-react/classname',
-    '@gravity-ui/components',
     '@gravity-ui/icons',
     '@gravity-ui/uikit',
     'tslib',

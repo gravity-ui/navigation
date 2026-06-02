@@ -56,7 +56,6 @@ The library requires these peer dependencies to be installed:
 npm install --save-dev \
   @gravity-ui/uikit@^6.15.0 \
   @gravity-ui/icons@2.2.0 \
-  @gravity-ui/components@3.0.0 \
   @bem-react/classname@1.6.0 \
   react@^18.0.0 \
   react-dom@18.0.0
