@@ -54,11 +54,11 @@ The library requires these peer dependencies to be installed:
 
 ```bash
 npm install --save-dev \
-  @gravity-ui/uikit@^6.15.0 \
-  @gravity-ui/icons@2.2.0 \
-  @bem-react/classname@1.6.0 \
-  react@^18.0.0 \
-  react-dom@18.0.0
+  @gravity-ui/uikit@^7.2.0 \
+  @gravity-ui/icons@^2.2.0 \
+  @bem-react/classname@^1.6.0 \
+  react@^19.0.0 \
+  react-dom@^19.0.0
 ```
 
 **Note**: For production, use `@gravity-ui/uikit@^7.2.0` or higher.
