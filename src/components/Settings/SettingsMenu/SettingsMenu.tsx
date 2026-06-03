@@ -91,6 +91,7 @@ function renderMenuItem(
     return (
         <span
             key={item.title}
+            {...item.menuItemAriaProps}
             className={b('item', {
                 selected: activeItemId === item.id,
                 disabled: item.disabled,

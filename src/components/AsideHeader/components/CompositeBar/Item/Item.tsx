@@ -85,6 +85,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         setCollapseBlocker,
         hidden,
         preventUserRemoving,
+        menuItemAriaProps,
     } = props;
 
     const ref = React.useRef<HTMLAnchorElement & HTMLButtonElement>(null);
@@ -153,11 +154,12 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             <React.Fragment>
                 <Tag
                     {...tagProps}
+                    {...(menuItemAriaProps ?? {})}
                     className={b({type, current, collapsed: !isExpanded}, className)}
                     ref={ref}
                     data-qa={qa}
                     data-type={type}
-                    aria-label={ariaLabel}
+                    aria-label={menuItemAriaProps?.['aria-label'] ?? ariaLabel}
                     onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
                         onItemClick?.(props, false, event, {setCollapseBlocker});
                     }}
