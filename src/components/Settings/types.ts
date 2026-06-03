@@ -10,12 +10,16 @@ interface GroupItem {
     items: Item[];
 }
 
+export type SettingsMenuItemAriaProps = React.AriaAttributes &
+    Pick<React.HTMLAttributes<HTMLSpanElement>, 'role'>;
+
 export interface Item {
     id: string;
     title: string;
     icon?: IconProps;
     disabled?: boolean;
     withBadge?: boolean;
+    menuItemAriaProps?: SettingsMenuItemAriaProps;
 }
 
 type SettingsMenuItems = (GroupItem | Item)[];
@@ -63,6 +67,8 @@ export interface SettingsPageProps {
     title?: string;
     icon?: IconProps;
     children: React.ReactNode;
+    /** Merged onto the left menu row in desktop Settings (`SettingsMenu`). */
+    menuItemAriaProps?: SettingsMenuItemAriaProps;
 }
 
 export interface SettingsSectionProps {

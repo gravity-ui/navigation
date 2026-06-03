@@ -53,6 +53,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         hideIcon = false,
         stopClickPropagation = false,
         menuGroupNestedTreeConnector,
+        menuItemAriaProps,
     } = props;
 
     const [compactNavPopoverOpen, setCompactNavPopoverOpen] = React.useState(false);
@@ -160,6 +161,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
         const wrappedByItemWrapper = typeof itemWrapper === 'function';
         const rowClassName = b({type, current, compact, 'hide-icon': hideIcon}, className);
+        const ariaLabel = typeof title === 'string' ? title : undefined;
 
         const handleRowClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
             if (compact && !collapsedItem && !showMenuPopup && !current) {
@@ -205,9 +207,11 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         );
 
         const rowEventProps = {
+            ...(menuItemAriaProps ?? {}),
             className: rowClassName,
             'data-type': type,
             'data-qa': qa,
+            'aria-label': menuItemAriaProps?.['aria-label'] ?? ariaLabel,
             onClick: handleRowClick,
             onClickCapture: onItemClickCapture,
             onMouseEnter: () => {
@@ -232,7 +236,11 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             );
         } else if (wrappedByItemWrapper) {
             tagNode = (
-                <div {...rowEventProps} role="button" ref={ref as React.RefObject<HTMLDivElement>}>
+                <div
+                    {...rowEventProps}
+                    role={menuItemAriaProps?.role ?? 'button'}
+                    ref={ref as React.RefObject<HTMLDivElement>}
+                >
                     {rowChildren}
                 </div>
             );

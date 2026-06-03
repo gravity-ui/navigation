@@ -5,6 +5,7 @@ import {IconProps} from '@gravity-ui/uikit';
 import {SettingsSelection} from './Selection/types';
 import {getSettingsDescriptionWithAllResultsPage} from './SettingsSearch/AllResultsPage';
 import {escapeStringForRegExp, invariant} from './helpers';
+import type {SettingsMenuItemAriaProps} from './types';
 
 export type SettingsMenu = (SettingsMenuGroup | SettingsMenuItem)[];
 
@@ -19,6 +20,7 @@ export interface SettingsMenuItem {
     icon?: IconProps;
     withBadge?: boolean;
     disabled?: boolean;
+    menuItemAriaProps?: SettingsMenuItemAriaProps;
 }
 
 export interface SettingsPage {
@@ -149,6 +151,7 @@ function getSettingsFromChildrenRecursive(
                     icon: element.props.icon,
                     withBadge: pages[pageId].withBadge,
                     disabled: pages[pageId].hidden,
+                    menuItemAriaProps: element.props.menuItemAriaProps,
                 });
             }
         }
