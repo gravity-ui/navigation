@@ -73,6 +73,7 @@ export const useAsideHeaderInnerContextValue = (
                 id: InnerPanels.AllPages,
                 children: <AllPagesPanel />,
                 open: innerVisiblePanel === InnerPanels.AllPages,
+                size: 'auto',
             },
         ];
     }, [allPagesIsAvailable, panelItems, innerVisiblePanel]);
