@@ -5,6 +5,9 @@
 ### ⚠ BREAKING CHANGES
 
 * **AsideHeader:** removed the `multipleTooltip` prop and the aggregated collapsed-menu labels popup. Rely on per-item `enableTooltip` / `tooltipText` (and other menu item props), or implement custom UI if you need a replacement for the old behavior.
+* **MobileHeader.burgerMenu.renderFooter:** changed the render data from `{size, isExpanded}` to `{size, isCompact}`. Use `!isCompact` where the old expanded-state check is still needed.
+* **Logo.wrapper:** the second callback argument is now `compact` instead of `isExpanded`. Use `!compact` where the old expanded-state check is still needed.
+* **PageLayoutProps:** removed `onChangePinned` and `isCompactMode`; `PageLayout` now follows the `compact` navigation state. Move compact state handling to `compact` / `onChangeCompact` on the AsideHeader/PageLayout usage path.
 
 ## [5.0.0](https://github.com/gravity-ui/navigation/compare/v4.0.11...v5.0.0) (2026-02-27)
 
