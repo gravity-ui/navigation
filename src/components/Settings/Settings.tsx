@@ -1,12 +1,13 @@
-import React from 'react';
+import React, {PropsWithChildren} from 'react';
 
-import {Flex, Loader} from '@gravity-ui/uikit';
+import {Flex, Loader, TabPanel, TabProvider} from '@gravity-ui/uikit';
 import identity from 'lodash/identity';
 
 import {Title} from '../Title';
 
 import {
     SettingsSelectionContextProvider,
+    SettingsSelectionProviderContextValue,
     useSettingsSelectionContext,
     useSettingsSelectionProviderValue,
 } from './Selection/context';
@@ -18,7 +19,7 @@ import {SettingsPageComponent} from './SettingsPage/SettingsPageComponent';
 import {useAllResultsPage} from './SettingsSearch/AllResultsPage';
 import {SettingsSearch} from './SettingsSearch/SettingsSearch';
 import {b} from './b';
-import {getSettingsFromChildren} from './collect-settings';
+import {SettingsMenu as SettingsMenuType, getSettingsFromChildren} from './collect-settings';
 import i18n from './i18n';
 import type {
     SettingsContentProps,
@@ -62,6 +63,116 @@ export function Settings({
     );
 }
 
+interface SettingsContentInnerProps
+    extends PropsWithChildren,
+        Pick<SettingsContentProps, 'initialSearch' | 'selection' | 'title' | 'filterPlaceholder'> {
+    initialSearch?: string;
+    selected: SettingsSelectionProviderContextValue;
+    activePage?: string;
+    menu: SettingsMenuType;
+    search: string;
+    setSearch: (newValue: string) => void;
+    onPageChange: (newPage: string | undefined) => void;
+}
+
+function SettingsContentInnerMobile({
+    initialSearch,
+    selection,
+    menu,
+    activePage,
+    setSearch,
+    onPageChange,
+    children,
+}: SettingsContentInnerProps) {
+    const searchInputRef = React.useRef<HTMLInputElement>(null);
+
+    return (
+        <TabProvider value={activePage} onUpdate={onPageChange}>
+            <React.Fragment>
+                <SettingsSearch
+                    inputRef={searchInputRef}
+                    className={b('search')}
+                    initialValue={initialSearch}
+                    selection={selection}
+                    onChange={setSearch}
+                    autoFocus={false}
+                    inputSize={'xl'}
+                />
+                <SettingsMenuMobile items={menu} className={b('tabs')} />
+            </React.Fragment>
+            {activePage ? <TabPanel value={activePage}>{children}</TabPanel> : children}
+        </TabProvider>
+    );
+}
+
+function SettingsContentInnerDesktop({
+    title,
+    selection,
+    menu,
+    activePage,
+    filterPlaceholder,
+    initialSearch,
+    search,
+    setSearch,
+    onPageChange,
+    children,
+}: SettingsContentInnerProps) {
+    const menuRef = React.useRef<SettingsMenuInstance>(null);
+    const searchInputRef = React.useRef<HTMLInputElement>(null);
+
+    React.useEffect(() => {
+        menuRef.current?.clearFocus();
+    }, [search]);
+
+    React.useEffect(() => {
+        const handler = () => {
+            menuRef.current?.clearFocus();
+        };
+        window.addEventListener('click', handler);
+        return () => {
+            window.removeEventListener('click', handler);
+        };
+    }, []);
+
+    return (
+        <React.Fragment>
+            <div
+                className={b('menu')}
+                onClick={() => {
+                    if (searchInputRef.current) {
+                        searchInputRef.current.focus();
+                    }
+                }}
+                onKeyDown={(event) => {
+                    if (menuRef.current) {
+                        if (menuRef.current.handleKeyDown(event)) {
+                            event.preventDefault();
+                        }
+                    }
+                }}
+            >
+                <Title>{title}</Title>
+                <SettingsSearch
+                    inputRef={searchInputRef}
+                    className={b('search')}
+                    initialValue={initialSearch}
+                    selection={selection}
+                    onChange={setSearch}
+                    placeholder={filterPlaceholder}
+                    autoFocus
+                />
+                <SettingsMenu
+                    ref={menuRef}
+                    items={menu}
+                    onChange={onPageChange}
+                    activeItemId={activePage}
+                />
+            </div>
+            {children}
+        </React.Fragment>
+    );
+}
+
 function SettingsContent({
     initialPage,
     initialSearch,
@@ -87,23 +198,7 @@ function SettingsContent({
         selectionInitialPage ||
             (initialPage && pageKeys.includes(initialPage) ? initialPage : undefined),
     );
-    const searchInputRef = React.useRef<HTMLInputElement>(null);
-    const menuRef = React.useRef<SettingsMenuInstance>(null);
     const isMobile = view === 'mobile';
-
-    React.useEffect(() => {
-        menuRef.current?.clearFocus();
-    }, [search]);
-
-    React.useEffect(() => {
-        const handler = () => {
-            menuRef.current?.clearFocus();
-        };
-        window.addEventListener('click', handler);
-        return () => {
-            window.removeEventListener('click', handler);
-        };
-    }, []);
 
     let activePage = selectedPage;
 
@@ -111,20 +206,28 @@ function SettingsContent({
         activePage = Object.values(pages).find(({hidden}) => !hidden)?.id;
     }
 
-    const handlePageChange = (newPage: string | undefined) => {
-        setCurrentPage((prevPage) => {
-            if (prevPage !== newPage && !isFakePage(newPage)) {
-                onPageChange?.(newPage);
-            }
-            return newPage;
-        });
-    };
+    const {isAllSearchPage, hasAllSearchResultsPage, allSearchResultsId} = useAllResultsPage({
+        pages,
+    });
 
-    const {isAllSearchPage} = useAllResultsPage({pages, handlePageChange});
+    const handlePageChange = React.useCallback(
+        (newPage: string | undefined) => {
+            setCurrentPage((prevPage) => {
+                if (prevPage !== newPage && !isAllSearchPage(newPage)) {
+                    onPageChange?.(newPage);
+                }
+                return newPage;
+            });
+        },
+        [isAllSearchPage, onPageChange],
+    );
 
-    function isFakePage(page: string | undefined) {
-        return isAllSearchPage(page);
-    }
+    React.useEffect(() => {
+        if (hasAllSearchResultsPage) {
+            handlePageChange(allSearchResultsId);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [hasAllSearchResultsPage]);
 
     React.useEffect(() => {
         if (activePage !== selectedPage) {
@@ -143,74 +246,73 @@ function SettingsContent({
         }
     }, [selected.selectedRef]);
 
+    const tabContent = React.useMemo(
+        () => (
+            <div className={b('page')}>
+                <SettingsPageComponent
+                    menu={menu}
+                    pages={pages}
+                    selected={selected}
+                    search={search}
+                    isMobile={isMobile}
+                    page={activePage}
+                    emptyPlaceholder={emptyPlaceholder}
+                    renderNotFound={renderNotFound}
+                    onClose={onClose}
+                />
+            </div>
+        ),
+        [
+            activePage,
+            emptyPlaceholder,
+            isMobile,
+            menu,
+            onClose,
+            pages,
+            renderNotFound,
+            search,
+            selected,
+        ],
+    );
+
+    const contentInnerProps = React.useMemo<SettingsContentInnerProps>(
+        () => ({
+            menu,
+            onPageChange: handlePageChange,
+            selected,
+            setSearch,
+            activePage,
+            filterPlaceholder,
+            selection,
+            initialSearch,
+            title,
+            search,
+        }),
+        [
+            activePage,
+            filterPlaceholder,
+            handlePageChange,
+            initialSearch,
+            menu,
+            search,
+            selected,
+            selection,
+            title,
+        ],
+    );
+
     return (
         <SettingsSelectionContextProvider value={selected}>
             <div className={b({view})}>
                 {isMobile ? (
-                    <React.Fragment>
-                        <SettingsSearch
-                            inputRef={searchInputRef}
-                            className={b('search')}
-                            initialValue={initialSearch}
-                            selection={selection}
-                            onChange={setSearch}
-                            autoFocus={false}
-                            inputSize={'xl'}
-                        />
-                        <SettingsMenuMobile
-                            items={menu}
-                            onChange={handlePageChange}
-                            activeItemId={activePage}
-                            className={b('tabs')}
-                        />
-                    </React.Fragment>
+                    <SettingsContentInnerMobile {...contentInnerProps}>
+                        {tabContent}
+                    </SettingsContentInnerMobile>
                 ) : (
-                    <div
-                        className={b('menu')}
-                        onClick={() => {
-                            if (searchInputRef.current) {
-                                searchInputRef.current.focus();
-                            }
-                        }}
-                        onKeyDown={(event) => {
-                            if (menuRef.current) {
-                                if (menuRef.current.handleKeyDown(event)) {
-                                    event.preventDefault();
-                                }
-                            }
-                        }}
-                    >
-                        <Title>{title}</Title>
-                        <SettingsSearch
-                            inputRef={searchInputRef}
-                            className={b('search')}
-                            initialValue={initialSearch}
-                            selection={selection}
-                            onChange={setSearch}
-                            placeholder={filterPlaceholder}
-                            autoFocus
-                        />
-                        <SettingsMenu
-                            ref={menuRef}
-                            items={menu}
-                            onChange={handlePageChange}
-                            activeItemId={activePage}
-                        />
-                    </div>
+                    <SettingsContentInnerDesktop {...contentInnerProps}>
+                        {tabContent}
+                    </SettingsContentInnerDesktop>
                 )}
-                <div className={b('page')}>
-                    <SettingsPageComponent
-                        menu={menu}
-                        pages={pages}
-                        selected={selected}
-                        search={search}
-                        isMobile={isMobile}
-                        page={activePage}
-                        emptyPlaceholder={emptyPlaceholder}
-                        renderNotFound={renderNotFound}
-                        onClose={onClose}
-                    />
-                </div>
             </div>
         </SettingsSelectionContextProvider>
     );

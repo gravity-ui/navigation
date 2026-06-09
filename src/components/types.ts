@@ -4,6 +4,9 @@ import {AlertProps, IconProps, QAProps} from '@gravity-ui/uikit';
 
 export type MenuItemType = 'regular' | 'action' | 'divider';
 
+export type AsideHeaderMenuItemAriaProps = React.AriaAttributes &
+    Pick<React.HTMLAttributes<HTMLButtonElement>, 'role'>;
+
 export type OpenModalSubscriber = (open: boolean) => void;
 
 export interface MakeItemParams {
@@ -58,6 +61,7 @@ export interface MenuItem extends QAProps {
      */
     groupId?: string;
     className?: string;
+    menuItemAriaProps?: AsideHeaderMenuItemAriaProps;
 }
 
 export interface MenuGroup {
