@@ -2,7 +2,7 @@ import React from 'react';
 
 import {Gear, Xmark} from '@gravity-ui/icons';
 import {Button, Flex, Icon, Text, spacing} from '@gravity-ui/uikit';
-import type {Meta, StoryFn} from '@storybook/react';
+import type {Meta, StoryFn} from '@storybook/react-webpack5';
 
 import {MenuGroup} from '../../types';
 import {AsideHeader} from '../AsideHeader';
@@ -21,7 +21,7 @@ export default {
     component: AsideHeader,
     parameters: {
         a11y: {
-            element: '#storybook-root',
+            context: '#storybook-root',
             config: {
                 rules: [
                     {
