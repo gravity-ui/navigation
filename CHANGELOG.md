@@ -1,5 +1,21 @@
 # Changelog
 
+## [5.1.0](https://github.com/gravity-ui/navigation/compare/v5.0.0...v5.1.0) (2026-06-09)
+
+
+### Features
+
+* **SettingsMenu:** add aria attributes ([#629](https://github.com/gravity-ui/navigation/issues/629)) ([7d28331](https://github.com/gravity-ui/navigation/commit/7d28331bb7040327e6a74be4f8fe0fcbc2a3d151))
+* **Settings:** migrate from legacy TabsList component to TabList for SettingsMobile component ([#624](https://github.com/gravity-ui/navigation/issues/624)) ([9515523](https://github.com/gravity-ui/navigation/commit/9515523a1cc19b12330a327804f62bfe5c21612a))
+* storybook 9 ([#517](https://github.com/gravity-ui/navigation/issues/517)) ([4d13e81](https://github.com/gravity-ui/navigation/commit/4d13e81119ed6cc5a5775ea0d90d787ad4ebc11e))
+
+
+### Bug Fixes
+
+* **AsideHeader:** preserve consumer-provided style on Drawer panels ([#601](https://github.com/gravity-ui/navigation/issues/601)) ([0f503cd](https://github.com/gravity-ui/navigation/commit/0f503cd50009cb45037b569e0c79b04691f251c5))
+* **AsideHeader:** prevent Drawer veil from overlapping topAlert ([#599](https://github.com/gravity-ui/navigation/issues/599)) ([3c73966](https://github.com/gravity-ui/navigation/commit/3c739663415d66c70197e09a4d50198ab0113547))
+* **MobileHeader:** render Drawer in portal to prevent content overlap ([#593](https://github.com/gravity-ui/navigation/issues/593)) ([50c8ae4](https://github.com/gravity-ui/navigation/commit/50c8ae475ace7efd29fc75cae887f07fefec66be)), closes [#591](https://github.com/gravity-ui/navigation/issues/591)
+
 ## [Unreleased]
 
 ### ⚠ BREAKING CHANGES
