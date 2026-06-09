@@ -1,11 +1,9 @@
 import React, {PropsWithChildren, Suspense, useMemo} from 'react';
 
 import {Content, ContentProps} from '../../../Content';
-import {ASIDE_HEADER_EXPANDED_WIDTH} from '../../../constants';
+import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../../constants';
 import {TopAlertProps} from '../../../types';
-import {getCollapsedWidth} from '../../../utils/getCollapsedWidth';
 import {AsideHeaderContextProvider, useAsideHeaderContext} from '../../AsideHeaderContext';
-import {useIsExpanded} from '../../hooks/useIsExpanded';
 import {LayoutProps} from '../../types';
 import {b} from '../../utils';
 
@@ -30,36 +28,11 @@ function calcEstimatedTopAlertHeight(topAlert?: TopAlertProps) {
     );
 }
 
-export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {
-    onChangePinned?: (pinned: boolean) => void;
-    /** When `true`, menu items use compact height. */
-    isCompactMode?: boolean;
-}
+export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {}
 
-const Layout = ({
-    pinned,
-    className,
-    children,
-    topAlert,
-    onChangePinned,
-    isCompactMode,
-}: PageLayoutProps) => {
-    const {isExpanded, onExpand, onFold, setCollapseBlocker} = useIsExpanded(pinned);
-
-    const size = isExpanded ? ASIDE_HEADER_EXPANDED_WIDTH : getCollapsedWidth(isCompactMode);
-
-    const asideHeaderContextValue = useMemo(
-        () => ({
-            size,
-            pinned,
-            isExpanded,
-            onChangePinned,
-            onExpand,
-            onFold,
-            setCollapseBlocker,
-        }),
-        [size, pinned, isExpanded, onChangePinned, onExpand, onFold, setCollapseBlocker],
-    );
+const Layout = ({compact, className, children, topAlert}: PageLayoutProps) => {
+    const size = compact ? ASIDE_HEADER_COMPACT_WIDTH : ASIDE_HEADER_EXPANDED_WIDTH;
+    const asideHeaderContextValue = useMemo(() => ({size, compact}), [compact, size]);
 
     const estimatedTopAlertHeight = calcEstimatedTopAlertHeight(topAlert);
 
@@ -86,7 +59,7 @@ const Layout = ({
     return (
         <AsideHeaderContextProvider value={asideHeaderContextValue}>
             <div
-                className={b({collapsed: !isExpanded}, className)}
+                className={b({compact}, className)}
                 style={{
                     ...({'--gn-aside-header-size': `${size}px`} as React.CSSProperties),
                 }}
@@ -113,15 +86,10 @@ const ConnectedContent: React.FC<PropsWithChildren<Pick<ContentProps, 'renderCon
     children,
     renderContent,
 }) => {
-    const {size, pinned, isExpanded} = useAsideHeaderContext();
-    const isExpandedByHover = !pinned && isExpanded;
+    const {size} = useAsideHeaderContext();
 
     return (
-        <Content
-            size={size}
-            className={b('content', {'expanded-by-hover': isExpandedByHover})}
-            renderContent={renderContent}
-        >
+        <Content size={size} className={b('content')} renderContent={renderContent}>
             {children}
         </Content>
     );

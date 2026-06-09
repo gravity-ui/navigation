@@ -54,12 +54,11 @@ The library requires these peer dependencies to be installed:
 
 ```bash
 npm install --save-dev \
-  @gravity-ui/uikit@^6.15.0 \
-  @gravity-ui/icons@2.2.0 \
-  @gravity-ui/components@3.0.0 \
-  @bem-react/classname@1.6.0 \
-  react@^18.0.0 \
-  react-dom@18.0.0
+  @gravity-ui/uikit@^7.2.0 \
+  @gravity-ui/icons@^2.2.0 \
+  @bem-react/classname@^1.6.0 \
+  react@^19.0.0 \
+  react-dom@^19.0.0
 ```
 
 **Note**: For production, use `@gravity-ui/uikit@^7.2.0` or higher.
@@ -461,6 +460,10 @@ The library uses CSS variables for theming. Set these on `.g-root` or a parent e
   /* Dividers */
   --gn-aside-header-divider-horizontal-color: #e5e5e5;
   --gn-aside-header-divider-vertical-color: #e5e5e5;
+
+  /* Nested menu groups (tree connectors: vertical spine + elbow SVG stroke) */
+  --gn-aside-header-menu-group-tree-line-color: #c1c3c7;
+  --gn-aside-header-menu-group-tree-line-active-color: var(--g-color-base-brand);
 
   /* Item colors */
   --gn-aside-header-general-item-icon-color: #666;

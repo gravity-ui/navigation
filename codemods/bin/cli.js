@@ -9,7 +9,7 @@ const {program} = require('commander');
 const PACKAGE_DIR = path.dirname(__dirname);
 const TRANSFORMS_DIR = path.join(PACKAGE_DIR, 'transforms');
 
-const AVAILABLE_TRANSFORMS = ['v4', 'v5'];
+const AVAILABLE_TRANSFORMS = ['v4'];
 
 // Get available transforms
 const availableTransforms = fs
@@ -114,28 +114,16 @@ program
         });
     });
 
-// Command to run v4 transforms
+// Default command to run v4 transforms
 program
     .command('v4 <path>')
-    .description('Run v4 migration transforms')
+    .description('Run all transforms in sequence')
     .option('-d, --dry', 'Dry run (no changes will be made)')
     .option('-v, --verbose', 'Verbose output')
     .option('--ignore-pattern <pattern>', 'Ignore files matching this pattern')
     .action((targetPath, options) => {
-        console.log('Running v4 migration transforms...');
+        console.log('Running all transforms in sequence...');
         runTransform('v4', targetPath, options);
-    });
-
-// Command to run v5 transforms
-program
-    .command('v5 <path>')
-    .description('Run v5 migration transforms (compact → isExpanded)')
-    .option('-d, --dry', 'Dry run (no changes will be made)')
-    .option('-v, --verbose', 'Verbose output')
-    .option('--ignore-pattern <pattern>', 'Ignore files matching this pattern')
-    .action((targetPath, options) => {
-        console.log('Running v5 migration transforms...');
-        runTransform('v5', targetPath, options);
     });
 
 // Help command
@@ -150,9 +138,8 @@ program
 program.on('--help', () => {
     console.log('');
     console.log('Examples:');
-    console.log('  $ navigation-codemod v4 ./src');
-    console.log('  $ navigation-codemod v5 ./src');
-    console.log('  $ navigation-codemod v5 ./src --dry');
+    console.log('  $ navigation-codemod transform v4 ./src');
+    console.log('  $ navigation-codemod transform v4 ./src --dry');
     console.log('  $ navigation-codemod list');
     console.log('');
     console.log('Available transforms:');

@@ -7,7 +7,7 @@ $block: '.#{variables.$ns}footer';
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    height: 40px;
+    height: #{variables.$item-height};
     padding: 0 var(--g-spacing-6) 0 var(--g-spacing-3);
     gap: var(--g-spacing-6);
     background: var(--g-color-base-background);

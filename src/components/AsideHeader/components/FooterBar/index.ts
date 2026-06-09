@@ -1,1 +1,0 @@
-export {FooterBar} from './FooterBar';

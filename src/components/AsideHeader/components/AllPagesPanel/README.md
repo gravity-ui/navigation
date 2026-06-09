@@ -4,7 +4,7 @@
 
 <!--/GITHUB_BLOCK-->
 
-A navigation panel for managing and organizing application pages in the middle (menuItems) section of `AsideHeader` component. Panel provides drag-and-drop reordering and visibility toggles of menu items.
+A navigation panel for managing and organizing application pages in the middle (menuItems) section of `AsideHeader` component. Panel provides drag-and-drop reordering, visibility toggles, pin/unpin and category grouping of menu items.
 
 <!--GITHUB_BLOCK-->
 
@@ -33,8 +33,8 @@ const Navigation: React.FC<React.PropsWithChildren> = ({children}) => {
         href: '#',
       }}
       menuItems={menuItems}
-      pinned={pinned}
-      onChangePinned={setPinned}
+      compact={compact}
+      onChangeCompact={setCompact}
       renderContent={() => children}
       // All pages
       defaultMenuItems={defaultMenuItems}

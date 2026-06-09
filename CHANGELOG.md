@@ -1,5 +1,28 @@
 # Changelog
 
+## [Unreleased]
+
+### ⚠ BREAKING CHANGES
+
+For users upgrading from 4.x, the only breaking change is the `multipleTooltip` removal.
+
+* **AsideHeader:** removed the `multipleTooltip` prop and the aggregated collapsed-menu labels popup. Rely on per-item `enableTooltip` / `tooltipText` (and other menu item props), or implement custom UI if you need a replacement for the old behavior.
+
+#### Migrating from 5.0.0 only
+
+The following notes apply only to consumers who adopted the published 5.0.0 release. They are not required when upgrading from 4.x.
+
+* **MobileHeader.burgerMenu.renderFooter:** v6 restores the v4 render data shape: `{size, isCompact}` instead of the v5-only `{size, isExpanded}`. Use `!isCompact` where the v5 expanded-state check is still needed.
+* **Logo.wrapper:** v6 restores the v4 second callback argument: `compact` instead of the v5-only `isExpanded`. Use `!compact` where the v5 expanded-state check is still needed.
+* **PageLayoutProps:** v6 restores the v4 compact-state API and removes the v5-only `onChangePinned` and `isCompactMode` props. Use `compact` / `onChangeCompact` on the AsideHeader/PageLayout usage path.
+
+### Features
+
+* **AsideHeader:** added grouped navigation with `menuGroups`, `MenuGroup`, `AsideHeaderItem.groupId`, grouped All pages editing, and compact group popups with `MenuGroup.popupTitle`.
+* **AsideHeader:** added `menuOverflow="scroll"` for a scrollable middle navigation section with inline group expand/collapse controls.
+* **AsideHeader:** added custom scrollbar styling variables for scrollable navigation.
+* **AsideHeader, Settings:** added `menuItemAriaProps` for passing aria attributes and roles to menu items.
+
 ## [5.0.0](https://github.com/gravity-ui/navigation/compare/v4.0.11...v5.0.0) (2026-02-27)
 
 

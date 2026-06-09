@@ -12,8 +12,7 @@ export interface PanelItemProps extends DrawerProps {
 }
 
 export interface LayoutProps {
-    /** Navigation visual state. When `true`, the navigation is expanded (pinned open). When `false`, it is collapsed. */
-    pinned: boolean;
+    compact: boolean;
     className?: string;
     topAlert?: TopAlertProps;
 }
@@ -24,7 +23,22 @@ interface EditMenuProps {
     onResetSettingsToDefault?: () => void;
     enableSorting?: boolean;
     onChangeItemsOrder?: (changedItem: AsideHeaderItem, oldIndex: number, newIndex: number) => void;
+    /**
+     * Fired when visibility of a menu group is toggled from the All pages panel (pin on group header).
+     * Use with `onMenuGroupsChanged` / controlled `menuGroups`.
+     */
+    onToggleMenuGroup?: (changedGroup: MenuGroup) => void;
 }
+
+/**
+ * Menu overflow behavior.
+ * - `collapse` — extra items collapse under a "More" popup (default).
+ * - `scroll` — all items remain visible inside a scrollable container with a native thin scrollbar.
+ *
+ * In compact mode the menu always falls back to `collapse` regardless of this value
+ * because a scrollbar over icon-only items is awkward.
+ */
+export type AsideHeaderMenuOverflow = 'collapse' | 'scroll';
 
 interface AsideHeaderGeneralProps extends QAProps {
     logo?: LogoProps;
@@ -32,39 +46,31 @@ interface AsideHeaderGeneralProps extends QAProps {
     collapseTitle?: string;
     expandTitle?: string;
     menuMoreTitle?: string;
+    /**
+     * @see AsideHeaderMenuOverflow
+     * @default 'collapse'
+     */
+    menuOverflow?: AsideHeaderMenuOverflow;
     topAlert?: TopAlertProps;
     customBackground?: React.ReactNode;
     customBackgroundClassName?: string;
     hideCollapseButton?: boolean;
-    /** When `true`, menu items use compact height. */
-    isCompactMode?: boolean;
     renderContent?: RenderContentType;
-    /**
-     * Render function for the footer section.
-     *
-     * Return types:
-     * - `React.ReactNode` - Renders custom content as-is
-     * - `React.ReactNode[]` - Wraps in FooterBar with horizontal/vertical layout based on isPinned
-     */
     renderFooter?: (data: {
         size: number;
-        isExpanded: boolean;
-        isPinned: boolean;
+        compact: boolean;
         asideRef: React.RefObject<HTMLDivElement>;
-        isCompactMode?: boolean;
-    }) => React.ReactNode | React.ReactNode[];
-    /** Render function for additional content after items (e.g., user profile). Receives options with setCollapseBlocker to block sidebar collapse while a popup is open. */
-    renderFooterAfter?: (options?: {setCollapseBlocker?: SetCollapseBlocker}) => React.ReactNode;
+    }) => React.ReactNode;
     collapseButtonWrapper?: (
         defaultButton: React.ReactNode,
         data: {
-            isExpanded: boolean;
-            onChangePinned?: (pinned: boolean) => void;
+            compact: boolean;
+            onChangeCompact?: (compact: boolean) => void;
         },
     ) => React.ReactNode;
     editMenuProps?: EditMenuProps;
     onClosePanel?: () => void;
-    onChangePinned?: (pinned: boolean) => void;
+    onChangeCompact?: (compact: boolean) => void;
     onMenuMoreClick?: () => void;
     onAllPagesClick?: () => void;
     openModalSubscriber?: (subscriber: OpenModalSubscriber) => void;
@@ -74,12 +80,29 @@ interface AsideHeaderDefaultProps {
     panelItems?: PanelItemProps[];
     subheaderItems?: AsideHeaderItem[];
     menuItems?: AsideHeaderItem[];
-    defaultMenuItems?: AsideHeaderItem[];
     menuGroups?: MenuGroup[];
-    defaultMenuGroups?: MenuGroup[];
+    /**
+     * Called only from **All pages** edit mode when the user toggles visibility of a **menu group** (group header pin), updating `menuGroup.hidden`.
+     * Use with controlled `menuGroups`; not emitted for programmatic `menuGroups` changes outside All pages.
+     */
+    onMenuGroupsChanged?: (menuGroups: MenuGroup[]) => void;
+    defaultMenuItems?: AsideHeaderItem[];
     onMenuItemsChanged?: (items: AsideHeaderItem[]) => void;
-    onMenuGroupsChanged?: (groups: MenuGroup[]) => void;
     headerDecoration?: boolean;
+    /**
+     * When provided, the map is the source of truth for which menu groups are collapsed
+     * in inline (`menuOverflow: 'scroll'`) layout. Keys are `MenuGroup.id`, values mean collapsed.
+     */
+    collapsedMenuGroupIds?: Record<string, boolean>;
+    /**
+     * Initial collapsed state for groups when `collapsedMenuGroupIds` is not controlled.
+     */
+    defaultCollapsedMenuGroupIds?: Record<string, boolean>;
+    /**
+     * Called when the user toggles a group in inline layout. The parent should update
+     * `collapsedMenuGroupIds` when using controlled mode.
+     */
+    onToggleMenuGroupCollapsed?: (groupId: string) => void;
 }
 
 export type AsideHeaderInnerProps = AsideHeaderGeneralProps &
@@ -95,17 +118,26 @@ export enum InnerPanels {
     AllPages = 'all-pages',
 }
 
+/** Menu item id for the All pages row (same value as {@link InnerPanels.AllPages}). */
+export const ALL_PAGES_ID = InnerPanels.AllPages;
+
 export interface AsideHeaderItem extends MenuItem {
+    /**
+     * @internal CompositeBar: group children rendered from the "More" overflow popover.
+     */
+    compositeBarMenuPopupItems?: AsideHeaderItem[];
+    /**
+     * @internal CompositeBar: optional heading in the overflow popover for a group row.
+     */
+    compositeBarMenuPopupTitle?: string;
     enableTooltip?: boolean;
     onItemClick?: (
         item: AsideHeaderItem,
         collapsed: boolean,
         event: React.MouseEvent<HTMLElement, MouseEvent>,
-        options: {setCollapseBlocker: SetCollapseBlocker | undefined},
     ) => void;
     bringForward?: boolean;
-    /** When `true`, forces the item to display in expanded form. */
-    isExpanded?: boolean;
+    compact?: boolean;
 
     /**
      * @deprecated Use itemWrapper instead for popup functionality
@@ -142,16 +174,3 @@ export interface AsideHeaderItem extends MenuItem {
      */
     onOpenChangePopup?: PopupProps['onOpenChange'];
 }
-
-export interface GroupedMenuItem extends MenuItem {
-    groupId: string;
-    collapsible: boolean;
-    isCollapsed: boolean;
-    collapsedByDefault?: boolean;
-    items: MenuItemsWithGroups[];
-}
-
-export type MenuItemsWithGroups = MenuItem | GroupedMenuItem;
-
-/** Toggles a collapse blocker: pass `true` to block collapsing, `false` to unblock. */
-export type SetCollapseBlocker = (isBlocked: boolean) => void;

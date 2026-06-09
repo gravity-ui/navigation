@@ -89,7 +89,7 @@ export const MobileFooter: FC<FooterProps> = ({
                 <small className={b('copyright')}>{copyright}</small>
                 {view !== 'clear' && logo && (
                     <div className={logoWrapperClassName}>
-                        <Logo {...logo} placement="footer" />
+                        <Logo {...logo} />
                     </div>
                 )}
             </div>

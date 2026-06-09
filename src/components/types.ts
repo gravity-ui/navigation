@@ -2,8 +2,6 @@ import React, {HTMLAttributeAnchorTarget} from 'react';
 
 import {AlertProps, IconProps, QAProps} from '@gravity-ui/uikit';
 
-import {SetCollapseBlocker} from './AsideHeader/types';
-
 export type MenuItemType = 'regular' | 'action' | 'divider';
 
 export type AsideHeaderMenuItemAriaProps = React.AriaAttributes &
@@ -25,31 +23,39 @@ export interface MenuItem extends QAProps {
     iconQa?: string;
     href?: string;
     current?: boolean;
+    pinned?: boolean;
     onItemClick?: (
         item: MenuItem,
         collapsed: boolean,
         event: React.MouseEvent<HTMLElement, MouseEvent>,
-        options: {setCollapseBlocker: SetCollapseBlocker | undefined},
     ) => void;
     onItemClickCapture?: (event: React.SyntheticEvent) => void;
     itemWrapper?: (
         p: MakeItemParams,
         makeItem: (p: MakeItemParams) => React.ReactNode,
         opts: {
-            isExpanded: boolean;
+            collapsed: boolean;
+            compact: boolean;
             item: MenuItem;
             ref: React.RefObject<HTMLElement>;
-            /** Call with `true` when a popup opens, `false` when it closes, to block sidebar collapse while open. */
-            setCollapseBlocker: SetCollapseBlocker | undefined;
         },
     ) => React.ReactNode;
     preventUserRemoving?: boolean;
     rightAdornment?: React.ReactNode;
     type?: MenuItemType;
+    afterMoreButton?: boolean;
+    /**
+     * Order number. Used to determine the display order in the side menu
+     */
+    order?: number;
     /**
      * Visibility flag in the side menu
      */
     hidden?: boolean;
+    /**
+     * The category to which the menu item belongs. Need for grouping in the display/editing mode of all pages
+     */
+    category?: string;
     /**
      * The group ID to which the menu item belongs. Used for grouping menu items
      */
@@ -64,12 +70,11 @@ export interface MenuGroup {
     icon?: IconProps['data'];
     /** Hide the group from display */
     hidden?: boolean;
-    /** Allow collapsing the group via UI */
-    collapsible?: boolean;
-    /** Initial collapsed state when collapsible is true */
-    collapsedByDefault?: boolean;
-    /** Current collapsed state. When undefined, collapsedByDefault is used for display. */
-    collapsed?: boolean;
+    /**
+     * Optional title shown only in the compact popup that lists group children.
+     * Does not affect the group title displayed anywhere else.
+     */
+    popupTitle?: string;
 }
 
 export interface LogoProps {
@@ -82,8 +87,7 @@ export interface LogoProps {
     textSize?: number;
     href?: string;
     target?: HTMLAttributeAnchorTarget;
-    /** Wrapper function for the logo. The `isExpanded` parameter indicates if the navigation is expanded. */
-    wrapper?: (node: React.ReactNode, isExpanded: boolean) => React.ReactNode;
+    wrapper?: (node: React.ReactNode, compact: boolean) => React.ReactNode;
     onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
     'aria-label'?: string;
     'aria-labelledby'?: string;

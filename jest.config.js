@@ -12,6 +12,9 @@ module.exports = {
             tsconfig: '<rootDir>/tsconfig.jest.json',
         },
     },
+    moduleNameMapper: {
+        '\\.(css|scss)$': '<rootDir>/src/__mocks__/styleMock.js',
+    },
     coverageDirectory: './coverage',
     collectCoverageFrom: ['src/**/*.{ts,tsx}', '!**/__stories__/**/*', '!**/*/*.stories.{ts,tsx}'],
     modulePathIgnorePatterns: ['visual', 'helpersPlaywright'],

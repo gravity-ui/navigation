@@ -22,7 +22,7 @@ $block: '.#{variables.$ns}burger-composite-bar';
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        width: 40px;
+        width: #{variables.$item-height};
         margin-right: 8px;
     }
 
@@ -59,11 +59,11 @@ $block: '.#{variables.$ns}burger-composite-bar';
     }
 
     &__root-menu-item {
-        &:global(.g-list__item_selected) {
+        &.g-list__item_selected {
             background-color: var(--g-color-base-selection);
         }
 
-        &:not(:global(.g-list__item_selected)):global(.g-list__item_active) {
+        &:not(.g-list__item_selected).g-list__item_active {
             background: none;
         }
     }
