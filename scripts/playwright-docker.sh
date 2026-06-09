@@ -13,7 +13,7 @@ command_exists() {
 
 run_command() {
     $CONTAINER_TOOL run --rm --network host -it -w /work \
-        -v $(pwd):/work \
+        -v "$(pwd):/work" \
         -v "$NODE_MODULES_CACHE_DIR:/work/node_modules" \
         -e IS_DOCKER=1 \
         "$IMAGE_NAME:$IMAGE_TAG" \

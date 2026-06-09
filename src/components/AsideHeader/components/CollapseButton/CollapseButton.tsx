@@ -1,11 +1,12 @@
 import React, {useCallback} from 'react';
 
-import {ArrowLeftFromLine} from '@gravity-ui/icons';
-import {Button, Icon} from '@gravity-ui/uikit';
+import {Icon} from '@gravity-ui/uikit';
 
 import {createBlock} from '../../../utils/cn';
-import {useAsideHeaderContext, useAsideHeaderInnerContext} from '../../AsideHeaderContext';
+import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
 import i18n from '../../i18n';
+
+import controlMenuButtonIcon from '../../../../../assets/icons/control-menu-button.svg';
 
 import styles from './CollapseButton.module.scss';
 
@@ -13,41 +14,32 @@ const b = createBlock('collapse-button', styles);
 
 interface CollapseButtonProps {
     className?: string;
-    isCompactMode?: boolean;
 }
 
-export const CollapseButton = ({className, isCompactMode}: CollapseButtonProps) => {
-    const {pinned, onChangePinned} = useAsideHeaderContext();
-    const {expandTitle, collapseTitle, collapseButtonWrapper} = useAsideHeaderInnerContext();
+export const CollapseButton = ({className}: CollapseButtonProps) => {
+    const {onChangeCompact, compact, expandTitle, collapseTitle, collapseButtonWrapper} =
+        useAsideHeaderInnerContext();
 
     const onCollapseButtonClick = useCallback(() => {
-        const newPinned = !pinned;
+        onChangeCompact?.(!compact);
+    }, [compact, onChangeCompact]);
 
-        onChangePinned?.(newPinned);
-    }, [pinned, onChangePinned]);
-
-    const buttonTitle = pinned
-        ? collapseTitle || i18n('button_collapse')
-        : expandTitle || i18n('button_expand');
+    const buttonTitle = compact
+        ? expandTitle || i18n('button_expand')
+        : collapseTitle || i18n('button_collapse');
 
     const defaultButton = (
-        <Button
-            view="flat-secondary"
-            size={isCompactMode ? 'm' : 'l'}
-            className={b({collapsed: !pinned}, className)}
+        <button
+            className={b({compact}, className)}
             onClick={onCollapseButtonClick}
-            aria-label={buttonTitle}
             title={buttonTitle}
         >
-            <Icon data={ArrowLeftFromLine} className={b('icon')} size={16} />
-        </Button>
+            <Icon data={controlMenuButtonIcon} className={b('icon')} width="16" height="10" />
+        </button>
     );
 
     if (collapseButtonWrapper) {
-        return collapseButtonWrapper(defaultButton, {
-            isExpanded: pinned,
-            onChangePinned,
-        });
+        return collapseButtonWrapper(defaultButton, {compact, onChangeCompact});
     }
 
     return defaultButton;

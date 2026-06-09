@@ -1,4 +1,4 @@
-import type { StorybookConfig } from '@storybook/react-webpack5';
+import type {StorybookConfig} from '@storybook/react-webpack5';
 
 const config: StorybookConfig = {
     staticDirs: ['./assets'],
@@ -11,16 +11,23 @@ const config: StorybookConfig = {
         './focus-addon/register.tsx',
         '@storybook/addon-a11y',
         '@storybook/addon-webpack5-compiler-babel',
-        '@chromatic-com/storybook'
+        '@chromatic-com/storybook',
+        '@storybook/addon-docs',
     ],
 
     framework: {
         name: '@storybook/react-webpack5',
-        options: {}
+        options: {},
+    },
+
+    docs: {},
+
+    core: {
+        disableTelemetry: true,
     },
 
     typescript: {
-        reactDocgen: 'react-docgen-typescript'
+        reactDocgen: 'react-docgen-typescript',
     },
 
     webpackFinal: async (config) => {
@@ -35,7 +42,7 @@ const config: StorybookConfig = {
                     }
                 }
                 return true;
-            }
+            },
         ) || [];
 
         // Add our rules for CSS Modules and regular styles at the beginning
@@ -92,19 +99,16 @@ const config: StorybookConfig = {
             // Rule for regular CSS files (including @gravity-ui/uikit)
             {
                 test: /\.css$/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                ],
-            }
+                use: ['style-loader', 'css-loader'],
+            },
         );
 
         return config;
     },
 
     features: {
-      backgrounds: false
-    }
+        backgrounds: false,
+    },
 };
 
 export default config;

@@ -10,12 +10,12 @@ import styles from './MobileLogo.module.scss';
 const b = createBlock('mobile-logo', styles);
 
 export interface MobileLogoProps extends LogoProps {
-    isExpanded: boolean;
+    compact: boolean;
 }
 
 export const MobileLogo: React.FC<MobileLogoProps> = ({
     text,
-    isExpanded,
+    compact,
     icon,
     iconSrc,
     iconClassName,
@@ -66,7 +66,7 @@ export const MobileLogo: React.FC<MobileLogoProps> = ({
 
     return hasWrapper ? (
         <div className={b(null, className)} onClick={onClick}>
-            {wrapper(logo, isExpanded)}
+            {wrapper(logo, compact)}
         </div>
     ) : (
         <a

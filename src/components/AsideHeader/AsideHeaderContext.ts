@@ -1,28 +1,16 @@
 import React from 'react';
 
-import {MenuGroup} from '../types';
-
-import {AsideHeaderInnerProps, AsideHeaderItem, SetCollapseBlocker} from './types';
+import {AsideHeaderInnerProps, AsideHeaderItem} from './types';
 
 export interface AsideHeaderInnerContextType extends AsideHeaderInnerProps {
     menuItems: AsideHeaderItem[];
-    menuGroups?: MenuGroup[];
     defaultMenuItems?: AsideHeaderItem[];
-    defaultMenuGroups?: MenuGroup[];
-    onMenuGroupsChanged?: (groups: MenuGroup[]) => void;
-    onToggleGroupCollapsed?: (groupId: string) => void;
     allPagesIsAvailable: boolean;
     onItemClick: (
         item: AsideHeaderItem,
         collapsed: boolean,
         event: React.MouseEvent<HTMLElement, MouseEvent>,
-        options: {setCollapseBlocker: SetCollapseBlocker | undefined},
     ) => void;
-    onExpand?: () => void;
-    onFold?: () => void;
-    isExpanded: boolean;
-    /** Registers a temporary block on collapse (e.g. while dropdown is open). Returns release function. */
-    setCollapseBlocker?: SetCollapseBlocker;
 }
 
 const AsideHeaderInnerContext = React.createContext<AsideHeaderInnerContextType | undefined>(
@@ -42,24 +30,19 @@ export const useAsideHeaderInnerContext = (): AsideHeaderInnerContextType => {
 };
 
 export interface AsideHeaderContextType {
-    /** Navigation visual state. When `true`, the navigation is expanded (pinned open). When `false`, it is collapsed. */
-    pinned: boolean;
+    compact: boolean;
     size: number;
-    isExpanded: boolean;
-    onChangePinned?: (pinned: boolean) => void;
-    onExpand?: () => void;
-    onFold?: () => void;
-    /** Registers a temporary block on collapse (e.g. while dropdown is open). Returns release function. */
-    setCollapseBlocker?: SetCollapseBlocker;
 }
 
-const AsideHeaderContext = React.createContext<AsideHeaderContextType | undefined>(undefined);
+const AsideHeaderContext = React.createContext<AsideHeaderContextType | undefined>({
+    compact: false,
+    size: 0,
+});
 
 AsideHeaderContext.displayName = 'AsideHeaderContext';
 
 export const AsideHeaderContextProvider = AsideHeaderContext.Provider;
 
-/** Returns context value or throws when used outside AsideHeader. Use when component must be wrapped with provider. */
 export const useAsideHeaderContext = (): AsideHeaderContextType => {
     const contextValue = React.useContext(AsideHeaderContext);
     if (contextValue === undefined) {
@@ -70,10 +53,8 @@ export const useAsideHeaderContext = (): AsideHeaderContextType => {
     return contextValue;
 };
 
-/**
- * Returns context value or undefined when used outside AsideHeader. Use when component can be used with or without provider.
- * @returns Context value or undefined when outside provider.
- */
-export const useAsideHeaderContextOptional = (): AsideHeaderContextType | undefined => {
-    return React.useContext(AsideHeaderContext);
+export const useSafeAsideHeaderContext = (): AsideHeaderContextType | undefined => {
+    const contextValue = React.useContext(AsideHeaderContext);
+
+    return contextValue;
 };

@@ -2,8 +2,6 @@ import React from 'react';
 
 import {ASIDE_HEADER_ICON_SIZE} from '../../../constants';
 import {block, createBlock} from '../../../utils/cn';
-import {useAsideHeaderContextOptional} from '../../AsideHeaderContext';
-import {useFooterLayout} from '../../FooterLayoutContext';
 import {AsideHeaderItem} from '../../types';
 import {Item} from '../CompositeBar/Item/Item';
 
@@ -12,29 +10,14 @@ import styles from './FooterItem.module.scss';
 const b = createBlock('footer-item', styles);
 const bGlobal = block('footer-item');
 
-export interface FooterItemProps extends AsideHeaderItem {
-    /** Layout mode: 'horizontal' shows icon only, 'vertical' shows icon and title. Used by FooterBar. */
-    layout?: 'horizontal' | 'vertical';
-}
+export interface FooterItemProps extends AsideHeaderItem {}
 
 export function FooterItem(props: FooterItemProps) {
-    const {layout, isExpanded: isExpandedProp, ...restProps} = props;
-    const context = useAsideHeaderContextOptional();
-    const contextIsExpanded = context?.isExpanded ?? true;
-
-    const footerLayoutCtx = useFooterLayout();
-    const effectiveLayout = layout ?? footerLayoutCtx?.layout ?? 'vertical';
-    const effectiveIsExpanded = isExpandedProp ?? footerLayoutCtx?.isExpanded ?? contextIsExpanded;
-    const isInFooterBar = Boolean(footerLayoutCtx);
-
     return (
         <Item
-            {...restProps}
-            layout={effectiveLayout}
+            {...props}
             iconSize={ASIDE_HEADER_ICON_SIZE}
-            isExpanded={effectiveIsExpanded}
-            setCollapseBlocker={context?.setCollapseBlocker}
-            className={`${b({collapsed: !effectiveIsExpanded, layout: effectiveLayout, 'footer-bar': isInFooterBar})} ${bGlobal()}`}
+            className={`${b({compact: props.compact})} ${bGlobal()}`}
         />
     );
 }

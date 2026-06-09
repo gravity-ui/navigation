@@ -4,40 +4,14 @@ import {MenuItem} from '../types';
 
 import {AsideHeaderInnerContextType} from './AsideHeaderContext';
 import {AllPagesPanel, getAllPagesMenuItem} from './components/AllPagesPanel';
-import {
-    AsideHeaderItem,
-    AsideHeaderProps,
-    InnerPanels,
-    PanelItemProps,
-    SetCollapseBlocker,
-} from './types';
+import {AsideHeaderItem, AsideHeaderProps, InnerPanels, PanelItemProps} from './types';
 
 const EMPTY_MENU_ITEMS: AsideHeaderItem[] = [];
 
 export const useAsideHeaderInnerContextValue = (
-    props: AsideHeaderProps & {
-        size: number;
-        pinned: boolean;
-        isExpanded: boolean;
-        onExpand?: () => void;
-        onFold?: () => void;
-        setCollapseBlocker?: SetCollapseBlocker;
-    },
+    props: AsideHeaderProps & {size: number},
 ): AsideHeaderInnerContextType => {
-    const {
-        size,
-        onClosePanel,
-        menuItems,
-        menuGroups,
-        defaultMenuGroups,
-        panelItems,
-        isCompactMode = false,
-        setCollapseBlocker,
-        onMenuItemsChanged,
-        onMenuGroupsChanged,
-        onAllPagesClick,
-    } = props;
-
+    const {size, onClosePanel, menuItems, panelItems, onMenuItemsChanged, onAllPagesClick} = props;
     const [innerVisiblePanel, setInnerVisiblePanel] = useState<InnerPanels | undefined>();
     const ALL_PAGES_MENU_ITEM = React.useMemo(() => {
         return getAllPagesMenuItem();
@@ -59,12 +33,7 @@ export const useAsideHeaderInnerContextValue = (
     }, [onClosePanel]);
 
     const onItemClick = useCallback(
-        (
-            item: MenuItem,
-            collapsed: boolean,
-            event: React.MouseEvent<HTMLElement, MouseEvent>,
-            options: {setCollapseBlocker: SetCollapseBlocker | undefined},
-        ) => {
+        (item: MenuItem, collapsed: boolean, event: React.MouseEvent<HTMLElement, MouseEvent>) => {
             if (item.id === ALL_PAGES_MENU_ITEM.id) {
                 onClosePanel?.();
                 setInnerVisiblePanel((prev) =>
@@ -73,30 +42,9 @@ export const useAsideHeaderInnerContextValue = (
             } else {
                 innerOnClosePanel();
             }
-            item.onItemClick?.(item, collapsed, event, options);
+            item.onItemClick?.(item, collapsed, event);
         },
         [innerOnClosePanel, ALL_PAGES_MENU_ITEM, onClosePanel],
-    );
-
-    const onToggleGroupCollapsed = useCallback(
-        (groupId: string) => {
-            const updatedMenuGroups = menuGroups?.map((group) => {
-                if (group.id === groupId) {
-                    const effectiveCollapsed = group.collapsed ?? group.collapsedByDefault ?? false;
-
-                    return {
-                        ...group,
-                        collapsed: !effectiveCollapsed,
-                    };
-                }
-                return group;
-            });
-
-            if (updatedMenuGroups) {
-                onMenuGroupsChanged?.(updatedMenuGroups);
-            }
-        },
-        [menuGroups, onMenuGroupsChanged],
     );
 
     const innerMenuItems = useMemo(
@@ -125,43 +73,18 @@ export const useAsideHeaderInnerContextValue = (
                 id: InnerPanels.AllPages,
                 children: <AllPagesPanel />,
                 open: innerVisiblePanel === InnerPanels.AllPages,
+                size: 'auto',
             },
         ];
     }, [allPagesIsAvailable, panelItems, innerVisiblePanel]);
 
-    const hasPanelOpen = innerPanelItems?.some((p) => p.open) ?? false;
-    const didBlockRef = React.useRef(false);
-
-    useEffect(() => {
-        if (hasPanelOpen) {
-            setCollapseBlocker?.(true);
-            didBlockRef.current = true;
-        } else if (didBlockRef.current) {
-            setCollapseBlocker?.(false);
-            didBlockRef.current = false;
-        }
-
-        return () => {
-            if (didBlockRef.current) {
-                setCollapseBlocker?.(false);
-                didBlockRef.current = false;
-            }
-        };
-    }, [hasPanelOpen, setCollapseBlocker]);
-
     return {
         ...props,
-        setCollapseBlocker,
-        isCompactMode,
         onClosePanel: innerOnClosePanel,
         allPagesIsAvailable,
         menuItems: innerMenuItems,
-        menuGroups,
-        defaultMenuGroups,
-        onMenuGroupsChanged,
         panelItems: innerPanelItems,
         size,
         onItemClick,
-        onToggleGroupCollapsed,
     };
 };

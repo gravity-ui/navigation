@@ -1,119 +1,114 @@
-import {describe, expect, test} from '@jest/globals';
-
+import {POPUP_REGULAR_ITEM_HEIGHT} from '../../../../constants';
+import {MenuGroup} from '../../../../types';
 import {AsideHeaderItem} from '../../../types';
-import {filterRedundantDividers, getVisibleItemsWithFilteredDividers} from '../utils';
+import {type CompositeBarRow, buildCompositeBarRows} from '../grouping';
+import {
+    getAutosizeCompositeBarRows,
+    getItemHeight,
+    getItemsHeight,
+    getMoreButtonItem,
+    getPopupItemHeight,
+    getPopupItemsHeight,
+    getReorderedCompositeBarRows,
+    getSelectedCompositeBarRowIndex,
+    makeGroupHeaderAsideItem,
+} from '../utils';
 
-const ALL_PAGES_ID = 'all-pages';
+describe('CompositeBar utils', () => {
+    describe('getPopupItemHeight', () => {
+        it('returns POPUP_REGULAR_ITEM_HEIGHT for regular items', () => {
+            const item: AsideHeaderItem = {id: 'r', title: 'Regular'};
+            expect(getPopupItemHeight(item)).toBe(POPUP_REGULAR_ITEM_HEIGHT);
+        });
 
-const item = (id: string, type: 'regular' | 'divider' | 'action' = 'regular'): AsideHeaderItem => ({
-    id,
-    title: id,
-    type,
-});
-const hidden = (id: string, type: 'regular' | 'divider' = 'regular'): AsideHeaderItem => ({
-    id,
-    title: id,
-    type,
-    hidden: true,
-});
+        it('matches getItemHeight for action and divider types', () => {
+            const action: AsideHeaderItem = {id: 'a', title: 'Action', type: 'action'};
+            const divider: AsideHeaderItem = {id: 'd', title: 'Divider', type: 'divider'};
 
-describe('filterRedundantDividers', () => {
-    test('returns empty array for empty input', () => {
-        expect(filterRedundantDividers([])).toEqual([]);
+            expect(getPopupItemHeight(action)).toBe(getItemHeight(action));
+            expect(getPopupItemHeight(divider)).toBe(getItemHeight(divider));
+        });
     });
 
-    test('returns empty array when all items are dividers', () => {
-        expect(filterRedundantDividers([item('d1', 'divider'), item('d2', 'divider')])).toEqual([]);
+    describe('getPopupItemsHeight', () => {
+        it('sums getPopupItemHeight like getItemsHeight sums getItemHeight', () => {
+            const items: AsideHeaderItem[] = [
+                {id: 'r', title: 'Regular'},
+                {id: 'a', title: 'Action', type: 'action'},
+            ];
+
+            expect(getPopupItemsHeight(items)).toBe(
+                getPopupItemHeight(items[0]) + getPopupItemHeight(items[1]),
+            );
+            expect(getItemsHeight(items)).toBe(getItemHeight(items[0]) + getItemHeight(items[1]));
+        });
     });
 
-    test('removes all dividers when only item is allPagesId', () => {
-        expect(filterRedundantDividers([item(ALL_PAGES_ID)], ALL_PAGES_ID)).toEqual([
-            item(ALL_PAGES_ID),
-        ]);
-        expect(
-            filterRedundantDividers([item(ALL_PAGES_ID), item('d', 'divider')], ALL_PAGES_ID),
-        ).toEqual([item(ALL_PAGES_ID)]);
+    describe('getReorderedCompositeBarRows', () => {
+        it('returns the same array reference when there are no afterMoreButton items', () => {
+            const rows: CompositeBarRow[] = [
+                {kind: 'item', item: {id: 'a', title: 'A'}},
+                {kind: 'item', item: {id: 'b', title: 'B'}},
+            ];
+            expect(getReorderedCompositeBarRows(rows)).toBe(rows);
+        });
+
+        it('moves afterMoreButton rows to the end while preserving relative order', () => {
+            const rows: CompositeBarRow[] = [
+                {kind: 'item', item: {id: 'a', title: 'A'}},
+                {
+                    kind: 'item',
+                    item: {id: 'action', title: 'Create', type: 'action', afterMoreButton: true},
+                },
+                {kind: 'item', item: {id: 'b', title: 'B'}},
+                {kind: 'item', item: {id: 'c', title: 'C'}},
+                {
+                    kind: 'item',
+                    item: {id: 'action2', title: 'Create 2', type: 'action', afterMoreButton: true},
+                },
+            ];
+
+            expect(
+                getReorderedCompositeBarRows(rows)
+                    .filter((r): r is Extract<CompositeBarRow, {kind: 'item'}> => r.kind === 'item')
+                    .map((r) => r.item.id),
+            ).toEqual(['a', 'b', 'c', 'action', 'action2']);
+        });
     });
 
-    test('keeps single non-allPages item with dividers', () => {
-        const input = [item('a'), item('d', 'divider'), item('d2', 'divider')];
-        expect(filterRedundantDividers(input, ALL_PAGES_ID)).toEqual([item('a')]);
-    });
+    describe('group header selection', () => {
+        it('makeGroupHeaderAsideItem does not set current from children', () => {
+            const groups: MenuGroup[] = [{id: 'g1', title: 'G1'}];
+            const header = makeGroupHeaderAsideItem(groups[0]);
+            expect(header.current).toBeFalsy();
+        });
 
-    test('collapses consecutive dividers to one', () => {
-        const input = [
-            item('a'),
-            item('d1', 'divider'),
-            item('d2', 'divider'),
-            item('d3', 'divider'),
-            item('b'),
-        ];
-        expect(filterRedundantDividers(input)).toEqual([
-            item('a'),
-            item('d1', 'divider'),
-            item('b'),
-        ]);
-    });
-
-    test('removes leading and trailing dividers', () => {
-        const input = [
-            item('d0', 'divider'),
-            item('d1', 'divider'),
-            item('a'),
-            item('d2', 'divider'),
-            item('d3', 'divider'),
-        ];
-        expect(filterRedundantDividers(input)).toEqual([item('a')]);
-    });
-
-    test('returns empty when only dividers (after leading/trailing removal)', () => {
-        const input = [item('d1', 'divider'), item('d2', 'divider')];
-        expect(filterRedundantDividers(input)).toEqual([]);
-    });
-
-    test('without allPagesId does not treat single item as no content', () => {
-        const input = [item(ALL_PAGES_ID), item('d', 'divider')];
-
-        expect(filterRedundantDividers(input)).toEqual([item(ALL_PAGES_ID)]);
-    });
-});
-
-describe('getVisibleItemsWithFilteredDividers', () => {
-    test('filters out hidden items', () => {
-        const input = [item('a'), hidden('b'), item('c')];
-        expect(getVisibleItemsWithFilteredDividers(input)).toEqual([item('a'), item('c')]);
-    });
-
-    test('filters nested hidden and redundant dividers in groups', () => {
-        const input = [
-            {
-                ...item('g1'),
-                groupId: 'g1',
-                items: [
-                    item('a'),
-                    item('d1', 'divider'),
-                    item('d2', 'divider'),
-                    hidden('b'),
-                    item('c'),
+        it('getSelectedCompositeBarRowIndex ignores current on group children', () => {
+            const rows = buildCompositeBarRows(
+                [
+                    {id: 'a', title: 'A'},
+                    {id: 'c', title: 'C', groupId: 'g1', current: true},
                 ],
-            },
-        ];
-        const result = getVisibleItemsWithFilteredDividers(input, ALL_PAGES_ID);
-        expect(result).toHaveLength(1);
-        expect('items' in result[0] && result[0].items).toEqual([
-            item('a'),
-            item('d1', 'divider'),
-            item('c'),
-        ]);
+                [{id: 'g1', title: 'G1'}],
+            );
+            expect(getSelectedCompositeBarRowIndex(rows)).toBeUndefined();
+        });
     });
 
-    test('does not add items property to non-group items', () => {
-        const input = [item('a'), item('b')];
-        const result = getVisibleItemsWithFilteredDividers(input);
-        expect(result).toHaveLength(2);
-        expect(result[0]).toEqual(item('a'));
-        expect(result[1]).toEqual(item('b'));
-        expect('items' in result[0]).toBe(false);
-        expect('items' in result[1]).toBe(false);
+    describe('getAutosizeCompositeBarRows', () => {
+        it('moves a whole group into overflow as one synthetic row with popup children', () => {
+            const groups: MenuGroup[] = [{id: 'g1', title: 'G1'}];
+            const items: AsideHeaderItem[] = [
+                {id: 'a', title: 'A'},
+                {id: 'c1', title: 'C1', groupId: 'g1'},
+            ];
+            const rows = buildCompositeBarRows(items, groups);
+            const collapseItem = getMoreButtonItem('More');
+
+            const {collapseItems} = getAutosizeCompositeBarRows(rows, 1, collapseItem);
+
+            const overflowGroup = collapseItems.find((i) => i.compositeBarMenuPopupItems?.length);
+            expect(overflowGroup?.compositeBarMenuPopupItems?.map((c) => c.id)).toEqual(['c1']);
+        });
     });
 });

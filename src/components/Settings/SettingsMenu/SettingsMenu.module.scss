@@ -32,7 +32,7 @@ $block: '.#{variables.$ns}settings-menu';
         $item: &;
         display: flex;
         align-items: center;
-        height: 40px;
+        height: #{variables.$item-height};
         padding: 0 20px;
         cursor: pointer;
 

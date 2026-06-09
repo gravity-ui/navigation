@@ -1,8 +1,8 @@
-import React, {FC, ReactNode, useId} from 'react';
+import React, {FC, ReactNode} from 'react';
 
 import {createBlock} from '../../../../utils/cn';
 
-import {useScrollbar} from './useScrollbar';
+import {useScrollableScrollbarSync} from './useScrollableScrollbarSync';
 
 import styles from './ScrollableWithScrollbar.module.scss';
 
@@ -13,66 +13,55 @@ const EMPTY_DEPS: React.DependencyList = [];
 type ScrollableWithScrollbarProps = {
     children: ReactNode;
     className?: string;
+    /**
+     * Extra dependencies that should trigger a recalculation of the bottom
+     * shadow and custom scrollbar thumb (e.g. when the rendered items change).
+     */
     recalcDeps?: React.DependencyList;
 };
 
+// Hides the native scrollbar and renders a custom thumb synced with the
+// underlying scroll position. The scroll itself stays native (wheel / touch /
+// keyboard) — only the visual indicator and drag handling are custom, so the
+// reserved gutter width is identical across OS / browser scrollbar settings.
 export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
     children,
     className,
     recalcDeps = EMPTY_DEPS,
 }) => {
-    const scrollableContentId = useId();
     const {
         scrollRef,
-        scrollState,
-        updateScrollState,
-        showScrollbar,
-        thumbHeight,
-        thumbTop,
-        handleThumbMouseDown,
-        handleTrackClick,
-        handleScrollbarKeyDown,
-    } = useScrollbar({recalcDeps});
-
-    const hasContentBelow =
-        scrollState.scrollHeight > scrollState.clientHeight &&
-        scrollState.scrollTop + scrollState.clientHeight < scrollState.scrollHeight - 1;
+        trackRef,
+        thumbRef,
+        hasContentBelow,
+        overflows,
+        thumb,
+        scheduleUpdate,
+        handleThumbPointerDown,
+        handleTrackPointerDown,
+    } = useScrollableScrollbarSync(recalcDeps);
 
     return (
         <div className={b({'bottom-shadow': hasContentBelow}, className)}>
-            <div
-                id={scrollableContentId}
-                ref={scrollRef}
-                className={b('scrollable-inner')}
-                onScroll={updateScrollState}
-            >
+            <div ref={scrollRef} className={b('scrollable-inner')} onScroll={scheduleUpdate}>
                 {children}
             </div>
 
-            {showScrollbar && (
+            {overflows ? (
                 <div
-                    className={b('scrollbar')}
-                    role="scrollbar"
-                    aria-controls={scrollableContentId}
-                    aria-orientation="vertical"
-                    aria-valuenow={scrollState.scrollTop}
-                    aria-valuemin={0}
-                    aria-valuemax={scrollState.scrollHeight - scrollState.clientHeight}
-                    tabIndex={0}
-                    onKeyDown={handleScrollbarKeyDown}
+                    ref={trackRef}
+                    className={b('scrollbar-track')}
+                    onPointerDown={handleTrackPointerDown}
+                    aria-hidden="true"
                 >
-                    <div className={b('scrollbar-track')} onClick={handleTrackClick}>
-                        <div
-                            className={b('scrollbar-thumb')}
-                            style={{
-                                height: thumbHeight,
-                                transform: `translateY(${thumbTop}px)`,
-                            }}
-                            onMouseDown={handleThumbMouseDown}
-                        />
-                    </div>
+                    <div
+                        ref={thumbRef}
+                        className={b('scrollbar-thumb')}
+                        style={{transform: `translateY(${thumb.top}px)`, height: thumb.height}}
+                        onPointerDown={handleThumbPointerDown}
+                    />
                 </div>
-            )}
+            ) : null}
         </div>
     );
 };

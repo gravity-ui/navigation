@@ -1,68 +1,39 @@
 import React from 'react';
 
-import {Pin, PinFill} from '@gravity-ui/icons';
-import {Button, Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
-import {CSSTransition} from 'react-transition-group';
+import {ChevronDown, ChevronRight, ChevronUp} from '@gravity-ui/icons';
+import {Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
 
-import {ASIDE_HEADER_EXPAND_TRANSITION_DELAY, ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
+import {ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
 import {MakeItemParams} from '../../../../types';
 import {createBlock} from '../../../../utils/cn';
-import {AsideHeaderItem, SetCollapseBlocker} from '../../../types';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
-import {ITEM_TYPE_REGULAR} from '../constants';
+import {COLLAPSE_ITEM_ID, ITEM_TYPE_REGULAR} from '../constants';
+
+import {ItemInnerProps, ItemProps} from './Item.types';
+import {ItemPopup} from './ItemPopup';
+import {ItemPopupNestContext} from './ItemPopupNestContext';
+import {renderItemTitle} from './renderItemTitle';
 
 import styles from './Item.module.scss';
 
 const b = createBlock('composite-bar-item', styles);
 
-const itemTransitionClasses = {
-    enter: b('transition-title-enter'),
-    enterActive: b('transition-title-enter-active'),
-    enterDone: b('transition-title-enter-done'),
-    exit: b('transition-title-exit'),
-    exitActive: b('transition-title-exit-active'),
-    exitDone: b('transition-title-exit-done'),
-};
-
-export interface ItemProps extends AsideHeaderItem {}
-
-interface ItemInnerProps extends ItemProps {
-    /** Registers a temporary block on collapse (e.g. while dropdown is open). Returns release function. */
-    setCollapseBlocker?: SetCollapseBlocker;
-    /** When `true`, the item is displayed in expanded form. */
-    isExpanded?: boolean;
-    /** Layout mode: 'horizontal' shows icon only, 'vertical' shows icon and title. Used in FooterBar. */
-    layout?: 'horizontal' | 'vertical';
-    className?: string;
-    onMouseEnter?: () => void;
-    onMouseLeave?: () => void;
-    editMode?: boolean;
-    onToggleVisibility?: () => void;
-}
-
-function renderItemTitle(params: Pick<AsideHeaderItem, 'title' | 'rightAdornment'>) {
-    let titleNode = <div className={b('title-text')}>{params.title}</div>;
-
-    if (params.rightAdornment) {
-        titleNode = (
-            <React.Fragment>
-                {titleNode}
-                <div className={b('title-adornment')}>{params.rightAdornment}</div>
-            </React.Fragment>
-        );
-    }
-
-    return titleNode;
-}
-
 const defaultPopupPlacement: PopupPlacement = ['right-end'];
-const defaultPopupOffset: NonNullable<PopupProps['offset']> = {mainAxis: 8, crossAxis: -20};
+const defaultPopupOffset: NonNullable<PopupProps['offset']> = {mainAxis: 14};
+const CHEVRON_SIZE = 16;
+const CHEVRON_SIZE_COMPACT = 10;
 
 export const Item: React.FC<ItemInnerProps> = (props) => {
     const {
         className,
+        popupItemClassName,
+        menuPopupItems,
+        menuPopupTitle,
+        groupHeaderExpanded,
+        compact,
         onMouseLeave,
         onMouseEnter,
+        enableTooltip = true,
         popupVisible = false,
         popupRef: anchoreRefProp,
         popupPlacement = defaultPopupPlacement,
@@ -71,6 +42,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         renderPopupContent,
         onOpenChangePopup,
         onItemClick,
+        onPopupItemClick,
         onItemClickCapture,
         itemWrapper,
         bringForward,
@@ -78,50 +50,28 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         title,
         href,
         qa,
-        isExpanded = true,
-        layout = 'vertical',
-        editMode = false,
-        onToggleVisibility,
-        setCollapseBlocker,
-        hidden,
-        preventUserRemoving,
+        hideIcon = false,
+        stopClickPropagation = false,
+        menuGroupNestedTreeConnector,
         menuItemAriaProps,
     } = props;
 
-    const ref = React.useRef<HTMLAnchorElement & HTMLButtonElement>(null);
+    const [compactNavPopoverOpen, setCompactNavPopoverOpen] = React.useState(false);
+
+    const ref = React.useRef<HTMLElement>(null);
     const anchorRef = anchoreRefProp?.current ? anchoreRefProp : ref;
     const highlightedRef = React.useRef<HTMLDivElement>(null);
 
-    React.useEffect(() => {
-        let didBlock = false;
-
-        if (popupVisible) {
-            didBlock = true;
-
-            setCollapseBlocker?.(true);
-        }
-
-        return () => {
-            if (didBlock) {
-                setCollapseBlocker?.(false);
-            }
-        };
-    }, [popupVisible, setCollapseBlocker]);
-
     const type = props.type || ITEM_TYPE_REGULAR;
-    const current = props.current || false;
     const icon = props.icon;
     const iconSize = props.iconSize || ASIDE_HEADER_ICON_SIZE;
     const iconQa = props.iconQa;
+    const collapsedItem = props.id === COLLAPSE_ITEM_ID;
+    const inlineGroupHeader = groupHeaderExpanded !== undefined;
+    const resolvedMenuPopupItems = menuPopupItems ?? props.compositeBarMenuPopupItems;
+    const resolvedMenuPopupTitle = menuPopupTitle ?? props.compositeBarMenuPopupTitle;
 
-    const onPinButtonClick = React.useCallback(
-        (e: React.MouseEvent<HTMLButtonElement>) => {
-            e.stopPropagation();
-            e.preventDefault();
-            onToggleVisibility?.();
-        },
-        [onToggleVisibility],
-    );
+    const current = props.current || resolvedMenuPopupItems?.some((item) => item.current) || false;
 
     const handleOpenChangePopup = React.useCallback<NonNullable<ItemProps['onOpenChangePopup']>>(
         (newOpen, event, reason) => {
@@ -133,73 +83,198 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 return;
             }
 
+            if (newOpen) {
+                setCompactNavPopoverOpen(false);
+            }
+
             onOpenChangePopup?.(newOpen, event, reason);
         },
         [onOpenChangePopup],
     );
 
-    if (type === 'divider') {
+    const isDivider = type === 'divider';
+    const showMenuPopup =
+        !isDivider &&
+        Boolean(resolvedMenuPopupItems?.length) &&
+        (collapsedItem || !inlineGroupHeader);
+
+    const submenuNest = React.useContext(ItemPopupNestContext);
+
+    React.useEffect(() => {
+        if (!submenuNest || !showMenuPopup || !compactNavPopoverOpen) {
+            return undefined;
+        }
+
+        submenuNest.registerNestedOpen(1);
+
+        return () => {
+            submenuNest.registerNestedOpen(-1);
+        };
+    }, [submenuNest, showMenuPopup, compactNavPopoverOpen]);
+
+    if (isDivider) {
         return <div className={b('menu-divider')} />;
     }
 
-    const makeIconNode = (iconEl: React.ReactNode): React.ReactNode => {
-        return isExpanded ? iconEl : <div className={b('btn-icon')}>{iconEl}</div>;
+    const compactPopoverDisabled = !enableTooltip || popupVisible || type === 'action';
+
+    const makeIconNode = (iconEl: React.ReactNode, withCompactPopover = true): React.ReactNode => {
+        if (!compact) {
+            return iconEl;
+        }
+
+        const iconButton = (
+            <div
+                onMouseEnter={() => onMouseEnter?.()}
+                onMouseLeave={() => onMouseLeave?.()}
+                className={b('btn-icon')}
+            >
+                {iconEl}
+            </div>
+        );
+
+        if (!withCompactPopover || resolvedMenuPopupItems?.length) {
+            return iconButton;
+        }
+
+        return (
+            <ItemPopup
+                items={[props]}
+                open={compactNavPopoverOpen}
+                onOpenChange={(nextOpen) => {
+                    if (nextOpen && compactPopoverDisabled) return;
+                    setCompactNavPopoverOpen(nextOpen);
+                }}
+                hideIcon
+                itemClassName={popupItemClassName}
+                disabled={compactPopoverDisabled}
+                type={type}
+                collapsed={compact}
+                onPopupItemClick={onPopupItemClick}
+                onItemClick={onItemClick}
+            >
+                {iconButton}
+            </ItemPopup>
+        );
     };
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
-        const [Tag, tagProps] = href ? ['a' as const, {href}] : ['button' as const, {}];
+        const wrappedByItemWrapper = typeof itemWrapper === 'function';
+        const rowClassName = b({type, current, compact, 'hide-icon': hideIcon}, className);
         const ariaLabel = typeof title === 'string' ? title : undefined;
+
+        const handleRowClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+            if (compact && !collapsedItem && !showMenuPopup && !current) {
+                setCompactNavPopoverOpen(false);
+            }
+
+            onItemClick?.(props, collapsedItem, event);
+
+            if (stopClickPropagation) {
+                event.stopPropagation();
+            }
+        };
+
+        const rowChildren = (
+            <>
+                {menuGroupNestedTreeConnector}
+                <div className={b('icon-place')} ref={highlightedRef}>
+                    {makeIconNode(iconEl)}
+                </div>
+
+                <div className={b('title')} title={typeof title === 'string' ? title : undefined}>
+                    {titleEl}
+                </div>
+
+                {inlineGroupHeader ? (
+                    <div className={b('chevron')}>
+                        <Icon
+                            data={groupHeaderExpanded ? ChevronUp : ChevronDown}
+                            size={compact ? CHEVRON_SIZE_COMPACT : CHEVRON_SIZE}
+                        />
+                    </div>
+                ) : (
+                    Boolean(resolvedMenuPopupItems?.length) && (
+                        <div className={b('chevron')}>
+                            <Icon
+                                data={ChevronRight}
+                                size={compact ? CHEVRON_SIZE_COMPACT : CHEVRON_SIZE}
+                            />
+                        </div>
+                    )
+                )}
+            </>
+        );
+
+        const rowEventProps = {
+            ...(menuItemAriaProps ?? {}),
+            className: rowClassName,
+            'data-type': type,
+            'data-qa': qa,
+            'aria-label': menuItemAriaProps?.['aria-label'] ?? ariaLabel,
+            onClick: handleRowClick,
+            onClickCapture: onItemClickCapture,
+            onMouseEnter: () => {
+                if (!compact) {
+                    onMouseEnter?.();
+                }
+            },
+            onMouseLeave: () => {
+                if (!compact) {
+                    onMouseLeave?.();
+                }
+            },
+        };
+
+        let tagNode: React.ReactNode;
+
+        if (href) {
+            tagNode = (
+                <a {...rowEventProps} href={href} ref={ref as React.RefObject<HTMLAnchorElement>}>
+                    {rowChildren}
+                </a>
+            );
+        } else if (wrappedByItemWrapper) {
+            tagNode = (
+                <div
+                    {...rowEventProps}
+                    role={menuItemAriaProps?.role ?? 'button'}
+                    ref={ref as React.RefObject<HTMLDivElement>}
+                >
+                    {rowChildren}
+                </div>
+            );
+        } else {
+            tagNode = (
+                <button {...rowEventProps} ref={ref as React.RefObject<HTMLButtonElement>}>
+                    {rowChildren}
+                </button>
+            );
+        }
+
+        const expandedMenuRows = resolvedMenuPopupItems;
+
+        const wrappedTagNode =
+            showMenuPopup && expandedMenuRows ? (
+                <ItemPopup
+                    items={expandedMenuRows}
+                    title={resolvedMenuPopupTitle}
+                    open={compactNavPopoverOpen}
+                    itemClassName={popupItemClassName}
+                    onOpenChange={setCompactNavPopoverOpen}
+                    collapsed={collapsedItem ? true : compact}
+                    onPopupItemClick={onPopupItemClick}
+                    onItemClick={onItemClick}
+                >
+                    {tagNode}
+                </ItemPopup>
+            ) : (
+                tagNode
+            );
 
         const createdNode = (
             <React.Fragment>
-                <Tag
-                    {...tagProps}
-                    {...(menuItemAriaProps ?? {})}
-                    className={b({type, current, collapsed: !isExpanded}, className)}
-                    ref={ref}
-                    data-qa={qa}
-                    data-type={type}
-                    aria-label={menuItemAriaProps?.['aria-label'] ?? ariaLabel}
-                    onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-                        onItemClick?.(props, false, event, {setCollapseBlocker});
-                    }}
-                    onClickCapture={onItemClickCapture}
-                    onMouseEnter={() => {
-                        onMouseEnter?.();
-                    }}
-                    onMouseLeave={() => {
-                        onMouseLeave?.();
-                    }}
-                >
-                    <div className={b('icon-place')} ref={highlightedRef}>
-                        {makeIconNode(iconEl)}
-                    </div>
-
-                    {layout === 'vertical' && (
-                        <CSSTransition
-                            in={isExpanded}
-                            timeout={ASIDE_HEADER_EXPAND_TRANSITION_DELAY}
-                            classNames={itemTransitionClasses}
-                        >
-                            <div
-                                className={b('title')}
-                                title={typeof title === 'string' ? title : undefined}
-                            >
-                                {titleEl}
-                            </div>
-                        </CSSTransition>
-                    )}
-
-                    {editMode && !preventUserRemoving && onToggleVisibility ? (
-                        <Button
-                            onClick={onPinButtonClick}
-                            view={hidden ? 'flat-secondary' : 'flat-action'}
-                            className={b('visibility-button')}
-                        >
-                            <Button.Icon>{hidden ? <Pin /> : <PinFill />}</Button.Icon>
-                        </Button>
-                    ) : null}
-                </Tag>
+                {wrappedTagNode}
                 {renderPopupContent && Boolean(anchorRef?.current) && (
                     <Popup
                         strategy="fixed"
@@ -219,20 +294,16 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         return createdNode;
     };
 
-    const iconNode = icon ? (
-        <Icon qa={iconQa} data={icon} size={iconSize} className={b('icon')} />
-    ) : null;
+    const iconNode =
+        hideIcon || !icon ? null : (
+            <Icon qa={iconQa} data={icon} size={iconSize} className={b('icon')} />
+        );
     const titleNode = renderItemTitle({title, rightAdornment});
     const params = {icon: iconNode, title: titleNode};
     let highlightedNode = null;
     let node;
 
-    const opts = {
-        isExpanded,
-        item: props,
-        ref,
-        setCollapseBlocker,
-    };
+    const opts = {compact: Boolean(compact), collapsed: false, item: props, ref};
 
     if (typeof itemWrapper === 'function') {
         node = itemWrapper(params, makeNode, opts) as React.ReactElement;
@@ -240,12 +311,12 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             bringForward &&
             (itemWrapper(
                 params,
-                ({icon: iconEl}) => makeIconNode(iconEl),
+                ({icon: iconEl}) => makeIconNode(iconEl, false),
                 opts,
             ) as React.ReactElement);
     } else {
         node = makeNode(params);
-        highlightedNode = bringForward && makeIconNode(iconNode);
+        highlightedNode = bringForward && makeIconNode(iconNode, false);
     }
 
     return (
@@ -255,7 +326,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     iconNode={highlightedNode}
                     iconRef={highlightedRef}
                     onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) =>
-                        onItemClick?.(props, false, event, {setCollapseBlocker})
+                        onItemClick?.(props, false, event)
                     }
                     onClickCapture={onItemClickCapture}
                 />

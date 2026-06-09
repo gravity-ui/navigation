@@ -1,26 +1,45 @@
 import {useMemo} from 'react';
 
-import {MenuGroup, MenuItem} from '../../../types';
-import {MenuItemsWithGroups} from '../../types';
-import {getVisibleItemsWithFilteredDividers} from '../CompositeBar/utils';
+import type {MenuGroup} from '../../../types';
+import {ALL_PAGES_ID, AsideHeaderItem} from '../../types';
 
-import {ALL_PAGES_ID} from './constants';
+import {getAllPagesEditModeFlatItems} from './allPagesEditDisplay';
+import i18n from './i18n';
 
+/**
+ * Group menu items by category for the All pages panel.
+ *
+ * @param asideHeaderItems — items from context (includes synthetic All pages row).
+ * @param editMode — when true, applies edit-mode row selection (headers when `menuGroups` is set).
+ * @param menuGroups — when provided with edit mode, inserts one CompositeBar-style header per group.
+ * @returns Items grouped by `category` key for rendering sections.
+ */
 export const useGroupedMenuItems = (
-    menuItems: MenuItem[],
+    asideHeaderItems: AsideHeaderItem[],
+    editMode?: boolean,
     menuGroups?: MenuGroup[],
-    isEditMode = false,
-): MenuItemsWithGroups[] => {
-    return useMemo(() => {
-        const visibleItems = menuItems.filter((item: MenuItem): boolean => {
-            if (isEditMode && item.id === ALL_PAGES_ID) {
-                return false;
-            }
+    onMenuGroupsChanged?: (menuGroups: MenuGroup[]) => void,
+) => {
+    const allPagesMenuItems = useMemo(() => {
+        const base = asideHeaderItems.filter(
+            ({id, type}) => type !== 'divider' && id !== ALL_PAGES_ID,
+        );
 
-            return true;
-        });
+        const groupHeaderPins = Boolean(onMenuGroupsChanged);
 
-        visibleItems.sort(({type: typeA}, {type: typeB}) => {
+        let flatForGrouping: AsideHeaderItem[];
+
+        if (!editMode) {
+            flatForGrouping = base;
+        } else if (menuGroups?.length) {
+            flatForGrouping = getAllPagesEditModeFlatItems(base, menuGroups, {
+                enableGroupHeaderPins: groupHeaderPins,
+            });
+        } else {
+            flatForGrouping = base.filter((item) => !item.groupId);
+        }
+
+        flatForGrouping.sort(({type: typeA}, {type: typeB}) => {
             if (typeA === 'action') {
                 return 1;
             }
@@ -29,82 +48,20 @@ export const useGroupedMenuItems = (
             }
             return 0;
         });
-
-        const groupsMap = new Map<string, MenuGroup>();
-
-        menuGroups?.forEach((group) => {
-            groupsMap.set(group.id, group);
-        });
-
-        const groupedItems = new Map<string, MenuItemsWithGroups[]>();
-        const ungroupedItems: MenuItemsWithGroups[] = [];
-        const processedGroups = new Set<string>();
-
-        visibleItems.forEach((item) => {
-            const groupId = item.groupId;
-
-            if (groupId) {
-                if (!groupedItems.has(groupId)) {
-                    groupedItems.set(groupId, []);
+        const groupedItems = flatForGrouping.reduce(
+            (acc, asideHeaderItem) => {
+                const category =
+                    asideHeaderItem.category || i18n('all-panel.menu.category.allOther');
+                if (!acc[category]) {
+                    acc[category] = [];
                 }
+                acc[category].push(asideHeaderItem);
+                return acc;
+            },
+            {} as {[key: string]: AsideHeaderItem[]},
+        );
+        return groupedItems;
+    }, [asideHeaderItems, editMode, menuGroups, onMenuGroupsChanged]);
 
-                const group = groupedItems.get(groupId);
-
-                if (group) {
-                    group.push(item);
-                }
-            } else {
-                ungroupedItems.push(item);
-            }
-        });
-
-        const flatListItems: MenuItemsWithGroups[] = [];
-
-        visibleItems.forEach((item) => {
-            const groupId = item.groupId;
-
-            if (groupId) {
-                if (!processedGroups.has(groupId)) {
-                    processedGroups.add(groupId);
-
-                    const items = groupedItems.get(groupId) || [];
-
-                    if (items.length > 0) {
-                        const itemsWithVisible = items.filter((sortedItem) => !sortedItem.hidden);
-
-                        const group = groupsMap.get(groupId);
-                        const isAllGroupItemsHidden = itemsWithVisible.length === 0;
-                        const isGroupHidden = isAllGroupItemsHidden
-                            ? true
-                            : (group?.hidden ?? false);
-
-                        const effectiveCollapsed =
-                            group?.collapsed ?? group?.collapsedByDefault ?? false;
-
-                        flatListItems.push({
-                            id: groupId,
-                            title: group?.title ?? groupId,
-                            icon: group?.icon,
-                            hidden: isGroupHidden,
-                            collapsible: group?.collapsible,
-                            collapsedByDefault: group?.collapsedByDefault,
-                            isCollapsed: effectiveCollapsed,
-                            groupId: groupId,
-                            items,
-                        });
-                    }
-                }
-            }
-
-            if (!groupId) {
-                flatListItems.push(item);
-            }
-        });
-
-        if (isEditMode) {
-            return flatListItems;
-        }
-
-        return getVisibleItemsWithFilteredDividers(flatListItems, ALL_PAGES_ID) ?? [];
-    }, [menuItems, menuGroups, isEditMode]);
+    return allPagesMenuItems;
 };

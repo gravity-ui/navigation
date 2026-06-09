@@ -1,47 +1,24 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 
-import {Drawer, DrawerProps} from '@gravity-ui/uikit';
+import {Drawer} from '@gravity-ui/uikit';
 
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import {b} from '../utils';
 
-export const Panels: React.FC = () => {
-    const {panelItems, size, onClosePanel, onFold} = useAsideHeaderInnerContext();
-
-    const handleVeilClick = useCallback(() => {
-        onFold?.();
-        onClosePanel?.();
-    }, [onClosePanel, onFold]);
-
-    const handleOpenChange: Required<DrawerProps>['onOpenChange'] = useCallback(
-        (open, _event, reason) => {
-            if (reason === 'outside-press') {
-                handleVeilClick();
-                return;
-            }
-
-            if (!open) {
-                onClosePanel?.();
-            }
-
-            return;
-        },
-        [handleVeilClick, onClosePanel],
-    );
+export const Panels = () => {
+    const {panelItems, onClosePanel, size} = useAsideHeaderInnerContext();
 
     return panelItems ? (
         <React.Fragment>
-            {panelItems.map(({id, className, children, style: itemStyle, ...rest}) => (
+            {panelItems.map(({id, className, style: itemStyle, ...rest}) => (
                 <Drawer
                     {...rest}
                     key={id}
                     className={b('panels')}
-                    onOpenChange={handleOpenChange}
+                    onOpenChange={(open) => !open && onClosePanel?.()}
                     style={{...itemStyle, left: size, top: 'var(--gn-top-alert-height, 0px)'}}
                     contentClassName={b('panel', className)}
-                >
-                    {children}
-                </Drawer>
+                />
             ))}
         </React.Fragment>
     ) : null;

@@ -1,11 +1,10 @@
 import {Ellipsis} from '@gravity-ui/icons';
 
-import {AsideHeaderItem} from '../../types';
+import {ALL_PAGES_ID, AsideHeaderItem} from '../../types';
 
 import i18n from './i18n';
 
-export const ALL_PAGES_ID = 'all-pages' as const;
-export const UNGROUPED_ID = 'ungrouped' as const;
+export {ALL_PAGES_ID} from '../../types';
 
 export function getAllPagesMenuItem(): AsideHeaderItem {
     return {
