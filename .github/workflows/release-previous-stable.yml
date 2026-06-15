@@ -47,8 +47,8 @@ jobs:
               echo "major_version must be defined"
               exit 1
           fi
-          if [[ ! "$MAJOR_VERSION" =~ ^v?[0-9]+$ ]]; then
-              echo "major_version must match ^v?[0-9]+$"
+          if [[ ! "$MAJOR_VERSION" =~ ^v?(0|[1-9][0-9]*)$ ]]; then
+              echo "major_version must match ^v?(0|[1-9][0-9]*)$"
               exit 1
           fi
           selected_major="${MAJOR_VERSION#v}"
