@@ -7,12 +7,23 @@ name: Release previous major version
 on:
   workflow_dispatch:
     inputs:
+      major_version:
+        type: string
+        required: true
+        description: Major version to release, for example 4 or v4
       version_type:
         type: choice
+        required: true
         description: Select type of version for release
         options:
           - patch
           - minor
+      allow_package_major_mismatch:
+        type: boolean
+        required: false
+        default: false
+        # WARNING: when enabled, workflow may publish code from the selected branch under the requested major even if package.json belongs to another major.
+        description: Allow publishing selected major when package.json has another major
       set_latest:
         type: boolean
         required: false
@@ -22,11 +33,30 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          if [ "${{ github.event.inputs.version_type }}" == "" ]; then
+      - name: Validate inputs
+        run: |
+          if [ "$VERSION_TYPE" == "" ]; then
               echo "version_type must be defined"
               exit 1
           fi
+          if [ "$VERSION_TYPE" != "patch" ] && [ "$VERSION_TYPE" != "minor" ]; then
+              echo "version_type must be patch or minor"
+              exit 1
+          fi
+          if [ "$MAJOR_VERSION" == "" ]; then
+              echo "major_version must be defined"
+              exit 1
+          fi
+          if [[ ! "$MAJOR_VERSION" =~ ^v?[0-9]+$ ]]; then
+              echo "major_version must match ^v?[0-9]+$"
+              exit 1
+          fi
+          selected_major="${MAJOR_VERSION#v}"
+          echo "Selected major version: ${selected_major}"
+        shell: bash
+        env:
+          MAJOR_VERSION: ${{ github.event.inputs.major_version }}
+          VERSION_TYPE: ${{ github.event.inputs.version_type }}
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GRAVITY_UI_BOT_GITHUB_TOKEN }}
@@ -34,6 +64,27 @@ jobs:
         with:
           node-version: 18
           registry-url: 'https://registry.npmjs.org'
+      - name: Validate package major
+        run: |
+          package_version=$(node -p "require('./package.json').version")
+          if [[ ! "$MAJOR_VERSION" =~ ^v?[0-9]+$ ]]; then
+              echo "major_version must match ^v?[0-9]+$"
+              exit 1
+          fi
+          selected_major="${MAJOR_VERSION#v}"
+          package_major="${package_version%%.*}"
+          if [ "$selected_major" != "$package_major" ] && [ "$ALLOW_PACKAGE_MAJOR_MISMATCH" != "true" ]; then
+              echo "Selected major ${selected_major} does not match package.json version ${package_version}."
+              echo "Set allow_package_major_mismatch=true to publish the selected major from this branch anyway."
+              exit 1
+          fi
+          if [ "$selected_major" != "$package_major" ]; then
+              echo "WARNING: package.json version ${package_version} does not match selected major ${selected_major}; continuing because allow_package_major_mismatch=true."
+          fi
+        shell: bash
+        env:
+          MAJOR_VERSION: ${{ github.event.inputs.major_version }}
+          ALLOW_PACKAGE_MAJOR_MISMATCH: ${{ github.event.inputs.allow_package_major_mismatch }}
       - run: npm ci
         shell: bash
       - run: npm test
@@ -48,16 +99,20 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
+            const majorInput = process.env.MAJOR_VERSION;
+            if (!/^v?\d+$/.test(majorInput)) {
+              throw Error("major_version must match ^v?[0-9]+$");
+            }
+            const major = majorInput.replace(/^v/, "");
             const allVersions = JSON.parse(process.env.VERSIONS).reverse();
             // Filter only stable versions (exclude beta, alpha, rc, etc.)
             const versions = allVersions.filter(v => !v.includes('-'));
             if (versions.length === 0) {
               throw Error("No stable versions found");
             }
-            const currMajor = versions[0].split(".")[0];
-            const prevVersion = versions.find(v => !v.startsWith(`${currMajor}.`));
+            const prevVersion = versions.find(v => v.startsWith(`${major}.`));
             if (!prevVersion) {
-              throw Error("Previous major versions not found");
+              throw Error(`Stable versions for major ${major} not found`);
             }
             const versionParts = prevVersion.split(".");
             if (versionParts.length !== 3) {
@@ -67,8 +122,11 @@ jobs:
               versionParts[1] = `${Number(versionParts[1])+1}`;
               versionParts[2] = "0";
             }
-            else {
+            else if (process.env.VERSION_TYPE === "patch") {
               versionParts[2] = `${Number(versionParts[2])+1}`;
+            }
+            else {
+              throw Error("version_type must be patch or minor");
             }
             const newVersion = versionParts.join(".");
             core.info(`New version: ${newVersion}`);
@@ -79,6 +137,7 @@ jobs:
               core.setFailed(error.message);
             }
         env:
+          MAJOR_VERSION: ${{ github.event.inputs.major_version }}
           VERSION_TYPE: ${{ github.event.inputs.version_type }}
           VERSIONS: ${{ steps.npm_versions.outputs.npm_versions }}
       - name: Set version
