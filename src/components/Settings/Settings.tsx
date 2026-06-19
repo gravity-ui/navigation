@@ -83,7 +83,8 @@ function SettingsContentInnerMobile({
     setSearch,
     onPageChange,
     children,
-}: SettingsContentInnerProps) {
+    enableTabsScroll,
+}: SettingsContentInnerProps & {enableTabsScroll?: boolean}) {
     const searchInputRef = React.useRef<HTMLInputElement>(null);
 
     return (
@@ -98,7 +99,11 @@ function SettingsContentInnerMobile({
                     autoFocus={false}
                     inputSize={'xl'}
                 />
-                <SettingsMenuMobile items={menu} className={b('tabs')} />
+                <SettingsMenuMobile
+                    items={menu}
+                    className={b('tabs')}
+                    enableTabsScroll={enableTabsScroll}
+                />
             </React.Fragment>
             {activePage ? <TabPanel value={activePage}>{children}</TabPanel> : children}
         </TabProvider>
@@ -185,6 +190,7 @@ function SettingsContent({
     view,
     onPageChange,
     onClose,
+    enableMobileSettingsTabsScroll,
 }: SettingsContentProps) {
     const [search, setSearch] = React.useState(initialSearch ?? '');
     const {menu, pages} = getSettingsFromChildren(children, search);
@@ -305,7 +311,10 @@ function SettingsContent({
         <SettingsSelectionContextProvider value={selected}>
             <div className={b({view})}>
                 {isMobile ? (
-                    <SettingsContentInnerMobile {...contentInnerProps}>
+                    <SettingsContentInnerMobile
+                        {...contentInnerProps}
+                        enableTabsScroll={enableMobileSettingsTabsScroll}
+                    >
                         {tabContent}
                     </SettingsContentInnerMobile>
                 ) : (

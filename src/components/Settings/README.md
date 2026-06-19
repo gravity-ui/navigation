@@ -55,18 +55,19 @@ Pages with sections example:
 
 ## Properties
 
-| Name              | Description                                | Type                         | Default            |
-| :---------------- | :----------------------------------------- | :--------------------------- | :----------------- |
-| loading           | Flag of loading status                     | `boolean`                    |                    |
-| renderLoading     | content for loading status                 | `() => React.ReactNode`      |                    |
-| renderNotFound    | Empty panel content                        | `() => React.ReactNode`      |                    |
-| initialPage       | Inititial page in `/groupId/pageId` format | `string`                     |                    |
-| view              | Change view for Mobile                     | `"normal"`, `"mobile"`       | `"normal"`         |
-| onPageChange      | Page change handler                        | `(newPage?: string) => void` |                    |
-| onClose           | Settings close handler                     | `() => void`                 |                    |
-| title             | Page title                                 | `string`                     | 'Settings'         |
-| filterPlaceholder | Filter placeholder text                    | `string`                     | 'Search settings'  |
-| emptyPlaceholder  | Filter empty text                          | `string`                     | 'No results found' |
+| Name                           | Description                                                   | Type                         | Default            |
+| :----------------------------- | :------------------------------------------------------------ | :--------------------------- | :----------------- |
+| loading                        | Flag of loading status                                        | `boolean`                    |                    |
+| renderLoading                  | content for loading status                                    | `() => React.ReactNode`      |                    |
+| renderNotFound                 | Empty panel content                                           | `() => React.ReactNode`      |                    |
+| initialPage                    | Inititial page in `/groupId/pageId` format                    | `string`                     |                    |
+| view                           | Change view for Mobile                                        | `"normal"`, `"mobile"`       | `"normal"`         |
+| onPageChange                   | Page change handler                                           | `(newPage?: string) => void` |                    |
+| onClose                        | Settings close handler                                        | `() => void`                 |                    |
+| title                          | Page title                                                    | `string`                     | 'Settings'         |
+| filterPlaceholder              | Filter placeholder text                                       | `string`                     | 'Search settings'  |
+| emptyPlaceholder               | Filter empty text                                             | `string`                     | 'No results found' |
+| enableMobileSettingsTabsScroll | In mobile view tabs will overflow with scroll instead of wrap | `boolean`                    |                    |
 
 ## Settings.Group
 
