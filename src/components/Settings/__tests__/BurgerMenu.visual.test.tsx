@@ -17,6 +17,15 @@ test.describe('Settings', () => {
         await expectScreenshot();
     });
 
+    test('render story: <ViewMobileWithTabsScroll>', async ({mount, expectScreenshot}) => {
+        await mount(<SettingsStories.ViewMobileWithTabsScroll />, undefined, {
+            width: 400,
+            height: 600,
+        });
+
+        await expectScreenshot();
+    });
+
     test('render story: <Overflow>', async ({mount, expectScreenshot}) => {
         await mount(<SettingsStories.Overflow />);
 

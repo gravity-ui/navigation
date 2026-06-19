@@ -65,10 +65,12 @@ export const SettingsMobileComponent = React.memo(
         initialPage,
         withBadge,
         onClose,
+        enableMobileSettingsTabsScroll,
     }: {
         initialPage?: string;
         withBadge?: boolean;
         onClose?: () => void;
+        enableMobileSettingsTabsScroll?: boolean;
     }) => {
         const [settings, dispatch] = useReducer(reducer, defaultSettings);
         const handleChange = (name: string, value: any) => {
@@ -86,6 +88,7 @@ export const SettingsMobileComponent = React.memo(
                     console.log({page});
                 }}
                 onClose={onClose}
+                enableMobileSettingsTabsScroll={enableMobileSettingsTabsScroll}
             >
                 <Settings.Group id="arcanum" groupTitle="Arcanum">
                     <Settings.Page id="features" title="Features">
@@ -236,6 +239,18 @@ export function SettingsMobileDemo() {
     return (
         <div className={b()}>
             <SettingsMobileComponent withBadge onClose={() => alert('Close settings')} />
+        </div>
+    );
+}
+
+export function SettingsMobileWithTabsScrollDemo() {
+    return (
+        <div className={b()}>
+            <SettingsMobileComponent
+                withBadge
+                onClose={() => alert('Close settings')}
+                enableMobileSettingsTabsScroll
+            />
         </div>
     );
 }

@@ -5,7 +5,7 @@ import type {Meta, StoryFn} from '@storybook/react-webpack5';
 import {Settings} from '..';
 
 import {SettingsDemo} from './SettingsDemo';
-import {SettingsMobileDemo} from './SettingsMobileDemo';
+import {SettingsMobileDemo, SettingsMobileWithTabsScrollDemo} from './SettingsMobileDemo';
 import {SettingsOverflowDemo} from './SettingsOverflowDemo';
 
 export default {
@@ -39,6 +39,9 @@ export const Showcase = ShowcaseTemplate.bind({});
 
 const ShowcaseMobileTemplate: StoryFn = () => <SettingsMobileDemo />;
 export const ViewMobile = ShowcaseMobileTemplate.bind({});
+
+const ShowcaseMobileWithTabsScrollTemplate: StoryFn = () => <SettingsMobileWithTabsScrollDemo />;
+export const ViewMobileWithTabsScroll = ShowcaseMobileWithTabsScrollTemplate.bind({});
 
 const OverflowTemplate: StoryFn = () => <SettingsOverflowDemo />;
 export const Overflow = OverflowTemplate.bind({});

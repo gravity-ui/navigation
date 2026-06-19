@@ -35,7 +35,9 @@ export interface SettingsMenuProps {
 export type SettingsMenuMobileProps = Omit<
     SettingsMenuProps,
     'activeItemId' | 'focusItemId' | 'onChange'
->;
+> & {
+    enableTabsScroll?: boolean;
+};
 
 export interface SettingsProps {
     children: React.ReactNode;
@@ -54,6 +56,7 @@ export interface SettingsProps {
     renderRightAdornment?: (item: SettingsItemProps) => React.ReactNode;
     renderSectionRightAdornment?: (section: SettingsPageSection) => React.ReactNode;
     showRightAdornmentOnHover?: boolean;
+    enableMobileSettingsTabsScroll?: boolean;
 }
 
 export interface SettingsGroupProps {
