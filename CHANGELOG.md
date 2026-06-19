@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.1.0](https://github.com/gravity-ui/navigation/compare/v6.0.0...v6.1.0) (2026-06-19)
+
+
+### Features
+
+* **Settings:** add scroll view for mobile tabs ([#643](https://github.com/gravity-ui/navigation/issues/643)) ([e95e6a8](https://github.com/gravity-ui/navigation/commit/e95e6a84fa767a97bba941631372d3190c8c15b0))
+
 ## [6.0.0](https://github.com/gravity-ui/navigation/compare/v5.0.0...v6.0.0) (2026-06-10)
 
 ### ⚠ BREAKING CHANGES
