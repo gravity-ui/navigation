@@ -1,17 +1,21 @@
 import React from 'react';
 
-import {ChevronDown, ChevronRight, ChevronUp} from '@gravity-ui/icons';
+import {ChevronDown, ChevronRight} from '@gravity-ui/icons';
 import {Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
 
-import {ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
 import {MakeItemParams} from '../../../../types';
 import {createBlock} from '../../../../utils/cn';
+import {useSafeAsideHeaderContext} from '../../../AsideHeaderContext';
+import {getAsideHeaderDensityConfig} from '../../../density';
+import {isQuickAccessPinEligible} from '../../../quickAccess';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {COLLAPSE_ITEM_ID, ITEM_TYPE_REGULAR} from '../constants';
 
 import {ItemInnerProps, ItemProps} from './Item.types';
+import {ItemCompactTooltip} from './ItemCompactTooltip';
 import {ItemPopup} from './ItemPopup';
 import {ItemPopupNestContext} from './ItemPopupNestContext';
+import {ItemQuickAccessPin} from './ItemQuickAccessPin';
 import {renderItemTitle} from './renderItemTitle';
 
 import styles from './Item.module.scss';
@@ -21,7 +25,6 @@ const b = createBlock('composite-bar-item', styles);
 const defaultPopupPlacement: PopupPlacement = ['right-end'];
 const defaultPopupOffset: NonNullable<PopupProps['offset']> = {mainAxis: 14};
 const CHEVRON_SIZE = 16;
-const CHEVRON_SIZE_COMPACT = 10;
 
 export const Item: React.FC<ItemInnerProps> = (props) => {
     const {
@@ -53,7 +56,10 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         hideIcon = false,
         stopClickPropagation = false,
         menuGroupNestedTreeConnector,
+        menuGroupNested,
         menuItemAriaProps,
+        enableQuickAccessPin,
+        onToggleQuickAccess,
     } = props;
 
     const [compactNavPopoverOpen, setCompactNavPopoverOpen] = React.useState(false);
@@ -64,14 +70,34 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const type = props.type || ITEM_TYPE_REGULAR;
     const icon = props.icon;
-    const iconSize = props.iconSize || ASIDE_HEADER_ICON_SIZE;
+    const asideHeaderContext = useSafeAsideHeaderContext();
+    const defaultIconSize = getAsideHeaderDensityConfig(asideHeaderContext?.menuDensity).iconSize;
+    const iconSize = props.iconSize || defaultIconSize;
     const iconQa = props.iconQa;
     const collapsedItem = props.id === COLLAPSE_ITEM_ID;
     const inlineGroupHeader = groupHeaderExpanded !== undefined;
     const resolvedMenuPopupItems = menuPopupItems ?? props.compositeBarMenuPopupItems;
-    const resolvedMenuPopupTitle = menuPopupTitle ?? props.compositeBarMenuPopupTitle;
+    const resolvedMenuPopupTitle = compact
+        ? (menuPopupTitle ?? props.compositeBarMenuPopupTitle)
+        : undefined;
 
     const current = props.current || resolvedMenuPopupItems?.some((item) => item.current) || false;
+
+    const showQuickAccessPin =
+        Boolean(enableQuickAccessPin) &&
+        !compact &&
+        isQuickAccessPinEligible(props) &&
+        typeof onToggleQuickAccess === 'function';
+
+    const handleToggleQuickAccess = React.useCallback(() => {
+        onToggleQuickAccess?.(props);
+    }, [
+        onToggleQuickAccess,
+        props.id,
+        props.quickAccess,
+        props.type,
+        props.compositeBarMenuPopupItems,
+    ]);
 
     const handleOpenChangePopup = React.useCallback<NonNullable<ItemProps['onOpenChangePopup']>>(
         (newOpen, event, reason) => {
@@ -96,7 +122,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const showMenuPopup =
         !isDivider &&
         Boolean(resolvedMenuPopupItems?.length) &&
-        (collapsedItem || !inlineGroupHeader);
+        (collapsedItem || !inlineGroupHeader || !groupHeaderExpanded);
 
     const submenuNest = React.useContext(ItemPopupNestContext);
 
@@ -138,36 +164,37 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         }
 
         return (
-            <ItemPopup
-                items={[props]}
-                open={compactNavPopoverOpen}
-                onOpenChange={(nextOpen) => {
-                    if (nextOpen && compactPopoverDisabled) return;
-                    setCompactNavPopoverOpen(nextOpen);
-                }}
-                hideIcon
-                itemClassName={popupItemClassName}
+            <ItemCompactTooltip
+                content={props.tooltipText ?? title}
                 disabled={compactPopoverDisabled}
                 type={type}
-                collapsed={compact}
-                onPopupItemClick={onPopupItemClick}
-                onItemClick={onItemClick}
             >
                 {iconButton}
-            </ItemPopup>
+            </ItemCompactTooltip>
         );
     };
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
         const wrappedByItemWrapper = typeof itemWrapper === 'function';
-        const rowClassName = b({type, current, compact, 'hide-icon': hideIcon}, className);
+        const showChevron = inlineGroupHeader
+            ? !compact
+            : !compact && Boolean(resolvedMenuPopupItems?.length);
+        const showAsideEnd = showChevron || showQuickAccessPin;
+
+        const rowClassName = b(
+            {
+                type,
+                current,
+                compact,
+                'hide-icon': hideIcon,
+                'menu-group-nested': menuGroupNested,
+                'with-aside-end': showAsideEnd,
+            },
+            className,
+        );
         const ariaLabel = typeof title === 'string' ? title : undefined;
 
         const handleRowClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-            if (compact && !collapsedItem && !showMenuPopup && !current) {
-                setCompactNavPopoverOpen(false);
-            }
-
             onItemClick?.(props, collapsedItem, event);
 
             if (stopClickPropagation) {
@@ -182,26 +209,31 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     {makeIconNode(iconEl)}
                 </div>
 
-                <div className={b('title')} title={typeof title === 'string' ? title : undefined}>
-                    {titleEl}
-                </div>
+                <div className={b('title')}>{titleEl}</div>
 
-                {inlineGroupHeader ? (
-                    <div className={b('chevron')}>
-                        <Icon
-                            data={groupHeaderExpanded ? ChevronUp : ChevronDown}
-                            size={compact ? CHEVRON_SIZE_COMPACT : CHEVRON_SIZE}
-                        />
-                    </div>
-                ) : (
-                    Boolean(resolvedMenuPopupItems?.length) && (
-                        <div className={b('chevron')}>
-                            <Icon
-                                data={ChevronRight}
-                                size={compact ? CHEVRON_SIZE_COMPACT : CHEVRON_SIZE}
+                {showAsideEnd && (
+                    <div className={b('aside-end')}>
+                        {showChevron && (
+                            <div className={b('chevron')}>
+                                <Icon
+                                    data={
+                                        inlineGroupHeader
+                                            ? groupHeaderExpanded
+                                                ? ChevronDown
+                                                : ChevronRight
+                                            : ChevronRight
+                                    }
+                                    size={CHEVRON_SIZE}
+                                />
+                            </div>
+                        )}
+                        {showQuickAccessPin && (
+                            <ItemQuickAccessPin
+                                quickAccess={props.quickAccess}
+                                onToggle={handleToggleQuickAccess}
                             />
-                        </div>
-                    )
+                        )}
+                    </div>
                 )}
             </>
         );
@@ -265,6 +297,8 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     collapsed={collapsedItem ? true : compact}
                     onPopupItemClick={onPopupItemClick}
                     onItemClick={onItemClick}
+                    enableQuickAccessPin={enableQuickAccessPin}
+                    onToggleQuickAccess={onToggleQuickAccess}
                 >
                     {tagNode}
                 </ItemPopup>

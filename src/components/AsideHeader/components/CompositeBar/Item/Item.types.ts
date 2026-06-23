@@ -12,8 +12,9 @@ export interface ItemInnerProps extends ItemProps {
     /** Optional title rendered at the top of the popup listing `menuPopupItems`. */
     menuPopupTitle?: string;
     /**
-     * When set, the row is an inline (expanded sidebar) group header: chevron up/down
-     * instead of a flyout chevron, and children render in a nested list.
+     * When set, the row is an inline (expanded sidebar) group header: chevron right
+     * when collapsed, chevron down when expanded. Collapsed headers may still show a
+     * hover flyout; expanded headers render children in a nested list instead.
      */
     groupHeaderExpanded?: boolean;
     onMouseEnter?: () => void;
@@ -29,4 +30,8 @@ export interface ItemInnerProps extends ItemProps {
     onPopupItemClick?: AsideHeaderItem['onItemClick'];
     /** Inline menu-group tree (L-connector) rendered inside the row, before the icon slot. */
     menuGroupNestedTreeConnector?: React.ReactNode;
+    /** Inline expanded menu-group child: text-only row aligned with the group header title. */
+    menuGroupNested?: boolean;
+    enableQuickAccessPin?: boolean;
+    onToggleQuickAccess?: (item: AsideHeaderItem) => void;
 }

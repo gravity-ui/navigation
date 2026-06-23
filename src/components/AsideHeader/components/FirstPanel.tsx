@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 
 import {setRef} from '@gravity-ui/uikit';
 
@@ -7,12 +7,15 @@ import i18n from '../i18n';
 import {b} from '../utils';
 
 import {useVisibleMenuItems} from './AllPagesPanel';
+import {useMainMenuItems} from './AllPagesPanel/useMainMenuItems';
+import {useQuickAccessMenuItems} from './AllPagesPanel/useQuickAccessMenuItems';
 import {CollapseButton} from './CollapseButton/CollapseButton';
 import {CompositeBar} from './CompositeBar';
 import {Header} from './Header';
 import {Panels} from './Panels';
 
 const MENU_ITEMS_COMPOSITE_ID = 'gravity-ui/navigation-menu-items-composite-bar';
+const QUICK_ACCESS_COMPOSITE_ID = 'gravity-ui/navigation-quick-access-composite-bar';
 
 export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
     const {
@@ -33,8 +36,25 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         defaultCollapsedMenuGroupIds,
         onToggleMenuGroupCollapsed,
         qa,
+        quickAccessIsAvailable,
+        onToggleQuickAccess,
+        enableQuickAccess,
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
+    const quickAccessItems = useQuickAccessMenuItems();
+    const mainMenuItems = useMainMenuItems();
+    const hasQuickAccessItems = quickAccessItems.length > 0;
+    const [menuScrollOverflows, setMenuScrollOverflows] = useState(false);
+
+    const handleMenuScrollOverflowChange = useCallback((overflows: boolean) => {
+        setMenuScrollOverflows(overflows);
+    }, []);
+
+    React.useEffect(() => {
+        if (menuOverflow !== 'scroll' || compact || !visibleMenuItems?.length) {
+            setMenuScrollOverflows(false);
+        }
+    }, [menuOverflow, compact, visibleMenuItems?.length]);
 
     const asideRef = useRef<HTMLDivElement>(null);
 
@@ -60,15 +80,40 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     </div>
                 )}
 
-                <div className={b('aside-content', {['with-decoration']: headerDecoration})}>
+                <div
+                    className={b('aside-content', {
+                        'with-decoration': headerDecoration,
+                        'with-quick-access': enableQuickAccess,
+                        'with-quick-access-items': enableQuickAccess && hasQuickAccessItems,
+                    })}
+                >
                     <Header />
-                    {visibleMenuItems?.length ? (
+                    {quickAccessItems.length > 0 && (
+                        <div className={b('quick-access')}>
+                            {!compact && (
+                                <div className={b('quick-access-title')}>
+                                    {i18n('quick_access_title')}
+                                </div>
+                            )}
+                            <CompositeBar
+                                menuItemClassName={b('menu-item')}
+                                compositeId={QUICK_ACCESS_COMPOSITE_ID}
+                                type="quick-access"
+                                compact={compact}
+                                items={quickAccessItems}
+                                onItemClick={onItemClick}
+                                enableQuickAccessPin={quickAccessIsAvailable}
+                                onToggleQuickAccess={onToggleQuickAccess}
+                            />
+                        </div>
+                    )}
+                    {mainMenuItems?.length ? (
                         <CompositeBar
                             menuItemClassName={b('menu-item')}
                             compositeId={MENU_ITEMS_COMPOSITE_ID}
                             type="menu"
                             compact={compact}
-                            items={visibleMenuItems}
+                            items={mainMenuItems}
                             menuGroups={menuGroups}
                             menuMoreTitle={menuMoreTitle ?? i18n('label_more')}
                             onItemClick={onItemClick}
@@ -77,18 +122,25 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             collapsedMenuGroupIds={collapsedMenuGroupIds}
                             defaultCollapsedMenuGroupIds={defaultCollapsedMenuGroupIds}
                             onToggleMenuGroupCollapsed={onToggleMenuGroupCollapsed}
+                            onMenuScrollOverflowChange={
+                                menuOverflow === 'scroll' && !compact
+                                    ? handleMenuScrollOverflowChange
+                                    : undefined
+                            }
+                            enableQuickAccessPin={quickAccessIsAvailable}
+                            onToggleQuickAccess={onToggleQuickAccess}
                         />
                     ) : (
                         <div className={b('menu-items')} />
                     )}
-                    <div className={b('footer')}>
+                    <div className={b('footer', {'with-divider': menuScrollOverflows})}>
                         {renderFooter?.({
                             size,
                             compact: Boolean(compact),
                             asideRef,
                         })}
+                        {!hideCollapseButton && <CollapseButton />}
                     </div>
-                    {!hideCollapseButton && <CollapseButton />}
                 </div>
             </div>
             <Panels />

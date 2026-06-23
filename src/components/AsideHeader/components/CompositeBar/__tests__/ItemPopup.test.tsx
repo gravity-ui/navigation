@@ -14,8 +14,11 @@ import {ItemPopup} from '../Item/ItemPopup';
 const contextValue = {
     compact: false,
     size: 200,
+    menuDensity: 'default' as const,
     menuItems: [],
     allPagesIsAvailable: false,
+    quickAccessIsAvailable: false,
+    onToggleQuickAccess: () => {},
     onItemClick: () => {},
 };
 
@@ -137,12 +140,12 @@ describe('ItemPopup', () => {
         expect(document.querySelector('[data-qa="icon-item1"]')).toBeTruthy();
     });
 
-    it('hides icons when hideIcon=true', () => {
+    it('hides icons by default', () => {
         const items: AsideHeaderItem[] = [
             {id: 'item1', title: 'No Icon', icon: Gear, iconQa: 'icon-item1'},
         ];
 
-        renderItemPopup({items, open: true, hideIcon: true});
+        renderItemPopup({items, open: true});
 
         // eslint-disable-next-line testing-library/no-node-access
         expect(document.querySelector('[data-qa="icon-item1"]')).toBeNull();
