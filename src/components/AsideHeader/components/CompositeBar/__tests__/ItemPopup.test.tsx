@@ -148,6 +148,21 @@ describe('ItemPopup', () => {
         expect(document.querySelector('[data-qa="icon-item1"]')).toBeNull();
     });
 
+    it('renders action items as regular rows (not floating action buttons) inside the popup', () => {
+        const items: AsideHeaderItem[] = [
+            {id: 'item1', title: 'Create', icon: Gear, type: 'action'},
+        ];
+
+        renderItemPopup({items, open: true});
+
+        expect(screen.getByText('Create')).toBeTruthy();
+        // eslint-disable-next-line testing-library/no-node-access
+        const row = document.querySelector('[data-type]');
+        expect(row).toBeTruthy();
+        expect(row?.getAttribute('data-type')).toBe('regular');
+        expect(row?.className).not.toContain('_type_action');
+    });
+
     it('renders title at the top of the popup when title prop is provided', () => {
         const items: AsideHeaderItem[] = [
             {id: 'item1', title: 'Child 1', icon: Gear},
