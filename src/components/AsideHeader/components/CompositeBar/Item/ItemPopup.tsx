@@ -61,6 +61,8 @@ export const ItemPopup: React.FC<Props> = ({
         [title],
     );
 
+    const isSingleLabel = !title && items.length === 1;
+
     const registerNestedOpen = React.useCallback((delta: number) => {
         nestedOpenCountRef.current = Math.max(0, nestedOpenCountRef.current + delta);
     }, []);
@@ -135,7 +137,7 @@ export const ItemPopup: React.FC<Props> = ({
                 if (nextOpen && disabled) return;
                 wrappedOnOpenChange(nextOpen);
             }}
-            placement="right-start"
+            placement={isSingleLabel ? 'right' : 'right-start'}
             strategy="fixed"
             openDelay={DEFAULT_POPUP_DELAY}
             closeDelay={DEFAULT_POPUP_DELAY}
