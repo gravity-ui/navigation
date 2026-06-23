@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.1.1](https://github.com/gravity-ui/navigation/compare/v6.1.0...v6.1.1) (2026-06-23)
+
+
+### Bug Fixes
+
+* **AsideHeader:** center single-item compact popover on the rail item ([#645](https://github.com/gravity-ui/navigation/issues/645)) ([deeff5e](https://github.com/gravity-ui/navigation/commit/deeff5e090ce218b89c3223c040568e60ad982cd))
+
 ## [6.1.0](https://github.com/gravity-ui/navigation/compare/v6.0.0...v6.1.0) (2026-06-19)
 
 
