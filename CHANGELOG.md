@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.1.2](https://github.com/gravity-ui/navigation/compare/v6.1.1...v6.1.2) (2026-06-23)
+
+
+### Bug Fixes
+
+* transform action menu items to regular in more popup ([#647](https://github.com/gravity-ui/navigation/issues/647)) ([68cd8c2](https://github.com/gravity-ui/navigation/commit/68cd8c2999c9fc069d93392cd385b6559082807f))
+
 ## [6.1.1](https://github.com/gravity-ui/navigation/compare/v6.1.0...v6.1.1) (2026-06-23)
 
 
