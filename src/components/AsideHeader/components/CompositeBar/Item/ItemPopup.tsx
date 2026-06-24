@@ -104,6 +104,8 @@ export const ItemPopup: React.FC<Props> = ({
         };
     }, [title, popupRowHeight, itemHeight]);
 
+    const isSingleLabel = !title && items.length === 1;
+
     const registerNestedOpen = React.useCallback((delta: number) => {
         nestedOpenCountRef.current = Math.max(0, nestedOpenCountRef.current + delta);
     }, []);
@@ -125,7 +127,17 @@ export const ItemPopup: React.FC<Props> = ({
         event.stopPropagation();
     }, []);
 
-    if (!items.length) {
+    // Inside a popup list, action items must look like regular menu rows, not floating
+    // action buttons (e.g. when an `action` item overflows into the "More" popup).
+    const popupItems = React.useMemo(
+        () =>
+            items.map((item) =>
+                item.type === 'action' ? {...item, type: 'regular' as const} : item,
+            ),
+        [items],
+    );
+
+    if (!popupItems.length) {
         return children;
     }
 
@@ -134,8 +146,8 @@ export const ItemPopup: React.FC<Props> = ({
             <div className={b('popup-content', {collapsed})} onClick={handlePopupContentClick}>
                 {title && <div className={b('popup-title')}>{title}</div>}
                 <List
-                    items={items}
-                    selectedItemIndex={getSelectedItemIndex(items)}
+                    items={popupItems}
+                    selectedItemIndex={getSelectedItemIndex(popupItems)}
                     itemHeight={popupItemHeight}
                     itemsHeight={popupItemsHeight}
                     itemClassName={b('root-menu-item', itemClassName)}
@@ -180,7 +192,7 @@ export const ItemPopup: React.FC<Props> = ({
                 if (nextOpen && disabled) return;
                 wrappedOnOpenChange(nextOpen);
             }}
-            placement="right-start"
+            placement={isSingleLabel ? 'right' : 'right-start'}
             strategy="fixed"
             openDelay={POPUP_OPEN_DELAY}
             closeDelay={POPUP_CLOSE_DELAY}
