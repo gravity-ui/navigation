@@ -5,7 +5,7 @@ $block: '.#{variables.$ns}logo';
 #{$block} {
     display: flex;
     align-items: center;
-    height: #{variables.$item-height};
+    height: var(--gn-aside-header-item-height, #{variables.$item-height});
 
     &__btn-logo {
         display: flex;
@@ -33,7 +33,7 @@ $block: '.#{variables.$ns}logo';
     }
 
     &__logo-icon-place {
-        width: 36px;
+        width: var(--gn-aside-header-item-height, 36px);
 
         display: flex;
         align-items: center;

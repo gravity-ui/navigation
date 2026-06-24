@@ -1,9 +1,10 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {MenuItem} from '../types';
 
 import {AsideHeaderInnerContextType} from './AsideHeaderContext';
 import {AllPagesPanel, getAllPagesMenuItem} from './components/AllPagesPanel';
+import {isQuickAccessPinEligible} from './quickAccess';
 import {AsideHeaderItem, AsideHeaderProps, InnerPanels, PanelItemProps} from './types';
 
 const EMPTY_MENU_ITEMS: AsideHeaderItem[] = [];
@@ -11,14 +12,29 @@ const EMPTY_MENU_ITEMS: AsideHeaderItem[] = [];
 export const useAsideHeaderInnerContextValue = (
     props: AsideHeaderProps & {size: number},
 ): AsideHeaderInnerContextType => {
-    const {size, onClosePanel, menuItems, panelItems, onMenuItemsChanged, onAllPagesClick} = props;
+    const {
+        size,
+        onClosePanel,
+        menuItems,
+        panelItems,
+        onMenuItemsChanged,
+        onAllPagesClick,
+        enableQuickAccess,
+        enableAllPages = true,
+        editMenuProps,
+    } = props;
     const [innerVisiblePanel, setInnerVisiblePanel] = useState<InnerPanels | undefined>();
+    const menuItemsRef = useRef(menuItems);
+    menuItemsRef.current = menuItems;
+
     const ALL_PAGES_MENU_ITEM = React.useMemo(() => {
         return getAllPagesMenuItem();
     }, []);
 
     const allPagesIsAvailable =
-        Boolean(onMenuItemsChanged) && (!menuItems || menuItems?.length > 0);
+        enableAllPages && Boolean(onMenuItemsChanged) && (!menuItems || menuItems?.length > 0);
+
+    const quickAccessIsAvailable = Boolean(enableQuickAccess) && Boolean(onMenuItemsChanged);
 
     useEffect(() => {
         // If any user panel became open we need to switch off all inner panels
@@ -45,6 +61,40 @@ export const useAsideHeaderInnerContextValue = (
             item.onItemClick?.(item, collapsed, event);
         },
         [innerOnClosePanel, ALL_PAGES_MENU_ITEM, onClosePanel],
+    );
+
+    const onToggleQuickAccess = useCallback(
+        (item: AsideHeaderItem) => {
+            if (!quickAccessIsAvailable || !onMenuItemsChanged) {
+                return;
+            }
+
+            if (!isQuickAccessPinEligible(item)) {
+                return;
+            }
+
+            const originItems = (menuItemsRef.current || EMPTY_MENU_ITEMS).filter(
+                (menuItem) => menuItem.id !== ALL_PAGES_MENU_ITEM.id,
+            );
+            const originItem = originItems.find((menuItem) => menuItem.id === item.id);
+
+            if (!originItem) {
+                return;
+            }
+
+            const changedItem: AsideHeaderItem = {
+                ...originItem,
+                quickAccess: !originItem.quickAccess,
+            };
+
+            editMenuProps?.onToggleQuickAccess?.(changedItem);
+            onMenuItemsChanged(
+                originItems.map((menuItem) =>
+                    menuItem.id === changedItem.id ? changedItem : menuItem,
+                ),
+            );
+        },
+        [quickAccessIsAvailable, onMenuItemsChanged, ALL_PAGES_MENU_ITEM.id, editMenuProps],
     );
 
     const innerMenuItems = useMemo(
@@ -80,11 +130,14 @@ export const useAsideHeaderInnerContextValue = (
 
     return {
         ...props,
+        menuDensity: props.menuDensity ?? 'default',
         onClosePanel: innerOnClosePanel,
         allPagesIsAvailable,
+        quickAccessIsAvailable,
         menuItems: innerMenuItems,
         panelItems: innerPanelItems,
         size,
         onItemClick,
+        onToggleQuickAccess,
     };
 };

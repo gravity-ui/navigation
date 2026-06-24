@@ -24,6 +24,11 @@ export interface MenuItem extends QAProps {
     href?: string;
     current?: boolean;
     pinned?: boolean;
+    /**
+     * When true, the item is shown in the quick access section between subheader and main menu.
+     * Requires `enableQuickAccess` on AsideHeader and `onMenuItemsChanged` to toggle from the UI.
+     */
+    quickAccess?: boolean;
     onItemClick?: (
         item: MenuItem,
         collapsed: boolean,

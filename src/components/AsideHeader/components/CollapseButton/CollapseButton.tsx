@@ -1,16 +1,17 @@
 import React, {useCallback} from 'react';
 
-import {Icon} from '@gravity-ui/uikit';
+import {ArrowLeftToLine, ArrowRightToLine} from '@gravity-ui/icons';
 
 import {createBlock} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
 import i18n from '../../i18n';
-
-import controlMenuButtonIcon from '../../../../../assets/icons/control-menu-button.svg';
+import {FooterItem} from '../FooterItem/FooterItem';
 
 import styles from './CollapseButton.module.scss';
 
 const b = createBlock('collapse-button', styles);
+
+const COLLAPSE_BUTTON_ITEM_ID = 'aside-header-collapse';
 
 interface CollapseButtonProps {
     className?: string;
@@ -29,13 +30,16 @@ export const CollapseButton = ({className}: CollapseButtonProps) => {
         : collapseTitle || i18n('button_collapse');
 
     const defaultButton = (
-        <button
-            className={b({compact}, className)}
-            onClick={onCollapseButtonClick}
+        <FooterItem
+            id={COLLAPSE_BUTTON_ITEM_ID}
+            className={b(null, className)}
+            icon={compact ? ArrowRightToLine : ArrowLeftToLine}
             title={buttonTitle}
-        >
-            <Icon data={controlMenuButtonIcon} className={b('icon')} width="16" height="10" />
-        </button>
+            tooltipText={buttonTitle}
+            compact={compact}
+            onItemClick={onCollapseButtonClick}
+            qa="aside-header-collapse-button"
+        />
     );
 
     if (collapseButtonWrapper) {

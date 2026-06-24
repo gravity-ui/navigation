@@ -1,14 +1,29 @@
 @use '../../../variables';
 
 $block: '.#{variables.$ns}composite-bar';
+$menu-group-tree-connector-width: 16px;
 
 #{$block} {
     flex: 1 0 auto;
     width: 100%;
-    min-height: #{variables.$item-height};
+    min-height: var(--gn-aside-header-item-height, #{variables.$item-height});
 
-    & &__root-menu-item[class] {
-        background-color: transparent;
+    &__root-menu-item[class] {
+        position: relative;
+        overflow: visible;
+        background: none;
+        padding-bottom: var(--gn-aside-header-item-gap, 1px);
+        box-sizing: border-box;
+
+        /**
+         * List marks the whole group row active on child hover; Item components
+         * handle hover/selection visuals themselves (see BurgerCompositeBar).
+         */
+        &:global(.g-list__item_active),
+        &:global(.g-list__item_selected),
+        &:global(.g-list__item_active.g-list__item_selected) {
+            background: none;
+        }
     }
 
     &__menu-group {
@@ -26,51 +41,54 @@ $block: '.#{variables.$ns}composite-bar';
         flex: 0 0 auto;
         box-sizing: border-box;
         width: 100%;
-        min-height: #{variables.$item-height};
+        min-height: var(--gn-aside-header-item-height, #{variables.$item-height});
     }
 
     &__menu-group-nested-item[class] {
         position: relative;
-        padding-inline-start: var(--g-spacing-3);
+
+        #{$block}__menu-group-nested-connector {
+            position: absolute;
+            inset-inline-start: calc(
+                var(--gn-aside-header-item-height, #{variables.$item-height}) / 2 -
+                    #{$menu-group-tree-connector-width} / 2
+            );
+            inset-block-start: 0;
+        }
     }
 
     &__menu-group-nested-list-item[class] {
         position: relative;
-        background-color: transparent;
         overflow: visible;
-    }
+        background: none;
+        padding-bottom: var(--gn-aside-header-item-gap, 1px);
+        box-sizing: border-box;
 
-    &__menu-group-nested-connector {
-        position: relative;
-        width: 16px;
-        box-sizing: content-box;
-        pointer-events: none;
-        display: flex;
+        &:global(.g-list__item_active),
+        &:global(.g-list__item_selected),
+        &:global(.g-list__item_active.g-list__item_selected) {
+            background: none;
+        }
 
-        // Vertical spine between rows (straight segments; elbow is SVG path).
-        &::before {
+        // Spine lives on the list row so it spans the row gap (padding-bottom is outside content flow).
+        &:not(:last-child)::after {
             content: '';
             position: absolute;
-            inset-inline-start: calc(50% - 0.5px);
-            top: 0;
-            bottom: 0;
+            inset-inline-start: calc(
+                var(--gn-aside-header-item-height, #{variables.$item-height}) / 2 - 0.5px
+            );
+            inset-block: 0;
             width: 1px;
-            height: 100%;
             background: var(--gn-aside-header-menu-group-tree-line-color, #c1c3c7);
             pointer-events: none;
         }
-
-        &_spine-active::before {
-            background: var(
-                --gn-aside-header-menu-group-tree-line-active-color,
-                var(--g-color-base-brand)
-            );
-            z-index: 1;
-        }
     }
 
-    &__menu-group-nested-list-item:last-child &__menu-group-nested-connector::before {
-        display: none;
+    &__menu-group-nested-connector {
+        width: $menu-group-tree-connector-width;
+        box-sizing: content-box;
+        pointer-events: none;
+        display: flex;
     }
 
     &__menu-group-nested-tree-svg {
@@ -78,22 +96,20 @@ $block: '.#{variables.$ns}composite-bar';
         position: relative;
         display: block;
         flex-shrink: 0;
-        min-width: 16px;
-        max-width: 16px;
-        height: #{variables.$item-height};
+        min-width: $menu-group-tree-connector-width;
+        max-width: $menu-group-tree-connector-width;
+        height: var(--gn-aside-header-item-height, #{variables.$item-height});
         stroke: var(--gn-aside-header-menu-group-tree-line-color, #c1c3c7);
-
-        &_active {
-            stroke: var(
-                --gn-aside-header-menu-group-tree-line-active-color,
-                var(--g-color-base-brand)
-            );
-        }
     }
 
     &__menu-group-nested-row-inner {
         width: 100%;
         min-width: 0;
         height: 100%;
+    }
+
+    &_subheader,
+    &_quick-access {
+        flex: none;
     }
 }

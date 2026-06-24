@@ -21,3 +21,10 @@ declare module '*.css' {
     const classes: {[key: string]: string};
     export default classes;
 }
+
+declare module '@gravity-ui/uikit/i18n' {
+    export function addComponentKeysets<T extends Record<string, string>>(
+        keysets: {en: T; ru?: T},
+        component: string,
+    ): (key: keyof T & string) => string;
+}

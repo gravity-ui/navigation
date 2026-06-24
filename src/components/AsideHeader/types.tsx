@@ -6,6 +6,7 @@ import {RenderContentType} from '../Content';
 import {LogoProps, MenuGroup, MenuItem, OpenModalSubscriber, TopAlertProps} from '../types';
 
 import {AsideHeaderContextType} from './AsideHeaderContext';
+import {AsideHeaderMenuDensity} from './density';
 
 export interface PanelItemProps extends DrawerProps {
     id: string;
@@ -15,11 +16,18 @@ export interface LayoutProps {
     compact: boolean;
     className?: string;
     topAlert?: TopAlertProps;
+    /**
+     * Menu item density. `compact` reduces item height, icon size, and spacing
+     * while keeping row dimensions identical in collapsed and expanded aside states.
+     * @default 'default'
+     */
+    menuDensity?: AsideHeaderMenuDensity;
 }
 
 interface EditMenuProps {
     onOpenEditMode?: () => void;
     onToggleMenuItem?: (changedItem: AsideHeaderItem) => void;
+    onToggleQuickAccess?: (changedItem: AsideHeaderItem) => void;
     onResetSettingsToDefault?: () => void;
     enableSorting?: boolean;
     onChangeItemsOrder?: (changedItem: AsideHeaderItem, oldIndex: number, newIndex: number) => void;
@@ -88,6 +96,17 @@ interface AsideHeaderDefaultProps {
     onMenuGroupsChanged?: (menuGroups: MenuGroup[]) => void;
     defaultMenuItems?: AsideHeaderItem[];
     onMenuItemsChanged?: (items: AsideHeaderItem[]) => void;
+    /**
+     * Shows the **All pages** menu row and panel. Enabled by default when `onMenuItemsChanged` is set.
+     * Set to `false` to use `onMenuItemsChanged` for other features (e.g. quick access) without All pages.
+     * @default true
+     */
+    enableAllPages?: boolean;
+    /**
+     * Enables the quick access section and inline pin controls on menu leaf items.
+     * Toggling requires controlled `menuItems` with `onMenuItemsChanged` (persist via localStorage/backend in the app).
+     */
+    enableQuickAccess?: boolean;
     headerDecoration?: boolean;
     /**
      * When provided, the map is the source of truth for which menu groups are collapsed

@@ -1,4 +1,4 @@
-import React, {FC, ReactNode} from 'react';
+import React, {FC, ReactNode, useEffect} from 'react';
 
 import {createBlock} from '../../../../utils/cn';
 
@@ -14,10 +14,12 @@ type ScrollableWithScrollbarProps = {
     children: ReactNode;
     className?: string;
     /**
-     * Extra dependencies that should trigger a recalculation of the bottom
-     * shadow and custom scrollbar thumb (e.g. when the rendered items change).
+     * Extra dependencies that should trigger a recalculation of the custom
+     * scrollbar thumb (e.g. when the rendered items change).
      */
     recalcDeps?: React.DependencyList;
+    /** Called when scrollable content overflows the allocated height. */
+    onOverflowChange?: (overflows: boolean) => void;
 };
 
 // Hides the native scrollbar and renders a custom thumb synced with the
@@ -28,12 +30,12 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
     children,
     className,
     recalcDeps = EMPTY_DEPS,
+    onOverflowChange,
 }) => {
     const {
         scrollRef,
         trackRef,
         thumbRef,
-        hasContentBelow,
         overflows,
         thumb,
         scheduleUpdate,
@@ -41,8 +43,16 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
         handleTrackPointerDown,
     } = useScrollableScrollbarSync(recalcDeps);
 
+    useEffect(() => {
+        onOverflowChange?.(overflows);
+    }, [overflows, onOverflowChange]);
+
+    useEffect(() => {
+        return () => onOverflowChange?.(false);
+    }, [onOverflowChange]);
+
     return (
-        <div className={b({'bottom-shadow': hasContentBelow}, className)}>
+        <div className={b(null, className)}>
             <div ref={scrollRef} className={b('scrollable-inner')} onScroll={scheduleUpdate}>
                 {children}
             </div>

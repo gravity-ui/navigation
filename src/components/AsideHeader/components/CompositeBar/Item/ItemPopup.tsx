@@ -3,6 +3,8 @@ import React from 'react';
 import {List, Popover, PopupProps} from '@gravity-ui/uikit';
 
 import {createBlock} from '../../../../utils/cn';
+import {useAsideHeaderContext} from '../../../AsideHeaderContext';
+import {getAsideHeaderDensityConfig} from '../../../density';
 import {AsideHeaderItem} from '../../../types';
 import {getPopupItemHeight, getPopupItemsHeight, getSelectedItemIndex} from '../utils';
 
@@ -13,11 +15,22 @@ import styles from './Item.module.scss';
 
 const b = createBlock('composite-bar-item', styles);
 
+const POPUP_PADDING = 2;
 const POPUP_MAIN_AXIS_OFFSET = 14;
-const POPUP_CROSS_AXIS_OFFSET_WITH_TITLE = -30;
-const POPUP_CROSS_AXIS_OFFSET_WITHOUT_TITLE = 0;
 
-const DEFAULT_POPUP_DELAY = 100;
+/** Keep in sync with `&__popup-title` in Item.module.scss (caption-2 row + padding + border + gap). */
+const POPUP_TITLE_VERTICAL_PADDING = 4; // var(--g-spacing-1)
+const POPUP_TITLE_LINE_HEIGHT = 16; // caption-2
+const POPUP_TITLE_BORDER = 1;
+const POPUP_TITLE_MARGIN_AFTER = 4; // var(--g-spacing-1)
+const POPUP_TITLE_BLOCK_HEIGHT =
+    POPUP_TITLE_VERTICAL_PADDING * 2 +
+    POPUP_TITLE_LINE_HEIGHT +
+    POPUP_TITLE_BORDER +
+    POPUP_TITLE_MARGIN_AFTER;
+
+const POPUP_OPEN_DELAY = 0;
+const POPUP_CLOSE_DELAY = 0;
 
 interface Props {
     items: AsideHeaderItem[];
@@ -33,6 +46,8 @@ interface Props {
     onOpenChange?: (open: boolean) => void;
     onPopupItemClick?: AsideHeaderItem['onItemClick'];
     onItemClick?: AsideHeaderItem['onItemClick'];
+    enableQuickAccessPin?: boolean;
+    onToggleQuickAccess?: (item: AsideHeaderItem) => void;
 }
 
 export const ItemPopup: React.FC<Props> = ({
@@ -43,23 +58,51 @@ export const ItemPopup: React.FC<Props> = ({
     disabled,
     type,
     collapsed = false,
-    hideIcon = false,
+    hideIcon = true,
     children,
     onPopupItemClick,
     onItemClick,
     onOpenChange,
+    enableQuickAccessPin,
+    onToggleQuickAccess,
 }) => {
+    const {menuDensity} = useAsideHeaderContext();
+    const {
+        itemExpandedRadius,
+        popupItemHeight: popupRowHeight,
+        itemHeight,
+    } = getAsideHeaderDensityConfig(menuDensity);
     const nestedOpenCountRef = React.useRef(0);
 
-    const popoverOffset = React.useMemo<NonNullable<PopupProps['offset']>>(
-        () => ({
-            mainAxis: POPUP_MAIN_AXIS_OFFSET,
-            crossAxis: title
-                ? POPUP_CROSS_AXIS_OFFSET_WITH_TITLE
-                : POPUP_CROSS_AXIS_OFFSET_WITHOUT_TITLE,
-        }),
-        [title],
+    const popoverStyle = React.useMemo(
+        () =>
+            ({
+                '--gn-aside-header-item-expanded-radius': `${itemExpandedRadius}px`,
+            }) as React.CSSProperties,
+        [itemExpandedRadius],
     );
+
+    const popupItemHeight = React.useCallback(
+        (item: AsideHeaderItem) => getPopupItemHeight(item, menuDensity),
+        [menuDensity],
+    );
+
+    const popupItemsHeight = React.useCallback(
+        (listItems: AsideHeaderItem[]) => getPopupItemsHeight(listItems, menuDensity),
+        [menuDensity],
+    );
+
+    const popoverOffset = React.useMemo<NonNullable<PopupProps['offset']>>(() => {
+        // Shift popup so the first menu row lines up with the anchor row, not the popover box top.
+        const firstRowOffsetInAnchor = (itemHeight - popupRowHeight) / 2;
+        const crossAxis =
+            firstRowOffsetInAnchor - POPUP_PADDING - (title ? POPUP_TITLE_BLOCK_HEIGHT : 0);
+
+        return {
+            mainAxis: POPUP_MAIN_AXIS_OFFSET,
+            crossAxis,
+        };
+    }, [title, popupRowHeight, itemHeight]);
 
     const isSingleLabel = !title && items.length === 1;
 
@@ -105,8 +148,8 @@ export const ItemPopup: React.FC<Props> = ({
                 <List
                     items={popupItems}
                     selectedItemIndex={getSelectedItemIndex(popupItems)}
-                    itemHeight={getPopupItemHeight}
-                    itemsHeight={getPopupItemsHeight}
+                    itemHeight={popupItemHeight}
+                    itemsHeight={popupItemsHeight}
                     itemClassName={b('root-menu-item', itemClassName)}
                     virtualized={false}
                     filterable={false}
@@ -125,6 +168,8 @@ export const ItemPopup: React.FC<Props> = ({
                             renderPopupContent={undefined}
                             onOpenChangePopup={undefined}
                             popupRef={undefined}
+                            enableQuickAccessPin={enableQuickAccessPin}
+                            onToggleQuickAccess={onToggleQuickAccess}
                             onItemClick={(_innerItem, _innerCollapsed, event) => {
                                 if (!item.current) {
                                     onOpenChange?.(false);
@@ -149,11 +194,16 @@ export const ItemPopup: React.FC<Props> = ({
             }}
             placement={isSingleLabel ? 'right' : 'right-start'}
             strategy="fixed"
-            openDelay={DEFAULT_POPUP_DELAY}
-            closeDelay={DEFAULT_POPUP_DELAY}
+            openDelay={POPUP_OPEN_DELAY}
+            closeDelay={POPUP_CLOSE_DELAY}
             offset={popoverOffset}
             enableSafePolygon
+            // Popover forwards this to Popup; typings omit disableTransition.
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- UIKit PopoverProps gap
+            // @ts-expect-error
+            disableTransition
             className={b('icon-popover', {'item-type': type})}
+            style={popoverStyle}
             content={content}
         >
             {children}
