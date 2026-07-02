@@ -109,8 +109,8 @@ $actionLeftRightMargin: 10px;
         /* stylelint-disable-next-line value-no-vendor-prefix */
         display: -webkit-box;
         -webkit-box-orient: vertical;
-        /* NOTE @vladimir-kuba: 2 lines fits in container height, more lines leads overflow container */
-        -webkit-line-clamp: 2;
+        -webkit-line-clamp: 1;
+        line-clamp: 1;
         overflow: hidden;
         text-align: start;
 
@@ -122,22 +122,46 @@ $actionLeftRightMargin: 10px;
                 var(--_--item-selected-text-color)
             );
         }
+
+        &_lines_2 {
+            /* NOTE @vladimir-kuba: 2 lines fits in two-line item height, more lines leads overflow container */
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+        }
     }
 
     &__title-adornment {
         margin: 0 10px;
     }
 
-    &__quick-access-pin {
-        flex-shrink: 0;
+    &_with-quick-access-pin {
+        position: relative;
+    }
+
+    &__quick-access-pin-slot {
+        position: absolute;
+        inset-inline-end: var(--gn-aside-header-item-title-gap-end, var(--g-spacing-4));
+        inset-block: 0;
+        z-index: 1;
+        display: flex;
+        align-items: center;
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
+        transition: none;
+
+        &_suppressed {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: none;
+        }
+    }
+
+    &__quick-access-pin {
+        flex-shrink: 0;
         color: var(--g-color-text-complementary);
-        transition:
-            opacity 0.15s ease 0s,
-            visibility 0s linear 0.15s,
-            color 0.15s ease;
+        transition: color 0.15s ease;
 
         &_pinned {
             color: var(--g-color-text-secondary);
@@ -160,14 +184,18 @@ $actionLeftRightMargin: 10px;
         gap: var(--g-spacing-1);
     }
 
-    &:hover &__quick-access-pin {
+    &:hover &__quick-access-pin-slot:not(#{$class}__quick-access-pin-slot_suppressed),
+    &__quick-access-pin-slot:not(#{$class}__quick-access-pin-slot_suppressed):hover {
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
         transition:
-            opacity 0.15s ease var(--gn-aside-header-quick-access-pin-hover-delay, 500ms),
-            visibility 0s linear var(--gn-aside-header-quick-access-pin-hover-delay, 500ms),
-            color 0.15s ease var(--gn-aside-header-quick-access-pin-hover-delay, 500ms);
+            opacity 0.15s ease var(--gn-aside-header-quick-access-pin-hover-delay, 350ms),
+            visibility 0s linear var(--gn-aside-header-quick-access-pin-hover-delay, 350ms);
+
+        #{$class}__quick-access-pin {
+            transition: color 0.15s ease var(--gn-aside-header-quick-access-pin-hover-delay, 350ms);
+        }
     }
 
     &__collapse-item {
@@ -218,6 +246,25 @@ $actionLeftRightMargin: 10px;
             text-decoration: none;
             outline: none;
             color: inherit;
+        }
+
+        #{$class}_title-lines_2 & {
+            align-items: flex-start;
+        }
+    }
+
+    &_title-lines_2 {
+        align-items: flex-start;
+
+        #{$class}__icon-place,
+        #{$class}__title,
+        #{$class}__aside-end {
+            padding-block: var(--g-spacing-1);
+        }
+
+        #{$class}__icon-place,
+        #{$class}__title {
+            align-items: flex-start;
         }
     }
 
@@ -293,6 +340,10 @@ $actionLeftRightMargin: 10px;
     &__icon-popover {
         --_--popup-padding: 2px;
         --_--popup-row-padding-inline: var(--g-spacing-4);
+        --gn-aside-header-popup-item-icon-place-width: calc(
+            var(--gn-aside-header-item-icon-size, 18px) + var(--g-spacing-2)
+        );
+        --gn-aside-header-popup-item-title-gap: var(--g-spacing-2);
         --_--popup-item-radius: var(
             --gn-aside-header-item-expanded-radius,
             #{variables.$item-expanded-radius}
@@ -349,10 +400,23 @@ $actionLeftRightMargin: 10px;
         font-weight: 600;
     }
 
-    &__popup-content #{$class}_popup-item#{$class}_hide-icon {
+    &__popup-content &__popup-item#{$class}_hide-icon {
         #{$class}__title {
             margin: 0 var(--gn-aside-header-item-title-gap-end, var(--g-spacing-4)) 0
                 var(--_--popup-row-padding-inline);
+        }
+    }
+
+    &__popup-content &__popup-item:not(#{$class}_hide-icon) {
+        #{$class}__icon-place {
+            width: var(
+                --gn-aside-header-popup-item-icon-place-width,
+                calc(var(--gn-aside-header-item-icon-size, 18px) + var(--g-spacing-2))
+            );
+        }
+
+        #{$class}__title {
+            margin-left: var(--gn-aside-header-popup-item-title-gap, var(--g-spacing-2));
         }
     }
 
@@ -376,15 +440,36 @@ $actionLeftRightMargin: 10px;
     }
 
     &_menu-group-nested {
-        // Match group header title inset: icon slot + title gap.
+        // Icon column starts just after the L-connector horizontal segment (not full parent icon width).
         padding-inline-start: calc(
-            var(--gn-aside-header-item-height, #{variables.$item-height}) +
-                var(--gn-aside-header-item-title-gap, var(--g-spacing-2))
+            var(--gn-aside-header-item-height, #{variables.$item-height}) / 2 +
+                var(--gn-aside-header-menu-group-tree-connector-width, 16px) / 2 +
+                var(--gn-aside-header-menu-group-nested-icon-gap, var(--g-spacing-1))
         );
 
-        #{$class}__title {
-            // Row padding already includes the title gap; drop start margin from base/hide-icon.
-            margin: 0 var(--gn-aside-header-item-title-gap-end, var(--g-spacing-4)) 0 0;
+        /**
+         * Without nested icons, align item title with the parent group header title
+         * (icon column + title gap), not with the nested icon column.
+         */
+        &#{$class}_hide-icon {
+            padding-inline-start: calc(
+                var(--gn-aside-header-item-height, #{variables.$item-height}) +
+                    var(--gn-aside-header-item-title-gap, var(--g-spacing-2))
+            );
+
+            #{$class}__title {
+                margin-left: 0;
+            }
+        }
+
+        &#{$class}_title-lines_2 {
+            /**
+             * L-connector hook targets icon center (top-aligned icon + block padding),
+             * not the vertical center of the taller two-line row.
+             */
+            --gn-aside-header-menu-group-tree-connector-hook-inset-block: calc(
+                var(--g-spacing-1) + var(--gn-aside-header-item-icon-size, 18px) / 2
+            );
         }
     }
 

@@ -41,6 +41,7 @@ function renderBar(props: {
     menuGroups?: MenuGroup[];
     collapsedMenuGroupIds?: Record<string, boolean>;
     onToggleMenuGroupCollapsed?: jest.Mock;
+    menuGroupNestedIcons?: boolean;
 }) {
     return render(
         <ThemeProvider theme="light">
@@ -56,6 +57,7 @@ function renderBar(props: {
                     menuOverflow={props.menuOverflow ?? 'scroll'}
                     collapsedMenuGroupIds={props.collapsedMenuGroupIds}
                     onToggleMenuGroupCollapsed={props.onToggleMenuGroupCollapsed}
+                    menuGroupNestedIcons={props.menuGroupNestedIcons}
                 />
             </AsideHeaderInnerContextProvider>
         </ThemeProvider>,
@@ -152,7 +154,7 @@ describe('CompositeBar menuOverflow="scroll"', () => {
         expect(screen.getByText('Personal access tokens')).toBeTruthy();
     });
 
-    it('hides icons for inline group children, leaving only text and tree connectors', () => {
+    it('shows icons for inline group children alongside tree connectors', () => {
         const menuGroups: MenuGroup[] = [{id: 'g1', title: 'Access', icon: Gear}];
         const groupItems: AsideHeaderItem[] = [
             {id: 'ssh', title: 'SSH Keys', icon: Gear, groupId: 'g1'},
@@ -164,6 +166,7 @@ describe('CompositeBar menuOverflow="scroll"', () => {
             menuGroups,
             menuOverflow: 'scroll',
             compact: false,
+            menuGroupNestedIcons: true,
         });
 
         for (const title of ['SSH Keys', 'Personal access tokens']) {
@@ -171,13 +174,36 @@ describe('CompositeBar menuOverflow="scroll"', () => {
             // eslint-disable-next-line testing-library/no-node-access
             const nestedItem = titleEl.closest('.gn-composite-bar-item');
 
-            expect(nestedItem?.classList.contains('gn-composite-bar-item_hide-icon')).toBe(true);
+            expect(nestedItem?.classList.contains('gn-composite-bar-item_hide-icon')).toBe(false);
             expect(nestedItem?.classList.contains('gn-composite-bar-item_menu-group-nested')).toBe(
                 true,
             );
             // eslint-disable-next-line testing-library/no-node-access
-            expect(nestedItem?.querySelector('.gn-composite-bar-item__icon')).toBeNull();
+            expect(nestedItem?.querySelector('.gn-composite-bar-item__icon')).toBeTruthy();
         }
+    });
+
+    it('hides icons for inline group children when menuGroupNestedIcons is false', () => {
+        const menuGroups: MenuGroup[] = [{id: 'g1', title: 'Access', icon: Gear}];
+        const groupItems: AsideHeaderItem[] = [
+            {id: 'ssh', title: 'SSH Keys', icon: Gear, groupId: 'g1'},
+        ];
+
+        renderBar({
+            items: groupItems,
+            menuGroups,
+            menuOverflow: 'scroll',
+            compact: false,
+            menuGroupNestedIcons: false,
+        });
+
+        const titleEl = screen.getByText('SSH Keys');
+        // eslint-disable-next-line testing-library/no-node-access
+        const nestedItem = titleEl.closest('.gn-composite-bar-item');
+
+        expect(nestedItem?.classList.contains('gn-composite-bar-item_hide-icon')).toBe(true);
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(nestedItem?.querySelector('.gn-composite-bar-item__icon')).toBeNull();
     });
 
     it('calls onToggleMenuGroupCollapsed when clicking an inline group header', () => {

@@ -159,6 +159,7 @@ export const ItemPopup: React.FC<Props> = ({
                             {...item}
                             qa={undefined}
                             compact={false}
+                            menuPopupRow
                             className={b('popup-item')}
                             hideIcon={hideIcon}
                             stopClickPropagation={!item.itemWrapper}

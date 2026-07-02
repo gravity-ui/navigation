@@ -11,6 +11,7 @@ import {useMainMenuItems} from './AllPagesPanel/useMainMenuItems';
 import {useQuickAccessMenuItems} from './AllPagesPanel/useQuickAccessMenuItems';
 import {CollapseButton} from './CollapseButton/CollapseButton';
 import {CompositeBar} from './CompositeBar';
+import {ScrollableWithScrollbar} from './CompositeBar/ScrollableWithScrollbar';
 import {Header} from './Header';
 import {Panels} from './Panels';
 
@@ -39,6 +40,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         quickAccessIsAvailable,
         onToggleQuickAccess,
         enableQuickAccess,
+        menuGroupNestedIcons,
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
     const quickAccessItems = useQuickAccessMenuItems();
@@ -89,22 +91,40 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 >
                     <Header />
                     {quickAccessItems.length > 0 && (
-                        <div className={b('quick-access')}>
+                        <div className={b('quick-access', {scrollable: !compact})}>
                             {!compact && (
                                 <div className={b('quick-access-title')}>
                                     {i18n('quick_access_title')}
                                 </div>
                             )}
-                            <CompositeBar
-                                menuItemClassName={b('menu-item')}
-                                compositeId={QUICK_ACCESS_COMPOSITE_ID}
-                                type="quick-access"
-                                compact={compact}
-                                items={quickAccessItems}
-                                onItemClick={onItemClick}
-                                enableQuickAccessPin={quickAccessIsAvailable}
-                                onToggleQuickAccess={onToggleQuickAccess}
-                            />
+                            {compact ? (
+                                <CompositeBar
+                                    menuItemClassName={b('menu-item')}
+                                    compositeId={QUICK_ACCESS_COMPOSITE_ID}
+                                    type="quick-access"
+                                    compact={compact}
+                                    items={quickAccessItems}
+                                    onItemClick={onItemClick}
+                                    enableQuickAccessPin={quickAccessIsAvailable}
+                                    onToggleQuickAccess={onToggleQuickAccess}
+                                />
+                            ) : (
+                                <ScrollableWithScrollbar
+                                    capped
+                                    recalcDeps={[quickAccessItems.length]}
+                                >
+                                    <CompositeBar
+                                        menuItemClassName={b('menu-item')}
+                                        compositeId={QUICK_ACCESS_COMPOSITE_ID}
+                                        type="quick-access"
+                                        compact={compact}
+                                        items={quickAccessItems}
+                                        onItemClick={onItemClick}
+                                        enableQuickAccessPin={quickAccessIsAvailable}
+                                        onToggleQuickAccess={onToggleQuickAccess}
+                                    />
+                                </ScrollableWithScrollbar>
+                            )}
                         </div>
                     )}
                     {mainMenuItems?.length ? (
@@ -129,6 +149,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             }
                             enableQuickAccessPin={quickAccessIsAvailable}
                             onToggleQuickAccess={onToggleQuickAccess}
+                            menuGroupNestedIcons={menuGroupNestedIcons}
                         />
                     ) : (
                         <div className={b('menu-items')} />
@@ -139,8 +160,8 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             compact: Boolean(compact),
                             asideRef,
                         })}
-                        {!hideCollapseButton && <CollapseButton />}
                     </div>
+                    {!hideCollapseButton && <CollapseButton />}
                 </div>
             </div>
             <Panels />

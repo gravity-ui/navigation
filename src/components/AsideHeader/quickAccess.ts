@@ -35,8 +35,9 @@ export function isQuickAccessMenuItem(item: AsideHeaderItem): boolean {
 export function getMainMenuItemsForDisplay(
     visibleMenuItems: AsideHeaderItem[],
     quickAccessItems: AsideHeaderItem[],
+    options?: {quickAccessHighlightInMainMenu?: boolean},
 ): AsideHeaderItem[] {
-    if (quickAccessItems.length === 0) {
+    if (quickAccessItems.length === 0 || options?.quickAccessHighlightInMainMenu) {
         return visibleMenuItems;
     }
 

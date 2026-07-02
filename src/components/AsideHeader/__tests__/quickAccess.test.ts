@@ -83,5 +83,30 @@ describe('quickAccess', () => {
 
             expect(getMainMenuItemsForDisplay(items, [])).toBe(items);
         });
+
+        it('keeps current on quick access items when quickAccessHighlightInMainMenu is true', () => {
+            const home: AsideHeaderItem = {
+                id: 'home',
+                title: 'Home',
+                icon: Gear,
+                quickAccess: true,
+                current: true,
+            };
+            const settings: AsideHeaderItem = {
+                id: 'settings',
+                title: 'Settings',
+                icon: Gear,
+                current: false,
+            };
+
+            const visible = [home, settings];
+            const quickAccess = [home];
+
+            expect(
+                getMainMenuItemsForDisplay(visible, quickAccess, {
+                    quickAccessHighlightInMainMenu: true,
+                }),
+            ).toBe(visible);
+        });
     });
 });

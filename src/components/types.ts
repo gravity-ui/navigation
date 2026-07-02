@@ -65,6 +65,11 @@ export interface MenuItem extends QAProps {
      * The group ID to which the menu item belongs. Used for grouping menu items
      */
     groupId?: string;
+    /**
+     * Maximum number of lines for the item title in the expanded sidebar.
+     * Defaults to a single line with ellipsis; use `2` for a taller two-line row.
+     */
+    titleLines?: 1 | 2;
     className?: string;
     menuItemAriaProps?: AsideHeaderMenuItemAriaProps;
 }

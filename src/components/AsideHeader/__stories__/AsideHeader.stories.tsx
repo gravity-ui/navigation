@@ -1,18 +1,36 @@
 import React from 'react';
 
 import {
+    AntennaSignal,
     Bell,
     BookOpen,
+    Bucket,
     ChartColumn,
+    ChartLine,
+    ChartPie,
     CircleQuestion,
     Cloud,
+    CloudArrowUpIn,
+    CopyCheck,
+    CreditCard,
     Database,
+    FileText,
     Gear,
+    HardDrive,
     House,
+    Key,
     Layers,
+    LayoutHeaderCellsLarge,
+    ListTimeline,
     Magnifier,
     Person,
+    Persons,
+    PlugConnection,
+    Route,
+    ShieldCheck,
     ShieldKeyhole,
+    Sliders,
+    Terminal,
     Xmark,
 } from '@gravity-ui/icons';
 import {Button, Flex, Icon, Text, spacing} from '@gravity-ui/uikit';
@@ -306,7 +324,7 @@ const menuItemsWithGroupsForAllPages: AsideHeaderProps['menuItems'] = [
     {
         id: 'analytics-overview',
         title: 'Overview',
-        icon: Gear,
+        icon: ChartPie,
         groupId: 'analytics',
         category: 'Analytics',
         current: true,
@@ -314,158 +332,171 @@ const menuItemsWithGroupsForAllPages: AsideHeaderProps['menuItems'] = [
     {
         id: 'analytics-reports',
         title: 'Reports',
-        icon: Gear,
+        icon: FileText,
         groupId: 'analytics',
         category: 'Analytics',
     },
     {
         id: 'analytics-dashboards',
         title: 'Dashboards',
-        icon: Gear,
+        icon: LayoutHeaderCellsLarge,
         groupId: 'analytics',
         category: 'Analytics',
     },
     {
         id: 'analytics-metrics',
         title: 'Metrics',
-        icon: Gear,
+        icon: ChartLine,
         groupId: 'analytics',
         category: 'Analytics',
     },
     {
         id: 'monitoring-alerts',
         title: 'Alerts',
-        icon: Gear,
+        icon: Bell,
         groupId: 'monitoring',
         category: 'Monitoring',
     },
     {
         id: 'monitoring-logs',
         title: 'Logs',
-        icon: Gear,
+        icon: Terminal,
         groupId: 'monitoring',
         category: 'Monitoring',
     },
     {
         id: 'monitoring-traces',
         title: 'Traces',
-        icon: Gear,
+        icon: Route,
         groupId: 'monitoring',
         category: 'Monitoring',
     },
     {
         id: 'monitoring-uptime',
         title: 'Uptime',
-        icon: Gear,
+        icon: AntennaSignal,
         groupId: 'monitoring',
         category: 'Monitoring',
     },
     {
         id: 'storage-buckets',
         title: 'Buckets',
-        icon: Gear,
+        icon: Bucket,
         groupId: 'storage',
         category: 'Storage',
     },
     {
         id: 'storage-databases',
         title: 'Databases',
-        icon: Gear,
+        icon: Database,
         groupId: 'storage',
         category: 'Storage',
     },
     {
         id: 'storage-volumes',
         title: 'Volumes',
-        icon: Gear,
+        icon: HardDrive,
         groupId: 'storage',
         category: 'Storage',
     },
     {
         id: 'storage-snapshots',
         title: 'Snapshots',
-        icon: Gear,
+        icon: CopyCheck,
         groupId: 'storage',
         category: 'Storage',
     },
     {
         id: 'storage-backups',
         title: 'Backups',
-        icon: Gear,
+        icon: CloudArrowUpIn,
         groupId: 'storage',
         category: 'Storage',
     },
     {
         id: 'security-access',
         title: 'Access keys',
-        icon: Gear,
+        icon: Key,
         groupId: 'security',
         category: 'Security',
     },
     {
         id: 'security-roles',
         title: 'Roles',
-        icon: Gear,
+        icon: Persons,
         groupId: 'security',
         category: 'Security',
     },
     {
         id: 'security-audit',
         title: 'Audit log',
-        icon: Gear,
+        icon: ListTimeline,
         groupId: 'security',
         category: 'Security',
     },
     {
         id: 'security-policies',
         title: 'Policies',
-        icon: Gear,
+        icon: ShieldCheck,
         groupId: 'security',
         category: 'Security',
     },
     {
         id: 'general-settings',
         title: 'General',
-        icon: Gear,
+        icon: Sliders,
         groupId: 'settings',
         category: 'Settings',
     },
     {
         id: 'user-settings',
         title: 'Users',
-        icon: Gear,
+        icon: Person,
         groupId: 'settings',
         category: 'Settings',
     },
     {
         id: 'billing-settings',
         title: 'Billing',
-        icon: Gear,
+        icon: CreditCard,
         groupId: 'settings',
         category: 'Settings',
     },
     {
         id: 'integrations-settings',
         title: 'Integrations',
-        icon: Gear,
+        icon: PlugConnection,
         groupId: 'settings',
         category: 'Settings',
     },
     {id: 'help', title: 'Help', icon: Gear, category: 'General'},
 ];
 
-const menuItemsForMenuGroupsNewIdea = menuItemsWithGroupsForAllPages.map((item) => {
-    if (item.id === 'home') {
-        return {...item, icon: House};
-    }
-    if (item.id === 'analytics-reports') {
-        return {...item, quickAccess: true};
-    }
-    if (item.id === 'help') {
-        return {...item, icon: BookOpen};
-    }
-    return item;
-});
+const menuItemsForMenuGroupsNewIdea: AsideHeaderItem[] = menuItemsWithGroupsForAllPages.map(
+    (item) => {
+        if (item.id === 'home') {
+            return {...item, icon: House};
+        }
+        if (item.id === 'analytics-reports') {
+            return {...item, quickAccess: true};
+        }
+        if (item.id === 'analytics-dashboards') {
+            return {
+                ...item,
+                title: 'Weekly operational performance',
+                titleLines: 2,
+            };
+        }
+        if (item.id === 'help') {
+            return {...item, icon: BookOpen};
+        }
+        return item;
+    },
+);
+
+const menuItemsForMenuGroupsNewIdeaFlat: AsideHeaderItem[] = menuItemsForMenuGroupsNewIdea.map(
+    ({groupId: _groupId, ...item}) => item,
+);
 
 const MENU_GROUPS_NEW_IDEA_STATS = [
     {label: 'Active users', value: '12.4k', delta: '+8.2%'},
@@ -583,6 +614,7 @@ function MenuGroupsNewIdeaPageContent({category, title}: {category?: string; tit
 function MenuGroupsWithAllPagesDemo(props: {
     initialCompact?: boolean;
     menuOverflow?: AsideHeaderProps['menuOverflow'];
+    menuGroupNestedIcons?: AsideHeaderProps['menuGroupNestedIcons'];
     description: React.ReactNode;
 }) {
     const [compact, setCompact] = React.useState(props.initialCompact ?? false);
@@ -610,6 +642,7 @@ function MenuGroupsWithAllPagesDemo(props: {
                         ? defaultCollapsedMenuGroupIdsExceptFirst
                         : undefined
                 }
+                menuGroupNestedIcons={props.menuGroupNestedIcons}
             />
             <PageLayout.Content>
                 <div style={{padding: 16}}>{props.description}</div>
@@ -618,10 +651,23 @@ function MenuGroupsWithAllPagesDemo(props: {
     );
 }
 
+const menuGroupsStoryArgTypes = {
+    menuGroupNestedIcons: {
+        control: 'boolean' as const,
+        description: 'Show icons on nested menu group items',
+    },
+    quickAccessHighlightInMainMenu: {
+        control: 'boolean' as const,
+        description:
+            'Keep the active item highlighted in the main menu when it is also in quick access',
+    },
+};
+
 /** Default overflow (collapse / &quot;More&quot;). Includes All pages + group popupTitle in data. */
 const MenuGroupsTemplate: StoryFn = (args) => (
     <MenuGroupsWithAllPagesDemo
         initialCompact={args.initialCompact}
+        menuGroupNestedIcons={args.menuGroupNestedIcons}
         description={
             <>
                 Default menuOverflow (overflow items move under &quot;More&quot;). Groups use
@@ -633,13 +679,16 @@ const MenuGroupsTemplate: StoryFn = (args) => (
 );
 
 export const MenuGroups = MenuGroupsTemplate.bind({});
+MenuGroups.argTypes = menuGroupsStoryArgTypes;
 MenuGroups.args = {
     initialCompact: false,
+    menuGroupNestedIcons: true,
 };
 
 const MenuGroupsCompactTemplate: StoryFn = (args) => (
     <MenuGroupsWithAllPagesDemo
         initialCompact={args.initialCompact}
+        menuGroupNestedIcons={args.menuGroupNestedIcons}
         description={
             <>
                 Compact sidebar: same overflow behavior as MenuGroups when the rail is narrow. Hover
@@ -651,14 +700,17 @@ const MenuGroupsCompactTemplate: StoryFn = (args) => (
 );
 
 export const MenuGroupsCompact = MenuGroupsCompactTemplate.bind({});
+MenuGroupsCompact.argTypes = menuGroupsStoryArgTypes;
 MenuGroupsCompact.args = {
     initialCompact: true,
+    menuGroupNestedIcons: true,
 };
 
 const MenuGroupsScrollbarTemplate: StoryFn = (args) => (
     <MenuGroupsWithAllPagesDemo
         menuOverflow="scroll"
         initialCompact={args.initialCompact}
+        menuGroupNestedIcons={args.menuGroupNestedIcons}
         description={
             <>
                 Non-compact: menuOverflow=&quot;scroll&quot; — groups render as nested lists with
@@ -671,21 +723,28 @@ const MenuGroupsScrollbarTemplate: StoryFn = (args) => (
 );
 
 export const MenuGroupsScrollbar = MenuGroupsScrollbarTemplate.bind({});
+MenuGroupsScrollbar.argTypes = menuGroupsStoryArgTypes;
 MenuGroupsScrollbar.args = {
     initialCompact: false,
+    menuGroupNestedIcons: true,
 };
 
 function MenuGroupsWithSubheaderAndFooterDemo(props: {
     initialCompact?: boolean;
     menuDensity?: AsideHeaderProps['menuDensity'];
+    menuGroupNestedIcons?: AsideHeaderProps['menuGroupNestedIcons'];
+    quickAccessHighlightInMainMenu?: AsideHeaderProps['quickAccessHighlightInMainMenu'];
     description: React.ReactNode;
     withPageContent?: boolean;
+    flatMenu?: boolean;
 }) {
     const [compact, setCompact] = React.useState(props.initialCompact ?? false);
     const [currentPageId, setCurrentPageId] = React.useState('analytics-overview');
-    const [menuItemsBase, setMenuItemsBase] = React.useState(menuItemsForMenuGroupsNewIdea);
+    const [menuItemsBase, setMenuItemsBase] = React.useState<AsideHeaderItem[]>(
+        props.flatMenu ? menuItemsForMenuGroupsNewIdeaFlat : menuItemsForMenuGroupsNewIdea,
+    );
 
-    const menuItems = React.useMemo(
+    const menuItems = React.useMemo<AsideHeaderItem[]>(
         () =>
             menuItemsBase.map((item) => ({
                 ...item,
@@ -714,13 +773,17 @@ function MenuGroupsWithSubheaderAndFooterDemo(props: {
                 headerDecoration={false}
                 logo={DEFAULT_LOGO}
                 menuItems={menuItems}
-                menuGroups={menuGroupsData}
+                menuGroups={props.flatMenu ? undefined : menuGroupsData}
                 enableQuickAccess
+                quickAccessHighlightInMainMenu={props.quickAccessHighlightInMainMenu}
                 enableAllPages={false}
                 onMenuItemsChanged={setMenuItemsBase}
                 onChangeCompact={setCompact}
                 menuOverflow="scroll"
-                defaultCollapsedMenuGroupIds={defaultCollapsedMenuGroupIdsExceptFirst}
+                defaultCollapsedMenuGroupIds={
+                    props.flatMenu ? undefined : defaultCollapsedMenuGroupIdsExceptFirst
+                }
+                menuGroupNestedIcons={props.menuGroupNestedIcons}
                 subheaderItems={[
                     {
                         id: 'search',
@@ -790,14 +853,40 @@ const MenuGroupsNewIdeaTemplate: StoryFn = (args) => (
     <MenuGroupsWithSubheaderAndFooterDemo
         initialCompact={args.initialCompact}
         menuDensity="compact"
+        menuGroupNestedIcons={args.menuGroupNestedIcons}
+        quickAccessHighlightInMainMenu={args.quickAccessHighlightInMainMenu}
         withPageContent
         description={null}
     />
 );
 
 export const MenuGroupsNewIdea = MenuGroupsNewIdeaTemplate.bind({});
+MenuGroupsNewIdea.argTypes = menuGroupsStoryArgTypes;
 MenuGroupsNewIdea.args = {
     initialCompact: false,
+    menuGroupNestedIcons: true,
+    quickAccessHighlightInMainMenu: false,
+};
+
+const MenuGroupsNewIdeaFlatTemplate: StoryFn = (args) => (
+    <MenuGroupsWithSubheaderAndFooterDemo
+        initialCompact={args.initialCompact}
+        menuDensity="compact"
+        menuGroupNestedIcons={args.menuGroupNestedIcons}
+        quickAccessHighlightInMainMenu={args.quickAccessHighlightInMainMenu}
+        withPageContent
+        flatMenu
+        description={null}
+    />
+);
+
+export const MenuGroupsNewIdeaFlat = MenuGroupsNewIdeaFlatTemplate.bind({});
+MenuGroupsNewIdeaFlat.storyName = 'Menu Groups New Idea (Flat)';
+MenuGroupsNewIdeaFlat.argTypes = menuGroupsStoryArgTypes;
+MenuGroupsNewIdeaFlat.args = {
+    initialCompact: false,
+    menuGroupNestedIcons: true,
+    quickAccessHighlightInMainMenu: false,
 };
 
 const manyMenuItems: AsideHeaderProps['menuItems'] = Array.from({length: 25}, (_, index) => ({

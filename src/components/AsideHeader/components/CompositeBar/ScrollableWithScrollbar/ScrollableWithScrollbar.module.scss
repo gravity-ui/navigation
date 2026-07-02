@@ -52,4 +52,37 @@ $block: '.#{variables.$ns}scrollable-with-scrollbar';
     &:hover &__scrollbar-thumb {
         opacity: 1;
     }
+
+    /**
+     * Quick access / pinned section: grow with content up to a cap, then scroll.
+     * Styles live here (not in AsideHeader) so CSS Modules scope inner selectors.
+     */
+    &_capped {
+        flex: 0 1 auto;
+        overflow: hidden;
+        max-height: var(
+            --gn-aside-header-quick-access-max-height,
+            calc(
+                5 *
+                    (
+                        var(--gn-aside-header-item-height, #{variables.$item-height}) +
+                            var(--gn-aside-header-item-gap, 1px)
+                    )
+            )
+        );
+
+        #{$block}__scrollable-inner {
+            height: auto;
+            max-height: var(
+                --gn-aside-header-quick-access-max-height,
+                calc(
+                    5 *
+                        (
+                            var(--gn-aside-header-item-height, #{variables.$item-height}) +
+                                var(--gn-aside-header-item-gap, 1px)
+                        )
+                )
+            );
+        }
+    }
 }

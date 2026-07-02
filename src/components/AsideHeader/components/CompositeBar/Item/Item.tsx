@@ -54,10 +54,12 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         href,
         qa,
         hideIcon = false,
+        menuPopupHideIcon,
         stopClickPropagation = false,
         menuGroupNestedTreeConnector,
         menuGroupNested,
         menuItemAriaProps,
+        menuPopupRow,
         enableQuickAccessPin,
         onToggleQuickAccess,
     } = props;
@@ -89,8 +91,11 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         isQuickAccessPinEligible(props) &&
         typeof onToggleQuickAccess === 'function';
 
+    const [quickAccessPinSuppressed, setQuickAccessPinSuppressed] = React.useState(false);
+
     const handleToggleQuickAccess = React.useCallback(() => {
         onToggleQuickAccess?.(props);
+        setQuickAccessPinSuppressed(true);
     }, [
         onToggleQuickAccess,
         props.id,
@@ -179,8 +184,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         const showChevron = inlineGroupHeader
             ? !compact
             : !compact && Boolean(resolvedMenuPopupItems?.length);
-        const showAsideEnd = showChevron || showQuickAccessPin;
-
         const rowClassName = b(
             {
                 type,
@@ -188,7 +191,10 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 compact,
                 'hide-icon': hideIcon,
                 'menu-group-nested': menuGroupNested,
-                'with-aside-end': showAsideEnd,
+                'with-aside-end': showChevron,
+                'with-quick-access-pin': showQuickAccessPin,
+                'title-lines':
+                    !compact && !menuPopupRow && props.titleLines === 2 ? '2' : undefined,
             },
             className,
         );
@@ -211,29 +217,33 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
                 <div className={b('title')}>{titleEl}</div>
 
-                {showAsideEnd && (
+                {showChevron && (
                     <div className={b('aside-end')}>
-                        {showChevron && (
-                            <div className={b('chevron')}>
-                                <Icon
-                                    data={
-                                        inlineGroupHeader
-                                            ? groupHeaderExpanded
-                                                ? ChevronDown
-                                                : ChevronRight
+                        <div className={b('chevron')}>
+                            <Icon
+                                data={
+                                    inlineGroupHeader
+                                        ? groupHeaderExpanded
+                                            ? ChevronDown
                                             : ChevronRight
-                                    }
-                                    size={CHEVRON_SIZE}
-                                />
-                            </div>
-                        )}
-                        {showQuickAccessPin && (
-                            <ItemQuickAccessPin
-                                quickAccess={props.quickAccess}
-                                onToggle={handleToggleQuickAccess}
+                                        : ChevronRight
+                                }
+                                size={CHEVRON_SIZE}
                             />
-                        )}
+                        </div>
                     </div>
+                )}
+                {showQuickAccessPin && (
+                    <span
+                        className={b('quick-access-pin-slot', {
+                            suppressed: quickAccessPinSuppressed,
+                        })}
+                    >
+                        <ItemQuickAccessPin
+                            quickAccess={props.quickAccess}
+                            onToggle={handleToggleQuickAccess}
+                        />
+                    </span>
                 )}
             </>
         );
@@ -255,6 +265,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 if (!compact) {
                     onMouseLeave?.();
                 }
+                setQuickAccessPinSuppressed(false);
             },
         };
 
@@ -293,6 +304,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     title={resolvedMenuPopupTitle}
                     open={compactNavPopoverOpen}
                     itemClassName={popupItemClassName}
+                    hideIcon={menuPopupHideIcon ?? true}
                     onOpenChange={setCompactNavPopoverOpen}
                     collapsed={collapsedItem ? true : compact}
                     onPopupItemClick={onPopupItemClick}
@@ -332,7 +344,11 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         hideIcon || !icon ? null : (
             <Icon qa={iconQa} data={icon} size={iconSize} className={b('icon')} />
         );
-    const titleNode = renderItemTitle({title, rightAdornment});
+    const titleNode = renderItemTitle({
+        title,
+        rightAdornment,
+        titleLines: compact || menuPopupRow ? undefined : props.titleLines,
+    });
     const params = {icon: iconNode, title: titleNode};
     let highlightedNode = null;
     let node;

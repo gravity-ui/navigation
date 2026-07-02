@@ -107,6 +107,12 @@ interface AsideHeaderDefaultProps {
      * Toggling requires controlled `menuItems` with `onMenuItemsChanged` (persist via localStorage/backend in the app).
      */
     enableQuickAccess?: boolean;
+    /**
+     * When `true`, the active (`current`) menu item stays highlighted in the main menu
+     * even when it is also shown in the quick access section.
+     * @default false
+     */
+    quickAccessHighlightInMainMenu?: boolean;
     headerDecoration?: boolean;
     /**
      * When provided, the map is the source of truth for which menu groups are collapsed
@@ -122,6 +128,12 @@ interface AsideHeaderDefaultProps {
      * `collapsedMenuGroupIds` when using controlled mode.
      */
     onToggleMenuGroupCollapsed?: (groupId: string) => void;
+    /**
+     * When `false`, nested menu group items render without icons (inline scroll layout
+     * and group popups in compact / collapsed-group mode).
+     * @default true
+     */
+    menuGroupNestedIcons?: boolean;
 }
 
 export type AsideHeaderInnerProps = AsideHeaderGeneralProps &

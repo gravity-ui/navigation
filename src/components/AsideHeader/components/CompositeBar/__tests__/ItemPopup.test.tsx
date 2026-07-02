@@ -272,6 +272,29 @@ describe('ItemPopup', () => {
         expect(onParentClick).not.toHaveBeenCalled();
     });
 
+    it('renders titleLines: 2 items as single-line rows inside the popup', () => {
+        const items: AsideHeaderItem[] = [
+            {
+                id: 'long',
+                title: 'Long title that wraps onto two lines',
+                icon: Gear,
+                titleLines: 2,
+            },
+        ];
+
+        renderItemPopup({items, open: true});
+
+        // eslint-disable-next-line testing-library/no-node-access
+        const row = screen.getByText('Long title that wraps onto two lines').closest('[data-type]');
+        expect(row?.className).toContain('__popup-item');
+        expect(row?.className).not.toContain('title-lines_2');
+
+        // eslint-disable-next-line testing-library/no-node-access
+        const listItem = row?.closest('.gn-composite-bar-item__root-menu-item');
+        expect(listItem).toBeTruthy();
+        expect(listItem?.getAttribute('style')).toContain('height: 32px');
+    });
+
     it('stops click propagation at the popup content boundary when itemWrapper is provided', () => {
         const onParentClick = jest.fn();
         const items: AsideHeaderItem[] = [

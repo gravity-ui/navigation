@@ -21,6 +21,7 @@ export const ItemQuickAccessPin: React.FC<ItemQuickAccessPinProps> = ({quickAcce
             event.stopPropagation();
             event.preventDefault();
             onToggle();
+            event.currentTarget.blur();
         },
         [onToggle],
     );
@@ -29,11 +30,12 @@ export const ItemQuickAccessPin: React.FC<ItemQuickAccessPinProps> = ({quickAcce
         <Button
             className={b('quick-access-pin', {pinned: quickAccess})}
             view="flat-secondary"
+            size="s"
             onClick={handleClick}
             aria-label={quickAccess ? i18n('quick_access_unpin') : i18n('quick_access_pin')}
         >
             <Button.Icon>
-                <Icon data={quickAccess ? PinFill : Pin} size={16} />
+                <Icon data={quickAccess ? PinFill : Pin} />
             </Button.Icon>
         </Button>
     );

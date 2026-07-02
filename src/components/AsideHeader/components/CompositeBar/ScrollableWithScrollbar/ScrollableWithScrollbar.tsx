@@ -14,6 +14,11 @@ type ScrollableWithScrollbarProps = {
     children: ReactNode;
     className?: string;
     /**
+     * Caps height to `--gn-aside-header-quick-access-max-height` (quick access /
+     * pinned section). Uses intrinsic content height up to the cap, then scrolls.
+     */
+    capped?: boolean;
+    /**
      * Extra dependencies that should trigger a recalculation of the custom
      * scrollbar thumb (e.g. when the rendered items change).
      */
@@ -29,6 +34,7 @@ type ScrollableWithScrollbarProps = {
 export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
     children,
     className,
+    capped = false,
     recalcDeps = EMPTY_DEPS,
     onOverflowChange,
 }) => {
@@ -52,7 +58,7 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
     }, [onOverflowChange]);
 
     return (
-        <div className={b(null, className)}>
+        <div className={b({capped}, className)}>
             <div ref={scrollRef} className={b('scrollable-inner')} onScroll={scheduleUpdate}>
                 {children}
             </div>
