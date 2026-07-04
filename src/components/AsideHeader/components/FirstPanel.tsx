@@ -40,6 +40,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         quickAccessIsAvailable,
         onToggleQuickAccess,
         enableQuickAccess,
+        showQuickAccessSection = true,
         menuGroupNestedIcons,
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
@@ -85,8 +86,9 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 <div
                     className={b('aside-content', {
                         'with-decoration': headerDecoration,
-                        'with-quick-access': enableQuickAccess,
-                        'with-quick-access-items': enableQuickAccess && hasQuickAccessItems,
+                        'with-quick-access': enableQuickAccess && showQuickAccessSection,
+                        'with-quick-access-items':
+                            enableQuickAccess && showQuickAccessSection && hasQuickAccessItems,
                     })}
                 >
                     <Header />

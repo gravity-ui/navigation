@@ -123,7 +123,7 @@ describe('CompositeBar', () => {
         expect(screen.queryByText('Ресурсы')).toBeNull();
     });
 
-    it('does not close compact icon tooltip when clicking the current leaf menu item', () => {
+    it('does not close compact solo item popover when clicking the current leaf menu item', () => {
         jest.useFakeTimers();
 
         const onItemClick = jest.fn();
@@ -139,11 +139,37 @@ describe('CompositeBar', () => {
             jest.advanceTimersByTime(150);
         });
 
-        expect(screen.getByText('Home')).toBeTruthy();
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(document.querySelector('.gn-composite-bar-item__popup-content')).toBeTruthy();
 
         fireEvent.click(itemButton);
 
-        expect(screen.getByText('Home')).toBeTruthy();
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(document.querySelector('.gn-composite-bar-item__popup-content')).toBeTruthy();
+
+        jest.useRealTimers();
+    });
+
+    it('does not highlight the current solo item inside the compact popover', () => {
+        jest.useFakeTimers();
+
+        const onItemClick = jest.fn();
+        const items: AsideHeaderItem[] = [{id: 'home', title: 'Home', icon: Gear, current: true}];
+
+        renderCompositeBar({items, onItemClick, compact: true});
+
+        fireEvent.mouseEnter(screen.getByRole('button'));
+
+        act(() => {
+            jest.advanceTimersByTime(150);
+        });
+
+        // eslint-disable-next-line testing-library/no-node-access
+        const popupRow = document.querySelector(
+            '.gn-composite-bar-item__popup-content [data-type]',
+        );
+        expect(popupRow).toBeTruthy();
+        expect(popupRow?.className).not.toContain('_current');
 
         jest.useRealTimers();
     });

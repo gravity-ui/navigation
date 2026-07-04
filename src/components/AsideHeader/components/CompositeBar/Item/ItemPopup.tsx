@@ -74,13 +74,16 @@ export const ItemPopup: React.FC<Props> = ({
     } = getAsideHeaderDensityConfig(menuDensity);
     const nestedOpenCountRef = React.useRef(0);
 
-    const popoverStyle = React.useMemo(
-        () =>
-            ({
-                '--gn-aside-header-item-expanded-radius': `${itemExpandedRadius}px`,
-            }) as React.CSSProperties,
-        [itemExpandedRadius],
-    );
+    const isSingleLabel = !title && items.length === 1;
+
+    const popoverStyle = React.useMemo(() => {
+        const borderRadius = itemExpandedRadius + POPUP_PADDING;
+
+        return {
+            '--gn-aside-header-item-expanded-radius': `${itemExpandedRadius}px`,
+            '--g-popup-border-radius': `${borderRadius}px`,
+        } as React.CSSProperties;
+    }, [itemExpandedRadius]);
 
     const popupItemHeight = React.useCallback(
         (item: AsideHeaderItem) => getPopupItemHeight(item, menuDensity),
@@ -103,8 +106,6 @@ export const ItemPopup: React.FC<Props> = ({
             crossAxis,
         };
     }, [title, popupRowHeight, itemHeight]);
-
-    const isSingleLabel = !title && items.length === 1;
 
     const registerNestedOpen = React.useCallback((delta: number) => {
         nestedOpenCountRef.current = Math.max(0, nestedOpenCountRef.current + delta);
@@ -143,7 +144,10 @@ export const ItemPopup: React.FC<Props> = ({
 
     const content = (
         <ItemPopupNestContext.Provider value={nestContextValue}>
-            <div className={b('popup-content', {collapsed})} onClick={handlePopupContentClick}>
+            <div
+                className={b('popup-content', {collapsed, 'single-label': isSingleLabel})}
+                onClick={handlePopupContentClick}
+            >
                 {title && <div className={b('popup-title')}>{title}</div>}
                 <List
                     items={popupItems}
@@ -203,7 +207,7 @@ export const ItemPopup: React.FC<Props> = ({
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- UIKit PopoverProps gap
             // @ts-expect-error
             disableTransition
-            className={b('icon-popover', {'item-type': type})}
+            className={b('icon-popover', {'item-type': type, 'single-label': isSingleLabel})}
             style={popoverStyle}
             content={content}
         >

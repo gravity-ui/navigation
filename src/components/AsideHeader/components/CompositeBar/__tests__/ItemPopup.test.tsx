@@ -282,7 +282,7 @@ describe('ItemPopup', () => {
             },
         ];
 
-        renderItemPopup({items, open: true});
+        renderItemPopup({items, open: true, title: 'Section'});
 
         // eslint-disable-next-line testing-library/no-node-access
         const row = screen.getByText('Long title that wraps onto two lines').closest('[data-type]');
@@ -293,6 +293,21 @@ describe('ItemPopup', () => {
         const listItem = row?.closest('.gn-composite-bar-item__root-menu-item');
         expect(listItem).toBeTruthy();
         expect(listItem?.getAttribute('style')).toContain('height: 32px');
+    });
+
+    it('uses tighter padding for a single-item solo popup', () => {
+        const items: AsideHeaderItem[] = [{id: 'home', title: 'Home', icon: Gear}];
+
+        renderItemPopup({items, open: true});
+
+        // eslint-disable-next-line testing-library/no-node-access
+        const listItem = screen.getByText('Home').closest('.gn-composite-bar-item__root-menu-item');
+        expect(listItem?.getAttribute('style')).toContain('height: 32px');
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(listItem?.className).toContain('__root-menu-item');
+        // eslint-disable-next-line testing-library/no-node-access
+        const popup = document.querySelector('.g-popup');
+        expect(popup?.getAttribute('style')).toContain('--g-popup-border-radius: 10px');
     });
 
     it('stops click propagation at the popup content boundary when itemWrapper is provided', () => {

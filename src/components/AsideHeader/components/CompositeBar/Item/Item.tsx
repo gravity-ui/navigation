@@ -12,7 +12,6 @@ import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {COLLAPSE_ITEM_ID, ITEM_TYPE_REGULAR} from '../constants';
 
 import {ItemInnerProps, ItemProps} from './Item.types';
-import {ItemCompactTooltip} from './ItemCompactTooltip';
 import {ItemPopup} from './ItemPopup';
 import {ItemPopupNestContext} from './ItemPopupNestContext';
 import {ItemQuickAccessPin} from './ItemQuickAccessPin';
@@ -129,10 +128,15 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         Boolean(resolvedMenuPopupItems?.length) &&
         (collapsedItem || !inlineGroupHeader || !groupHeaderExpanded);
 
+    const showSoloCompactPopup =
+        compact && !collapsedItem && !menuPopupRow && !resolvedMenuPopupItems?.length;
+
+    const hasCompactItemPopup = showMenuPopup || showSoloCompactPopup;
+
     const submenuNest = React.useContext(ItemPopupNestContext);
 
     React.useEffect(() => {
-        if (!submenuNest || !showMenuPopup || !compactNavPopoverOpen) {
+        if (!submenuNest || !hasCompactItemPopup || !compactNavPopoverOpen) {
             return undefined;
         }
 
@@ -141,7 +145,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         return () => {
             submenuNest.registerNestedOpen(-1);
         };
-    }, [submenuNest, showMenuPopup, compactNavPopoverOpen]);
+    }, [submenuNest, hasCompactItemPopup, compactNavPopoverOpen]);
 
     if (isDivider) {
         return <div className={b('menu-divider')} />;
@@ -149,12 +153,12 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const compactPopoverDisabled = !enableTooltip || popupVisible || type === 'action';
 
-    const makeIconNode = (iconEl: React.ReactNode, withCompactPopover = true): React.ReactNode => {
+    const makeIconNode = (iconEl: React.ReactNode): React.ReactNode => {
         if (!compact) {
             return iconEl;
         }
 
-        const iconButton = (
+        return (
             <div
                 onMouseEnter={() => onMouseEnter?.()}
                 onMouseLeave={() => onMouseLeave?.()}
@@ -162,20 +166,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             >
                 {iconEl}
             </div>
-        );
-
-        if (!withCompactPopover || resolvedMenuPopupItems?.length) {
-            return iconButton;
-        }
-
-        return (
-            <ItemCompactTooltip
-                content={props.tooltipText ?? title}
-                disabled={compactPopoverDisabled}
-                type={type}
-            >
-                {iconButton}
-            </ItemCompactTooltip>
         );
     };
 
@@ -201,6 +191,10 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         const ariaLabel = typeof title === 'string' ? title : undefined;
 
         const handleRowClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+            if (compact && !collapsedItem && !showMenuPopup && !current) {
+                setCompactNavPopoverOpen(false);
+            }
+
             onItemClick?.(props, collapsedItem, event);
 
             if (stopClickPropagation) {
@@ -314,6 +308,24 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 >
                     {tagNode}
                 </ItemPopup>
+            ) : showSoloCompactPopup ? (
+                <ItemPopup
+                    items={[{...props, current: false}]}
+                    open={compactNavPopoverOpen}
+                    onOpenChange={(nextOpen) => {
+                        if (nextOpen && compactPopoverDisabled) return;
+                        setCompactNavPopoverOpen(nextOpen);
+                    }}
+                    hideIcon
+                    itemClassName={popupItemClassName}
+                    disabled={compactPopoverDisabled}
+                    type={type}
+                    collapsed={compact}
+                    onPopupItemClick={onPopupItemClick}
+                    onItemClick={onItemClick}
+                >
+                    {tagNode}
+                </ItemPopup>
             ) : (
                 tagNode
             );
@@ -361,12 +373,12 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             bringForward &&
             (itemWrapper(
                 params,
-                ({icon: iconEl}) => makeIconNode(iconEl, false),
+                ({icon: iconEl}) => makeIconNode(iconEl),
                 opts,
             ) as React.ReactElement);
     } else {
         node = makeNode(params);
-        highlightedNode = bringForward && makeIconNode(iconNode, false);
+        highlightedNode = bringForward && makeIconNode(iconNode);
     }
 
     return (

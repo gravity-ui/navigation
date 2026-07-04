@@ -108,6 +108,12 @@ interface AsideHeaderDefaultProps {
      */
     enableQuickAccess?: boolean;
     /**
+     * When `false`, hides the pinned quick access section and disables pin controls on menu items.
+     * Has no effect when `enableQuickAccess` is `false`.
+     * @default true
+     */
+    showQuickAccessSection?: boolean;
+    /**
      * When `true`, the active (`current`) menu item stays highlighted in the main menu
      * even when it is also shown in the quick access section.
      * @default false

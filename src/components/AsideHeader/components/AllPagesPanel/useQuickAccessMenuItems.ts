@@ -7,14 +7,14 @@ import {AsideHeaderItem} from '../../types';
 import {useVisibleMenuItems} from './useVisibleMenuItems';
 
 export const useQuickAccessMenuItems = (): AsideHeaderItem[] => {
-    const {enableQuickAccess} = useAsideHeaderInnerContext();
+    const {enableQuickAccess, showQuickAccessSection = true} = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
 
     return useMemo(() => {
-        if (!enableQuickAccess) {
+        if (!enableQuickAccess || !showQuickAccessSection) {
             return [];
         }
 
         return visibleMenuItems.filter(isQuickAccessMenuItem);
-    }, [enableQuickAccess, visibleMenuItems]);
+    }, [enableQuickAccess, showQuickAccessSection, visibleMenuItems]);
 };

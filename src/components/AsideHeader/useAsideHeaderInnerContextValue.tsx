@@ -20,6 +20,7 @@ export const useAsideHeaderInnerContextValue = (
         onMenuItemsChanged,
         onAllPagesClick,
         enableQuickAccess,
+        showQuickAccessSection = true,
         enableAllPages = true,
         editMenuProps,
     } = props;
@@ -34,7 +35,8 @@ export const useAsideHeaderInnerContextValue = (
     const allPagesIsAvailable =
         enableAllPages && Boolean(onMenuItemsChanged) && (!menuItems || menuItems?.length > 0);
 
-    const quickAccessIsAvailable = Boolean(enableQuickAccess) && Boolean(onMenuItemsChanged);
+    const quickAccessIsAvailable =
+        Boolean(enableQuickAccess) && Boolean(onMenuItemsChanged) && showQuickAccessSection;
 
     useEffect(() => {
         // If any user panel became open we need to switch off all inner panels
