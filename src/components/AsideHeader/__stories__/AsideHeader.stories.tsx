@@ -473,6 +473,7 @@ const renderAboveMenuContent = ({
 }) => (
     <Box spacing={{p: 2}}>
         <Select
+            aria-label="Select tenant"
             placeholder="Select tenant"
             options={tenants.map((tenant) => ({
                 content: tenant.label,
