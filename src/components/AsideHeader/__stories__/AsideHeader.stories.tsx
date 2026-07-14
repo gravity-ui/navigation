@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {Gear, Xmark} from '@gravity-ui/icons';
-import {Button, Flex, Icon, Text, spacing} from '@gravity-ui/uikit';
+import {Box, Button, Flex, Icon, Select, Text, spacing} from '@gravity-ui/uikit';
 import type {Meta, StoryFn} from '@storybook/react-webpack5';
 
 import {MenuGroup} from '../../types';
@@ -440,5 +440,129 @@ const ScrollableModeTemplate: StoryFn<{initialCompact?: boolean}> = (args) => {
 
 export const MenuScrollbar = ScrollableModeTemplate.bind({});
 MenuScrollbar.args = {
+    initialCompact: false,
+};
+
+const tenants: {label: string; value: string; menuItems: AsideHeaderProps['menuItems']}[] = [
+    {
+        label: 'Tenant 1',
+        value: 'tenant1',
+        menuItems: Array.from({length: 25}, (_, index) => ({
+            id: `item-${index + 1}`,
+            title: `Item ${index + 1}`,
+            icon: Gear,
+        })),
+    },
+    {
+        label: 'Tenant 2',
+        value: 'tenant2',
+        menuItems: Array.from({length: 25}, (_, index) => ({
+            id: `item-${index + 1}`,
+            title: `Item ${index + 26}`,
+            icon: Gear,
+        })),
+    },
+];
+
+const renderAboveMenuContent = ({
+    value,
+    onChange,
+}: {
+    value?: string;
+    onChange: (value: string) => void;
+}) => (
+    <Box spacing={{p: 2}}>
+        <Select
+            placeholder="Select tenant"
+            options={tenants.map((tenant) => ({
+                content: tenant.label,
+                value: tenant.value,
+            }))}
+            value={value ? [value] : []}
+            onUpdate={(values) => onChange(values[0])}
+            width="max"
+        />
+    </Box>
+);
+
+const AboveMenuContentDemo = (props: {
+    initialCompact?: boolean;
+    menuOverflow?: AsideHeaderProps['menuOverflow'];
+    description: React.ReactNode;
+}) => {
+    const [compact, setCompact] = React.useState(props.initialCompact ?? false);
+    const [tenant, setTenant] = React.useState(tenants[0].value);
+
+    const menuItems = React.useMemo(() => {
+        return tenants.find((t) => t.value === tenant)?.menuItems ?? [];
+    }, [tenant]);
+
+    return (
+        <PageLayout compact={compact}>
+            <PageLayoutAside
+                headerDecoration
+                logo={DEFAULT_LOGO}
+                menuItems={menuItems}
+                menuOverflow={props.menuOverflow}
+                aboveMenuContent={
+                    compact ? null : renderAboveMenuContent({value: tenant, onChange: setTenant})
+                }
+                onChangeCompact={setCompact}
+            />
+            <PageLayout.Content>
+                <div style={{padding: 16}}>{props.description}</div>
+            </PageLayout.Content>
+        </PageLayout>
+    );
+};
+
+const AboveMenuContentTemplate: StoryFn = (args) => (
+    <AboveMenuContentDemo
+        initialCompact={args.initialCompact}
+        description={
+            <>
+                Sidebar with <code>aboveMenuContent</code> (select above menu).
+            </>
+        }
+    />
+);
+
+export const AboveMenuContent = AboveMenuContentTemplate.bind({});
+AboveMenuContent.args = {
+    initialCompact: false,
+};
+
+const AboveMenuContentCompactTemplate: StoryFn = (args) => (
+    <AboveMenuContentDemo
+        initialCompact={args.initialCompact}
+        description={
+            <>
+                Compact sidebar with <code>aboveMenuContent</code> (select above menu). Many items
+                collapse under &quot;More&quot; — scroll mode is not used in compact.
+            </>
+        }
+    />
+);
+
+export const AboveMenuContentCompact = AboveMenuContentCompactTemplate.bind({});
+AboveMenuContentCompact.args = {
+    initialCompact: true,
+};
+
+const AboveMenuContentScrollbarTemplate: StoryFn = (args) => (
+    <AboveMenuContentDemo
+        menuOverflow="scroll"
+        initialCompact={args.initialCompact}
+        description={
+            <>
+                Expanded sidebar: <code>aboveMenuContent</code> stays fixed above the scrollable
+                menu list (menuOverflow=&quot;scroll&quot;).
+            </>
+        }
+    />
+);
+
+export const AboveMenuContentScrollbar = AboveMenuContentScrollbarTemplate.bind({});
+AboveMenuContentScrollbar.args = {
     initialCompact: false,
 };
