@@ -1,9 +1,9 @@
-## Footer and MobileFooter
+# Footer and MobileFooter
 
 The page footer components. Use `Footer` for the desktop version and `MobileFooter` for the mobile version.
 Both components have the same properties.
 
-### PropTypes
+## Properties
 
 | Property                                                                                 | Type                             | Required | Default | Description                   |
 | :--------------------------------------------------------------------------------------- | :------------------------------- | :------: | :------ | :---------------------------- |
