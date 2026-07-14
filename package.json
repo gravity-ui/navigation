@@ -32,7 +32,7 @@
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --passWithNoTests",
     "test-storybook": "test-storybook --url ${PR_PREVIEW_URL:-http://localhost:7008}",
     "build": "rimraf build && rollup -c && npm run build:docs",
-    "build:docs": "node -e \"require('@gravity-ui/gulp-utils').buildDocs()\"",
+    "build:docs": "node scripts/build-docs.js",
     "lint:js": "eslint src --ext .js,.jsx,.ts,.tsx",
     "lint:styles": "stylelint '{styles,src}/**/*.scss'",
     "lint:prettier": "prettier --check '**/*.md'",
