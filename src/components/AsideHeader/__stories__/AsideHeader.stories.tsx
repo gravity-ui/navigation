@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {Gear, Xmark} from '@gravity-ui/icons';
-import {Box, Button, Flex, Icon, Select, Text, spacing} from '@gravity-ui/uikit';
+import {Gear, LogoYandexCloud, LogoYandexTracker, Xmark} from '@gravity-ui/icons';
+import {Button, Flex, Icon, IconData, Select, Text, spacing} from '@gravity-ui/uikit';
 import type {Meta, StoryFn} from '@storybook/react-webpack5';
 
 import {MenuGroup} from '../../types';
@@ -443,10 +443,16 @@ MenuScrollbar.args = {
     initialCompact: false,
 };
 
-const tenants: {label: string; value: string; menuItems: AsideHeaderProps['menuItems']}[] = [
+const projects: {
+    label: string;
+    value: string;
+    icon: IconData;
+    menuItems: AsideHeaderProps['menuItems'];
+}[] = [
     {
-        label: 'Tenant 1',
-        value: 'tenant1',
+        label: 'Yandex Cloud',
+        value: 'yandex-cloud',
+        icon: LogoYandexCloud,
         menuItems: Array.from({length: 25}, (_, index) => ({
             id: `item-${index + 1}`,
             title: `Item ${index + 1}`,
@@ -454,8 +460,9 @@ const tenants: {label: string; value: string; menuItems: AsideHeaderProps['menuI
         })),
     },
     {
-        label: 'Tenant 2',
-        value: 'tenant2',
+        label: 'Yandex Tracker',
+        value: 'yandex-tracker',
+        icon: LogoYandexTracker,
         menuItems: Array.from({length: 25}, (_, index) => ({
             id: `item-${index + 1}`,
             title: `Item ${index + 26}`,
@@ -467,23 +474,40 @@ const tenants: {label: string; value: string; menuItems: AsideHeaderProps['menuI
 const renderAboveMenuContent = ({
     value,
     onChange,
+    data,
+    compact,
 }: {
     value?: string;
     onChange: (value: string) => void;
+    data: {
+        icon?: IconData;
+        label?: string;
+    };
+    compact: boolean;
 }) => (
-    <Box spacing={{p: 2}}>
-        <Select
-            aria-label="Select tenant"
-            placeholder="Select tenant"
-            options={tenants.map((tenant) => ({
-                content: tenant.label,
-                value: tenant.value,
-            }))}
-            value={value ? [value] : []}
-            onUpdate={(values) => onChange(values[0])}
-            width="max"
-        />
-    </Box>
+    <Flex spacing={{p: 2}} direction="column" gap={2}>
+        {!compact && (
+            <Select
+                aria-label="Select project"
+                placeholder="Select project"
+                options={projects.map((project) => ({
+                    content: project.label,
+                    value: project.value,
+                }))}
+                value={value ? [value] : []}
+                onUpdate={(values) => onChange(values[0])}
+                width="max"
+            />
+        )}
+        {data.icon && data.label && (
+            <Flex direction="row" alignItems="center" gap={2}>
+                <Flex alignItems="center" justifyContent="center" width={40} height={40}>
+                    <Icon data={data.icon} size={28} />
+                </Flex>
+                {!compact && <Text variant="subheader-2">{data.label}</Text>}
+            </Flex>
+        )}
+    </Flex>
 );
 
 const AboveMenuContentDemo = (props: {
@@ -492,11 +516,15 @@ const AboveMenuContentDemo = (props: {
     description: React.ReactNode;
 }) => {
     const [compact, setCompact] = React.useState(props.initialCompact ?? false);
-    const [tenant, setTenant] = React.useState(tenants[0].value);
+    const [project, setProject] = React.useState(projects[0].value);
+
+    const selectedProject = React.useMemo(() => {
+        return projects.find((p) => p.value === project);
+    }, [project]);
 
     const menuItems = React.useMemo(() => {
-        return tenants.find((t) => t.value === tenant)?.menuItems ?? [];
-    }, [tenant]);
+        return projects.find((p) => p.value === project)?.menuItems ?? [];
+    }, [project]);
 
     return (
         <PageLayout compact={compact}>
@@ -505,9 +533,15 @@ const AboveMenuContentDemo = (props: {
                 logo={DEFAULT_LOGO}
                 menuItems={menuItems}
                 menuOverflow={props.menuOverflow}
-                aboveMenuContent={
-                    compact ? null : renderAboveMenuContent({value: tenant, onChange: setTenant})
-                }
+                aboveMenuContent={renderAboveMenuContent({
+                    value: project,
+                    onChange: setProject,
+                    data: {
+                        icon: selectedProject?.icon,
+                        label: selectedProject?.label,
+                    },
+                    compact,
+                })}
                 onChangeCompact={setCompact}
             />
             <PageLayout.Content>
