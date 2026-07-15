@@ -32,6 +32,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         collapsedMenuGroupIds,
         defaultCollapsedMenuGroupIds,
         onToggleMenuGroupCollapsed,
+        aboveMenuContent,
         qa,
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
@@ -62,6 +63,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
                 <div className={b('aside-content', {['with-decoration']: headerDecoration})}>
                     <Header />
+                    {aboveMenuContent}
                     {visibleMenuItems?.length ? (
                         <CompositeBar
                             menuItemClassName={b('menu-item')}

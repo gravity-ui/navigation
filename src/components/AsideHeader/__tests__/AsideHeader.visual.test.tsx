@@ -83,4 +83,19 @@ test.describe('AsideHeader', () => {
         await mount(<AsideHeaderStories.MenuScrollbar />, mountOptions, viewport);
         await expectScreenshot();
     });
+
+    test('render story: <AboveMenuContent>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.AboveMenuContent />, mountOptions, viewport);
+        await expectScreenshot();
+    });
+
+    test('render story: <AboveMenuContentCompact>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.AboveMenuContentCompact />, mountOptions, viewport);
+        await expectScreenshot();
+    });
+
+    test('render story: <AboveMenuContentScrollbar>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.AboveMenuContentScrollbar />, mountOptions, viewport);
+        await expectScreenshot();
+    });
 });
