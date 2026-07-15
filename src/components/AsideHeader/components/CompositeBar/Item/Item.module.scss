@@ -441,8 +441,8 @@ $floating-surface-box-shadow-dark:
         margin-bottom: var(--g-spacing-1);
         border-bottom: 1px solid
             var(--gn-aside-header-divider-horizontal-color, var(--g-color-line-generic));
-        color: var(--gn-aside-header-item-text-color, var(--g-color-text-primary));
-        font-weight: 600;
+        color: var(--g-color-text-complementary);
+        font-weight: 500;
     }
 
     &__popup-content &__popup-item#{$class}_hide-icon {
