@@ -9,7 +9,7 @@ import {fireEvent, render, screen} from '@testing-library/react';
 
 import {AsideHeaderInnerContextProvider} from '../../../AsideHeaderContext';
 import {AsideHeaderItem} from '../../../types';
-import {ItemPopup} from '../Item/ItemPopup';
+import {ItemPopup, getItemPopoverOffset} from '../Item/ItemPopup';
 
 const contextValue = {
     compact: false,
@@ -295,6 +295,15 @@ describe('ItemPopup', () => {
         expect(listItem?.getAttribute('style')).toContain('height: 32px');
     });
 
+    it('uses zero crossAxis offset for a single-item solo popup', () => {
+        expect(
+            getItemPopoverOffset({isSingleLabel: true, itemHeight: 40, popupRowHeight: 32}),
+        ).toEqual({mainAxis: 14, crossAxis: 0});
+        expect(
+            getItemPopoverOffset({isSingleLabel: false, itemHeight: 40, popupRowHeight: 32}),
+        ).toEqual({mainAxis: 14, crossAxis: 2});
+    });
+
     it('uses tighter padding for a single-item solo popup', () => {
         const items: AsideHeaderItem[] = [{id: 'home', title: 'Home', icon: Gear}];
 
@@ -302,12 +311,15 @@ describe('ItemPopup', () => {
 
         // eslint-disable-next-line testing-library/no-node-access
         const listItem = screen.getByText('Home').closest('.gn-composite-bar-item__root-menu-item');
-        expect(listItem?.getAttribute('style')).toContain('height: 32px');
+        expect(listItem?.getAttribute('style')).toContain('height: 28px');
         // eslint-disable-next-line testing-library/no-node-access
         expect(listItem?.className).toContain('__root-menu-item');
         // eslint-disable-next-line testing-library/no-node-access
+        const listItemsContainer = document.querySelector('.g-list__items');
+        expect(listItemsContainer?.getAttribute('style')).toContain('height: 28px');
+        // eslint-disable-next-line testing-library/no-node-access
         const popup = document.querySelector('.g-popup');
-        expect(popup?.getAttribute('style')).toContain('--g-popup-border-radius: 10px');
+        expect(popup?.getAttribute('style')).toContain('--g-popup-border-radius: 4px');
     });
 
     it('stops click propagation at the popup content boundary when itemWrapper is provided', () => {

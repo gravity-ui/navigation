@@ -140,6 +140,12 @@ interface AsideHeaderDefaultProps {
      * @default true
      */
     menuGroupNestedIcons?: boolean;
+    /**
+     * When `true` and `menuOverflow="scroll"` (non-compact), quick access and main menu
+     * share one scroll container instead of separate scroll areas.
+     * @default false
+     */
+    unifiedMenuScroll?: boolean;
 }
 
 export type AsideHeaderInnerProps = AsideHeaderGeneralProps &

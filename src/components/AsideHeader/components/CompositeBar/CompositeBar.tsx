@@ -1,4 +1,4 @@
-import React, {FC, ReactNode, useCallback, useMemo, useRef, useState} from 'react';
+import React, {FC, ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {List} from '@gravity-ui/uikit';
 import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
@@ -56,6 +56,10 @@ type CompositeBarProps = {
     defaultCollapsedMenuGroupIds?: Record<string, boolean>;
     onToggleMenuGroupCollapsed?: (groupId: string) => void;
     onMenuScrollOverflowChange?: (overflows: boolean) => void;
+    /** Skips the internal scroll wrapper when the parent already provides one. */
+    disableScrollWrapper?: boolean;
+    /** Notifies the parent when scrollable menu content height may have changed. */
+    onScrollContentChange?: () => void;
     enableQuickAccessPin?: boolean;
     onToggleQuickAccess?: (item: AsideHeaderItem) => void;
     menuGroupNestedIcons?: boolean;
@@ -246,6 +250,8 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                             onMouseLeave={onMouseLeave}
                             onPopupItemClick={onPopupItemClick}
                             onItemClick={onSyntheticHeaderItemClick}
+                            enableQuickAccessPin={enableQuickAccessPin}
+                            onToggleQuickAccess={onToggleQuickAccessByItem}
                         />
                     );
                 }
@@ -275,6 +281,8 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                                 onToggleGroupCollapsed(row.group.id);
                                 onSyntheticHeaderItemClick(item, isItemCollapsed, event);
                             }}
+                            enableQuickAccessPin={enableQuickAccessPin}
+                            onToggleQuickAccess={onToggleQuickAccessByItem}
                         />
                         {!groupIsCollapsed && (
                             <List<AsideHeaderItem>
@@ -359,6 +367,8 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     defaultCollapsedMenuGroupIds,
     onToggleMenuGroupCollapsed,
     onMenuScrollOverflowChange,
+    disableScrollWrapper = false,
+    onScrollContentChange,
     enableQuickAccessPin,
     onToggleQuickAccess,
     menuGroupNestedIcons = true,
@@ -406,6 +416,10 @@ export const CompositeBar: FC<CompositeBarProps> = ({
         [items.length, menuGroups?.length, collapsedMap],
     );
 
+    useEffect(() => {
+        onScrollContentChange?.();
+    }, [scrollRecalcKey, onScrollContentChange]);
+
     if (rows.length === 0) {
         return null;
     }
@@ -414,27 +428,33 @@ export const CompositeBar: FC<CompositeBarProps> = ({
 
     if (type === 'menu') {
         if (menuOverflow === 'scroll' && !compact) {
-            node = (
+            const menuView = (
+                <CompositeBarView
+                    compositeId={compositeId}
+                    type="menu"
+                    compact={compact}
+                    rows={scrollableRows}
+                    onItemClick={onItemClick}
+                    onMoreClick={onMoreClick}
+                    menuItemClassName={menuItemClassName}
+                    inlineGroupChildren={inlineGroupChildren}
+                    isGroupCollapsed={isGroupCollapsed}
+                    onToggleGroupCollapsed={onToggleGroupCollapsed}
+                    enableQuickAccessPin={enableQuickAccessPin}
+                    onToggleQuickAccess={onToggleQuickAccess}
+                    menuGroupNestedIcons={menuGroupNestedIcons}
+                />
+            );
+
+            node = disableScrollWrapper ? (
+                menuView
+            ) : (
                 <ScrollableWithScrollbar
                     className={className}
                     recalcDeps={[scrollRecalcKey]}
                     onOverflowChange={onMenuScrollOverflowChange}
                 >
-                    <CompositeBarView
-                        compositeId={compositeId}
-                        type="menu"
-                        compact={compact}
-                        rows={scrollableRows}
-                        onItemClick={onItemClick}
-                        onMoreClick={onMoreClick}
-                        menuItemClassName={menuItemClassName}
-                        inlineGroupChildren={inlineGroupChildren}
-                        isGroupCollapsed={isGroupCollapsed}
-                        onToggleGroupCollapsed={onToggleGroupCollapsed}
-                        enableQuickAccessPin={enableQuickAccessPin}
-                        onToggleQuickAccess={onToggleQuickAccess}
-                        menuGroupNestedIcons={menuGroupNestedIcons}
-                    />
+                    {menuView}
                 </ScrollableWithScrollbar>
             );
         } else {

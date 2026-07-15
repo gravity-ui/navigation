@@ -42,22 +42,101 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         enableQuickAccess,
         showQuickAccessSection = true,
         menuGroupNestedIcons,
+        unifiedMenuScroll = false,
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
     const quickAccessItems = useQuickAccessMenuItems();
     const mainMenuItems = useMainMenuItems();
     const hasQuickAccessItems = quickAccessItems.length > 0;
+    const isUnifiedMenuScroll = unifiedMenuScroll && menuOverflow === 'scroll' && !compact;
     const [menuScrollOverflows, setMenuScrollOverflows] = useState(false);
+    const [unifiedScrollContentVersion, setUnifiedScrollContentVersion] = useState(0);
 
     const handleMenuScrollOverflowChange = useCallback((overflows: boolean) => {
         setMenuScrollOverflows(overflows);
+    }, []);
+
+    const handleUnifiedScrollContentChange = useCallback(() => {
+        setUnifiedScrollContentVersion((version) => version + 1);
     }, []);
 
     React.useEffect(() => {
         if (menuOverflow !== 'scroll' || compact || !visibleMenuItems?.length) {
             setMenuScrollOverflows(false);
         }
-    }, [menuOverflow, compact, visibleMenuItems?.length]);
+    }, [menuOverflow, compact, visibleMenuItems?.length, isUnifiedMenuScroll]);
+
+    const quickAccessCompositeBar = (
+        <CompositeBar
+            menuItemClassName={b('menu-item')}
+            compositeId={QUICK_ACCESS_COMPOSITE_ID}
+            type="quick-access"
+            compact={compact}
+            items={quickAccessItems}
+            onItemClick={onItemClick}
+            enableQuickAccessPin={quickAccessIsAvailable}
+            onToggleQuickAccess={onToggleQuickAccess}
+        />
+    );
+
+    const menuCompositeBar = (
+        <CompositeBar
+            menuItemClassName={b('menu-item')}
+            compositeId={MENU_ITEMS_COMPOSITE_ID}
+            type="menu"
+            compact={compact}
+            items={mainMenuItems}
+            menuGroups={menuGroups}
+            menuMoreTitle={menuMoreTitle ?? i18n('label_more')}
+            onItemClick={onItemClick}
+            onMoreClick={onMenuMoreClick}
+            menuOverflow={menuOverflow}
+            collapsedMenuGroupIds={collapsedMenuGroupIds}
+            defaultCollapsedMenuGroupIds={defaultCollapsedMenuGroupIds}
+            onToggleMenuGroupCollapsed={onToggleMenuGroupCollapsed}
+            disableScrollWrapper={isUnifiedMenuScroll}
+            onScrollContentChange={
+                isUnifiedMenuScroll ? handleUnifiedScrollContentChange : undefined
+            }
+            onMenuScrollOverflowChange={
+                menuOverflow === 'scroll' && !compact && !isUnifiedMenuScroll
+                    ? handleMenuScrollOverflowChange
+                    : undefined
+            }
+            enableQuickAccessPin={quickAccessIsAvailable}
+            onToggleQuickAccess={onToggleQuickAccess}
+            menuGroupNestedIcons={menuGroupNestedIcons}
+        />
+    );
+
+    const quickAccessSection =
+        quickAccessItems.length > 0 ? (
+            <div
+                className={b('quick-access', {
+                    scrollable: !compact && !isUnifiedMenuScroll,
+                    unified: isUnifiedMenuScroll,
+                })}
+            >
+                {!compact && (
+                    <div className={b('quick-access-title')}>{i18n('quick_access_title')}</div>
+                )}
+                {compact ? (
+                    quickAccessCompositeBar
+                ) : isUnifiedMenuScroll ? (
+                    quickAccessCompositeBar
+                ) : (
+                    <ScrollableWithScrollbar capped recalcDeps={[quickAccessItems.length]}>
+                        {quickAccessCompositeBar}
+                    </ScrollableWithScrollbar>
+                )}
+            </div>
+        ) : null;
+
+    const menuSection = mainMenuItems?.length ? (
+        menuCompositeBar
+    ) : (
+        <div className={b('menu-items')} />
+    );
 
     const asideRef = useRef<HTMLDivElement>(null);
 
@@ -92,69 +171,24 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     })}
                 >
                     <Header />
-                    {quickAccessItems.length > 0 && (
-                        <div className={b('quick-access', {scrollable: !compact})}>
-                            {!compact && (
-                                <div className={b('quick-access-title')}>
-                                    {i18n('quick_access_title')}
-                                </div>
-                            )}
-                            {compact ? (
-                                <CompositeBar
-                                    menuItemClassName={b('menu-item')}
-                                    compositeId={QUICK_ACCESS_COMPOSITE_ID}
-                                    type="quick-access"
-                                    compact={compact}
-                                    items={quickAccessItems}
-                                    onItemClick={onItemClick}
-                                    enableQuickAccessPin={quickAccessIsAvailable}
-                                    onToggleQuickAccess={onToggleQuickAccess}
-                                />
-                            ) : (
-                                <ScrollableWithScrollbar
-                                    capped
-                                    recalcDeps={[quickAccessItems.length]}
-                                >
-                                    <CompositeBar
-                                        menuItemClassName={b('menu-item')}
-                                        compositeId={QUICK_ACCESS_COMPOSITE_ID}
-                                        type="quick-access"
-                                        compact={compact}
-                                        items={quickAccessItems}
-                                        onItemClick={onItemClick}
-                                        enableQuickAccessPin={quickAccessIsAvailable}
-                                        onToggleQuickAccess={onToggleQuickAccess}
-                                    />
-                                </ScrollableWithScrollbar>
-                            )}
-                        </div>
-                    )}
-                    {mainMenuItems?.length ? (
-                        <CompositeBar
-                            menuItemClassName={b('menu-item')}
-                            compositeId={MENU_ITEMS_COMPOSITE_ID}
-                            type="menu"
-                            compact={compact}
-                            items={mainMenuItems}
-                            menuGroups={menuGroups}
-                            menuMoreTitle={menuMoreTitle ?? i18n('label_more')}
-                            onItemClick={onItemClick}
-                            onMoreClick={onMenuMoreClick}
-                            menuOverflow={menuOverflow}
-                            collapsedMenuGroupIds={collapsedMenuGroupIds}
-                            defaultCollapsedMenuGroupIds={defaultCollapsedMenuGroupIds}
-                            onToggleMenuGroupCollapsed={onToggleMenuGroupCollapsed}
-                            onMenuScrollOverflowChange={
-                                menuOverflow === 'scroll' && !compact
-                                    ? handleMenuScrollOverflowChange
-                                    : undefined
-                            }
-                            enableQuickAccessPin={quickAccessIsAvailable}
-                            onToggleQuickAccess={onToggleQuickAccess}
-                            menuGroupNestedIcons={menuGroupNestedIcons}
-                        />
+                    {isUnifiedMenuScroll ? (
+                        <ScrollableWithScrollbar
+                            className={b('unified-menu-scroll')}
+                            recalcDeps={[
+                                quickAccessItems.length,
+                                mainMenuItems?.length ?? 0,
+                                unifiedScrollContentVersion,
+                            ]}
+                            onOverflowChange={handleMenuScrollOverflowChange}
+                        >
+                            {quickAccessSection}
+                            {menuSection}
+                        </ScrollableWithScrollbar>
                     ) : (
-                        <div className={b('menu-items')} />
+                        <React.Fragment>
+                            {quickAccessSection}
+                            {menuSection}
+                        </React.Fragment>
                     )}
                     <div className={b('footer', {'with-divider': menuScrollOverflows})}>
                         {renderFooter?.({

@@ -174,6 +174,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         const showChevron = inlineGroupHeader
             ? !compact
             : !compact && Boolean(resolvedMenuPopupItems?.length);
+        const showAsideEnd = showChevron || (menuPopupRow && showQuickAccessPin);
         const rowClassName = b(
             {
                 type,
@@ -181,8 +182,9 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 compact,
                 'hide-icon': hideIcon,
                 'menu-group-nested': menuGroupNested,
-                'with-aside-end': showChevron,
+                'with-aside-end': showAsideEnd,
                 'with-quick-access-pin': showQuickAccessPin,
+                'menu-popup-row': menuPopupRow,
                 'title-lines':
                     !compact && !menuPopupRow && props.titleLines === 2 ? '2' : undefined,
             },
@@ -202,6 +204,20 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             }
         };
 
+        const quickAccessPinSlot = showQuickAccessPin ? (
+            <span
+                className={b('quick-access-pin-slot', {
+                    'menu-popup': menuPopupRow,
+                    suppressed: quickAccessPinSuppressed,
+                })}
+            >
+                <ItemQuickAccessPin
+                    quickAccess={props.quickAccess}
+                    onToggle={handleToggleQuickAccess}
+                />
+            </span>
+        ) : null;
+
         const rowChildren = (
             <>
                 {menuGroupNestedTreeConnector}
@@ -211,34 +227,26 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
                 <div className={b('title')}>{titleEl}</div>
 
-                {showChevron && (
+                {showAsideEnd && (
                     <div className={b('aside-end')}>
-                        <div className={b('chevron')}>
-                            <Icon
-                                data={
-                                    inlineGroupHeader
-                                        ? groupHeaderExpanded
-                                            ? ChevronDown
+                        {showChevron && (
+                            <div className={b('chevron')}>
+                                <Icon
+                                    data={
+                                        inlineGroupHeader
+                                            ? groupHeaderExpanded
+                                                ? ChevronDown
+                                                : ChevronRight
                                             : ChevronRight
-                                        : ChevronRight
-                                }
-                                size={CHEVRON_SIZE}
-                            />
-                        </div>
+                                    }
+                                    size={CHEVRON_SIZE}
+                                />
+                            </div>
+                        )}
+                        {menuPopupRow && quickAccessPinSlot}
                     </div>
                 )}
-                {showQuickAccessPin && (
-                    <span
-                        className={b('quick-access-pin-slot', {
-                            suppressed: quickAccessPinSuppressed,
-                        })}
-                    >
-                        <ItemQuickAccessPin
-                            quickAccess={props.quickAccess}
-                            onToggle={handleToggleQuickAccess}
-                        />
-                    </span>
-                )}
+                {!menuPopupRow && quickAccessPinSlot}
             </>
         );
 

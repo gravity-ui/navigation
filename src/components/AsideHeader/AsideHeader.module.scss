@@ -253,6 +253,15 @@ $block: '.#{variables.$ns}aside-header';
             flex-direction: column;
             min-height: 0;
         }
+
+        &_unified {
+            flex: none;
+        }
+    }
+
+    &__unified-menu-scroll {
+        flex: 1 1 auto;
+        min-height: 0;
     }
 
     &__quick-access-title {

@@ -165,6 +165,7 @@ function NavigationConceptDemo(props: {
     menuGroupNestedIcons?: AsideHeaderProps['menuGroupNestedIcons'];
     quickAccessHighlightInMainMenu?: AsideHeaderProps['quickAccessHighlightInMainMenu'];
     showQuickAccessSection?: AsideHeaderProps['showQuickAccessSection'];
+    unifiedMenuScroll?: AsideHeaderProps['unifiedMenuScroll'];
     flatMenu?: boolean;
 }) {
     const [compact, setCompact] = React.useState(props.initialCompact ?? false);
@@ -208,6 +209,7 @@ function NavigationConceptDemo(props: {
                 onMenuItemsChanged={setMenuItemsBase}
                 onChangeCompact={setCompact}
                 menuOverflow="scroll"
+                unifiedMenuScroll={props.unifiedMenuScroll}
                 defaultCollapsedMenuGroupIds={
                     props.flatMenu ? undefined : defaultCollapsedMenuGroupIdsExceptFirst
                 }
@@ -277,6 +279,7 @@ const MenuGroupsTemplate: StoryFn = (args) => (
         menuGroupNestedIcons={args.menuGroupNestedIcons}
         quickAccessHighlightInMainMenu={args.quickAccessHighlightInMainMenu}
         showQuickAccessSection={args.showQuickAccessSection}
+        unifiedMenuScroll={args.unifiedMenuScroll}
     />
 );
 
@@ -288,6 +291,7 @@ MenuGroups.args = {
     menuGroupNestedIcons: true,
     showQuickAccessSection: true,
     quickAccessHighlightInMainMenu: false,
+    unifiedMenuScroll: false,
 };
 
 const MenuGroupsFlatTemplate: StoryFn = (args) => (
@@ -297,6 +301,7 @@ const MenuGroupsFlatTemplate: StoryFn = (args) => (
         menuGroupNestedIcons={args.menuGroupNestedIcons}
         quickAccessHighlightInMainMenu={args.quickAccessHighlightInMainMenu}
         showQuickAccessSection={args.showQuickAccessSection}
+        unifiedMenuScroll={args.unifiedMenuScroll}
         flatMenu
     />
 );
@@ -309,4 +314,5 @@ MenuGroupsFlat.args = {
     menuGroupNestedIcons: true,
     showQuickAccessSection: true,
     quickAccessHighlightInMainMenu: false,
+    unifiedMenuScroll: false,
 };

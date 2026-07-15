@@ -6,7 +6,7 @@ import {createBlock} from '../../../../utils/cn';
 import {useAsideHeaderContext} from '../../../AsideHeaderContext';
 import {getAsideHeaderDensityConfig} from '../../../density';
 import {AsideHeaderItem} from '../../../types';
-import {getPopupItemHeight, getPopupItemsHeight, getSelectedItemIndex} from '../utils';
+import {getPopupItemHeight, getSelectedItemIndex} from '../utils';
 
 import {Item} from './Item';
 import {ItemPopupNestContext} from './ItemPopupNestContext';
@@ -17,6 +17,9 @@ const b = createBlock('composite-bar-item', styles);
 
 const POPUP_PADDING = 2;
 const POPUP_MAIN_AXIS_OFFSET = 14;
+/** Compact solo label in collapsed sidebar: body line + vertical padding (spacing-1). */
+const SOLO_LABEL_POPUP_ITEM_HEIGHT = 28;
+const SOLO_LABEL_POPUP_BORDER_RADIUS = 4;
 
 /** Keep in sync with `&__popup-title` in Item.module.scss (caption-2 row + padding + border + gap). */
 const POPUP_TITLE_VERTICAL_PADDING = 4; // var(--g-spacing-1)
@@ -31,6 +34,34 @@ const POPUP_TITLE_BLOCK_HEIGHT =
 
 const POPUP_OPEN_DELAY = 0;
 const POPUP_CLOSE_DELAY = 0;
+
+export function getItemPopoverOffset({
+    isSingleLabel,
+    itemHeight,
+    popupRowHeight,
+    title,
+}: {
+    isSingleLabel: boolean;
+    itemHeight: number;
+    popupRowHeight: number;
+    title?: string;
+}): NonNullable<PopupProps['offset']> {
+    if (isSingleLabel) {
+        return {
+            mainAxis: POPUP_MAIN_AXIS_OFFSET,
+            crossAxis: 0,
+        };
+    }
+
+    const firstRowOffsetInAnchor = (itemHeight - popupRowHeight) / 2;
+    const crossAxis =
+        firstRowOffsetInAnchor - POPUP_PADDING - (title ? POPUP_TITLE_BLOCK_HEIGHT : 0);
+
+    return {
+        mainAxis: POPUP_MAIN_AXIS_OFFSET,
+        crossAxis,
+    };
+}
 
 interface Props {
     items: AsideHeaderItem[];
@@ -77,35 +108,42 @@ export const ItemPopup: React.FC<Props> = ({
     const isSingleLabel = !title && items.length === 1;
 
     const popoverStyle = React.useMemo(() => {
+        if (isSingleLabel) {
+            return {
+                '--g-popup-border-radius': `${SOLO_LABEL_POPUP_BORDER_RADIUS}px`,
+            } as React.CSSProperties;
+        }
+
         const borderRadius = itemExpandedRadius + POPUP_PADDING;
 
         return {
             '--gn-aside-header-item-expanded-radius': `${itemExpandedRadius}px`,
             '--g-popup-border-radius': `${borderRadius}px`,
         } as React.CSSProperties;
-    }, [itemExpandedRadius]);
+    }, [isSingleLabel, itemExpandedRadius]);
 
     const popupItemHeight = React.useCallback(
-        (item: AsideHeaderItem) => getPopupItemHeight(item, menuDensity),
-        [menuDensity],
+        (item: AsideHeaderItem) =>
+            isSingleLabel ? SOLO_LABEL_POPUP_ITEM_HEIGHT : getPopupItemHeight(item, menuDensity),
+        [isSingleLabel, menuDensity],
     );
 
     const popupItemsHeight = React.useCallback(
-        (listItems: AsideHeaderItem[]) => getPopupItemsHeight(listItems, menuDensity),
-        [menuDensity],
+        (listItems: AsideHeaderItem[]) =>
+            listItems.reduce((sum, item) => sum + popupItemHeight(item), 0),
+        [popupItemHeight],
     );
 
-    const popoverOffset = React.useMemo<NonNullable<PopupProps['offset']>>(() => {
-        // Shift popup so the first menu row lines up with the anchor row, not the popover box top.
-        const firstRowOffsetInAnchor = (itemHeight - popupRowHeight) / 2;
-        const crossAxis =
-            firstRowOffsetInAnchor - POPUP_PADDING - (title ? POPUP_TITLE_BLOCK_HEIGHT : 0);
-
-        return {
-            mainAxis: POPUP_MAIN_AXIS_OFFSET,
-            crossAxis,
-        };
-    }, [title, popupRowHeight, itemHeight]);
+    const popoverOffset = React.useMemo<NonNullable<PopupProps['offset']>>(
+        () =>
+            getItemPopoverOffset({
+                isSingleLabel,
+                itemHeight,
+                popupRowHeight,
+                title,
+            }),
+        [isSingleLabel, title, popupRowHeight, itemHeight],
+    );
 
     const registerNestedOpen = React.useCallback((delta: number) => {
         nestedOpenCountRef.current = Math.max(0, nestedOpenCountRef.current + delta);

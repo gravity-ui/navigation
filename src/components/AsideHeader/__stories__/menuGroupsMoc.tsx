@@ -236,4 +236,9 @@ export const menuGroupsStoryArgTypes = {
         description:
             'Keep the active item highlighted in the main menu when it is also in quick access',
     },
+    unifiedMenuScroll: {
+        control: 'boolean' as const,
+        description:
+            'Merge pinned quick access and main menu into one scroll container (menuOverflow="scroll" only)',
+    },
 };

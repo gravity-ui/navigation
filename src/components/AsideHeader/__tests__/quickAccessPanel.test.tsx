@@ -7,6 +7,7 @@ import {Gear} from '@gravity-ui/icons';
 import {ThemeProvider} from '@gravity-ui/uikit';
 import {fireEvent, render, screen} from '@testing-library/react';
 
+import {MenuGroup} from '../../types';
 import {AsideHeaderInnerContextProvider} from '../AsideHeaderContext';
 import {CompositeBar} from '../components/CompositeBar/CompositeBar';
 import {AsideHeaderItem} from '../types';
@@ -76,5 +77,28 @@ describe('CompositeBar quick access pin', () => {
         });
 
         expect(screen.queryByLabelText('Pin to quick access')).toBeNull();
+    });
+
+    it('calls onToggleQuickAccess when pin button is clicked in compact group popup', () => {
+        const onToggleQuickAccess = jest.fn();
+        const items: AsideHeaderItem[] = [
+            {id: 'wb-1', title: 'Workbook 1', icon: Gear, groupId: 'resources'},
+        ];
+        const menuGroups: MenuGroup[] = [
+            {id: 'resources', title: 'Resources Group', popupTitle: 'Resources', icon: Gear},
+        ];
+
+        renderQuickAccessBar(items, onToggleQuickAccess, {
+            compact: true,
+            menuGroups,
+        });
+
+        fireEvent.click(screen.getByText('Resources Group'));
+
+        fireEvent.mouseEnter(screen.getByRole('button', {name: 'Workbook 1'}));
+
+        fireEvent.click(screen.getByLabelText('Pin to quick access'));
+
+        expect(onToggleQuickAccess).toHaveBeenCalledWith(expect.objectContaining({id: 'wb-1'}));
     });
 });
