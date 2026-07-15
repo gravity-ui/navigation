@@ -1,8 +1,26 @@
-### MobileHeader
+# MobileHeader
 
 Header for Mobile navigation. MobileHeader provides maintaining Panels except for Modals.
 
 Includes auxiliary `MobileHeaderFooterItem` component.
+
+## Properties
+
+| Name                  | Description                                                     | Type                                                       |
+| :-------------------- | :-------------------------------------------------------------- | :--------------------------------------------------------- |
+| logo                  | Service logo properties                                         | `LogoProps`                                                |
+| burgerMenu            | Burger menu properties                                          | `BurgerMenuProps`                                          |
+| overlapPanel          | Overlap panel properties                                        | `OverlapPanelProps`                                        |
+| burgerCloseTitle      | Burger close button title (a11y)                                | `string`                                                   |
+| burgerOpenTitle       | Burger open button title (a11y)                                 | `string`                                                   |
+| panelItems            | Custom panels rendered in the header                            | `PanelItemProps[]`                                         |
+| topAlert              | Top alert properties                                            | `TopAlertProps`                                            |
+| renderContent         | Render function for the header content                          | `RenderContentType`                                        |
+| sideItemRenderContent | Render function for the side item content                       | `RenderContentType`                                        |
+| onEvent               | Inner event handler — receives the item name and the event name | `(itemName: string, eventName: MobileHeaderEvent) => void` |
+| onClosePanel          | Close panel handler                                             | `() => void`                                               |
+| className             | Header class name                                               | `string`                                                   |
+| contentClassName      | Header content class name                                       | `string`                                                   |
 
 ### Usage
 

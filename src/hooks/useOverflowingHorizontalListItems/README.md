@@ -1,8 +1,12 @@
-## useOverflowingContainerListItems
+# useOverflowingHorizontalListItems
 
-A hook for defining which list items should be shown and which ones should be hidden in the drop-down list
+A hook for determining which horizontal list items stay visible and which collapse into an overflow "more" dropdown.
 
-### PropTypes
+```tsx
+import {useOverflowingHorizontalListItems} from '@gravity-ui/navigation';
+```
+
+## Properties
 
 | Property        | Type                     | Required | Default | Description              |
 | :-------------- | :----------------------- | :------: | :------ | :----------------------- |

@@ -1,10 +1,10 @@
 <!--GITHUB_BLOCK-->
 
-## Settings
+# Settings
 
 <!--/GITHUB_BLOCK-->
 
-The components provides layouting functionality of settings panel with the following features:
+The Settings component provides the layout for a settings panel with the following features.
 
 - single-level and two-level grouping of items
 - filtering of the panel's content by headers of items

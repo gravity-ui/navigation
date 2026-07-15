@@ -1,6 +1,6 @@
 <!--GITHUB_BLOCK-->
 
-## HotkeysPanel
+# HotkeysPanel
 
 <!--/GITHUB_BLOCK-->
 
@@ -11,7 +11,7 @@ The panel displays a set of hotkeys for your application with a description of t
 import {HotkeysPanel} from '@gravity-ui/navigation';
 ```
 
-### PropTypes
+## Properties
 
 | Property                | Type            | Required | Default | Description                                                                  |
 | :---------------------- | :-------------- | :------: | :------ | :--------------------------------------------------------------------------- |
