@@ -1,6 +1,6 @@
 {
   "name": "@gravity-ui/navigation",
-  "version": "6.1.2",
+  "version": "6.3.0",
   "description": "Gravity UI Navigation components",
   "license": "MIT",
   "repository": {
@@ -32,6 +32,7 @@
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --passWithNoTests",
     "test-storybook": "test-storybook --url ${PR_PREVIEW_URL:-http://localhost:7008}",
     "build": "rimraf build && rollup -c",
+    "build:docs": "node scripts/build-docs.js",
     "lint:js": "eslint src --ext .js,.jsx,.ts,.tsx",
     "lint:styles": "stylelint '{styles,src}/**/*.scss'",
     "lint:prettier": "prettier --check '**/*.md'",
@@ -39,7 +40,7 @@
     "packages:check": "knip",
     "build-storybook": "storybook build",
     "start": "cross-env TS_NODE_PROJECT=.storybook/tsconfig.json storybook dev -p 7008",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "npm run build && npm run build:docs",
     "playwright:install": "playwright install --with-deps",
     "playwright": "playwright test --config=playwright/playwright.config.ts",
     "playwright:update": "npm run playwright -- -u",
@@ -67,6 +68,7 @@
     "@commitlint/config-conventional": "^19.6.0",
     "@doc-tools/transform": "^3.11.0",
     "@gravity-ui/eslint-config": "^3.3.0",
+    "@gravity-ui/gulp-utils": "^1.1.1",
     "@gravity-ui/icons": "^2.8.1",
     "@gravity-ui/prettier-config": "^1.0.0",
     "@gravity-ui/stylelint-config": "^4.0.1",

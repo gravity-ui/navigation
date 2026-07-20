@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {Gear, Xmark} from '@gravity-ui/icons';
-import {Button, Flex, Icon, Text, spacing} from '@gravity-ui/uikit';
+import {Gear, LogoYandexCloud, LogoYandexTracker, Xmark} from '@gravity-ui/icons';
+import {Button, Flex, Icon, IconData, Select, Text, spacing} from '@gravity-ui/uikit';
 import type {Meta, StoryFn} from '@storybook/react-webpack5';
 
 import {AsideHeader} from '../AsideHeader';
@@ -414,5 +414,164 @@ const ScrollableModeTemplate: StoryFn<{initialCompact?: boolean}> = (args) => {
 
 export const MenuScrollbar = ScrollableModeTemplate.bind({});
 MenuScrollbar.args = {
+    initialCompact: false,
+};
+
+const projects: {
+    label: string;
+    value: string;
+    icon: IconData;
+    menuItems: AsideHeaderProps['menuItems'];
+}[] = [
+    {
+        label: 'Yandex Cloud',
+        value: 'yandex-cloud',
+        icon: LogoYandexCloud,
+        menuItems: Array.from({length: 25}, (_, index) => ({
+            id: `item-${index + 1}`,
+            title: `Item ${index + 1}`,
+            icon: Gear,
+        })),
+    },
+    {
+        label: 'Yandex Tracker',
+        value: 'yandex-tracker',
+        icon: LogoYandexTracker,
+        menuItems: Array.from({length: 25}, (_, index) => ({
+            id: `item-${index + 1}`,
+            title: `Item ${index + 26}`,
+            icon: Gear,
+        })),
+    },
+];
+
+const renderAboveMenuContent = ({
+    value,
+    onChange,
+    data,
+    compact,
+}: {
+    value?: string;
+    onChange: (value: string) => void;
+    data: {
+        icon?: IconData;
+        label?: string;
+    };
+    compact: boolean;
+}) => (
+    <Flex spacing={{p: 2}} direction="column" gap={2}>
+        {!compact && (
+            <Select
+                aria-label="Select project"
+                placeholder="Select project"
+                options={projects.map((project) => ({
+                    content: project.label,
+                    value: project.value,
+                }))}
+                value={value ? [value] : []}
+                onUpdate={(values) => onChange(values[0])}
+                width="max"
+            />
+        )}
+        {data.icon && data.label && (
+            <Flex direction="row" alignItems="center" gap={2}>
+                <Flex alignItems="center" justifyContent="center" width={40} height={40}>
+                    <Icon data={data.icon} size={28} />
+                </Flex>
+                {!compact && <Text variant="subheader-2">{data.label}</Text>}
+            </Flex>
+        )}
+    </Flex>
+);
+
+const AboveMenuContentDemo = (props: {
+    initialCompact?: boolean;
+    menuOverflow?: AsideHeaderProps['menuOverflow'];
+    description: React.ReactNode;
+}) => {
+    const [compact, setCompact] = React.useState(props.initialCompact ?? false);
+    const [project, setProject] = React.useState(projects[0].value);
+
+    const selectedProject = React.useMemo(() => {
+        return projects.find((p) => p.value === project);
+    }, [project]);
+
+    const menuItems = React.useMemo(() => {
+        return projects.find((p) => p.value === project)?.menuItems ?? [];
+    }, [project]);
+
+    return (
+        <PageLayout compact={compact}>
+            <PageLayoutAside
+                headerDecoration
+                logo={DEFAULT_LOGO}
+                menuItems={menuItems}
+                menuOverflow={props.menuOverflow}
+                aboveMenuContent={renderAboveMenuContent({
+                    value: project,
+                    onChange: setProject,
+                    data: {
+                        icon: selectedProject?.icon,
+                        label: selectedProject?.label,
+                    },
+                    compact,
+                })}
+                onChangeCompact={setCompact}
+            />
+            <PageLayout.Content>
+                <div style={{padding: 16}}>{props.description}</div>
+            </PageLayout.Content>
+        </PageLayout>
+    );
+};
+
+const AboveMenuContentTemplate: StoryFn = (args) => (
+    <AboveMenuContentDemo
+        initialCompact={args.initialCompact}
+        description={
+            <>
+                Sidebar with <code>aboveMenuContent</code> (select above menu).
+            </>
+        }
+    />
+);
+
+export const AboveMenuContent = AboveMenuContentTemplate.bind({});
+AboveMenuContent.args = {
+    initialCompact: false,
+};
+
+const AboveMenuContentCompactTemplate: StoryFn = (args) => (
+    <AboveMenuContentDemo
+        initialCompact={args.initialCompact}
+        description={
+            <>
+                Compact sidebar with <code>aboveMenuContent</code> (select above menu). Many items
+                collapse under &quot;More&quot; — scroll mode is not used in compact.
+            </>
+        }
+    />
+);
+
+export const AboveMenuContentCompact = AboveMenuContentCompactTemplate.bind({});
+AboveMenuContentCompact.args = {
+    initialCompact: true,
+};
+
+const AboveMenuContentScrollbarTemplate: StoryFn = (args) => (
+    <AboveMenuContentDemo
+        menuOverflow="scroll"
+        initialCompact={args.initialCompact}
+        description={
+            <>
+                Expanded sidebar: <code>aboveMenuContent</code> stays fixed above the scrollable
+                menu list (menuOverflow=&quot;scroll&quot;).
+            </>
+        }
+    />
+);
+
+export const AboveMenuContentScrollbar = AboveMenuContentScrollbarTemplate.bind({});
+AboveMenuContentScrollbar.args = {
     initialCompact: false,
 };

@@ -36,6 +36,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         collapsedMenuGroupIds,
         defaultCollapsedMenuGroupIds,
         onToggleMenuGroupCollapsed,
+        aboveMenuContent,
         qa,
         quickAccessIsAvailable,
         onToggleQuickAccess,
@@ -171,6 +172,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     })}
                 >
                     <Header />
+                    {aboveMenuContent}
                     {isUnifiedMenuScroll ? (
                         <ScrollableWithScrollbar
                             className={b('unified-menu-scroll')}

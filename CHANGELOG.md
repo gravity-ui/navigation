@@ -1,5 +1,19 @@
 # Changelog
 
+## [6.3.0](https://github.com/gravity-ui/navigation/compare/v6.2.0...v6.3.0) (2026-07-15)
+
+
+### Features
+
+* improve agent docs ([#653](https://github.com/gravity-ui/navigation/issues/653)) ([f03fdfd](https://github.com/gravity-ui/navigation/commit/f03fdfd2e2d48918d23caa16e28c5d85b20b7fe2))
+
+## [6.2.0](https://github.com/gravity-ui/navigation/compare/v6.1.2...v6.2.0) (2026-07-15)
+
+
+### Features
+
+* **AsideHeader:** added new optional prop aboveMenuContent ([#651](https://github.com/gravity-ui/navigation/issues/651)) ([044f237](https://github.com/gravity-ui/navigation/commit/044f23721e16e462e3d40ea85e3cdde4c61f1acf))
+
 ## [6.1.2](https://github.com/gravity-ui/navigation/compare/v6.1.1...v6.1.2) (2026-06-23)
 
 

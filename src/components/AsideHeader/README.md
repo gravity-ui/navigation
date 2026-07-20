@@ -56,6 +56,36 @@ The `onMenuItemsChanged` callback is required for adding extra component `All Pa
 
 The elements of this block can have multiple tooltips.
 
+#### Content above the menu (`aboveMenuContent`)
+
+Pass **`aboveMenuContent`** to render arbitrary content between the header (logo and `subheaderItems`) and the main **`menuItems`** list.
+
+With **`menuOverflow="scroll"`**, that block stays fixed above the scrollable menu column; only the menu rows scroll.
+
+**Example:**
+
+```tsx
+<AsideHeader
+  logo={logo}
+  menuItems={menuItems}
+  compact={compact}
+  onChangeCompact={setCompact}
+  aboveMenuContent={
+    compact ? null : (
+      <Box spacing={{p: 2}}>
+        <Select
+          placeholder="Select tenant"
+          options={tenantOptions}
+          value={tenant ? [tenant] : []}
+          onUpdate={(values) => setTenant(values[0])}
+          width="max"
+        />
+      </Box>
+    )
+  }
+/>
+```
+
 ### The Bottom
 
 The Footer improves user experience by offering easy access to the elements and supplementary resources. It gives opportunity to connect with support add custom information to be sure that user will not get lost.
@@ -192,6 +222,7 @@ export const Aside: FC = () => {
 | onToggleMenuGroupCollapsed   | User toggled group expand/collapse in **`menuOverflow='scroll'`** layout; combine with **`collapsedMenuGroupIds`** when controlled                                                                                                 |                                                  `(groupId: string) => void`                                                  |                           |
 | onAllPagesClick              | Callback will be called when "All pages" button is clicked                                                                                                                                                                         |                                                         `() => void;`                                                         |                           |
 | openModalSubscriber          | Function notifies `AsideHeader` about Modals visibility changes                                                                                                                                                                    |                                             `( (open: boolean) => void) => void`                                              |                           |
+| aboveMenuContent             | Optional content between the header and **`menuItems`**; stays fixed above the scrollable list when **`menuOverflow="scroll"`**.                                                                                                   |                                                       `React.ReactNode`                                                       |                           |
 | panelItems                   | Items for `Drawer` component. Used for show additional information over main content                                                                                                                                               |       [`Array<DrawerItem>`](https://github.com/gravity-ui/navigation/tree/main/src/components/Drawer#draweritem-props)        |           `[]`            |
 | renderContent                | Function rendering the main content at the right of the `AsideHeader`                                                                                                                                                              |                                          `(data: {size: number}) => React.ReactNode`                                          |                           |
 | renderFooter                 | Function rendering the navigation bottom section                                                                                                                                                                                   |                                          `(data: {size: number}) => React.ReactNode`                                          |                           |

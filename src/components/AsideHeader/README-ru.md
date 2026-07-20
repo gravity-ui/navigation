@@ -56,6 +56,36 @@ import {AsideHeader} from '@gravity-ui/navigation';
 
 Элементы данного блока могут иметь множественную всплывающую подсказку.
 
+#### Контент над меню (`aboveMenuContent`)
+
+Свойство **`aboveMenuContent`** позволяет отрисовать произвольный контент между шапкой (логотип и `subheaderItems`) и списком **`menuItems`**.
+
+При **`menuOverflow="scroll"`** этот блок остаётся закреплённым над прокручиваемой колонкой меню; прокручиваются только строки меню.
+
+**Пример:**
+
+```tsx
+<AsideHeader
+  logo={logo}
+  menuItems={menuItems}
+  compact={compact}
+  onChangeCompact={setCompact}
+  aboveMenuContent={
+    compact ? null : (
+      <Box spacing={{p: 2}}>
+        <Select
+          placeholder="Выберите тенант"
+          options={tenantOptions}
+          value={tenant ? [tenant] : []}
+          onUpdate={(values) => setTenant(values[0])}
+          width="max"
+        />
+      </Box>
+    )
+  }
+/>
+```
+
 ### Нижний блок
 
 Нижний блок (футер) повышает удобство пользователей, обеспечивая легкий доступ к элементам и вспомогательным ресурсам. Он позволяет связаться со службой поддержки и включает дополнительную информацию, чтобы пользователю было проще ориентироваться.
@@ -191,6 +221,7 @@ export const Aside: FC = () => {
 | onToggleMenuGroupCollapsed   | Пользователь свернул/развернул группу при `menuOverflow='scroll'`; в контролируемом режиме обновляйте `collapsedMenuGroupIds`.                                                                                                                                         |                                                  `(groupId: string) => void`                                                  |                           |
 | onAllPagesClick              | Обратный вызов, срабатывающий при нажатии кнопки **All pages** («Все станицы»).                                                                                                                                                                                        |                                                         `() => void;`                                                         |                           |
 | openModalSubscriber          | Функция для уведомления `AsideHeader` об изменении состояния видимости модальных окон.                                                                                                                                                                                 |                                             `( (open: boolean) => void) => void`                                              |                           |
+| aboveMenuContent             | Опциональный контент между шапкой и **`menuItems`**; при **`menuOverflow="scroll"`** остаётся над прокручиваемым списком.                                                                                                                                              |                                                       `React.ReactNode`                                                       |                           |
 | panelItems                   | Элементы компонента `Drawer`. Используется для отображения дополнительной информации поверх основного контента.                                                                                                                                                        |                                 [`Array<DrawerItem>`](./../Drawer/README.md#draweritem-props)                                 |           `[]`            |
 | renderContent                | Функция рендеринга основного контента справа от `AsideHeader`.                                                                                                                                                                                                         |                                          `(data: {size: number}) => React.ReactNode`                                          |                           |
 | renderFooter                 | Функция рендеринга нижнего блока навигации.                                                                                                                                                                                                                            |                                          `(data: {size: number}) => React.ReactNode`                                          |                           |

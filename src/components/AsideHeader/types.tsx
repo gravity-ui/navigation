@@ -88,6 +88,7 @@ interface AsideHeaderGeneralProps extends QAProps {
     onMenuMoreClick?: () => void;
     onAllPagesClick?: () => void;
     openModalSubscriber?: (subscriber: OpenModalSubscriber) => void;
+    aboveMenuContent?: React.ReactNode;
 }
 
 interface AsideHeaderDefaultProps {
