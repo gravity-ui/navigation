@@ -12,7 +12,7 @@ $block: '.#{variables.$ns}hotkeys-panel';
 
     &__drawer-item {
         width: var(--hotkeys-panel-width);
-        padding: var(--hotkeys-panel-vertical-padding) 0;
+        padding-top: var(--hotkeys-panel-vertical-padding);
         box-sizing: border-box;
     }
 
@@ -42,6 +42,12 @@ $block: '.#{variables.$ns}hotkeys-panel';
         flex: 1;
         min-height: 0;
         overflow-y: auto;
+
+        &::after {
+            content: '';
+            display: block;
+            height: var(--hotkeys-panel-vertical-padding);
+        }
     }
 
     &__item[class] {
