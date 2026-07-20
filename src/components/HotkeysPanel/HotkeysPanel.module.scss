@@ -14,6 +14,11 @@ $block: '.#{variables.$ns}hotkeys-panel';
         width: var(--hotkeys-panel-width);
         padding: var(--hotkeys-panel-vertical-padding) 0;
         box-sizing: border-box;
+    }
+
+    &__drawer-content {
+        height: 100%;
+        min-height: 0;
         display: flex;
         flex-direction: column;
     }
@@ -35,6 +40,7 @@ $block: '.#{variables.$ns}hotkeys-panel';
 
     &__list {
         flex: 1;
+        min-height: 0;
         overflow-y: auto;
     }
 
