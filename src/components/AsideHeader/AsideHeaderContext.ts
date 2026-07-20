@@ -36,12 +36,14 @@ export interface AsideHeaderContextType {
     compact: boolean;
     size: number;
     menuDensity: AsideHeaderMenuDensity;
+    invertSoloTooltipTheme?: boolean;
 }
 
 const AsideHeaderContext = React.createContext<AsideHeaderContextType | undefined>({
     compact: false,
     size: 0,
     menuDensity: 'default',
+    invertSoloTooltipTheme: false,
 });
 
 AsideHeaderContext.displayName = 'AsideHeaderContext';

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {List, Popover, PopupProps} from '@gravity-ui/uikit';
+import {List, Popover, PopupProps, RealTheme, getThemeType, useThemeValue} from '@gravity-ui/uikit';
 
 import {createBlock} from '../../../../utils/cn';
 import {useAsideHeaderContext} from '../../../AsideHeaderContext';
@@ -34,6 +34,12 @@ const POPUP_TITLE_BLOCK_HEIGHT =
 
 const POPUP_OPEN_DELAY = 0;
 const POPUP_CLOSE_DELAY = 0;
+
+export function getOppositeTheme(theme: RealTheme): RealTheme {
+    const oppositeThemeType = getThemeType(theme) === 'light' ? 'dark' : 'light';
+
+    return theme.endsWith('-hc') ? `${oppositeThemeType}-hc` : oppositeThemeType;
+}
 
 export function getItemPopoverOffset({
     isSingleLabel,
@@ -79,6 +85,7 @@ interface Props {
     onItemClick?: AsideHeaderItem['onItemClick'];
     enableQuickAccessPin?: boolean;
     onToggleQuickAccess?: (item: AsideHeaderItem) => void;
+    invertTheme?: boolean;
 }
 
 export const ItemPopup: React.FC<Props> = ({
@@ -96,8 +103,10 @@ export const ItemPopup: React.FC<Props> = ({
     onOpenChange,
     enableQuickAccessPin,
     onToggleQuickAccess,
+    invertTheme = false,
 }) => {
     const {menuDensity} = useAsideHeaderContext();
+    const theme = useThemeValue();
     const {
         itemExpandedRadius,
         popupItemHeight: popupRowHeight,
@@ -106,6 +115,7 @@ export const ItemPopup: React.FC<Props> = ({
     const nestedOpenCountRef = React.useRef(0);
 
     const isSingleLabel = !title && items.length === 1;
+    const oppositeTheme = invertTheme && isSingleLabel ? getOppositeTheme(theme) : undefined;
 
     const popoverStyle = React.useMemo(() => {
         if (isSingleLabel) {
@@ -245,7 +255,11 @@ export const ItemPopup: React.FC<Props> = ({
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- UIKit PopoverProps gap
             // @ts-expect-error
             disableTransition
-            className={b('icon-popover', {'item-type': type, 'single-label': isSingleLabel})}
+            className={b(
+                'icon-popover',
+                {'item-type': type, 'single-label': isSingleLabel},
+                oppositeTheme ? `g-root g-root_theme_${oppositeTheme}` : undefined,
+            )}
             style={popoverStyle}
             content={content}
         >

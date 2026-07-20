@@ -17,6 +17,12 @@ export interface LayoutProps {
     className?: string;
     topAlert?: TopAlertProps;
     /**
+     * Renders solo tooltips in the theme opposite to the current UIKit theme.
+     * Group tooltips keep the current theme.
+     * @default false
+     */
+    invertSoloTooltipTheme?: boolean;
+    /**
      * Menu item density. `compact` reduces item height, icon size, and spacing
      * while keeping row dimensions identical in collapsed and expanded aside states.
      * @default 'default'

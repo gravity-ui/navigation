@@ -36,12 +36,13 @@ const Layout = ({
     children,
     topAlert,
     menuDensity = 'default',
+    invertSoloTooltipTheme = false,
 }: PageLayoutProps) => {
     const densityConfig = getAsideHeaderDensityConfig(menuDensity);
     const size = compact ? densityConfig.compactWidth : densityConfig.expandedWidth;
     const asideHeaderContextValue = useMemo(
-        () => ({size, compact, menuDensity}),
-        [compact, size, menuDensity],
+        () => ({size, compact, menuDensity, invertSoloTooltipTheme}),
+        [compact, size, menuDensity, invertSoloTooltipTheme],
     );
 
     const estimatedTopAlertHeight = calcEstimatedTopAlertHeight(topAlert);

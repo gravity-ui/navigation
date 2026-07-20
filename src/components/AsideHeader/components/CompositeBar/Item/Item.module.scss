@@ -17,7 +17,9 @@ $floating-surface-box-shadow-dark:
     --_--floating-surface-box-shadow-default: #{$floating-surface-box-shadow-light};
 
     :global(.g-root_theme_dark) &,
-    :global(.g-root_theme_dark-hc) & {
+    :global(.g-root_theme_dark-hc) &,
+    &:global(.g-root_theme_dark),
+    &:global(.g-root_theme_dark-hc) {
         --_--floating-surface-box-shadow-default: #{$floating-surface-box-shadow-dark};
     }
 }

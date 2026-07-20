@@ -4,7 +4,7 @@
 import React from 'react';
 
 import {Gear} from '@gravity-ui/icons';
-import {ThemeProvider} from '@gravity-ui/uikit';
+import {RealTheme, ThemeProvider} from '@gravity-ui/uikit';
 import {fireEvent, render, screen} from '@testing-library/react';
 
 import {AsideHeaderInnerContextProvider} from '../../../AsideHeaderContext';
@@ -30,9 +30,11 @@ function renderItemPopup(props: {
     hideIcon?: boolean;
     open?: boolean;
     title?: string;
+    theme?: RealTheme;
+    invertTheme?: boolean;
 }) {
     return render(
-        <ThemeProvider theme="light">
+        <ThemeProvider theme={props.theme ?? 'light'}>
             <AsideHeaderInnerContextProvider value={contextValue}>
                 <ItemPopup
                     items={props.items}
@@ -42,6 +44,7 @@ function renderItemPopup(props: {
                     collapsed={props.collapsed}
                     hideIcon={props.hideIcon}
                     onItemClick={props.onItemClick}
+                    invertTheme={props.invertTheme}
                 >
                     <button data-testid="trigger">Trigger</button>
                 </ItemPopup>
@@ -320,6 +323,43 @@ describe('ItemPopup', () => {
         // eslint-disable-next-line testing-library/no-node-access
         const popup = document.querySelector('.g-popup');
         expect(popup?.getAttribute('style')).toContain('--g-popup-border-radius: 4px');
+    });
+
+    it.each([
+        ['light', 'dark'],
+        ['dark', 'light'],
+        ['light-hc', 'dark-hc'],
+        ['dark-hc', 'light-hc'],
+    ] as const)(
+        'uses the opposite %s theme for a solo popup when enabled',
+        (theme, oppositeTheme) => {
+            renderItemPopup({
+                items: [{id: 'home', title: 'Home', icon: Gear}],
+                open: true,
+                theme,
+                invertTheme: true,
+            });
+
+            // eslint-disable-next-line testing-library/no-node-access
+            const popup = document.querySelector('.g-popup');
+            expect(popup?.classList.contains(`g-root_theme_${oppositeTheme}`)).toBe(true);
+        },
+    );
+
+    it('keeps the current theme for a group popup when solo theme inversion is enabled', () => {
+        renderItemPopup({
+            items: [
+                {id: 'first', title: 'First', icon: Gear},
+                {id: 'second', title: 'Second', icon: Gear},
+            ],
+            open: true,
+            theme: 'light',
+            invertTheme: true,
+        });
+
+        // eslint-disable-next-line testing-library/no-node-access
+        const popup = document.querySelector('.g-popup');
+        expect(popup?.classList.contains('g-root_theme_dark')).toBe(false);
     });
 
     it('stops click propagation at the popup content boundary when itemWrapper is provided', () => {

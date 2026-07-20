@@ -166,6 +166,7 @@ function NavigationConceptDemo(props: {
     quickAccessHighlightInMainMenu?: AsideHeaderProps['quickAccessHighlightInMainMenu'];
     showQuickAccessSection?: AsideHeaderProps['showQuickAccessSection'];
     unifiedMenuScroll?: AsideHeaderProps['unifiedMenuScroll'];
+    invertSoloTooltipTheme?: AsideHeaderProps['invertSoloTooltipTheme'];
     flatMenu?: boolean;
 }) {
     const [compact, setCompact] = React.useState(props.initialCompact ?? false);
@@ -196,7 +197,11 @@ function NavigationConceptDemo(props: {
     const pageTitle = typeof currentItem?.title === 'string' ? currentItem.title : 'Overview';
 
     return (
-        <PageLayout compact={compact} menuDensity={props.menuDensity}>
+        <PageLayout
+            compact={compact}
+            menuDensity={props.menuDensity}
+            invertSoloTooltipTheme={props.invertSoloTooltipTheme}
+        >
             <PageLayoutAside
                 headerDecoration={false}
                 logo={DEFAULT_LOGO}
@@ -280,18 +285,26 @@ const MenuGroupsTemplate: StoryFn = (args) => (
         quickAccessHighlightInMainMenu={args.quickAccessHighlightInMainMenu}
         showQuickAccessSection={args.showQuickAccessSection}
         unifiedMenuScroll={args.unifiedMenuScroll}
+        invertSoloTooltipTheme={args.invertSoloTooltipTheme}
     />
 );
 
 export const MenuGroups = MenuGroupsTemplate.bind({});
 MenuGroups.storyName = 'Menu Groups';
-MenuGroups.argTypes = menuGroupsStoryArgTypes;
+MenuGroups.argTypes = {
+    ...menuGroupsStoryArgTypes,
+    invertSoloTooltipTheme: {
+        control: 'boolean',
+        description: 'Render solo tooltips in the opposite theme; group tooltips stay unchanged',
+    },
+};
 MenuGroups.args = {
     initialCompact: false,
     menuGroupNestedIcons: true,
     showQuickAccessSection: true,
     quickAccessHighlightInMainMenu: false,
     unifiedMenuScroll: false,
+    invertSoloTooltipTheme: true,
 };
 
 const MenuGroupsFlatTemplate: StoryFn = (args) => (
@@ -302,17 +315,19 @@ const MenuGroupsFlatTemplate: StoryFn = (args) => (
         quickAccessHighlightInMainMenu={args.quickAccessHighlightInMainMenu}
         showQuickAccessSection={args.showQuickAccessSection}
         unifiedMenuScroll={args.unifiedMenuScroll}
+        invertSoloTooltipTheme={args.invertSoloTooltipTheme}
         flatMenu
     />
 );
 
 export const MenuGroupsFlat = MenuGroupsFlatTemplate.bind({});
 MenuGroupsFlat.storyName = 'Menu Groups (Flat)';
-MenuGroupsFlat.argTypes = menuGroupsStoryArgTypes;
+MenuGroupsFlat.argTypes = MenuGroups.argTypes;
 MenuGroupsFlat.args = {
     initialCompact: false,
     menuGroupNestedIcons: true,
     showQuickAccessSection: true,
     quickAccessHighlightInMainMenu: false,
     unifiedMenuScroll: false,
+    invertSoloTooltipTheme: true,
 };

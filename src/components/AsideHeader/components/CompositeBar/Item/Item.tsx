@@ -331,6 +331,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     collapsed={compact}
                     onPopupItemClick={onPopupItemClick}
                     onItemClick={onItemClick}
+                    invertTheme={asideHeaderContext?.invertSoloTooltipTheme}
                 >
                     {tagNode}
                 </ItemPopup>
