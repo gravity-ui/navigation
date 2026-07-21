@@ -119,7 +119,7 @@ export function HotkeysPanel<T = {}>({
     );
 
     const drawerItemContent = (
-        <React.Fragment>
+        <div className={b('drawer-content')}>
             <Text variant="subheader-3" as={'h2' as const} className={b('title', titleClassName)}>
                 {title}
                 {togglePanelHotkey && <Hotkey value={togglePanelHotkey} platform={platform} />}
@@ -144,7 +144,7 @@ export function HotkeysPanel<T = {}>({
                 emptyPlaceholder={emptyState}
                 {...listProps}
             />
-        </React.Fragment>
+        </div>
     );
 
     const onOpenChange = useCallback(
