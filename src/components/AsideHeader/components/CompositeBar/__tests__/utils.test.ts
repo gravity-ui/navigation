@@ -15,10 +15,35 @@ import {
 } from '../utils';
 
 describe('CompositeBar utils', () => {
+    describe('getItemHeight', () => {
+        it('returns two-line height when titleLines is 2', () => {
+            const item: AsideHeaderItem = {id: 'long', title: 'Long title', titleLines: 2};
+            expect(getItemHeight(item)).toBe(56);
+            expect(getItemHeight(item, 'compact')).toBe(48);
+        });
+
+        it('returns single-line height by default', () => {
+            const item: AsideHeaderItem = {id: 'short', title: 'Short'};
+            expect(getItemHeight(item)).toBe(40);
+        });
+
+        it('returns single-line height for two-line items when sidebar is compact', () => {
+            const item: AsideHeaderItem = {id: 'long', title: 'Long title', titleLines: 2};
+            expect(getItemHeight(item, 'default', {sidebarCompact: true})).toBe(40);
+            expect(getItemHeight(item, 'compact', {sidebarCompact: true})).toBe(32);
+        });
+    });
+
     describe('getPopupItemHeight', () => {
         it('returns POPUP_REGULAR_ITEM_HEIGHT for regular items', () => {
             const item: AsideHeaderItem = {id: 'r', title: 'Regular'};
             expect(getPopupItemHeight(item)).toBe(POPUP_REGULAR_ITEM_HEIGHT);
+        });
+
+        it('returns single-line popup height for two-line items (popup has more width)', () => {
+            const item: AsideHeaderItem = {id: 'long', title: 'Long title', titleLines: 2};
+            expect(getPopupItemHeight(item)).toBe(POPUP_REGULAR_ITEM_HEIGHT);
+            expect(getPopupItemHeight(item, 'compact')).toBe(POPUP_REGULAR_ITEM_HEIGHT);
         });
 
         it('matches getItemHeight for action and divider types', () => {

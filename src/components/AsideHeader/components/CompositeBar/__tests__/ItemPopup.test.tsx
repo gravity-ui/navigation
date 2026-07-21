@@ -4,18 +4,21 @@
 import React from 'react';
 
 import {Gear} from '@gravity-ui/icons';
-import {ThemeProvider} from '@gravity-ui/uikit';
+import {RealTheme, ThemeProvider} from '@gravity-ui/uikit';
 import {fireEvent, render, screen} from '@testing-library/react';
 
 import {AsideHeaderInnerContextProvider} from '../../../AsideHeaderContext';
 import {AsideHeaderItem} from '../../../types';
-import {ItemPopup} from '../Item/ItemPopup';
+import {ItemPopup, getItemPopoverOffset} from '../Item/ItemPopup';
 
 const contextValue = {
     compact: false,
     size: 200,
+    menuDensity: 'default' as const,
     menuItems: [],
     allPagesIsAvailable: false,
+    quickAccessIsAvailable: false,
+    onToggleQuickAccess: () => {},
     onItemClick: () => {},
 };
 
@@ -27,9 +30,11 @@ function renderItemPopup(props: {
     hideIcon?: boolean;
     open?: boolean;
     title?: string;
+    theme?: RealTheme;
+    invertTheme?: boolean;
 }) {
     return render(
-        <ThemeProvider theme="light">
+        <ThemeProvider theme={props.theme ?? 'light'}>
             <AsideHeaderInnerContextProvider value={contextValue}>
                 <ItemPopup
                     items={props.items}
@@ -39,6 +44,7 @@ function renderItemPopup(props: {
                     collapsed={props.collapsed}
                     hideIcon={props.hideIcon}
                     onItemClick={props.onItemClick}
+                    invertTheme={props.invertTheme}
                 >
                     <button data-testid="trigger">Trigger</button>
                 </ItemPopup>
@@ -137,12 +143,12 @@ describe('ItemPopup', () => {
         expect(document.querySelector('[data-qa="icon-item1"]')).toBeTruthy();
     });
 
-    it('hides icons when hideIcon=true', () => {
+    it('hides icons by default', () => {
         const items: AsideHeaderItem[] = [
             {id: 'item1', title: 'No Icon', icon: Gear, iconQa: 'icon-item1'},
         ];
 
-        renderItemPopup({items, open: true, hideIcon: true});
+        renderItemPopup({items, open: true});
 
         // eslint-disable-next-line testing-library/no-node-access
         expect(document.querySelector('[data-qa="icon-item1"]')).toBeNull();
@@ -267,6 +273,93 @@ describe('ItemPopup', () => {
         fireEvent.click(screen.getByText('Plain item'));
 
         expect(onParentClick).not.toHaveBeenCalled();
+    });
+
+    it('renders titleLines: 2 items as single-line rows inside the popup', () => {
+        const items: AsideHeaderItem[] = [
+            {
+                id: 'long',
+                title: 'Long title that wraps onto two lines',
+                icon: Gear,
+                titleLines: 2,
+            },
+        ];
+
+        renderItemPopup({items, open: true, title: 'Section'});
+
+        // eslint-disable-next-line testing-library/no-node-access
+        const row = screen.getByText('Long title that wraps onto two lines').closest('[data-type]');
+        expect(row?.className).toContain('__popup-item');
+        expect(row?.className).not.toContain('title-lines_2');
+
+        // eslint-disable-next-line testing-library/no-node-access
+        const listItem = row?.closest('.gn-composite-bar-item__root-menu-item');
+        expect(listItem).toBeTruthy();
+        expect(listItem?.getAttribute('style')).toContain('height: 32px');
+    });
+
+    it('uses zero crossAxis offset for a single-item solo popup', () => {
+        expect(
+            getItemPopoverOffset({isSingleLabel: true, itemHeight: 40, popupRowHeight: 32}),
+        ).toEqual({mainAxis: 14, crossAxis: 0});
+        expect(
+            getItemPopoverOffset({isSingleLabel: false, itemHeight: 40, popupRowHeight: 32}),
+        ).toEqual({mainAxis: 14, crossAxis: 2});
+    });
+
+    it('uses tighter padding for a single-item solo popup', () => {
+        const items: AsideHeaderItem[] = [{id: 'home', title: 'Home', icon: Gear}];
+
+        renderItemPopup({items, open: true});
+
+        // eslint-disable-next-line testing-library/no-node-access
+        const listItem = screen.getByText('Home').closest('.gn-composite-bar-item__root-menu-item');
+        expect(listItem?.getAttribute('style')).toContain('height: 28px');
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(listItem?.className).toContain('__root-menu-item');
+        // eslint-disable-next-line testing-library/no-node-access
+        const listItemsContainer = document.querySelector('.g-list__items');
+        expect(listItemsContainer?.getAttribute('style')).toContain('height: 28px');
+        // eslint-disable-next-line testing-library/no-node-access
+        const popup = document.querySelector('.g-popup');
+        expect(popup?.getAttribute('style')).toContain('--g-popup-border-radius: 4px');
+    });
+
+    it.each([
+        ['light', 'dark'],
+        ['dark', 'light'],
+        ['light-hc', 'dark-hc'],
+        ['dark-hc', 'light-hc'],
+    ] as const)(
+        'uses the opposite %s theme for a solo popup when enabled',
+        (theme, oppositeTheme) => {
+            renderItemPopup({
+                items: [{id: 'home', title: 'Home', icon: Gear}],
+                open: true,
+                theme,
+                invertTheme: true,
+            });
+
+            // eslint-disable-next-line testing-library/no-node-access
+            const popup = document.querySelector('.g-popup');
+            expect(popup?.classList.contains(`g-root_theme_${oppositeTheme}`)).toBe(true);
+        },
+    );
+
+    it('keeps the current theme for a group popup when solo theme inversion is enabled', () => {
+        renderItemPopup({
+            items: [
+                {id: 'first', title: 'First', icon: Gear},
+                {id: 'second', title: 'Second', icon: Gear},
+            ],
+            open: true,
+            theme: 'light',
+            invertTheme: true,
+        });
+
+        // eslint-disable-next-line testing-library/no-node-access
+        const popup = document.querySelector('.g-popup');
+        expect(popup?.classList.contains('g-root_theme_dark')).toBe(false);
     });
 
     it('stops click propagation at the popup content boundary when itemWrapper is provided', () => {

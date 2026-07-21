@@ -22,8 +22,11 @@ jest.mock('react-virtualized-auto-sizer', () => ({
 const contextValue = {
     compact: false,
     size: 200,
+    menuDensity: 'default' as const,
     menuItems: [],
     allPagesIsAvailable: false,
+    quickAccessIsAvailable: false,
+    onToggleQuickAccess: () => {},
     onItemClick: () => {},
 } as any;
 
@@ -84,7 +87,25 @@ describe('CompositeBar', () => {
         );
     });
 
-    it('renders MenuGroup.popupTitle as the heading of the group popup', () => {
+    it('renders MenuGroup.popupTitle as the heading of the group popup in compact mode', () => {
+        const onItemClick = jest.fn();
+        const items: AsideHeaderItem[] = [
+            {id: 'wb-1', title: 'Workbook 1', icon: Gear, groupId: 'resources'},
+            {id: 'wb-2', title: 'Workbook 2', icon: Gear, groupId: 'resources'},
+        ];
+        const menuGroups: MenuGroup[] = [
+            {id: 'resources', title: 'Resources Group', popupTitle: 'Ресурсы', icon: Gear},
+        ];
+
+        renderCompositeBar({items, onItemClick, menuGroups, compact: true});
+
+        const groupHeader = screen.getByText('Resources Group');
+        fireEvent.click(groupHeader);
+
+        expect(screen.getByText('Ресурсы')).toBeTruthy();
+    });
+
+    it('does not render MenuGroup.popupTitle when the sidebar is expanded', () => {
         const onItemClick = jest.fn();
         const items: AsideHeaderItem[] = [
             {id: 'wb-1', title: 'Workbook 1', icon: Gear, groupId: 'resources'},
@@ -99,10 +120,10 @@ describe('CompositeBar', () => {
         const groupHeader = screen.getByText('Resources Group');
         fireEvent.click(groupHeader);
 
-        expect(screen.getByText('Ресурсы')).toBeTruthy();
+        expect(screen.queryByText('Ресурсы')).toBeNull();
     });
 
-    it('does not close compact icon tooltip when clicking the current leaf menu item', () => {
+    it('does not close compact solo item popover when clicking the current leaf menu item', () => {
         jest.useFakeTimers();
 
         const onItemClick = jest.fn();
@@ -118,11 +139,37 @@ describe('CompositeBar', () => {
             jest.advanceTimersByTime(150);
         });
 
-        expect(screen.getByText('Home')).toBeTruthy();
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(document.querySelector('.gn-composite-bar-item__popup-content')).toBeTruthy();
 
         fireEvent.click(itemButton);
 
-        expect(screen.getByText('Home')).toBeTruthy();
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(document.querySelector('.gn-composite-bar-item__popup-content')).toBeTruthy();
+
+        jest.useRealTimers();
+    });
+
+    it('does not highlight the current solo item inside the compact popover', () => {
+        jest.useFakeTimers();
+
+        const onItemClick = jest.fn();
+        const items: AsideHeaderItem[] = [{id: 'home', title: 'Home', icon: Gear, current: true}];
+
+        renderCompositeBar({items, onItemClick, compact: true});
+
+        fireEvent.mouseEnter(screen.getByRole('button'));
+
+        act(() => {
+            jest.advanceTimersByTime(150);
+        });
+
+        // eslint-disable-next-line testing-library/no-node-access
+        const popupRow = document.querySelector(
+            '.gn-composite-bar-item__popup-content [data-type]',
+        );
+        expect(popupRow).toBeTruthy();
+        expect(popupRow?.className).not.toContain('_current');
 
         jest.useRealTimers();
     });
@@ -181,7 +228,7 @@ describe('CompositeBar', () => {
         fireEvent.click(screen.getByText('More'));
         fireEvent.click(screen.getByText('Resources Group'));
 
-        expect(screen.getByText('Ресурсы')).toBeTruthy();
+        expect(screen.queryByText('Ресурсы')).toBeNull();
         expect(screen.getByText('Workbook 1')).toBeTruthy();
         expect(screen.getByText('Workbook 2')).toBeTruthy();
     });

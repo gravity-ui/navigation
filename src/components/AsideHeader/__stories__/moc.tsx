@@ -15,6 +15,7 @@ function renderTag(tag: string) {
 export const EMPTY_CONTEXT_VALUE: AsideHeaderContextType = {
     size: ASIDE_HEADER_EXPANDED_WIDTH,
     compact: true,
+    menuDensity: 'default',
 };
 
 export const menuItemsShowcase: AsideHeaderProps['menuItems'] = [
@@ -122,6 +123,7 @@ const MENU_ITEMS_CLAMPED: AsideHeaderProps['menuItems'] = [
         id: 'text',
         title: MENU_ITEMS_CLAMPED_TITLE,
         icon: Gear,
+        titleLines: 2,
     },
     {id: 'text-action', title: MENU_ITEMS_CLAMPED_TITLE, icon: Gear, type: 'action'},
     {
@@ -129,6 +131,7 @@ const MENU_ITEMS_CLAMPED: AsideHeaderProps['menuItems'] = [
         title: MENU_ITEMS_CLAMPED_TITLE,
         icon: Gear,
         href: 'about:blank',
+        titleLines: 2,
     },
     {
         id: 'text-link-action',
@@ -156,5 +159,6 @@ export const menuItemsClamped = MENU_ITEMS_CLAMPED.concat({
         ...item,
         id: item.id.concat('-new'),
         rightAdornment: renderTag('new'),
+        titleLines: item.type === 'action' ? item.titleLines : (2 as const),
     })),
 );

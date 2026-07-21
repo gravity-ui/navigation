@@ -1,13 +1,34 @@
 import {Ellipsis} from '@gravity-ui/icons';
 
-import {ITEM_HEIGHT, POPUP_REGULAR_ITEM_HEIGHT} from '../../../constants';
 import {MenuGroup} from '../../../types';
+import {AsideHeaderMenuDensity, getAsideHeaderDensityConfig} from '../../density';
 import {AsideHeaderItem} from '../../types';
 
 import {COLLAPSE_ITEM_ID, COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX} from './constants';
 import type {CompositeBarRow} from './grouping';
 
-export function getItemHeight(compositeItem: AsideHeaderItem) {
+export type CompositeBarItemLayoutOptions = {
+    /** Collapsed sidebar (icon-only rows): multi-line titles use single-line row height. */
+    sidebarCompact?: boolean;
+};
+
+function resolveItemHeight(
+    compositeItem: AsideHeaderItem,
+    menuDensity: AsideHeaderMenuDensity = 'default',
+    layout?: CompositeBarItemLayoutOptions,
+) {
+    const config = getAsideHeaderDensityConfig(menuDensity);
+    if (compositeItem.titleLines === 2 && !layout?.sidebarCompact) {
+        return config.twoLineItemHeight;
+    }
+    return config.itemHeight;
+}
+
+export function getItemHeight(
+    compositeItem: AsideHeaderItem,
+    menuDensity: AsideHeaderMenuDensity = 'default',
+    layout?: CompositeBarItemLayoutOptions,
+) {
     switch (compositeItem.type) {
         case 'action':
             return 50;
@@ -15,11 +36,14 @@ export function getItemHeight(compositeItem: AsideHeaderItem) {
             return 15;
 
         default:
-            return ITEM_HEIGHT;
+            return resolveItemHeight(compositeItem, menuDensity, layout);
     }
 }
 
-export function getPopupItemHeight(compositeItem: AsideHeaderItem) {
+export function getPopupItemHeight(
+    compositeItem: AsideHeaderItem,
+    menuDensity: AsideHeaderMenuDensity = 'default',
+) {
     switch (compositeItem.type) {
         case 'action':
             return 50;
@@ -27,16 +51,24 @@ export function getPopupItemHeight(compositeItem: AsideHeaderItem) {
             return 15;
 
         default:
-            return POPUP_REGULAR_ITEM_HEIGHT;
+            // Popup rows have more horizontal space than the sidebar; two-line titles stay single-line.
+            return getAsideHeaderDensityConfig(menuDensity).popupItemHeight;
     }
 }
 
-export function getItemsHeight<T extends AsideHeaderItem>(items: T[]) {
-    return items.reduce((sum, item) => sum + getItemHeight(item), 0);
+export function getItemsHeight<T extends AsideHeaderItem>(
+    items: T[],
+    menuDensity: AsideHeaderMenuDensity = 'default',
+    layout?: CompositeBarItemLayoutOptions,
+) {
+    return items.reduce((sum, item) => sum + getItemHeight(item, menuDensity, layout), 0);
 }
 
-export function getPopupItemsHeight<T extends AsideHeaderItem>(items: T[]) {
-    return items.reduce((sum, item) => sum + getPopupItemHeight(item), 0);
+export function getPopupItemsHeight<T extends AsideHeaderItem>(
+    items: T[],
+    menuDensity: AsideHeaderMenuDensity = 'default',
+) {
+    return items.reduce((sum, item) => sum + getPopupItemHeight(item, menuDensity), 0);
 }
 
 export function getSelectedItemIndex(compositeItems: AsideHeaderItem[]) {
@@ -58,23 +90,33 @@ function getPinnedItems(compositeItems: AsideHeaderItem[]) {
     return pinnedItems;
 }
 
-function getItemsMinHeight(compositeItems: AsideHeaderItem[]) {
+function getItemsMinHeight(
+    compositeItems: AsideHeaderItem[],
+    menuDensity: AsideHeaderMenuDensity = 'default',
+    layout?: CompositeBarItemLayoutOptions,
+) {
     const pinnedItems = getPinnedItems(compositeItems);
     const afterMoreButtonItems = compositeItems.filter(({afterMoreButton}) => afterMoreButton);
 
     return (
-        getItemsHeight(pinnedItems) +
-        getItemsHeight(afterMoreButtonItems) +
-        (pinnedItems.length === compositeItems.length ? 0 : ITEM_HEIGHT)
+        getItemsHeight(pinnedItems, menuDensity, layout) +
+        getItemsHeight(afterMoreButtonItems, menuDensity, layout) +
+        (pinnedItems.length === compositeItems.length
+            ? 0
+            : getAsideHeaderDensityConfig(menuDensity).itemHeight)
     );
 }
 
-export function getMoreButtonItem(menuMoreTitle?: string): AsideHeaderItem {
+export function getMoreButtonItem(
+    menuMoreTitle?: string,
+    menuDensity: AsideHeaderMenuDensity = 'default',
+): AsideHeaderItem {
+    const {iconSize} = getAsideHeaderDensityConfig(menuDensity);
     return {
         id: COLLAPSE_ITEM_ID,
         title: menuMoreTitle,
         icon: Ellipsis,
-        iconSize: 18,
+        iconSize,
     };
 }
 
@@ -101,11 +143,15 @@ function makeOverflowGroupAsideItem(
     };
 }
 
-function getCompositeBarRowLayoutHeight(row: CompositeBarRow): number {
+function getCompositeBarRowLayoutHeight(
+    row: CompositeBarRow,
+    menuDensity: AsideHeaderMenuDensity = 'default',
+    layout?: CompositeBarItemLayoutOptions,
+): number {
     if (row.kind === 'item') {
-        return getItemHeight(row.item);
+        return getItemHeight(row.item, menuDensity, layout);
     }
-    return getItemHeight(makeGroupHeaderAsideItem(row.group));
+    return getItemHeight(makeGroupHeaderAsideItem(row.group), menuDensity, layout);
 }
 
 /**
@@ -138,8 +184,12 @@ function compositeBarRowsToFlatForMinHeight(rows: CompositeBarRow[]): AsideHeade
     return out;
 }
 
-export function getCompositeBarRowsMinHeight(rows: CompositeBarRow[]): number {
-    return getItemsMinHeight(compositeBarRowsToFlatForMinHeight(rows));
+export function getCompositeBarRowsMinHeight(
+    rows: CompositeBarRow[],
+    menuDensity: AsideHeaderMenuDensity = 'default',
+    layout?: CompositeBarItemLayoutOptions,
+): number {
+    return getItemsMinHeight(compositeBarRowsToFlatForMinHeight(rows), menuDensity, layout);
 }
 
 export function getSelectedCompositeBarRowIndex(rows: CompositeBarRow[]): number | undefined {
@@ -157,6 +207,8 @@ export function getAutosizeCompositeBarRows(
     rows: CompositeBarRow[],
     height: number,
     collapseItem: AsideHeaderItem,
+    menuDensity: AsideHeaderMenuDensity = 'default',
+    layout?: CompositeBarItemLayoutOptions,
 ): {
     listRows: CompositeBarRow[];
     collapseItems: AsideHeaderItem[];
@@ -167,14 +219,14 @@ export function getAutosizeCompositeBarRows(
     const listRows: CompositeBarRow[] = [...regularRows, ...afterMoreRows];
 
     const allRowsHeight = listRows.reduce(
-        (sum, row) => sum + getCompositeBarRowLayoutHeight(row),
+        (sum, row) => sum + getCompositeBarRowLayoutHeight(row, menuDensity, layout),
         0,
     );
     if (allRowsHeight <= height) {
         return {listRows, collapseItems: []};
     }
 
-    const collapseItemHeight = getItemHeight(collapseItem);
+    const collapseItemHeight = getItemHeight(collapseItem, menuDensity, layout);
 
     listRows.splice(regularRows.length, 0, {kind: 'item', item: collapseItem});
     const collapseItems: AsideHeaderItem[] = [];
@@ -204,19 +256,19 @@ export function getAutosizeCompositeBarRows(
                     nextRow?.kind === 'item' &&
                     nextRow.item.type === 'divider'
                 ) {
-                    listHeight -= getItemHeight(compositeItem);
+                    listHeight -= getItemHeight(compositeItem, menuDensity, layout);
                     listRows.splice(index, 1);
                 }
                 continue;
             }
-            listHeight -= getItemHeight(compositeItem);
+            listHeight -= getItemHeight(compositeItem, menuDensity, layout);
             collapseItems.unshift(
                 ...listRows
                     .splice(index, 1)
                     .map((r) => (r as Extract<CompositeBarRow, {kind: 'item'}>).item),
             );
         } else {
-            listHeight -= getCompositeBarRowLayoutHeight(row);
+            listHeight -= getCompositeBarRowLayoutHeight(row, menuDensity, layout);
             const [removed] = listRows.splice(index, 1);
             if (removed?.kind === 'group') {
                 collapseItems.unshift(makeOverflowGroupAsideItem(removed.group, removed.items));

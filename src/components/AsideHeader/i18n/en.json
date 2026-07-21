@@ -1,5 +1,8 @@
 {
   "button_collapse": "Collapse",
   "button_expand": "Expand",
-  "label_more": "More"
+  "label_more": "More",
+  "quick_access_pin": "Pin to quick access",
+  "quick_access_unpin": "Remove from quick access",
+  "quick_access_title": "Pinned"
 }

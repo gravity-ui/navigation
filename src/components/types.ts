@@ -24,6 +24,11 @@ export interface MenuItem extends QAProps {
     href?: string;
     current?: boolean;
     pinned?: boolean;
+    /**
+     * When true, the item is shown in the quick access section between subheader and main menu.
+     * Requires `enableQuickAccess` on AsideHeader and `onMenuItemsChanged` to toggle from the UI.
+     */
+    quickAccess?: boolean;
     onItemClick?: (
         item: MenuItem,
         collapsed: boolean,
@@ -60,6 +65,11 @@ export interface MenuItem extends QAProps {
      * The group ID to which the menu item belongs. Used for grouping menu items
      */
     groupId?: string;
+    /**
+     * Maximum number of lines for the item title in the expanded sidebar.
+     * Defaults to a single line with ellipsis; use `2` for a taller two-line row.
+     */
+    titleLines?: 1 | 2;
     className?: string;
     menuItemAriaProps?: AsideHeaderMenuItemAriaProps;
 }

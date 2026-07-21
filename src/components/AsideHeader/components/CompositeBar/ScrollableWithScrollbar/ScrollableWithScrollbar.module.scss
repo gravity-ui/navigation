@@ -11,26 +11,6 @@ $block: '.#{variables.$ns}scrollable-with-scrollbar';
     --_--scrollbar-width: var(--gn-aside-scrollbar-width, 8px);
     --_--scrollbar-thumb-width: var(--gn-aside-scrollbar-thumb-width, 4px);
 
-    &::before {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 100%;
-        pointer-events: none;
-        background: var(
-            --gn-aside-bottom-shadow-color,
-            linear-gradient(to bottom, transparent 0%, transparent 50%, rgba(0, 0, 0, 0.08) 100%)
-        );
-        transition: opacity 0.3s ease-in-out;
-        opacity: 0;
-    }
-
-    &#{$block}_bottom-shadow::before {
-        opacity: 1;
-    }
-
     &__scrollable-inner {
         width: 100%;
         height: 100%;
@@ -72,24 +52,37 @@ $block: '.#{variables.$ns}scrollable-with-scrollbar';
     &:hover &__scrollbar-thumb {
         opacity: 1;
     }
-}
 
-:global(.g-root_theme_light) #{$block},
-:global(.g-root_theme_light-hc) #{$block} {
-    --gn-aside-bottom-shadow-color: linear-gradient(
-        to bottom,
-        transparent 0%,
-        transparent 50%,
-        rgba(0, 0, 0, 0.08) 100%
-    );
-}
+    /**
+     * Quick access / pinned section: grow with content up to a cap, then scroll.
+     * Styles live here (not in AsideHeader) so CSS Modules scope inner selectors.
+     */
+    &_capped {
+        flex: 0 1 auto;
+        overflow: hidden;
+        max-height: var(
+            --gn-aside-header-quick-access-max-height,
+            calc(
+                5 *
+                    (
+                        var(--gn-aside-header-item-height, #{variables.$item-height}) +
+                            var(--gn-aside-header-item-gap, 1px)
+                    )
+            )
+        );
 
-:global(.g-root_theme_dark) #{$block},
-:global(.g-root_theme_dark-hc) #{$block} {
-    --gn-aside-bottom-shadow-color: linear-gradient(
-        to bottom,
-        transparent 0%,
-        transparent 80%,
-        rgba(0, 0, 0, 0.4) 100%
-    );
+        #{$block}__scrollable-inner {
+            height: auto;
+            max-height: var(
+                --gn-aside-header-quick-access-max-height,
+                calc(
+                    5 *
+                        (
+                            var(--gn-aside-header-item-height, #{variables.$item-height}) +
+                                var(--gn-aside-header-item-gap, 1px)
+                        )
+                )
+            );
+        }
+    }
 }

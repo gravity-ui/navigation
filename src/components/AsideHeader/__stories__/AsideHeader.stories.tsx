@@ -4,7 +4,6 @@ import {Gear, LogoYandexCloud, LogoYandexTracker, Xmark} from '@gravity-ui/icons
 import {Button, Flex, Icon, IconData, Select, Text, spacing} from '@gravity-ui/uikit';
 import type {Meta, StoryFn} from '@storybook/react-webpack5';
 
-import {MenuGroup} from '../../types';
 import {AsideHeader} from '../AsideHeader';
 import {AsideFallback} from '../components/PageLayout/AsideFallback';
 import {PageLayout} from '../components/PageLayout/PageLayout';
@@ -12,6 +11,12 @@ import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
 import {AsideHeaderProps} from '../types';
 
 import {AsideHeaderShowcase, AsideHeaderShowcaseProps} from './AsideHeaderShowcase';
+import {
+    defaultCollapsedMenuGroupIdsExceptFirst,
+    menuGroupsData,
+    menuGroupsStoryArgTypes,
+    menuItemsWithGroupsForAllPages,
+} from './menuGroupsMoc';
 import {DEFAULT_LOGO, menuItemsClamped, menuItemsShowcase} from './moc';
 
 import logoIcon from '../../../../.storybook/assets/logo.svg';
@@ -273,56 +278,10 @@ CollapseButtonWrapper.args = {
     initialCompact: false,
 };
 
-const menuGroupsData: MenuGroup[] = [
-    {id: 'analytics', title: 'Analytics', icon: Gear, popupTitle: 'Analytics'},
-    {id: 'settings', title: 'Settings', icon: Gear},
-];
-
-/** Demo menu with `groupId`/`category` for All pages grouping; default matches `defaultMenuItems`. */
-const menuItemsWithGroupsForAllPages: AsideHeaderProps['menuItems'] = [
-    {id: 'home', title: 'Home', icon: Gear, category: 'General'},
-    {
-        id: 'analytics-overview',
-        title: 'Overview',
-        icon: Gear,
-        groupId: 'analytics',
-        category: 'Analytics',
-        current: true,
-    },
-    {
-        id: 'analytics-reports',
-        title: 'Reports',
-        icon: Gear,
-        groupId: 'analytics',
-        category: 'Analytics',
-    },
-    {
-        id: 'analytics-dashboards',
-        title: 'Dashboards',
-        icon: Gear,
-        groupId: 'analytics',
-        category: 'Analytics',
-    },
-    {
-        id: 'general-settings',
-        title: 'General',
-        icon: Gear,
-        groupId: 'settings',
-        category: 'Settings',
-    },
-    {
-        id: 'user-settings',
-        title: 'Users',
-        icon: Gear,
-        groupId: 'settings',
-        category: 'Settings',
-    },
-    {id: 'help', title: 'Help', icon: Gear, category: 'General'},
-];
-
 function MenuGroupsWithAllPagesDemo(props: {
     initialCompact?: boolean;
     menuOverflow?: AsideHeaderProps['menuOverflow'];
+    menuGroupNestedIcons?: AsideHeaderProps['menuGroupNestedIcons'];
     description: React.ReactNode;
 }) {
     const [compact, setCompact] = React.useState(props.initialCompact ?? false);
@@ -345,6 +304,12 @@ function MenuGroupsWithAllPagesDemo(props: {
                 editMenuProps={{enableSorting: true}}
                 onChangeCompact={setCompact}
                 menuOverflow={props.menuOverflow}
+                defaultCollapsedMenuGroupIds={
+                    props.menuOverflow === 'scroll'
+                        ? defaultCollapsedMenuGroupIdsExceptFirst
+                        : undefined
+                }
+                menuGroupNestedIcons={props.menuGroupNestedIcons}
             />
             <PageLayout.Content>
                 <div style={{padding: 16}}>{props.description}</div>
@@ -357,6 +322,7 @@ function MenuGroupsWithAllPagesDemo(props: {
 const MenuGroupsTemplate: StoryFn = (args) => (
     <MenuGroupsWithAllPagesDemo
         initialCompact={args.initialCompact}
+        menuGroupNestedIcons={args.menuGroupNestedIcons}
         description={
             <>
                 Default menuOverflow (overflow items move under &quot;More&quot;). Groups use
@@ -368,13 +334,16 @@ const MenuGroupsTemplate: StoryFn = (args) => (
 );
 
 export const MenuGroups = MenuGroupsTemplate.bind({});
+MenuGroups.argTypes = menuGroupsStoryArgTypes;
 MenuGroups.args = {
     initialCompact: false,
+    menuGroupNestedIcons: true,
 };
 
 const MenuGroupsCompactTemplate: StoryFn = (args) => (
     <MenuGroupsWithAllPagesDemo
         initialCompact={args.initialCompact}
+        menuGroupNestedIcons={args.menuGroupNestedIcons}
         description={
             <>
                 Compact sidebar: same overflow behavior as MenuGroups when the rail is narrow. Hover
@@ -386,14 +355,17 @@ const MenuGroupsCompactTemplate: StoryFn = (args) => (
 );
 
 export const MenuGroupsCompact = MenuGroupsCompactTemplate.bind({});
+MenuGroupsCompact.argTypes = menuGroupsStoryArgTypes;
 MenuGroupsCompact.args = {
     initialCompact: true,
+    menuGroupNestedIcons: true,
 };
 
 const MenuGroupsScrollbarTemplate: StoryFn = (args) => (
     <MenuGroupsWithAllPagesDemo
         menuOverflow="scroll"
         initialCompact={args.initialCompact}
+        menuGroupNestedIcons={args.menuGroupNestedIcons}
         description={
             <>
                 Non-compact: menuOverflow=&quot;scroll&quot; — groups render as nested lists with
@@ -406,8 +378,10 @@ const MenuGroupsScrollbarTemplate: StoryFn = (args) => (
 );
 
 export const MenuGroupsScrollbar = MenuGroupsScrollbarTemplate.bind({});
+MenuGroupsScrollbar.argTypes = menuGroupsStoryArgTypes;
 MenuGroupsScrollbar.args = {
     initialCompact: false,
+    menuGroupNestedIcons: true,
 };
 
 const manyMenuItems: AsideHeaderProps['menuItems'] = Array.from({length: 25}, (_, index) => ({
