@@ -57,6 +57,9 @@ export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
                             )}
                         >
                             <Button
+                                aria-label={i18n(
+                                    item.hidden ? 'all-panel.item.pin' : 'all-panel.item.unpin',
+                                )}
                                 onClick={onPinButtonClick}
                                 view={item.hidden ? 'flat-secondary' : 'flat-action'}
                             >
