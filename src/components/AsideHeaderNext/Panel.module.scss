@@ -1,0 +1,9 @@
+.gn-aside-header-next-panel {
+    z-index: var(--gn-aside-header-panel-z-index, 98);
+
+    &__content {
+        top: 0;
+        bottom: 0;
+        height: auto;
+    }
+}

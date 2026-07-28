@@ -1,0 +1,38 @@
+@use '../variables';
+@use '../../../styles/mixins';
+
+.gn-aside-header-next-collapse {
+    @include mixins.accessibility-button;
+
+    --_--horizontal-divider-line-color: var(--g-color-line-generic);
+    --_--focus-outline-color: var(--g-color-line-focus);
+
+    min-height: 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 0;
+    border-top: 1px solid
+        var(--gn-aside-header-divider-horizontal-color, var(--_--horizontal-divider-line-color));
+    position: relative;
+    box-sizing: content-box;
+    color: var(--g-color-text-secondary);
+    cursor: pointer;
+
+    &::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: 0 2px 2px;
+    }
+
+    &:focus-visible::before {
+        outline: var(--_--focus-outline-color) solid 2px;
+        outline-offset: 0;
+    }
+
+    &:hover {
+        color: var(--g-color-text-primary);
+    }
+}
