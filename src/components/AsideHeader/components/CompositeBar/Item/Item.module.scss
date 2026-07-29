@@ -4,6 +4,25 @@
 $block: '.#{variables.$ns}composite-bar-item';
 
 $actionLeftRightMargin: 10px;
+$floating-surface-box-shadow-light:
+    0 0 0 1px var(--g-color-line-generic-solid),
+    0 3px 10px 0 var(--g-color-sfx-shadow),
+    0 8px 20px -4px var(--g-color-sfx-shadow);
+$floating-surface-box-shadow-dark:
+    0 0 0 1px var(--g-color-line-generic-solid),
+    0 4px 12px 0 var(--g-color-sfx-veil),
+    0 10px 24px -2px var(--g-color-sfx-shadow-heavy);
+
+@mixin floating-surface-box-shadow-default {
+    --_--floating-surface-box-shadow-default: #{$floating-surface-box-shadow-light};
+
+    :global(.g-root_theme_dark) &,
+    :global(.g-root_theme_dark-hc) &,
+    &:global(.g-root_theme_dark),
+    &:global(.g-root_theme_dark-hc) {
+        --_--floating-surface-box-shadow-default: #{$floating-surface-box-shadow-dark};
+    }
+}
 
 #{$block} {
     @include mixins.accessibility-button;
@@ -38,8 +57,11 @@ $actionLeftRightMargin: 10px;
     margin-inline: auto;
 
     &:global(.#{variables.$ns}footer-item)#{$class}_type_regular {
-        height: #{variables.$compact-item-height};
-        --gn-aside-header-item-icon-background-size: 32px;
+        height: var(--gn-aside-header-footer-item-height, #{variables.$compact-item-height});
+        --gn-aside-header-item-icon-background-size: var(
+            --gn-aside-header-footer-item-height,
+            #{variables.$compact-item-height}
+        );
     }
 
     &__icon {
@@ -54,7 +76,8 @@ $actionLeftRightMargin: 10px;
 
         :global(.#{variables.$ns}footer-item) &,
         :global(.#{variables.$ns}composite-bar-highlighted-item) &,
-        :global(.#{variables.$ns}composite-bar_subheader) & {
+        :global(.#{variables.$ns}composite-bar_subheader) &,
+        :global(.#{variables.$ns}composite-bar_quick-access) & {
             color: var(
                 --gn-aside-header-general-item-icon-color,
                 var(--_--item-general-icon-color)
@@ -63,7 +86,8 @@ $actionLeftRightMargin: 10px;
 
         :global(.#{variables.$ns}footer-item) #{$class}_current &,
         :global(.#{variables.$ns}composite-bar-highlighted-item) #{$class}_current &,
-        :global(.#{variables.$ns}composite-bar_subheader) #{$class}_current & {
+        :global(.#{variables.$ns}composite-bar_subheader) #{$class}_current &,
+        :global(.#{variables.$ns}composite-bar_quick-access) #{$class}_current & {
             color: var(
                 --gn-aside-header-item-current-icon-color,
                 var(--gn-aside-header-general-item-icon-color, var(--_--item-general-icon-color))
@@ -83,22 +107,29 @@ $actionLeftRightMargin: 10px;
         align-items: center;
         justify-content: center;
         height: 100%;
-        width: var(--_--item-height, #{variables.$item-height});
+        width: var(--gn-aside-header-item-height, #{variables.$item-height});
     }
 
     &__title {
         display: flex;
         align-items: center;
+        flex: 1 1 auto;
+        min-width: 0;
         overflow: hidden;
-        margin: 0 var(--g-spacing-4) 0 var(--g-spacing-2);
+        margin: 0 var(--gn-aside-header-item-title-gap-end, var(--g-spacing-4)) 0
+            var(--gn-aside-header-item-title-gap, var(--g-spacing-2));
+
+        #{$class}_with-aside-end & {
+            margin-inline-end: var(--g-spacing-2);
+        }
     }
 
     &__title-text {
         /* stylelint-disable-next-line value-no-vendor-prefix */
         display: -webkit-box;
         -webkit-box-orient: vertical;
-        /* NOTE @vladimir-kuba: 2 lines fits in container height, more lines leads overflow container */
-        -webkit-line-clamp: 2;
+        -webkit-line-clamp: 1;
+        line-clamp: 1;
         overflow: hidden;
         text-align: start;
 
@@ -110,10 +141,87 @@ $actionLeftRightMargin: 10px;
                 var(--_--item-selected-text-color)
             );
         }
+
+        &_lines_2 {
+            /* NOTE @vladimir-kuba: 2 lines fits in two-line item height, more lines leads overflow container */
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+        }
     }
 
     &__title-adornment {
         margin: 0 10px;
+    }
+
+    &_with-quick-access-pin:not(#{$class}_menu-popup-row) {
+        position: relative;
+    }
+
+    &__quick-access-pin-slot {
+        position: absolute;
+        inset-inline-end: var(--gn-aside-header-item-title-gap-end, var(--g-spacing-4));
+        inset-block: 0;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: none;
+
+        &_menu-popup {
+            position: static;
+            inset: unset;
+            z-index: auto;
+            flex-shrink: 0;
+        }
+
+        &_suppressed {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: none;
+        }
+    }
+
+    &__quick-access-pin {
+        flex-shrink: 0;
+        color: var(--g-color-text-complementary);
+        transition: color 0.15s ease;
+
+        &_pinned {
+            color: var(--g-color-text-secondary);
+        }
+
+        &:hover {
+            color: var(--g-color-text-primary);
+        }
+
+        :global(.g-button__icon) {
+            color: inherit;
+        }
+    }
+
+    &__aside-end {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        margin-inline: auto var(--gn-aside-header-item-title-gap-end, var(--g-spacing-4));
+        gap: var(--g-spacing-1);
+    }
+
+    &:hover &__quick-access-pin-slot:not(#{$class}__quick-access-pin-slot_suppressed),
+    &__quick-access-pin-slot:not(#{$class}__quick-access-pin-slot_suppressed):hover {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transition:
+            opacity 0.15s ease var(--gn-aside-header-quick-access-pin-hover-delay, 200ms),
+            visibility 0s linear var(--gn-aside-header-quick-access-pin-hover-delay, 200ms);
+
+        #{$class}__quick-access-pin {
+            transition: color 0.15s ease var(--gn-aside-header-quick-access-pin-hover-delay, 200ms);
+        }
     }
 
     &__collapse-item {
@@ -165,6 +273,25 @@ $actionLeftRightMargin: 10px;
             outline: none;
             color: inherit;
         }
+
+        #{$class}_title-lines_2 & {
+            align-items: flex-start;
+        }
+    }
+
+    &_title-lines_2 {
+        align-items: flex-start;
+
+        #{$class}__icon-place,
+        #{$class}__title,
+        #{$class}__aside-end {
+            padding-block: var(--g-spacing-1);
+        }
+
+        #{$class}__icon-place,
+        #{$class}__title {
+            align-items: flex-start;
+        }
     }
 
     &__btn-icon {
@@ -214,19 +341,27 @@ $actionLeftRightMargin: 10px;
         }
     }
 
-    &__icon-tooltip {
+    &__icon-tooltip:global(.g-tooltip) {
+        @include floating-surface-box-shadow-default;
+        --g-tooltip-box-shadow: var(
+            --gn-aside-header-floating-surface-box-shadow,
+            var(--_--floating-surface-box-shadow-default)
+        );
+        --_--compact-tooltip-height: var(--gn-aside-header-item-height, #{variables.$item-height});
+
         display: flex;
-        box-sizing: border-box;
-        height: 30px;
-        padding: 8px 12px;
         align-items: center;
+        box-sizing: border-box;
+        height: var(--_--compact-tooltip-height);
+        min-height: var(--_--compact-tooltip-height);
+        padding-block: 0;
+        padding-inline: var(--g-spacing-3);
+        overflow: visible;
+        white-space: nowrap;
 
-        :global(.g-action-tooltip__description) {
-            margin: 0;
-            margin-block: 0;
-
-            color: var(--g-color-text-light-primary);
-        }
+        /* Override UIKit -webkit-box clamp for a single-line pill row. */
+        -webkit-line-clamp: unset;
+        line-clamp: unset;
     }
 
     &__icon-tooltip_item-type_action {
@@ -234,11 +369,38 @@ $actionLeftRightMargin: 10px;
     }
 
     &__icon-popover {
+        --_--popup-padding: 2px;
+        --_--popup-row-padding-inline: var(--g-spacing-4);
+        --gn-aside-header-popup-item-icon-place-width: calc(
+            var(--gn-aside-header-item-icon-size, 18px) + var(--g-spacing-2)
+        );
+        --gn-aside-header-popup-item-title-gap: var(--g-spacing-2);
+        --_--popup-item-radius: var(
+            --gn-aside-header-item-expanded-radius,
+            #{variables.$item-expanded-radius}
+        );
+        --_--border-radius: calc(var(--_--popup-item-radius) + var(--_--popup-padding));
+        --g-popup-border-radius: var(--_--border-radius);
+
+        @include floating-surface-box-shadow-default;
         display: flex;
         box-sizing: border-box;
-        padding: var(--g-spacing-2);
+        padding: var(--_--popup-padding);
         align-items: center;
-        border-radius: 12px;
+        border-radius: var(--_--border-radius);
+        overflow: hidden;
+        transition: none;
+        box-shadow: var(
+            --gn-aside-header-floating-surface-box-shadow,
+            var(--_--floating-surface-box-shadow-default)
+        );
+    }
+
+    &__icon-popover_single-label {
+        --_--popup-row-padding-inline: var(--g-spacing-2);
+        --_--popup-padding: 0;
+        --_--border-radius: 4px;
+        --g-popup-border-radius: var(--_--border-radius);
     }
 
     &__icon-popover_item-type_action {
@@ -247,19 +409,62 @@ $actionLeftRightMargin: 10px;
 
     &__popup-content {
         box-sizing: border-box;
-        border-radius: var(--gn-aside-header-item-expanded-radius);
+        border-radius: var(
+            --gn-aside-header-item-expanded-radius,
+            #{variables.$item-expanded-radius}
+        );
+    }
+
+    &__popup-content_single-label {
+        overflow: hidden;
     }
 
     &__popup-content &__root-menu-item[class] {
-        background-color: transparent;
+        position: relative;
+        overflow: visible;
+        background: none;
+        padding-bottom: var(--gn-aside-header-item-gap, 1px);
+        box-sizing: border-box;
+
+        &:global(.g-list__item_active),
+        &:global(.g-list__item_selected),
+        &:global(.g-list__item_active.g-list__item_selected) {
+            background: none;
+        }
     }
 
     &__popup-title {
-        padding: var(--g-spacing-1) var(--g-spacing-2) 6px;
-        color: var(--g-color-text-primary);
-        font-weight: var(--g-text-subheader-font-weight);
-        font-size: var(--g-text-subheader-2-font-size);
-        line-height: var(--g-text-subheader-2-line-height);
+        @include mixins.text-caption-2;
+
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        padding: var(--g-spacing-1) var(--_--popup-row-padding-inline);
+        margin-bottom: var(--g-spacing-1);
+        border-bottom: 1px solid
+            var(--gn-aside-header-divider-horizontal-color, var(--g-color-line-generic));
+        color: var(--g-color-text-complementary);
+        font-weight: 500;
+    }
+
+    &__popup-content &__popup-item#{$class}_hide-icon {
+        #{$class}__title {
+            margin: 0 var(--gn-aside-header-item-title-gap-end, var(--g-spacing-4)) 0
+                var(--_--popup-row-padding-inline);
+        }
+    }
+
+    &__popup-content &__popup-item:not(#{$class}_hide-icon) {
+        #{$class}__icon-place {
+            width: var(
+                --gn-aside-header-popup-item-icon-place-width,
+                calc(var(--gn-aside-header-item-icon-size, 18px) + var(--g-spacing-2))
+            );
+        }
+
+        #{$class}__title {
+            margin-left: var(--gn-aside-header-popup-item-title-gap, var(--g-spacing-2));
+        }
     }
 
     &__popup-item {
@@ -271,6 +476,30 @@ $actionLeftRightMargin: 10px;
         }
     }
 
+    &__popup-content_single-label &__root-menu-item[class] {
+        align-items: stretch;
+        padding-bottom: 0;
+    }
+
+    &__popup-content_single-label &__popup-item#{$class}_type_regular {
+        height: 100%;
+        min-height: 0;
+        border-radius: var(--_--border-radius, 4px);
+    }
+
+    &__popup-content_single-label &__popup-item#{$class}_hide-icon {
+        #{$class}__title {
+            margin: 0 var(--_--popup-row-padding-inline);
+        }
+
+        #{$class}__title-text {
+            /* stylelint-disable-next-line value-no-vendor-prefix */
+            display: block;
+            -webkit-line-clamp: unset;
+            line-clamp: unset;
+        }
+    }
+
     &_hide-icon {
         #{$class}__icon-place {
             display: none;
@@ -278,6 +507,40 @@ $actionLeftRightMargin: 10px;
 
         #{$class}__title {
             margin-left: var(--g-spacing-4);
+        }
+    }
+
+    &_menu-group-nested {
+        // Icon column starts just after the L-connector horizontal segment (not full parent icon width).
+        padding-inline-start: calc(
+            var(--gn-aside-header-item-height, #{variables.$item-height}) / 2 +
+                var(--gn-aside-header-menu-group-tree-connector-width, 16px) / 2 +
+                var(--gn-aside-header-menu-group-nested-icon-gap, var(--g-spacing-1))
+        );
+
+        /**
+         * Without nested icons, align item title with the parent group header title
+         * (icon column + title gap), not with the nested icon column.
+         */
+        &#{$class}_hide-icon {
+            padding-inline-start: calc(
+                var(--gn-aside-header-item-height, #{variables.$item-height}) +
+                    var(--gn-aside-header-item-title-gap, var(--g-spacing-2))
+            );
+
+            #{$class}__title {
+                margin-left: 0;
+            }
+        }
+
+        &#{$class}_title-lines_2 {
+            /**
+             * L-connector hook targets icon center (top-aligned icon + block padding),
+             * not the vertical center of the taller two-line row.
+             */
+            --gn-aside-header-menu-group-tree-connector-hook-inset-block: calc(
+                var(--g-spacing-1) + var(--gn-aside-header-item-icon-size, 18px) / 2
+            );
         }
     }
 
@@ -296,20 +559,6 @@ $actionLeftRightMargin: 10px;
         &:hover {
             &#{$class}_type_regular {
                 background-color: var(
-                    --gn-aside-header-item-current-background-color-hover,
-                    var(
-                        --gn-aside-header-item-current-background-color,
-                        var(--_--item-selected-background-color)
-                    )
-                );
-
-                border-radius: var(--gn-aside-header-item-expanded-radius);
-            }
-        }
-
-        &:not(#{$class}_current):hover {
-            &#{$class}_type_regular {
-                background-color: var(
                     --gn-aside-header-item-background-color-hover,
                     var(--_--item-background-color-hover)
                 );
@@ -322,20 +571,7 @@ $actionLeftRightMargin: 10px;
     &__chevron {
         display: flex;
         align-items: center;
-        margin-left: auto;
-        margin-right: var(--g-spacing-1);
         flex-shrink: 0;
-    }
-
-    &_compact &__chevron {
-        position: absolute;
-        right: 8px;
-        margin: 0;
-
-        svg {
-            stroke: currentColor;
-            stroke-width: 1;
-        }
     }
 
     &_compact {
@@ -389,24 +625,6 @@ $actionLeftRightMargin: 10px;
         }
 
         &:hover {
-            &#{$class}_type_regular {
-                #{$class}__btn-icon {
-                    @include item-bg();
-
-                    &::before {
-                        background-color: var(
-                            --gn-aside-header-item-current-background-color-hover,
-                            var(
-                                --gn-aside-header-item-current-background-color,
-                                var(--_--item-selected-background-color)
-                            )
-                        );
-                    }
-                }
-            }
-        }
-
-        &:not(#{$class}_current):hover {
             &#{$class}_type_regular {
                 #{$class}__btn-icon {
                     @include item-bg();

@@ -6,6 +6,7 @@ import {RenderContentType} from '../Content';
 import {LogoProps, MenuGroup, MenuItem, OpenModalSubscriber, TopAlertProps} from '../types';
 
 import {AsideHeaderContextType} from './AsideHeaderContext';
+import {AsideHeaderMenuDensity} from './density';
 
 export interface PanelItemProps extends DrawerProps {
     id: string;
@@ -15,11 +16,24 @@ export interface LayoutProps {
     compact: boolean;
     className?: string;
     topAlert?: TopAlertProps;
+    /**
+     * Renders solo tooltips in the theme opposite to the current UIKit theme.
+     * Group tooltips keep the current theme.
+     * @default false
+     */
+    invertSoloTooltipTheme?: boolean;
+    /**
+     * Menu item density. `compact` reduces item height, icon size, and spacing
+     * while keeping row dimensions identical in collapsed and expanded aside states.
+     * @default 'default'
+     */
+    menuDensity?: AsideHeaderMenuDensity;
 }
 
 interface EditMenuProps {
     onOpenEditMode?: () => void;
     onToggleMenuItem?: (changedItem: AsideHeaderItem) => void;
+    onToggleQuickAccess?: (changedItem: AsideHeaderItem) => void;
     onResetSettingsToDefault?: () => void;
     enableSorting?: boolean;
     onChangeItemsOrder?: (changedItem: AsideHeaderItem, oldIndex: number, newIndex: number) => void;
@@ -89,6 +103,29 @@ interface AsideHeaderDefaultProps {
     onMenuGroupsChanged?: (menuGroups: MenuGroup[]) => void;
     defaultMenuItems?: AsideHeaderItem[];
     onMenuItemsChanged?: (items: AsideHeaderItem[]) => void;
+    /**
+     * Shows the **All pages** menu row and panel. Enabled by default when `onMenuItemsChanged` is set.
+     * Set to `false` to use `onMenuItemsChanged` for other features (e.g. quick access) without All pages.
+     * @default true
+     */
+    enableAllPages?: boolean;
+    /**
+     * Enables the quick access section and inline pin controls on menu leaf items.
+     * Toggling requires controlled `menuItems` with `onMenuItemsChanged` (persist via localStorage/backend in the app).
+     */
+    enableQuickAccess?: boolean;
+    /**
+     * When `false`, hides the pinned quick access section and disables pin controls on menu items.
+     * Has no effect when `enableQuickAccess` is `false`.
+     * @default true
+     */
+    showQuickAccessSection?: boolean;
+    /**
+     * When `true`, the active (`current`) menu item stays highlighted in the main menu
+     * even when it is also shown in the quick access section.
+     * @default false
+     */
+    quickAccessHighlightInMainMenu?: boolean;
     headerDecoration?: boolean;
     /**
      * When provided, the map is the source of truth for which menu groups are collapsed
@@ -104,6 +141,18 @@ interface AsideHeaderDefaultProps {
      * `collapsedMenuGroupIds` when using controlled mode.
      */
     onToggleMenuGroupCollapsed?: (groupId: string) => void;
+    /**
+     * When `false`, nested menu group items render without icons (inline scroll layout
+     * and group popups in compact / collapsed-group mode).
+     * @default true
+     */
+    menuGroupNestedIcons?: boolean;
+    /**
+     * When `true` and `menuOverflow="scroll"` (non-compact), quick access and main menu
+     * share one scroll container instead of separate scroll areas.
+     * @default false
+     */
+    unifiedMenuScroll?: boolean;
 }
 
 export type AsideHeaderInnerProps = AsideHeaderGeneralProps &
