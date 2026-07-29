@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.4.0](https://github.com/gravity-ui/navigation/compare/v6.3.1...v6.4.0) (2026-07-29)
+
+
+### Features
+
+* **AllPagesPanel:** added tooltip for the pin icon ([#658](https://github.com/gravity-ui/navigation/issues/658)) ([893d9b2](https://github.com/gravity-ui/navigation/commit/893d9b2551a1aac2d2bc539cb27ab505502c081f))
+
 ## [6.3.1](https://github.com/gravity-ui/navigation/compare/v6.3.0...v6.3.1) (2026-07-21)
 
 
