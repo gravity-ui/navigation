@@ -3,5 +3,7 @@
   "all-panel.menu.category.allOther": "Остальное",
   "all-panel.resetToDefault": "Сбросить по умолчанию",
   "all-panel.title.editing": "Настройка панели меню",
-  "all-panel.title.main": "Все страницы"
+  "all-panel.title.main": "Все страницы",
+  "all-panel.item.pin": "Закрепить",
+  "all-panel.item.unpin": "Открепить"
 }
