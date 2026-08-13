@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.4.1](https://github.com/gravity-ui/navigation/compare/v6.4.0...v6.4.1) (2026-08-13)
+
+
+### Bug Fixes
+
+* **Footer:** prevent menu collapse in narrow containers ([#662](https://github.com/gravity-ui/navigation/issues/662)) ([c087c18](https://github.com/gravity-ui/navigation/commit/c087c18bf380bc52f847d5c29a5529717e043cbc))
+
 ## [6.4.0](https://github.com/gravity-ui/navigation/compare/v6.3.1...v6.4.0) (2026-07-29)
 
 
