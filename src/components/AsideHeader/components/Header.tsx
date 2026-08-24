@@ -41,6 +41,7 @@ export const Header = () => {
             {logo && (
                 <Logo
                     {...logo}
+                    className={b('logo', logo.className)}
                     onClick={onLogoClick}
                     compact={compact}
                     buttonClassName={b('logo-button')}

@@ -13,11 +13,10 @@ $block: '.#{variables.$ns}aside-header';
         --_--gn-aside-header-density-item-margin-inline,
         #{variables.$item-margin-inline}
     );
-    --gn-aside-header-item-expanded-radius: var(
+    --_--item-expanded-radius: var(
         --_--gn-aside-header-density-item-expanded-radius,
         #{variables.$item-expanded-radius}
     );
-    --_--item-expanded-radius: var(--gn-aside-header-item-expanded-radius);
 
     --_--item-icon-background-size: var(
         --gn-aside-header-item-icon-background-size,
@@ -210,6 +209,13 @@ $block: '.#{variables.$ns}aside-header';
             var(--_--item-icon-background-size)
         );
         width: var(--gn-aside-header-min-width);
+    }
+
+    &__logo {
+        --_--gn-logo-height: var(
+            --_--gn-aside-header-density-item-height,
+            #{variables.$item-height}
+        );
     }
 
     &__menu-items {

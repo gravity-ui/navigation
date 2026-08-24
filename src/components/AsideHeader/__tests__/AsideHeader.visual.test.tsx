@@ -1,6 +1,12 @@
 import React from 'react';
 
+import {expect} from '@playwright/experimental-ct-react';
+
 import {test} from '~playwright/core';
+
+import {Footer} from '../../Footer/desktop/Footer';
+import {PageLayout} from '../components/PageLayout/PageLayout';
+import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
 
 import {AsideHeaderStories} from './helpersPlaywright';
 
@@ -47,6 +53,28 @@ test.describe('AsideHeader', () => {
     test('render story: <AdvancedCompactDensity>', async ({mount, expectScreenshot}) => {
         await mount(<AsideHeaderStories.AdvancedCompactDensity />, mountOptions, viewport);
         await expectScreenshot();
+    });
+
+    test('scopes compact density to the AsideHeader logo', async ({mount, page}) => {
+        await mount(
+            <PageLayout compact={false} menuDensity="compact">
+                <PageLayoutAside
+                    logo={{text: 'Navigation logo', className: 'test-aside-header-logo'}}
+                    hideCollapseButton
+                />
+                <PageLayout.Content>
+                    <Footer
+                        copyright="Gravity UI"
+                        logo={{text: 'Footer logo', className: 'test-footer-logo'}}
+                    />
+                </PageLayout.Content>
+            </PageLayout>,
+            mountOptions,
+            viewport,
+        );
+
+        await expect(page.locator('.test-aside-header-logo')).toHaveCSS('height', '32px');
+        await expect(page.locator('.test-footer-logo')).toHaveCSS('height', '40px');
     });
 
     test('render story: <HeaderAlert>', async ({mount, expectScreenshot}) => {

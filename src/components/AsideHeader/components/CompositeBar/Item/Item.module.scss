@@ -10,11 +10,10 @@ $actionLeftRightMargin: 10px;
 
     $class: &;
     --gn-composite-bar-item-action-size: var(--_--gn-aside-header-density-action-size, 36px);
-    --gn-aside-header-item-expanded-radius: var(
+    --_--item-expanded-radius: var(
         --_--gn-aside-header-density-item-expanded-radius,
         #{variables.$item-expanded-radius}
     );
-    --_--item-expanded-radius: var(--gn-aside-header-item-expanded-radius);
 
     --_--horizontal-divider-line-color: var(--g-color-line-generic);
 
