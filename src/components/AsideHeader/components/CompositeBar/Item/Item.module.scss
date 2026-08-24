@@ -9,8 +9,12 @@ $actionLeftRightMargin: 10px;
     @include mixins.accessibility-button;
 
     $class: &;
-    --gn-composite-bar-item-action-size: 36px;
-    --gn-aside-header-item-expanded-radius: #{variables.$item-expanded-radius};
+    --gn-composite-bar-item-action-size: var(--_--gn-aside-header-density-action-size, 36px);
+    --gn-aside-header-item-expanded-radius: var(
+        --_--gn-aside-header-density-item-expanded-radius,
+        #{variables.$item-expanded-radius}
+    );
+    --_--item-expanded-radius: var(--gn-aside-header-item-expanded-radius);
 
     --_--horizontal-divider-line-color: var(--g-color-line-generic);
 
@@ -19,7 +23,7 @@ $actionLeftRightMargin: 10px;
     --_--item-general-icon-color: var(--g-color-text-primary);
     --_--item-icon-color: var(--g-color-text-complementary);
     --_--item-text-color: var(--g-color-text-primary);
-    --_--item-collapsed-radius: 7px;
+    --_--item-collapsed-radius: var(--_--gn-aside-header-density-item-collapsed-radius, 7px);
 
     --_--item-action-color: var(--g-color-base-float);
     --_--item-action-color-hover: var(--g-color-base-float-hover);
@@ -38,8 +42,14 @@ $actionLeftRightMargin: 10px;
     margin-inline: auto;
 
     &:global(.#{variables.$ns}footer-item)#{$class}_type_regular {
-        height: #{variables.$compact-item-height};
-        --gn-aside-header-item-icon-background-size: 32px;
+        height: var(
+            --_--gn-aside-header-density-footer-item-height,
+            #{variables.$compact-item-height}
+        );
+        --gn-aside-header-item-icon-background-size: var(
+            --_--gn-aside-header-density-footer-item-height,
+            #{variables.$compact-item-height}
+        );
     }
 
     &__icon {
@@ -83,14 +93,15 @@ $actionLeftRightMargin: 10px;
         align-items: center;
         justify-content: center;
         height: 100%;
-        width: var(--_--item-height, #{variables.$item-height});
+        width: var(--_--gn-aside-header-density-item-height, #{variables.$item-height});
     }
 
     &__title {
         display: flex;
         align-items: center;
         overflow: hidden;
-        margin: 0 var(--g-spacing-4) 0 var(--g-spacing-2);
+        margin: 0 var(--_--gn-aside-header-density-item-title-gap-end, var(--g-spacing-4)) 0
+            var(--_--gn-aside-header-density-item-title-gap, var(--g-spacing-2));
     }
 
     &__title-text {
@@ -247,7 +258,7 @@ $actionLeftRightMargin: 10px;
 
     &__popup-content {
         box-sizing: border-box;
-        border-radius: var(--gn-aside-header-item-expanded-radius);
+        border-radius: var(--gn-aside-header-item-expanded-radius, var(--_--item-expanded-radius));
     }
 
     &__popup-content &__root-menu-item[class] {
@@ -267,7 +278,10 @@ $actionLeftRightMargin: 10px;
 
         &#{$class}_type_regular {
             height: #{variables.$compact-item-height};
-            border-radius: var(--gn-aside-header-item-expanded-radius);
+            border-radius: var(
+                --gn-aside-header-item-expanded-radius,
+                var(--_--item-expanded-radius)
+            );
         }
     }
 
@@ -289,7 +303,10 @@ $actionLeftRightMargin: 10px;
                     var(--_--item-selected-background-color)
                 );
 
-                border-radius: var(--gn-aside-header-item-expanded-radius);
+                border-radius: var(
+                    --gn-aside-header-item-expanded-radius,
+                    var(--_--item-expanded-radius)
+                );
             }
         }
 
@@ -303,7 +320,10 @@ $actionLeftRightMargin: 10px;
                     )
                 );
 
-                border-radius: var(--gn-aside-header-item-expanded-radius);
+                border-radius: var(
+                    --gn-aside-header-item-expanded-radius,
+                    var(--_--item-expanded-radius)
+                );
             }
         }
 
@@ -314,7 +334,10 @@ $actionLeftRightMargin: 10px;
                     var(--_--item-background-color-hover)
                 );
 
-                border-radius: var(--gn-aside-header-item-expanded-radius);
+                border-radius: var(
+                    --gn-aside-header-item-expanded-radius,
+                    var(--_--item-expanded-radius)
+                );
             }
         }
     }
@@ -367,6 +390,7 @@ $actionLeftRightMargin: 10px;
 
         &#{$class}_type_action {
             width: var(--gn-composite-bar-item-action-size);
+            margin-inline: auto;
 
             & #{$class}__title {
                 margin: 0;

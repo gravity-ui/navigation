@@ -24,6 +24,26 @@ import {AsideHeader} from '@gravity-ui/navigation';
 Компонент имеет два состояния: свернутое и развернутое.
 Управлять состоянием можно через свойства `compact` и `onChangeCompact`, а видимостью кнопки — через `hideCollapseButton`.
 
+### Плотность меню
+
+Используйте `menuDensity="compact"`, чтобы уменьшить ширину панели, высоту пунктов, размер иконок,
+отступы и радиусы без изменения механики навигации. Плотность не зависит от свернутого или
+развернутого состояния, которым управляет `compact`, поэтому оба свойства можно комбинировать.
+
+```tsx
+<AsideHeader
+  compact={compact}
+  menuDensity="compact"
+  menuItems={menuItems}
+  onChangeCompact={setCompact}
+/>
+```
+
+Значение по умолчанию — `default`, оно сохраняет прежние размеры. Компактная плотность уменьшает
+иконки пунктов меню, подзаголовка и футера, но не стандартную иконку логотипа размером 24 px.
+В расширенной схеме передавайте `menuDensity` в `PageLayout`: `PageLayoutAside` получает
+нормализованное значение из контекста.
+
 ### Оформление верхнего блока
 
 `AsideHeader` позволяет выделить верхний блок с элементами логотипа и подзаголовка с помощью свойства `headerDecoration`.
@@ -206,6 +226,7 @@ export const Aside: FC = () => {
 | logo                         | Контейнер логотипа, включающий иконку с заголовком и обрабатывающий клики.                                                                                                                                                                                             |                                              [`Logo`](./../Logo/Readme.md#logo)                                               |                           |
 | menuItems                    | Элементы в среднем блоке навигации.                                                                                                                                                                                                                                    |                                                   `Array<AsideHeaderItem>`                                                    |           `[]`            |
 | menuGroups                   | Описание групп меню (поля см. [`MenuGroup`](#menugroup)). Элементы связываются через `AsideHeaderItem.groupId`.                                                                                                                                                        |                                                         `MenuGroup[]`                                                         |                           |
+| menuDensity                  | Визуальная плотность панели и пунктов меню. `compact` уменьшает размеры без изменения механики взаимодействия.                                                                                                                                                         |                                                   `'default' \| 'compact'`                                                    |        `'default'`        |
 | defaultMenuItems             | Базовый список для сброса правок режима **Все страницы**.                                                                                                                                                                                                              |                                                   `Array<AsideHeaderItem>`                                                    |                           |
 | menuOverflow                 | Поведение при переполнении меню; см. [`menuOverflow`](#composite-menu-overflow-menuoverflow). **`collapse`** (по умолчанию): не поместившиеся пункты — под **«Ещё»** (**«More»**). **`scroll`**: прокручиваемый столбец. В режиме **`compact`** всегда **`collapse`**. |                                                   `'collapse' \| 'scroll'`                                                    |       `'collapse'`        |
 | collapsedMenuGroupIds        | Контролируемое состояние свёрнутости групп (`MenuGroup.id` → свёрнуто) при `menuOverflow === 'scroll'`.                                                                                                                                                                |                                                   `Record<string, boolean>`                                                   |                           |

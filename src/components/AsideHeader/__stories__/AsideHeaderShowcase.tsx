@@ -39,6 +39,7 @@ enum Panel {
 
 export interface AsideHeaderShowcaseProps {
     initialCompact?: boolean;
+    menuDensity?: AsideHeaderProps['menuDensity'];
     topAlert?: TopAlertProps;
     customBackground?: React.ReactNode;
     customBackgroundClassName?: string;
@@ -48,6 +49,7 @@ export interface AsideHeaderShowcaseProps {
 
 export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
     initialCompact = false,
+    menuDensity,
     topAlert,
     customBackground,
     customBackgroundClassName,
@@ -89,6 +91,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
             <AsideHeader
                 ref={ref}
                 qa={'ah-aside'}
+                menuDensity={menuDensity}
                 logo={{
                     text: 'Service',
                     icon: logoIcon,

@@ -7,7 +7,11 @@ import {Gear} from '@gravity-ui/icons';
 import {ThemeProvider} from '@gravity-ui/uikit';
 import {fireEvent, render, screen} from '@testing-library/react';
 
-import {AsideHeaderInnerContextProvider} from '../../../AsideHeaderContext';
+import {
+    AsideHeaderContextProvider,
+    AsideHeaderInnerContextProvider,
+} from '../../../AsideHeaderContext';
+import {AsideHeaderMenuDensity} from '../../../density';
 import {AsideHeaderItem} from '../../../types';
 import {ItemPopup} from '../Item/ItemPopup';
 
@@ -27,22 +31,27 @@ function renderItemPopup(props: {
     hideIcon?: boolean;
     open?: boolean;
     title?: string;
+    menuDensity?: AsideHeaderMenuDensity;
 }) {
     return render(
         <ThemeProvider theme="light">
-            <AsideHeaderInnerContextProvider value={contextValue}>
-                <ItemPopup
-                    items={props.items}
-                    title={props.title}
-                    open={props.open ?? true}
-                    onOpenChange={props.onOpenChange ?? (() => {})}
-                    collapsed={props.collapsed}
-                    hideIcon={props.hideIcon}
-                    onItemClick={props.onItemClick}
-                >
-                    <button data-testid="trigger">Trigger</button>
-                </ItemPopup>
-            </AsideHeaderInnerContextProvider>
+            <AsideHeaderContextProvider
+                value={{compact: false, size: 200, menuDensity: props.menuDensity}}
+            >
+                <AsideHeaderInnerContextProvider value={contextValue}>
+                    <ItemPopup
+                        items={props.items}
+                        title={props.title}
+                        open={props.open ?? true}
+                        onOpenChange={props.onOpenChange ?? (() => {})}
+                        collapsed={props.collapsed}
+                        hideIcon={props.hideIcon}
+                        onItemClick={props.onItemClick}
+                    >
+                        <button data-testid="trigger">Trigger</button>
+                    </ItemPopup>
+                </AsideHeaderInnerContextProvider>
+            </AsideHeaderContextProvider>
         </ThemeProvider>,
     );
 }
@@ -63,6 +72,27 @@ describe('ItemPopup', () => {
 
         expect(screen.getByText('Item 1')).toBeTruthy();
         expect(screen.getByText('Item 2')).toBeTruthy();
+    });
+
+    it('copies compact density properties to the portaled popup root', () => {
+        const items: AsideHeaderItem[] = [{id: 'item1', title: 'Item 1', icon: Gear}];
+
+        renderItemPopup({items, open: true, menuDensity: 'compact'});
+
+        // Popover renders this node in document.body, outside the PageLayout CSS cascade.
+        // eslint-disable-next-line testing-library/no-node-access
+        const popup = document.querySelector<HTMLElement>('.gn-composite-bar-item__icon-popover');
+
+        expect(popup).toBeTruthy();
+        expect(
+            popup?.style.getPropertyValue('--_--gn-aside-header-density-icon-background-size'),
+        ).toBe('32px');
+        expect(
+            popup?.style.getPropertyValue('--_--gn-aside-header-density-item-expanded-radius'),
+        ).toBe('6px');
+        expect(popup?.style.getPropertyValue('--_--gn-aside-header-density-item-title-gap')).toBe(
+            '4px',
+        );
     });
 
     it('calls onItemClick with original item and collapsed=true when collapsed prop is set', () => {

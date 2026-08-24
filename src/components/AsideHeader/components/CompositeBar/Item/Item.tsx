@@ -3,9 +3,10 @@ import React from 'react';
 import {ChevronDown, ChevronRight, ChevronUp} from '@gravity-ui/icons';
 import {Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
 
-import {ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
 import {MakeItemParams} from '../../../../types';
 import {createBlock} from '../../../../utils/cn';
+import {useSafeAsideHeaderContext} from '../../../AsideHeaderContext';
+import {getAsideHeaderDensityConfig} from '../../../density';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {COLLAPSE_ITEM_ID, ITEM_TYPE_REGULAR} from '../constants';
 
@@ -64,7 +65,9 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const type = props.type || ITEM_TYPE_REGULAR;
     const icon = props.icon;
-    const iconSize = props.iconSize || ASIDE_HEADER_ICON_SIZE;
+    const asideHeaderContext = useSafeAsideHeaderContext();
+    const defaultIconSize = getAsideHeaderDensityConfig(asideHeaderContext?.menuDensity).iconSize;
+    const iconSize = props.iconSize || defaultIconSize;
     const iconQa = props.iconQa;
     const collapsedItem = props.id === COLLAPSE_ITEM_ID;
     const inlineGroupHeader = groupHeaderExpanded !== undefined;

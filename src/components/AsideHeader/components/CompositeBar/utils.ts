@@ -1,21 +1,25 @@
 import {Ellipsis} from '@gravity-ui/icons';
 
-import {ITEM_HEIGHT, POPUP_REGULAR_ITEM_HEIGHT} from '../../../constants';
+import {POPUP_REGULAR_ITEM_HEIGHT} from '../../../constants';
 import {MenuGroup} from '../../../types';
+import {AsideHeaderMenuDensity, getAsideHeaderDensityConfig} from '../../density';
 import {AsideHeaderItem} from '../../types';
 
 import {COLLAPSE_ITEM_ID, COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX} from './constants';
 import type {CompositeBarRow} from './grouping';
 
-export function getItemHeight(compositeItem: AsideHeaderItem) {
+export function getItemHeight(
+    compositeItem: AsideHeaderItem,
+    menuDensity: AsideHeaderMenuDensity = 'default',
+) {
     switch (compositeItem.type) {
         case 'action':
-            return 50;
+            return getAsideHeaderDensityConfig(menuDensity).actionItemHeight;
         case 'divider':
             return 15;
 
         default:
-            return ITEM_HEIGHT;
+            return getAsideHeaderDensityConfig(menuDensity).itemHeight;
     }
 }
 
@@ -31,8 +35,11 @@ export function getPopupItemHeight(compositeItem: AsideHeaderItem) {
     }
 }
 
-export function getItemsHeight<T extends AsideHeaderItem>(items: T[]) {
-    return items.reduce((sum, item) => sum + getItemHeight(item), 0);
+export function getItemsHeight<T extends AsideHeaderItem>(
+    items: T[],
+    menuDensity: AsideHeaderMenuDensity = 'default',
+) {
+    return items.reduce((sum, item) => sum + getItemHeight(item, menuDensity), 0);
 }
 
 export function getPopupItemsHeight<T extends AsideHeaderItem>(items: T[]) {
@@ -58,23 +65,32 @@ function getPinnedItems(compositeItems: AsideHeaderItem[]) {
     return pinnedItems;
 }
 
-function getItemsMinHeight(compositeItems: AsideHeaderItem[]) {
+function getItemsMinHeight(
+    compositeItems: AsideHeaderItem[],
+    menuDensity: AsideHeaderMenuDensity = 'default',
+) {
     const pinnedItems = getPinnedItems(compositeItems);
     const afterMoreButtonItems = compositeItems.filter(({afterMoreButton}) => afterMoreButton);
+    const {itemHeight} = getAsideHeaderDensityConfig(menuDensity);
 
     return (
-        getItemsHeight(pinnedItems) +
-        getItemsHeight(afterMoreButtonItems) +
-        (pinnedItems.length === compositeItems.length ? 0 : ITEM_HEIGHT)
+        getItemsHeight(pinnedItems, menuDensity) +
+        getItemsHeight(afterMoreButtonItems, menuDensity) +
+        (pinnedItems.length === compositeItems.length ? 0 : itemHeight)
     );
 }
 
-export function getMoreButtonItem(menuMoreTitle?: string): AsideHeaderItem {
+export function getMoreButtonItem(
+    menuMoreTitle?: string,
+    menuDensity: AsideHeaderMenuDensity = 'default',
+): AsideHeaderItem {
+    const {iconSize} = getAsideHeaderDensityConfig(menuDensity);
+
     return {
         id: COLLAPSE_ITEM_ID,
         title: menuMoreTitle,
         icon: Ellipsis,
-        iconSize: 18,
+        iconSize,
     };
 }
 
@@ -101,11 +117,14 @@ function makeOverflowGroupAsideItem(
     };
 }
 
-function getCompositeBarRowLayoutHeight(row: CompositeBarRow): number {
+function getCompositeBarRowLayoutHeight(
+    row: CompositeBarRow,
+    menuDensity: AsideHeaderMenuDensity = 'default',
+): number {
     if (row.kind === 'item') {
-        return getItemHeight(row.item);
+        return getItemHeight(row.item, menuDensity);
     }
-    return getItemHeight(makeGroupHeaderAsideItem(row.group));
+    return getItemHeight(makeGroupHeaderAsideItem(row.group), menuDensity);
 }
 
 /**
@@ -138,8 +157,11 @@ function compositeBarRowsToFlatForMinHeight(rows: CompositeBarRow[]): AsideHeade
     return out;
 }
 
-export function getCompositeBarRowsMinHeight(rows: CompositeBarRow[]): number {
-    return getItemsMinHeight(compositeBarRowsToFlatForMinHeight(rows));
+export function getCompositeBarRowsMinHeight(
+    rows: CompositeBarRow[],
+    menuDensity: AsideHeaderMenuDensity = 'default',
+): number {
+    return getItemsMinHeight(compositeBarRowsToFlatForMinHeight(rows), menuDensity);
 }
 
 export function getSelectedCompositeBarRowIndex(rows: CompositeBarRow[]): number | undefined {
@@ -157,6 +179,7 @@ export function getAutosizeCompositeBarRows(
     rows: CompositeBarRow[],
     height: number,
     collapseItem: AsideHeaderItem,
+    menuDensity: AsideHeaderMenuDensity = 'default',
 ): {
     listRows: CompositeBarRow[];
     collapseItems: AsideHeaderItem[];
@@ -167,14 +190,14 @@ export function getAutosizeCompositeBarRows(
     const listRows: CompositeBarRow[] = [...regularRows, ...afterMoreRows];
 
     const allRowsHeight = listRows.reduce(
-        (sum, row) => sum + getCompositeBarRowLayoutHeight(row),
+        (sum, row) => sum + getCompositeBarRowLayoutHeight(row, menuDensity),
         0,
     );
     if (allRowsHeight <= height) {
         return {listRows, collapseItems: []};
     }
 
-    const collapseItemHeight = getItemHeight(collapseItem);
+    const collapseItemHeight = getItemHeight(collapseItem, menuDensity);
 
     listRows.splice(regularRows.length, 0, {kind: 'item', item: collapseItem});
     const collapseItems: AsideHeaderItem[] = [];
@@ -204,19 +227,19 @@ export function getAutosizeCompositeBarRows(
                     nextRow?.kind === 'item' &&
                     nextRow.item.type === 'divider'
                 ) {
-                    listHeight -= getItemHeight(compositeItem);
+                    listHeight -= getItemHeight(compositeItem, menuDensity);
                     listRows.splice(index, 1);
                 }
                 continue;
             }
-            listHeight -= getItemHeight(compositeItem);
+            listHeight -= getItemHeight(compositeItem, menuDensity);
             collapseItems.unshift(
                 ...listRows
                     .splice(index, 1)
                     .map((r) => (r as Extract<CompositeBarRow, {kind: 'item'}>).item),
             );
         } else {
-            listHeight -= getCompositeBarRowLayoutHeight(row);
+            listHeight -= getCompositeBarRowLayoutHeight(row, menuDensity);
             const [removed] = listRows.splice(index, 1);
             if (removed?.kind === 'group') {
                 collapseItems.unshift(makeOverflowGroupAsideItem(removed.group, removed.items));

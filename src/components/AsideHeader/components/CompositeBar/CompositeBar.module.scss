@@ -5,7 +5,7 @@ $block: '.#{variables.$ns}composite-bar';
 #{$block} {
     flex: 1 0 auto;
     width: 100%;
-    min-height: #{variables.$item-height};
+    min-height: var(--_--gn-aside-header-density-item-height, #{variables.$item-height});
 
     & &__root-menu-item[class] {
         background-color: transparent;
@@ -26,7 +26,7 @@ $block: '.#{variables.$ns}composite-bar';
         flex: 0 0 auto;
         box-sizing: border-box;
         width: 100%;
-        min-height: #{variables.$item-height};
+        min-height: var(--_--gn-aside-header-density-item-height, #{variables.$item-height});
     }
 
     &__menu-group-nested-item[class] {
@@ -80,7 +80,7 @@ $block: '.#{variables.$ns}composite-bar';
         flex-shrink: 0;
         min-width: 16px;
         max-width: 16px;
-        height: #{variables.$item-height};
+        height: var(--_--gn-aside-header-density-item-height, #{variables.$item-height});
         stroke: var(--gn-aside-header-menu-group-tree-line-color, #c1c3c7);
 
         &_active {

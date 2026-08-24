@@ -5,7 +5,7 @@ $block: '.#{variables.$ns}logo';
 #{$block} {
     display: flex;
     align-items: center;
-    height: #{variables.$item-height};
+    height: var(--_--gn-aside-header-density-item-height, #{variables.$item-height});
 
     &__btn-logo {
         display: flex;

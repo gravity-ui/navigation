@@ -3,8 +3,9 @@ import React, {useCallback} from 'react';
 import {Icon} from '@gravity-ui/uikit';
 
 import {Logo} from '../../Logo';
-import {ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT} from '../../constants';
+import {HEADER_DIVIDER_HEIGHT} from '../../constants';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
+import {getAsideHeaderDensityConfig} from '../density';
 import {AsideHeaderItem} from '../types';
 import {b} from '../utils';
 
@@ -16,8 +17,16 @@ const DEFAULT_SUBHEADER_ITEMS: AsideHeaderItem[] = [];
 const HEADER_COMPOSITE_ID = 'gravity-ui/navigation-header-composite-bar';
 
 export const Header = () => {
-    const {logo, onItemClick, onClosePanel, headerDecoration, subheaderItems, compact} =
-        useAsideHeaderInnerContext();
+    const {
+        logo,
+        onItemClick,
+        onClosePanel,
+        headerDecoration,
+        subheaderItems,
+        compact,
+        menuDensity,
+    } = useAsideHeaderInnerContext();
+    const {compactWidth} = getAsideHeaderDensityConfig(menuDensity);
 
     const onLogoClick = useCallback(
         (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -52,7 +61,7 @@ export const Header = () => {
                 <Icon
                     data={headerDividerCollapsedIcon}
                     className={b('header-divider')}
-                    width={ASIDE_HEADER_COMPACT_WIDTH}
+                    width={compactWidth}
                     height={HEADER_DIVIDER_HEIGHT}
                 />
             )}

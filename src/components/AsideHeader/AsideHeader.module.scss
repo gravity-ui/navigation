@@ -8,11 +8,21 @@ $block: '.#{variables.$ns}aside-header';
 
 #{$block} {
     $class: &;
-    --gn-aside-header-min-width: 56px;
-    --_--item-margin-inline: #{variables.$item-margin-inline};
-    --gn-aside-header-item-expanded-radius: #{variables.$item-expanded-radius};
+    --gn-aside-header-min-width: var(--_--gn-aside-header-density-compact-width, 56px);
+    --_--item-margin-inline: var(
+        --_--gn-aside-header-density-item-margin-inline,
+        #{variables.$item-margin-inline}
+    );
+    --gn-aside-header-item-expanded-radius: var(
+        --_--gn-aside-header-density-item-expanded-radius,
+        #{variables.$item-expanded-radius}
+    );
+    --_--item-expanded-radius: var(--gn-aside-header-item-expanded-radius);
 
-    --_--item-icon-background-size: 38px;
+    --_--item-icon-background-size: var(
+        --gn-aside-header-item-icon-background-size,
+        var(--_--gn-aside-header-density-icon-background-size, 38px)
+    );
     --_--background-color: var(--g-color-base-background);
     --_--decoration-collapsed-background-color: var(--g-color-base-warning-light);
     --_--decoration-expanded-background-color: var(--g-color-base-warning-light);
@@ -213,7 +223,7 @@ $block: '.#{variables.$ns}aside-header';
     &__menu-item_type_regular,
     &__menu-item:has([data-type='regular']),
     &__root-menu-item[class]:hover {
-        border-radius: var(--gn-aside-header-item-expanded-radius, 8px);
+        border-radius: var(--gn-aside-header-item-expanded-radius, var(--_--item-expanded-radius));
     }
 
     &__footer {

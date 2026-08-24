@@ -53,6 +53,19 @@ Compact.args = {
     hideCollapseButton: true,
 };
 
+const CompactDensityTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
+export const CompactDensity = CompactDensityTemplate.bind({});
+CompactDensity.args = {
+    menuDensity: 'compact',
+};
+
+export const CompactDensityCollapsed = CompactDensityTemplate.bind({});
+CompactDensityCollapsed.args = {
+    initialCompact: true,
+    menuDensity: 'compact',
+    hideCollapseButton: true,
+};
+
 const CustomThemeTemplate: StoryFn = (args) => (
     <React.Fragment>
         <style>
@@ -97,17 +110,18 @@ CustomBackground.args = {
 };
 
 const AdvancedUsageTemplate: StoryFn = (args) => {
-    const [compact, setCompact] = React.useState(args.initialCompact);
+    const {initialCompact, menuDensity, ...asideProps} = args;
+    const [compact, setCompact] = React.useState(initialCompact);
 
     return (
-        <PageLayout compact={compact}>
+        <PageLayout compact={compact} menuDensity={menuDensity}>
             <PageLayoutAside
                 headerDecoration
                 menuItems={menuItemsShowcase}
                 logo={DEFAULT_LOGO}
                 onChangeCompact={setCompact}
                 qa={'pl-aside'}
-                {...args}
+                {...asideProps}
             />
 
             <PageLayout.Content>PageContent</PageLayout.Content>
@@ -119,6 +133,12 @@ export const AdvancedUsage = AdvancedUsageTemplate.bind({});
 
 AdvancedUsage.args = {
     initialCompact: true,
+};
+
+export const AdvancedCompactDensity = AdvancedUsageTemplate.bind({});
+AdvancedCompactDensity.args = {
+    initialCompact: true,
+    menuDensity: 'compact',
 };
 
 const TopAlertTemplate: StoryFn<AsideHeaderShowcaseProps> = (args) => (
@@ -230,10 +250,11 @@ export function LineClamp() {
 }
 
 const CollapseButtonWrapperTemplate: StoryFn = (args) => {
-    const [compact, setCompact] = React.useState(args.initialCompact);
+    const {initialCompact, menuDensity, ...asideProps} = args;
+    const [compact, setCompact] = React.useState(initialCompact);
 
     return (
-        <PageLayout compact={compact}>
+        <PageLayout compact={compact} menuDensity={menuDensity}>
             <PageLayoutAside
                 headerDecoration
                 menuItems={menuItemsShowcase}
@@ -262,7 +283,7 @@ const CollapseButtonWrapperTemplate: StoryFn = (args) => {
                     </React.Fragment>
                 )}
                 qa={'pl-aside-collapse-wrapper'}
-                {...args}
+                {...asideProps}
             />
         </PageLayout>
     );
@@ -322,6 +343,7 @@ const menuItemsWithGroupsForAllPages: AsideHeaderProps['menuItems'] = [
 
 function MenuGroupsWithAllPagesDemo(props: {
     initialCompact?: boolean;
+    menuDensity?: AsideHeaderProps['menuDensity'];
     menuOverflow?: AsideHeaderProps['menuOverflow'];
     description: React.ReactNode;
 }) {
@@ -333,7 +355,7 @@ function MenuGroupsWithAllPagesDemo(props: {
         React.useState<AsideHeaderProps['menuGroups']>(menuGroupsData);
 
     return (
-        <PageLayout compact={compact}>
+        <PageLayout compact={compact} menuDensity={props.menuDensity}>
             <PageLayoutAside
                 headerDecoration={false}
                 logo={DEFAULT_LOGO}
@@ -357,6 +379,7 @@ function MenuGroupsWithAllPagesDemo(props: {
 const MenuGroupsTemplate: StoryFn = (args) => (
     <MenuGroupsWithAllPagesDemo
         initialCompact={args.initialCompact}
+        menuDensity={args.menuDensity}
         description={
             <>
                 Default menuOverflow (overflow items move under &quot;More&quot;). Groups use
@@ -375,6 +398,7 @@ MenuGroups.args = {
 const MenuGroupsCompactTemplate: StoryFn = (args) => (
     <MenuGroupsWithAllPagesDemo
         initialCompact={args.initialCompact}
+        menuDensity={args.menuDensity}
         description={
             <>
                 Compact sidebar: same overflow behavior as MenuGroups when the rail is narrow. Hover
@@ -390,10 +414,17 @@ MenuGroupsCompact.args = {
     initialCompact: true,
 };
 
+export const CompactDensityMenuGroups = MenuGroupsCompactTemplate.bind({});
+CompactDensityMenuGroups.args = {
+    initialCompact: true,
+    menuDensity: 'compact',
+};
+
 const MenuGroupsScrollbarTemplate: StoryFn = (args) => (
     <MenuGroupsWithAllPagesDemo
         menuOverflow="scroll"
         initialCompact={args.initialCompact}
+        menuDensity={args.menuDensity}
         description={
             <>
                 Non-compact: menuOverflow=&quot;scroll&quot; — groups render as nested lists with
@@ -417,11 +448,14 @@ const manyMenuItems: AsideHeaderProps['menuItems'] = Array.from({length: 25}, (_
     current: index === 0,
 }));
 
-const ScrollableModeTemplate: StoryFn<{initialCompact?: boolean}> = (args) => {
+const ScrollableModeTemplate: StoryFn<{
+    initialCompact?: boolean;
+    menuDensity?: AsideHeaderProps['menuDensity'];
+}> = (args) => {
     const [compact, setCompact] = React.useState(args.initialCompact ?? false);
 
     return (
-        <PageLayout compact={compact}>
+        <PageLayout compact={compact} menuDensity={args.menuDensity}>
             <PageLayoutAside
                 headerDecoration
                 logo={DEFAULT_LOGO}
@@ -512,6 +546,7 @@ const renderAboveMenuContent = ({
 
 const AboveMenuContentDemo = (props: {
     initialCompact?: boolean;
+    menuDensity?: AsideHeaderProps['menuDensity'];
     menuOverflow?: AsideHeaderProps['menuOverflow'];
     description: React.ReactNode;
 }) => {
@@ -527,7 +562,7 @@ const AboveMenuContentDemo = (props: {
     }, [project]);
 
     return (
-        <PageLayout compact={compact}>
+        <PageLayout compact={compact} menuDensity={props.menuDensity}>
             <PageLayoutAside
                 headerDecoration
                 logo={DEFAULT_LOGO}
@@ -554,6 +589,7 @@ const AboveMenuContentDemo = (props: {
 const AboveMenuContentTemplate: StoryFn = (args) => (
     <AboveMenuContentDemo
         initialCompact={args.initialCompact}
+        menuDensity={args.menuDensity}
         description={
             <>
                 Sidebar with <code>aboveMenuContent</code> (select above menu).
@@ -570,6 +606,7 @@ AboveMenuContent.args = {
 const AboveMenuContentCompactTemplate: StoryFn = (args) => (
     <AboveMenuContentDemo
         initialCompact={args.initialCompact}
+        menuDensity={args.menuDensity}
         description={
             <>
                 Compact sidebar with <code>aboveMenuContent</code> (select above menu). Many items
@@ -588,6 +625,7 @@ const AboveMenuContentScrollbarTemplate: StoryFn = (args) => (
     <AboveMenuContentDemo
         menuOverflow="scroll"
         initialCompact={args.initialCompact}
+        menuDensity={args.menuDensity}
         description={
             <>
                 Expanded sidebar: <code>aboveMenuContent</code> stays fixed above the scrollable

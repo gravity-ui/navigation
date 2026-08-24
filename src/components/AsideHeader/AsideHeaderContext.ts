@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {AsideHeaderMenuDensity} from './density';
 import {AsideHeaderInnerProps, AsideHeaderItem} from './types';
 
 export interface AsideHeaderInnerContextType extends AsideHeaderInnerProps {
@@ -32,11 +33,13 @@ export const useAsideHeaderInnerContext = (): AsideHeaderInnerContextType => {
 export interface AsideHeaderContextType {
     compact: boolean;
     size: number;
+    menuDensity?: AsideHeaderMenuDensity;
 }
 
 const AsideHeaderContext = React.createContext<AsideHeaderContextType | undefined>({
     compact: false,
     size: 0,
+    menuDensity: 'default',
 });
 
 AsideHeaderContext.displayName = 'AsideHeaderContext';

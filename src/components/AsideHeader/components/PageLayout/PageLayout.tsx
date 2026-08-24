@@ -1,9 +1,9 @@
 import React, {PropsWithChildren, Suspense, useMemo} from 'react';
 
 import {Content, ContentProps} from '../../../Content';
-import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../../../constants';
 import {TopAlertProps} from '../../../types';
 import {AsideHeaderContextProvider, useAsideHeaderContext} from '../../AsideHeaderContext';
+import {getAsideHeaderDensityConfig, getAsideHeaderDensityCssProperties} from '../../density';
 import {LayoutProps} from '../../types';
 import {b} from '../../utils';
 
@@ -30,9 +30,20 @@ function calcEstimatedTopAlertHeight(topAlert?: TopAlertProps) {
 
 export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {}
 
-const Layout = ({compact, className, children, topAlert}: PageLayoutProps) => {
-    const size = compact ? ASIDE_HEADER_COMPACT_WIDTH : ASIDE_HEADER_EXPANDED_WIDTH;
-    const asideHeaderContextValue = useMemo(() => ({size, compact}), [compact, size]);
+const Layout = ({
+    compact,
+    className,
+    children,
+    topAlert,
+    menuDensity = 'default',
+}: PageLayoutProps) => {
+    const densityConfig = getAsideHeaderDensityConfig(menuDensity);
+    const densityCssProperties = getAsideHeaderDensityCssProperties(menuDensity);
+    const size = compact ? densityConfig.compactWidth : densityConfig.expandedWidth;
+    const asideHeaderContextValue = useMemo(
+        () => ({size, compact, menuDensity}),
+        [compact, size, menuDensity],
+    );
 
     const estimatedTopAlertHeight = calcEstimatedTopAlertHeight(topAlert);
 
@@ -61,6 +72,7 @@ const Layout = ({compact, className, children, topAlert}: PageLayoutProps) => {
             <div
                 className={b({compact}, className)}
                 style={{
+                    ...densityCssProperties,
                     ...({'--gn-aside-header-size': `${size}px`} as React.CSSProperties),
                 }}
             >

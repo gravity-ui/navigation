@@ -19,6 +19,16 @@ test.describe('AsideHeader', () => {
         await expectScreenshot();
     });
 
+    test('render story: <CompactDensity>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.CompactDensity />, mountOptions, viewport);
+        await expectScreenshot();
+    });
+
+    test('render story: <CompactDensityCollapsed>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.CompactDensityCollapsed />, mountOptions, viewport);
+        await expectScreenshot();
+    });
+
     test('render story: <CustomTheme>', async ({mount, expectScreenshot}) => {
         await mount(<AsideHeaderStories.CustomTheme />, mountOptions, viewport);
         await expectScreenshot();
@@ -31,6 +41,11 @@ test.describe('AsideHeader', () => {
 
     test('render story: <AdvancedUsage>', async ({mount, expectScreenshot}) => {
         await mount(<AsideHeaderStories.AdvancedUsage />, mountOptions, viewport);
+        await expectScreenshot();
+    });
+
+    test('render story: <AdvancedCompactDensity>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.AdvancedCompactDensity />, mountOptions, viewport);
         await expectScreenshot();
     });
 
@@ -72,6 +87,39 @@ test.describe('AsideHeader', () => {
     test('render story: <MenuGroupsCompact>', async ({mount, expectScreenshot}) => {
         await mount(<AsideHeaderStories.MenuGroupsCompact />, mountOptions, viewport);
         await expectScreenshot();
+    });
+
+    test('render story: <CompactDensityMenuGroups>', async ({mount, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.CompactDensityMenuGroups />, mountOptions, viewport);
+        await expectScreenshot();
+    });
+
+    test('render compact-density group popup', async ({mount, page, expectScreenshot}) => {
+        await mount(<AsideHeaderStories.CompactDensityMenuGroups />, mountOptions, viewport);
+
+        await page.locator('button[aria-label="Analytics"]').hover();
+        await page.locator('text=Overview').waitFor({state: 'visible'});
+
+        await expectScreenshot({
+            component: page.locator('body'),
+            screenshotName: 'AsideHeader compact-density group popup',
+        });
+    });
+
+    test('render compact-density bringForward over modal', async ({
+        mount,
+        page,
+        expectScreenshot,
+    }) => {
+        await mount(<AsideHeaderStories.CompactDensity />, mountOptions, viewport);
+
+        await page.locator('button:has-text("Open Modal")').click();
+        await page.locator('.gn-composite-bar-highlighted-item').waitFor({state: 'visible'});
+
+        await expectScreenshot({
+            component: page.locator('body'),
+            screenshotName: 'AsideHeader compact-density bringForward over modal',
+        });
     });
 
     test('render story: <MenuGroupsScrollbar>', async ({mount, expectScreenshot}) => {

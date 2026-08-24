@@ -5,6 +5,7 @@ import debounceFn from 'lodash/debounce';
 
 import {block, createBlock} from '../../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../../AsideHeaderContext';
+import {getAsideHeaderDensityCssProperties} from '../../../density';
 
 import styles from './HighlightedItem.module.scss';
 
@@ -26,7 +27,8 @@ export const HighlightedItem: React.FC<ItemInnerProps> = ({
     onClick,
     onClickCapture,
 }: ItemInnerProps) => {
-    const {openModalSubscriber} = useAsideHeaderInnerContext();
+    const {menuDensity, openModalSubscriber} = useAsideHeaderInnerContext();
+    const densityCssProperties = getAsideHeaderDensityCssProperties(menuDensity);
     const [position, setPosition] = useState({
         top: 0,
         left: 0,
@@ -87,7 +89,7 @@ export const HighlightedItem: React.FC<ItemInnerProps> = ({
         <Portal>
             <div
                 className={`${b()} ${bGlobal()}`}
-                style={position}
+                style={{...densityCssProperties, ...position}}
                 onClick={onClick}
                 onClickCapture={onClickCapture}
                 data-toast

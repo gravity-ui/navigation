@@ -6,6 +6,7 @@ import {RenderContentType} from '../Content';
 import {LogoProps, MenuGroup, MenuItem, OpenModalSubscriber, TopAlertProps} from '../types';
 
 import {AsideHeaderContextType} from './AsideHeaderContext';
+import {AsideHeaderMenuDensity} from './density';
 
 export interface PanelItemProps extends DrawerProps {
     id: string;
@@ -15,6 +16,12 @@ export interface LayoutProps {
     compact: boolean;
     className?: string;
     topAlert?: TopAlertProps;
+    /**
+     * Menu item density. `compact` reduces item height, icon size, spacing, and aside width
+     * without changing navigation behavior.
+     * @default 'default'
+     */
+    menuDensity?: AsideHeaderMenuDensity;
 }
 
 interface EditMenuProps {

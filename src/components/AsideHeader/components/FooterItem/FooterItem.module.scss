@@ -5,5 +5,8 @@ $block: '.#{variables.$ns}footer-item';
 #{$block} {
     width: 100%;
 
-    border-radius: var(--gn-aside-header-item-expanded-radius);
+    border-radius: var(
+        --gn-aside-header-item-expanded-radius,
+        var(--_--gn-aside-header-density-item-expanded-radius, #{variables.$item-expanded-radius})
+    );
 }
