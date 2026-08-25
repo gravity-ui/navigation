@@ -1,0 +1,19 @@
+.gn-aside-header-next-popup {
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 160px;
+        max-width: 320px;
+        padding: var(--g-spacing-1);
+        box-sizing: border-box;
+    }
+
+    &__title {
+        padding: var(--g-spacing-1) var(--g-spacing-2) 6px;
+        color: var(--g-color-text-primary);
+        font-weight: var(--g-text-subheader-font-weight);
+        font-size: var(--g-text-subheader-2-font-size);
+        line-height: var(--g-text-subheader-2-line-height);
+    }
+}

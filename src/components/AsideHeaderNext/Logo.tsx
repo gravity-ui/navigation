@@ -5,6 +5,7 @@ import {Icon, IconProps} from '@gravity-ui/uikit';
 import {createBlock} from '../utils/cn';
 
 import {useLayoutContext} from './LayoutContext';
+import {RowBody, RowLeading, rowBlock} from './Row';
 import {withSlot} from './internal/slots';
 import {RenderProp, useRenderElement} from './internal/useRenderElement';
 
@@ -17,10 +18,17 @@ export interface LogoState extends Record<string, unknown> {
 }
 
 export interface LogoProps {
-    text?: React.ReactNode;
+    /** Shorthand for `Logo.Icon`. */
     icon?: IconProps['data'];
+    /** Shorthand for `Logo.Icon` with an image. */
+    iconSrc?: string;
     iconSize?: number;
+    /** Shorthand for `Logo.Text`. */
+    text?: React.ReactNode;
+    /** Sub-parts or any custom content. */
+    children?: React.ReactNode;
     href?: string;
+    target?: string;
     onClick?: (event: React.MouseEvent<HTMLElement>) => void;
     className?: string;
     'aria-label'?: string;
@@ -28,11 +36,70 @@ export interface LogoProps {
     ref?: React.Ref<HTMLElement>;
 }
 
+export interface LogoIconProps {
+    data?: IconProps['data'];
+    src?: string;
+    size?: number;
+    children?: React.ReactNode;
+    className?: string;
+}
+
+/** Occupies `Row.Leading` — the zone that survives `compact`. */
+export function LogoIcon(props: LogoIconProps) {
+    const {data, src, size = 24, children, className} = props;
+
+    let content = children;
+    if (!content && data) {
+        content = <Icon data={data} size={size} />;
+    }
+    if (!content && src) {
+        content = <img src={src} width={size} height={size} alt="" />;
+    }
+
+    return <RowLeading className={b('icon', className)}>{content}</RowLeading>;
+}
+
+export interface LogoTextProps {
+    children?: React.ReactNode;
+    className?: string;
+}
+
+/** Occupies `Row.Body` — hidden in `compact` by CSS, never unmounted. */
+export function LogoText(props: LogoTextProps) {
+    return <RowBody className={b('text', props.className)}>{props.children}</RowBody>;
+}
+
 function LogoComponent(props: LogoProps) {
-    const {text, icon, iconSize = 24, href, onClick, className, render, ref, ...rest} = props;
+    const {
+        icon,
+        iconSrc,
+        iconSize,
+        text,
+        children,
+        href,
+        target,
+        onClick,
+        className,
+        render,
+        ref,
+        ...rest
+    } = props;
     const {compact} = useLayoutContext();
 
-    const tag = href ? 'a' : 'button';
+    // A non-clickable logo must not sit in the tab order.
+    let tag: 'a' | 'button' | 'div' = 'div';
+    if (href) {
+        tag = 'a';
+    } else if (onClick) {
+        tag = 'button';
+    }
+
+    const content = children ?? (
+        <React.Fragment>
+            {(icon || iconSrc) && <LogoIcon data={icon} src={iconSrc} size={iconSize} />}
+            {text ? <LogoText>{text}</LogoText> : null}
+        </React.Fragment>
+    );
 
     return useRenderElement<LogoState>(tag, {
         render,
@@ -40,23 +107,20 @@ function LogoComponent(props: LogoProps) {
         state: {compact},
         props: [
             {
-                className: b({compact}, className),
+                className: rowBlock({interactive: Boolean(href || onClick)}, b(null, className)),
+                'data-place': 'header',
+                'data-compact': compact || undefined,
                 onClick,
-                ...(href ? {href} : {type: 'button'}),
-                children: (
-                    <React.Fragment>
-                        {icon && (
-                            <span className={b('icon')}>
-                                <Icon data={icon} size={iconSize} />
-                            </span>
-                        )}
-                        {!compact && <span className={b('text')}>{text}</span>}
-                    </React.Fragment>
-                ),
+                ...(href ? {href, target} : {}),
+                ...(tag === 'button' ? {type: 'button'} : {}),
+                children: content,
             },
             rest,
         ],
     });
 }
 
-export const Logo = withSlot(LogoComponent, 'header');
+export const Logo = Object.assign(withSlot(LogoComponent, 'header'), {
+    Icon: LogoIcon,
+    Text: LogoText,
+});

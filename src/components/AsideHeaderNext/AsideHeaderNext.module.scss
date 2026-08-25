@@ -95,11 +95,14 @@
         }
     }
 
-    &__menu {
-        flex: 1 0 auto;
-        width: 100%;
-        min-height: 0;
-        overflow: hidden auto;
+    &__panels {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+
+        > * {
+            pointer-events: auto;
+        }
     }
 
     &__footer {

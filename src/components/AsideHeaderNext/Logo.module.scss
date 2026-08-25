@@ -1,38 +1,18 @@
 @use '../variables';
-@use '../../../styles/mixins';
 
 .gn-aside-header-next-logo {
-    @include mixins.accessibility-button;
-
-    display: flex;
-    align-items: center;
     flex-shrink: 0;
-    justify-content: flex-start;
-    width: 100%;
-    height: #{variables.$item-height};
-    cursor: pointer;
     color: inherit;
     text-decoration: none;
-    word-break: break-word;
-    overflow-wrap: break-word;
     font-weight: var(--g-text-subheader-font-weight);
     font-size: var(--g-text-subheader-2-font-size);
     line-height: var(--g-text-subheader-2-line-height);
 
     &__icon {
-        width: 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
         color: var(--gn-aside-header-general-item-icon-color, var(--g-color-text-primary));
     }
 
     &__text {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        margin-inline-start: var(--g-spacing-2);
         color: var(--g-color-text-primary);
     }
 }

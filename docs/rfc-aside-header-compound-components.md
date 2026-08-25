@@ -5,6 +5,7 @@
 - **Прототип:** [src/components/AsideHeaderNext/](../src/components/AsideHeaderNext/) (реализован рядом со старым, старый код не тронут)
 - **Тип изменения:** breaking change, мажорная версия
 - **Референс подхода:** [base-ui](https://github.com/mui/base-ui/tree/master/packages/react) — `useRenderElement` + `render`-проп, `internals/composite`
+- **Приложения:** [Приложение A — спецификация API](#приложение-a-спецификация-api) · [шпаргалка для презентации](./rfc-aside-header-pitch.md)
 
 ---
 
@@ -15,28 +16,51 @@
 Предлагается разложить его на compound-компоненты в стиле base-ui:
 
 ```tsx
-<AsideHeader.Root compact={compact} onCompactChange={setCompact}>
-  <AsideHeader.Logo icon={logo} text="My App" />
+<AsideHeader.Root compact={compact} onCompactChange={setCompact} currentPath={pathname}>
+  <AsideHeader.Logo href="/">
+    <AsideHeader.Logo.Icon data={logoIcon} />
+    <AsideHeader.Logo.Text>My App</AsideHeader.Logo.Text>
+  </AsideHeader.Logo>
+
   <AsideHeader.Subheader>…</AsideHeader.Subheader>
-  <AsideHeader.Menu>…</AsideHeader.Menu>
-  <AsideHeader.Footer>…</AsideHeader.Footer>
+
+  <AsideHeader.Menu aria-label="Main navigation">
+    <AsideHeader.Item id="overview" icon={HouseIcon} render={<Link to="/overview" />}>
+      Overview
+    </AsideHeader.Item>
+    <AsideHeader.GroupItem id="infra" icon={ServerIcon}>
+      <AsideHeader.GroupItem.Trigger>Infrastructure</AsideHeader.GroupItem.Trigger>
+      <AsideHeader.GroupItem.Content>…</AsideHeader.GroupItem.Content>
+    </AsideHeader.GroupItem>
+    <AsideHeader.Divider />
+  </AsideHeader.Menu>
+
+  <AsideHeader.Footer>
+    <AsideHeader.Popup>
+      <AsideHeader.Popup.Trigger icon={UserIcon}>Alex</AsideHeader.Popup.Trigger>
+      <AsideHeader.Popup.Content>…</AsideHeader.Popup.Content>
+    </AsideHeader.Popup>
+  </AsideHeader.Footer>
+
   <AsideHeader.CollapseButton />
   <AsideHeader.Content>…</AsideHeader.Content>
-  <AsideHeader.Panel id="search" open={…} onClose={…}>…</AsideHeader.Panel>
 </AsideHeader.Root>
 ```
 
-Три ключевых решения:
+Шесть ключевых решений:
 
-1. **Один примитив `Item`** вместо трёх (`subheaderItem`, `menuItem`, `footerItem`, `FooterItem`). Поведение задаёт контейнер, а не тип пункта.
-2. **Один `render`-проп** на каждом подкомпоненте вместо `renderContent` / `renderFooter` / `collapseButtonWrapper` / `itemWrapper` / `logo.wrapper` / `topAlert.render` / `renderPopupContent`.
-3. **Два режима лейаута:** `layout="slots"` (строгая раскладка, порядок JSX не важен — «магия», но безопасная) и `layout="manual"` (свободная композиция). Дерево и пропы в обоих режимах одинаковые.
+1. **Один контейнер списка** `ItemList` вместо трёх обёрток. `Subheader` / `Menu` / `Footer` — его пресеты со слот-меткой и дефолтами. Список владеет клавиатурой, ARIA-ролями и overflow; пункт не знает, где он находится.
+2. **Три разные сущности строки:** `Item` (лист), `GroupItem` (строка с детьми), `Divider` (разделитель) — вместо одного `Item` с полями `type: 'divider'` и `items`.
+3. **Оверлеи — отдельные примитивы, а не пропы пункта.** `Popup` и `Panel` объявляются рядом со своим триггером, `Trigger` по умолчанию рендерится как `Item`, контент уезжает порталом. `Item` про оверлеи не знает вообще.
+4. **Один** `render`**-проп** на каждом подкомпоненте вместо `renderContent` / `renderFooter` / `collapseButtonWrapper` / `itemWrapper` / `logo.wrapper` / `topAlert.render` / `renderPopupContent`.
+5. **Вычисляемая активность** вместо булева `current`: подсвечен всегда ближайший _видимый_ узел пути — потомок, если группа раскрыта, и сама группа, если свёрнута.
+6. **Два режима лейаута:** `layout="slots"` (строгая раскладка, порядок JSX не важен — «магия», но безопасная) и `layout="manual"` (свободная композиция). Дерево и пропы в обоих режимах одинаковые.
+
+Плюс сквозной контракт лейаута (`Row` = `Leading` / `Body` / `Trailing`): у всех базовых частей заданы дефолты, поэтому в развёрнутом и свёрнутом рельсе они корректно выглядят из коробки, а кастомный контент получает то же поведение, положив себя в те же зоны.
 
 ---
 
 ## 1. Проблемы текущей реализации
-
-Это не абстрактная критика — ниже конкретные места в коде.
 
 ### 1.1 Переизбыток пропов: `AsideHeaderProps` = ~32 пропа верхнего уровня
 
@@ -57,7 +81,7 @@
 - какие пропы работают только в связке (`menuOverflow: 'scroll'` + `menuGroups` + `collapsedMenuGroupIds`; `onMenuItemsChanged` включает скрытую фичу «All pages»);
 - какие взаимоисключающи (`hideCollapseButton` vs `collapseButtonWrapper`).
 
-Отдельно `AsideHeaderItem` (= `MenuItem` + расширения) имеет **~35 полей, из которых 7 помечены `@deprecated`** ([types.tsx:124-176](../src/components/AsideHeader/types.tsx)): `popupVisible`, `popupRef`, `popupPlacement`, `popupOffset`, `popupKeepMounted`, `renderPopupContent`, `onOpenChangePopup`. Плюс два поля с явной пометкой `@internal` (`compositeBarMenuPopupItems`, `compositeBarMenuPopupTitle`) — то есть внутренняя деталь протекла в публичный тип.
+Отдельно `AsideHeaderItem` (= `MenuItem` + расширения) имеет **~35 полей, из которых 7 помечены** `@deprecated` ([types.tsx:124-176](../src/components/AsideHeader/types.tsx)): `popupVisible`, `popupRef`, `popupPlacement`, `popupOffset`, `popupKeepMounted`, `renderPopupContent`, `onOpenChangePopup`. Плюс два поля с явной пометкой `@internal` (`compositeBarMenuPopupItems`, `compositeBarMenuPopupTitle`) — то есть внутренняя деталь протекла в публичный тип.
 
 ### 1.2 «Бог-контекст» и жёсткая связанность
 
@@ -101,13 +125,11 @@ AsideHeader → PageLayout → PageLayoutAside → FirstPanel → Header / Compo
 
 ### 1.4 `subheaderItem`, `menuItem`, `footerItem` — это один и тот же примитив
 
-Проверено по коду:
-
 - `FooterItem` — обёртка над тем же `Item` с фиксированным `iconSize` и доп. классом; тип `FooterItemProps extends AsideHeaderItem`, т.е. полностью идентичен ([FooterItem.tsx](../src/components/AsideHeader/components/FooterItem/FooterItem.tsx));
 - subheader-пункты рендерит **тот же** `CompositeBar` с `type="subheader"` и `items: AsideHeaderItem[]` ([Header.tsx:42-49](../src/components/AsideHeader/components/Header.tsx));
 - menu-пункты — тот же `CompositeBar` с `type="menu"`, тот же `Item`, тот же тип (`ItemProps extends AsideHeaderItem`).
 
-Различаются только **место размещения** и **режим overflow**. При этом публичного API — четыре (`subheaderItems`, `menuItems`, `renderFooter` + `FooterItem`), и в роадмапе уже стоит пункт «Unify subheaderItem, menuItem, footerItem API».
+Различаются только **место размещения** и **режим overflow**.
 
 ### 1.5 Костыли поверх UIKit `List`
 
@@ -154,13 +176,11 @@ enableSafePolygon
 
 `AsideHeader` одновременно отвечает за: лейаут страницы, навигацию, состояние compact, состояние панелей, состояние «All pages» и режим редактирования меню, рендер контента, топ-алерт с расчётом его высоты для SSR, тему и кастомный фон.
 
-Поэтому добавление одной фичи (например, `menuOverflow: 'scroll'`) потребовало правок в `types.tsx`, `CompositeBar.tsx`, `FirstPanel.tsx`, `grouping.ts`, `utils.ts`, `ScrollableWithScrollbar/`\* и новых пропов `collapsedMenuGroupIds` / `defaultCollapsedMenuGroupIds` / `onToggleMenuGroupCollapsed`.
+Поэтому добавление одной фичи (например, `menuOverflow: 'scroll'`) потребовало правок в `types.tsx`, `CompositeBar.tsx`, `FirstPanel.tsx`, `grouping.ts`, `utils.ts`, `ScrollableWithScrollbar/` и новых пропов `collapsedMenuGroupIds` / `defaultCollapsedMenuGroupIds` / `onToggleMenuGroupCollapsed`.
 
 ---
 
-## 2. Цели и не-цели
-
-### Цели
+## 2. Цели
 
 1. Явная композиция вместо скрытых рендер-функций.
 2. Один примитив `Item` вместо трёх API.
@@ -169,12 +189,6 @@ enableSafePolygon
 5. Своя клавиатурная навигация (`Composite`) вместо `List` с отключёнными фичами.
 6. Полный контроль позиционирования попапов относительно скоупа + возможность принести свою реализацию.
 7. Сохранить существующую темизацию: все `--gn-aside-header-*` CSS-переменные продолжают работать.
-
-### Не-цели
-
-- Не переписываем `Settings`, `MobileHeader`, `HotkeysPanel` и прочие компоненты пакета.
-- Не сохраняем обратную совместимость на уровне пропов (согласовано: breaking change допустим).
-- Не выносим `Composite` в публичный API пакета на первом этапе.
 
 ---
 
@@ -212,11 +226,26 @@ useRenderElement<State>(defaultTag, {render, ref, state, props});
 
 Это **заменяет все 7 механизмов** из §1.3 одним пропом.
 
+#### `children` и `render`: правило приоритета
+
+Отдельно фиксируем, что происходит с контентом, когда задан `render`. Компонент собирает дефолтный контент (иконка + заголовок + адорнменты) и кладёт его в `children` мёрдженных пропов. Дальше действует общее «later wins»:
+
+| Что написал пользователь                                   | Что отрендерится                                               |
+| ---------------------------------------------------------- | -------------------------------------------------------------- |
+| `render={<Link to="/x" />}` + `icon` + `children`          | `<Link>` с дефолтной строкой внутри                            |
+| `render={<Link to="/x">Своё</Link>}`                       | `<Link>` со «Своё»; `children` пункта не используются          |
+| `render={(props) => <Link {...props} to="/x" />}`          | `<Link>` с дефолтной строкой внутри                            |
+| `render={(props) => <Link {...props} to="/x">Своё</Link>}` | `<Link>` со «Своё» (JSX-children перекрывают `props.children`) |
+
+То есть «если у `render` есть свои children — они выигрывают» работает само собой, без специального кода: `children` — это обычный ключ в объекте пропов, никакого клонирования и проброса детей не происходит. `cloneElement(render, merged)` подставит дефолтный контент только если у элемента `render` своих детей нет.
+
+Альтернатива — жёстко игнорировать `children` пункта при наличии `render` — рассматривалась и отклонена: она ломает самый частый однострочник (`render={<Link/>}` + `icon` + заголовок) и заставляет в каждом пункте-ссылке вручную пересобирать строку из `Row.Leading` / `Row.Body`. Если всё же захочется строгости, альтернатива формулируется одной строкой: не класть `children` в мёрдженные пропы, когда задан `render`.
+
 ### 3.2 `Composite` вместо UIKit `List`
 
-Порт идеи [base-ui `internals/composite](https://github.com/mui/base-ui/tree/master/packages/react/src/internals/composite)`: roving tabindex, где активный пункт — единственная tab-остановка, навигация стрелками / `Home`/`End`, опциональный `loop`.
+Порт идеи [base-ui `internals/composite](https://github.com/mui/base-ui/tree/master/packages/react/src/internals/composite)`: roving tabindex, где активный пункт — единственная tab-остановка, навигация стрелками / `Home`/`End`, опциональный `loop`. В целевом API (§4.9) применяется внутри оверлеев, а не в самом рельсе.
 
-Реализация: [internal/composite/](../src/components/AsideHeaderNext/internal/composite/) — `Composite` (~~150 строк) + `useCompositeItem` (~~60 строк). Что это даёт по сравнению с `List`:
+Реализация: [internal/composite/](../src/components/AsideHeaderNext/internal/composite/) — `Composite` (~~150 строк) +~~ `useCompositeItem` ~~(~~60 строк). Что это даёт по сравнению с `List`:
 
 - не нужно знать высоты пунктов заранее → уходит вся арифметика `getItemHeight` / `itemsHeight`;
 - регистрация пунктов по DOM-порядку (`compareDocumentPosition`) → вложенные группы и произвольная разметка «просто работают»;
@@ -227,7 +256,7 @@ useRenderElement<State>(defaultTag, {render, ref, state, props});
 
 Прототип рассчитан на React 19, где `ref` — обычный проп и `forwardRef` не нужен. `peerDependencies` пакета **уже** допускают `^19` — потребовался только бамп dev-зависимостей до 19.2.
 
-Плата (см. §11): бамп `@types/react` до 19 вскрыл **38 ошибок типов в старом коде** (React 19 сделал `RefObject<T>` → `RefObject<T | null>`, `useRef()` требует аргумент). В `AsideHeaderNext` — **0 ошибок**. Распределение: `Settings/collect-settings.ts` — 21, остальное по 1–3 в `ScrollableWithScrollbar`, старом `Item.tsx`, `Footer` (desktop/mobile), `MobileLogo`, `TopAlert`, `AllPagesListItem`, `FirstPanel`, старых сторис.
+Плата (см. §10 «Риски»): бамп `@types/react` до 19 вскрыл **38 ошибок типов в старом коде** (React 19 сделал `RefObject<T>` → `RefObject<T | null>`, `useRef()` требует аргумент). В `AsideHeaderNext` — **0 ошибок**. Распределение: `Settings/collect-settings.ts` — 21, остальное по 1–3 в `ScrollableWithScrollbar`, старом `Item.tsx`, `Footer` (desktop/mobile), `MobileLogo`, `TopAlert`, `AllPagesListItem`, `FirstPanel`, старых сторис.
 
 ---
 
@@ -236,38 +265,61 @@ useRenderElement<State>(defaultTag, {render, ref, state, props});
 ### 4.1 Дерево компонентов
 
 ```
-AsideHeader.Root                      // состояние compact, размер, режим лейаута, CSS-переменные
-├── AsideHeader.Alert                 // слот alert   — заменяет проп topAlert
+AsideHeader.Root                      // compact, размер, режим лейаута, матчинг роутов, портал для панелей
+├── AsideHeader.Alert                 // слот alert      — заменяет проп topAlert
 ├── AsideHeader.Background            // слот background — заменяет customBackground
-├── AsideHeader.Logo                  // слот header  — заменяет проп logo
-├── AsideHeader.Subheader             // слот header  — заменяет subheaderItems
-│   └── AsideHeader.Item
-├── AsideHeader.Menu                  // слот menu    — заменяет menuItems (+ Composite внутри)
-│   ├── AsideHeader.Item
-│   └── AsideHeader.MenuGroup         // (этап 3) заменяет menuGroups
-├── AsideHeader.Footer                // слот footer  — заменяет renderFooter + FooterItem
-│   └── AsideHeader.Item
-├── AsideHeader.CollapseButton        // слот footer  — заменяет hideCollapseButton / collapseButtonWrapper
-├── AsideHeader.Content               // слот content — заменяет renderContent
-├── AsideHeader.Panel                 // слот panels  — заменяет panelItems
+├── AsideHeader.Logo                  // слот header     — заменяет проп logo
+│   ├── AsideHeader.Logo.Icon
+│   └── AsideHeader.Logo.Text
+├── AsideHeader.Subheader             // слот header     — пресет ItemList, заменяет subheaderItems
+├── AsideHeader.Menu                  // слот menu       — пресет ItemList, заменяет menuItems
+├── AsideHeader.Footer                // слот footer     — пресет ItemList, заменяет renderFooter + FooterItem
+│   ├── AsideHeader.Item              //                 — лист навигации, про оверлеи не знает
+│   ├── AsideHeader.GroupItem         //   (этап 4)      — заменяет menuGroups
+│   │   ├── AsideHeader.GroupItem.Trigger
+│   │   └── AsideHeader.GroupItem.Content
+│   ├── AsideHeader.Popup             //   (этап 3)      — заменяет renderPopupContent + popup*-пропы
+│   │   ├── AsideHeader.Popup.Trigger //                 — по умолчанию рендерится как Item
+│   │   └── AsideHeader.Popup.Content
+│   ├── AsideHeader.Panel             //                 — заменяет panelItems
+│   │   ├── AsideHeader.Panel.Trigger //                 — по умолчанию рендерится как Item
+│   │   └── AsideHeader.Panel.Content //                 — портал в контейнер панелей на Root
+│   └── AsideHeader.Divider           //                 — заменяет Item type="divider"
+├── AsideHeader.CollapseButton        // слот footer     — заменяет hideCollapseButton / collapseButtonWrapper
+├── AsideHeader.Content               // слот content    — заменяет renderContent
 └── AsideHeader.Aside                 // только для layout="manual"
+
+// Примитивы, доступные где угодно:
+AsideHeader.ItemList                  // контейнер строк; Subheader/Menu/Footer — его пресеты
+AsideHeader.Row (.Leading/.Body/.Trailing)   // контракт строки рельса
+AsideHeader.WhenCompact / .WhenExpanded, useAsideHeaderCompact()
 ```
+
+**`Popup` и `Panel` живут там, где стоит их триггер** — то есть внутри списка, а не в отдельном слоте. Наружу (в оверлей и в контейнер панелей рядом с рельсом) уезжает только контент, через портал. Это модель base-ui `Dialog` / `Popover`: `Root` объявляется рядом с триггером, `Portal` + `Positioner` рендерятся в другое место дерева.
+
+Панель без триггера (открывается кнопкой из контента страницы) остаётся прямым ребёнком `Root` со слотом `panels` — тогда у неё просто нет `Panel.Trigger`.
 
 Namespace-объект собирается в [AsideHeaderNext.tsx](../src/components/AsideHeaderNext/AsideHeaderNext.tsx) через `Object.assign(Root, {...})`, поэтому `<AsideHeader>` и `<AsideHeader.Root>` — одно и то же.
 
+Полные сигнатуры всех частей — в [Приложении A](#приложение-a-спецификация-api).
+
 ### 4.2 Зоны ответственности (SRP)
 
-| Компонент                       | Отвечает за                                                                        | Не знает про           |
-| ------------------------------- | ---------------------------------------------------------------------------------- | ---------------------- |
-| `Root`                          | compact (controlled/uncontrolled), `size`, `--gn-aside-header-size`, режим лейаута | пункты, попапы, панели |
-| `Aside`                         | колонка навигации в `manual`                                                       | состояние              |
-| `Logo`                          | лого + адаптация к compact                                                         | навигацию              |
-| `Subheader` / `Menu` / `Footer` | размещение и дефолты для своих `Item`                                              | внешний вид пункта     |
-| `Menu`                          | клавиатурная навигация (`Composite`), overflow                                     | что внутри пункта      |
-| `Item`                          | одна строка навигации: иконка, заголовок, current/disabled, тултип, попап          | где он находится       |
-| `CollapseButton`                | переключение compact                                                               | остальной лейаут       |
-| `Content`                       | область контента                                                                   | навигацию              |
-| `Panel`                         | drawer рядом с навигацией                                                          | что его открыло        |
+| Компонент                       | Отвечает за                                                                                  |
+| ------------------------------- | -------------------------------------------------------------------------------------------- |
+| `Root`                          | compact, `size`, `--gn-aside-header-size`, режим лейаута, матчинг роутов, портал для панелей |
+| `Aside`                         | колонка навигации в `manual`                                                                 |
+| `Row`                           | геометрия строки: 56px-полоса, тело, трейлинг; поведение зон в compact                       |
+| `Logo`                          | лого + адаптация к compact                                                                   |
+| `Subheader` / `Menu` / `Footer` | слот-метка + дефолты (`place`, `iconSize`)                                                   |
+| `ItemList`                      | фокус-модель, ARIA-роли детей, overflow, скоуп активности                                    |
+| `Item`                          | одна строка навигации: иконка, заголовок, активность, тултип                                 |
+| `GroupItem`                     | раскрытие/сворачивание, выбор inline vs флайаут, агрегация активности потомков               |
+| `Popup`                         | оверлей: позиционирование относительно рельса, задержки, вложенность                         |
+| `Divider`                       | разделитель, пропускаемый клавиатурой                                                        |
+| `CollapseButton`                | переключение compact                                                                         |
+| `Content`                       | область контента                                                                             |
+| `Panel`                         | drawer рядом с навигацией + портал контента в контейнер панелей                              |
 
 ### 4.3 Два режима лейаута
 
@@ -278,9 +330,9 @@ Namespace-объект собирается в [AsideHeaderNext.tsx](../src/comp
 <AsideHeader.Root layout="manual">
 ```
 
-`**layout="slots"` (по умолчанию).** Каждый подкомпонент помечен слотом (`header` / `menu` / `footer` / `content` / `alert` / `background` / `panels`). `Root` раскладывает прямых детей по слотам, порядок в JSX не важен — Footer, написанный первым, всё равно окажется внизу. Ограничение: части должны быть **прямыми\*\* детьми `Root`.
+`**layout="slots"` (по умолчанию).** Каждый подкомпонент помечен слотом (`header` / `menu` / `footer` / `content` / `alert` / `background` / `panels`). `Root` раскладывает прямых детей по слотам, порядок в JSX не важен — Footer, написанный первым, всё равно окажется внизу. Ограничение: части должны быть **прямыми детьми `Root`.
 
-`**layout="manual"`.\*\* Никакой магии: дети рендерятся как есть, лейаут собирает пользователь (обычно завернув навигацию в `AsideHeader.Aside`). Это замена сегодняшнего `PageLayout` / `PageLayoutAside` (сторис `AdvancedUsage`).
+`**layout="manual"`. Никакой магии: дети рендерятся как есть, лейаут собирает пользователь (обычно завернув навигацию в `AsideHeader.Aside`). Это замена сегодняшнего `PageLayout` / `PageLayoutAside` (сторис `AdvancedUsage`).
 
 Важно: **дерево и пропы в обоих режимах одинаковые** — меняется только то, кто расставляет части по местам. Никакого раздвоения API.
 
@@ -305,97 +357,144 @@ export function collectSlots(children): {
 
 ### 4.5 Модель состояния
 
-Все состояния — по паттерну controlled / uncontrolled, без «полуконтролируемых» гибридов:
+Все состояния — по паттерну controlled / uncontrolled:
 
-| Состояние                   | Владелец                  | Пропы                                                           |
-| --------------------------- | ------------------------- | --------------------------------------------------------------- |
-| compact                     | `Root`                    | `compact` / `defaultCompact` / `onCompactChange`                |
-| активный пункт (клавиатура) | `Composite` внутри `Menu` | `activeIndex` / `defaultActiveIndex` / `onActiveIndexChange`    |
-| открытость попапа пункта    | `Item`                    | (этап 2) `open` / `defaultOpen` / `onOpenChange`                |
-| открытость панели           | пользователь              | `Panel.open` / `Panel.onClose`                                  |
-| свёрнутость группы          | `MenuGroup`               | (этап 3) `collapsed` / `defaultCollapsed` / `onCollapsedChange` |
+| Состояние                   | Владелец    | Пропы                                                        |
+| --------------------------- | ----------- | ------------------------------------------------------------ |
+| compact                     | `Root`      | `compact` / `defaultCompact` / `onCompactChange`             |
+| активный пункт (клавиатура) | `ItemList`  | `activeIndex` / `defaultActiveIndex` / `onActiveIndexChange` |
+| открытость попапа           | `Popup`     | `open` / `defaultOpen` / `onOpenChange`                      |
+| открытость панели           | `Panel`     | `open` / `defaultOpen` / `onOpenChange`                      |
+| раскрытость группы          | `GroupItem` | `expanded` / `defaultExpanded` / `onExpandedChange`          |
 
-Контексты — узкие ([LayoutContext.tsx](../src/components/AsideHeaderNext/LayoutContext.tsx)):
+Контексты — шесть узких вместо одного «бог-контекста» ([LayoutContext.tsx](../src/components/AsideHeaderNext/LayoutContext.tsx)):
 
 ```ts
-LayoutContext    = {compact, size, layout, setCompact}          // «где я и насколько я узкий»
-ItemDefaults     = {place: 'header'|'menu'|'footer'|'popup', iconSize?}  // дефолты от контейнера
-CompositeContext = {activeIndex, register, unregister, getIndex, …}      // только навигация
+LayoutContext      = {compact, size, layout, setCompact}                 // «где я и насколько я узкий»
+NavigationContext  = {currentPath, matchStrategy, isCurrent(href)}       // матчинг роутов
+ItemListContext    = {place, iconSize, role, keyboard}                   // дефолты от контейнера
+CompositeContext   = {activeIndex, register, unregister, getIndex, …}    // клавиатура попапов; nullable
+ActiveScopeContext = {reportActive(id, active), hasActiveDescendant}     // всплытие активности
+OverlayContext     = {open, setOpen, triggerId, contentId, portalTarget} // локальный: от Popup/Panel к своему Trigger
 ```
 
-Именно `ItemDefaults` закрывает унификацию из §1.4: `Footer` просто провайдит `{place: 'footer', iconSize: 18}`, и отдельный компонент `FooterItem` больше не нужен.
+Три важных следствия:
+
+- `ItemListContext` закрывает унификацию из §1.4: `Footer` провайдит `{place: 'footer', iconSize: 18}`, и отдельный `FooterItem` не нужен.
+- `CompositeContext` становится **nullable** (сейчас `useCompositeContext` бросает, [CompositeContext.ts:18-24](../src/components/AsideHeaderNext/internal/composite/CompositeContext.ts#L18-L24)). Благодаря этому `Item` перестаёт ветвиться на `place === 'menu'` ([Item.tsx:199](../src/components/AsideHeaderNext/Item.tsx#L199)): он регистрируется, если вокруг есть скоуп навигации, и рендерится обычной строкой, если нет. `place` остаётся только маркером для CSS.
+- `OverlayContext` — **локальный** контекст от `Popup` / `Panel` к их собственному `Trigger`, а не глобальный реестр. В более ранней редакции RFC здесь был `PanelRegistryContext = {isOpen(id), register(id, open)}`: панели жили в слоте `panels`, триггеры — в меню, поэтому связать их можно было только по строковому `id` через реестр на `Root`. Как только `Panel` объявляется рядом со своим триггером (§4.1), реестр становится не нужен: `Panel.Trigger` читает `open` из ближайшего провайдера. Меньше кода, нет строковых связей, которые может разъехаться, и `aria-controls` получается из сгенерированных id, а не из пользовательских.
 
 ### 4.6 API подкомпонентов
 
+Здесь — только ключевые решения и их обоснование. Полные сигнатуры, дефолты и таблицы поведения — в [Приложении A](#приложение-a-спецификация-api).
+
 #### `Root`
 
-```ts
-interface RootProps {
-  children?: React.ReactNode;
-  className?: string;
-  layout?: 'slots' | 'manual'; // default: 'slots'
-  compact?: boolean;
-  defaultCompact?: boolean;
-  onCompactChange?: (compact: boolean) => void;
-  ref?: React.Ref<HTMLDivElement>;
-}
+7 пропов: `layout`, `compact` / `defaultCompact` / `onCompactChange`, `currentPath` / `matchStrategy`, `className`. Выставляет `--gn-aside-header-size` (56px / 236px из [constants.ts](../src/components/constants.ts)).
+
+`currentPath` — опциональный сахар, снимающий самый частый бойлерплейт (`current: pathname.startsWith(href)` в каждом пункте); явный `current` на пункте всегда перебивает авто-матчинг.
+
+#### `Row` — контракт лейаута для всех строк
+
+```
+┌──────────┬───────────────────────────┬──────────┐
+│ Leading  │ Body                      │ Trailing │
+│ 56px     │ 1fr, обрезается           │ auto     │
+└──────────┴───────────────────────────┴──────────┘
+   ▲ виден всегда   ▲ скрыт в compact    ▲ скрыт в compact
 ```
 
-Выставляет `--gn-aside-header-size` (56px / 236px из [constants.ts](../src/components/constants.ts)).
+На `Row` построены `Item`, `GroupItem.Trigger`, `Logo`, `CollapseButton`. Он же экспортируется публично — чтобы кастомный контент получал корректное поведение в обоих состояниях рельса, положив себя в те же три зоны.
 
-#### `Item` — единый примитив
+Три правила контракта:
 
-```ts
-interface ItemProps {
-  id: string;
-  icon?: IconProps['data'];
-  iconSize?: number; // иначе — из ItemDefaults, иначе 18
-  children?: React.ReactNode; // заголовок (вместо пропа title)
-  current?: boolean;
-  disabled?: boolean;
-  href?: string; // href → <a>, иначе <button>
-  target?: string;
-  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
-  className?: string;
-  type?: 'item' | 'divider';
-  rightAdornment?: React.ReactNode; // например тег «New»
-  render?: RenderProp<ItemState>; // ← заменяет itemWrapper
-  tooltipText?: React.ReactNode; // в compact фолбэк на заголовок
-  items?: ItemProps[]; // collapsible / flyout
-  popupTitle?: string;
-  popupPlacement?: PopupPlacement; // контроль якоря
-  popupOffset?: PopupProps['offset'];
-  ref?: React.Ref<HTMLElement>;
-}
+1. **Скрытие в compact — только CSS, без размонтирования.** Иначе ломаются transition-ы, теряется фокус при сворачивании и расходится SSR-разметка. Сейчас `Logo` размонтирует текст ([Logo.tsx:53](../src/components/AsideHeaderNext/Logo.tsx#L53)), а `Item` прячет по CSS — это надо привести к одному.
+2. `**min-height` живёт на `Row**`, а не на контенте: многострочное тело не ломает ритм рельса.
+3. `**Leading` — единственная зона, гарантированно видимая в compact.\*\*
 
-interface ItemState {
-  current: boolean;
-  disabled: boolean;
-  compact: boolean;
-}
+Когда CSS не хватает (в свёрнутом состоянии нужен _другой_ контент, а не тот же поуже) — `<AsideHeader.WhenCompact>` / `<AsideHeader.WhenExpanded>` / `useAsideHeaderCompact()`.
+
+#### `Logo` — по частям
+
+```tsx
+<AsideHeader.Logo href="/">
+  <AsideHeader.Logo.Icon data={logoIcon} />
+  <AsideHeader.Logo.Text>My App</AsideHeader.Logo.Text>
+</AsideHeader.Logo>
 ```
 
-Сравнение с сегодняшним `AsideHeaderItem`: **17 пропов вместо ~35**, ноль deprecated, ноль `@internal`.
+Шорткат `<AsideHeader.Logo icon={…} text="…" />` остаётся, но реализован **через** подчасти, а не параллельно им. `Logo.Icon` принимает `data` (UIKit `Icon`), `src` (картинка) или произвольные `children` — это закрывает `iconSrc` из старого [types.ts:84](../src/components/types.ts#L84). Тег по умолчанию: `a` при `href`, `button` при `onClick`, иначе `div` (сейчас всегда `button`, [Logo.tsx:35](../src/components/AsideHeaderNext/Logo.tsx#L35) — некликабельное лого не должно быть в tab-порядке).
 
-Внутри `Item` выбирает реализацию по `ItemDefaults.place`: в `menu` — регистрируется в `Composite` (roving tabindex), в остальных местах — обычный элемент ([Item.tsx:185-200](../src/components/AsideHeaderNext/Item.tsx)). Пользователю это не видно.
+#### `ItemList` — единственный контейнер строк
 
-#### `Menu` / `Subheader` / `Footer`
+`Subheader` / `Menu` / `Footer` перестают быть отдельными реализациями и становятся пресетами:
 
-```ts
-interface MenuProps {
-  children?: React.ReactNode;
-  items?: ItemProps[]; // data-driven альтернатива композиции
-  className?: string;
-  'aria-label'?: string;
-  ref?: React.Ref<HTMLDivElement>;
-}
+```tsx
+export const Menu = withSlot((p: ItemListProps) => <ItemList place="menu" {...p} />, 'menu');
+export const Subheader = withSlot(
+  (p: ItemListProps) => <ItemList place="header" {...p} />,
+  'header',
+);
+export const Footer = withSlot(
+  (p: ItemListProps) => <ItemList place="footer" iconSize={18} {...p} />,
+  'footer',
+);
 ```
 
-Наличие `items` — сознательная уступка: миграция с `menuItems={[...]}` становится однострочной, а composition-путь остаётся для тех, кому нужен контроль. Оба пути используют один и тот же `Item`.
+Голый `ItemList` нужен там, где слотов нет: `layout="manual"`, внутри `Panel.Content`, внутри `GroupItem.Content`, внутри `Popup.Content`.
 
-#### `CollapseButton`, `Content`, `Alert`, `Background`, `Logo`
+Что унификация чинит:
 
-Все — тонкие обёртки над `useRenderElement` с `render` и своим `state`:
+| Сейчас                                                                                                                                               | После                                     |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+|                                                                                                                                                      |                                           |
+| `Composite` только в `Menu`; в футере и сабхедере каждый пункт — отдельная tab-остановка                                                             | roving tabindex одинаково везде           |
+| `role="menu"` без `menuitem` внутри — невалидный ARIA ([Composite.tsx:146](../src/components/AsideHeaderNext/internal/composite/Composite.tsx#L146)) | роль детей раздаёт список                 |
+| `menuOverflow` / `menuMoreTitle` / `onMenuMoreClick` — пропы корня                                                                                   | пропы `ItemList`, работают в любом списке |
+
+Наличие `items` — сознательная уступка: миграция с `menuItems={[...]}` остаётся однострочной, а composition-путь есть для тех, кому нужен контроль. Оба пути используют одни и те же `Item` / `GroupItem` / `Divider`.
+
+Контракт содержимого: в списке ожидаются только `Item`, `GroupItem`, `Divider`. Нарушение — **dev-warning, но не фильтрация**: пользовательская обёртка вокруг `Item` не должна ломать рендер. Регистрация в клавиатурной навигации идёт по ref, а не по типу компонента.
+
+#### `Item` / `GroupItem` / `Divider`
+
+| Компонент   | Что это                                                             | Заменяет                                  |
+| ----------- | ------------------------------------------------------------------- | ----------------------------------------- |
+| `Item`      | лист навигации: одна цель или действие                              | `menuItem`, `subheaderItem`, `footerItem` |
+| `GroupItem` | строка списка, у которой есть дети                                  | `menuGroups` + 3 связанных пропа          |
+| `Divider`   | `role="separator"`, пропускается клавиатурой (можно взять из uikit) | `Item type="divider"`                     |
+
+Имя `GroupItem`, а не `Group`: это такой же элемент списка, как `Item`, — занимает строку, участвует в клавиатурной навигации, подсвечивается по тем же правилам.
+
+У `Item` остаётся **12 пропов** против ~35 полей `AsideHeaderItem` (7 deprecated, 2 `@internal`). Из прототипа убраны: `type: 'divider'` → отдельный `Divider` (у разделителя нет ни `id`, ни `href`, ни поведения — ему нечего делать в типе пункта), `items` → `GroupItem`, `popupTitle` / `popupPlacement` / `popupOffset` → `Popup`.
+
+**`Item` ничего не знает про оверлеи.** Ни про попап, ни про панель: у него нет ни `open`, ни `panel`, ни `popup*`-пропов. Строка навигации — это строка навигации. Всё, что связано с оверлеем, живёт в `Popup` / `Panel`, а их `Trigger` по умолчанию рендерится как `Item` (§4.7). Практическое следствие: `Item` можно смонтировать и протестировать без единого мока `Popover`/`Drawer`.
+
+```tsx
+<AsideHeader.GroupItem id="infra" defaultExpanded>
+  <AsideHeader.GroupItem.Trigger icon={ServerIcon}>Infrastructure</AsideHeader.GroupItem.Trigger>
+  <AsideHeader.GroupItem.Content>
+    <AsideHeader.Item id="vm" href="/vm">
+      VM
+    </AsideHeader.Item>
+    <AsideHeader.Item id="k8s" href="/k8s">
+      Kubernetes
+    </AsideHeader.Item>
+  </AsideHeader.GroupItem.Content>
+</AsideHeader.GroupItem>
+```
+
+| Рельс     | `compactBehavior` | Что видно                                        |
+| --------- | ----------------- | ------------------------------------------------ |
+| развёрнут | —                 | триггер + inline-раскрытие детей                 |
+| свёрнут   | `flyout` (дефолт) | иконка группы; дети — во флайауте                |
+| свёрнут   | `flat`            | триггер скрыт, дети — обычными иконками в рельсе |
+
+**Один и тот же JSX детей в обоих режимах** — где их показать, решает `GroupItem`, а не потребитель. Это главное отличие от `menuGroups`, где режимы приходилось собирать вручную.
+
+#### `CollapseButton`, `Content`, `Alert`, `Background`
+
+Тонкие обёртки над `useRenderElement` с `render` и своим `state`:
 
 | Компонент              | `state`, доступный в `render` |
 | ---------------------- | ----------------------------- |
@@ -406,75 +505,160 @@ interface MenuProps {
 
 #### `Panel`
 
+```tsx
+<AsideHeader.Menu>
+  <AsideHeader.Panel>
+    <AsideHeader.Panel.Trigger icon={MagnifierIcon}>Search</AsideHeader.Panel.Trigger>
+    <AsideHeader.Panel.Content>
+      <SearchPanel />
+    </AsideHeader.Panel.Content>
+  </AsideHeader.Panel>
+</AsideHeader.Menu>
+```
+
+`Panel.Trigger` по умолчанию рендерится как `Item` — то есть выглядит и ведёт себя как обычная строка рельса, но дополнительно получает `aria-expanded`, `aria-controls`, переключение открытости и подсветку при открытой панели. Переопределяется тем же `render`, что и везде.
+
+`Panel.Content` — UIKit `Drawer`, спозиционированный рядом с навигацией (`left: size`, `top: var(--gn-top-alert-height)`), как в сегодняшнем [Panels.tsx](../src/components/AsideHeader/components/Panels.tsx). Рендерится порталом в контейнер панелей на `Root`, поэтому объявление рядом с триггером не мешает раскладке.
+
+Разница со старым API: панели объявляются как JSX, а не как массив `panelItems`; состояние `open` принадлежит приложению (или самой панели в uncontrolled-режиме); исчезает скрытая синхронизация `panelItems.some(x => x.open)` из `useAsideHeaderInnerContextValue` и необходимость вручную связывать пункт меню с панелью.
+
+### 4.7 Попапы: отдельный примитив, а не часть `Item`
+
+Требование: пользователь должен и получать работающий дефолт, и иметь возможность подставить свой контент, зная, как попап позиционируется относительно рельса.
+
+**Ключевое решение: `Item` про попапы не знает.** Попап — самостоятельный компонент `AsideHeader.Popup`: тонкая обёртка над UIKit `Popup`/`Popover`, которая знает про рельс (дефолтные отступы, сторону, поведение в compact, вложенность) и ничего не знает про навигацию.
+
+```tsx
+<AsideHeader.Popup>
+  <AsideHeader.Popup.Trigger icon={UserIcon}>Alex</AsideHeader.Popup.Trigger>
+  <AsideHeader.Popup.Content>
+    <UserCard />
+  </AsideHeader.Popup.Content>
+</AsideHeader.Popup>
+```
+
+Три свойства, которые это даёт:
+
+1. **`Popup.Trigger` по умолчанию рендерится как `Item`** — принимает те же пропы (`icon`, `children`, `rightAdornment`, `disabled`, `tooltipText`) и получает ту же строку рельса, плюс `aria-haspopup` / `aria-expanded` и подсветку при открытом попапе. Ничего специально описывать не нужно.
+2. **Правильные отступы — из коробки.** Сегодняшние магические константы (`POPUP_MAIN_AXIS_OFFSET = 14`, `POPUP_CROSS_AXIS_OFFSET_WITH_TITLE = -30`, `placement: ['right-start','right']`, `enableSafePolygon`, `strategy: 'fixed'`) становятся дефолтами `Popup.Content` и перестают быть тайной. Compact и expanded учитываются автоматически.
+3. **Правило «не закрывать родителя, пока открыт вложенный»** становится частью примитива: вложенный `Popup` регистрируется в родительском через свой контекст. Уходит ручной счётчик `nestedOpenCountRef` и ad-hoc [ItemPopupNestContext](../src/components/AsideHeader/components/CompositeBar/Item/ItemPopupNestContext.tsx).
+
+**Кастомизация — теми же двумя рычагами, что и везде.** Позиционирование — пропами `Popup.Content` (`side`, `align`, `sideOffset`, `alignOffset`, `anchor`, `strategy`, `flip`, `shift`, задержки); полная замена разметки — через `render`.
+
+**Один примитив на три сценария.** Флайаут свёрнутой группы, overflow «More» и попап отдельного пункта — это `Popup` с разным контентом:
+
+| Сценарий        | Trigger                        | Content                    |
+| --------------- | ------------------------------ | -------------------------- |
+| попап пункта    | `Popup.Trigger` (= `Item`)     | произвольная разметка      |
+| флайаут группы  | `GroupItem.Trigger`            | `ItemList` с детьми группы |
+| overflow «More» | автоматический `Popup.Trigger` | `ItemList` с не влезшими   |
+
+`GroupItem` и «More» построены **на** `Popup`, а не рядом с ним, — поэтому позиционирование, задержки и вложенность у них одинаковые по построению, а не по совпадению.
+
+### 4.8 Модель активности
+
+**Проблема.** Сейчас `current` — один булев проп, который потребитель считает сам и который напрямую красит пункт. Из-за этого нельзя выразить ни «пункт подсвечен, потому что открыта его панель», ни «группа подсвечена, потому что активен скрытый потомок».
+
+**Решение — развести источники и результат.**
+
+| Понятие               | Смысл                                   | Наружу                                |
+| --------------------- | --------------------------------------- | ------------------------------------- |
+| `current`             | пункт соответствует текущему URL        | `aria-current="page"`, `data-current` |
+| `open`                | открыт оверлей, которым владеет триггер | `aria-expanded`, `data-open`          |
+| `active`              | **визуальная подсветка** — вычисляется  | `data-active`                         |
+| `hasActiveDescendant` | внутри группы есть активный потомок     | `data-has-active-descendant`          |
+
 ```ts
-interface PanelProps {
-  id: string;
-  open?: boolean;
-  onClose?: () => void;
-  placement?: 'left' | 'right' | 'top' | 'bottom';
-  keepMounted?: boolean;
-  children?: React.ReactNode;
-  className?: string;
-  contentClassName?: string;
-}
+// Item — знает только про URL
+const current = props.current ?? (props.href ? nav.isCurrent(props.href) : false);
+const active = props.active ?? current;
+
+// Popup.Trigger / Panel.Trigger — Item + открытость своего оверлея
+const open = overlay.open; // из локального OverlayContext
+const active = props.active ?? (current || open);
+
+// GroupItem
+const flyoutMode = compact && compactBehavior === 'flyout';
+const childrenVisible = expanded && !flyoutMode;
+const active = props.active ?? (flyoutOpen || (hasActiveDescendant && !childrenVisible));
 ```
 
-Внутри — UIKit `Drawer`, спозиционированный рядом с навигацией (`left: size`, `top: var(--gn-top-alert-height)`), как в сегодняшнем [Panels.tsx](../src/components/AsideHeader/components/Panels.tsx). Разница: панели объявляются как JSX-дети, а не как массив `panelItems`, и состояние `open` принадлежит приложению — исчезает скрытая синхронизация `panelItems.some(x => x.open)` из `useAsideHeaderInnerContextValue`.
+**Правило одной строкой:** подсвечен всегда ближайший _видимый_ узел пути.
 
-### 4.7 Попапы: два уровня — «готовое решение» и «принеси своё»
+| Рельс     | Группа         | Активный потомок | Подсветка группы                      | Подсветка потомка     |
+| --------- | -------------- | ---------------- | ------------------------------------- | --------------------- |
+| развёрнут | свёрнута       | да               | **полная**                            | — (не виден)          |
+| развёрнут | раскрыта       | да               | слабая (`data-has-active-descendant`) | **полная**            |
+| свёрнут   | флайаут закрыт | да               | **полная**                            | — (не виден)          |
+| свёрнут   | флайаут открыт | да               | **полная** + `data-open`              | **полная** (в попапе) |
 
-Требование: пользователь должен и получать работающий дефолт, и иметь возможность подставить свой попап, зная, как позиционировать его относительно скоупа.
+Флайаут намеренно **не** считается «раскрытием на месте»: триггер остаётся якорем в рельсе, и снятие подсветки на время открытия попапа читалось бы как мигание.
 
-**Уровень 1 — готовое решение.** `Item` c `items` сам строит флайаут с дефолтами, снятыми с сегодняшнего `ItemPopup` (`placement: ['right-start','right']`, `offset: {mainAxis: 14}`):
+**Четыре источника активности, все опциональные:** явный `current` на пункте; `Root.currentPath` + `href` + `matchStrategy`; открытый `Popup`; открытая `Panel`. Последние два не требуют от приложения ничего: триггер читает открытость из своего оверлея.
 
-```tsx
-<AsideHeader.Item id="projects" icon={FolderIcon} popupTitle="Projects" items={subItems}>
-  Projects
-</AsideHeader.Item>
-```
+**Всплытие** — через `ActiveScopeContext` (`reportActive(id, active)` / `hasActiveDescendant`). Скоуп создаёт `GroupItem`, а также корневой `ItemList` — последнее нужно кнопке «More» при `overflow="more"`: если активный пункт уехал в overflow, подсвечивается «More». Реализация — внешний стор с подпиской (`useSyncExternalStore`), а не подъём состояния: отчёт одного пункта не должен перерендеривать весь список.
 
-**Уровень 2 — bring-your-own.** Магические константы становятся документированными дефолтами публичных пропов (`popupPlacement`, `popupOffset`), а на этапе 2 — полноценными сабчастями:
+**Авто-раскрытие:** `expandOnActive` (по умолчанию `true`, только для uncontrolled) раскрывает группу, в которой после смены роута появился активный потомок. В controlled-режиме компонент не дёргает `onExpandedChange` без действия пользователя.
 
-```tsx
-<AsideHeader.Item id="projects" icon={FolderIcon}>
-  <AsideHeader.Item.Trigger>Projects</AsideHeader.Item.Trigger>
-  <AsideHeader.Item.Popup side="right" align="start" sideOffset={14} alignOffset={0}>
-    <MyOwnPopupContent />
-  </AsideHeader.Item.Popup>
-</AsideHeader.Item>
-```
+Что это даёт бесплатно: `aria-current`, `aria-expanded`, `aria-controls`, подсветка «More», авто-раскрытие группы при навигации, dev-warning при двух `current` в одном скоупе.
 
-Полная замена контента — через `render`, как и везде.
+### 4.9 Клавиатура и ARIA
 
-Дополнительно: collapsible-группа, overflow «More» и compact-флайаут сводятся к **одному** примитиву с разными дефолтами контейнера, а правило «не закрывать родителя, пока открыт вложенный» становится частью примитива вместо ручного счётчика `nestedOpenCountRef`.
+Здесь есть развилка, которую надо закрыть решением, а не дефолтом «как было»: **пункты рельса — это отдельные tab-остановки или один виджет со стрелками?**
+
+Сегодня рельс наследует поведение UIKit `List`: roving tabindex, весь список — одна tab-остановка, движение стрелками.
+
+**Предлагается: в рельсе — Tab, в оверлеях — стрелки.**
+
+| Где                                              | Фокус-модель                                   | Роли                                                   |
+| ------------------------------------------------ | ---------------------------------------------- | ------------------------------------------------------ |
+| `Menu` / `Subheader` / `Footer`                  | Tab / Shift+Tab, каждый пункт — своя остановка | `nav` > `list` > `listitem` > `a` или `button`         |
+| `GroupItem.Trigger` при inline-раскрытии         | обычная кнопка в Tab-порядке                   | `button` + `aria-expanded` (APG Disclosure Navigation) |
+| `Popup.Content`, флайаут группы, overflow «More» | roving tabindex, стрелки, `Esc`                | `menu` > `menuitem`                                    |
+
+Почему Tab в рельсе:
+
+1. **Пункты рельса — ссылки.** Нативный порядок фокуса — то, что пользователь ожидает от навигации на любом сайте; учить ничему не надо.
+2. **Roving прячет меню от Tab.** Пользователь, который табает, проскакивает весь рельс одним нажатием и без подсказки не узнает, что внутри есть стрелки.
+3. **`role="tree"` / `menu` навязывает ссылкам семантику виджета приложения:** скринридер читает «дерево, элемент 3 из 12» вместо «ссылка». Для меню приложения это правильно, для навигации по сайту — нет.
+4. **Проблема «слишком много tab-остановок» решается штатно** — landmark `<nav aria-label>` и skip-link, а не подменой модели фокуса.
+5. **Меньше кода:** `Composite` остаётся только там, где он семантически уместен — внутри оверлеев.
+
+Честный контраргумент: для существующих пользователей это поведенческий регресс (сейчас стрелки работают). Митигация — `keyboard="roving"` + `role="tree"` одним пропом на `ItemList`, для длинных иерархических меню.
+
+Клавиши внутри оверлея: `↓`/`↑` по пунктам, `Home`/`End`, `Enter`/`Space` активация, `Esc` закрывает с возвратом фокуса на триггер, `→`/`←` вход во вложенный попап и выход из него.
 
 ---
 
 ## 5. Маппинг старого API на новый
 
-| Было                                                                                                                                                     | Стало                                                                               |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| `compact` / `onChangeCompact`                                                                                                                            | `Root`: `compact` / `defaultCompact` / `onCompactChange`                            |
-| `logo={{...}}`                                                                                                                                           | `<AsideHeader.Logo />`                                                              |
-| `logo.wrapper`                                                                                                                                           | `Logo` + `render`                                                                   |
-| `subheaderItems={[...]}`                                                                                                                                 | `<AsideHeader.Subheader items={…}>` или композиция `Item`                           |
-| `menuItems={[...]}`                                                                                                                                      | `<AsideHeader.Menu items={…}>` или композиция `Item`                                |
-| `renderFooter={({size, compact, asideRef}) => …}`                                                                                                        | `<AsideHeader.Footer>` + композиция                                                 |
-| `FooterItem`                                                                                                                                             | `<AsideHeader.Item>` внутри `Footer`                                                |
-| `renderContent`                                                                                                                                          | `<AsideHeader.Content>`                                                             |
-| `hideCollapseButton`                                                                                                                                     | просто не рендерить `<AsideHeader.CollapseButton />`                                |
-| `collapseButtonWrapper`                                                                                                                                  | `CollapseButton` + `render`                                                         |
-| `MenuItem.itemWrapper`                                                                                                                                   | `Item` + `render`                                                                   |
-| `MenuItem.title`                                                                                                                                         | `children`                                                                          |
-| `MenuItem.popupVisible` / `popupRef` / `popupPlacement` / `popupOffset` / `popupKeepMounted` / `renderPopupContent` / `onOpenChangePopup` (7 deprecated) | `Item` + `items` / `popupPlacement` / `popupOffset`, далее `Item.Popup`             |
-| `compositeBarMenuPopupItems` / `compositeBarMenuPopupTitle` (`@internal`)                                                                                | `Item.items` / `Item.popupTitle`                                                    |
-| `topAlert={{...}}`                                                                                                                                       | `<AsideHeader.Alert>` (любая разметка)                                              |
-| `customBackground` / `customBackgroundClassName`                                                                                                         | `<AsideHeader.Background>`                                                          |
-| `panelItems={[...]}` + `onClosePanel`                                                                                                                    | `<AsideHeader.Panel open onClose>`                                                  |
-| `PageLayout` / `PageLayoutAside`                                                                                                                         | `layout="manual"` + `<AsideHeader.Aside>`                                           |
-| `menuGroups` + `collapsedMenuGroupIds` + `defaultCollapsedMenuGroupIds` + `onToggleMenuGroupCollapsed`                                                   | `<AsideHeader.MenuGroup collapsed / defaultCollapsed / onCollapsedChange>` (этап 3) |
-| `menuOverflow` / `menuMoreTitle` / `onMenuMoreClick`                                                                                                     | пропы `Menu` (этап 3)                                                               |
-| `editMenuProps` + `onMenuItemsChanged` + `onAllPagesClick`                                                                                               | отдельный компонент `AllPagesPanel` (этап 4)                                        |
+| Было                                                                                                                                                     | Стало                                                                                                     |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `compact` / `onChangeCompact`                                                                                                                            | `Root`: `compact` / `defaultCompact` / `onCompactChange`                                                  |
+| `logo={{...}}`                                                                                                                                           | `<AsideHeader.Logo />` или `Logo.Icon` + `Logo.Text`                                                      |
+| `logo.wrapper`                                                                                                                                           | `Logo` + `render`                                                                                         |
+| `logo.iconSrc` / `logo.iconClassName` / `logo.textSize`                                                                                                  | пропы `Logo.Icon` / `Logo.Text`                                                                           |
+| `subheaderItems={[...]}`                                                                                                                                 | `<AsideHeader.Subheader items={…}>` или композиция `Item`                                                 |
+| `menuItems={[...]}`                                                                                                                                      | `<AsideHeader.Menu items={…}>` или композиция `Item`                                                      |
+| `renderFooter={({size, compact, asideRef}) => …}`                                                                                                        | `<AsideHeader.Footer>` + композиция                                                                       |
+| `FooterItem`                                                                                                                                             | `<AsideHeader.Item>` внутри `Footer`                                                                      |
+| `renderContent`                                                                                                                                          | `<AsideHeader.Content>`                                                                                   |
+| `hideCollapseButton`                                                                                                                                     | просто не рендерить `<AsideHeader.CollapseButton />`                                                      |
+| `collapseButtonWrapper`                                                                                                                                  | `CollapseButton` + `render`                                                                               |
+| `MenuItem.itemWrapper`                                                                                                                                   | `Item` + `render`                                                                                         |
+| `MenuItem.title`                                                                                                                                         | `children`                                                                                                |
+| `MenuItem.type: 'divider'`                                                                                                                               | `<AsideHeader.Divider />`                                                                                 |
+| `MenuItem.current` (считается приложением)                                                                                                               | `current`, либо `Root.currentPath` + `href` + `matchStrategy`                                             |
+| — (не выражалось)                                                                                                                                        | `Panel.Trigger` / `Popup.Trigger`: открытый оверлей подсвечивает свой триггер                             |
+| `MenuItem.popupVisible` / `popupRef` / `popupPlacement` / `popupOffset` / `popupKeepMounted` / `renderPopupContent` / `onOpenChangePopup` (7 deprecated) | `Popup` + `Popup.Content`: `open` / `anchor` / `side` / `align` / `sideOffset` / `keepMounted` / `render` |
+| `compositeBarMenuPopupItems` / `compositeBarMenuPopupTitle` (`@internal`)                                                                                | `GroupItem.items` / `GroupItem.popupTitle`                                                                |
+| `topAlert={{...}}`                                                                                                                                       | `<AsideHeader.Alert>` (любая разметка)                                                                    |
+| `customBackground` / `customBackgroundClassName`                                                                                                         | `<AsideHeader.Background>`                                                                                |
+| `panelItems={[...]}` + `onClosePanel`                                                                                                                    | `<AsideHeader.Panel>` + `Panel.Trigger` + `Panel.Content`                                                 |
+| `PageLayout` / `PageLayoutAside`                                                                                                                         | `layout="manual"` + `<AsideHeader.Aside>`                                                                 |
+| `menuGroups` + `collapsedMenuGroupIds` + `defaultCollapsedMenuGroupIds` + `onToggleMenuGroupCollapsed`                                                   | `<AsideHeader.GroupItem expanded / defaultExpanded / onExpandedChange>` (этап 4)                          |
+| `menuOverflow` / `menuMoreTitle` / `onMenuMoreClick`                                                                                                     | пропы `ItemList` — работают в любом списке (этап 4)                                                       |
+| `editMenuProps` + `onMenuItemsChanged` + `onAllPagesClick`                                                                                               | отдельный компонент `AllPagesPanel` (этап 5)                                                              |
 
 ---
 
@@ -582,17 +766,7 @@ const menuItems = [
 
 ---
 
-## 7. Совместимость и темизация
-
-- **CSS-переменные.** Все `--gn-aside-header-*` работают без изменений: сторис `CustomTheme` перенесён один-в-один и красит новый компонент тем же блоком переменных. Значит существующие темы прикладных проектов применимы.
-- **BEM-неймспейс.** Новые SCSS-модули используют тот же `createBlock` с неймспейсом `gn-` ([utils/cn.ts](../src/components/utils/cn.ts)), классы вида `.gn-aside-header-next*`. Внешние переопределения по классам придётся обновить — это ожидаемая часть breaking change.
-- **Размеры и константы.** Переиспользуются существующие `ASIDE_HEADER_COMPACT_WIDTH` (56), `ASIDE_HEADER_EXPANDED_WIDTH` (236), `ASIDE_HEADER_ICON_SIZE` (18), `ITEM_HEIGHT` (40), `POPUP_REGULAR_ITEM_HEIGHT` (32).
-- **UIKit.** `ActionTooltip`, `Popover`, `Drawer`, `Icon` переиспользуются как есть. Заменяется только `List` → свой `Composite`.
-- **Старый компонент** остаётся в дереве нетронутым на время миграции; удаление — отдельным шагом мажора.
-
----
-
-## 8. Статус прототипа
+## 7. Статус прототипа
 
 Реализовано в [src/components/AsideHeaderNext/](../src/components/AsideHeaderNext/), старый код не изменялся. Проходит `tsc --noEmit` (0 ошибок в новом коде), `eslint` (0 ошибок), `stylelint`, SCSS компилируется.
 
@@ -606,47 +780,51 @@ const menuItems = [
 
 | Фича                                                     | Куда относится |
 | -------------------------------------------------------- | -------------- |
-| `Item.Trigger` / `Item.Popup` как сабчасти + вложенность | этап 2         |
-| `MenuGroup` (группы, tree-connector, inline-раскрытие)   | этап 3         |
-| Overflow «More» (`AutoSizer` + расчёт вместимости)       | этап 3         |
-| `menuOverflow: 'scroll'` + `ScrollableWithScrollbar`     | этап 3         |
-| `AllPagesPanel` + режим редактирования меню, сортировка  | этап 4         |
-| `Fallback` (SSR-скелетон `AsideFallback`)                | этап 4         |
-| `headerDecoration` (градиент + декоративный дивайдер)    | этап 4         |
-| `HighlightedItem` / `bringForward`                       | этап 4         |
-| `type: 'action'` (плавающая кнопка)                      | этап 4         |
-| `multipleTooltip`                                        | этап 4         |
-| i18n, unit- и visual-тесты, README                       | этап 5         |
+| `ItemList` + nullable `CompositeContext` + `Divider`     | этап 2         |
+| `Row` + разбор `Logo` на подчасти + render-гейты         | этап 2         |
+| `Popup` (+ `Trigger` / `Content`) и вложенность оверлеев | этап 3         |
+| `Panel.Trigger` / `Panel.Content` + портал контента      | этап 3         |
+| `GroupItem` (группы, tree-connector, inline-раскрытие)   | этап 4         |
+| Модель активности (`ActiveScope`, матчинг роутов)        | этап 4         |
+| Overflow «More» (`AutoSizer` + расчёт вместимости)       | этап 4         |
+| `overflow: 'scroll'` + `ScrollableWithScrollbar`         | этап 4         |
+| `AllPagesPanel` + режим редактирования меню, сортировка  | этап 5         |
+| `Fallback` (SSR-скелетон `AsideFallback`)                | этап 5         |
+| `headerDecoration` (градиент + декоративный дивайдер)    | этап 5         |
+| `HighlightedItem` / `bringForward`                       | этап 5         |
+| `type: 'action'` (плавающая кнопка)                      | этап 5         |
+| `multipleTooltip`                                        | этап 5         |
+| i18n, unit- и visual-тесты, README                       | этап 6         |
 
 ---
 
-## 9. План внедрения
+## 8. План внедрения
 
 Всё за фиче-флагом импорта (`AsideHeaderNext`), без влияния на текущих пользователей.
 
 - **Этап 1 — ядро и вертикальный срез.** ✅ Сделано: ядро, слоты, `Composite`, базовые части, портированные сторис.
-- **Этап 2 — попапы.** `Item.Trigger` / `Item.Popup` с полным набором пропов позиционирования (`side`, `align`, `sideOffset`, `alignOffset`, `anchor`, `strategy`, `flip`, `shift`, задержки), вложенные попапы как часть примитива.
-- **Этап 3 — меню целиком.** `MenuGroup`, overflow «More», scroll-режим. Закрывает сторис `MenuGroups*` и `MenuScrollbar`.
-- **Этап 4 — оставшиеся фичи.** `AllPagesPanel`, `Fallback`, `headerDecoration`, `bringForward`, `action`-пункты, `multipleTooltip`.
-- **Этап 5 — качество и документация.** Unit-тесты (композиция, слоты, клавиатура, `render`), visual-снапшоты на портированных сторис для сравнения со старым компонентом, README + гайд миграции, при необходимости codemod (в репозитории уже есть инфраструктура [codemods/](../codemods/)).
-- **Этап 6 — переключение.** Переименование `AsideHeaderNext` → `AsideHeader` в мажоре, старая реализация удаляется или временно остаётся как `AsideHeaderLegacy`.
+- **Этап 2 — унификация строк и списков.** `ItemList` + пресеты `Subheader`/`Menu`/`Footer`, nullable `CompositeContext`, `Divider`, контракт `Row`, разбор `Logo` на `Logo.Icon` / `Logo.Text`, render-гейты `WhenCompact` / `WhenExpanded`. Самый дешёвый и самый разблокирующий этап: снимает развилку по `place` в `Item` и чинит ARIA.
+- **Этап 3 — оверлеи.** `Popup` (`Trigger` + `Content`) с полным набором пропов позиционирования (`side`, `align`, `sideOffset`, `alignOffset`, `anchor`, `strategy`, `flip`, `shift`, задержки), вложенные попапы как часть примитива; `Panel` переезжает на `Trigger` + `Content` с порталом.
+- **Этап 4 — группы, активность, overflow.** `GroupItem`, модель активности (`ActiveScope`, `Root.currentPath`), overflow «More» и scroll-режим. Закрывает сторис `MenuGroups`\* и `MenuScrollbar`.
+- **Этап 5 — оставшиеся фичи.** `AllPagesPanel`, `Fallback`, `headerDecoration`, `bringForward`, `action`-пункты, `multipleTooltip`.
+- **Этап 6 — качество и документация.** Unit-тесты (композиция, слоты, клавиатура, `render`, правила активности), visual-снапшоты на портированных сторис для сравнения со старым компонентом, README + гайд миграции, при необходимости codemod (в репозитории уже есть инфраструктура [codemods/](../codemods/)).
+- **Этап 7 — переключение.** Переименование `AsideHeaderNext` → `AsideHeader` в мажоре, старая реализация удаляется или временно остаётся как `AsideHeaderLegacy`.
 
 ---
 
-## 10. Аргументы для мейнтейнера
+## 9. Аргументы для мейнтейнера
 
-1. **Это не «переизобретение», а закрытие уже принятого пункта роадмапа** «Unify subheaderItem, menuItem, footerItem API». Проверено по коду: три API рендерят один и тот же `Item`, различаясь только местом и режимом overflow.
-2. **API уменьшается измеримо:** ~32 пропа `Root` → 7; ~35 полей `AsideHeaderItem` (7 deprecated, 2 `@internal`) → 17 без deprecated; 7 механизмов кастомизации → 1.
-3. **Гарантии лейаута не теряются** — `layout="slots"` оставляет строгую раскладку и запрещает произвольных прямых детей (с dev-диагностикой). Свободная композиция — осознанный opt-in.
-4. **Дерево и пропы в обоих режимах одинаковые**, поэтому мы не поддерживаем два разных API.
-5. **Долг вокруг `List` закрывается**: уходит `activateItem(undefined as unknown as number)`, ручной расчёт высот, отключённые `virtualized`/`sortable`/`filterable`.
-6. **Попапы становятся управляемыми**, что уже сейчас запрашивается пользователями: свой контент и контроль положения относительно скоупа. Магические `mainAxis: 14` / `crossAxis: -30` перестают быть тайной и становятся документированными дефолтами.
-7. **Тестируемость**: каждую часть можно смонтировать отдельно; сейчас `Header`, `CompositeBar`, `CollapseButton` без `AsideHeaderInnerContextProvider` падают.
-8. **Риск управляем**: новое живёт рядом со старым, за отдельным импортом; портированные сторис дают побайтовое визуальное сравнение перед переключением.
+1. **API уменьшается измеримо:** ~32 пропа `Root` → 7; ~35 полей `AsideHeaderItem` (7 deprecated, 2 `@internal`) → 13 без deprecated; 7 механизмов кастомизации → 1; 4 API «пункта навигации» → 1; 3 контекста (один — «всё сразу») → 6 узких.
+2. **Гарантии лейаута не теряются** — `layout="slots"` оставляет строгую раскладку и запрещает произвольных прямых детей (с dev-диагностикой). Свободная композиция — осознанный opt-in.
+3. **Долг вокруг** `List` **закрывается**: уходит `activateItem(undefined as unknown as number)`, ручной расчёт высот, отключённые `virtualized`/`sortable`/`filterable`.
+4. **Попапы становятся управляемыми**: свой контент и контроль положения относительно скоупа. Магические `mainAxis: 14` / `crossAxis: -30` перестают быть тайной и становятся документированными дефолтами.
+5. **Чинятся четыре текущих дефекта, а не только API:** невалидный ARIA (`role="menu"` без `menuitem`), отсутствие клавиатурной навигации в футере и сабхедере, непозиционируемые попапы, невозможность подсветить пункт по открытой панели.
+6. **Тестируемость**: каждую часть можно смонтировать отдельно; сейчас `Header`, `CompositeBar`, `CollapseButton` без `AsideHeaderInnerContextProvider` падают.
+7. **Риск управляем**: новое живёт рядом со старым, за отдельным импортом;
 
 ---
 
-## 11. Риски
+## 10. Риски
 
 | Риск                                   | Оценка / митигация                                                                                                                                                                                                                            |
 | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -654,25 +832,378 @@ const menuItems = [
 | React 19 как требование                | `peerDependencies` уже допускают `^19`. Но бамп `@types/react` вскрыл **38 ошибок типов в старом коде** (0 — в новом). Нужно решение: починить типы минимально (без изменения поведения), отложить или откатить бамп типов до полной миграции |
 | `Composite` — свой код вместо готового | base-ui не экспортирует `internals/composite` публично, поэтому вариант «взять зависимостью» отпадает. Наш порт — ~210 строк, покрывается unit-тестами; альтернатива (остаться на `List`) сохраняет текущие костыли                           |
 | Слот-магия непрозрачна при отладке     | dev-`console.error` на нераспознанных детях; `layout="manual"` как аварийный выход                                                                                                                                                            |
-| Визуальные регрессии                   | Портированные сторис + существующая инфраструктура Playwright-снапшотов; сверка со старыми снапшотами до переключения                                                                                                                         |
-| Объём работ                            | Разбит на 6 этапов, каждый самостоятельно поставляемый; этап 1 уже готов                                                                                                                                                                      |
 
 ---
 
-## 12. Рассмотренные альтернативы
+# Приложение A. Спецификация API
 
-1. **Оставить как есть, точечно чистить пропы.** Не решает ни унификацию пунктов, ни непрозрачность попапов, ни зависимость от `List`. Каждая новая фича продолжит добавлять проп в перегруженный интерфейс.
-2. **Compound как opt-in поверх старой реализации (адаптер).** Пробовали продумать: адаптер обязан протаскивать данные в старый «бог-контекст», значит внутренние проблемы остаются, а поддерживать надо два API. Отклонено, т.к. breaking change разрешён.
-3. **Полный compound без режима слотов.** Максимальная гибкость, но теряются гарантии раскладки — основное возражение мейнтейнера. Отклонено в пользу двух режимов.
-4. **Оставить `List`, а compound сделать только над разметкой.** Сохраняет ручной расчёт высот и `activateItem(undefined)`; клавиатурная навигация по вложенным группам остаётся хрупкой.
+Справочная часть RFC: полные сигнатуры, дефолты и таблицы поведения каждой части. Концептуальные решения и их обоснование — в §4.
 
----
+Общие соглашения действуют для всех частей и здесь не повторяются:
 
-## 13. Открытые вопросы
+- семантика `render` и правило приоритета `children` — §3.1;
+- правила мёрджа пропов — `on[A-Z]*` чейнятся, `className` склеиваются, `style` шэллоу-мёрджится, refs объединяются;
+- каждое состояние — пара controlled / uncontrolled, §4.5;
+- у каждой части есть `className`, `render`, `ref` — в таблицах ниже они не дублируются.
 
-1. **Имя флага режима:** `layout="slots" | "manual"` или булев `disableSlots`? (в прототипе — первое)
-2. `**Composite`:\*\* оставляем внутренним (`internal/`) или выносим в публичный API пакета как переиспользуемый примитив?
-3. **Data-driven `items` на `Menu` / `Subheader` / `Footer`:** оставляем навсегда (упрощает миграцию) или помечаем как переходный API?
-4. **React 19 type fallout:** починить 38 ошибок в старом коде сейчас, отложить или откатить бамп `@types/react`?
-5. **Судьба `AllPagesPanel` и режима редактирования меню:** остаётся частью `AsideHeader` или выделяется в самостоятельный компонент пакета?
-6. **Нужен ли `AsideHeaderLegacy`** на один мажор или переключаемся сразу?
+Для читаемости варианты union-типов ниже перечислены через `/`.
+
+## A.1. data-атрибуты
+
+Всё вычисленное состояние доступно двумя способами: в `render(props, state)` — для JS, и в `data-*` на DOM-узле — для CSS.
+
+| Атрибут                      | Где                                           | Значение                               |
+| ---------------------------- | --------------------------------------------- | -------------------------------------- |
+| `data-compact`               | все части                                     | рельс свёрнут                          |
+| `data-place`                 | `Row`, `Item`, `GroupItem`                    | `header` / `menu` / `footer` / `popup` |
+| `data-current`               | `Item`                                        | пункт соответствует текущему URL       |
+| `data-active`                | `Item`, `GroupItem`, триггеры оверлеев        | **визуальная подсветка** (§4.8)        |
+| `data-open`                  | `Popup.Trigger`, `Panel.Trigger`, `GroupItem` | открыт оверлей                         |
+| `data-expanded`              | `GroupItem`                                   | группа раскрыта inline                 |
+| `data-has-active-descendant` | `GroupItem`, `ItemList`                       | внутри есть активный потомок           |
+| `data-disabled`              | `Item`, `GroupItem`                           |                                        |
+| `data-highlighted`           | пункты внутри оверлея                         | текущая остановка roving tabindex      |
+
+```css
+/* точки расширения для потребителя */
+.my-aside [data-active] {
+  background: var(--my-accent);
+}
+.my-aside [data-has-active-descendant]:not([data-active]) {
+  color: var(--my-accent);
+}
+.my-aside [data-compact] [data-place='footer'] {
+}
+```
+
+## A.2. `Root`
+
+| Проп              | Тип                                                       | Дефолт     |
+| ----------------- | --------------------------------------------------------- | ---------- |
+| `layout`          | `'slots'` / `'manual'`                                    | `'slots'`  |
+| `compact`         | `boolean`                                                 |            |
+| `defaultCompact`  | `boolean`                                                 | `false`    |
+| `onCompactChange` | `(compact: boolean) => void`                              |            |
+| `currentPath`     | `string`                                                  |            |
+| `matchStrategy`   | `'exact'` / `'prefix'` / `(href, currentPath) => boolean` | `'prefix'` |
+| `qa`              | `string`                                                  |            |
+
+Выставляет `--gn-aside-header-size`, предоставляет контейнер-портал для `Panel.Content`. Не знает про пункты, оверлеи и их содержимое.
+
+## A.3. `Row`
+
+```
+┌──────────┬───────────────────────────┬──────────┐
+│ Leading  │ Body                      │ Trailing │
+│ 56px     │ 1fr, обрезается           │ auto     │
+└──────────┴───────────────────────────┴──────────┘
+   ▲ виден всегда   ▲ скрыт в compact    ▲ скрыт в compact
+```
+
+```tsx
+<AsideHeader.Row interactive>
+  <AsideHeader.Row.Leading>
+    <Icon data={FolderIcon} size={18} />
+  </AsideHeader.Row.Leading>
+  <AsideHeader.Row.Body>Projects</AsideHeader.Row.Body>
+  <AsideHeader.Row.Trailing>
+    <Label theme="info">New</Label>
+  </AsideHeader.Row.Trailing>
+</AsideHeader.Row>
+```
+
+| Проп          | Тип                                            | Дефолт               | Описание                               |
+| ------------- | ---------------------------------------------- | -------------------- | -------------------------------------- |
+| `interactive` | `boolean`                                      | `false`              | hover/active-стили и `cursor: pointer` |
+| `place`       | `'header'` / `'menu'` / `'footer'` / `'popup'` | из `ItemListContext` | влияет только на `data-place`          |
+
+`state` в `render`: `{compact, place}`. Зоны опциональны и позиционно независимы — порядок в JSX не важен.
+
+Render-гейты для случаев, когда в свёрнутом состоянии нужен _другой_ контент, а не тот же поуже:
+
+```tsx
+<AsideHeader.WhenExpanded><OrgSwitcher /></AsideHeader.WhenExpanded>
+<AsideHeader.WhenCompact><OrgAvatar /></AsideHeader.WhenCompact>
+const compact = useAsideHeaderCompact();
+```
+
+## A.4. `Logo`
+
+| Проп         | Тип                 | Дефолт | Описание                               |
+| ------------ | ------------------- | ------ | -------------------------------------- |
+| `icon`       | `IconProps['data']` |        | шорткат для `Logo.Icon`                |
+| `iconSrc`    | `string`            |        | картинка вместо SVG                    |
+| `text`       | `React.ReactNode`   |        | шорткат для `Logo.Text`                |
+| `href`       | `string`            |        | рендерит `<a>`                         |
+| `target`     | `string`            |        |                                        |
+| `onClick`    | `(e) => void`       |        | рендерит `<button>`                    |
+| `children`   | `ReactNode`         |        | подчасти или произвольный контент      |
+| `aria-label` | `string`            |        | обязателен, если текст скрыт в compact |
+
+Тег по умолчанию: `a` при `href`, `button` при `onClick`, иначе `div`. `state`: `{compact}`.
+
+**`Logo.Icon`** — `data` (UIKit `Icon`) / `src` (картинка) / `children` (произвольный узел), `size` (дефолт `24`). Занимает `Row.Leading`.
+
+**`Logo.Text`** — `children`. Занимает `Row.Body`, в compact скрывается по CSS.
+
+## A.5. `ItemList`
+
+| Проп                  | Тип                                                | Дефолт       |
+| --------------------- | -------------------------------------------------- | ------------ |
+| `items`               | `Array<ItemProps / GroupItemProps / DividerProps>` |              |
+| `place`               | `'header'` / `'menu'` / `'footer'` / `'popup'`     |              |
+| `iconSize`            | `number`                                           | `18`         |
+| `orientation`         | `'vertical'` / `'horizontal'`                      | `'vertical'` |
+| `overflow`            | `'visible'` / `'scroll'` / `'more'`                | `'visible'`  |
+| `moreTitle`           | `React.ReactNode`                                  |              |
+| `onMoreClick`         | `() => void`                                       |              |
+| `keyboard`            | `'tab'` / `'roving'`                               | `'tab'`      |
+| `loop`                | `boolean`                                          | `true`       |
+| `activeIndex`         | `number`                                           |              |
+| `defaultActiveIndex`  | `number`                                           | `0`          |
+| `onActiveIndexChange` | `(index: number) => void`                          |              |
+| `scope`               | `'new'` / `'inherit'`                              | авто         |
+| `role`                | `'list'` / `'tree'` / `'menu'` / `'none'`          | `'list'`     |
+| `aria-label`          | `string`                                           |              |
+
+`state`: `{compact, place, overflowing}`.
+
+`loop`, `activeIndex` и `scope` имеют смысл только при `keyboard="roving"` — то есть внутри оверлеев и в явно включённом tree-режиме (§4.9).
+
+Авто-правило для `scope`:
+
+| Ситуация                               | Скоуп                                    |
+| -------------------------------------- | ---------------------------------------- |
+| корневой список (`Menu`, `Footer`, …)  | `new`                                    |
+| `GroupItem.Content` в inline-раскрытии | `inherit` — навигация едет сквозь группу |
+| `GroupItem.Content` во флайауте        | `new` — фокус физически уходит в попап   |
+| `ItemList` внутри `Popup.Content`      | `new`                                    |
+
+## A.6. `Item`
+
+| Проп              | Тип                 | Дефолт                         | Описание                            |
+| ----------------- | ------------------- | ------------------------------ | ----------------------------------- |
+| `id`              | `string`            | —                              | обязателен                          |
+| `icon`            | `IconProps['data']` |                                |                                     |
+| `iconSize`        | `number`            | из списка, иначе `18`          |                                     |
+| `children`        | `ReactNode`         |                                | заголовок                           |
+| `rightAdornment`  | `ReactNode`         |                                | например тег «New»; скрыт в compact |
+| `href` / `target` | `string`            |                                | `href` → `<a>`, иначе `<button>`    |
+| `onClick`         | `(e) => void`       |                                |                                     |
+| `current`         | `boolean`           | из `Root.currentPath` + `href` |                                     |
+| `active`          | `boolean`           | `= current`                    | жёсткий override подсветки          |
+| `disabled`        | `boolean`           |                                |                                     |
+| `tooltipText`     | `ReactNode`         | заголовок в compact            |                                     |
+| `qa`              | `string`            |                                |                                     |
+
+`state`: `{current, active, disabled, compact, place, highlighted}`.
+
+**У `Item` нет пропов оверлея.** Ни `open`, ни `panel`, ни `popup*`: строка навигации не знает ни про попапы, ни про панели. Всё это живёт в `Popup` / `Panel`, чьи триггеры рендерятся как `Item` (§4.7).
+
+## A.7. `Popup`
+
+```tsx
+<AsideHeader.Popup>
+  <AsideHeader.Popup.Trigger icon={UserIcon}>Alex</AsideHeader.Popup.Trigger>
+  <AsideHeader.Popup.Content>
+    <UserCard />
+  </AsideHeader.Popup.Content>
+</AsideHeader.Popup>
+```
+
+`Popup` — обёртка над UIKit `Popup`/`Popover`, знающая про рельс. Владеет открытостью и связью триггера с контентом.
+
+| Проп           | Тип                       | Дефолт                                       |
+| -------------- | ------------------------- | -------------------------------------------- |
+| `open`         | `boolean`                 |                                              |
+| `defaultOpen`  | `boolean`                 | `false`                                      |
+| `onOpenChange` | `(open: boolean) => void` |                                              |
+| `trigger`      | `'hover'` / `'click'`     | `'hover'` в compact, `'click'` в развёрнутом |
+| `disabled`     | `boolean`                 | `false`                                      |
+
+**`Popup.Trigger`** принимает те же пропы, что `Item`, и по умолчанию рендерится им же. Дополнительно получает `aria-haspopup`, `aria-expanded`, `aria-controls`, `data-open` и подсветку при открытом попапе.
+
+**`Popup.Content`** — дефолты сняты с сегодняшнего `ItemPopup` и задокументированы:
+
+| Проп                       | Тип                                         | Дефолт    | Комментарий                                                           |
+| -------------------------- | ------------------------------------------- | --------- | --------------------------------------------------------------------- |
+| `side`                     | `'top'` / `'right'` / `'bottom'` / `'left'` | `'right'` |                                                                       |
+| `align`                    | `'start'` / `'center'` / `'end'`            | `'start'` |                                                                       |
+| `sideOffset`               | `number`                                    | `14`      | бывшая `POPUP_MAIN_AXIS_OFFSET`                                       |
+| `alignOffset`              | `number`                                    | `0`       | бывшая `POPUP_CROSS_AXIS_OFFSET_*`; смещение под заголовок делает CSS |
+| `anchor`                   | `Element` / `RefObject` / `() => Element`   | триггер   | якорь можно вынести на весь рельс                                     |
+| `strategy`                 | `'absolute'` / `'fixed'`                    | `'fixed'` |                                                                       |
+| `flip` / `shift`           | `boolean`                                   | `true`    |                                                                       |
+| `openDelay` / `closeDelay` | `number`                                    | `100`     | бывшая `DEFAULT_POPUP_DELAY`                                          |
+| `safePolygon`              | `boolean`                                   | `true`    | бывший `enableSafePolygon`                                            |
+| `keepMounted`              | `boolean`                                   | `false`   |                                                                       |
+| `title`                    | `ReactNode`                                 |           | заголовок над контентом                                               |
+
+Внутри `Popup.Content` фокус-модель — roving tabindex со стрелками и `Esc` (§4.9). Правило «не закрывать родителя, пока открыт вложенный» — часть примитива: вложенный `Popup` регистрируется в родительском через свой контекст, вместо ручного счётчика `nestedOpenCountRef` и ad-hoc [ItemPopupNestContext](../src/components/AsideHeader/components/CompositeBar/Item/ItemPopupNestContext.tsx).
+
+## A.8. `GroupItem`
+
+| Проп               | Тип                               | Дефолт      | Описание                            |
+| ------------------ | --------------------------------- | ----------- | ----------------------------------- |
+| `id`               | `string`                          | —           |                                     |
+| `icon` / `title`   | `IconProps['data']` / `ReactNode` |             | шорткаты вместо `GroupItem.Trigger` |
+| `items`            | `Array<ItemProps / DividerProps>` |             | шорткат вместо `GroupItem.Content`  |
+| `expanded`         | `boolean`                         |             |                                     |
+| `defaultExpanded`  | `boolean`                         | `false`     |                                     |
+| `onExpandedChange` | `(expanded: boolean) => void`     |             |                                     |
+| `expandOnActive`   | `boolean`                         | `true`      | только uncontrolled                 |
+| `compactBehavior`  | `'flyout'` / `'flat'`             | `'flyout'`  |                                     |
+| `popupTitle`       | `ReactNode`                       |             |                                     |
+| `active`           | `boolean`                         | вычисляется | override подсветки                  |
+| `disabled`         | `boolean`                         |             |                                     |
+
+`state`: `{expanded, active, hasActiveDescendant, open, compact, disabled}`.
+
+**`GroupItem.Trigger`** — `icon`, `iconSize`, `children`, `rightAdornment`; кнопка с `aria-expanded` в развёрнутом рельсе, триггер `Popup` в свёрнутом. **`GroupItem.Content`** — вложенный `ItemList`; принимает те же пропы.
+
+Реализован на `Popup` + `ItemList`, а не рядом с ними: во флайаут-режиме это буквально `Popup` с `ItemList` внутри.
+
+## A.9. `Divider`
+
+Без обязательных пропов. `role="separator"`, в фокус-порядок не попадает, в roving-режиме пропускается. `state`: `{compact}`.
+
+## A.10. `CollapseButton`
+
+| Проп            | Тип      | Описание                          |
+| --------------- | -------- | --------------------------------- |
+| `collapseTitle` | `string` | подпись/тултип в развёрнутом виде |
+| `expandTitle`   | `string` | подпись/тултип в свёрнутом виде   |
+
+`state`: `{compact}`. `hideCollapseButton` не нужен — просто не рендерим компонент.
+
+## A.11. `Content`, `Alert`, `Background`, `Aside`
+
+| Компонент    | Пропы сверх общих    | `state`           | Заменяет                                         |
+| ------------ | -------------------- | ----------------- | ------------------------------------------------ |
+| `Content`    | `children`           | `{size, compact}` | `renderContent`                                  |
+| `Alert`      | `children`, `height` | `{}`              | `topAlert` + `topAlert.render`                   |
+| `Background` | `children`           | `{}`              | `customBackground` / `customBackgroundClassName` |
+| `Aside`      | `children`           | `{compact, size}` | `PageLayoutAside`                                |
+
+`Alert.height` — SSR-оценка высоты, чтобы не было прыжка при гидрации; выставляет `--gn-top-alert-height`.
+
+## A.12. `Panel`
+
+```tsx
+<AsideHeader.Panel>
+  <AsideHeader.Panel.Trigger icon={MagnifierIcon}>Search</AsideHeader.Panel.Trigger>
+  <AsideHeader.Panel.Content>
+    <SearchPanel />
+  </AsideHeader.Panel.Content>
+</AsideHeader.Panel>
+```
+
+| Проп           | Тип                       | Дефолт  |
+| -------------- | ------------------------- | ------- |
+| `open`         | `boolean`                 |         |
+| `defaultOpen`  | `boolean`                 | `false` |
+| `onOpenChange` | `(open: boolean) => void` |         |
+
+**`Panel.Trigger`** — те же пропы, что у `Item`, по умолчанию им же и рендерится; получает `aria-expanded`, `aria-controls`, `data-open` и подсветку при открытой панели.
+
+**`Panel.Content`**:
+
+| Проп               | Тип                                         | Дефолт   |
+| ------------------ | ------------------------------------------- | -------- |
+| `placement`        | `'left'` / `'right'` / `'top'` / `'bottom'` | `'left'` |
+| `keepMounted`      | `boolean`                                   | `false`  |
+| `contentClassName` | `string`                                    |          |
+
+Рендерится порталом в контейнер панелей на `Root` (`left: size`, `top: var(--gn-top-alert-height)`), поэтому `Panel` можно объявлять рядом с триггером внутри списка.
+
+Панель без триггера (открывается из контента страницы) — прямой ребёнок `Root` со слотом `panels`, `open` контролируется приложением.
+
+## A.13. Полный пример
+
+```tsx
+import {AsideHeader} from '@gravity-ui/navigation';
+import {Link, useLocation} from 'react-router-dom';
+
+function App({children}: {children: React.ReactNode}) {
+  const {pathname} = useLocation();
+  const [compact, setCompact] = React.useState(false);
+
+  return (
+    <AsideHeader.Root
+      compact={compact}
+      onCompactChange={setCompact}
+      currentPath={pathname}
+      matchStrategy="prefix"
+    >
+      <AsideHeader.Alert height={40}>
+        <MaintenanceBanner />
+      </AsideHeader.Alert>
+
+      <AsideHeader.Logo render={<Link to="/" />}>
+        <AsideHeader.Logo.Icon data={logoIcon} />
+        <AsideHeader.Logo.Text>Acme Cloud</AsideHeader.Logo.Text>
+      </AsideHeader.Logo>
+
+      <AsideHeader.Subheader>
+        <AsideHeader.Panel>
+          <AsideHeader.Panel.Trigger icon={MagnifierIcon}>Search</AsideHeader.Panel.Trigger>
+          <AsideHeader.Panel.Content>
+            <SearchPanel />
+          </AsideHeader.Panel.Content>
+        </AsideHeader.Panel>
+      </AsideHeader.Subheader>
+
+      <AsideHeader.Menu aria-label="Main navigation" overflow="scroll">
+        <AsideHeader.Item id="overview" icon={HouseIcon} render={<Link to="/overview" />}>
+          Overview
+        </AsideHeader.Item>
+
+        <AsideHeader.GroupItem id="infra" icon={ServerIcon} defaultExpanded>
+          <AsideHeader.GroupItem.Trigger>Infrastructure</AsideHeader.GroupItem.Trigger>
+          <AsideHeader.GroupItem.Content>
+            <AsideHeader.Item id="vm" render={<Link to="/infra/vm" />}>
+              VM
+            </AsideHeader.Item>
+            <AsideHeader.Item id="k8s" render={<Link to="/infra/k8s" />}>
+              Kubernetes
+            </AsideHeader.Item>
+          </AsideHeader.GroupItem.Content>
+        </AsideHeader.GroupItem>
+
+        <AsideHeader.Divider />
+
+        <AsideHeader.Item
+          id="billing"
+          icon={CreditCardIcon}
+          render={<Link to="/billing" />}
+          rightAdornment={<Label theme="info">New</Label>}
+        >
+          Billing
+        </AsideHeader.Item>
+      </AsideHeader.Menu>
+
+      <AsideHeader.Footer>
+        <AsideHeader.Item
+          id="support"
+          icon={SupportIcon}
+          href="https://support.acme.dev"
+          target="_blank"
+        >
+          Support
+        </AsideHeader.Item>
+
+        <AsideHeader.Popup>
+          <AsideHeader.Popup.Trigger icon={UserIcon}>Alex</AsideHeader.Popup.Trigger>
+          <AsideHeader.Popup.Content align="end">
+            <UserCard />
+          </AsideHeader.Popup.Content>
+        </AsideHeader.Popup>
+      </AsideHeader.Footer>
+
+      <AsideHeader.CollapseButton />
+
+      <AsideHeader.Content>{children}</AsideHeader.Content>
+    </AsideHeader.Root>
+  );
+}
+```

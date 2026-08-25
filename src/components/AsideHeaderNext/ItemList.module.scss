@@ -1,0 +1,41 @@
+@use '../variables';
+
+.gn-aside-header-next-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+    box-sizing: border-box;
+    padding-inline: var(--_--item-margin-inline, #{variables.$item-margin-inline});
+
+    &_place_menu {
+        flex: 1 0 auto;
+        min-height: #{variables.$item-height};
+    }
+
+    &_place_footer,
+    &_place_header {
+        padding-inline: 0;
+    }
+
+    &_place_popup {
+        min-width: 160px;
+        padding: 0;
+    }
+
+    &_overflow_scroll {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden auto;
+    }
+
+    &__divider {
+        height: 1px;
+        flex: none;
+        margin: var(--g-spacing-2) var(--g-spacing-2);
+        background-color: var(
+            --gn-aside-header-divider-horizontal-color,
+            var(--g-color-line-generic)
+        );
+    }
+}

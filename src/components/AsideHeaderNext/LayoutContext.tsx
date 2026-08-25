@@ -7,6 +7,8 @@ export interface LayoutContextValue {
     size: number;
     layout: LayoutMode;
     setCompact: (compact: boolean) => void;
+    /** DOM node next to the rail where `Panel.Content` is portaled. */
+    panelContainer: HTMLElement | null;
 }
 
 const LayoutContext = React.createContext<LayoutContextValue | null>(null);
@@ -21,16 +23,31 @@ export function useLayoutContext(): LayoutContextValue {
     return ctx;
 }
 
-/** Defaults for an `Item`, provided by its container (e.g. footer icon size). */
-export interface ItemDefaults {
-    iconSize?: number;
-    place: 'header' | 'menu' | 'footer' | 'popup';
+/** Public hook: "is the rail collapsed right now". */
+export function useAsideHeaderCompact(): boolean {
+    return useLayoutContext().compact;
 }
 
-const ItemDefaultsContext = React.createContext<ItemDefaults>({place: 'menu'});
+export type ItemPlace = 'header' | 'menu' | 'footer' | 'popup';
+export type KeyboardMode = 'tab' | 'roving';
 
-export const ItemDefaultsProvider = ItemDefaultsContext.Provider;
+/**
+ * Defaults an `ItemList` gives to its rows. `place` only feeds `data-place`
+ * (i.e. CSS); `keyboard` decides whether rows join a roving tabindex scope.
+ */
+export interface ItemListContextValue {
+    place: ItemPlace;
+    iconSize?: number;
+    keyboard: KeyboardMode;
+}
 
-export function useItemDefaults(): ItemDefaults {
-    return React.useContext(ItemDefaultsContext);
+const ItemListContext = React.createContext<ItemListContextValue>({
+    place: 'menu',
+    keyboard: 'tab',
+});
+
+export const ItemListProvider = ItemListContext.Provider;
+
+export function useItemListContext(): ItemListContextValue {
+    return React.useContext(ItemListContext);
 }

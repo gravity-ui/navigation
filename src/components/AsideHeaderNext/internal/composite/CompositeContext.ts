@@ -15,10 +15,10 @@ export interface CompositeContextValue {
 
 export const CompositeContext = React.createContext<CompositeContextValue | null>(null);
 
-export function useCompositeContext(): CompositeContextValue {
-    const ctx = React.useContext(CompositeContext);
-    if (!ctx) {
-        throw new Error('Composite parts must be used within <Composite>.');
-    }
-    return ctx;
+/**
+ * Nullable on purpose: rows outside a composite scope (the rail, which uses
+ * plain Tab order) must render normally instead of throwing.
+ */
+export function useCompositeContext(): CompositeContextValue | null {
+    return React.useContext(CompositeContext);
 }

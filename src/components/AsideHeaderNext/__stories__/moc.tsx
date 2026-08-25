@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import {Gear, Plus} from '@gravity-ui/icons';
 
-import type {AsideHeaderNextItemProps} from '../index';
+import type {AsideHeaderNextItemListEntry} from '../index';
 
 import logoIcon from '../../../../.storybook/assets/logo.svg';
 
@@ -14,7 +14,7 @@ export const DEFAULT_LOGO = {
     'aria-label': 'Service',
 };
 
-function Tag({children}: {children: React.ReactNode}) {
+export function Tag({children}: {children: React.ReactNode}) {
     return (
         <span
             style={{
@@ -31,12 +31,12 @@ function Tag({children}: {children: React.ReactNode}) {
     );
 }
 
-/** Mirror of the old `menuItemsShowcase`, mapped onto the compound `Item` API. */
-export const menuItemsShowcase: AsideHeaderNextItemProps[] = [
+/** Mirror of the old `menuItemsShowcase`, mapped onto the compound row API. */
+export const menuItemsShowcase: AsideHeaderNextItemListEntry[] = [
     {id: 'overview', icon: Gear, children: 'Overview'},
     {id: 'operations', icon: Gear, children: 'Operations', rightAdornment: <Tag>New</Tag>},
     {id: 'templates', icon: Gear, children: 'Main notifications long menu title'},
-    {id: 'divider', type: 'divider'},
+    {kind: 'divider', id: 'divider'},
     {
         id: 'notifications',
         icon: Gear,
@@ -51,7 +51,7 @@ export const menuItemsShowcase: AsideHeaderNextItemProps[] = [
         rightAdornment: <Tag>New</Tag>,
         onClick: () => alert(JSON.stringify({id: 'dashboard'})),
     },
-    {id: 'divider2', type: 'divider'},
+    {kind: 'divider', id: 'divider2'},
     {
         id: 'objects',
         icon: Gear,
@@ -69,22 +69,25 @@ export const menuItemsShowcase: AsideHeaderNextItemProps[] = [
 
 const CLAMPED_TITLE = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit';
 
-export const menuItemsClamped: AsideHeaderNextItemProps[] = [
+export const menuItemsClamped: AsideHeaderNextItemListEntry[] = [
     {id: 'text', icon: Gear, children: CLAMPED_TITLE},
     {id: 'text-action', icon: Gear, children: CLAMPED_TITLE},
     {id: 'text-link', icon: Gear, children: CLAMPED_TITLE, href: 'about:blank'},
     {id: 'text-link-action', icon: Gear, children: CLAMPED_TITLE, href: 'about:blank'},
-    {id: 'divider', type: 'divider'},
+    {kind: 'divider', id: 'divider'},
     {id: 'text-new', icon: Gear, children: CLAMPED_TITLE, rightAdornment: <Tag>new</Tag>},
     {id: 'text-action-new', icon: Gear, children: CLAMPED_TITLE, rightAdornment: <Tag>new</Tag>},
 ];
 
-export const manyMenuItems: AsideHeaderNextItemProps[] = Array.from({length: 25}, (_, index) => ({
-    id: `item-${index + 1}`,
-    icon: Gear,
-    children: `Item ${index + 1}`,
-    current: index === 0,
-}));
+export const manyMenuItems: AsideHeaderNextItemListEntry[] = Array.from(
+    {length: 25},
+    (_, index) => ({
+        id: `item-${index + 1}`,
+        icon: Gear,
+        children: `Item ${index + 1}`,
+        current: index === 0,
+    }),
+);
 
 export const text = `
 Did you attend? He sang by grove ripe -

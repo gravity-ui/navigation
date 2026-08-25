@@ -1,0 +1,183 @@
+@use '../variables';
+@use '../../../styles/mixins';
+
+.gn-aside-header-next-row {
+    --gn-aside-header-item-expanded-radius: #{variables.$item-expanded-radius};
+    --_--row-lane-size: 40px;
+    --_--item-icon-color: var(--g-color-text-complementary);
+    --_--item-general-icon-color: var(--g-color-text-primary);
+    --_--item-text-color: var(--g-color-text-primary);
+    --_--item-background-color-hover: var(--g-color-base-simple-hover);
+    --_--item-selected-text-color: var(--g-color-text-primary);
+    --_--item-selected-background-color: var(--g-color-base-selection);
+    --_--item-icon-background-size: 38px;
+    --_--item-collapsed-radius: 7px;
+
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--_--row-lane-size) minmax(0, 1fr) auto;
+    align-items: center;
+    width: 100%;
+    min-height: #{variables.$item-height};
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    color: var(--gn-aside-header-item-text-color, var(--_--item-text-color));
+    text-align: start;
+    text-decoration: none;
+    background: none;
+    border: none;
+    border-radius: var(--gn-aside-header-item-expanded-radius);
+
+    /* Zone 1 — the only zone guaranteed to survive `compact`. */
+    &__leading {
+        grid-column: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        align-self: stretch;
+        color: var(--gn-aside-header-item-icon-color, var(--_--item-icon-color));
+    }
+
+    /* Zone 2 — clipped, then hidden in `compact`. */
+    &__body {
+        grid-column: 2;
+        display: block;
+        min-width: 0;
+        margin-inline: var(--g-spacing-2) var(--g-spacing-2);
+        overflow: hidden;
+    }
+
+    /* Title of a built-in row: single line, ellipsized. */
+    &__title {
+        display: block;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    /* Zone 3 — hidden in `compact`. */
+    &__trailing {
+        grid-column: 3;
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        margin-inline-end: var(--g-spacing-1);
+        color: var(--g-color-text-secondary);
+    }
+
+    /*
+     * Compact: zones 2 and 3 are hidden with CSS, never unmounted — otherwise
+     * transitions break, focus is lost on collapse and SSR markup diverges.
+     */
+    &[data-compact] {
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+
+    &[data-compact] &__leading {
+        grid-column: 1;
+        width: 100%;
+    }
+
+    &[data-compact] &__body,
+    &[data-compact] &__trailing {
+        display: none;
+    }
+
+    /* Footer / subheader rows use the "general" (primary) icon color. */
+    &[data-place='footer'] &__leading,
+    &[data-place='header'] &__leading {
+        color: var(--gn-aside-header-general-item-icon-color, var(--_--item-general-icon-color));
+    }
+
+    &[data-place='footer'] {
+        min-height: #{variables.$compact-item-height};
+    }
+
+    &[data-place='popup'] {
+        --_--row-lane-size: 28px;
+
+        min-height: #{variables.$compact-item-height};
+        border-radius: 6px;
+    }
+
+    &_interactive {
+        @include mixins.accessibility-button;
+
+        cursor: pointer;
+    }
+
+    &[data-disabled] {
+        opacity: 0.6;
+        cursor: default;
+        pointer-events: none;
+    }
+
+    &[data-active] {
+        color: var(--gn-aside-header-item-current-text-color, var(--_--item-selected-text-color));
+    }
+
+    /* A group whose active descendant is visible gets a hint, not a highlight. */
+    &[data-has-active-descendant]:not([data-active]) &__leading {
+        color: var(--gn-aside-header-item-current-text-color, var(--_--item-selected-text-color));
+    }
+
+    /* Expanded rail: full-width pill behind the row. */
+    &_interactive:not([data-compact]) {
+        &[data-active] {
+            background-color: var(
+                --gn-aside-header-item-current-background-color,
+                var(--_--item-selected-background-color)
+            );
+        }
+
+        &:not([data-active]):hover {
+            background-color: var(
+                --gn-aside-header-item-background-color-hover,
+                var(--_--item-background-color-hover)
+            );
+        }
+    }
+
+    /* Compact rail: rounded pill behind the icon only. */
+    &_interactive[data-compact] &__leading {
+        position: relative;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            z-index: -1;
+            width: var(
+                --gn-aside-header-item-icon-background-size,
+                var(--_--item-icon-background-size)
+            );
+            height: var(
+                --gn-aside-header-item-icon-background-size,
+                var(--_--item-icon-background-size)
+            );
+            transform: translate(-50%, -50%);
+            border-radius: var(
+                --gn-aside-header-item-collapsed-radius,
+                var(--_--item-collapsed-radius)
+            );
+            background-color: transparent;
+        }
+    }
+
+    &_interactive[data-compact][data-active] &__leading::before {
+        background-color: var(
+            --gn-aside-header-item-current-background-color,
+            var(--_--item-selected-background-color)
+        );
+    }
+
+    &_interactive[data-compact]:not([data-active]):hover &__leading::before {
+        background-color: var(
+            --gn-aside-header-item-background-color-hover,
+            var(--_--item-background-color-hover)
+        );
+    }
+}

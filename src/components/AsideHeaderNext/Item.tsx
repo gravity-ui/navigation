@@ -1,200 +1,155 @@
 import * as React from 'react';
 
-import {ChevronRight} from '@gravity-ui/icons';
-import {
-    ActionTooltip,
-    Icon,
-    IconProps,
-    Popover,
-    PopupPlacement,
-    PopupProps,
-} from '@gravity-ui/uikit';
+import {ActionTooltip, Icon, IconProps} from '@gravity-ui/uikit';
 
 import {ASIDE_HEADER_ICON_SIZE} from '../constants';
-import {createBlock} from '../utils/cn';
 
-import {ItemDefaultsProvider, useItemDefaults, useLayoutContext} from './LayoutContext';
+import {useReportActive} from './ActiveScope';
+import {ItemPlace, useItemListContext, useLayoutContext} from './LayoutContext';
+import {useIsCurrent} from './NavigationContext';
+import {RowBody, RowLeading, RowTrailing, rowBlock} from './Row';
 import {useCompositeItem} from './internal/composite/useCompositeItem';
 import {RenderProp, useRenderElement} from './internal/useRenderElement';
 
-import styles from './Item.module.scss';
-
-const b = createBlock('aside-header-next-item', styles);
-
-const DEFAULT_POPUP_PLACEMENT: PopupPlacement = ['right-start', 'right'];
-const DEFAULT_POPUP_OFFSET: NonNullable<PopupProps['offset']> = {mainAxis: 14};
-
 export interface ItemState extends Record<string, unknown> {
     current: boolean;
+    active: boolean;
     disabled: boolean;
     compact: boolean;
+    place: ItemPlace;
 }
 
-export interface ItemProps {
+export interface ItemProps extends React.AriaAttributes {
     id: string;
     icon?: IconProps['data'];
     iconSize?: number;
     /** Item title. */
     children?: React.ReactNode;
-    current?: boolean;
-    disabled?: boolean;
+    /** Trailing content, e.g. a "New" label. Hidden in compact. */
+    rightAdornment?: React.ReactNode;
     href?: string;
     target?: string;
     onClick?: (event: React.MouseEvent<HTMLElement>) => void;
-    className?: string;
-    /** `divider` renders a horizontal separator instead of an interactive row. */
-    type?: 'item' | 'divider';
-    /** Content rendered at the trailing edge of the row (e.g. a "New" tag). */
-    rightAdornment?: React.ReactNode;
-    /** Replace/compose the rendered element (e.g. router `Link`). */
-    render?: RenderProp<ItemState>;
-    /** Tooltip text. In compact mode the title is used as a fallback. */
+    /** Matches the current URL. Falls back to `Root.currentPath` + `href`. */
+    current?: boolean;
+    /** Hard override for the highlight. Overlay triggers use it. */
+    active?: boolean;
+    disabled?: boolean;
+    /** Tooltip text; in compact the title is used as a fallback. */
     tooltipText?: React.ReactNode;
-    /** Nested items shown in a flyout popup (collapsible item / "More"). */
-    items?: ItemProps[];
-    /** Optional title rendered above the popup items. */
-    popupTitle?: string;
-    /** Popup anchoring relative to the item (see base-ui Positioner concept). */
-    popupPlacement?: PopupPlacement;
-    popupOffset?: PopupProps['offset'];
+    className?: string;
+    qa?: string;
+    /** Replace/compose the rendered element (e.g. a router `Link`). */
+    render?: RenderProp<ItemState>;
     ref?: React.Ref<HTMLElement>;
+    onMouseEnter?: React.MouseEventHandler<HTMLElement>;
+    onMouseLeave?: React.MouseEventHandler<HTMLElement>;
+    /** Set by overlay triggers and `GroupItem`; not part of the row's own API. */
+    'data-open'?: boolean;
+    'data-expanded'?: boolean;
+    'data-has-active-descendant'?: boolean;
 }
 
-function PopupItems({items, title}: {items: ItemProps[]; title?: string}) {
-    return (
-        <ItemDefaultsProvider value={{place: 'popup'}}>
-            <div className={b('popup-content')}>
-                {title && <div className={b('popup-title')}>{title}</div>}
-                {items.map((item) => (
-                    <Item key={item.id} {...item} />
-                ))}
-            </div>
-        </ItemDefaultsProvider>
-    );
-}
-
-function useItemElement(
-    props: ItemProps,
-    extra: {ref?: React.Ref<HTMLElement>; extraProps?: Record<string, unknown>},
-): React.ReactElement {
+/**
+ * A single navigation row. Knows nothing about overlays: no `open`, no `panel`,
+ * no `popup*` props — those live in `Popup` / `Panel`, whose triggers render an
+ * `Item` by default.
+ */
+export function Item(props: ItemProps) {
     const {
         id,
         icon,
         iconSize,
         children,
-        current,
-        disabled,
+        rightAdornment,
         href,
         target,
         onClick,
-        className,
-        rightAdornment,
-        render,
+        current: currentProp,
+        active: activeProp,
+        disabled,
         tooltipText,
-        items,
-        popupTitle,
-        popupPlacement = DEFAULT_POPUP_PLACEMENT,
-        popupOffset = DEFAULT_POPUP_OFFSET,
+        className,
+        qa,
+        render,
         ref,
+        ...rest
     } = props;
-    const {compact} = useLayoutContext();
-    const defaults = useItemDefaults();
 
-    const resolvedIconSize = iconSize ?? defaults.iconSize ?? ASIDE_HEADER_ICON_SIZE;
-    const hasPopup = Boolean(items?.length);
+    const {compact: railCompact} = useLayoutContext();
+    const list = useItemListContext();
+    const matchedByPath = useIsCurrent(href);
 
+    // A popup always has room, so its rows stay expanded even in a compact rail.
+    const compact = railCompact && list.place !== 'popup';
+    const overlayOpen = props['data-open'];
+
+    const current = currentProp ?? matchedByPath;
+    const active = activeProp ?? current;
+
+    useReportActive(id, active && !disabled);
+
+    // Rows only join a roving scope where one exists (i.e. inside overlays).
+    const composite = useCompositeItem(list.keyboard === 'roving');
+
+    const resolvedIconSize = iconSize ?? list.iconSize ?? ASIDE_HEADER_ICON_SIZE;
     const state: ItemState = {
-        current: Boolean(current),
+        current,
+        active,
         disabled: Boolean(disabled),
         compact,
+        place: list.place,
     };
-
-    const content = (
-        <React.Fragment>
-            {icon && (
-                <span className={b('icon')}>
-                    <Icon data={icon} size={resolvedIconSize} />
-                </span>
-            )}
-            <span className={b('title')}>{children}</span>
-            {rightAdornment && <span className={b('right-adornment')}>{rightAdornment}</span>}
-            {hasPopup && (
-                <span className={b('chevron')}>
-                    <Icon data={ChevronRight} size={compact ? 10 : 16} />
-                </span>
-            )}
-        </React.Fragment>
-    );
 
     const tag = href ? 'a' : 'button';
 
-    let node = useRenderElement<ItemState>(tag, {
+    const node = useRenderElement<ItemState>(tag, {
         render,
-        ref: [ref, extra.ref],
+        ref: [ref, composite.ref],
         state,
         props: [
             {
+                className: rowBlock({interactive: true}, className),
                 'data-id': id,
-                className: b(
-                    {
-                        current: state.current,
-                        disabled: state.disabled,
-                        compact,
-                        place: defaults.place,
-                    },
-                    className,
-                ),
-                children: content,
+                'data-qa': qa,
+                'data-place': list.place,
+                'data-compact': compact || undefined,
+                'data-current': current || undefined,
+                'data-active': active || undefined,
+                'data-disabled': disabled || undefined,
+                'aria-current': current ? 'page' : undefined,
+                'aria-disabled': disabled || undefined,
                 onClick: disabled ? undefined : onClick,
-                'aria-current': state.current ? 'page' : undefined,
-                'aria-disabled': state.disabled || undefined,
                 ...(href ? {href, target} : {type: 'button', disabled}),
+                children: (
+                    <React.Fragment>
+                        <RowLeading>
+                            {icon ? <Icon data={icon} size={resolvedIconSize} /> : null}
+                        </RowLeading>
+                        <RowBody>
+                            <span className={rowBlock('title')}>{children}</span>
+                        </RowBody>
+                        {rightAdornment ? <RowTrailing>{rightAdornment}</RowTrailing> : null}
+                    </React.Fragment>
+                ),
             },
-            extra.extraProps,
+            composite.props,
+            rest,
         ],
     });
 
-    if (hasPopup && items) {
-        node = (
-            <Popover
-                placement={popupPlacement}
-                offset={popupOffset}
-                content={<PopupItems items={items} title={popupTitle} />}
-                className={b('popup')}
-            >
-                {node}
-            </Popover>
-        );
-    } else {
-        const tooltip = compact
-            ? (tooltipText ?? (typeof children === 'string' ? children : undefined))
-            : tooltipText;
+    const tooltip = compact
+        ? (tooltipText ?? (typeof children === 'string' ? children : undefined))
+        : tooltipText;
 
-        if (tooltip) {
-            node = (
-                <ActionTooltip title={String(tooltip)} placement="right">
-                    {node}
-                </ActionTooltip>
-            );
-        }
+    // Never tooltip on top of the overlay this row has just opened.
+    if (tooltip && !overlayOpen) {
+        return (
+            <ActionTooltip title={String(tooltip)} placement="right">
+                {node}
+            </ActionTooltip>
+        );
     }
 
     return node;
-}
-
-function MenuItem(props: ItemProps) {
-    const composite = useCompositeItem();
-    return useItemElement(props, {ref: composite.ref, extraProps: composite.props});
-}
-
-function PlainItem(props: ItemProps) {
-    return useItemElement(props, {});
-}
-
-export function Item(props: ItemProps) {
-    const defaults = useItemDefaults();
-    if (props.type === 'divider') {
-        return <div className={b('divider', undefined, props.className)} role="separator" />;
-    }
-    return defaults.place === 'menu' ? <MenuItem {...props} /> : <PlainItem {...props} />;
 }

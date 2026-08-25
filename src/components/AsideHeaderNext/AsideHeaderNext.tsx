@@ -3,13 +3,17 @@ import {Aside} from './Aside';
 import {Background} from './Background';
 import {CollapseButton} from './CollapseButton';
 import {Content} from './Content';
-import {Footer} from './Footer';
+import {Divider} from './Divider';
+import {GroupItem} from './GroupItem';
 import {Item} from './Item';
+import {ItemList} from './ItemList';
 import {Logo} from './Logo';
-import {Menu} from './Menu';
+import {Footer, Menu, Subheader} from './Menu';
 import {Panel} from './Panel';
+import {Popup} from './Popup';
 import {Root} from './Root';
-import {Subheader} from './Subheader';
+import {Row} from './Row';
+import {WhenCompact, WhenExpanded} from './Visibility';
 
 /**
  * Compound, base-ui-style rebuild of AsideHeader (prototype).
@@ -24,11 +28,22 @@ export const AsideHeaderNext = Object.assign(Root, {
     Alert,
     Background,
     Logo,
+    // Row containers: Subheader / Menu / Footer are presets over ItemList.
+    ItemList,
     Subheader,
     Menu,
-    Item,
     Footer,
-    CollapseButton,
-    Content,
+    // Rows.
+    Item,
+    GroupItem,
+    Divider,
+    // Overlays — declared next to their trigger, content is portaled.
+    Popup,
     Panel,
+    // Layout primitives.
+    Row,
+    Content,
+    CollapseButton,
+    WhenCompact,
+    WhenExpanded,
 });

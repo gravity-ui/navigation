@@ -1,0 +1,34 @@
+.gn-aside-header-next-group {
+    display: contents;
+
+    &__content {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding-inline-start: 20px;
+
+        /* Tree connector for the inline (expanded rail) mode. */
+        &::before {
+            content: '';
+            position: absolute;
+            inset-block: 4px;
+            inset-inline-start: 20px;
+            width: 1px;
+            background-color: var(
+                --gn-aside-header-divider-vertical-color,
+                var(--g-color-line-generic)
+            );
+        }
+    }
+
+    &__chevron {
+        display: flex;
+        align-items: center;
+        transition: transform 0.15s ease-in-out;
+    }
+
+    &__chevron_expanded {
+        transform: rotate(90deg);
+    }
+}

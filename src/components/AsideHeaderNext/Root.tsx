@@ -4,6 +4,7 @@ import {ASIDE_HEADER_COMPACT_WIDTH, ASIDE_HEADER_EXPANDED_WIDTH} from '../consta
 import {createBlock} from '../utils/cn';
 
 import {LayoutMode, LayoutProvider} from './LayoutContext';
+import {MatchStrategy, NavigationProvider} from './NavigationContext';
 import {collectSlots} from './internal/slots';
 
 import styles from './AsideHeaderNext.module.scss';
@@ -18,6 +19,9 @@ export interface RootProps {
     compact?: boolean;
     defaultCompact?: boolean;
     onCompactChange?: (compact: boolean) => void;
+    /** Optional sugar: derives `current` for rows that declare an `href`. */
+    currentPath?: string;
+    matchStrategy?: MatchStrategy;
     ref?: React.Ref<HTMLDivElement>;
 }
 
@@ -29,6 +33,8 @@ export function Root(props: RootProps) {
         compact: controlledCompact,
         defaultCompact = false,
         onCompactChange,
+        currentPath,
+        matchStrategy = 'prefix',
         ref,
     } = props;
 
@@ -47,20 +53,32 @@ export function Root(props: RootProps) {
 
     const size = compact ? ASIDE_HEADER_COMPACT_WIDTH : ASIDE_HEADER_EXPANDED_WIDTH;
 
+    // Portal target for `Panel.Content`, so a panel can be declared next to its
+    // trigger inside a list without disturbing the layout.
+    const [panelContainer, setPanelContainer] = React.useState<HTMLElement | null>(null);
+
     const contextValue = React.useMemo(
-        () => ({compact, size, layout, setCompact}),
-        [compact, size, layout, setCompact],
+        () => ({compact, size, layout, setCompact, panelContainer}),
+        [compact, size, layout, setCompact, panelContainer],
+    );
+
+    const navigationValue = React.useMemo(
+        () => ({currentPath, matchStrategy}),
+        [currentPath, matchStrategy],
     );
 
     return (
         <LayoutProvider value={contextValue}>
-            <div
-                ref={ref}
-                className={b({compact}, className)}
-                style={{['--gn-aside-header-size' as string]: `${size}px`}}
-            >
-                {layout === 'slots' ? <SlotsLayout>{children}</SlotsLayout> : children}
-            </div>
+            <NavigationProvider value={navigationValue}>
+                <div
+                    ref={ref}
+                    className={b({compact}, className)}
+                    style={{['--gn-aside-header-size' as string]: `${size}px`}}
+                >
+                    {layout === 'slots' ? <SlotsLayout>{children}</SlotsLayout> : children}
+                    <div ref={setPanelContainer} className={b('panels')} />
+                </div>
+            </NavigationProvider>
         </LayoutProvider>
     );
 }
@@ -86,7 +104,7 @@ function SlotsLayout({children}: {children: React.ReactNode}) {
                     )}
                     <div className={b('aside-content')}>
                         <div className={b('header')}>{slots.header}</div>
-                        <div className={b('menu')}>{slots.menu}</div>
+                        {slots.menu}
                         <div className={b('footer')}>{slots.footer}</div>
                     </div>
                 </aside>
