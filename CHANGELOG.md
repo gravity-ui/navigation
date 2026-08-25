@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.4.2](https://github.com/gravity-ui/navigation/compare/v6.4.1...v6.4.2) (2026-08-25)
+
+
+### Bug Fixes
+
+* correct ru translation ([#660](https://github.com/gravity-ui/navigation/issues/660)) ([4a43f0a](https://github.com/gravity-ui/navigation/commit/4a43f0a67f680aa79dfe59d643bb95726c56bbf4))
+
 ## [6.4.1](https://github.com/gravity-ui/navigation/compare/v6.4.0...v6.4.1) (2026-08-13)
 
 
