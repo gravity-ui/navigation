@@ -12,14 +12,22 @@ export interface ItemInnerProps extends ItemProps {
     /** Optional title rendered at the top of the popup listing `menuPopupItems`. */
     menuPopupTitle?: string;
     /**
-     * When set, the row is an inline (expanded sidebar) group header: chevron up/down
-     * instead of a flyout chevron, and children render in a nested list.
+     * When set, the row is an inline (expanded sidebar) group header: chevron right
+     * when collapsed, chevron down when expanded. Collapsed headers may still show a
+     * hover flyout; expanded headers render children in a nested list instead.
      */
     groupHeaderExpanded?: boolean;
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
     /** When true, the icon slot is not rendered (e.g. compact popover: icon stays in the bar). */
     hideIcon?: boolean;
+    /**
+     * When set, controls icon visibility for rows rendered inside {@link ItemPopup}
+     * (group children). Defaults to `true` (hidden) when unset.
+     */
+    menuPopupHideIcon?: boolean;
+    /** Row rendered inside {@link ItemPopup}; uses single-line title layout regardless of `titleLines`. */
+    menuPopupRow?: boolean;
     /**
      * Stops click bubbling so portaled popup rows do not trigger the parent Item's onClick.
      * Off when `itemWrapper` is set so the wrapper (e.g. react-router Link) receives the click.
@@ -29,4 +37,8 @@ export interface ItemInnerProps extends ItemProps {
     onPopupItemClick?: AsideHeaderItem['onItemClick'];
     /** Inline menu-group tree (L-connector) rendered inside the row, before the icon slot. */
     menuGroupNestedTreeConnector?: React.ReactNode;
+    /** Inline expanded menu-group child row (icon + title after parent tree connectors). */
+    menuGroupNested?: boolean;
+    enableQuickAccessPin?: boolean;
+    onToggleQuickAccess?: (item: AsideHeaderItem) => void;
 }

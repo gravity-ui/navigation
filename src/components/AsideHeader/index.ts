@@ -1,5 +1,7 @@
 export {AsideHeader} from './AsideHeader';
 export type {AsideHeaderProps, AsideHeaderItem, PanelItemProps} from './types';
+export type {AsideHeaderMenuDensity} from './density';
+export {getAsideHeaderDensityConfig, ASIDE_HEADER_DENSITY_CONFIG} from './density';
 export type {MenuGroup} from '../types';
 export {AsideHeaderContextProvider, useAsideHeaderContext} from './AsideHeaderContext';
 export {FooterItem, type FooterItemProps} from './components/FooterItem/FooterItem';

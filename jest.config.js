@@ -14,6 +14,7 @@ module.exports = {
     },
     moduleNameMapper: {
         '\\.(css|scss)$': '<rootDir>/src/__mocks__/styleMock.js',
+        '^@gravity-ui/uikit/i18n$': '<rootDir>/src/__mocks__/gravityUiI18n.js',
     },
     coverageDirectory: './coverage',
     collectCoverageFrom: ['src/**/*.{ts,tsx}', '!**/__stories__/**/*', '!**/*/*.stories.{ts,tsx}'],

@@ -1,16 +1,19 @@
 import React from 'react';
 
+import {AsideHeaderMenuDensity} from './density';
 import {AsideHeaderInnerProps, AsideHeaderItem} from './types';
 
 export interface AsideHeaderInnerContextType extends AsideHeaderInnerProps {
     menuItems: AsideHeaderItem[];
     defaultMenuItems?: AsideHeaderItem[];
     allPagesIsAvailable: boolean;
+    quickAccessIsAvailable: boolean;
     onItemClick: (
         item: AsideHeaderItem,
         collapsed: boolean,
         event: React.MouseEvent<HTMLElement, MouseEvent>,
     ) => void;
+    onToggleQuickAccess: (item: AsideHeaderItem) => void;
 }
 
 const AsideHeaderInnerContext = React.createContext<AsideHeaderInnerContextType | undefined>(
@@ -32,11 +35,15 @@ export const useAsideHeaderInnerContext = (): AsideHeaderInnerContextType => {
 export interface AsideHeaderContextType {
     compact: boolean;
     size: number;
+    menuDensity: AsideHeaderMenuDensity;
+    invertSoloTooltipTheme?: boolean;
 }
 
 const AsideHeaderContext = React.createContext<AsideHeaderContextType | undefined>({
     compact: false,
     size: 0,
+    menuDensity: 'default',
+    invertSoloTooltipTheme: false,
 });
 
 AsideHeaderContext.displayName = 'AsideHeaderContext';
