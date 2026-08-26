@@ -1,4 +1,5 @@
 export {AsideHeader} from './AsideHeader';
+export type {AsideHeaderMenuDensity} from './density';
 export type {AsideHeaderProps, AsideHeaderItem, PanelItemProps} from './types';
 export type {MenuGroup} from '../types';
 export {AsideHeaderContextProvider, useAsideHeaderContext} from './AsideHeaderContext';

@@ -24,6 +24,26 @@ import {AsideHeader} from '@gravity-ui/navigation';
 The component has two possible states: collapsed, expanded.
 Уou can manage between states using `compact`, `onChangeCompact` props and also hide button with `hideCollapseButton`.
 
+### Menu density
+
+Use `menuDensity="compact"` to reduce the aside width, item height, icon size, spacing, and corner
+radius without changing how the navigation behaves. Density is independent from the collapsed or
+expanded state controlled by `compact`, so both properties can be combined.
+
+```tsx
+<AsideHeader
+  compact={compact}
+  menuDensity="compact"
+  menuItems={menuItems}
+  onChangeCompact={setCompact}
+/>
+```
+
+The default value is `default`, which preserves the previous dimensions. Compact density reduces
+menu, subheader, and footer item icons; it does not resize the standard 24 px logo icon.
+With the advanced layout pattern, pass `menuDensity` to `PageLayout`; `PageLayoutAside` inherits
+the normalized value from context.
+
 ### Top decoration
 
 Navigation highlights top section with Logo and Subheader items using `headerDecoration` props.
@@ -207,6 +227,7 @@ export const Aside: FC = () => {
 | logo                         | Logo container includes icon, title, handling clicks                                                                                                                                                                               |                [`Logo`](https://github.com/gravity-ui/navigation/blob/main/src/components/Logo/Readme.md#logo)                |                           |
 | menuItems                    | Items in the navigation middle section                                                                                                                                                                                             |                                                   `Array<AsideHeaderItem>`                                                    |           `[]`            |
 | menuGroups                   | Declares groups for the middle section; see [`MenuGroup`](#menugroup). Items attach via `AsideHeaderItem.groupId`.                                                                                                                 |                                                         `MenuGroup[]`                                                         |                           |
+| menuDensity                  | Visual density of the aside and menu items. `compact` reduces dimensions without changing interaction behavior.                                                                                                                    |                                                   `'default' \| 'compact'`                                                    |        `'default'`        |
 | defaultMenuItems             | Default list for resetting **All pages** edits                                                                                                                                                                                     |                                                   `Array<AsideHeaderItem>`                                                    |                           |
 | menuOverflow                 | Overflow behavior for the composite menu; see [`menuOverflow`](#composite-menu-overflow-menuoverflow). **`collapse`** (default): extras under «More». **`scroll`**: scrollable column. Compact sidebar always uses **`collapse`**. |                                                   `'collapse' \| 'scroll'`                                                    |       `'collapse'`        |
 | collapsedMenuGroupIds        | Controlled map (`MenuGroup.id` → collapsed) when `menuOverflow` is **`scroll`**                                                                                                                                                    |                                                   `Record<string, boolean>`                                                   |                           |

@@ -3,6 +3,8 @@ import React from 'react';
 import {List, Popover, PopupProps} from '@gravity-ui/uikit';
 
 import {createBlock} from '../../../../utils/cn';
+import {useSafeAsideHeaderContext} from '../../../AsideHeaderContext';
+import {getAsideHeaderDensityCssProperties} from '../../../density';
 import {AsideHeaderItem} from '../../../types';
 import {getPopupItemHeight, getPopupItemsHeight, getSelectedItemIndex} from '../utils';
 
@@ -49,7 +51,11 @@ export const ItemPopup: React.FC<Props> = ({
     onItemClick,
     onOpenChange,
 }) => {
+    const asideHeaderContext = useSafeAsideHeaderContext();
     const nestedOpenCountRef = React.useRef(0);
+    const densityCssProperties = getAsideHeaderDensityCssProperties(
+        asideHeaderContext?.menuDensity,
+    );
 
     const popoverOffset = React.useMemo<NonNullable<PopupProps['offset']>>(
         () => ({
@@ -154,6 +160,7 @@ export const ItemPopup: React.FC<Props> = ({
             offset={popoverOffset}
             enableSafePolygon
             className={b('icon-popover', {'item-type': type})}
+            style={densityCssProperties}
             content={content}
         >
             {children}

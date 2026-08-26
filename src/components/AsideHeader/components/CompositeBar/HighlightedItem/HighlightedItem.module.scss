@@ -4,7 +4,7 @@ $block: '.#{variables.$ns}composite-bar-highlighted-item';
 
 #{$block} {
     --_--background-color: var(--g-color-base-background);
-    --_--item-icon-background-size: 38px;
+    --_--item-icon-background-size: var(--_--gn-aside-header-density-icon-background-size, 38px);
     --_--item-background-color-hover: var(--g-color-base-selection-hover);
     --_--item-selected-background-color-active: var(--g-color-base-selection);
 
@@ -22,7 +22,7 @@ $block: '.#{variables.$ns}composite-bar-highlighted-item';
             --gn-aside-header-item-icon-background-size,
             var(--_--item-icon-background-size)
         );
-        border-radius: 7px;
+        border-radius: var(--_--gn-aside-header-density-item-collapsed-radius, 7px);
         cursor: pointer;
         background-color: var(--gn-aside-header-background-color, var(--_--background-color));
         display: flex;

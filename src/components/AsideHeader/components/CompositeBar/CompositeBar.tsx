@@ -5,6 +5,7 @@ import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
 
 import {MenuGroup} from '../../../types';
 import {createBlock} from '../../../utils/cn';
+import {useAsideHeaderContext} from '../../AsideHeaderContext';
 import {AsideHeaderItem, AsideHeaderMenuOverflow} from '../../types';
 
 import {Item} from './Item/Item';
@@ -86,6 +87,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     onToggleGroupCollapsed,
 }) => {
     const ref = useRef<List<CompositeBarRow>>(null);
+    const {menuDensity} = useAsideHeaderContext();
 
     const onMouseLeave = useCallback(() => {
         if (compact && document.hasFocus()) {
@@ -131,15 +133,25 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     const itemHeight = useCallback(
         (row: CompositeBarRow) => {
             if (row.kind === 'item') {
-                return getItemHeight(row.item);
+                return getItemHeight(row.item, menuDensity);
             }
-            const headerH = getItemHeight(makeGroupHeaderAsideItem(row.group));
+            const headerH = getItemHeight(makeGroupHeaderAsideItem(row.group), menuDensity);
             if (!inlineGroupChildren || isGroupCollapsed(row.group.id)) {
                 return headerH;
             }
-            return headerH + getItemsHeight(row.items);
+            return headerH + getItemsHeight(row.items, menuDensity);
         },
-        [inlineGroupChildren, isGroupCollapsed],
+        [inlineGroupChildren, isGroupCollapsed, menuDensity],
+    );
+
+    const nestedItemHeight = useCallback(
+        (item: AsideHeaderItem) => getItemHeight(item, menuDensity),
+        [menuDensity],
+    );
+
+    const nestedItemsHeight = useCallback(
+        (listItems: AsideHeaderItem[]) => getItemsHeight(listItems, menuDensity),
+        [menuDensity],
     );
 
     const itemsHeight = useCallback(
@@ -230,8 +242,8 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                             <List<AsideHeaderItem>
                                 items={row.items}
                                 selectedItemIndex={selectedItemIndex}
-                                itemHeight={getItemHeight}
-                                itemsHeight={getItemsHeight}
+                                itemHeight={nestedItemHeight}
+                                itemsHeight={nestedItemsHeight}
                                 itemClassName={b('menu-group-nested-list-item')}
                                 virtualized={false}
                                 filterable={false}
@@ -318,6 +330,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     onToggleMenuGroupCollapsed,
 }) => {
     const rows = useMemo(() => buildCompositeBarRows(items, menuGroups), [items, menuGroups]);
+    const {menuDensity} = useAsideHeaderContext();
 
     const isCollapsedControlled = collapsedMenuGroupIdsProp !== undefined;
     const [uncontrolledCollapsed, setUncontrolledCollapsed] = useState<Record<string, boolean>>(
@@ -348,7 +361,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
 
     const scrollRecalcKey = useMemo(
         () =>
-            `${items.length}:${menuGroups?.length ?? 0}:${JSON.stringify(
+            `${menuDensity ?? 'default'}:${items.length}:${menuGroups?.length ?? 0}:${JSON.stringify(
                 Object.keys(collapsedMap)
                     .sort()
                     .reduce<Record<string, boolean>>((acc, k) => {
@@ -356,7 +369,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                         return acc;
                     }, {}),
             )}`,
-        [items.length, menuGroups?.length, collapsedMap],
+        [items.length, menuGroups?.length, collapsedMap, menuDensity],
     );
 
     if (rows.length === 0) {
@@ -384,8 +397,8 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                 </ScrollableWithScrollbar>
             );
         } else {
-            const minHeight = getCompositeBarRowsMinHeight(rows);
-            const collapseItem = getMoreButtonItem(menuMoreTitle);
+            const minHeight = getCompositeBarRowsMinHeight(rows, menuDensity);
+            const collapseItem = getMoreButtonItem(menuMoreTitle, menuDensity);
             node = (
                 <div className={b({autosizer: true})} style={{minHeight}}>
                     {rows.length !== 0 && (
@@ -398,6 +411,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                                     rows,
                                     height,
                                     collapseItem,
+                                    menuDensity,
                                 );
                                 return (
                                     <div style={{width, height}}>

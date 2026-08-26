@@ -80,6 +80,7 @@ export const useAsideHeaderInnerContextValue = (
 
     return {
         ...props,
+        menuDensity: props.menuDensity ?? 'default',
         onClosePanel: innerOnClosePanel,
         allPagesIsAvailable,
         menuItems: innerMenuItems,

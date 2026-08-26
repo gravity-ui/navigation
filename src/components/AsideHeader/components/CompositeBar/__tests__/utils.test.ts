@@ -15,6 +15,24 @@ import {
 } from '../utils';
 
 describe('CompositeBar utils', () => {
+    describe('getItemHeight', () => {
+        it('uses the selected density for regular items', () => {
+            const item: AsideHeaderItem = {id: 'regular', title: 'Regular'};
+
+            expect(getItemHeight(item)).toBe(40);
+            expect(getItemHeight(item, 'compact')).toBe(32);
+        });
+
+        it('uses density for action height and keeps divider height unchanged', () => {
+            const action: AsideHeaderItem = {id: 'action', title: 'Action', type: 'action'};
+            const divider: AsideHeaderItem = {id: 'divider', title: 'Divider', type: 'divider'};
+
+            expect(getItemHeight(action)).toBe(50);
+            expect(getItemHeight(action, 'compact')).toBe(46);
+            expect(getItemHeight(divider, 'compact')).toBe(15);
+        });
+    });
+
     describe('getPopupItemHeight', () => {
         it('returns POPUP_REGULAR_ITEM_HEIGHT for regular items', () => {
             const item: AsideHeaderItem = {id: 'r', title: 'Regular'};
@@ -109,6 +127,25 @@ describe('CompositeBar utils', () => {
 
             const overflowGroup = collapseItems.find((i) => i.compositeBarMenuPopupItems?.length);
             expect(overflowGroup?.compositeBarMenuPopupItems?.map((c) => c.id)).toEqual(['c1']);
+        });
+
+        it('uses density when deciding whether items fit', () => {
+            const rows: CompositeBarRow[] = [
+                {kind: 'item', item: {id: 'a', title: 'A'}},
+                {kind: 'item', item: {id: 'b', title: 'B'}},
+                {kind: 'item', item: {id: 'c', title: 'C'}},
+            ];
+
+            const defaultResult = getAutosizeCompositeBarRows(rows, 96, getMoreButtonItem('More'));
+            const compactResult = getAutosizeCompositeBarRows(
+                rows,
+                96,
+                getMoreButtonItem('More', 'compact'),
+                'compact',
+            );
+
+            expect(defaultResult.collapseItems.map(({id}) => id)).toEqual(['b', 'c']);
+            expect(compactResult.collapseItems).toEqual([]);
         });
     });
 });
