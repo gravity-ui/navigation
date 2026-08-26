@@ -71,7 +71,7 @@ export interface MenuGroup {
     /** Hide the group from display */
     hidden?: boolean;
     /**
-     * Optional title shown only in the compact popup that lists group children.
+     * Optional title shown in a popup that lists group children.
      * Does not affect the group title displayed anywhere else.
      */
     popupTitle?: string;

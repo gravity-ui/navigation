@@ -26,6 +26,7 @@ describe('AsideHeader menu density', () => {
     it('keeps the current metrics in default density', () => {
         expect(getAsideHeaderDensityConfig()).toEqual({
             itemHeight: 40,
+            twoLineItemHeight: 56,
             actionSize: 36,
             actionItemHeight: 50,
             iconSize: 18,
@@ -44,6 +45,7 @@ describe('AsideHeader menu density', () => {
     it('provides compact density metrics and CSS properties from the same config', () => {
         expect(getAsideHeaderDensityConfig('compact')).toEqual({
             itemHeight: 32,
+            twoLineItemHeight: 45,
             actionSize: 32,
             actionItemHeight: 46,
             iconSize: 16,
@@ -60,6 +62,7 @@ describe('AsideHeader menu density', () => {
         expect(getAsideHeaderDensityCssProperties('compact')).toEqual({
             '--_--gn-aside-header-density-item-height': '32px',
             '--_--gn-aside-header-density-action-size': '32px',
+            '--_--gn-aside-header-density-icon-size': '16px',
             '--_--gn-aside-header-density-footer-item-height': '32px',
             '--_--gn-aside-header-density-item-margin-inline': '6px',
             '--_--gn-aside-header-density-icon-background-size': '32px',

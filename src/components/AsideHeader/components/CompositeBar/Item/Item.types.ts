@@ -12,14 +12,22 @@ export interface ItemInnerProps extends ItemProps {
     /** Optional title rendered at the top of the popup listing `menuPopupItems`. */
     menuPopupTitle?: string;
     /**
-     * When set, the row is an inline (expanded sidebar) group header: chevron up/down
-     * instead of a flyout chevron, and children render in a nested list.
+     * When set, the row is an inline (expanded sidebar) group header: chevron right/down
+     * instead of a flyout chevron. A collapsed header may still open its children in a popup.
      */
     groupHeaderExpanded?: boolean;
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
     /** When true, the icon slot is not rendered (e.g. compact popover: icon stays in the bar). */
     hideIcon?: boolean;
+    /** Controls icon visibility for the rows rendered in this item's popup. */
+    menuPopupHideIcon?: boolean;
+    /** Controls icon visibility one popup level deeper (a group nested inside `More`). */
+    menuPopupNestedHideIcon?: boolean;
+    /** Row rendered inside ItemPopup; always uses a single-line title. */
+    menuPopupRow?: boolean;
+    /** Suppresses selected styling without changing the source item's `current` value. */
+    suppressCurrentHighlight?: boolean;
     /**
      * Stops click bubbling so portaled popup rows do not trigger the parent Item's onClick.
      * Off when `itemWrapper` is set so the wrapper (e.g. react-router Link) receives the click.
@@ -29,4 +37,6 @@ export interface ItemInnerProps extends ItemProps {
     onPopupItemClick?: AsideHeaderItem['onItemClick'];
     /** Inline menu-group tree (L-connector) rendered inside the row, before the icon slot. */
     menuGroupNestedTreeConnector?: React.ReactNode;
+    /** Inline expanded menu-group child row. */
+    menuGroupNested?: boolean;
 }

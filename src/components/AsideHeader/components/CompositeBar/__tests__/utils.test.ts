@@ -31,11 +31,20 @@ describe('CompositeBar utils', () => {
             expect(getItemHeight(action, 'compact')).toBe(46);
             expect(getItemHeight(divider, 'compact')).toBe(15);
         });
+
+        it('uses the two-line height only in an expanded sidebar row', () => {
+            const item: AsideHeaderItem = {id: 'two-lines', title: 'Two lines', titleLines: 2};
+
+            expect(getItemHeight(item)).toBe(56);
+            expect(getItemHeight(item, 'compact')).toBe(45);
+            expect(getItemHeight(item, 'default', {sidebarCompact: true})).toBe(40);
+            expect(getItemHeight(item, 'compact', {sidebarCompact: true})).toBe(32);
+        });
     });
 
     describe('getPopupItemHeight', () => {
         it('returns POPUP_REGULAR_ITEM_HEIGHT for regular items', () => {
-            const item: AsideHeaderItem = {id: 'r', title: 'Regular'};
+            const item: AsideHeaderItem = {id: 'r', title: 'Regular', titleLines: 2};
             expect(getPopupItemHeight(item)).toBe(POPUP_REGULAR_ITEM_HEIGHT);
         });
 

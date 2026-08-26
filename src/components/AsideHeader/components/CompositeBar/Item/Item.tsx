@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {ChevronDown, ChevronRight, ChevronUp} from '@gravity-ui/icons';
+import {ChevronDown, ChevronRight} from '@gravity-ui/icons';
 import {Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
 
 import {MakeItemParams} from '../../../../types';
@@ -22,7 +22,64 @@ const b = createBlock('composite-bar-item', styles);
 const defaultPopupPlacement: PopupPlacement = ['right-end'];
 const defaultPopupOffset: NonNullable<PopupProps['offset']> = {mainAxis: 14};
 const CHEVRON_SIZE = 16;
-const CHEVRON_SIZE_COMPACT = 10;
+
+function isItemCurrent(props: ItemInnerProps, popupItems?: ItemInnerProps['menuPopupItems']) {
+    return Boolean(props.current || popupItems?.some((item) => item.current));
+}
+
+function shouldShowMenuPopup({
+    type,
+    popupItems,
+    collapsedItem,
+    inlineGroupHeader,
+    groupHeaderExpanded,
+}: {
+    type: string;
+    popupItems?: ItemInnerProps['menuPopupItems'];
+    collapsedItem: boolean;
+    inlineGroupHeader: boolean;
+    groupHeaderExpanded?: boolean;
+}) {
+    return (
+        type !== 'divider' &&
+        Boolean(popupItems?.length) &&
+        (collapsedItem || !inlineGroupHeader || !groupHeaderExpanded)
+    );
+}
+
+function shouldShowChevron({
+    compact,
+    inlineGroupHeader,
+    hasPopupItems,
+}: {
+    compact?: boolean;
+    inlineGroupHeader: boolean;
+    hasPopupItems: boolean;
+}) {
+    if (inlineGroupHeader) {
+        return !compact;
+    }
+
+    return !compact && hasPopupItems;
+}
+
+function getExpandedTitleLines({
+    type,
+    compact,
+    menuPopupRow,
+    titleLines,
+}: {
+    type: string;
+    compact?: boolean;
+    menuPopupRow?: boolean;
+    titleLines?: ItemInnerProps['titleLines'];
+}) {
+    if (type !== ITEM_TYPE_REGULAR || compact || menuPopupRow) {
+        return 1;
+    }
+
+    return titleLines;
+}
 
 export const Item: React.FC<ItemInnerProps> = (props) => {
     const {
@@ -52,9 +109,14 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         href,
         qa,
         hideIcon = false,
+        menuPopupHideIcon,
+        menuPopupNestedHideIcon,
         stopClickPropagation = false,
         menuGroupNestedTreeConnector,
+        menuGroupNested,
         menuItemAriaProps,
+        menuPopupRow,
+        suppressCurrentHighlight = false,
     } = props;
 
     const [compactNavPopoverOpen, setCompactNavPopoverOpen] = React.useState(false);
@@ -74,7 +136,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const resolvedMenuPopupItems = menuPopupItems ?? props.compositeBarMenuPopupItems;
     const resolvedMenuPopupTitle = menuPopupTitle ?? props.compositeBarMenuPopupTitle;
 
-    const current = props.current || resolvedMenuPopupItems?.some((item) => item.current) || false;
+    const current = !suppressCurrentHighlight && isItemCurrent(props, resolvedMenuPopupItems);
 
     const handleOpenChangePopup = React.useCallback<NonNullable<ItemProps['onOpenChangePopup']>>(
         (newOpen, event, reason) => {
@@ -96,10 +158,13 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     );
 
     const isDivider = type === 'divider';
-    const showMenuPopup =
-        !isDivider &&
-        Boolean(resolvedMenuPopupItems?.length) &&
-        (collapsedItem || !inlineGroupHeader);
+    const showMenuPopup = shouldShowMenuPopup({
+        type,
+        popupItems: resolvedMenuPopupItems,
+        collapsedItem,
+        inlineGroupHeader,
+        groupHeaderExpanded,
+    });
 
     const submenuNest = React.useContext(ItemPopupNestContext);
 
@@ -120,6 +185,12 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     }
 
     const compactPopoverDisabled = !enableTooltip || popupVisible || type === 'action';
+    const expandedTitleLines = getExpandedTitleLines({
+        type,
+        compact,
+        menuPopupRow,
+        titleLines: props.titleLines,
+    });
 
     const makeIconNode = (iconEl: React.ReactNode, withCompactPopover = true): React.ReactNode => {
         if (!compact) {
@@ -143,6 +214,8 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         return (
             <ItemPopup
                 items={[props]}
+                variant="label"
+                highlightCurrentItem={false}
                 open={compactNavPopoverOpen}
                 onOpenChange={(nextOpen) => {
                     if (nextOpen && compactPopoverDisabled) return;
@@ -163,7 +236,23 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
         const wrappedByItemWrapper = typeof itemWrapper === 'function';
-        const rowClassName = b({type, current, compact, 'hide-icon': hideIcon}, className);
+        const showChevron = shouldShowChevron({
+            compact,
+            inlineGroupHeader,
+            hasPopupItems: Boolean(resolvedMenuPopupItems?.length),
+        });
+        const rowClassName = b(
+            {
+                type,
+                current,
+                compact,
+                'hide-icon': hideIcon,
+                'menu-group-nested': menuGroupNested,
+                'menu-popup-row': menuPopupRow,
+                'title-lines': expandedTitleLines?.toString(),
+            },
+            className,
+        );
         const ariaLabel = typeof title === 'string' ? title : undefined;
 
         const handleRowClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -189,20 +278,17 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     {titleEl}
                 </div>
 
-                {inlineGroupHeader ? (
+                {showChevron && inlineGroupHeader ? (
                     <div className={b('chevron')}>
                         <Icon
-                            data={groupHeaderExpanded ? ChevronUp : ChevronDown}
-                            size={compact ? CHEVRON_SIZE_COMPACT : CHEVRON_SIZE}
+                            data={groupHeaderExpanded ? ChevronDown : ChevronRight}
+                            size={CHEVRON_SIZE}
                         />
                     </div>
                 ) : (
-                    Boolean(resolvedMenuPopupItems?.length) && (
+                    showChevron && (
                         <div className={b('chevron')}>
-                            <Icon
-                                data={ChevronRight}
-                                size={compact ? CHEVRON_SIZE_COMPACT : CHEVRON_SIZE}
-                            />
+                            <Icon data={ChevronRight} size={CHEVRON_SIZE} />
                         </div>
                     )
                 )}
@@ -264,6 +350,8 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     title={resolvedMenuPopupTitle}
                     open={compactNavPopoverOpen}
                     itemClassName={popupItemClassName}
+                    hideIcon={menuPopupHideIcon}
+                    nestedPopupHideIcon={menuPopupNestedHideIcon}
                     onOpenChange={setCompactNavPopoverOpen}
                     collapsed={collapsedItem ? true : compact}
                     onPopupItemClick={onPopupItemClick}
@@ -301,7 +389,11 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         hideIcon || !icon ? null : (
             <Icon qa={iconQa} data={icon} size={iconSize} className={b('icon')} />
         );
-    const titleNode = renderItemTitle({title, rightAdornment});
+    const titleNode = renderItemTitle({
+        title,
+        rightAdornment,
+        titleLines: expandedTitleLines,
+    });
     const params = {icon: iconNode, title: titleNode};
     let highlightedNode = null;
     let node;
