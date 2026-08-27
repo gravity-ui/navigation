@@ -11,6 +11,7 @@ export type AsideHeaderMenuDensity = 'default' | 'compact';
 
 interface AsideHeaderDensityConfig {
     itemHeight: number;
+    twoLineItemHeight: number;
     actionSize: number;
     actionItemHeight: number;
     iconSize: number;
@@ -28,6 +29,7 @@ interface AsideHeaderDensityConfig {
 const ASIDE_HEADER_DENSITY_CONFIG: Record<AsideHeaderMenuDensity, AsideHeaderDensityConfig> = {
     default: {
         itemHeight: ITEM_HEIGHT,
+        twoLineItemHeight: 56,
         actionSize: 36,
         actionItemHeight: 50,
         iconSize: ASIDE_HEADER_ICON_SIZE,
@@ -43,6 +45,7 @@ const ASIDE_HEADER_DENSITY_CONFIG: Record<AsideHeaderMenuDensity, AsideHeaderDen
     },
     compact: {
         itemHeight: 32,
+        twoLineItemHeight: 45,
         actionSize: 32,
         actionItemHeight: 46,
         iconSize: 16,
@@ -72,6 +75,7 @@ export function getAsideHeaderDensityCssProperties(
     return {
         '--_--gn-aside-header-density-item-height': `${config.itemHeight}px`,
         '--_--gn-aside-header-density-action-size': `${config.actionSize}px`,
+        '--_--gn-aside-header-density-icon-size': `${config.iconSize}px`,
         '--_--gn-aside-header-density-footer-item-height': `${config.footerItemHeight}px`,
         '--_--gn-aside-header-density-item-margin-inline': `${config.itemMarginInline}px`,
         '--_--gn-aside-header-density-icon-background-size': `${config.iconBackgroundSize}px`,

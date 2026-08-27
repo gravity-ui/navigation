@@ -5,6 +5,7 @@ import React from 'react';
 
 import {Gear} from '@gravity-ui/icons';
 import {ThemeProvider} from '@gravity-ui/uikit';
+import type {RealTheme} from '@gravity-ui/uikit';
 import {fireEvent, render, screen} from '@testing-library/react';
 
 import {
@@ -13,7 +14,7 @@ import {
 } from '../../../AsideHeaderContext';
 import {AsideHeaderMenuDensity} from '../../../density';
 import {AsideHeaderItem} from '../../../types';
-import {ItemPopup} from '../Item/ItemPopup';
+import {ItemPopup, getItemPopoverOffset} from '../Item/ItemPopup';
 
 const contextValue = {
     compact: false,
@@ -32,15 +33,18 @@ function renderItemPopup(props: {
     open?: boolean;
     title?: string;
     menuDensity?: AsideHeaderMenuDensity;
+    theme?: RealTheme;
+    variant?: 'menu' | 'label';
 }) {
     return render(
-        <ThemeProvider theme="light">
+        <ThemeProvider theme={props.theme ?? 'light'}>
             <AsideHeaderContextProvider
                 value={{compact: false, size: 200, menuDensity: props.menuDensity}}
             >
                 <AsideHeaderInnerContextProvider value={contextValue}>
                     <ItemPopup
                         items={props.items}
+                        variant={props.variant}
                         title={props.title}
                         open={props.open ?? true}
                         onOpenChange={props.onOpenChange ?? (() => {})}
@@ -93,6 +97,10 @@ describe('ItemPopup', () => {
         expect(popup?.style.getPropertyValue('--_--gn-aside-header-density-item-title-gap')).toBe(
             '4px',
         );
+        expect(popup?.style.getPropertyValue('--_--gn-aside-header-density-icon-size')).toBe(
+            '16px',
+        );
+        expect(popup?.style.getPropertyValue('--_--popup-title-height')).toBe('30px');
     });
 
     it('calls onItemClick with original item and collapsed=true when collapsed prop is set', () => {
@@ -222,6 +230,46 @@ describe('ItemPopup', () => {
         expect(document.querySelector('.gn-composite-bar-item__popup-title')).toBeNull();
     });
 
+    it('forces a two-line menu item to one line inside the popup', () => {
+        renderItemPopup({
+            items: [{id: 'item1', title: 'Long popup title', titleLines: 2}],
+            open: true,
+        });
+
+        expect(screen.getByText('Long popup title').className).not.toContain('title-text_lines_2');
+    });
+
+    it.each([
+        ['light', 'dark'],
+        ['dark', 'dark'],
+        ['light-hc', 'dark-hc'],
+        ['dark-hc', 'dark-hc'],
+    ] as const)('uses %s parent theme with %s solo popup theme', (theme, popupTheme) => {
+        renderItemPopup({
+            items: [{id: 'home', title: 'Home', icon: Gear}],
+            open: true,
+            theme,
+            variant: 'label',
+        });
+
+        // eslint-disable-next-line testing-library/no-node-access
+        const popup = document.querySelector('.g-popup');
+        expect(popup?.classList.contains(`g-root_theme_${popupTheme}`)).toBe(true);
+    });
+
+    it('does not force the dark theme on a group popup', () => {
+        renderItemPopup({
+            items: [{id: 'only-child', title: 'Only child'}],
+            open: true,
+            variant: 'menu',
+        });
+
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(document.querySelector('.g-popup')?.classList.contains('g-root_theme_dark')).toBe(
+            false,
+        );
+    });
+
     it('lets itemWrapper receive bubbled clicks in popup', () => {
         const onWrapperClick = jest.fn();
         const items: AsideHeaderItem[] = [
@@ -327,5 +375,25 @@ describe('ItemPopup', () => {
         fireEvent.click(screen.getByText('Wrapped item'));
 
         expect(onParentClick).not.toHaveBeenCalled();
+    });
+});
+
+describe('ItemPopup helpers', () => {
+    it('aligns the first popup row with its anchor and accounts for a title block', () => {
+        expect(
+            getItemPopoverOffset({
+                isSingleLabel: false,
+                itemHeight: 40,
+                popupRowHeight: 32,
+            }),
+        ).toEqual({mainAxis: 14, crossAxis: 0});
+        expect(
+            getItemPopoverOffset({
+                isSingleLabel: false,
+                itemHeight: 40,
+                popupRowHeight: 32,
+                titleHeight: 30,
+            }),
+        ).toEqual({mainAxis: 14, crossAxis: -30});
     });
 });

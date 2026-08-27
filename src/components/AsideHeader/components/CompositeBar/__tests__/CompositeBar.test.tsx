@@ -8,7 +8,10 @@ import {ThemeProvider} from '@gravity-ui/uikit';
 import {act, fireEvent, render, screen} from '@testing-library/react';
 
 import {MenuGroup} from '../../../../types';
-import {AsideHeaderInnerContextProvider} from '../../../AsideHeaderContext';
+import {
+    AsideHeaderInnerContextProvider,
+    AsideHeaderInnerContextType,
+} from '../../../AsideHeaderContext';
 import {AsideHeaderItem} from '../../../types';
 import {CompositeBar} from '../CompositeBar';
 
@@ -19,13 +22,13 @@ jest.mock('react-virtualized-auto-sizer', () => ({
         children({width: 200, height: 80}),
 }));
 
-const contextValue = {
+const contextValue: AsideHeaderInnerContextType = {
     compact: false,
     size: 200,
     menuItems: [],
     allPagesIsAvailable: false,
     onItemClick: () => {},
-} as any;
+};
 
 function renderCompositeBar(props: {
     items: AsideHeaderItem[];
@@ -102,7 +105,7 @@ describe('CompositeBar', () => {
         expect(screen.getByText('Ресурсы')).toBeTruthy();
     });
 
-    it('does not close compact icon tooltip when clicking the current leaf menu item', () => {
+    it('preserves current item data when clicking its row in the collapsed label popup', () => {
         jest.useFakeTimers();
 
         const onItemClick = jest.fn();
@@ -110,19 +113,28 @@ describe('CompositeBar', () => {
 
         renderCompositeBar({items, onItemClick, compact: true});
 
-        const itemButton = screen.getByRole('button');
+        const itemButton = screen.getByRole('button', {name: 'Home'});
+        // The label Popover is anchored to the icon area inside the menu row.
+        // eslint-disable-next-line testing-library/no-node-access
+        const labelPopupTrigger = itemButton.firstElementChild?.firstElementChild;
 
-        fireEvent.mouseEnter(itemButton);
+        fireEvent.mouseEnter(labelPopupTrigger as Element);
 
         act(() => {
             jest.advanceTimersByTime(150);
         });
 
-        expect(screen.getByText('Home')).toBeTruthy();
+        const popupItemButton = screen.getAllByRole('button', {name: 'Home'})[1];
+        expect(popupItemButton).toBeTruthy();
 
-        fireEvent.click(itemButton);
+        fireEvent.click(popupItemButton);
 
-        expect(screen.getByText('Home')).toBeTruthy();
+        expect(onItemClick).toHaveBeenCalledWith(
+            expect.objectContaining({id: 'home', current: true}),
+            true,
+            expect.any(Object),
+        );
+        expect(screen.getAllByRole('button', {name: 'Home'})).toHaveLength(2);
 
         jest.useRealTimers();
     });

@@ -1,7 +1,5 @@
 import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 
-const EMPTY_DEPS: React.DependencyList = [];
-
 const MIN_THUMB_HEIGHT = 24;
 
 type ThumbGeometry = {
@@ -13,7 +11,6 @@ type UseScrollableScrollbarSyncResult = {
     scrollRef: React.RefObject<HTMLDivElement>;
     trackRef: React.RefObject<HTMLDivElement>;
     thumbRef: React.RefObject<HTMLDivElement>;
-    hasContentBelow: boolean;
     overflows: boolean;
     thumb: ThumbGeometry;
     scheduleUpdate: () => void;
@@ -22,23 +19,19 @@ type UseScrollableScrollbarSyncResult = {
 };
 
 /**
- * Keeps a custom scrollbar thumb and bottom shadow in sync with a native
- * scroll layer. The scroll element handles touch/keyboard; wheel events on the
- * overlay track are forwarded to it (the track sits above the scroller, so
- * they would not scroll otherwise). Wheel, touch, and keyboard on the
- * scrollable area itself are unchanged.
+ * Keeps a custom scrollbar thumb in sync with a native scroll layer. The
+ * scroll element handles touch/keyboard; wheel events on the overlay track are
+ * forwarded to it (the track sits above the scroller, so they would not scroll
+ * otherwise). Wheel, touch, and keyboard on the scrollable area itself are
+ * unchanged.
  *
- * @param recalcDeps - extra deps that should trigger thumb/shadow recalculation
  * @returns refs, scroll state, thumb geometry, and pointer handlers for the UI
  */
-export function useScrollableScrollbarSync(
-    recalcDeps: React.DependencyList = EMPTY_DEPS,
-): UseScrollableScrollbarSyncResult {
+export function useScrollableScrollbarSync(): UseScrollableScrollbarSyncResult {
     const scrollRef = useRef<HTMLDivElement>(null);
     const trackRef = useRef<HTMLDivElement>(null);
     const thumbRef = useRef<HTMLDivElement>(null);
 
-    const [hasContentBelow, setHasContentBelow] = useState(false);
     const [overflows, setOverflows] = useState(false);
     const [thumb, setThumb] = useState<ThumbGeometry>({top: 0, height: 0});
 
@@ -57,13 +50,10 @@ export function useScrollableScrollbarSync(
                 return;
             }
 
-            const {scrollTop, scrollHeight, clientHeight} = el;
+            const {scrollHeight, clientHeight} = el;
             const isOverflowing = scrollHeight > clientHeight;
-            // `-1` guards against subpixel rounding at the bottom.
-            const notAtBottom = scrollTop + clientHeight < scrollHeight - 1;
 
             setOverflows(isOverflowing);
-            setHasContentBelow(isOverflowing && notAtBottom);
 
             if (!isOverflowing) {
                 setThumb({top: 0, height: 0});
@@ -74,6 +64,7 @@ export function useScrollableScrollbarSync(
             const rawHeight = clientHeight * ratio;
             const height = Math.max(rawHeight, MIN_THUMB_HEIGHT);
             const maxTop = clientHeight - height;
+            const {scrollTop} = el;
             const scrollRatio =
                 scrollHeight - clientHeight > 0 ? scrollTop / (scrollHeight - clientHeight) : 0;
             const top = maxTop * scrollRatio;
@@ -97,9 +88,14 @@ export function useScrollableScrollbarSync(
 
         const observer = new ResizeObserver(scheduleUpdate);
         observer.observe(el);
+        // CompositeBar is the single direct child. Its content-box changes when
+        // row type, title, adornment, group state, or density changes.
+        const contentEl = el.firstElementChild;
+        if (contentEl) {
+            observer.observe(contentEl);
+        }
         return () => observer.disconnect();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [scheduleUpdate, ...recalcDeps]);
+    }, [scheduleUpdate]);
 
     useEffect(() => {
         return () => {
@@ -228,7 +224,6 @@ export function useScrollableScrollbarSync(
         scrollRef,
         trackRef,
         thumbRef,
-        hasContentBelow,
         overflows,
         thumb,
         scheduleUpdate,

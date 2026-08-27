@@ -8,9 +8,27 @@ import {AsideHeaderItem} from '../../types';
 import {COLLAPSE_ITEM_ID, COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX} from './constants';
 import type {CompositeBarRow} from './grouping';
 
+type CompositeBarItemLayoutOptions = {
+    /** Collapsed sidebar (icon-only rows): multi-line titles use the regular row height. */
+    sidebarCompact?: boolean;
+};
+
+function getRegularItemHeight(
+    compositeItem: AsideHeaderItem,
+    menuDensity: AsideHeaderMenuDensity,
+    layout?: CompositeBarItemLayoutOptions,
+) {
+    const config = getAsideHeaderDensityConfig(menuDensity);
+
+    return compositeItem.titleLines === 2 && !layout?.sidebarCompact
+        ? config.twoLineItemHeight
+        : config.itemHeight;
+}
+
 export function getItemHeight(
     compositeItem: AsideHeaderItem,
     menuDensity: AsideHeaderMenuDensity = 'default',
+    layout?: CompositeBarItemLayoutOptions,
 ) {
     switch (compositeItem.type) {
         case 'action':
@@ -19,7 +37,7 @@ export function getItemHeight(
             return 15;
 
         default:
-            return getAsideHeaderDensityConfig(menuDensity).itemHeight;
+            return getRegularItemHeight(compositeItem, menuDensity, layout);
     }
 }
 
@@ -38,8 +56,9 @@ export function getPopupItemHeight(compositeItem: AsideHeaderItem) {
 export function getItemsHeight<T extends AsideHeaderItem>(
     items: T[],
     menuDensity: AsideHeaderMenuDensity = 'default',
+    layout?: CompositeBarItemLayoutOptions,
 ) {
-    return items.reduce((sum, item) => sum + getItemHeight(item, menuDensity), 0);
+    return items.reduce((sum, item) => sum + getItemHeight(item, menuDensity, layout), 0);
 }
 
 export function getPopupItemsHeight<T extends AsideHeaderItem>(items: T[]) {
@@ -68,14 +87,15 @@ function getPinnedItems(compositeItems: AsideHeaderItem[]) {
 function getItemsMinHeight(
     compositeItems: AsideHeaderItem[],
     menuDensity: AsideHeaderMenuDensity = 'default',
+    layout?: CompositeBarItemLayoutOptions,
 ) {
     const pinnedItems = getPinnedItems(compositeItems);
     const afterMoreButtonItems = compositeItems.filter(({afterMoreButton}) => afterMoreButton);
     const {itemHeight} = getAsideHeaderDensityConfig(menuDensity);
 
     return (
-        getItemsHeight(pinnedItems, menuDensity) +
-        getItemsHeight(afterMoreButtonItems, menuDensity) +
+        getItemsHeight(pinnedItems, menuDensity, layout) +
+        getItemsHeight(afterMoreButtonItems, menuDensity, layout) +
         (pinnedItems.length === compositeItems.length ? 0 : itemHeight)
     );
 }
@@ -120,11 +140,12 @@ function makeOverflowGroupAsideItem(
 function getCompositeBarRowLayoutHeight(
     row: CompositeBarRow,
     menuDensity: AsideHeaderMenuDensity = 'default',
+    layout?: CompositeBarItemLayoutOptions,
 ): number {
     if (row.kind === 'item') {
-        return getItemHeight(row.item, menuDensity);
+        return getItemHeight(row.item, menuDensity, layout);
     }
-    return getItemHeight(makeGroupHeaderAsideItem(row.group), menuDensity);
+    return getItemHeight(makeGroupHeaderAsideItem(row.group), menuDensity, layout);
 }
 
 /**
@@ -160,8 +181,9 @@ function compositeBarRowsToFlatForMinHeight(rows: CompositeBarRow[]): AsideHeade
 export function getCompositeBarRowsMinHeight(
     rows: CompositeBarRow[],
     menuDensity: AsideHeaderMenuDensity = 'default',
+    layout?: CompositeBarItemLayoutOptions,
 ): number {
-    return getItemsMinHeight(compositeBarRowsToFlatForMinHeight(rows), menuDensity);
+    return getItemsMinHeight(compositeBarRowsToFlatForMinHeight(rows), menuDensity, layout);
 }
 
 export function getSelectedCompositeBarRowIndex(rows: CompositeBarRow[]): number | undefined {
@@ -180,6 +202,7 @@ export function getAutosizeCompositeBarRows(
     height: number,
     collapseItem: AsideHeaderItem,
     menuDensity: AsideHeaderMenuDensity = 'default',
+    layout?: CompositeBarItemLayoutOptions,
 ): {
     listRows: CompositeBarRow[];
     collapseItems: AsideHeaderItem[];
@@ -190,14 +213,14 @@ export function getAutosizeCompositeBarRows(
     const listRows: CompositeBarRow[] = [...regularRows, ...afterMoreRows];
 
     const allRowsHeight = listRows.reduce(
-        (sum, row) => sum + getCompositeBarRowLayoutHeight(row, menuDensity),
+        (sum, row) => sum + getCompositeBarRowLayoutHeight(row, menuDensity, layout),
         0,
     );
     if (allRowsHeight <= height) {
         return {listRows, collapseItems: []};
     }
 
-    const collapseItemHeight = getItemHeight(collapseItem, menuDensity);
+    const collapseItemHeight = getItemHeight(collapseItem, menuDensity, layout);
 
     listRows.splice(regularRows.length, 0, {kind: 'item', item: collapseItem});
     const collapseItems: AsideHeaderItem[] = [];
@@ -227,19 +250,19 @@ export function getAutosizeCompositeBarRows(
                     nextRow?.kind === 'item' &&
                     nextRow.item.type === 'divider'
                 ) {
-                    listHeight -= getItemHeight(compositeItem, menuDensity);
+                    listHeight -= getItemHeight(compositeItem, menuDensity, layout);
                     listRows.splice(index, 1);
                 }
                 continue;
             }
-            listHeight -= getItemHeight(compositeItem, menuDensity);
+            listHeight -= getItemHeight(compositeItem, menuDensity, layout);
             collapseItems.unshift(
                 ...listRows
                     .splice(index, 1)
                     .map((r) => (r as Extract<CompositeBarRow, {kind: 'item'}>).item),
             );
         } else {
-            listHeight -= getCompositeBarRowLayoutHeight(row, menuDensity);
+            listHeight -= getCompositeBarRowLayoutHeight(row, menuDensity, layout);
             const [removed] = listRows.splice(index, 1);
             if (removed?.kind === 'group') {
                 collapseItems.unshift(makeOverflowGroupAsideItem(removed.group, removed.items));

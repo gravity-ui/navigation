@@ -90,6 +90,11 @@ interface AsideHeaderDefaultProps {
     menuItems?: AsideHeaderItem[];
     menuGroups?: MenuGroup[];
     /**
+     * Shows icons for child items in inline groups and group popups.
+     * @default true
+     */
+    menuGroupNestedIcons?: boolean;
+    /**
      * Called only from **All pages** edit mode when the user toggles visibility of a **menu group** (group header pin), updating `menuGroup.hidden`.
      * Use with controlled `menuGroups`; not emitted for programmatic `menuGroups` changes outside All pages.
      */
@@ -130,6 +135,12 @@ export enum InnerPanels {
 export const ALL_PAGES_ID = InnerPanels.AllPages;
 
 export interface AsideHeaderItem extends MenuItem {
+    /**
+     * Maximum number of title lines in the expanded sidebar.
+     * Collapsed (icon-only) sidebar and popup rows always use one line.
+     * When omitted, the legacy two-line clamp is preserved.
+     */
+    titleLines?: 1 | 2;
     /**
      * @internal CompositeBar: group children rendered from the "More" overflow popover.
      */

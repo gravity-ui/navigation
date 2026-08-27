@@ -122,13 +122,21 @@ const MENU_ITEMS_CLAMPED: AsideHeaderProps['menuItems'] = [
         id: 'text',
         title: MENU_ITEMS_CLAMPED_TITLE,
         icon: Gear,
+        titleLines: 1,
     },
-    {id: 'text-action', title: MENU_ITEMS_CLAMPED_TITLE, icon: Gear, type: 'action'},
+    {
+        id: 'text-action',
+        title: MENU_ITEMS_CLAMPED_TITLE,
+        icon: Gear,
+        type: 'action',
+        titleLines: 1,
+    },
     {
         id: 'text-link',
         title: MENU_ITEMS_CLAMPED_TITLE,
         icon: Gear,
         href: 'about:blank',
+        titleLines: 1,
     },
     {
         id: 'text-link-action',
@@ -136,6 +144,7 @@ const MENU_ITEMS_CLAMPED: AsideHeaderProps['menuItems'] = [
         icon: Gear,
         href: 'about:blank',
         type: 'action',
+        titleLines: 1,
     },
 ];
 
@@ -154,7 +163,8 @@ export const menuItemsClamped = MENU_ITEMS_CLAMPED.concat({
 }).concat(
     MENU_ITEMS_CLAMPED.map((item) => ({
         ...item,
-        id: item.id.concat('-new'),
+        id: item.id.concat('-two-lines'),
+        titleLines: 2,
         rightAdornment: renderTag('new'),
     })),
 );

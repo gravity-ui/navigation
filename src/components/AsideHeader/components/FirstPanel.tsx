@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 
 import {setRef} from '@gravity-ui/uikit';
 
@@ -28,6 +28,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         className,
         hideCollapseButton,
         menuGroups,
+        menuGroupNestedIcons,
         menuOverflow,
         collapsedMenuGroupIds,
         defaultCollapsedMenuGroupIds,
@@ -36,6 +37,11 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         qa,
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
+    const [menuScrollOverflows, setMenuScrollOverflows] = useState(false);
+
+    const handleMenuScrollOverflowChange = useCallback((overflows: boolean) => {
+        setMenuScrollOverflows(overflows);
+    }, []);
 
     const asideRef = useRef<HTMLDivElement>(null);
 
@@ -72,6 +78,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             compact={compact}
                             items={visibleMenuItems}
                             menuGroups={menuGroups}
+                            menuGroupNestedIcons={menuGroupNestedIcons}
                             menuMoreTitle={menuMoreTitle ?? i18n('label_more')}
                             onItemClick={onItemClick}
                             onMoreClick={onMenuMoreClick}
@@ -79,11 +86,12 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             collapsedMenuGroupIds={collapsedMenuGroupIds}
                             defaultCollapsedMenuGroupIds={defaultCollapsedMenuGroupIds}
                             onToggleMenuGroupCollapsed={onToggleMenuGroupCollapsed}
+                            onMenuScrollOverflowChange={handleMenuScrollOverflowChange}
                         />
                     ) : (
                         <div className={b('menu-items')} />
                     )}
-                    <div className={b('footer')}>
+                    <div className={b('footer', {'with-divider': menuScrollOverflows})}>
                         {renderFooter?.({
                             size,
                             compact: Boolean(compact),

@@ -213,6 +213,13 @@ export const Aside: FC = () => {
 
 ## Properties
 
+The combined menu-group presentation adds one display option:
+
+- `menuGroupNestedIcons?: boolean` (default `true`) shows child icons both in inline groups and
+  group popups.
+
+With the advanced layout, pass `menuGroupNestedIcons` to `PageLayoutAside`.
+
 | Name                         | Description                                                                                                                                                                                                                        |                                                             Type                                                              |          Default          |
 | :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------: | :-----------------------: |
 | className                    | HTML `class` attribute of the Logo                                                                                                                                                                                                 |                                                           `string`                                                            |                           |
@@ -227,6 +234,7 @@ export const Aside: FC = () => {
 | logo                         | Logo container includes icon, title, handling clicks                                                                                                                                                                               |                [`Logo`](https://github.com/gravity-ui/navigation/blob/main/src/components/Logo/Readme.md#logo)                |                           |
 | menuItems                    | Items in the navigation middle section                                                                                                                                                                                             |                                                   `Array<AsideHeaderItem>`                                                    |           `[]`            |
 | menuGroups                   | Declares groups for the middle section; see [`MenuGroup`](#menugroup). Items attach via `AsideHeaderItem.groupId`.                                                                                                                 |                                                         `MenuGroup[]`                                                         |                           |
+| menuGroupNestedIcons         | Shows child item icons in inline groups and group popups.                                                                                                                                                                          |                                                           `boolean`                                                           |          `true`           |
 | menuDensity                  | Visual density of the aside and menu items. `compact` reduces dimensions without changing interaction behavior.                                                                                                                    |                                                   `'default' \| 'compact'`                                                    |        `'default'`        |
 | defaultMenuItems             | Default list for resetting **All pages** edits                                                                                                                                                                                     |                                                   `Array<AsideHeaderItem>`                                                    |                           |
 | menuOverflow                 | Overflow behavior for the composite menu; see [`menuOverflow`](#composite-menu-overflow-menuoverflow). **`collapse`** (default): extras under «More». **`scroll`**: scrollable column. Compact sidebar always uses **`collapse`**. |                                                   `'collapse' \| 'scroll'`                                                    |       `'collapse'`        |
@@ -262,11 +270,25 @@ The middle section uses a composite bar. **`menuOverflow`** chooses how overflow
 
 When the sidebar is **`compact`** (collapsed to icons), overflow **always** behaves like **`collapse`**, regardless of `menuOverflow`, because scrolling a strip of icon-only rows is awkward.
 
-With **`menuOverflow="scroll"`** and **`menuGroups`**, group headers can expand/collapse inline. Use **`collapsedMenuGroupIds`** / **`defaultCollapsedMenuGroupIds`** and **`onToggleMenuGroupCollapsed`** to control or observe that state (keys are `MenuGroup.id`).
+With **`menuOverflow="scroll"`** and **`menuGroups`**, group headers can expand/collapse inline. Use **`collapsedMenuGroupIds`** / **`defaultCollapsedMenuGroupIds`** and **`onToggleMenuGroupCollapsed`** to control or observe that state (keys are `MenuGroup.id`). An expanded group shows its children as an inline hierarchy; a collapsed group exposes the same children in a popup on hover/focus. `menuGroupNestedIcons` controls child icons in both representations.
+
+```tsx
+const [collapsedGroups, setCollapsedGroups] = React.useState<Record<string, boolean>>({});
+
+<AsideHeader
+  {...props}
+  menuOverflow="scroll"
+  menuGroups={menuGroups}
+  collapsedMenuGroupIds={collapsedGroups}
+  onToggleMenuGroupCollapsed={(groupId) => {
+    setCollapsedGroups((current) => ({...current, [groupId]: !current[groupId]}));
+  }}
+/>;
+```
 
 **`defaultMenuItems`** is the baseline list used when resetting **All pages** edits. Configure sorting, pins, group visibility toggles, and reset via **[`editMenuProps`](#editmenuprops)** below.
 
-In compact mode, groups collapse to a single icon anchor (`MenuGroup.icon`); the group's children are revealed in a popup whose heading is taken from `MenuGroup.popupTitle`.
+In compact mode, groups collapse to a single icon anchor (`MenuGroup.icon`); the group's children are revealed in a popup whose heading is taken from `MenuGroup.popupTitle`. A standalone compact item uses a lightweight dark popup surface for its single-line label and preserves high-contrast mode as `dark-hc`. Group and overflow popups keep the current UIKit theme.
 Inline expand/collapse (**`collapsedMenuGroupIds`** / **`onToggleMenuGroupCollapsed`**) does not apply here — it is only used when **`menuOverflow="scroll"`**.
 
 ### `MenuGroup`
@@ -279,7 +301,7 @@ Shape for entries in `menuGroups`. When `menuGroups` is set, middle-section item
 | `title`      | Group label shown on the inline group header in the expanded sidebar (and in flows that use this title).                                                                                                                       |
 | `icon`       | Optional [`Icon`](https://github.com/gravity-ui/uikit/tree/main/src/components/Icon) data for the group header.                                                                                                                |
 | `hidden`     | When `true`, hides the group from the main navigation; items in that group are omitted there. The **All pages** panel can still surface the group row for visibility edits when callbacks like `onMenuGroupsChanged` are used. |
-| `popupTitle` | Optional heading used **only** in the compact sidebar popup that lists a group’s children. Does not replace `title` for the inline group header or other surfaces.                                                             |
+| `popupTitle` | Optional heading used in a popup that lists a group’s children. Does not replace `title` for the inline group header or other surfaces.                                                                                        |
 
 ### `editMenuProps`
 
@@ -295,6 +317,11 @@ Optional configuration for the **All pages** panel (drag-and-drop, pins, reset).
 | `onToggleMenuGroup`        | Fired when the user toggles a **menu group’s** visibility via the pin on the group header in **All pages**—keep **`menuGroups`** in sync with **`onMenuGroupsChanged`**. |
 
 ### `AsideHeaderItem`
+
+`titleLines?: 1 | 2` controls the maximum title lines in the expanded sidebar. When omitted, the
+legacy two-line clamp is preserved.
+Compact sidebar and popup rows always use one line. A two-line row is included in menu overflow
+measurements, so it does not overlap the footer or incorrectly move neighboring items under More.
 
 | Name                   | Description                                                                                                                                                                                      |                                                                         Type                                                                         |             Default             |
 | :--------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------: |
@@ -315,6 +342,7 @@ Optional configuration for the **All pages** panel (drag-and-drop, pins, reset).
 | pinned                 | The parameter restricts hiding menu item                                                                                                                                                         |                                                                      `boolean`                                                                       |             `false`             |
 | rightAdornment         | Customize right side of the menu item                                                                                                                                                            |                                                                  `React.ReactNode`                                                                   |                                 |
 | title                  | The menu item title                                                                                                                                                                              |                                                                  `React.ReactNode`                                                                   |                                 |
+| titleLines             | Maximum title lines in the expanded sidebar. Collapsed (icon-only) sidebar and popup rows always use one line.                                                                                   |                                                                       `1 \| 2`                                                                       |               `2`               |
 | tooltipText            | Tooltip content                                                                                                                                                                                  |                                                                  `React.ReactNode`                                                                   |                                 |
 | type                   | The menu item type changes appearance: `"regular"`, `"action"`, `"divider"`                                                                                                                      |                                                                       `string`                                                                       |           `"regular"`           |
 | qa                     | The value to be passed to `data-qa` attribute                                                                                                                                                    |                                                                       `string`                                                                       |                                 |
@@ -363,6 +391,7 @@ You can customize the inner content, make alert closeable if necessary. For read
 | `--gn-aside-header-divider-vertical-color`                | Vertical divider line color between `AsideHeader` and content             |
 | `--gn-aside-header-menu-group-tree-line-color`            | Tree connector lines for nested menu groups (inactive segments)           |
 | `--gn-aside-header-menu-group-tree-line-active-color`     | Tree connector lines for the active branch in nested menu groups          |
+| `--gn-aside-header-floating-surface-box-shadow`           | Box shadow for navigation popups                                          |
 | `--gn-top-alert-height`                                   | **Read only**.`AsideHeader` top alert height                              |
 | `--gn-aside-header-padding-top`                           | Navigation top padding. May be helpful when logo and subheader items hide |
 | Item                                                      |                                                                           |

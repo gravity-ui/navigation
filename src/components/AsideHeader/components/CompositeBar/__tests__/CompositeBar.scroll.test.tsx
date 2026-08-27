@@ -38,6 +38,7 @@ function renderBar(props: {
     menuGroups?: MenuGroup[];
     collapsedMenuGroupIds?: Record<string, boolean>;
     onToggleMenuGroupCollapsed?: jest.Mock;
+    menuGroupNestedIcons?: boolean;
 }) {
     return render(
         <ThemeProvider theme="light">
@@ -53,6 +54,7 @@ function renderBar(props: {
                     menuOverflow={props.menuOverflow ?? 'scroll'}
                     collapsedMenuGroupIds={props.collapsedMenuGroupIds}
                     onToggleMenuGroupCollapsed={props.onToggleMenuGroupCollapsed}
+                    menuGroupNestedIcons={props.menuGroupNestedIcons}
                 />
             </AsideHeaderInnerContextProvider>
         </ThemeProvider>,
@@ -166,5 +168,122 @@ describe('CompositeBar menuOverflow="scroll"', () => {
 
         fireEvent.click(screen.getByText('Access'));
         expect(onToggleMenuGroupCollapsed).toHaveBeenCalledWith('g1');
+    });
+
+    it('opens child items in a popup for a collapsed inline group', () => {
+        const menuGroups: MenuGroup[] = [
+            {id: 'g1', title: 'Access', icon: Gear, popupTitle: 'Access tools'},
+        ];
+        const groupItems: AsideHeaderItem[] = [
+            {id: 'ssh', title: 'SSH Keys', icon: Gear, groupId: 'g1'},
+        ];
+
+        renderBar({
+            items: groupItems,
+            menuGroups,
+            menuOverflow: 'scroll',
+            compact: false,
+            collapsedMenuGroupIds: {g1: true},
+        });
+
+        expect(screen.queryByText('SSH Keys')).toBeNull();
+        fireEvent.click(screen.getByText('Access'));
+
+        expect(screen.getByText('Access tools')).toBeTruthy();
+        expect(screen.getByText('SSH Keys')).toBeTruthy();
+    });
+
+    it('selects a popup child without expanding its collapsed inline group', () => {
+        const onItemClick = jest.fn();
+        const onToggleMenuGroupCollapsed = jest.fn();
+        const itemClick = jest.fn();
+        const menuGroups: MenuGroup[] = [
+            {id: 'g1', title: 'Access', icon: Gear, popupTitle: 'Access tools'},
+        ];
+        const groupItems: AsideHeaderItem[] = [
+            {
+                id: 'ssh',
+                title: 'SSH Keys',
+                icon: Gear,
+                groupId: 'g1',
+                onItemClick: itemClick,
+            },
+        ];
+
+        renderBar({
+            items: groupItems,
+            menuGroups,
+            menuOverflow: 'scroll',
+            compact: false,
+            collapsedMenuGroupIds: {g1: true},
+            onItemClick,
+            onToggleMenuGroupCollapsed,
+        });
+
+        fireEvent.click(screen.getByText('Access'));
+        onItemClick.mockClear();
+        onToggleMenuGroupCollapsed.mockClear();
+
+        fireEvent.click(screen.getByText('SSH Keys'));
+
+        expect(onItemClick).toHaveBeenCalledWith(
+            expect.objectContaining({id: 'ssh', onItemClick: itemClick}),
+            false,
+            expect.any(Object),
+        );
+        expect(onToggleMenuGroupCollapsed).not.toHaveBeenCalled();
+    });
+
+    it('can hide icons of nested group items without hiding the group icon', () => {
+        const menuGroups: MenuGroup[] = [{id: 'g1', title: 'Access', icon: Gear}];
+        const groupItems: AsideHeaderItem[] = [
+            {id: 'ssh', title: 'SSH Keys', icon: Gear, iconQa: 'ssh-icon', groupId: 'g1'},
+        ];
+
+        renderBar({
+            items: groupItems,
+            menuGroups,
+            menuOverflow: 'scroll',
+            compact: false,
+            menuGroupNestedIcons: false,
+        });
+
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(document.querySelector('[data-qa="ssh-icon"]')).toBeNull();
+        expect(screen.getByText('Access')).toBeTruthy();
+    });
+
+    it('also hides nested item icons in a collapsed group popup', () => {
+        const menuGroups: MenuGroup[] = [
+            {id: 'g1', title: 'Access', icon: Gear, popupTitle: 'Access tools'},
+        ];
+        const groupItems: AsideHeaderItem[] = [
+            {id: 'ssh', title: 'SSH Keys', icon: Gear, iconQa: 'ssh-icon', groupId: 'g1'},
+        ];
+
+        renderBar({
+            items: groupItems,
+            menuGroups,
+            menuOverflow: 'scroll',
+            compact: false,
+            collapsedMenuGroupIds: {g1: true},
+            menuGroupNestedIcons: false,
+        });
+
+        fireEvent.click(screen.getByText('Access'));
+
+        expect(screen.getByText('SSH Keys')).toBeTruthy();
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(document.querySelector('[data-qa="ssh-icon"]')).toBeNull();
+    });
+
+    it('applies a two-line title modifier to expanded rows', () => {
+        renderBar({
+            items: [{id: 'long', title: 'A deliberately long title', titleLines: 2}],
+        });
+
+        expect(screen.getByText('A deliberately long title').className).toContain(
+            'title-text_lines_2',
+        );
     });
 });

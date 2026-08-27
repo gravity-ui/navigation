@@ -1,14 +1,41 @@
 @use '../../../variables';
 
 $block: '.#{variables.$ns}composite-bar';
+$menu-group-tree-connector-width: 16px;
 
 #{$block} {
+    --_--menu-group-tree-connector-width: #{$menu-group-tree-connector-width};
+    --_--menu-item-gap: 0px;
+
     flex: 1 0 auto;
     width: 100%;
     min-height: var(--_--gn-aside-header-density-item-height, #{variables.$item-height});
 
     & &__root-menu-item[class] {
         background-color: transparent;
+    }
+
+    &_inline-groups &__root-menu-item[class] {
+        position: relative;
+        overflow: visible;
+        box-sizing: border-box;
+        background: none;
+        padding-block-end: var(--_--menu-item-gap);
+
+        /**
+         * List marks the whole row active when one of its descendants is hovered.
+         * Item owns its hover/selection visuals, so the structural List row must
+         * always stay transparent.
+         */
+        &:global(.g-list__item_active),
+        &:global(.g-list__item_selected),
+        &:global(.g-list__item_active.g-list__item_selected) {
+            background: none;
+        }
+    }
+
+    &_inline-groups {
+        --_--menu-item-gap: 1px;
     }
 
     &__menu-group {
@@ -31,55 +58,84 @@ $block: '.#{variables.$ns}composite-bar';
 
     &__menu-group-nested-item[class] {
         position: relative;
-        padding-inline-start: var(--g-spacing-3);
+
+        #{$block}__menu-group-nested-connector {
+            position: absolute;
+            inset-inline-start: calc(
+                var(--_--gn-aside-header-density-item-height, #{variables.$item-height}) / 2 -
+                    #{$menu-group-tree-connector-width} / 2
+            );
+            inset-block: 0;
+        }
     }
 
     &__menu-group-nested-list-item[class] {
         position: relative;
-        background-color: transparent;
         overflow: visible;
+        box-sizing: border-box;
+        padding-block-end: var(--_--menu-item-gap);
+        background-color: transparent;
+
+        &:global(.g-list__item_active),
+        &:global(.g-list__item_selected),
+        &:global(.g-list__item_active.g-list__item_selected) {
+            background-color: transparent;
+        }
+
+        // Keep the vertical spine on the full List row so it also paints through the row gap.
+        &:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            inset-inline-start: calc(
+                var(--_--gn-aside-header-density-item-height, #{variables.$item-height}) / 2 - 0.5px
+            );
+            inset-block: 0;
+            width: 1px;
+            background: var(--gn-aside-header-menu-group-tree-line-color, #c1c3c7);
+            pointer-events: none;
+        }
     }
 
     &__menu-group-nested-connector {
         position: relative;
-        width: 16px;
+        width: $menu-group-tree-connector-width;
         box-sizing: content-box;
         pointer-events: none;
         display: flex;
+        overflow: visible;
 
-        // Vertical spine between rows (straight segments; elbow is SVG path).
-        &::before {
+        // Active color overlays the row-level spine; the elbow itself is rendered by SVG.
+        &_spine-active::before {
             content: '';
             position: absolute;
             inset-inline-start: calc(50% - 0.5px);
             top: 0;
-            bottom: 0;
+            bottom: calc(-1 * var(--_--menu-item-gap));
             width: 1px;
-            height: 100%;
-            background: var(--gn-aside-header-menu-group-tree-line-color, #c1c3c7);
-            pointer-events: none;
-        }
-
-        &_spine-active::before {
             background: var(
                 --gn-aside-header-menu-group-tree-line-active-color,
                 var(--g-color-base-brand)
             );
+            pointer-events: none;
             z-index: 1;
         }
     }
 
-    &__menu-group-nested-list-item:last-child &__menu-group-nested-connector::before {
-        display: none;
-    }
-
     &__menu-group-nested-tree-svg {
         fill: none;
-        position: relative;
+        position: absolute;
+        inset-inline-start: 0;
+        inset-block-start: calc(
+            var(--_--menu-group-tree-connector-hook-inset-block, 50%) - var(
+                    --_--gn-aside-header-density-item-height,
+                    #{variables.$item-height}
+                ) /
+                2
+        );
         display: block;
         flex-shrink: 0;
-        min-width: 16px;
-        max-width: 16px;
+        min-width: $menu-group-tree-connector-width;
+        max-width: $menu-group-tree-connector-width;
         height: var(--_--gn-aside-header-density-item-height, #{variables.$item-height});
         stroke: var(--gn-aside-header-menu-group-tree-line-color, #c1c3c7);
 
@@ -88,6 +144,11 @@ $block: '.#{variables.$ns}composite-bar';
                 --gn-aside-header-menu-group-tree-line-active-color,
                 var(--g-color-base-brand)
             );
+        }
+
+        // Logical insets move the connector column in RTL; mirror the elbow toward the item too.
+        :global([dir='rtl']) & {
+            transform: scaleX(-1);
         }
     }
 
