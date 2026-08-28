@@ -7,12 +7,16 @@ import {MakeItemParams} from '../../../../types';
 import {createBlock} from '../../../../utils/cn';
 import {useSafeAsideHeaderContext} from '../../../AsideHeaderContext';
 import {getAsideHeaderDensityConfig} from '../../../density';
+import {isQuickAccessPinEligible} from '../../../quickAccess';
+import {AsideHeaderItem} from '../../../types';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
-import {COLLAPSE_ITEM_ID, ITEM_TYPE_REGULAR} from '../constants';
+import {COLLAPSE_ITEM_ID, COMPOSITE_BAR_ITEM_ID_ATTRIBUTE, ITEM_TYPE_REGULAR} from '../constants';
+import {isItemPresentationCurrent} from '../presentationCurrent';
 
-import {ItemInnerProps, ItemProps} from './Item.types';
+import {ItemInnerProps, ItemProps, QuickAccessToggleHandler} from './Item.types';
 import {ItemPopup} from './ItemPopup';
 import {ItemPopupNestContext} from './ItemPopupNestContext';
+import {ItemQuickAccessPin} from './ItemQuickAccessPin';
 import {renderItemTitle} from './renderItemTitle';
 
 import styles from './Item.module.scss';
@@ -22,10 +26,6 @@ const b = createBlock('composite-bar-item', styles);
 const defaultPopupPlacement: PopupPlacement = ['right-end'];
 const defaultPopupOffset: NonNullable<PopupProps['offset']> = {mainAxis: 14};
 const CHEVRON_SIZE = 16;
-
-function isItemCurrent(props: ItemInnerProps, popupItems?: ItemInnerProps['menuPopupItems']) {
-    return Boolean(props.current || popupItems?.some((item) => item.current));
-}
 
 function shouldShowMenuPopup({
     type,
@@ -81,6 +81,28 @@ function getExpandedTitleLines({
     return titleLines;
 }
 
+function shouldShowQuickAccessPin({
+    enabled,
+    compact,
+    popupItems,
+    item,
+    onToggle,
+}: {
+    enabled?: boolean;
+    compact?: boolean;
+    popupItems?: AsideHeaderItem[];
+    item: AsideHeaderItem;
+    onToggle?: QuickAccessToggleHandler;
+}) {
+    return (
+        Boolean(enabled) &&
+        !compact &&
+        !popupItems?.length &&
+        isQuickAccessPinEligible(item) &&
+        typeof onToggle === 'function'
+    );
+}
+
 export const Item: React.FC<ItemInnerProps> = (props) => {
     const {
         className,
@@ -117,6 +139,10 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         menuItemAriaProps,
         menuPopupRow,
         suppressCurrentHighlight = false,
+        suppressCurrentItemIds,
+        enableQuickAccessPin,
+        quickAccessPinItem: quickAccessPinItemProp,
+        onToggleQuickAccess,
     } = props;
 
     const [compactNavPopoverOpen, setCompactNavPopoverOpen] = React.useState(false);
@@ -124,6 +150,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const ref = React.useRef<HTMLElement>(null);
     const anchorRef = anchoreRefProp?.current ? anchoreRefProp : ref;
     const highlightedRef = React.useRef<HTMLDivElement>(null);
+    const interactiveRowRef = React.useRef<HTMLDivElement>(null);
 
     const type = props.type || ITEM_TYPE_REGULAR;
     const icon = props.icon;
@@ -136,7 +163,35 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const resolvedMenuPopupItems = menuPopupItems ?? props.compositeBarMenuPopupItems;
     const resolvedMenuPopupTitle = menuPopupTitle ?? props.compositeBarMenuPopupTitle;
 
-    const current = !suppressCurrentHighlight && isItemCurrent(props, resolvedMenuPopupItems);
+    const current =
+        !suppressCurrentHighlight &&
+        isItemPresentationCurrent(props, {
+            suppressCurrentItemIds,
+            popupItems: resolvedMenuPopupItems,
+        });
+    const quickAccessPinItem = quickAccessPinItemProp ?? props;
+    const showQuickAccessPin = shouldShowQuickAccessPin({
+        enabled: enableQuickAccessPin,
+        compact,
+        popupItems: resolvedMenuPopupItems,
+        item: quickAccessPinItem,
+        onToggle: onToggleQuickAccess,
+    });
+    const [quickAccessPinSuppressed, setQuickAccessPinSuppressed] = React.useState(false);
+
+    const handleToggleQuickAccess = React.useCallback(
+        (event: React.MouseEvent<HTMLButtonElement>) => {
+            onToggleQuickAccess?.(quickAccessPinItem, event);
+
+            // Pointer clicks should not leave the control under the cursor after the row moves.
+            // Keep keyboard-triggered controls visible and focused.
+            if (event.detail > 0) {
+                setQuickAccessPinSuppressed(true);
+                event.currentTarget.blur();
+            }
+        },
+        [onToggleQuickAccess, quickAccessPinItem],
+    );
 
     const handleOpenChangePopup = React.useCallback<NonNullable<ItemProps['onOpenChangePopup']>>(
         (newOpen, event, reason) => {
@@ -213,7 +268,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
         return (
             <ItemPopup
-                items={[props]}
+                items={[quickAccessPinItem]}
                 variant="label"
                 highlightCurrentItem={false}
                 open={compactNavPopoverOpen}
@@ -228,6 +283,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 collapsed={compact}
                 onPopupItemClick={onPopupItemClick}
                 onItemClick={onItemClick}
+                suppressCurrentItemIds={suppressCurrentItemIds}
             >
                 {iconButton}
             </ItemPopup>
@@ -249,6 +305,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 'hide-icon': hideIcon,
                 'menu-group-nested': menuGroupNested,
                 'menu-popup-row': menuPopupRow,
+                'with-quick-access-pin': showQuickAccessPin,
                 'title-lines': expandedTitleLines?.toString(),
             },
             className,
@@ -258,6 +315,17 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         const handleRowClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
             if (compact && !collapsedItem && !showMenuPopup && !current) {
                 setCompactNavPopoverOpen(false);
+            }
+
+            if (event.detail > 0) {
+                const activeElement = event.currentTarget.ownerDocument.activeElement;
+
+                if (
+                    activeElement instanceof HTMLElement &&
+                    interactiveRowRef.current?.contains(activeElement)
+                ) {
+                    activeElement.blur();
+                }
             }
 
             onItemClick?.(props, collapsedItem, event);
@@ -300,6 +368,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             className: rowClassName,
             'data-type': type,
             'data-qa': qa,
+            [COMPOSITE_BAR_ITEM_ID_ATTRIBUTE]: props.id,
             'aria-label': menuItemAriaProps?.['aria-label'] ?? ariaLabel,
             onClick: handleRowClick,
             onClickCapture: onItemClickCapture,
@@ -356,6 +425,9 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     collapsed={collapsedItem ? true : compact}
                     onPopupItemClick={onPopupItemClick}
                     onItemClick={onItemClick}
+                    enableQuickAccessPin={enableQuickAccessPin}
+                    onToggleQuickAccess={onToggleQuickAccess}
+                    suppressCurrentItemIds={suppressCurrentItemIds}
                 >
                     {tagNode}
                 </ItemPopup>
@@ -385,6 +457,32 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         return createdNode;
     };
 
+    const wrapWithQuickAccessPin = (rowNode: React.ReactNode) => {
+        if (!showQuickAccessPin) {
+            return rowNode;
+        }
+
+        return (
+            <div
+                ref={interactiveRowRef}
+                className={b('interactive-row', {'menu-popup': menuPopupRow})}
+                onMouseLeave={() => setQuickAccessPinSuppressed(false)}
+            >
+                {rowNode}
+                <span
+                    className={b('quick-access-pin-slot', {
+                        suppressed: quickAccessPinSuppressed,
+                    })}
+                >
+                    <ItemQuickAccessPin
+                        quickAccess={quickAccessPinItem.quickAccess}
+                        onToggle={handleToggleQuickAccess}
+                    />
+                </span>
+            </div>
+        );
+    };
+
     const iconNode =
         hideIcon || !icon ? null : (
             <Icon qa={iconQa} data={icon} size={iconSize} className={b('icon')} />
@@ -401,7 +499,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const opts = {compact: Boolean(compact), collapsed: false, item: props, ref};
 
     if (typeof itemWrapper === 'function') {
-        node = itemWrapper(params, makeNode, opts) as React.ReactElement;
+        node = wrapWithQuickAccessPin(itemWrapper(params, makeNode, opts) as React.ReactElement);
         highlightedNode =
             bringForward &&
             (itemWrapper(
@@ -410,7 +508,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 opts,
             ) as React.ReactElement);
     } else {
-        node = makeNode(params);
+        node = wrapWithQuickAccessPin(makeNode(params));
         highlightedNode = bringForward && makeIconNode(iconNode, false);
     }
 

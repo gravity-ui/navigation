@@ -1,4 +1,5 @@
 @use '../variables';
+@use '../../../styles/mixins';
 
 $block: '.#{variables.$ns}aside-header';
 
@@ -27,6 +28,20 @@ $block: '.#{variables.$ns}aside-header';
     --_--decoration-expanded-background-color: var(--g-color-base-warning-light);
     --_--vertical-divider-line-color: var(--g-color-line-generic);
     --_--horizontal-divider-line-color: var(--g-color-line-generic);
+    --_--section-divider-gap: var(--g-spacing-1);
+
+    @mixin section-divider-line {
+        position: absolute;
+        left: var(--_--item-margin-inline);
+        right: var(--_--item-margin-inline);
+        width: auto;
+        height: 1px;
+        content: '';
+        background-color: var(
+            --gn-aside-header-divider-horizontal-color,
+            var(--_--horizontal-divider-line-color)
+        );
+    }
 
     height: 100%;
     width: 100%;
@@ -187,6 +202,22 @@ $block: '.#{variables.$ns}aside-header';
         }
     }
 
+    &__aside-content_with-quick-access &__header {
+        padding-bottom: var(--_--section-divider-gap);
+
+        &::after {
+            bottom: 0;
+            left: var(--_--item-margin-inline);
+            right: var(--_--item-margin-inline);
+            width: auto;
+        }
+    }
+
+    &__aside-content_with-quick-access:not(#{$class}__aside-content_with-quick-access-items)
+        &__header {
+        margin-bottom: var(--_--section-divider-gap);
+    }
+
     &_compact &__header {
         &::before {
             display: block;
@@ -216,6 +247,57 @@ $block: '.#{variables.$ns}aside-header';
             --_--gn-aside-header-density-item-height,
             #{variables.$item-height}
         );
+    }
+
+    &__quick-access {
+        position: relative;
+        flex: none;
+        box-sizing: border-box;
+        width: 100%;
+        padding-block: var(--_--section-divider-gap);
+        margin-bottom: var(--_--section-divider-gap);
+
+        &::after {
+            @include section-divider-line;
+
+            bottom: 0;
+            z-index: 1;
+        }
+
+        &_scrollable {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        &_unified {
+            flex: none;
+        }
+    }
+
+    &__quick-access-title {
+        @include mixins.text-caption-2;
+
+        color: var(--g-color-text-secondary);
+        margin-inline: var(--_--item-margin-inline);
+        padding-inline: calc(
+                var(--_--gn-aside-header-density-item-height, #{variables.$item-height}) +
+                    var(--_--gn-aside-header-density-item-title-gap, var(--g-spacing-2))
+            )
+            var(--_--gn-aside-header-density-item-title-gap-end, var(--g-spacing-4));
+        padding-bottom: var(--g-spacing-1);
+        user-select: none;
+    }
+
+    &__unified-menu-scroll {
+        flex: 1 1 auto;
+        min-height: 0;
+    }
+
+    &__unified-menu-content {
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
     }
 
     &__menu-items {

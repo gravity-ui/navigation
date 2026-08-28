@@ -120,6 +120,15 @@ describe('CompositeBar utils', () => {
             );
             expect(getSelectedCompositeBarRowIndex(rows)).toBeUndefined();
         });
+
+        it('getSelectedCompositeBarRowIndex uses presentation-current suppression', () => {
+            const rows: CompositeBarRow[] = [
+                {kind: 'item', item: {id: 'current', title: 'Current', current: true}},
+            ];
+
+            expect(getSelectedCompositeBarRowIndex(rows)).toBe(0);
+            expect(getSelectedCompositeBarRowIndex(rows, new Set(['current']))).toBeUndefined();
+        });
     });
 
     describe('getAutosizeCompositeBarRows', () => {

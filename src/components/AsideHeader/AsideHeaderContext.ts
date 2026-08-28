@@ -7,11 +7,13 @@ export interface AsideHeaderInnerContextType extends AsideHeaderInnerProps {
     menuItems: AsideHeaderItem[];
     defaultMenuItems?: AsideHeaderItem[];
     allPagesIsAvailable: boolean;
+    quickAccessIsAvailable: boolean;
     onItemClick: (
         item: AsideHeaderItem,
         collapsed: boolean,
         event: React.MouseEvent<HTMLElement, MouseEvent>,
     ) => void;
+    onToggleQuickAccess: (item: AsideHeaderItem) => void;
 }
 
 const AsideHeaderInnerContext = React.createContext<AsideHeaderInnerContextType | undefined>(

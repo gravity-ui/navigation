@@ -20,6 +20,9 @@ interface FullNavigationProps {
     initialCompact?: boolean;
     menuDensity?: AsideHeaderProps['menuDensity'];
     menuGroupNestedIcons?: AsideHeaderProps['menuGroupNestedIcons'];
+    enableQuickAccess?: AsideHeaderProps['enableQuickAccess'];
+    quickAccessHighlightInMainMenu?: AsideHeaderProps['quickAccessHighlightInMainMenu'];
+    unifiedMenuScroll?: AsideHeaderProps['unifiedMenuScroll'];
 }
 
 export default {
@@ -39,12 +42,24 @@ export default {
             control: 'boolean',
             description: 'Show icons on nested group items',
         },
+        enableQuickAccess: {
+            control: 'boolean',
+            description: 'Show quick access and allow eligible menu items to be pinned',
+        },
+        quickAccessHighlightInMainMenu: {
+            control: 'boolean',
+            description: 'Keep pinned current items highlighted in the main menu as well',
+        },
+        unifiedMenuScroll: {
+            control: 'boolean',
+            description: 'Use one scroll container for quick access and the main menu',
+        },
     },
     parameters: {
         docs: {
             description: {
                 component:
-                    'Full-page interactive example combining compact density, collapsible menu groups, popup navigation, footer actions, and page content.',
+                    'Full-page interactive example combining compact density, collapsible menu groups, popup navigation, quick access, footer actions, and page content.',
             },
         },
         a11y: {
@@ -163,10 +178,21 @@ function FullNavigationPageContent({category, title}: {category?: string; title:
 function FullNavigationDemo(props: FullNavigationProps) {
     const [compact, setCompact] = React.useState(props.initialCompact ?? false);
     const [currentPageId, setCurrentPageId] = React.useState('analytics-overview');
+    const [controlledMenuItems, setControlledMenuItems] =
+        React.useState<AsideHeaderItem[]>(fullNavigationMenuItems);
+
+    const handleQuickAccessChange = React.useCallback(
+        (changedItem: AsideHeaderItem, quickAccess: boolean) => {
+            setControlledMenuItems((items) =>
+                items.map((item) => (item.id === changedItem.id ? {...item, quickAccess} : item)),
+            );
+        },
+        [],
+    );
 
     const menuItems = React.useMemo<AsideHeaderItem[]>(
         () =>
-            fullNavigationMenuItems.map((item) => ({
+            controlledMenuItems.map((item) => ({
                 ...item,
                 current: item.id === currentPageId,
                 onItemClick: (clicked: AsideHeaderItem) => {
@@ -177,7 +203,7 @@ function FullNavigationDemo(props: FullNavigationProps) {
                     }
                 },
             })),
-        [currentPageId],
+        [controlledMenuItems, currentPageId],
     );
 
     const currentItem = menuItems.find((item) => item.current);
@@ -194,6 +220,10 @@ function FullNavigationDemo(props: FullNavigationProps) {
                 menuOverflow="scroll"
                 defaultCollapsedMenuGroupIds={fullNavigationCollapsedGroupIds}
                 menuGroupNestedIcons={props.menuGroupNestedIcons}
+                enableQuickAccess={props.enableQuickAccess}
+                quickAccessHighlightInMainMenu={props.quickAccessHighlightInMainMenu}
+                onQuickAccessChange={handleQuickAccessChange}
+                unifiedMenuScroll={props.unifiedMenuScroll}
                 subheaderItems={[
                     {
                         id: 'search',
@@ -258,4 +288,7 @@ FullNavigation.args = {
     initialCompact: false,
     menuDensity: 'compact',
     menuGroupNestedIcons: true,
+    enableQuickAccess: true,
+    quickAccessHighlightInMainMenu: false,
+    unifiedMenuScroll: false,
 };

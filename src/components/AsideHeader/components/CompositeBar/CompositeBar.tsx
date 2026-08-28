@@ -9,11 +9,11 @@ import {useAsideHeaderContext} from '../../AsideHeaderContext';
 import {AsideHeaderItem, AsideHeaderMenuOverflow} from '../../types';
 
 import {Item} from './Item/Item';
-import {ItemProps} from './Item/Item.types';
-import {ScrollableWithScrollbar} from './ScrollableWithScrollbar';
+import {ItemProps, QuickAccessToggleHandler} from './Item/Item.types';
 import {COLLAPSE_ITEM_ID} from './constants';
 import {buildCompositeBarRows} from './grouping';
 import type {CompositeBarRow} from './grouping';
+import {isItemPresentationCurrent} from './presentationCurrent';
 import {
     getAutosizeCompositeBarRows,
     getCompositeBarRowsMinHeight,
@@ -22,7 +22,6 @@ import {
     getMoreButtonItem,
     getReorderedCompositeBarRows,
     getSelectedCompositeBarRowIndex,
-    getSelectedItemIndex,
     makeGroupHeaderAsideItem,
 } from './utils';
 
@@ -35,9 +34,8 @@ const MENU_GROUP_NESTED_TREE_CONNECTOR_PATH =
     'M8.03125 0V10.07935C8.03125 15.558375 11.5846 20 15.9678 20';
 
 type CompositeBarProps = {
-    type: 'menu' | 'subheader';
+    type: 'menu' | 'subheader' | 'quick-access';
     items: AsideHeaderItem[];
-    className?: string;
     menuGroups?: MenuGroup[];
     onItemClick?: (
         item: AsideHeaderItem,
@@ -56,12 +54,14 @@ type CompositeBarProps = {
     collapsedMenuGroupIds?: Record<string, boolean>;
     defaultCollapsedMenuGroupIds?: Record<string, boolean>;
     onToggleMenuGroupCollapsed?: (groupId: string) => void;
-    onMenuScrollOverflowChange?: (overflows: boolean) => void;
+    enableQuickAccessPin?: boolean;
+    onToggleQuickAccess?: QuickAccessToggleHandler;
+    suppressCurrentItemIds?: ReadonlySet<string>;
     menuGroupNestedIcons?: boolean;
 };
 
 type CompositeBarViewProps = {
-    type: 'menu' | 'subheader';
+    type: 'menu' | 'subheader' | 'quick-access';
     compositeId?: string;
     compact: boolean;
     menuItemClassName?: string;
@@ -73,6 +73,9 @@ type CompositeBarViewProps = {
     inlineGroupChildren: boolean;
     isGroupCollapsed: (groupId: string) => boolean;
     onToggleGroupCollapsed: (groupId: string) => void;
+    enableQuickAccessPin?: boolean;
+    onToggleQuickAccess?: QuickAccessToggleHandler;
+    suppressCurrentItemIds?: ReadonlySet<string>;
     menuGroupNestedIcons?: boolean;
 };
 
@@ -88,6 +91,9 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     inlineGroupChildren,
     isGroupCollapsed,
     onToggleGroupCollapsed,
+    enableQuickAccessPin,
+    onToggleQuickAccess,
+    suppressCurrentItemIds,
     menuGroupNestedIcons = true,
 }) => {
     const ref = useRef<List<CompositeBarRow>>(null);
@@ -176,13 +182,21 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
         [itemHeight],
     );
 
+    const selectedRootItemIndex = useMemo(() => {
+        if (type !== 'menu') {
+            return undefined;
+        }
+
+        return getSelectedCompositeBarRowIndex(rows, suppressCurrentItemIds);
+    }, [rows, suppressCurrentItemIds, type]);
+
     return (
         <List<CompositeBarRow>
             id={compositeId}
             ref={ref}
             className={inlineGroupChildren ? b({'inline-groups': true}) : undefined}
             items={rows}
-            selectedItemIndex={type === 'menu' ? getSelectedCompositeBarRowIndex(rows) : undefined}
+            selectedItemIndex={selectedRootItemIndex}
             itemHeight={itemHeight}
             itemsHeight={itemsHeight}
             itemClassName={b('root-menu-item', menuItemClassName)}
@@ -213,6 +227,10 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                             onMouseLeave={onMouseLeave}
                             onPopupItemClick={onPopupItemClick}
                             onItemClick={onItemClickByIndex(item.onItemClick)}
+                            suppressCurrentItemIds={suppressCurrentItemIds}
+                            enableQuickAccessPin={enableQuickAccessPin}
+                            quickAccessPinItem={item}
+                            onToggleQuickAccess={onToggleQuickAccess}
                         />
                     );
                 }
@@ -233,11 +251,18 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                             onMouseLeave={onMouseLeave}
                             onPopupItemClick={onPopupItemClick}
                             onItemClick={onSyntheticHeaderItemClick}
+                            suppressCurrentItemIds={suppressCurrentItemIds}
+                            enableQuickAccessPin={enableQuickAccessPin}
+                            onToggleQuickAccess={onToggleQuickAccess}
                         />
                     );
                 }
 
-                const selectedItemIndex = getSelectedItemIndex(row.items);
+                const selectedItemIndex = row.items.findIndex((item) =>
+                    isItemPresentationCurrent(item, {suppressCurrentItemIds}),
+                );
+                const normalizedSelectedItemIndex =
+                    selectedItemIndex === -1 ? undefined : selectedItemIndex;
 
                 return (
                     <div
@@ -262,11 +287,14 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                                 onToggleGroupCollapsed(row.group.id);
                                 onSyntheticHeaderItemClick(item, isItemCollapsed, event);
                             }}
+                            suppressCurrentItemIds={suppressCurrentItemIds}
+                            enableQuickAccessPin={enableQuickAccessPin}
+                            onToggleQuickAccess={onToggleQuickAccess}
                         />
                         {!groupIsCollapsed && (
                             <List<AsideHeaderItem>
                                 items={row.items}
-                                selectedItemIndex={selectedItemIndex}
+                                selectedItemIndex={normalizedSelectedItemIndex}
                                 itemHeight={nestedItemHeight}
                                 itemsHeight={nestedItemsHeight}
                                 itemClassName={b('menu-group-nested-list-item')}
@@ -275,8 +303,8 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                                 sortable={false}
                                 renderItem={(nestedItem, _isActive, groupItemIndex) => {
                                     const spineActive =
-                                        selectedItemIndex !== undefined &&
-                                        groupItemIndex < selectedItemIndex;
+                                        normalizedSelectedItemIndex !== undefined &&
+                                        groupItemIndex < normalizedSelectedItemIndex;
 
                                     return (
                                         <div className={b('menu-group-nested-row-inner')}>
@@ -304,7 +332,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                                                                 'menu-group-nested-tree-svg',
                                                                 {
                                                                     active:
-                                                                        selectedItemIndex ===
+                                                                        normalizedSelectedItemIndex ===
                                                                         groupItemIndex,
                                                                 },
                                                             )}
@@ -327,6 +355,10 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                                                 onItemClick={onItemClickByIndex(
                                                     nestedItem.onItemClick,
                                                 )}
+                                                suppressCurrentItemIds={suppressCurrentItemIds}
+                                                enableQuickAccessPin={enableQuickAccessPin}
+                                                quickAccessPinItem={nestedItem}
+                                                onToggleQuickAccess={onToggleQuickAccess}
                                             />
                                         </div>
                                     );
@@ -342,7 +374,6 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
 
 export const CompositeBar: FC<CompositeBarProps> = ({
     type,
-    className,
     items,
     menuGroups,
     menuMoreTitle,
@@ -355,7 +386,9 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     collapsedMenuGroupIds: collapsedMenuGroupIdsProp,
     defaultCollapsedMenuGroupIds,
     onToggleMenuGroupCollapsed,
-    onMenuScrollOverflowChange,
+    enableQuickAccessPin,
+    onToggleQuickAccess,
+    suppressCurrentItemIds,
     menuGroupNestedIcons = true,
 }) => {
     const rows = useMemo(() => buildCompositeBarRows(items, menuGroups), [items, menuGroups]);
@@ -396,26 +429,26 @@ export const CompositeBar: FC<CompositeBarProps> = ({
 
     if (type === 'menu') {
         if (menuOverflow === 'scroll' && !compact) {
-            node = (
-                <ScrollableWithScrollbar
-                    className={className}
-                    onOverflowChange={onMenuScrollOverflowChange}
-                >
-                    <CompositeBarView
-                        compositeId={compositeId}
-                        type="menu"
-                        compact={compact}
-                        rows={scrollableRows}
-                        onItemClick={onItemClick}
-                        onMoreClick={onMoreClick}
-                        menuItemClassName={menuItemClassName}
-                        inlineGroupChildren={inlineGroupChildren}
-                        isGroupCollapsed={isGroupCollapsed}
-                        onToggleGroupCollapsed={onToggleGroupCollapsed}
-                        menuGroupNestedIcons={menuGroupNestedIcons}
-                    />
-                </ScrollableWithScrollbar>
+            const menuView = (
+                <CompositeBarView
+                    compositeId={compositeId}
+                    type="menu"
+                    compact={compact}
+                    rows={scrollableRows}
+                    onItemClick={onItemClick}
+                    onMoreClick={onMoreClick}
+                    menuItemClassName={menuItemClassName}
+                    inlineGroupChildren={inlineGroupChildren}
+                    isGroupCollapsed={isGroupCollapsed}
+                    onToggleGroupCollapsed={onToggleGroupCollapsed}
+                    enableQuickAccessPin={enableQuickAccessPin}
+                    onToggleQuickAccess={onToggleQuickAccess}
+                    suppressCurrentItemIds={suppressCurrentItemIds}
+                    menuGroupNestedIcons={menuGroupNestedIcons}
+                />
             );
+
+            node = menuView;
         } else {
             const itemLayout = compact ? {sidebarCompact: true as const} : undefined;
             const minHeight = getCompositeBarRowsMinHeight(rows, menuDensity, itemLayout);
@@ -449,6 +482,9 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                                             inlineGroupChildren={false}
                                             isGroupCollapsed={isGroupCollapsed}
                                             onToggleGroupCollapsed={onToggleGroupCollapsed}
+                                            enableQuickAccessPin={enableQuickAccessPin}
+                                            onToggleQuickAccess={onToggleQuickAccess}
+                                            suppressCurrentItemIds={suppressCurrentItemIds}
                                             menuGroupNestedIcons={menuGroupNestedIcons}
                                         />
                                     </div>
@@ -459,6 +495,24 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                 </div>
             );
         }
+    } else if (type === 'quick-access') {
+        node = (
+            <div className={b({'quick-access': true})}>
+                <CompositeBarView
+                    compositeId={compositeId}
+                    type="quick-access"
+                    menuItemClassName={menuItemClassName}
+                    compact={compact}
+                    rows={rows}
+                    onItemClick={onItemClick}
+                    inlineGroupChildren={false}
+                    isGroupCollapsed={isGroupCollapsed}
+                    onToggleGroupCollapsed={onToggleGroupCollapsed}
+                    enableQuickAccessPin={enableQuickAccessPin}
+                    onToggleQuickAccess={onToggleQuickAccess}
+                />
+            </div>
+        );
     } else {
         node = (
             <div className={b({subheader: true})}>

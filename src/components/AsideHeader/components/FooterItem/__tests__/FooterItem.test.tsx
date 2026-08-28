@@ -10,6 +10,8 @@ import {render, screen} from '@testing-library/react';
 import {AsideHeaderContextProvider} from '../../../AsideHeaderContext';
 import {FooterItem} from '../FooterItem';
 
+jest.mock('../../../i18n');
+
 describe('FooterItem', () => {
     it('renders standalone in compact mode with only the public AsideHeader context', () => {
         render(

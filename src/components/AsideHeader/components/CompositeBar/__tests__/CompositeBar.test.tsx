@@ -15,6 +15,8 @@ import {
 import {AsideHeaderItem} from '../../../types';
 import {CompositeBar} from '../CompositeBar';
 
+jest.mock('../../../i18n');
+
 // Mock AutoSizer to render children with a fixed small height that forces items to collapse
 jest.mock('react-virtualized-auto-sizer', () => ({
     __esModule: true,
@@ -27,7 +29,9 @@ const contextValue: AsideHeaderInnerContextType = {
     size: 200,
     menuItems: [],
     allPagesIsAvailable: false,
+    quickAccessIsAvailable: false,
     onItemClick: () => {},
+    onToggleQuickAccess: () => {},
 };
 
 function renderCompositeBar(props: {
@@ -36,6 +40,7 @@ function renderCompositeBar(props: {
     compact?: boolean;
     menuMoreTitle?: string;
     menuGroups?: MenuGroup[];
+    suppressCurrentItemIds?: ReadonlySet<string>;
 }) {
     return render(
         <ThemeProvider theme="light">
@@ -47,6 +52,7 @@ function renderCompositeBar(props: {
                     compact={props.compact ?? false}
                     onItemClick={props.onItemClick}
                     menuMoreTitle={props.menuMoreTitle ?? 'More'}
+                    suppressCurrentItemIds={props.suppressCurrentItemIds}
                 />
             </AsideHeaderInnerContextProvider>
         </ThemeProvider>,
@@ -196,5 +202,32 @@ describe('CompositeBar', () => {
         expect(screen.getByText('Ресурсы')).toBeTruthy();
         expect(screen.getByText('Workbook 1')).toBeTruthy();
         expect(screen.getByText('Workbook 2')).toBeTruthy();
+    });
+
+    it('suppresses the aggregate current state of More and its popup item', () => {
+        const onItemClick = jest.fn();
+        const currentItem: AsideHeaderItem = {
+            id: 'current',
+            title: 'Current',
+            icon: Gear,
+            current: true,
+            quickAccess: true,
+        };
+
+        renderCompositeBar({
+            items: [
+                {id: 'first', title: 'First', icon: Gear},
+                currentItem,
+                {id: 'last', title: 'Last', icon: Gear},
+            ],
+            onItemClick,
+            suppressCurrentItemIds: new Set([currentItem.id]),
+        });
+
+        const moreButton = screen.getByRole('button', {name: 'More'});
+        expect(moreButton.className).not.toContain('current');
+
+        fireEvent.click(moreButton);
+        expect(screen.getByRole('button', {name: 'Current'}).className).not.toContain('current');
     });
 });

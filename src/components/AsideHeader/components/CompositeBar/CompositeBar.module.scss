@@ -15,7 +15,8 @@ $menu-group-tree-connector-width: 16px;
         background-color: transparent;
     }
 
-    &_inline-groups &__root-menu-item[class] {
+    &_inline-groups &__root-menu-item[class],
+    &_quick-access &__root-menu-item[class] {
         position: relative;
         overflow: visible;
         box-sizing: border-box;
@@ -36,6 +37,16 @@ $menu-group-tree-connector-width: 16px;
 
     &_inline-groups {
         --_--menu-item-gap: 1px;
+    }
+
+    &_quick-access {
+        --_--menu-item-gap: 1px;
+        --gn-aside-header-item-icon-color: var(
+            --gn-aside-header-general-item-icon-color,
+            var(--g-color-text-primary)
+        );
+
+        flex: none;
     }
 
     &__menu-group {

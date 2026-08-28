@@ -5,6 +5,12 @@ import {expect} from '@playwright/experimental-ct-react';
 import {test} from '~playwright/core';
 
 import {Footer} from '../../Footer/desktop/Footer';
+import {
+    NestedMorePopupExample,
+    QuickAccessOverflowExample,
+    QuickAccessWrappedItemExample,
+} from '../__playwright__/QuickAccessOverflowExample';
+import {COMPOSITE_BAR_ITEM_ID_ATTRIBUTE} from '../components/CompositeBar/constants';
 import {PageLayout} from '../components/PageLayout/PageLayout';
 import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
 
@@ -12,6 +18,8 @@ import {AsideHeaderExamplesStories, AsideHeaderStories} from './helpersPlaywrigh
 
 const mountOptions = undefined;
 const viewport = {width: 1200, height: 720};
+const quickAccessOverflowViewport = {width: 1200, height: 480};
+const quickAccessCompactOverflowViewport = {width: 1200, height: 320};
 
 test.describe('AsideHeader', () => {
     /** Order matches exports in `@stories__/AsideHeader.stories.tsx`. Explicit components — dynamic `Stories[key]` breaks Playwright CT. */
@@ -136,7 +144,7 @@ test.describe('AsideHeader', () => {
 
     test('render combined compact-density group popup', async ({mount, page, expectScreenshot}) => {
         await mount(
-            <AsideHeaderExamplesStories.FullNavigation initialCompact />,
+            <AsideHeaderExamplesStories.FullNavigation initialCompact enableQuickAccess={false} />,
             mountOptions,
             viewport,
         );
@@ -181,6 +189,7 @@ test.describe('AsideHeader', () => {
             <AsideHeaderExamplesStories.FullNavigation
                 initialCompact
                 menuGroupNestedIcons={false}
+                enableQuickAccess={false}
             />,
             mountOptions,
             viewport,
@@ -219,7 +228,7 @@ test.describe('AsideHeader', () => {
 
     test('keeps compact-density group popup at its minimum width', async ({mount, page}) => {
         await mount(
-            <AsideHeaderExamplesStories.FullNavigation initialCompact />,
+            <AsideHeaderExamplesStories.FullNavigation initialCompact enableQuickAccess={false} />,
             mountOptions,
             viewport,
         );
@@ -245,7 +254,7 @@ test.describe('AsideHeader', () => {
 
     test('opens and dismisses a group popup from the keyboard', async ({mount, page}) => {
         await mount(
-            <AsideHeaderExamplesStories.FullNavigation initialCompact />,
+            <AsideHeaderExamplesStories.FullNavigation initialCompact enableQuickAccess={false} />,
             mountOptions,
             viewport,
         );
@@ -292,7 +301,11 @@ test.describe('AsideHeader', () => {
         page,
         expectScreenshot,
     }) => {
-        await mount(<AsideHeaderExamplesStories.FullNavigation />, mountOptions, viewport);
+        await mount(
+            <AsideHeaderExamplesStories.FullNavigation enableQuickAccess={false} />,
+            mountOptions,
+            viewport,
+        );
 
         const nestedItem = page.locator('button[aria-label="Weekly operational performance"]');
         const previousNestedItem = page.locator('button[aria-label="Reports"]');
@@ -335,7 +348,11 @@ test.describe('AsideHeader', () => {
     });
 
     test('keeps the List row behind an expanded action transparent', async ({mount, page}) => {
-        await mount(<AsideHeaderExamplesStories.FullNavigation />, mountOptions, viewport);
+        await mount(
+            <AsideHeaderExamplesStories.FullNavigation enableQuickAccess={false} />,
+            mountOptions,
+            viewport,
+        );
 
         const action = page.locator('button[aria-label="Create"]');
         const actionListRow = page
@@ -349,7 +366,11 @@ test.describe('AsideHeader', () => {
     });
 
     test('render collapsed inline group popup', async ({mount, page, expectScreenshot}) => {
-        await mount(<AsideHeaderExamplesStories.FullNavigation />, mountOptions, viewport);
+        await mount(
+            <AsideHeaderExamplesStories.FullNavigation enableQuickAccess={false} />,
+            mountOptions,
+            viewport,
+        );
 
         await page.locator('button[aria-label="Monitoring"]').hover();
         await page.locator('text=Alerts').waitFor({state: 'visible'});
@@ -362,7 +383,7 @@ test.describe('AsideHeader', () => {
 
     test('render dark solo compact popup', async ({mount, page, expectScreenshot}) => {
         await mount(
-            <AsideHeaderExamplesStories.FullNavigation initialCompact />,
+            <AsideHeaderExamplesStories.FullNavigation initialCompact enableQuickAccess={false} />,
             mountOptions,
             viewport,
         );
@@ -374,6 +395,322 @@ test.describe('AsideHeader', () => {
             component: page.locator('body'),
             screenshotName: 'AsideHeader dark solo compact popup',
         });
+    });
+
+    test('render expanded quick access', async ({mount, page, expectScreenshot}) => {
+        await mount(<AsideHeaderExamplesStories.FullNavigation />, mountOptions, viewport);
+
+        await expect(page.locator('text="Pinned"')).toBeVisible();
+        await expect(page.locator('button[aria-label="Overview"]')).toHaveCount(2);
+
+        await expectScreenshot({
+            component: page.locator('body'),
+            screenshotName: 'AsideHeader expanded quick access',
+        });
+    });
+
+    test('render quick access pin in a compact group popup', async ({
+        mount,
+        page,
+        expectScreenshot,
+    }) => {
+        await mount(
+            <AsideHeaderExamplesStories.FullNavigation initialCompact />,
+            mountOptions,
+            viewport,
+        );
+
+        await page.locator('button[aria-label="Monitoring"]').hover();
+        const logsItem = page.locator('button[aria-label="Logs"]');
+        await expect(logsItem).toBeVisible();
+        await logsItem.hover();
+
+        const interactiveRow = logsItem.locator('..');
+        const pin = interactiveRow.locator('button[aria-label="Pin to quick access"]');
+        const pinSlot = interactiveRow.locator('[class*="quick-access-pin-slot"]');
+        await expect(pin).toBeVisible();
+        await expect(pinSlot).toHaveCSS('opacity', '1');
+        await page.waitForTimeout(200);
+
+        await expectScreenshot({
+            component: page.locator('body'),
+            screenshotName: 'AsideHeader compact group popup quick access pin',
+        });
+    });
+
+    test('does not render a quick access pin in a compact solo item popup', async ({
+        mount,
+        page,
+    }) => {
+        await mount(
+            <AsideHeaderExamplesStories.FullNavigation initialCompact />,
+            mountOptions,
+            viewport,
+        );
+
+        await page
+            .locator(
+                '[id="gravity-ui/navigation-menu-items-composite-bar"] button[aria-label="Home"]',
+            )
+            .hover();
+        await page.locator('text=Home').last().waitFor({state: 'visible'});
+
+        await expect(page.locator('button[aria-label="Pin to quick access"]')).toHaveCount(0);
+    });
+
+    test('closes More after leaving a nested group popup', async ({mount, page}) => {
+        await mount(<NestedMorePopupExample />, mountOptions, viewport);
+
+        await page.locator('button[aria-label="More"]').hover();
+        const groupItem = page.locator('button[aria-label="Nested group"]');
+        await expect(groupItem).toBeVisible();
+        await groupItem.hover();
+        await expect(page.locator('button[aria-label="Group child A"]')).toBeVisible();
+
+        await page.mouse.move(600, 400);
+
+        await expect(page.locator('button[aria-label="Group child A"]')).toHaveCount(0);
+        await expect(groupItem).toHaveCount(0);
+    });
+
+    test('keeps More open when returning from its nested group popup', async ({mount, page}) => {
+        await mount(<NestedMorePopupExample />, mountOptions, viewport);
+
+        await page.locator('button[aria-label="More"]').hover();
+        const groupItem = page.locator('button[aria-label="Nested group"]');
+        await groupItem.hover();
+
+        const childItem = page.locator('button[aria-label="Group child A"]');
+        await childItem.hover();
+        await page.locator('button[aria-label="Second"]').hover();
+
+        await expect(childItem).toHaveCount(0);
+        await expect(groupItem).toBeVisible();
+    });
+
+    test('pins from an expanded row without navigating', async ({mount, page}) => {
+        await mount(<AsideHeaderExamplesStories.FullNavigation />, mountOptions, viewport);
+
+        const reportsItem = page.locator('button[aria-label="Reports"]');
+        await reportsItem.hover();
+
+        const pin = reportsItem.locator('..').getByRole('button', {name: 'Pin to quick access'});
+        await expect(pin).toBeVisible();
+        await pin.click();
+
+        await expect(page.locator('button[aria-label="Reports"]')).toHaveCount(2);
+        await expect(
+            page.locator('text="Overview and recent activity for Overview."'),
+        ).toBeVisible();
+    });
+
+    test('hides the pin after a pointer-selected row loses hover', async ({mount, page}) => {
+        await mount(<AsideHeaderExamplesStories.FullNavigation />, mountOptions, viewport);
+
+        const reportsItem = page.locator('button[aria-label="Reports"]');
+        const pin = reportsItem.locator('..').getByRole('button', {name: 'Pin to quick access'});
+
+        await reportsItem.hover();
+        await expect(pin).toBeVisible();
+        await reportsItem.click();
+        await page.locator('text="Overview and recent activity for Reports."').hover();
+
+        await expect(pin).not.toBeVisible();
+    });
+
+    test('keeps the expanded row hover surface while hovering its pin', async ({mount, page}) => {
+        await mount(<AsideHeaderExamplesStories.FullNavigation />, mountOptions, viewport);
+
+        const reportsItem = page.locator('button[aria-label="Reports"]');
+        const pin = reportsItem.locator('..').getByRole('button', {name: 'Pin to quick access'});
+
+        await reportsItem.hover();
+        await expect(pin).toBeVisible();
+        const rowHoverBackground = await reportsItem.evaluate(
+            (element) => getComputedStyle(element).backgroundColor,
+        );
+        expect(rowHoverBackground).not.toBe('rgba(0, 0, 0, 0)');
+
+        await pin.hover();
+        await expect
+            .poll(() =>
+                reportsItem.evaluate((element) => getComputedStyle(element).backgroundColor),
+            )
+            .toBe(rowHoverBackground);
+    });
+
+    test('keeps an itemWrapper row hover surface while hovering its pin', async ({mount, page}) => {
+        await mount(<QuickAccessWrappedItemExample />, mountOptions, viewport);
+
+        const anchor = page.locator('[data-qa="quick-access-anchor-wrapper"]');
+        const wrappedRow = anchor.locator(`[${COMPOSITE_BAR_ITEM_ID_ATTRIBUTE}="wrapped-item"]`);
+        const pin = anchor.locator('..').getByRole('button', {name: 'Pin to quick access'});
+
+        await anchor.hover();
+        await expect(pin).toBeVisible();
+        const rowHoverBackground = await wrappedRow.evaluate(
+            (element) => getComputedStyle(element).backgroundColor,
+        );
+        expect(rowHoverBackground).not.toBe('rgba(0, 0, 0, 0)');
+
+        await pin.hover();
+        await expect
+            .poll(() => wrappedRow.evaluate((element) => getComputedStyle(element).backgroundColor))
+            .toBe(rowHoverBackground);
+    });
+
+    test('moves focus to an adjacent quick access row after keyboard unpin', async ({
+        mount,
+        page,
+    }) => {
+        await mount(<AsideHeaderExamplesStories.FullNavigation />, mountOptions, viewport);
+
+        const quickAccess = page.locator('[id="gravity-ui/navigation-quick-access-composite-bar"]');
+        const alertsItem = quickAccess.locator('button[aria-label="Alerts"]');
+        const removeButton = alertsItem
+            .locator('..')
+            .getByRole('button', {name: 'Remove from quick access'});
+
+        await alertsItem.focus();
+        await page.keyboard.press('Tab');
+        await expect(removeButton).toBeFocused();
+        await page.keyboard.press('Enter');
+
+        await expect(alertsItem).toHaveCount(0);
+        await expect(quickAccess.locator('button[aria-label="Overview"]')).toBeFocused();
+    });
+
+    test('highlights a pinned current item only in quick access by default', async ({
+        mount,
+        page,
+    }) => {
+        await mount(<AsideHeaderExamplesStories.FullNavigation />, mountOptions, viewport);
+
+        const overviewItems = page.locator('button[aria-label="Overview"]');
+        await expect(overviewItems).toHaveCount(2);
+
+        const quickAccessBackground = await overviewItems
+            .nth(0)
+            .evaluate((element) => getComputedStyle(element).backgroundColor);
+        const mainMenuBackground = await overviewItems
+            .nth(1)
+            .evaluate((element) => getComputedStyle(element).backgroundColor);
+
+        expect(quickAccessBackground).not.toBe('rgba(0, 0, 0, 0)');
+        expect(mainMenuBackground).toBe('rgba(0, 0, 0, 0)');
+    });
+
+    test('can highlight a pinned current item in both sections', async ({mount, page}) => {
+        await mount(
+            <AsideHeaderExamplesStories.FullNavigation quickAccessHighlightInMainMenu />,
+            mountOptions,
+            viewport,
+        );
+
+        const overviewItems = page.locator('button[aria-label="Overview"]');
+        await expect(overviewItems).toHaveCount(2);
+
+        for (const index of [0, 1]) {
+            expect(
+                await overviewItems
+                    .nth(index)
+                    .evaluate((element) => getComputedStyle(element).backgroundColor),
+            ).not.toBe('rgba(0, 0, 0, 0)');
+        }
+    });
+
+    test('caps the separate quick access scroll area at five rows', async ({mount, page}) => {
+        await mount(<QuickAccessOverflowExample />, mountOptions, quickAccessOverflowViewport);
+
+        const quickAccessScroll = page.locator(
+            '[class*="gn-aside-header__quick-access_"] [class*="scrollable-with-scrollbar__scrollable-inner"]',
+        );
+        const mainMenuScroll = page.locator(
+            '[class*="gn-aside-header__aside-content_"] > [class*="scrollable-with-scrollbar_"] [class*="scrollable-with-scrollbar__scrollable-inner"]',
+        );
+
+        await expect(quickAccessScroll).toHaveCount(1);
+        await expect(mainMenuScroll).toHaveCount(1);
+        await expect
+            .poll(() =>
+                quickAccessScroll.evaluate((element) => ({
+                    clientHeight: element.clientHeight,
+                    overflows: element.scrollHeight > element.clientHeight,
+                })),
+            )
+            .toEqual({clientHeight: 160, overflows: true});
+    });
+
+    test('caps compact quick access at five rows in a low viewport', async ({mount, page}) => {
+        await mount(
+            <QuickAccessOverflowExample compact />,
+            mountOptions,
+            quickAccessCompactOverflowViewport,
+        );
+
+        const quickAccessScroll = page.locator(
+            '[class*="gn-aside-header__quick-access_"] [class*="scrollable-with-scrollbar__scrollable-inner"]',
+        );
+
+        await expect(quickAccessScroll).toHaveCount(1);
+        await expect
+            .poll(() =>
+                quickAccessScroll.evaluate((element) => ({
+                    clientHeight: element.clientHeight,
+                    overflows: element.scrollHeight > element.clientHeight,
+                })),
+            )
+            .toEqual({clientHeight: 160, overflows: true});
+        await expect(page.locator('button[aria-label="Analytics"]')).toBeVisible();
+        await expect(page.locator('[data-qa="quick-access-overflow-footer"]')).toBeVisible();
+    });
+
+    test('keeps an anchor itemWrapper and its pin separate in keyboard order', async ({
+        mount,
+        page,
+    }) => {
+        await mount(<QuickAccessWrappedItemExample />, mountOptions, viewport);
+
+        const anchor = page.locator('[data-qa="quick-access-anchor-wrapper"]');
+        const interactiveRow = anchor.locator('..');
+        const pin = interactiveRow.locator('button[aria-label="Pin to quick access"]');
+        const initialUrl = page.url();
+
+        await expect(anchor.locator('button')).toHaveCount(0);
+        await page.keyboard.press('Tab');
+        await expect(anchor).toBeFocused();
+        await expect(pin).toBeVisible();
+        await page.keyboard.press('Tab');
+        await expect(pin).toBeFocused();
+        await page.keyboard.press('Enter');
+        expect(page.url()).toBe(initialUrl);
+    });
+
+    test('uses one overflow-aware scroll area in unified mode', async ({mount, page}) => {
+        await mount(
+            <QuickAccessOverflowExample unifiedMenuScroll />,
+            mountOptions,
+            quickAccessOverflowViewport,
+        );
+
+        const unifiedScroll = page.locator(
+            '[class*="gn-aside-header__unified-menu-scroll_"] [class*="scrollable-with-scrollbar__scrollable-inner"]',
+        );
+        const quickAccessNestedScroll = page.locator(
+            '[class*="gn-aside-header__quick-access_"] [class*="scrollable-with-scrollbar__scrollable-inner"]',
+        );
+
+        await expect(unifiedScroll).toHaveCount(1);
+        await expect(quickAccessNestedScroll).toHaveCount(0);
+        await expect
+            .poll(() =>
+                unifiedScroll.evaluate((element) => element.scrollHeight > element.clientHeight),
+            )
+            .toBe(true);
+
+        await expect(page.locator('[class*="gn-aside-header__footer_with-divider"]')).toHaveCount(
+            1,
+        );
     });
 
     test('render story: <MenuScrollbar>', async ({mount, expectScreenshot}) => {

@@ -49,13 +49,14 @@ export const fullNavigationMenuItems: AsideHeaderItem[] = [
         type: 'action',
         afterMoreButton: true,
     },
-    {id: 'home', title: 'Home', icon: House, category: 'General'},
+    {id: 'home', title: 'Home', icon: House, category: 'General', quickAccess: true},
     {
         id: 'analytics-overview',
         title: 'Overview',
         icon: ChartPie,
         groupId: 'analytics',
         category: 'Analytics',
+        quickAccess: true,
     },
     {
         id: 'analytics-reports',
@@ -85,6 +86,7 @@ export const fullNavigationMenuItems: AsideHeaderItem[] = [
         icon: Bell,
         groupId: 'monitoring',
         category: 'Monitoring',
+        quickAccess: true,
     },
     {
         id: 'monitoring-logs',

@@ -26,7 +26,9 @@ describe('HighlightedItem', () => {
             menuDensity: 'compact',
             menuItems: [],
             allPagesIsAvailable: false,
+            quickAccessIsAvailable: false,
             onItemClick: () => {},
+            onToggleQuickAccess: () => {},
             openModalSubscriber,
         };
 
