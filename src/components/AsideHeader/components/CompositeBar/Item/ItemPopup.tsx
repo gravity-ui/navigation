@@ -7,9 +7,11 @@ import {createBlock} from '../../../../utils/cn';
 import {useSafeAsideHeaderContext} from '../../../AsideHeaderContext';
 import {getAsideHeaderDensityConfig, getAsideHeaderDensityCssProperties} from '../../../density';
 import {AsideHeaderItem} from '../../../types';
-import {getPopupItemHeight, getSelectedItemIndex} from '../utils';
+import {isItemPresentationCurrent} from '../presentationCurrent';
+import {getPopupItemHeight} from '../utils';
 
 import {Item} from './Item';
+import type {QuickAccessToggleHandler} from './Item.types';
 import {ItemPopupNestContext} from './ItemPopupNestContext';
 
 import styles from './Item.module.scss';
@@ -66,7 +68,17 @@ interface Props {
     onItemClick?: AsideHeaderItem['onItemClick'];
     /** Controls selected styling without altering the source items passed to callbacks. */
     highlightCurrentItem?: boolean;
+    enableQuickAccessPin?: boolean;
+    onToggleQuickAccess?: QuickAccessToggleHandler;
+    suppressCurrentItemIds?: ReadonlySet<string>;
 }
+
+type PopupTriggerInteractionProps = {
+    onMouseEnter?: React.MouseEventHandler<HTMLElement>;
+    onMouseLeave?: React.MouseEventHandler<HTMLElement>;
+    onFocus?: React.FocusEventHandler<HTMLElement>;
+    onBlur?: React.FocusEventHandler<HTMLElement>;
+};
 
 export const ItemPopup: React.FC<Props> = ({
     items,
@@ -84,17 +96,31 @@ export const ItemPopup: React.FC<Props> = ({
     onItemClick,
     onOpenChange,
     highlightCurrentItem = true,
+    enableQuickAccessPin,
+    onToggleQuickAccess,
+    suppressCurrentItemIds,
 }) => {
     const asideHeaderContext = useSafeAsideHeaderContext();
     const theme = useThemeValue();
     const densityConfig = getAsideHeaderDensityConfig(asideHeaderContext?.menuDensity);
     const nestedOpenCountRef = React.useRef(0);
+    // A nested portaled popup temporarily blocks the parent's hover-close. Remember that close
+    // request and replay it after the child closes, unless the pointer/focus returned to the parent.
+    const deferredCloseRef = React.useRef(false);
+    const interactionInsideRef = React.useRef(false);
+    const popupContentRef = React.useRef<HTMLDivElement>(null);
+    const triggerElementRef = React.useRef<HTMLElement | null>(null);
+    const onOpenChangeRef = React.useRef(onOpenChange);
     const densityCssProperties = getAsideHeaderDensityCssProperties(
         asideHeaderContext?.menuDensity,
     );
 
     const isSingleLabel = variant === 'label';
     const soloPopupTheme = theme.endsWith('-hc') ? 'dark-hc' : 'dark';
+
+    React.useEffect(() => {
+        onOpenChangeRef.current = onOpenChange;
+    }, [onOpenChange]);
 
     const popoverStyle = React.useMemo(() => {
         const popupPadding = isSingleLabel ? 0 : POPUP_PADDING;
@@ -136,6 +162,15 @@ export const ItemPopup: React.FC<Props> = ({
 
     const registerNestedOpen = React.useCallback((delta: number) => {
         nestedOpenCountRef.current = Math.max(0, nestedOpenCountRef.current + delta);
+
+        if (
+            nestedOpenCountRef.current === 0 &&
+            deferredCloseRef.current &&
+            !interactionInsideRef.current
+        ) {
+            deferredCloseRef.current = false;
+            onOpenChangeRef.current?.(false);
+        }
     }, []);
 
     const nestContextValue = React.useMemo(() => ({registerNestedOpen}), [registerNestedOpen]);
@@ -143,13 +178,33 @@ export const ItemPopup: React.FC<Props> = ({
     const wrappedOnOpenChange = React.useCallback(
         (next: boolean) => {
             if (!next && nestedOpenCountRef.current > 0) {
+                deferredCloseRef.current = true;
                 return;
             }
 
+            deferredCloseRef.current = false;
             onOpenChange?.(next);
         },
         [onOpenChange],
     );
+
+    const markInteractionRegionEntered = React.useCallback(() => {
+        interactionInsideRef.current = true;
+        deferredCloseRef.current = false;
+    }, []);
+
+    const markInteractionRegionLeft = React.useCallback((relatedTarget: EventTarget | null) => {
+        const nextTarget = relatedTarget instanceof Node ? relatedTarget : null;
+        const remainsInside = Boolean(
+            nextTarget &&
+                (triggerElementRef.current?.contains(nextTarget) ||
+                    popupContentRef.current?.contains(nextTarget)),
+        );
+
+        if (!remainsInside) {
+            interactionInsideRef.current = false;
+        }
+    }, []);
 
     const handlePopupContentClick = React.useCallback((event: React.MouseEvent<HTMLDivElement>) => {
         event.stopPropagation();
@@ -164,6 +219,21 @@ export const ItemPopup: React.FC<Props> = ({
             ),
         [items],
     );
+    const sourceItemsById = React.useMemo(
+        () => new Map(items.map((item) => [item.id, item])),
+        [items],
+    );
+    const selectedPopupItemIndex = React.useMemo(() => {
+        if (!highlightCurrentItem) {
+            return undefined;
+        }
+
+        const index = popupItems.findIndex((item) =>
+            isItemPresentationCurrent(item, {suppressCurrentItemIds}),
+        );
+
+        return index === -1 ? undefined : index;
+    }, [highlightCurrentItem, popupItems, suppressCurrentItemIds]);
 
     if (!popupItems.length) {
         return children;
@@ -172,50 +242,92 @@ export const ItemPopup: React.FC<Props> = ({
     const content = (
         <ItemPopupNestContext.Provider value={nestContextValue}>
             <div
+                ref={popupContentRef}
                 className={b('popup-content', {collapsed, 'single-label': isSingleLabel})}
                 onClick={handlePopupContentClick}
+                onMouseEnter={markInteractionRegionEntered}
+                onMouseLeave={(event) => markInteractionRegionLeft(event.relatedTarget)}
+                onFocusCapture={markInteractionRegionEntered}
+                onBlurCapture={(event) => markInteractionRegionLeft(event.relatedTarget)}
             >
                 {title && <div className={b('popup-title')}>{title}</div>}
                 <List
                     items={popupItems}
-                    selectedItemIndex={
-                        highlightCurrentItem ? getSelectedItemIndex(popupItems) : undefined
-                    }
+                    selectedItemIndex={selectedPopupItemIndex}
                     itemHeight={popupItemHeight}
                     itemsHeight={popupItemsHeight}
                     itemClassName={b('root-menu-item', itemClassName)}
                     virtualized={false}
                     filterable={false}
                     sortable={false}
-                    renderItem={(item) => (
-                        <Item
-                            {...item}
-                            qa={undefined}
-                            compact={false}
-                            menuPopupRow
-                            suppressCurrentHighlight={!highlightCurrentItem}
-                            className={b('popup-item')}
-                            hideIcon={hideIcon}
-                            menuPopupHideIcon={nestedPopupHideIcon}
-                            stopClickPropagation={!item.itemWrapper}
-                            enableTooltip={false}
-                            bringForward={false}
-                            popupVisible={false}
-                            renderPopupContent={undefined}
-                            onOpenChangePopup={undefined}
-                            popupRef={undefined}
-                            onItemClick={(_innerItem, _innerCollapsed, event) => {
-                                if (!item.current) {
-                                    onOpenChange?.(false);
-                                }
+                    renderItem={(item) => {
+                        const sourceItem = sourceItemsById.get(item.id) ?? item;
 
-                                (onPopupItemClick ?? onItemClick)?.(item, collapsed, event);
-                            }}
-                        />
-                    )}
+                        return (
+                            <Item
+                                {...item}
+                                qa={undefined}
+                                compact={false}
+                                menuPopupRow
+                                suppressCurrentHighlight={!highlightCurrentItem}
+                                suppressCurrentItemIds={suppressCurrentItemIds}
+                                className={b('popup-item')}
+                                hideIcon={hideIcon}
+                                menuPopupHideIcon={nestedPopupHideIcon}
+                                stopClickPropagation={!sourceItem.itemWrapper}
+                                enableTooltip={false}
+                                bringForward={false}
+                                popupVisible={false}
+                                renderPopupContent={undefined}
+                                onOpenChangePopup={undefined}
+                                popupRef={undefined}
+                                enableQuickAccessPin={!isSingleLabel && enableQuickAccessPin}
+                                quickAccessPinItem={sourceItem}
+                                onToggleQuickAccess={
+                                    isSingleLabel ? undefined : onToggleQuickAccess
+                                }
+                                onItemClick={(_innerItem, _innerCollapsed, event) => {
+                                    if (!sourceItem.current) {
+                                        onOpenChange?.(false);
+                                    }
+
+                                    (onPopupItemClick ?? onItemClick)?.(
+                                        sourceItem,
+                                        collapsed,
+                                        event,
+                                    );
+                                }}
+                            />
+                        );
+                    }}
                 />
             </div>
         </ItemPopupNestContext.Provider>
+    );
+
+    const triggerProps = children.props as PopupTriggerInteractionProps;
+    const trigger = React.cloneElement(
+        children as React.ReactElement<PopupTriggerInteractionProps>,
+        {
+            onMouseEnter: (event) => {
+                triggerElementRef.current = event.currentTarget;
+                markInteractionRegionEntered();
+                triggerProps.onMouseEnter?.(event);
+            },
+            onMouseLeave: (event) => {
+                markInteractionRegionLeft(event.relatedTarget);
+                triggerProps.onMouseLeave?.(event);
+            },
+            onFocus: (event) => {
+                triggerElementRef.current = event.currentTarget;
+                markInteractionRegionEntered();
+                triggerProps.onFocus?.(event);
+            },
+            onBlur: (event) => {
+                markInteractionRegionLeft(event.relatedTarget);
+                triggerProps.onBlur?.(event);
+            },
+        },
     );
 
     return (
@@ -240,7 +352,7 @@ export const ItemPopup: React.FC<Props> = ({
             style={popoverStyle}
             content={content}
         >
-            {children}
+            {trigger}
         </Popover>
     );
 };

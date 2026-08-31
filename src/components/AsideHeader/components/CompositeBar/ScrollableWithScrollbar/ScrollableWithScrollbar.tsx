@@ -11,6 +11,8 @@ const b = createBlock('scrollable-with-scrollbar', styles);
 type ScrollableWithScrollbarProps = {
     children: ReactNode;
     className?: string;
+    /** Grow with content up to the quick access height cap, then scroll. */
+    capped?: boolean;
     /** Called when scrollable content overflows the allocated height. */
     onOverflowChange?: (overflows: boolean) => void;
 };
@@ -22,6 +24,7 @@ type ScrollableWithScrollbarProps = {
 export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
     children,
     className,
+    capped = false,
     onOverflowChange,
 }) => {
     const {
@@ -44,7 +47,7 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
     }, [onOverflowChange]);
 
     return (
-        <div className={b(null, className)}>
+        <div className={b({capped}, className)}>
             <div ref={scrollRef} className={b('scrollable-inner')} onScroll={scheduleUpdate}>
                 {children}
             </div>

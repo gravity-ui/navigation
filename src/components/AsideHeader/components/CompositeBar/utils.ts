@@ -7,6 +7,7 @@ import {AsideHeaderItem} from '../../types';
 
 import {COLLAPSE_ITEM_ID, COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX} from './constants';
 import type {CompositeBarRow} from './grouping';
+import {isItemPresentationCurrent} from './presentationCurrent';
 
 type CompositeBarItemLayoutOptions = {
     /** Collapsed sidebar (icon-only rows): multi-line titles use the regular row height. */
@@ -63,11 +64,6 @@ export function getItemsHeight<T extends AsideHeaderItem>(
 
 export function getPopupItemsHeight<T extends AsideHeaderItem>(items: T[]) {
     return items.reduce((sum, item) => sum + getPopupItemHeight(item), 0);
-}
-
-export function getSelectedItemIndex(compositeItems: AsideHeaderItem[]) {
-    const index = compositeItems.findIndex(({current}) => Boolean(current));
-    return index === -1 ? undefined : index;
 }
 
 function getPinnedItems(compositeItems: AsideHeaderItem[]) {
@@ -186,10 +182,13 @@ export function getCompositeBarRowsMinHeight(
     return getItemsMinHeight(compositeBarRowsToFlatForMinHeight(rows), menuDensity, layout);
 }
 
-export function getSelectedCompositeBarRowIndex(rows: CompositeBarRow[]): number | undefined {
+export function getSelectedCompositeBarRowIndex(
+    rows: CompositeBarRow[],
+    suppressCurrentItemIds?: ReadonlySet<string>,
+): number | undefined {
     const index = rows.findIndex((row) => {
         if (row.kind === 'item') {
-            return Boolean(row.item.current);
+            return isItemPresentationCurrent(row.item, {suppressCurrentItemIds});
         }
         // Group rows embed their own List; selection is on nested items, not this root row.
         return false;

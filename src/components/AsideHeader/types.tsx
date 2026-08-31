@@ -101,6 +101,23 @@ interface AsideHeaderDefaultProps {
     onMenuGroupsChanged?: (menuGroups: MenuGroup[]) => void;
     defaultMenuItems?: AsideHeaderItem[];
     onMenuItemsChanged?: (items: AsideHeaderItem[]) => void;
+    /**
+     * Enables the quick access section and pin controls for eligible leaf menu items.
+     * The state remains controlled by `menuItems`; use `onQuickAccessChange` to update it.
+     * @default false
+     */
+    enableQuickAccess?: boolean;
+    /**
+     * Keeps the active item highlighted in the main menu when the same item is also
+     * rendered in quick access.
+     * @default false
+     */
+    quickAccessHighlightInMainMenu?: boolean;
+    /**
+     * Called when a user pins or unpins an eligible leaf item. The library does not
+     * mutate `menuItems`; the consumer should provide the updated controlled value.
+     */
+    onQuickAccessChange?: (item: AsideHeaderItem, quickAccess: boolean) => void;
     headerDecoration?: boolean;
     /**
      * When provided, the map is the source of truth for which menu groups are collapsed
@@ -116,6 +133,12 @@ interface AsideHeaderDefaultProps {
      * `collapsedMenuGroupIds` when using controlled mode.
      */
     onToggleMenuGroupCollapsed?: (groupId: string) => void;
+    /**
+     * Uses one scroll container for quick access and the main menu in expanded
+     * `menuOverflow="scroll"` mode. Otherwise quick access has its own capped area.
+     * @default false
+     */
+    unifiedMenuScroll?: boolean;
 }
 
 export type AsideHeaderInnerProps = AsideHeaderGeneralProps &
@@ -135,6 +158,10 @@ export enum InnerPanels {
 export const ALL_PAGES_ID = InnerPanels.AllPages;
 
 export interface AsideHeaderItem extends MenuItem {
+    /**
+     * Shows an eligible leaf item in the quick access section when quick access is enabled.
+     */
+    quickAccess?: boolean;
     /**
      * Maximum number of title lines in the expanded sidebar.
      * Collapsed (icon-only) sidebar and popup rows always use one line.

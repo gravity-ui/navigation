@@ -12,6 +12,8 @@ import {AsideHeaderInnerContextProvider} from '../../../AsideHeaderContext';
 import {AsideHeaderItem, AsideHeaderMenuOverflow} from '../../../types';
 import {CompositeBar} from '../CompositeBar';
 
+jest.mock('../../../i18n');
+
 // AutoSizer is only hit by the `collapse` fallback branch; we still mock it so
 // that branch produces deterministic sizes regardless of the jsdom viewport.
 jest.mock('react-virtualized-auto-sizer', () => ({
@@ -25,7 +27,9 @@ const contextValue = {
     size: 200,
     menuItems: [],
     allPagesIsAvailable: false,
+    quickAccessIsAvailable: false,
     onItemClick: () => {},
+    onToggleQuickAccess: () => {},
 };
 
 function renderBar(props: {

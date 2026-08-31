@@ -2,6 +2,11 @@ import * as React from 'react';
 
 import type {AsideHeaderItem} from 'src/components/AsideHeader/types';
 
+export type QuickAccessToggleHandler = (
+    item: AsideHeaderItem,
+    event?: React.MouseEvent<HTMLButtonElement>,
+) => void;
+
 export interface ItemProps extends AsideHeaderItem {}
 
 export interface ItemInnerProps extends ItemProps {
@@ -28,6 +33,8 @@ export interface ItemInnerProps extends ItemProps {
     menuPopupRow?: boolean;
     /** Suppresses selected styling without changing the source item's `current` value. */
     suppressCurrentHighlight?: boolean;
+    /** Item ids whose current state is visually suppressed in this item's popup. */
+    suppressCurrentItemIds?: ReadonlySet<string>;
     /**
      * Stops click bubbling so portaled popup rows do not trigger the parent Item's onClick.
      * Off when `itemWrapper` is set so the wrapper (e.g. react-router Link) receives the click.
@@ -39,4 +46,9 @@ export interface ItemInnerProps extends ItemProps {
     menuGroupNestedTreeConnector?: React.ReactNode;
     /** Inline expanded menu-group child row. */
     menuGroupNested?: boolean;
+    /** Enables pin/unpin controls for eligible leaf items. */
+    enableQuickAccessPin?: boolean;
+    /** Original public item used by the quick access callback. */
+    quickAccessPinItem?: AsideHeaderItem;
+    onToggleQuickAccess?: QuickAccessToggleHandler;
 }

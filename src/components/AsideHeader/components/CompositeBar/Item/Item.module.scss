@@ -151,6 +151,105 @@ $floating-surface-box-shadow-dark:
         margin: 0 10px;
     }
 
+    /**
+     * Keep the pin next to the row instead of nesting a button inside the row button/link.
+     * The slot reserves its width, so long titles never render below the control.
+     */
+    &__interactive-row {
+        position: relative;
+        align-self: flex-start;
+        width: 100%;
+        height: 100%;
+        min-width: 0;
+
+        & > :first-child {
+            width: 100%;
+            min-width: 0;
+        }
+    }
+
+    &__quick-access-pin-slot {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: var(--_--gn-aside-header-density-item-title-gap-end, var(--g-spacing-2));
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: none;
+
+        &_suppressed {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+    }
+
+    &_with-quick-access-pin &__title {
+        margin-inline-end: calc(
+            32px + var(--_--gn-aside-header-density-item-title-gap-end, var(--g-spacing-2))
+        );
+    }
+
+    &__interactive-row:hover &__quick-access-pin-slot:not(&__quick-access-pin-slot_suppressed) {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transition:
+            opacity 0.15s ease var(--_--gn-aside-header-quick-access-pin-hover-delay, 200ms),
+            visibility 0s linear var(--_--gn-aside-header-quick-access-pin-hover-delay, 200ms);
+    }
+
+    // Keyboard focus must expose the next control immediately so it joins the Tab sequence.
+    &__interactive-row:focus-within
+        &__quick-access-pin-slot:not(&__quick-access-pin-slot_suppressed) {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transition: none;
+    }
+
+    // The pin is a sibling of the menu item, so hovering it must keep the row hover surface.
+    &__interactive-row:hover #{$block}:not(#{$block}_compact)#{$block}_type_regular {
+        background-color: var(
+            --gn-aside-header-item-current-background-color-hover,
+            var(
+                --gn-aside-header-item-current-background-color,
+                var(--_--item-selected-background-color)
+            )
+        );
+        border-radius: var(--gn-aside-header-item-expanded-radius, var(--_--item-expanded-radius));
+    }
+
+    &__interactive-row:hover
+        #{$block}:not(#{$block}_compact):not(#{$block}_current)#{$block}_type_regular {
+        background-color: var(
+            --gn-aside-header-item-background-color-hover,
+            var(--_--item-background-color-hover)
+        );
+    }
+
+    &__quick-access-pin {
+        flex-shrink: 0;
+        color: var(--g-color-text-complementary);
+
+        &_pinned {
+            color: var(--g-color-text-secondary);
+        }
+
+        &:hover {
+            color: var(--g-color-text-primary);
+        }
+
+        :global(.g-button__icon) {
+            color: inherit;
+        }
+    }
+
     &__collapse-item {
         @include mixins.accessibility-button;
 

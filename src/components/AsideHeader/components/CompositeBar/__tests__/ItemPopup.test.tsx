@@ -16,12 +16,16 @@ import {AsideHeaderMenuDensity} from '../../../density';
 import {AsideHeaderItem} from '../../../types';
 import {ItemPopup, getItemPopoverOffset} from '../Item/ItemPopup';
 
+jest.mock('../../../i18n');
+
 const contextValue = {
     compact: false,
     size: 200,
     menuItems: [],
     allPagesIsAvailable: false,
+    quickAccessIsAvailable: false,
     onItemClick: () => {},
+    onToggleQuickAccess: () => {},
 };
 
 function renderItemPopup(props: {
@@ -35,6 +39,8 @@ function renderItemPopup(props: {
     menuDensity?: AsideHeaderMenuDensity;
     theme?: RealTheme;
     variant?: 'menu' | 'label';
+    enableQuickAccessPin?: boolean;
+    onToggleQuickAccess?: jest.Mock;
 }) {
     return render(
         <ThemeProvider theme={props.theme ?? 'light'}>
@@ -51,6 +57,8 @@ function renderItemPopup(props: {
                         collapsed={props.collapsed}
                         hideIcon={props.hideIcon}
                         onItemClick={props.onItemClick}
+                        enableQuickAccessPin={props.enableQuickAccessPin}
+                        onToggleQuickAccess={props.onToggleQuickAccess}
                     >
                         <button data-testid="trigger">Trigger</button>
                     </ItemPopup>
@@ -268,6 +276,18 @@ describe('ItemPopup', () => {
         expect(document.querySelector('.g-popup')?.classList.contains('g-root_theme_dark')).toBe(
             false,
         );
+    });
+
+    it('does not render a pin control in a solo label popup', () => {
+        renderItemPopup({
+            items: [{id: 'home', title: 'Home', icon: Gear}],
+            open: true,
+            variant: 'label',
+            enableQuickAccessPin: true,
+            onToggleQuickAccess: jest.fn(),
+        });
+
+        expect(screen.queryByRole('button', {name: 'Pin to quick access'})).toBeNull();
     });
 
     it('lets itemWrapper receive bubbled clicks in popup', () => {

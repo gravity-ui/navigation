@@ -52,4 +52,19 @@ $block: '.#{variables.$ns}scrollable-with-scrollbar';
     &:hover &__scrollbar-thumb {
         opacity: 1;
     }
+
+    /** Quick access grows with content up to five rows, then gets its own scrollbar. */
+    &_capped {
+        flex: 0 1 auto;
+        overflow: hidden;
+        max-height: var(
+            --_--gn-aside-header-quick-access-max-height,
+            calc(5 * var(--_--gn-aside-header-density-item-height, #{variables.$item-height}))
+        );
+
+        #{$block}__scrollable-inner {
+            height: auto;
+            max-height: inherit;
+        }
+    }
 }
