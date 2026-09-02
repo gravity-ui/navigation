@@ -121,17 +121,20 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
         activeIndex,
         lastClickedItemIndex,
     });
-    multipleTooltipStateRef.current = {
-        active: multipleTooltipActive,
-        activeIndex,
-        lastClickedItemIndex,
-    };
     const onItemClickRef = useRef(onItemClick);
     const onMoreClickRef = useRef(onMoreClick);
     const setMultipleTooltipContextValueRef = useRef(setMultipleTooltipContextValue);
-    onItemClickRef.current = onItemClick;
-    onMoreClickRef.current = onMoreClick;
-    setMultipleTooltipContextValueRef.current = setMultipleTooltipContextValue;
+
+    React.useLayoutEffect(() => {
+        multipleTooltipStateRef.current = {
+            active: multipleTooltipActive,
+            activeIndex,
+            lastClickedItemIndex,
+        };
+        onItemClickRef.current = onItemClick;
+        onMoreClickRef.current = onMoreClick;
+        setMultipleTooltipContextValueRef.current = setMultipleTooltipContextValue;
+    });
 
     React.useEffect(() => {
         function handleBlurWindow() {

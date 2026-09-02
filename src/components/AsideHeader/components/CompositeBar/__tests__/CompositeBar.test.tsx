@@ -66,7 +66,16 @@ describe('CompositeBar', () => {
             renderCompositeBar({items, onItemClick, compact: true, multipleTooltip: true});
 
             const menuItem = screen.getByRole('button', {name: 'Item 1'});
-            fireEvent.mouseEnter(menuItem);
+            // Compact Item attaches its hover handler only to this wrapper.
+            // eslint-disable-next-line testing-library/no-node-access
+            const iconWrapper = menuItem.querySelector('[class*="btn-icon"]');
+
+            if (!iconWrapper) {
+                throw new Error('Compact item icon wrapper is missing');
+            }
+
+            fireEvent.mouseEnter(iconWrapper);
+            expect(screen.getAllByText('Item 1')).toHaveLength(2);
             const listRenderCallsAfterHover = listRenderSpy.mock.calls.length;
 
             fireEvent.click(menuItem);
