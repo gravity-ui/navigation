@@ -37,6 +37,7 @@ export const MultipleTooltip: React.FC<MultipleTooltipProps> = ({
             strategy="fixed"
             placement={placement}
             offset={POPUP_OFFSET}
+            returnFocus={false}
         >
             <div className={b()}>
                 <div className={b('items-container')}>

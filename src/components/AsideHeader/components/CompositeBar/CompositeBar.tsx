@@ -42,6 +42,61 @@ type CompositeBarViewProps = CompositeBarProps & {
     collapseItems?: AsideHeaderItem[];
 };
 
+type CompositeBarListProps = {
+    compact: boolean;
+    compositeId?: string;
+    collapseItems?: AsideHeaderItem[];
+    items: AsideHeaderItem[];
+    listRef: React.RefObject<List<AsideHeaderItem>>;
+    multipleTooltip: boolean;
+    onItemClickByIndex: (
+        itemIndex: number,
+        orginalItemClick: AsideHeaderItem['onItemClick'],
+    ) => ItemProps['onItemClick'];
+    onMouseEnterByIndex: (itemIndex: number) => () => void;
+    onMouseLeave: () => void;
+    type: CompositeBarProps['type'];
+};
+
+const CompositeBarList = React.memo(function CompositeBarList({
+    compact,
+    compositeId,
+    collapseItems,
+    items,
+    listRef,
+    multipleTooltip,
+    onItemClickByIndex,
+    onMouseEnterByIndex,
+    onMouseLeave,
+    type,
+}: CompositeBarListProps) {
+    return (
+        <List<AsideHeaderItem>
+            id={compositeId}
+            ref={listRef}
+            items={items}
+            selectedItemIndex={type === 'menu' ? getSelectedItemIndex(items) : undefined}
+            itemHeight={getItemHeight}
+            itemsHeight={getItemsHeight}
+            itemClassName={b('root-menu-item')}
+            virtualized={false}
+            filterable={false}
+            sortable={false}
+            renderItem={(item, _isItemActive, itemIndex) => (
+                <Item
+                    {...item}
+                    enableTooltip={multipleTooltip ? false : item.enableTooltip}
+                    compact={compact}
+                    onMouseEnter={onMouseEnterByIndex(itemIndex)}
+                    onMouseLeave={onMouseLeave}
+                    onItemClick={onItemClickByIndex(itemIndex, item.onItemClick)}
+                    collapseItems={collapseItems}
+                />
+            )}
+        />
+    );
+});
+
 const CompositeBarView: FC<CompositeBarViewProps> = ({
     type,
     items,
@@ -61,6 +116,25 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
         activeIndex,
         lastClickedItemIndex,
     } = useContext(MultipleTooltipContext);
+    const multipleTooltipStateRef = useRef({
+        active: multipleTooltipActive,
+        activeIndex,
+        lastClickedItemIndex,
+    });
+    const onItemClickRef = useRef(onItemClick);
+    const onMoreClickRef = useRef(onMoreClick);
+    const setMultipleTooltipContextValueRef = useRef(setMultipleTooltipContextValue);
+
+    React.useLayoutEffect(() => {
+        multipleTooltipStateRef.current = {
+            active: multipleTooltipActive,
+            activeIndex,
+            lastClickedItemIndex,
+        };
+        onItemClickRef.current = onItemClick;
+        onMoreClickRef.current = onMoreClick;
+        setMultipleTooltipContextValueRef.current = setMultipleTooltipContextValue;
+    });
 
     React.useEffect(() => {
         function handleBlurWindow() {
@@ -113,51 +187,48 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     const onMouseEnterByIndex = useCallback(
         (itemIndex: number) => () => {
             if (multipleTooltip && document.hasFocus()) {
-                let multipleTooltipActiveValue = multipleTooltipActive;
-                if (!multipleTooltipActive && itemIndex !== lastClickedItemIndex) {
-                    multipleTooltipActiveValue = true;
+                const {
+                    active: multipleTooltipActiveValue,
+                    activeIndex: currentActiveIndex,
+                    lastClickedItemIndex: currentLastClickedItemIndex,
+                } = multipleTooltipStateRef.current;
+                let nextMultipleTooltipActive = multipleTooltipActiveValue;
+                if (!multipleTooltipActiveValue && itemIndex !== currentLastClickedItemIndex) {
+                    nextMultipleTooltipActive = true;
                 }
                 if (
-                    activeIndex === itemIndex &&
-                    multipleTooltipActive === multipleTooltipActiveValue
+                    currentActiveIndex === itemIndex &&
+                    multipleTooltipActiveValue === nextMultipleTooltipActive
                 ) {
                     return;
                 }
-                setMultipleTooltipContextValue({
+                setMultipleTooltipContextValueRef.current({
                     activeIndex: itemIndex,
-                    active: multipleTooltipActiveValue,
+                    active: nextMultipleTooltipActive,
                 });
             }
         },
-        [
-            multipleTooltip,
-            multipleTooltipActive,
-            lastClickedItemIndex,
-            activeIndex,
-            setMultipleTooltipContextValue,
-        ],
+        [multipleTooltip],
     );
 
     const onMouseLeave = useCallback(() => {
         if (compact && document.hasFocus()) {
             ref.current?.activateItem(undefined as unknown as number);
+            const {
+                activeIndex: currentActiveIndex,
+                lastClickedItemIndex: currentLastClickedItemIndex,
+            } = multipleTooltipStateRef.current;
             if (
                 multipleTooltip &&
-                (activeIndex !== undefined || lastClickedItemIndex !== undefined)
+                (currentActiveIndex !== undefined || currentLastClickedItemIndex !== undefined)
             ) {
-                setMultipleTooltipContextValue({
+                setMultipleTooltipContextValueRef.current({
                     activeIndex: undefined,
                     lastClickedItemIndex: undefined,
                 });
             }
         }
-    }, [
-        activeIndex,
-        compact,
-        lastClickedItemIndex,
-        multipleTooltip,
-        setMultipleTooltipContextValue,
-    ]);
+    }, [compact, multipleTooltip]);
 
     const onItemClickByIndex = useCallback(
         (
@@ -165,13 +236,15 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
             orginalItemClick: AsideHeaderItem['onItemClick'],
         ): ItemProps['onItemClick'] =>
             (item, collapsed, event) => {
+                const {lastClickedItemIndex: currentLastClickedItemIndex} =
+                    multipleTooltipStateRef.current;
                 if (
                     compact &&
                     multipleTooltip &&
-                    itemIndex !== lastClickedItemIndex &&
+                    itemIndex !== currentLastClickedItemIndex &&
                     item.id !== COLLAPSE_ITEM_ID
                 ) {
-                    setMultipleTooltipContextValue({
+                    setMultipleTooltipContextValueRef.current({
                         lastClickedItemIndex: itemIndex,
                         active: false,
                     });
@@ -179,9 +252,9 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
 
                 // Handle clicks on the "more" button (collapse item)
                 if (item.id === COLLAPSE_ITEM_ID && collapsed) {
-                    onMoreClick?.();
+                    onMoreClickRef.current?.();
                 } else {
-                    onItemClick?.(
+                    onItemClickRef.current?.(
                         {
                             ...item,
                             // For collapsed popup items, preserve the item's own onItemClick
@@ -193,14 +266,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                     );
                 }
             },
-        [
-            compact,
-            lastClickedItemIndex,
-            multipleTooltip,
-            onItemClick,
-            onMoreClick,
-            setMultipleTooltipContextValue,
-        ],
+        [compact, multipleTooltip],
     );
 
     return (
@@ -210,28 +276,17 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                 onMouseEnter={onTooltipMouseEnter}
                 onMouseLeave={onTooltipMouseLeave}
             >
-                <List<AsideHeaderItem>
-                    id={compositeId}
-                    ref={ref}
+                <CompositeBarList
+                    compositeId={compositeId}
+                    type={type}
+                    compact={compact}
                     items={items}
-                    selectedItemIndex={type === 'menu' ? getSelectedItemIndex(items) : undefined}
-                    itemHeight={getItemHeight}
-                    itemsHeight={getItemsHeight}
-                    itemClassName={b('root-menu-item')}
-                    virtualized={false}
-                    filterable={false}
-                    sortable={false}
-                    renderItem={(item, _isItemActive, itemIndex) => (
-                        <Item
-                            {...item}
-                            enableTooltip={multipleTooltip ? false : item.enableTooltip}
-                            compact={compact}
-                            onMouseEnter={onMouseEnterByIndex(itemIndex)}
-                            onMouseLeave={onMouseLeave}
-                            onItemClick={onItemClickByIndex(itemIndex, item.onItemClick)}
-                            collapseItems={collapseItems}
-                        />
-                    )}
+                    listRef={ref}
+                    multipleTooltip={multipleTooltip}
+                    onItemClickByIndex={onItemClickByIndex}
+                    onMouseEnterByIndex={onMouseEnterByIndex}
+                    onMouseLeave={onMouseLeave}
+                    collapseItems={collapseItems}
                 />
             </div>
             {type === 'menu' && multipleTooltip && (

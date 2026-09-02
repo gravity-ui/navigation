@@ -4,7 +4,7 @@
 import React from 'react';
 
 import {Gear} from '@gravity-ui/icons';
-import {ThemeProvider} from '@gravity-ui/uikit';
+import {List, ThemeProvider} from '@gravity-ui/uikit';
 import {fireEvent, render, screen} from '@testing-library/react';
 
 import {AsideHeaderInnerContextProvider} from '../../../AsideHeaderContext';
@@ -25,12 +25,12 @@ const contextValue = {
     allPagesIsAvailable: false,
     onItemClick: () => {},
 } as any;
-
 function renderCompositeBar(props: {
     items: AsideHeaderItem[];
     onItemClick: jest.Mock;
     compact?: boolean;
     menuMoreTitle?: string;
+    multipleTooltip?: boolean;
 }) {
     return render(
         <ThemeProvider theme="light">
@@ -41,6 +41,7 @@ function renderCompositeBar(props: {
                     compact={props.compact ?? false}
                     onItemClick={props.onItemClick}
                     menuMoreTitle={props.menuMoreTitle ?? 'More'}
+                    multipleTooltip={props.multipleTooltip}
                 />
             </AsideHeaderInnerContextProvider>
         </ThemeProvider>,
@@ -48,6 +49,48 @@ function renderCompositeBar(props: {
 }
 
 describe('CompositeBar', () => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it('does not rebuild stable menu items when multiple tooltip state changes', () => {
+        const onItemClick = jest.fn();
+        const items: AsideHeaderItem[] = [
+            {
+                id: 'item1',
+                title: 'Item 1',
+                icon: Gear,
+            },
+            {id: 'item2', title: 'Item 2', icon: Gear},
+        ];
+        jest.spyOn(document, 'hasFocus').mockReturnValue(true);
+        const listRenderSpy = jest.spyOn(List.prototype, 'render');
+
+        renderCompositeBar({items, onItemClick, compact: true, multipleTooltip: true});
+
+        const menuItem = screen.getByRole('button', {name: 'Item 1'});
+        // Compact Item attaches its hover handler only to this wrapper.
+        // eslint-disable-next-line testing-library/no-node-access
+        const iconWrapper = menuItem.querySelector('[class*="btn-icon"]');
+
+        if (!iconWrapper) {
+            throw new Error('Compact item icon wrapper is missing');
+        }
+
+        fireEvent.mouseEnter(iconWrapper);
+        expect(screen.getAllByText('Item 1')).toHaveLength(2);
+        const listRenderCallsAfterHover = listRenderSpy.mock.calls.length;
+
+        fireEvent.click(menuItem);
+
+        expect(listRenderSpy).toHaveBeenCalledTimes(listRenderCallsAfterHover);
+        expect(onItemClick).toHaveBeenCalledWith(
+            expect.objectContaining({id: 'item1'}),
+            false,
+            expect.any(Object),
+        );
+    });
+
     it('should preserve item.onItemClick when clicking collapsed popup items', () => {
         const onItemClick = jest.fn();
         const dashboardOnItemClick = jest.fn();
