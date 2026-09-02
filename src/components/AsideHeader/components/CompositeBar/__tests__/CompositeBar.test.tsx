@@ -49,6 +49,10 @@ function renderCompositeBar(props: {
 }
 
 describe('CompositeBar', () => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
     it('does not rebuild stable menu items when multiple tooltip state changes', () => {
         const onItemClick = jest.fn();
         const items: AsideHeaderItem[] = [
@@ -59,37 +63,32 @@ describe('CompositeBar', () => {
             },
             {id: 'item2', title: 'Item 2', icon: Gear},
         ];
-        const hasFocusSpy = jest.spyOn(document, 'hasFocus').mockReturnValue(true);
+        jest.spyOn(document, 'hasFocus').mockReturnValue(true);
         const listRenderSpy = jest.spyOn(List.prototype, 'render');
 
-        try {
-            renderCompositeBar({items, onItemClick, compact: true, multipleTooltip: true});
+        renderCompositeBar({items, onItemClick, compact: true, multipleTooltip: true});
 
-            const menuItem = screen.getByRole('button', {name: 'Item 1'});
-            // Compact Item attaches its hover handler only to this wrapper.
-            // eslint-disable-next-line testing-library/no-node-access
-            const iconWrapper = menuItem.querySelector('[class*="btn-icon"]');
+        const menuItem = screen.getByRole('button', {name: 'Item 1'});
+        // Compact Item attaches its hover handler only to this wrapper.
+        // eslint-disable-next-line testing-library/no-node-access
+        const iconWrapper = menuItem.querySelector('[class*="btn-icon"]');
 
-            if (!iconWrapper) {
-                throw new Error('Compact item icon wrapper is missing');
-            }
-
-            fireEvent.mouseEnter(iconWrapper);
-            expect(screen.getAllByText('Item 1')).toHaveLength(2);
-            const listRenderCallsAfterHover = listRenderSpy.mock.calls.length;
-
-            fireEvent.click(menuItem);
-
-            expect(listRenderSpy).toHaveBeenCalledTimes(listRenderCallsAfterHover);
-            expect(onItemClick).toHaveBeenCalledWith(
-                expect.objectContaining({id: 'item1'}),
-                false,
-                expect.any(Object),
-            );
-        } finally {
-            hasFocusSpy.mockRestore();
-            listRenderSpy.mockRestore();
+        if (!iconWrapper) {
+            throw new Error('Compact item icon wrapper is missing');
         }
+
+        fireEvent.mouseEnter(iconWrapper);
+        expect(screen.getAllByText('Item 1')).toHaveLength(2);
+        const listRenderCallsAfterHover = listRenderSpy.mock.calls.length;
+
+        fireEvent.click(menuItem);
+
+        expect(listRenderSpy).toHaveBeenCalledTimes(listRenderCallsAfterHover);
+        expect(onItemClick).toHaveBeenCalledWith(
+            expect.objectContaining({id: 'item1'}),
+            false,
+            expect.any(Object),
+        );
     });
 
     it('should preserve item.onItemClick when clicking collapsed popup items', () => {
