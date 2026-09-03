@@ -85,6 +85,21 @@ test.describe('AsideHeader', () => {
         await expect(page.locator('.test-footer-logo')).toHaveCSS('height', '40px');
     });
 
+    test('renders footer items at the menu item height in default density', async ({
+        mount,
+        page,
+    }) => {
+        await mount(<AsideHeaderStories.Showcase />, mountOptions, viewport);
+
+        await expect(page.locator('.gn-footer-item').first()).toHaveCSS('height', '40px');
+    });
+
+    test('keeps footer items at the compact height in compact density', async ({mount, page}) => {
+        await mount(<AsideHeaderStories.CompactDensity />, mountOptions, viewport);
+
+        await expect(page.locator('.gn-footer-item').first()).toHaveCSS('height', '32px');
+    });
+
     test('render story: <HeaderAlert>', async ({mount, expectScreenshot}) => {
         await mount(<AsideHeaderStories.HeaderAlert />, mountOptions, viewport);
         await expectScreenshot();

@@ -37,7 +37,7 @@ const ASIDE_HEADER_DENSITY_CONFIG: Record<AsideHeaderMenuDensity, AsideHeaderDen
         iconBackgroundSize: 38,
         compactWidth: ASIDE_HEADER_COMPACT_WIDTH,
         expandedWidth: ASIDE_HEADER_EXPANDED_WIDTH,
-        footerItemHeight: 32,
+        footerItemHeight: ITEM_HEIGHT,
         itemExpandedRadius: 8,
         itemCollapsedRadius: 7,
         itemTitleGap: 8,
