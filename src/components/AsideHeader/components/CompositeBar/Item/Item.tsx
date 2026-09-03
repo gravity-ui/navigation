@@ -166,7 +166,13 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 disabled={compactPopoverDisabled}
                 type={type}
                 collapsed={compact}
-                onPopupItemClick={onPopupItemClick}
+                /**
+                 * No `onPopupItemClick` here on purpose: this popup renders the item itself
+                 * (`items={[props]}`), whose `onItemClick` is already the row-level wrapper.
+                 * Going through the wrapper keeps the original `item.onItemClick` intact for
+                 * the AsideHeader handler; the direct path would pass the wrapper as
+                 * `item.onItemClick` and trigger the handler twice (toggling All pages back).
+                 */
                 onItemClick={onItemClick}
             >
                 {iconButton}

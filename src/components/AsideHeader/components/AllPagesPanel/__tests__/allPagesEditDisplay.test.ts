@@ -6,6 +6,7 @@ import {buildCompositeBarRows} from '../../CompositeBar/grouping';
 import {
     ALL_PAGES_PANEL_ROW_BUILD_OPTIONS,
     getAllPagesEditModeFlatItems,
+    getAllPagesViewModeFlatItems,
     isCompositeBarGroupHeaderItem,
     rowsToAllPagesDisplayItems,
 } from '../allPagesEditDisplay';
@@ -47,6 +48,48 @@ describe('allPagesEditDisplay', () => {
         ];
         const flat = getAllPagesEditModeFlatItems(items, mixed);
         expect(flat.some((r) => r.id.includes('analytics'))).toBe(true);
+    });
+
+    it('getAllPagesViewModeFlatItems returns items unchanged when no group has its own action', () => {
+        expect(getAllPagesViewModeFlatItems(items, groups)).toEqual(items);
+        expect(getAllPagesViewModeFlatItems(items, undefined)).toEqual(items);
+    });
+
+    it('getAllPagesViewModeFlatItems inserts a clickable header before the first group item', () => {
+        const groupClick = jest.fn();
+        const clickableGroups: MenuGroup[] = [
+            {id: 'analytics', title: 'Analytics', icon: Gear, href: '/a', onItemClick: groupClick},
+            {id: 'settings', title: 'Settings', icon: Gear},
+        ];
+
+        const flat = getAllPagesViewModeFlatItems(items, clickableGroups);
+
+        expect(flat.map((i) => i.id)).toEqual([
+            'home',
+            '__gn-composite-bar__group-header__analytics',
+            'o1',
+            'o2',
+            's1',
+            'help',
+        ]);
+
+        const header = flat[1];
+        expect(header.category).toBe('Analytics');
+        expect(header.href).toBe('/a');
+        expect(header.onItemClick).toBe(groupClick);
+    });
+
+    it('getAllPagesViewModeFlatItems keeps the header in the default section when items have no category', () => {
+        const noCategoryItems: AsideHeaderItem[] = [
+            {id: 'o1', title: 'Overview', icon: Gear, groupId: 'analytics'},
+        ];
+        const clickableGroups: MenuGroup[] = [
+            {id: 'analytics', title: 'Analytics', icon: Gear, href: '/a'},
+        ];
+
+        const flat = getAllPagesViewModeFlatItems(noCategoryItems, clickableGroups);
+
+        expect(flat[0].category).toBeUndefined();
     });
 
     it('isCompositeBarGroupHeaderItem detects synthetic header ids', () => {

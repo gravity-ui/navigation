@@ -425,19 +425,23 @@ const MenuGroupsClickableHeaderTemplate: StoryFn<{initialCompact?: boolean}> = (
         },
     ];
 
-    const groupedMenuItems: AsideHeaderProps['menuItems'] = [
+    const defaultGroupedMenuItems: AsideHeaderProps['menuItems'] = [
         {id: 'home', title: 'Home', icon: Gear, current: true},
         {id: 'analytics-overview', title: 'Overview', icon: Gear, groupId: 'analytics'},
         {id: 'analytics-reports', title: 'Reports', icon: Gear, groupId: 'analytics'},
         {id: 'analytics-dashboards', title: 'Dashboards', icon: Gear, groupId: 'analytics'},
     ];
+    const [menuItems, setMenuItems] = React.useState(defaultGroupedMenuItems);
 
     return (
         <PageLayout compact={compact}>
             <PageLayoutAside
                 headerDecoration={false}
                 logo={DEFAULT_LOGO}
-                menuItems={groupedMenuItems}
+                menuItems={menuItems}
+                defaultMenuItems={defaultGroupedMenuItems}
+                onMenuItemsChanged={setMenuItems}
+                editMenuProps={{enableSorting: true}}
                 menuGroups={clickableGroups}
                 menuOverflow="scroll"
                 onChangeCompact={setCompact}

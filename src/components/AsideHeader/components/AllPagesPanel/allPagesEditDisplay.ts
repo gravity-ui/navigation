@@ -46,6 +46,48 @@ export function rowsToAllPagesDisplayItems(
 }
 
 /**
+ * View-mode list: original items plus a clickable header row for each group that has
+ * its own action (`MenuGroup.onItemClick` / `href`), inserted before the group's first item.
+ * Groups without an action are not represented by a row, as before.
+ */
+export function getAllPagesViewModeFlatItems(
+    asideHeaderItems: AsideHeaderItem[],
+    menuGroups: MenuGroup[] | undefined,
+): AsideHeaderItem[] {
+    const clickableGroupsById = new Map(
+        (menuGroups ?? [])
+            .filter((group) => group.onItemClick || group.href)
+            .map((group) => [group.id, group]),
+    );
+
+    if (clickableGroupsById.size === 0) {
+        return asideHeaderItems;
+    }
+
+    const insertedGroupIds = new Set<string>();
+    const result: AsideHeaderItem[] = [];
+
+    for (const item of asideHeaderItems) {
+        const group = item.groupId ? clickableGroupsById.get(item.groupId) : undefined;
+
+        if (group && !insertedGroupIds.has(group.id)) {
+            insertedGroupIds.add(group.id);
+            result.push({
+                ...makeGroupHeaderAsideItem(group),
+                category: item.category,
+                hidden: Boolean(group.hidden),
+                href: group.href,
+                onItemClick: group.onItemClick,
+            });
+        }
+
+        result.push(item);
+    }
+
+    return result;
+}
+
+/**
  * Edit-mode list: top-level items + one row per menu group (header only), same order as CompositeBar.
  */
 export function getAllPagesEditModeFlatItems(

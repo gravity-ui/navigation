@@ -80,7 +80,8 @@ export interface MenuGroup {
      * (receives the synthetic group-header item). When the group has its own action
      * (`onItemClick` and/or `href`), in the inline layout (`menuOverflow="scroll"`,
      * expanded sidebar) clicking the header row triggers the action like a regular
-     * menu item, and only the chevron toggles expand/collapse.
+     * menu item, and only the chevron toggles expand/collapse. Such groups are also
+     * listed as a clickable row in the All pages panel (view mode).
      */
     onItemClick?: MenuItem['onItemClick'];
     /**
