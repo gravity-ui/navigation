@@ -148,6 +148,38 @@ describe('CompositeBar', () => {
         expect(screen.getByText('Workbook 1')).toBeTruthy();
     });
 
+    it('renders the chevron on the compact group anchor by default', () => {
+        const onItemClick = jest.fn();
+        const items: AsideHeaderItem[] = [
+            {id: 'wb-1', title: 'Workbook 1', icon: Gear, groupId: 'resources'},
+        ];
+        const menuGroups: MenuGroup[] = [{id: 'resources', title: 'Resources Group', icon: Gear}];
+
+        renderCompositeBar({items, onItemClick, menuGroups, compact: true});
+
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(document.querySelector('.gn-composite-bar-item__chevron')).not.toBeNull();
+    });
+
+    it('hides the chevron on the compact group anchor when hideCompactChevron is set', () => {
+        const onItemClick = jest.fn();
+        const items: AsideHeaderItem[] = [
+            {id: 'wb-1', title: 'Workbook 1', icon: Gear, groupId: 'resources'},
+        ];
+        const menuGroups: MenuGroup[] = [
+            {id: 'resources', title: 'Resources Group', icon: Gear, hideCompactChevron: true},
+        ];
+
+        renderCompositeBar({items, onItemClick, menuGroups, compact: true});
+
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(document.querySelector('.gn-composite-bar-item__chevron')).toBeNull();
+
+        // The children popup still opens from the anchor.
+        fireEvent.click(screen.getByText('Resources Group'));
+        expect(screen.getByText('Workbook 1')).toBeTruthy();
+    });
+
     it('does not render popupTitle when it is not set on the MenuGroup', () => {
         const onItemClick = jest.fn();
         const items: AsideHeaderItem[] = [

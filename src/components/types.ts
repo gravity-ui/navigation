@@ -75,6 +75,24 @@ export interface MenuGroup {
      * Does not affect the group title displayed anywhere else.
      */
     popupTitle?: string;
+    /**
+     * Optional main action for the group header, mirroring `MenuItem.onItemClick`
+     * (receives the synthetic group-header item). When the group has its own action
+     * (`onItemClick` and/or `href`), in the inline layout (`menuOverflow="scroll"`,
+     * expanded sidebar) clicking the header row triggers the action like a regular
+     * menu item, and only the chevron toggles expand/collapse.
+     */
+    onItemClick?: MenuItem['onItemClick'];
+    /**
+     * Optional link for the group header; renders the header row as an anchor.
+     * Same click behavior split as `onItemClick`.
+     */
+    href?: string;
+    /**
+     * When `true`, the small chevron is not rendered on the group anchor in the
+     * compact (collapsed) sidebar. The children popup keeps working as usual.
+     */
+    hideCompactChevron?: boolean;
 }
 
 export interface LogoProps {

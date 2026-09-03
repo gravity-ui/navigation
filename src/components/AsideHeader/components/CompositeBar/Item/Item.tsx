@@ -23,6 +23,14 @@ const defaultPopupOffset: NonNullable<PopupProps['offset']> = {mainAxis: 14};
 const CHEVRON_SIZE = 16;
 const CHEVRON_SIZE_COMPACT = 10;
 
+function shouldShowFlyoutChevron(
+    hasPopupItems: boolean,
+    compact?: boolean,
+    hideCompactChevron?: boolean,
+): boolean {
+    return hasPopupItems && !(compact && hideCompactChevron);
+}
+
 export const Item: React.FC<ItemInnerProps> = (props) => {
     const {
         className,
@@ -54,6 +62,8 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         stopClickPropagation = false,
         menuGroupNestedTreeConnector,
         menuItemAriaProps,
+        onGroupHeaderChevronClick,
+        hideCompactChevron,
     } = props;
 
     const [compactNavPopoverOpen, setCompactNavPopoverOpen] = React.useState(false);
@@ -118,6 +128,12 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const compactPopoverDisabled = !enableTooltip || popupVisible || type === 'action';
 
+    const showFlyoutChevron = shouldShowFlyoutChevron(
+        Boolean(resolvedMenuPopupItems?.length),
+        compact,
+        hideCompactChevron,
+    );
+
     const makeIconNode = (iconEl: React.ReactNode, withCompactPopover = true): React.ReactNode => {
         if (!compact) {
             return iconEl;
@@ -175,6 +191,48 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             }
         };
 
+        const chevronSize = compact ? CHEVRON_SIZE_COMPACT : CHEVRON_SIZE;
+
+        let chevronNode: React.ReactNode = null;
+
+        if (inlineGroupHeader && onGroupHeaderChevronClick) {
+            chevronNode = (
+                <div
+                    className={b('chevron', {interactive: true})}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={ariaLabel}
+                    aria-expanded={groupHeaderExpanded}
+                    onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        onGroupHeaderChevronClick(event);
+                    }}
+                    onKeyDown={(event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            onGroupHeaderChevronClick(event);
+                        }
+                    }}
+                >
+                    <Icon data={groupHeaderExpanded ? ChevronUp : ChevronDown} size={chevronSize} />
+                </div>
+            );
+        } else if (inlineGroupHeader) {
+            chevronNode = (
+                <div className={b('chevron')}>
+                    <Icon data={groupHeaderExpanded ? ChevronUp : ChevronDown} size={chevronSize} />
+                </div>
+            );
+        } else if (showFlyoutChevron) {
+            chevronNode = (
+                <div className={b('chevron')}>
+                    <Icon data={ChevronRight} size={chevronSize} />
+                </div>
+            );
+        }
+
         const rowChildren = (
             <>
                 {menuGroupNestedTreeConnector}
@@ -186,23 +244,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     {titleEl}
                 </div>
 
-                {inlineGroupHeader ? (
-                    <div className={b('chevron')}>
-                        <Icon
-                            data={groupHeaderExpanded ? ChevronUp : ChevronDown}
-                            size={compact ? CHEVRON_SIZE_COMPACT : CHEVRON_SIZE}
-                        />
-                    </div>
-                ) : (
-                    Boolean(resolvedMenuPopupItems?.length) && (
-                        <div className={b('chevron')}>
-                            <Icon
-                                data={ChevronRight}
-                                size={compact ? CHEVRON_SIZE_COMPACT : CHEVRON_SIZE}
-                            />
-                        </div>
-                    )
-                )}
+                {chevronNode}
             </>
         );
 

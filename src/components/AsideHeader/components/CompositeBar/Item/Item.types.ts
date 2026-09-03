@@ -27,6 +27,14 @@ export interface ItemInnerProps extends ItemProps {
     stopClickPropagation?: boolean;
     /** Direct AsideHeader `onItemClick` for rows rendered inside {@link ItemPopup}. */
     onPopupItemClick?: AsideHeaderItem['onItemClick'];
+    /**
+     * Inline group header only: renders the chevron as a separate interactive control
+     * that fires this callback (expand/collapse) instead of the row click, so the row
+     * itself can carry the group's own main action.
+     */
+    onGroupHeaderChevronClick?: (event: React.SyntheticEvent) => void;
+    /** When `true`, the chevron is not rendered in the compact (collapsed) sidebar. */
+    hideCompactChevron?: boolean;
     /** Inline menu-group tree (L-connector) rendered inside the row, before the icon slot. */
     menuGroupNestedTreeConnector?: React.ReactNode;
 }
