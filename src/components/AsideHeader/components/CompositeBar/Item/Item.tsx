@@ -6,6 +6,7 @@ import {Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
 import {ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
 import {MakeItemParams} from '../../../../types';
 import {createBlock} from '../../../../utils/cn';
+import i18n from '../../../i18n';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {COLLAPSE_ITEM_ID, ITEM_TYPE_REGULAR} from '../constants';
 
@@ -22,6 +23,17 @@ const defaultPopupPlacement: PopupPlacement = ['right-end'];
 const defaultPopupOffset: NonNullable<PopupProps['offset']> = {mainAxis: 14};
 const CHEVRON_SIZE = 16;
 const CHEVRON_SIZE_COMPACT = 10;
+
+function getChevronFallbackLabel(expanded: boolean | undefined): string {
+    return expanded ? i18n('button_collapse') : i18n('button_expand');
+}
+
+function resolveItemAriaLabel(
+    ariaProps: ItemInnerProps['menuItemAriaProps'],
+    titleLabel: string | undefined,
+): string | undefined {
+    return ariaProps?.['aria-label'] ?? titleLabel;
+}
 
 function resolveAnchorRef(
     anchorRef: React.RefObject<HTMLElement> | undefined,
@@ -188,6 +200,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     };
 
     const ariaLabel = typeof title === 'string' ? title : undefined;
+    const resolvedAriaLabel = resolveItemAriaLabel(menuItemAriaProps, ariaLabel);
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
         const wrappedByItemWrapper = typeof itemWrapper === 'function';
@@ -227,7 +240,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 <button
                     type="button"
                     className={b('chevron', {interactive: true})}
-                    aria-label={ariaLabel}
+                    aria-label={resolvedAriaLabel ?? getChevronFallbackLabel(groupHeaderExpanded)}
                     aria-expanded={groupHeaderExpanded}
                     onClick={(event) => {
                         event.stopPropagation();
@@ -271,7 +284,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             className: rowClassName,
             'data-type': type,
             'data-qa': qa,
-            'aria-label': menuItemAriaProps?.['aria-label'] ?? ariaLabel,
+            'aria-label': resolvedAriaLabel,
             onClick: handleRowClick,
             onClickCapture: onItemClickCapture,
             onMouseEnter: () => {

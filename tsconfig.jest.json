@@ -4,7 +4,12 @@
     "outDir": "build-jest",
     "module": "commonjs",
     "moduleResolution": "node",
-    "jsx": "react"
+    "jsx": "react",
+    "baseUrl": ".",
+    "paths": {
+      "~playwright/*": ["playwright/*"],
+      "@gravity-ui/uikit/i18n": ["node_modules/@gravity-ui/uikit/build/cjs/i18n"]
+    }
   },
   "include": [
     "src/**/*.ts",

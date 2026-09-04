@@ -14,6 +14,8 @@ module.exports = {
     },
     moduleNameMapper: {
         '\\.(css|scss)$': '<rootDir>/src/__mocks__/styleMock.js',
+        // `moduleResolution: node` cannot resolve the package subpath export
+        '^@gravity-ui/uikit/i18n$': '<rootDir>/node_modules/@gravity-ui/uikit/build/cjs/i18n',
     },
     coverageDirectory: './coverage',
     collectCoverageFrom: ['src/**/*.{ts,tsx}', '!**/__stories__/**/*', '!**/*/*.stories.{ts,tsx}'],
