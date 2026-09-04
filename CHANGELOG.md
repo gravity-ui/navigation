@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.5.1](https://github.com/gravity-ui/navigation/compare/v6.5.0...v6.5.1) (2026-09-04)
+
+
+### Bug Fixes
+
+* **AsideHeader:** support MenuGroup.iconSize for group header row ([#671](https://github.com/gravity-ui/navigation/issues/671)) ([a932aad](https://github.com/gravity-ui/navigation/commit/a932aadfce104f2f71fb7dc6a0d3a56ff112f514))
+
 ## [6.5.0](https://github.com/gravity-ui/navigation/compare/v6.4.2...v6.5.0) (2026-09-04)
 
 
