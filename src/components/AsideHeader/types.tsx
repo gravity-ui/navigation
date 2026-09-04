@@ -42,8 +42,11 @@ interface EditMenuProps {
  * - `collapse` — extra items collapse under a "More" popup (default).
  * - `scroll` — all items remain visible inside a scrollable container with a native thin scrollbar.
  *
- * In compact mode the menu always falls back to `collapse` regardless of this value
- * because a scrollbar over icon-only items is awkward.
+ * Quick access and the menu always share a single scroll container: when the column
+ * does not fit the available height, both sections scroll together while the header,
+ * footer, and `aboveMenuContent` stay fixed. In compact mode item overflow still
+ * falls back to `collapse` regardless of this value because a scrollbar over
+ * icon-only items is awkward.
  */
 export type AsideHeaderMenuOverflow = 'collapse' | 'scroll';
 
@@ -133,12 +136,6 @@ interface AsideHeaderDefaultProps {
      * `collapsedMenuGroupIds` when using controlled mode.
      */
     onToggleMenuGroupCollapsed?: (groupId: string) => void;
-    /**
-     * Uses one scroll container for quick access and the main menu in expanded
-     * `menuOverflow="scroll"` mode. Otherwise quick access has its own capped area.
-     * @default false
-     */
-    unifiedMenuScroll?: boolean;
 }
 
 export type AsideHeaderInnerProps = AsideHeaderGeneralProps &

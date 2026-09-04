@@ -51,7 +51,11 @@ export function useScrollableScrollbarSync(): UseScrollableScrollbarSyncResult {
             }
 
             const {scrollHeight, clientHeight} = el;
-            const isOverflowing = scrollHeight > clientHeight;
+            // A fractional container height can make the integer scrollHeight exceed
+            // clientHeight by 1px. That sub-pixel overflow is not meaningfully
+            // scrollable, so ignore it to keep the scrollbar and overflow callbacks
+            // from flickering while the layout settles.
+            const isOverflowing = scrollHeight - clientHeight > 1;
 
             setOverflows(isOverflowing);
 
@@ -88,8 +92,8 @@ export function useScrollableScrollbarSync(): UseScrollableScrollbarSyncResult {
 
         const observer = new ResizeObserver(scheduleUpdate);
         observer.observe(el);
-        // CompositeBar is the single direct child. Its content-box changes when
-        // row type, title, adornment, group state, or density changes.
+        // Observe the direct content child as well: its content-box changes whenever
+        // the rendered content changes (rows, titles, adornments, groups, density).
         const contentEl = el.firstElementChild;
         if (contentEl) {
             observer.observe(contentEl);

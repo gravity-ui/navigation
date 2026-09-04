@@ -13,6 +13,15 @@ export const expectScreenshotFixture: PlaywrightFixture<ExpectScreenshotFixture>
         ...pageScreenshotOptions
     } = {}) => {
         const captureScreenshot = async () => {
+            // Let late layout settling (async measurements collapsing menu rows,
+            // font swaps) finish so screenshots do not race transient frames.
+            await page.evaluate(
+                () =>
+                    new Promise((resolve) => {
+                        requestAnimationFrame(() => requestAnimationFrame(resolve));
+                    }),
+            );
+
             return (component || page.locator('.playwright-wrapper-test')).screenshot({
                 animations: 'disabled',
                 ...pageScreenshotOptions,

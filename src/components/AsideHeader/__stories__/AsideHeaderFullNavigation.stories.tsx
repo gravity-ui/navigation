@@ -22,7 +22,6 @@ interface FullNavigationProps {
     menuGroupNestedIcons?: AsideHeaderProps['menuGroupNestedIcons'];
     enableQuickAccess?: AsideHeaderProps['enableQuickAccess'];
     quickAccessHighlightInMainMenu?: AsideHeaderProps['quickAccessHighlightInMainMenu'];
-    unifiedMenuScroll?: AsideHeaderProps['unifiedMenuScroll'];
 }
 
 export default {
@@ -49,10 +48,6 @@ export default {
         quickAccessHighlightInMainMenu: {
             control: 'boolean',
             description: 'Keep pinned current items highlighted in the main menu as well',
-        },
-        unifiedMenuScroll: {
-            control: 'boolean',
-            description: 'Use one scroll container for quick access and the main menu',
         },
     },
     parameters: {
@@ -223,7 +218,6 @@ function FullNavigationDemo(props: FullNavigationProps) {
                 enableQuickAccess={props.enableQuickAccess}
                 quickAccessHighlightInMainMenu={props.quickAccessHighlightInMainMenu}
                 onQuickAccessChange={handleQuickAccessChange}
-                unifiedMenuScroll={props.unifiedMenuScroll}
                 subheaderItems={[
                     {
                         id: 'search',
@@ -290,5 +284,4 @@ FullNavigation.args = {
     menuGroupNestedIcons: true,
     enableQuickAccess: true,
     quickAccessHighlightInMainMenu: false,
-    unifiedMenuScroll: false,
 };

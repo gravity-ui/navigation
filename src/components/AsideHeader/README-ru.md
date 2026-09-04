@@ -110,10 +110,10 @@ const [menuItems, setMenuItems] = React.useState<AsideHeaderItem[]>(initialMenuI
 `quickAccessHighlightInMainMenu` сохраняет подсветку и в основном меню. Отключив
 `enableQuickAccess`, можно скрыть секцию и pin-контролы, не сбрасывая флаги пунктов.
 
-В раскрытой и свёрнутой панели быстрый доступ имеет отдельную прокрутку высотой до пяти строк. В
-раскрытом режиме с `menuOverflow="scroll"` свойство `unifiedMenuScroll` объединяет быстрый доступ и
-основное меню в один scroll-контейнер. Основное меню в свёрнутой панели сохраняет существующее
-поведение переполнения.
+В раскрытой и свёрнутой панели быстрый доступ и меню прокручиваются вместе в одном
+scroll-контейнере: если колонка не помещается по высоте, обе секции скроллятся как единое целое, а
+шапка, футер и `aboveMenuContent` остаются закреплёнными. В свёрнутой панели не поместившиеся
+пункты по-прежнему уходят под **«Ещё»**.
 
 `quickAccess` и `pinned` имеют разную семантику: `quickAccess` дублирует пункт в секции быстрого
 доступа, а существующий `pinned` не позволяет скрыть пункт через **All pages**.
@@ -122,7 +122,7 @@ const [menuItems, setMenuItems] = React.useState<AsideHeaderItem[]>(initialMenuI
 
 Свойство **`aboveMenuContent`** позволяет отрисовать произвольный контент между шапкой (логотип и `subheaderItems`) и списком **`menuItems`**.
 
-При **`menuOverflow="scroll"`** этот блок остаётся закреплённым над прокручиваемой колонкой меню; прокручиваются только строки меню.
+Этот блок остаётся закреплённым над прокручиваемой колонкой: под ним вместе со строками меню прокручивается и быстрый доступ, если колонка не помещается по высоте.
 
 **Пример:**
 
@@ -279,7 +279,6 @@ export const Aside: FC = () => {
 | menuDensity                    | Визуальная плотность панели и пунктов меню. `compact` уменьшает размеры без изменения механики взаимодействия.                                                                                                                                                         |                                                   `'default' \| 'compact'`                                                    |        `'default'`        |
 | enableQuickAccess              | Показывает пункты с `quickAccess` в отдельной секции и включает pin-контролы, если передан `onQuickAccessChange`.                                                                                                                                                      |                                                           `boolean`                                                           |          `false`          |
 | quickAccessHighlightInMainMenu | Сохраняет подсветку текущего закреплённого пункта и в основном меню, и в секции быстрого доступа.                                                                                                                                                                      |                                                           `boolean`                                                           |          `false`          |
-| unifiedMenuScroll              | Использует один scroll-контейнер для быстрого доступа и основного меню в раскрытом режиме `menuOverflow="scroll"`.                                                                                                                                                     |                                                           `boolean`                                                           |          `false`          |
 | defaultMenuItems               | Базовый список для сброса правок режима **Все страницы**.                                                                                                                                                                                                              |                                                   `Array<AsideHeaderItem>`                                                    |                           |
 | menuOverflow                   | Поведение при переполнении меню; см. [`menuOverflow`](#composite-menu-overflow-menuoverflow). **`collapse`** (по умолчанию): не поместившиеся пункты — под **«Ещё»** (**«More»**). **`scroll`**: прокручиваемый столбец. В режиме **`compact`** всегда **`collapse`**. |                                                   `'collapse' \| 'scroll'`                                                    |       `'collapse'`        |
 | collapsedMenuGroupIds          | Контролируемое состояние свёрнутости групп (`MenuGroup.id` → свёрнуто) при `menuOverflow === 'scroll'`.                                                                                                                                                                |                                                   `Record<string, boolean>`                                                   |                           |
@@ -295,7 +294,7 @@ export const Aside: FC = () => {
 | onToggleMenuGroupCollapsed     | Пользователь свернул/развернул группу при `menuOverflow='scroll'`; в контролируемом режиме обновляйте `collapsedMenuGroupIds`.                                                                                                                                         |                                                  `(groupId: string) => void`                                                  |                           |
 | onAllPagesClick                | Обратный вызов, срабатывающий при нажатии кнопки **All pages** («Все станицы»).                                                                                                                                                                                        |                                                         `() => void;`                                                         |                           |
 | openModalSubscriber            | Функция для уведомления `AsideHeader` об изменении состояния видимости модальных окон.                                                                                                                                                                                 |                                             `( (open: boolean) => void) => void`                                              |                           |
-| aboveMenuContent               | Опциональный контент между шапкой и **`menuItems`**; при **`menuOverflow="scroll"`** остаётся над прокручиваемым списком.                                                                                                                                              |                                                       `React.ReactNode`                                                       |                           |
+| aboveMenuContent               | Опциональный контент между шапкой и **`menuItems`**; остаётся закреплённым над прокручиваемой колонкой (быстрый доступ и меню).                                                                                                                                        |                                                       `React.ReactNode`                                                       |                           |
 | panelItems                     | Элементы компонента `Drawer`. Используется для отображения дополнительной информации поверх основного контента.                                                                                                                                                        |                                 [`Array<DrawerItem>`](./../Drawer/README.md#draweritem-props)                                 |           `[]`            |
 | renderContent                  | Функция рендеринга основного контента справа от `AsideHeader`.                                                                                                                                                                                                         |                                          `(data: {size: number}) => React.ReactNode`                                          |                           |
 | renderFooter                   | Функция рендеринга нижнего блока навигации.                                                                                                                                                                                                                            |                                          `(data: {size: number}) => React.ReactNode`                                          |                           |
@@ -313,7 +312,7 @@ export const Aside: FC = () => {
 | **`collapse`** | По умолчанию. Не помещающиеся пункты уходят под пункт **«Ещё»** / **«More»** (всплывающий список). |
 | **`scroll`**   | Список меню становится прокручиваемой колонкой, все строки доступны без пункта **«Ещё»**.          |
 
-В режиме **`compact`** (узкая колонка только с иконками) переполнение **всегда** ведёт себя как **`collapse`**, даже если задано `menuOverflow: 'scroll'`: вертикальная прокрутка такого ряда неудобна.
+В режиме **`compact`** (узкая колонка только с иконками) не поместившиеся пункты **всегда** уходят под **«Ещё»**, даже если задано `menuOverflow: 'scroll'`; сама колонка (быстрый доступ и меню) при нехватке высоты скроллится одним контейнером.
 
 При **`menuOverflow="scroll"`** и заданных **`menuGroups`** заголовки групп можно сворачивать и разворачивать внутри списка. Управляйте этим через **`collapsedMenuGroupIds`** / **`defaultCollapsedMenuGroupIds`** и **`onToggleMenuGroupCollapsed`** (ключи — `MenuGroup.id`). Развёрнутая группа показывает дочерние пункты в инлайн-иерархии, а свёрнутая открывает те же пункты в popup по hover/focus. `menuGroupNestedIcons` управляет иконками дочерних пунктов в обоих представлениях.
 

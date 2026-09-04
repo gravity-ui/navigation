@@ -20,6 +20,8 @@ const mountOptions = undefined;
 const viewport = {width: 1200, height: 720};
 const quickAccessOverflowViewport = {width: 1200, height: 480};
 const quickAccessCompactOverflowViewport = {width: 1200, height: 320};
+const unifiedMenuScrollInner =
+    '[class*="gn-aside-header__unified-menu-scroll_"] [class*="scrollable-with-scrollbar__scrollable-inner"]';
 
 test.describe('AsideHeader', () => {
     /** Order matches exports in `@stories__/AsideHeader.stories.tsx`. Explicit components — dynamic `Stories[key]` breaks Playwright CT. */
@@ -634,50 +636,178 @@ test.describe('AsideHeader', () => {
         }
     });
 
-    test('caps the separate quick access scroll area at five rows', async ({mount, page}) => {
+    test('scrolls quick access and menu together in expanded scroll mode', async ({
+        mount,
+        page,
+    }) => {
+        // The mount style sizes the wrapper only; the aside resolves 100vh against the
+        // real viewport. Shrink it so the unified column actually overflows.
+        await page.setViewportSize(quickAccessOverflowViewport);
         await mount(<QuickAccessOverflowExample />, mountOptions, quickAccessOverflowViewport);
 
-        const quickAccessScroll = page.locator(
-            '[class*="gn-aside-header__quick-access_"] [class*="scrollable-with-scrollbar__scrollable-inner"]',
-        );
-        const mainMenuScroll = page.locator(
-            '[class*="gn-aside-header__aside-content_"] > [class*="scrollable-with-scrollbar_"] [class*="scrollable-with-scrollbar__scrollable-inner"]',
-        );
+        const scrollInner = page.locator(unifiedMenuScrollInner);
+        const quickAccessItem = page
+            .locator('[id="gravity-ui/navigation-quick-access-composite-bar"]')
+            .locator('button[aria-label="Home"]');
+        const menuItem = page
+            .locator('[id="gravity-ui/navigation-menu-items-composite-bar"]')
+            .locator('button[aria-label="Help"]');
+        const logo = page.locator('[class*="gn-aside-header__logo_"]');
+        const aboveMenu = page.locator('[data-qa="quick-access-overflow-above-menu"]');
+        const footer = page.locator('[data-qa="quick-access-overflow-footer"]');
 
-        await expect(quickAccessScroll).toHaveCount(1);
-        await expect(mainMenuScroll).toHaveCount(1);
+        await expect(quickAccessItem).toBeAttached();
+        await expect(menuItem).toBeAttached();
+
+        const beforeQuickAccessY = (await quickAccessItem.boundingBox())?.y ?? 0;
+        const beforeMenuItemY = (await menuItem.boundingBox())?.y ?? 0;
+        const beforeLogoY = (await logo.boundingBox())?.y ?? 0;
+        const beforeAboveMenuY = (await aboveMenu.boundingBox())?.y ?? 0;
+        const beforeFooterY = (await footer.boundingBox())?.y ?? 0;
+
+        await scrollInner.evaluate((element) => {
+            element.scrollTo(0, 250);
+        });
         await expect
-            .poll(() =>
-                quickAccessScroll.evaluate((element) => ({
-                    clientHeight: element.clientHeight,
-                    overflows: element.scrollHeight > element.clientHeight,
-                })),
-            )
-            .toEqual({clientHeight: 160, overflows: true});
+            .poll(() => scrollInner.evaluate((element) => element.scrollTop))
+            .toBeGreaterThan(0);
+        const scrollTop = await scrollInner.evaluate((element) => element.scrollTop);
+
+        // Scrolled rows move by exactly the applied scroll offset...
+        expect(
+            Math.abs(
+                ((await quickAccessItem.boundingBox())?.y ?? 0) - (beforeQuickAccessY - scrollTop),
+            ),
+        ).toBeLessThan(0.5);
+        expect(
+            Math.abs(((await menuItem.boundingBox())?.y ?? 0) - (beforeMenuItemY - scrollTop)),
+        ).toBeLessThan(0.5);
+        // ...while the header, content above the menu, and footer stay fixed.
+        expect(Math.abs(((await logo.boundingBox())?.y ?? 0) - beforeLogoY)).toBeLessThan(0.5);
+        expect(Math.abs(((await aboveMenu.boundingBox())?.y ?? 0) - beforeAboveMenuY)).toBeLessThan(
+            0.5,
+        );
+        expect(Math.abs(((await footer.boundingBox())?.y ?? 0) - beforeFooterY)).toBeLessThan(0.5);
+
+        await expect(page.locator('[class*="gn-aside-header__footer_with-divider"]')).toHaveCount(
+            1,
+        );
     });
 
-    test('caps compact quick access at five rows in a low viewport', async ({mount, page}) => {
+    test('scrolls the unified column in expanded collapse mode and keeps More reachable', async ({
+        mount,
+        page,
+    }) => {
+        await page.setViewportSize(quickAccessOverflowViewport);
+        await mount(
+            <QuickAccessOverflowExample menuOverflow="collapse" />,
+            mountOptions,
+            quickAccessOverflowViewport,
+        );
+
+        const scrollInner = page.locator(unifiedMenuScrollInner);
+        const quickAccessItem = page
+            .locator('[id="gravity-ui/navigation-quick-access-composite-bar"]')
+            .locator('button[aria-label="Home"]');
+        const more = page
+            .locator('[id="gravity-ui/navigation-menu-items-composite-bar"]')
+            .locator('button[aria-label="More"]');
+        const logo = page.locator('[class*="gn-aside-header__logo_"]');
+        const aboveMenu = page.locator('[data-qa="quick-access-overflow-above-menu"]');
+        const footer = page.locator('[data-qa="quick-access-overflow-footer"]');
+
+        await expect(quickAccessItem).toBeAttached();
+        await expect(more).toBeAttached();
+
+        const beforeQuickAccessY = (await quickAccessItem.boundingBox())?.y ?? 0;
+        const beforeMoreY = (await more.boundingBox())?.y ?? 0;
+        const beforeLogoY = (await logo.boundingBox())?.y ?? 0;
+        const beforeAboveMenuY = (await aboveMenu.boundingBox())?.y ?? 0;
+        const beforeFooterY = (await footer.boundingBox())?.y ?? 0;
+
+        await scrollInner.evaluate((element) => {
+            element.scrollTo(0, element.scrollHeight);
+        });
+        await expect
+            .poll(() => scrollInner.evaluate((element) => element.scrollTop))
+            .toBeGreaterThan(0);
+        const scrollTop = await scrollInner.evaluate((element) => element.scrollTop);
+
+        // Scrolled rows (including the More row) move by exactly the applied scroll offset...
+        expect(
+            Math.abs(
+                ((await quickAccessItem.boundingBox())?.y ?? 0) - (beforeQuickAccessY - scrollTop),
+            ),
+        ).toBeLessThan(0.5);
+        expect(
+            Math.abs(((await more.boundingBox())?.y ?? 0) - (beforeMoreY - scrollTop)),
+        ).toBeLessThan(0.5);
+        // ...while the header, content above the menu, and footer stay fixed.
+        expect(Math.abs(((await logo.boundingBox())?.y ?? 0) - beforeLogoY)).toBeLessThan(0.5);
+        expect(Math.abs(((await aboveMenu.boundingBox())?.y ?? 0) - beforeAboveMenuY)).toBeLessThan(
+            0.5,
+        );
+        expect(Math.abs(((await footer.boundingBox())?.y ?? 0) - beforeFooterY)).toBeLessThan(0.5);
+
+        // More stays in the DOM and reachable after the joint scroll.
+        await expect(more).toBeAttached();
+        await expect(more).toBeVisible();
+    });
+
+    test('scrolls the unified column in compact mode and keeps the footer fixed', async ({
+        mount,
+        page,
+    }) => {
+        await page.setViewportSize(quickAccessCompactOverflowViewport);
         await mount(
             <QuickAccessOverflowExample compact />,
             mountOptions,
             quickAccessCompactOverflowViewport,
         );
 
-        const quickAccessScroll = page.locator(
-            '[class*="gn-aside-header__quick-access_"] [class*="scrollable-with-scrollbar__scrollable-inner"]',
-        );
+        const scrollInner = page.locator(unifiedMenuScrollInner);
+        const quickAccessItem = page
+            .locator('[id="gravity-ui/navigation-quick-access-composite-bar"]')
+            .locator('button[aria-label="Home"]');
+        const more = page
+            .locator('[id="gravity-ui/navigation-menu-items-composite-bar"]')
+            .locator('button[aria-label="More"]');
+        const logo = page.locator('[class*="gn-aside-header__logo_"]');
+        const footer = page.locator('[data-qa="quick-access-overflow-footer"]');
 
-        await expect(quickAccessScroll).toHaveCount(1);
+        await expect(quickAccessItem).toBeAttached();
+        await expect(more).toBeAttached();
+
+        const beforeQuickAccessY = (await quickAccessItem.boundingBox())?.y ?? 0;
+        const beforeMoreY = (await more.boundingBox())?.y ?? 0;
+        const beforeLogoY = (await logo.boundingBox())?.y ?? 0;
+        const beforeFooterBox = await footer.boundingBox();
+
+        await scrollInner.evaluate((element) => {
+            element.scrollTo(0, element.scrollHeight);
+        });
         await expect
-            .poll(() =>
-                quickAccessScroll.evaluate((element) => ({
-                    clientHeight: element.clientHeight,
-                    overflows: element.scrollHeight > element.clientHeight,
-                })),
-            )
-            .toEqual({clientHeight: 160, overflows: true});
-        await expect(page.locator('button[aria-label="Analytics"]')).toBeVisible();
-        await expect(page.locator('[data-qa="quick-access-overflow-footer"]')).toBeVisible();
+            .poll(() => scrollInner.evaluate((element) => element.scrollTop))
+            .toBeGreaterThan(0);
+        const scrollTop = await scrollInner.evaluate((element) => element.scrollTop);
+
+        // Scrolled rows move by exactly the applied scroll offset; elements are
+        // found inside their own composite containers (same labels in both sections).
+        expect(
+            Math.abs(
+                ((await quickAccessItem.boundingBox())?.y ?? 0) - (beforeQuickAccessY - scrollTop),
+            ),
+        ).toBeLessThan(0.5);
+        expect(
+            Math.abs(((await more.boundingBox())?.y ?? 0) - (beforeMoreY - scrollTop)),
+        ).toBeLessThan(0.5);
+        // The header and the footer keep their bounding boxes, not just visibility.
+        expect(Math.abs(((await logo.boundingBox())?.y ?? 0) - beforeLogoY)).toBeLessThan(0.5);
+        const afterFooterBox = await footer.boundingBox();
+        expect(Math.abs((afterFooterBox?.y ?? 0) - (beforeFooterBox?.y ?? 0))).toBeLessThan(0.5);
+        expect(afterFooterBox?.x).toBe(beforeFooterBox?.x);
+        expect(afterFooterBox?.height).toBe(beforeFooterBox?.height);
+        await expect(footer).toBeVisible();
     });
 
     test('keeps an anchor itemWrapper and its pin separate in keyboard order', async ({
@@ -699,33 +829,6 @@ test.describe('AsideHeader', () => {
         await expect(pin).toBeFocused();
         await page.keyboard.press('Enter');
         expect(page.url()).toBe(initialUrl);
-    });
-
-    test('uses one overflow-aware scroll area in unified mode', async ({mount, page}) => {
-        await mount(
-            <QuickAccessOverflowExample unifiedMenuScroll />,
-            mountOptions,
-            quickAccessOverflowViewport,
-        );
-
-        const unifiedScroll = page.locator(
-            '[class*="gn-aside-header__unified-menu-scroll_"] [class*="scrollable-with-scrollbar__scrollable-inner"]',
-        );
-        const quickAccessNestedScroll = page.locator(
-            '[class*="gn-aside-header__quick-access_"] [class*="scrollable-with-scrollbar__scrollable-inner"]',
-        );
-
-        await expect(unifiedScroll).toHaveCount(1);
-        await expect(quickAccessNestedScroll).toHaveCount(0);
-        await expect
-            .poll(() =>
-                unifiedScroll.evaluate((element) => element.scrollHeight > element.clientHeight),
-            )
-            .toBe(true);
-
-        await expect(page.locator('[class*="gn-aside-header__footer_with-divider"]')).toHaveCount(
-            1,
-        );
     });
 
     test('render story: <MenuScrollbar>', async ({mount, expectScreenshot}) => {

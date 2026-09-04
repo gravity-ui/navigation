@@ -108,10 +108,10 @@ By default, an active quick-access item is highlighted only in the quick-access 
 `quickAccessHighlightInMainMenu` to preserve its highlight in both places. Disable
 `enableQuickAccess` to hide the section and pin controls without clearing item flags.
 
-Quick access has an independently scrollable area capped at five rows in both expanded and compact
-navigation. In an expanded sidebar with `menuOverflow="scroll"`, set `unifiedMenuScroll` to put
-quick access and the main menu into a single scroll container instead. The main compact menu keeps
-its existing collapse/overflow behavior.
+Quick access and the menu rows scroll together in a single container in all modes: when the column
+does not fit the available height, both sections scroll as one while the header, footer, and
+`aboveMenuContent` stay fixed. In a compact sidebar, items that do not fit still collapse under
+**More**.
 
 `quickAccess` and `pinned` serve different purposes: `quickAccess` duplicates an item in the quick
 access section, while the existing `pinned` flag prevents an item from being hidden in **All pages**.
@@ -120,7 +120,7 @@ access section, while the existing `pinned` flag prevents an item from being hid
 
 Pass **`aboveMenuContent`** to render arbitrary content between the header (logo and `subheaderItems`) and the main **`menuItems`** list.
 
-With **`menuOverflow="scroll"`**, that block stays fixed above the scrollable menu column; only the menu rows scroll.
+That block stays fixed above the scrollable column: quick access and the menu rows scroll together beneath it when the column does not fit the height.
 
 **Example:**
 
@@ -278,7 +278,6 @@ With the advanced layout, pass `menuGroupNestedIcons` to `PageLayoutAside`.
 | menuDensity                    | Visual density of the aside and menu items. `compact` reduces dimensions without changing interaction behavior.                                                                                                                    |                                                   `'default' \| 'compact'`                                                    |        `'default'`        |
 | enableQuickAccess              | Renders items marked with `quickAccess` in a separate section and enables pin controls when `onQuickAccessChange` is provided.                                                                                                     |                                                           `boolean`                                                           |          `false`          |
 | quickAccessHighlightInMainMenu | Keeps a pinned current item highlighted in the main menu as well as in quick access.                                                                                                                                               |                                                           `boolean`                                                           |          `false`          |
-| unifiedMenuScroll              | Uses one scroll container for quick access and the main menu in expanded `menuOverflow="scroll"` mode.                                                                                                                             |                                                           `boolean`                                                           |          `false`          |
 | defaultMenuItems               | Default list for resetting **All pages** edits                                                                                                                                                                                     |                                                   `Array<AsideHeaderItem>`                                                    |                           |
 | menuOverflow                   | Overflow behavior for the composite menu; see [`menuOverflow`](#composite-menu-overflow-menuoverflow). **`collapse`** (default): extras under «More». **`scroll`**: scrollable column. Compact sidebar always uses **`collapse`**. |                                                   `'collapse' \| 'scroll'`                                                    |       `'collapse'`        |
 | collapsedMenuGroupIds          | Controlled map (`MenuGroup.id` → collapsed) when `menuOverflow` is **`scroll`**                                                                                                                                                    |                                                   `Record<string, boolean>`                                                   |                           |
@@ -294,7 +293,7 @@ With the advanced layout, pass `menuGroupNestedIcons` to `PageLayoutAside`.
 | onToggleMenuGroupCollapsed     | User toggled group expand/collapse in **`menuOverflow='scroll'`** layout; combine with **`collapsedMenuGroupIds`** when controlled                                                                                                 |                                                  `(groupId: string) => void`                                                  |                           |
 | onAllPagesClick                | Callback will be called when "All pages" button is clicked                                                                                                                                                                         |                                                         `() => void;`                                                         |                           |
 | openModalSubscriber            | Function notifies `AsideHeader` about Modals visibility changes                                                                                                                                                                    |                                             `( (open: boolean) => void) => void`                                              |                           |
-| aboveMenuContent               | Optional content between the header and **`menuItems`**; stays fixed above the scrollable list when **`menuOverflow="scroll"`**.                                                                                                   |                                                       `React.ReactNode`                                                       |                           |
+| aboveMenuContent               | Optional content between the header and **`menuItems`**; stays fixed above the scrollable column (quick access and menu).                                                                                                          |                                                       `React.ReactNode`                                                       |                           |
 | panelItems                     | Items for `Drawer` component. Used for show additional information over main content                                                                                                                                               |       [`Array<DrawerItem>`](https://github.com/gravity-ui/navigation/tree/main/src/components/Drawer#draweritem-props)        |           `[]`            |
 | renderContent                  | Function rendering the main content at the right of the `AsideHeader`                                                                                                                                                              |                                          `(data: {size: number}) => React.ReactNode`                                          |                           |
 | renderFooter                   | Function rendering the navigation bottom section                                                                                                                                                                                   |                                          `(data: {size: number}) => React.ReactNode`                                          |                           |
@@ -312,7 +311,7 @@ The middle section uses a composite bar. **`menuOverflow`** chooses how overflow
 | **`collapse`** | Default. Items that do not fit are collected under a **«More»** entry (popup).             |
 | **`scroll`**   | The menu list becomes a scrollable column so every row stays reachable without **«More»**. |
 
-When the sidebar is **`compact`** (collapsed to icons), overflow **always** behaves like **`collapse`**, regardless of `menuOverflow`, because scrolling a strip of icon-only rows is awkward.
+When the sidebar is **`compact`** (collapsed to icons), items that do not fit **always** collapse under **«More»**, regardless of `menuOverflow`; the column itself (quick access and menu) scrolls in a single container when height runs out.
 
 With **`menuOverflow="scroll"`** and **`menuGroups`**, group headers can expand/collapse inline. Use **`collapsedMenuGroupIds`** / **`defaultCollapsedMenuGroupIds`** and **`onToggleMenuGroupCollapsed`** to control or observe that state (keys are `MenuGroup.id`). An expanded group shows its children as an inline hierarchy; a collapsed group exposes the same children in a popup on hover/focus. `menuGroupNestedIcons` controls child icons in both representations.
 

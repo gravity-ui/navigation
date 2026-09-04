@@ -91,7 +91,12 @@ $block: '.#{variables.$ns}aside-header';
 
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
+            /**
+             * Keep overflow inside the unified scroll container (not the aside / page).
+             * Requires min-height: 0 so flex children can shrink below content height.
+             */
+            min-height: 0;
+            overflow: hidden;
             width: inherit;
             height: inherit;
             position: relative;
@@ -103,15 +108,6 @@ $block: '.#{variables.$ns}aside-header';
             & > #{$class}-logo {
                 margin: 8px 0;
             }
-        }
-
-        /**
-         * Scrollable menu: keep overflow inside the custom scrollbar host (not the aside / page).
-         * Requires min-height: 0 so flex children can shrink below content height.
-         */
-        &_menu-overflow-scroll #{$class}__aside-content {
-            min-height: 0;
-            overflow: hidden;
         }
 
         &-content_with-decoration {
@@ -262,16 +258,6 @@ $block: '.#{variables.$ns}aside-header';
 
             bottom: 0;
             z-index: 1;
-        }
-
-        &_scrollable {
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
-        }
-
-        &_unified {
-            flex: none;
         }
     }
 
