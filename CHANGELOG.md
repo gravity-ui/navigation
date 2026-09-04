@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.5.0](https://github.com/gravity-ui/navigation/compare/v6.4.2...v6.5.0) (2026-09-04)
+
+
+### Features
+
+* **AsideHeader:** allow menu group headers to act as regular menu item ([#669](https://github.com/gravity-ui/navigation/issues/669)) ([c63c8f0](https://github.com/gravity-ui/navigation/commit/c63c8f0643fef12062344f2bf02a4e330928e188))
+
 ## [6.4.2](https://github.com/gravity-ui/navigation/compare/v6.4.1...v6.4.2) (2026-08-25)
 
 
