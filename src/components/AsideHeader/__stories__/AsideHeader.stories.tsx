@@ -410,6 +410,64 @@ MenuGroupsScrollbar.args = {
     initialCompact: false,
 };
 
+const MenuGroupsClickableHeaderTemplate: StoryFn<{initialCompact?: boolean}> = (args) => {
+    const [compact, setCompact] = React.useState(args.initialCompact ?? false);
+    const [lastAction, setLastAction] = React.useState('—');
+
+    const clickableGroups: MenuGroup[] = [
+        {
+            id: 'analytics',
+            title: 'Analytics',
+            icon: Gear,
+            popupTitle: 'Analytics',
+            href: '#analytics',
+            onItemClick: () => setLastAction('Group header "Analytics" clicked (main action)'),
+        },
+    ];
+
+    const defaultGroupedMenuItems: AsideHeaderProps['menuItems'] = [
+        {id: 'home', title: 'Home', icon: Gear, current: true},
+        {id: 'analytics-overview', title: 'Overview', icon: Gear, groupId: 'analytics'},
+        {id: 'analytics-reports', title: 'Reports', icon: Gear, groupId: 'analytics'},
+        {id: 'analytics-dashboards', title: 'Dashboards', icon: Gear, groupId: 'analytics'},
+    ];
+    const [menuItems, setMenuItems] = React.useState(defaultGroupedMenuItems);
+
+    return (
+        <PageLayout compact={compact}>
+            <PageLayoutAside
+                headerDecoration={false}
+                logo={DEFAULT_LOGO}
+                menuItems={menuItems}
+                defaultMenuItems={defaultGroupedMenuItems}
+                onMenuItemsChanged={setMenuItems}
+                editMenuProps={{enableSorting: true}}
+                menuGroups={clickableGroups}
+                menuOverflow="scroll"
+                onChangeCompact={setCompact}
+            />
+            <PageLayout.Content>
+                <div style={{padding: 16}}>
+                    <p>
+                        The <strong>Analytics</strong> group has its own action (
+                        <code>MenuGroup.onItemClick</code> + <code>MenuGroup.href</code>), so
+                        clicking the header row triggers the action like a regular menu item, while
+                        only the chevron toggles expand/collapse.
+                    </p>
+                    <p>
+                        Last group header action: <strong>{lastAction}</strong>
+                    </p>
+                </div>
+            </PageLayout.Content>
+        </PageLayout>
+    );
+};
+
+export const MenuGroupsClickableHeader = MenuGroupsClickableHeaderTemplate.bind({});
+MenuGroupsClickableHeader.args = {
+    initialCompact: false,
+};
+
 const manyMenuItems: AsideHeaderProps['menuItems'] = Array.from({length: 25}, (_, index) => ({
     id: `item-${index + 1}`,
     title: `Item ${index + 1}`,

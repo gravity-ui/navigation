@@ -3,7 +3,7 @@ import {useMemo} from 'react';
 import type {MenuGroup} from '../../../types';
 import {ALL_PAGES_ID, AsideHeaderItem} from '../../types';
 
-import {getAllPagesEditModeFlatItems} from './allPagesEditDisplay';
+import {getAllPagesEditModeFlatItems, getAllPagesViewModeFlatItems} from './allPagesEditDisplay';
 import i18n from './i18n';
 
 /**
@@ -30,7 +30,7 @@ export const useGroupedMenuItems = (
         let flatForGrouping: AsideHeaderItem[];
 
         if (!editMode) {
-            flatForGrouping = base;
+            flatForGrouping = getAllPagesViewModeFlatItems(base, menuGroups);
         } else if (menuGroups?.length) {
             flatForGrouping = getAllPagesEditModeFlatItems(base, menuGroups, {
                 enableGroupHeaderPins: groupHeaderPins,

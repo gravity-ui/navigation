@@ -42,3 +42,12 @@ Default.args = {
     title: 'Settings',
     icon: Gear,
 };
+
+export const RegularSize = Template.bind({});
+RegularSize.args = {
+    compact: false,
+    id: 'settings',
+    title: 'Settings',
+    icon: Gear,
+    regularSize: true,
+};

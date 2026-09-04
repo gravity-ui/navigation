@@ -6,6 +6,7 @@ import {Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
 import {ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
 import {MakeItemParams} from '../../../../types';
 import {createBlock} from '../../../../utils/cn';
+import i18n from '../../../i18n';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {COLLAPSE_ITEM_ID, ITEM_TYPE_REGULAR} from '../constants';
 
@@ -22,6 +23,32 @@ const defaultPopupPlacement: PopupPlacement = ['right-end'];
 const defaultPopupOffset: NonNullable<PopupProps['offset']> = {mainAxis: 14};
 const CHEVRON_SIZE = 16;
 const CHEVRON_SIZE_COMPACT = 10;
+
+function getChevronFallbackLabel(expanded: boolean | undefined): string {
+    return expanded ? i18n('button_collapse') : i18n('button_expand');
+}
+
+function resolveItemAriaLabel(
+    ariaProps: ItemInnerProps['menuItemAriaProps'],
+    titleLabel: string | undefined,
+): string | undefined {
+    return ariaProps?.['aria-label'] ?? titleLabel;
+}
+
+function resolveAnchorRef(
+    anchorRef: React.RefObject<HTMLElement> | undefined,
+    fallback: React.RefObject<HTMLElement>,
+): React.RefObject<HTMLElement> {
+    return anchorRef?.current ? anchorRef : fallback;
+}
+
+function shouldShowFlyoutChevron(
+    hasPopupItems: boolean,
+    compact?: boolean,
+    hideCompactChevron?: boolean,
+): boolean {
+    return hasPopupItems && !(compact && hideCompactChevron);
+}
 
 export const Item: React.FC<ItemInnerProps> = (props) => {
     const {
@@ -54,12 +81,14 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         stopClickPropagation = false,
         menuGroupNestedTreeConnector,
         menuItemAriaProps,
+        onGroupHeaderChevronClick,
+        hideCompactChevron,
     } = props;
 
     const [compactNavPopoverOpen, setCompactNavPopoverOpen] = React.useState(false);
 
     const ref = React.useRef<HTMLElement>(null);
-    const anchorRef = anchoreRefProp?.current ? anchoreRefProp : ref;
+    const anchorRef = resolveAnchorRef(anchoreRefProp, ref);
     const highlightedRef = React.useRef<HTMLDivElement>(null);
 
     const type = props.type || ITEM_TYPE_REGULAR;
@@ -118,6 +147,12 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const compactPopoverDisabled = !enableTooltip || popupVisible || type === 'action';
 
+    const showFlyoutChevron = shouldShowFlyoutChevron(
+        Boolean(resolvedMenuPopupItems?.length),
+        compact,
+        hideCompactChevron,
+    );
+
     const makeIconNode = (iconEl: React.ReactNode, withCompactPopover = true): React.ReactNode => {
         if (!compact) {
             return iconEl;
@@ -150,7 +185,13 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 disabled={compactPopoverDisabled}
                 type={type}
                 collapsed={compact}
-                onPopupItemClick={onPopupItemClick}
+                /**
+                 * No `onPopupItemClick` here on purpose: this popup renders the item itself
+                 * (`items={[props]}`), whose `onItemClick` is already the row-level wrapper.
+                 * Going through the wrapper keeps the original `item.onItemClick` intact for
+                 * the AsideHeader handler; the direct path would pass the wrapper as
+                 * `item.onItemClick` and trigger the handler twice (toggling All pages back).
+                 */
                 onItemClick={onItemClick}
             >
                 {iconButton}
@@ -158,10 +199,24 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         );
     };
 
+    const ariaLabel = typeof title === 'string' ? title : undefined;
+    const resolvedAriaLabel = resolveItemAriaLabel(menuItemAriaProps, ariaLabel);
+
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
         const wrappedByItemWrapper = typeof itemWrapper === 'function';
-        const rowClassName = b({type, current, compact, 'hide-icon': hideIcon}, className);
-        const ariaLabel = typeof title === 'string' ? title : undefined;
+        const chevronClick = inlineGroupHeader ? onGroupHeaderChevronClick : undefined;
+        /* With a sibling chevron control, the wrapper becomes the outer box of the row,
+           so the external className (outer layout) is applied to it instead of the row. */
+        const rowClassName = b(
+            {
+                type,
+                current,
+                compact,
+                'hide-icon': hideIcon,
+                'with-chevron-control': Boolean(chevronClick),
+            },
+            chevronClick ? undefined : className,
+        );
 
         const handleRowClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
             if (compact && !collapsedItem && !showMenuPopup && !current) {
@@ -175,6 +230,40 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             }
         };
 
+        const chevronSize = compact ? CHEVRON_SIZE_COMPACT : CHEVRON_SIZE;
+
+        let chevronNode: React.ReactNode = null;
+        let chevronControl: React.ReactNode = null;
+
+        if (chevronClick) {
+            chevronControl = (
+                <button
+                    type="button"
+                    className={b('chevron', {interactive: true})}
+                    aria-label={resolvedAriaLabel ?? getChevronFallbackLabel(groupHeaderExpanded)}
+                    aria-expanded={groupHeaderExpanded}
+                    onClick={(event) => {
+                        event.stopPropagation();
+                        chevronClick(event);
+                    }}
+                >
+                    <Icon data={groupHeaderExpanded ? ChevronUp : ChevronDown} size={chevronSize} />
+                </button>
+            );
+        } else if (inlineGroupHeader) {
+            chevronNode = (
+                <div className={b('chevron')}>
+                    <Icon data={groupHeaderExpanded ? ChevronUp : ChevronDown} size={chevronSize} />
+                </div>
+            );
+        } else if (showFlyoutChevron) {
+            chevronNode = (
+                <div className={b('chevron')}>
+                    <Icon data={ChevronRight} size={chevronSize} />
+                </div>
+            );
+        }
+
         const rowChildren = (
             <>
                 {menuGroupNestedTreeConnector}
@@ -182,27 +271,11 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     {makeIconNode(iconEl)}
                 </div>
 
-                <div className={b('title')} title={typeof title === 'string' ? title : undefined}>
+                <div className={b('title')} title={ariaLabel}>
                     {titleEl}
                 </div>
 
-                {inlineGroupHeader ? (
-                    <div className={b('chevron')}>
-                        <Icon
-                            data={groupHeaderExpanded ? ChevronUp : ChevronDown}
-                            size={compact ? CHEVRON_SIZE_COMPACT : CHEVRON_SIZE}
-                        />
-                    </div>
-                ) : (
-                    Boolean(resolvedMenuPopupItems?.length) && (
-                        <div className={b('chevron')}>
-                            <Icon
-                                data={ChevronRight}
-                                size={compact ? CHEVRON_SIZE_COMPACT : CHEVRON_SIZE}
-                            />
-                        </div>
-                    )
-                )}
+                {chevronNode}
             </>
         );
 
@@ -211,7 +284,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             className: rowClassName,
             'data-type': type,
             'data-qa': qa,
-            'aria-label': menuItemAriaProps?.['aria-label'] ?? ariaLabel,
+            'aria-label': resolvedAriaLabel,
             onClick: handleRowClick,
             onClickCapture: onItemClickCapture,
             onMouseEnter: () => {
@@ -249,6 +322,15 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 <button {...rowEventProps} ref={ref as React.RefObject<HTMLButtonElement>}>
                     {rowChildren}
                 </button>
+            );
+        }
+
+        if (chevronControl) {
+            tagNode = (
+                <div className={b('group-header-row', className)}>
+                    {tagNode}
+                    {chevronControl}
+                </div>
             );
         }
 
