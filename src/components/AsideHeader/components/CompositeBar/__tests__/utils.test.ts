@@ -83,6 +83,11 @@ describe('CompositeBar utils', () => {
             expect(header.current).toBeFalsy();
         });
 
+        it('makeGroupHeaderAsideItem passes MenuGroup.iconSize to the header row', () => {
+            const header = makeGroupHeaderAsideItem({id: 'g1', title: 'G1', iconSize: 24});
+            expect(header.iconSize).toBe(24);
+        });
+
         it('getSelectedCompositeBarRowIndex ignores current on group children', () => {
             const rows = buildCompositeBarRows(
                 [
