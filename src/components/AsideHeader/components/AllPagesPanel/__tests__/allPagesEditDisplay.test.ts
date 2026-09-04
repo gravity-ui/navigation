@@ -79,6 +79,29 @@ describe('allPagesEditDisplay', () => {
         expect(header.onItemClick).toBe(groupClick);
     });
 
+    it('getAllPagesViewModeFlatItems appends actionable groups that have no child item', () => {
+        const groupClick = jest.fn();
+        const clickableGroups: MenuGroup[] = [
+            {id: 'empty', title: 'Empty', icon: Gear, href: '/e', onItemClick: groupClick},
+        ];
+
+        const flat = getAllPagesViewModeFlatItems(items, clickableGroups);
+
+        expect(flat.map((i) => i.id)).toEqual([
+            'home',
+            'o1',
+            'o2',
+            's1',
+            'help',
+            '__gn-composite-bar__group-header__empty',
+        ]);
+
+        const header = flat[flat.length - 1];
+        expect(header.category).toBeUndefined();
+        expect(header.href).toBe('/e');
+        expect(header.onItemClick).toBe(groupClick);
+    });
+
     it('getAllPagesViewModeFlatItems keeps the header in the default section when items have no category', () => {
         const noCategoryItems: AsideHeaderItem[] = [
             {id: 'o1', title: 'Overview', icon: Gear, groupId: 'analytics'},
