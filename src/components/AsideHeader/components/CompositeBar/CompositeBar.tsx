@@ -144,11 +144,6 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
         [onItemClick, onMoreClick],
     );
 
-    const onSyntheticHeaderItemClick = useMemo(
-        () => onItemClickByIndex(undefined) as NonNullable<ItemProps['onItemClick']>,
-        [onItemClickByIndex],
-    );
-
     const itemHeight = useCallback(
         (row: CompositeBarRow) => {
             if (row.kind === 'item') {
@@ -237,11 +232,16 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
 
                 const headerItem = makeGroupHeaderAsideItem(row.group);
                 const groupIsCollapsed = isGroupCollapsed(row.group.id);
+                const groupHasOwnAction = Boolean(row.group.onItemClick || row.group.href);
+                const onHeaderItemClick = onItemClickByIndex(row.group.onItemClick) as NonNullable<
+                    ItemProps['onItemClick']
+                >;
 
                 if (!inlineGroupChildren) {
                     return (
                         <Item
                             {...headerItem}
+                            href={row.group.href}
                             compact={compact}
                             popupItemClassName={menuItemClassName}
                             menuPopupItems={row.items}
@@ -250,7 +250,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                             className={b('menu-group-header')}
                             onMouseLeave={onMouseLeave}
                             onPopupItemClick={onPopupItemClick}
-                            onItemClick={onSyntheticHeaderItemClick}
+                            onItemClick={onHeaderItemClick}
                             suppressCurrentItemIds={suppressCurrentItemIds}
                             enableQuickAccessPin={enableQuickAccessPin}
                             onToggleQuickAccess={onToggleQuickAccess}
@@ -274,6 +274,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                     >
                         <Item
                             {...headerItem}
+                            href={row.group.href}
                             compact={compact}
                             popupItemClassName={menuItemClassName}
                             className={b('menu-group-header')}
@@ -283,9 +284,16 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                             menuPopupHideIcon={hideNestedIcons}
                             onMouseLeave={onMouseLeave}
                             onPopupItemClick={onPopupItemClick}
+                            onGroupHeaderChevronClick={
+                                groupHasOwnAction
+                                    ? () => onToggleGroupCollapsed(row.group.id)
+                                    : undefined
+                            }
                             onItemClick={(item, isItemCollapsed, event) => {
-                                onToggleGroupCollapsed(row.group.id);
-                                onSyntheticHeaderItemClick(item, isItemCollapsed, event);
+                                if (!groupHasOwnAction) {
+                                    onToggleGroupCollapsed(row.group.id);
+                                }
+                                onHeaderItemClick(item, isItemCollapsed, event);
                             }}
                             suppressCurrentItemIds={suppressCurrentItemIds}
                             enableQuickAccessPin={enableQuickAccessPin}
