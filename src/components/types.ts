@@ -68,6 +68,7 @@ export interface MenuGroup {
     id: string;
     title: string;
     icon?: IconProps['data'];
+    iconSize?: number | string;
     /** Hide the group from display */
     hidden?: boolean;
     /**
