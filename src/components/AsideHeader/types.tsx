@@ -38,15 +38,13 @@ interface EditMenuProps {
 }
 
 /**
- * Menu overflow behavior.
- * - `collapse` — extra items collapse under a "More" popup (default).
- * - `scroll` — all items remain visible inside a scrollable container with a native thin scrollbar.
+ * Menu overflow behavior for menu items.
+ * - `collapse` — extra menu items collapse under a "More" popup (default).
+ * - `scroll` — all menu items remain visible inside a scrollable column with a native thin scrollbar.
  *
- * Quick access and the menu always share a single scroll container: when the column
- * does not fit the available height, both sections scroll together while the header,
- * footer, and `aboveMenuContent` stay fixed. In compact mode item overflow still
- * falls back to `collapse` regardless of this value because a scrollbar over
- * icon-only items is awkward.
+ * The distinction applies to menu items only: quick access and the menu always share a single
+ * scroll container that scrolls when the column does not fit the available height. In compact
+ * mode menu items still fall back to `collapse` regardless of this value.
  */
 export type AsideHeaderMenuOverflow = 'collapse' | 'scroll';
 

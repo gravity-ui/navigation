@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {expect} from '@playwright/experimental-ct-react';
+import type {Page} from '@playwright/test';
 
 import {test} from '~playwright/core';
 
@@ -22,6 +23,26 @@ const quickAccessOverflowViewport = {width: 1200, height: 480};
 const quickAccessCompactOverflowViewport = {width: 1200, height: 320};
 const unifiedMenuScrollInner =
     '[class*="gn-aside-header__unified-menu-scroll_"] [class*="scrollable-with-scrollbar__scrollable-inner"]';
+const footerWithDivider = '[class*="gn-aside-header__footer_with-divider"]';
+
+/**
+ * The top alert shifts the aside down after mount, so the menu column resizes: for a
+ * frame the column holds the un-collapsed menu (transient overflow) and the
+ * overflow-driven footer divider can outlive that frame by one render. Wait for both
+ * observable states before capturing screenshots of alert stories.
+ *
+ * @param page - Playwright page the aside is mounted in.
+ * @returns Assertion resolving once the column stopped overflowing and the divider is removed.
+ */
+const waitForMenuColumnSettled = async (page: Page) => {
+    const scrollInner = page.locator(unifiedMenuScrollInner);
+    // The transient paints the full menu, so the column overflows until it collapses.
+    await expect
+        .poll(() => scrollInner.evaluate((element) => element.scrollHeight - element.clientHeight))
+        .toBeLessThanOrEqual(1);
+    // The divider is removed one render after the overflow ends; retry through that lag.
+    await expect(page.locator(footerWithDivider)).toHaveCount(0);
+};
 
 test.describe('AsideHeader', () => {
     /** Order matches exports in `@stories__/AsideHeader.stories.tsx`. Explicit components — dynamic `Stories[key]` breaks Playwright CT. */
@@ -102,18 +123,21 @@ test.describe('AsideHeader', () => {
         await expect(page.locator('.gn-footer-item').first()).toHaveCSS('height', '32px');
     });
 
-    test('render story: <HeaderAlert>', async ({mount, expectScreenshot}) => {
+    test('render story: <HeaderAlert>', async ({mount, page, expectScreenshot}) => {
         await mount(<AsideHeaderStories.HeaderAlert />, mountOptions, viewport);
+        await waitForMenuColumnSettled(page);
         await expectScreenshot();
     });
 
-    test('render story: <HeaderAlertCentered>', async ({mount, expectScreenshot}) => {
+    test('render story: <HeaderAlertCentered>', async ({mount, page, expectScreenshot}) => {
         await mount(<AsideHeaderStories.HeaderAlertCentered />, mountOptions, viewport);
+        await waitForMenuColumnSettled(page);
         await expectScreenshot();
     });
 
-    test('render story: <HeaderAlertCustom>', async ({mount, expectScreenshot}) => {
+    test('render story: <HeaderAlertCustom>', async ({mount, page, expectScreenshot}) => {
         await mount(<AsideHeaderStories.HeaderAlertCustom />, mountOptions, viewport);
+        await waitForMenuColumnSettled(page);
         await expectScreenshot();
     });
 

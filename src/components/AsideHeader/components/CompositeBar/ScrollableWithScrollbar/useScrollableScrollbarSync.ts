@@ -2,6 +2,13 @@ import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from '
 
 const MIN_THUMB_HEIGHT = 24;
 
+/**
+ * A fractional container height can make the integer scrollHeight exceed clientHeight
+ * by this many pixels. Such a delta is sub-pixel rounding, not meaningfully scrollable
+ * content, so it is not reported as overflow.
+ */
+const SUBPIXEL_OVERFLOW_PX = 1;
+
 type ThumbGeometry = {
     top: number;
     height: number;
@@ -51,11 +58,7 @@ export function useScrollableScrollbarSync(): UseScrollableScrollbarSyncResult {
             }
 
             const {scrollHeight, clientHeight} = el;
-            // A fractional container height can make the integer scrollHeight exceed
-            // clientHeight by 1px. That sub-pixel overflow is not meaningfully
-            // scrollable, so ignore it to keep the scrollbar and overflow callbacks
-            // from flickering while the layout settles.
-            const isOverflowing = scrollHeight - clientHeight > 1;
+            const isOverflowing = scrollHeight - clientHeight > SUBPIXEL_OVERFLOW_PX;
 
             setOverflows(isOverflowing);
 
@@ -98,7 +101,24 @@ export function useScrollableScrollbarSync(): UseScrollableScrollbarSyncResult {
         if (contentEl) {
             observer.observe(contentEl);
         }
-        return () => observer.disconnect();
+
+        // Content can also change without resizing any observed box: the collapse-mode
+        // menu resizes its content wrapper via an inline style (AutoSizer), which
+        // changes scrollHeight while every observed box stays the same, leaving the
+        // overflow state stale. Re-measure on content mutations too (rAF-throttled
+        // by scheduleUpdate).
+        const mutationObserver = new MutationObserver(scheduleUpdate);
+        mutationObserver.observe(el, {
+            childList: true,
+            subtree: true,
+            characterData: true,
+            attributes: true,
+        });
+
+        return () => {
+            observer.disconnect();
+            mutationObserver.disconnect();
+        };
     }, [scheduleUpdate]);
 
     useEffect(() => {
