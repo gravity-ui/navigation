@@ -416,4 +416,25 @@ describe('ItemPopup helpers', () => {
             }),
         ).toEqual({mainAxis: 14, crossAxis: -30});
     });
+
+    it('narrows a nested popup so its gap to the parent matches the aside gap', () => {
+        expect(
+            getItemPopoverOffset({
+                isSingleLabel: false,
+                itemHeight: 40,
+                popupRowHeight: 32,
+                nested: true,
+                itemMarginInline: 8,
+            }),
+        ).toEqual({mainAxis: 10, crossAxis: 0});
+        expect(
+            getItemPopoverOffset({
+                isSingleLabel: false,
+                itemHeight: 40,
+                popupRowHeight: 32,
+                nested: true,
+                itemMarginInline: 6,
+            }),
+        ).toEqual({mainAxis: 12, crossAxis: 0});
+    });
 });
