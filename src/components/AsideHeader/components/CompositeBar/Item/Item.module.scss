@@ -12,6 +12,13 @@ $floating-surface-box-shadow-dark:
     0 0 0 1px var(--g-color-line-generic-solid),
     0 4px 12px 0 var(--g-color-sfx-veil),
     0 10px 24px -2px var(--g-color-sfx-shadow-heavy);
+// The single-item label tooltip is a small always-dark surface: the multi-layer
+// floating shadow reads as too heavy on it, so it keeps the outline ring plus a
+// single soft layer. Its element is forced to the dark theme, so the tokens
+// always resolve from the dark palette.
+$floating-surface-box-shadow-label:
+    0 0 0 1px var(--g-color-line-generic-solid),
+    0 2px 8px 0 var(--g-color-sfx-shadow);
 
 @mixin floating-surface-box-shadow-default {
     --_--floating-surface-box-shadow-default: #{$floating-surface-box-shadow-light};
@@ -414,6 +421,10 @@ $floating-surface-box-shadow-dark:
     &__icon-popover_single-label {
         --_--popup-min-width: 0;
         --_--popup-row-padding-inline: var(--g-spacing-2);
+        box-shadow: var(
+            --gn-aside-header-floating-surface-box-shadow,
+            #{$floating-surface-box-shadow-label}
+        );
     }
 
     &__icon-popover_item-type_action {
