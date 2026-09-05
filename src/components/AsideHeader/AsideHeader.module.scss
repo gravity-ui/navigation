@@ -3,6 +3,15 @@
 
 $block: '.#{variables.$ns}aside-header';
 
+// Aside collapse/expand animates the width, so the aside and the content area
+// (its width is derived from the same size) must share one transition: their
+// widths have to sum up to 100% at every animation frame.
+// Keep the duration in sync with ASIDE_HEADER_COLLAPSE_TRANSITION_MS (constants.ts).
+$aside-width-transition-duration: 0.2s;
+$aside-width-transition-timing-function: ease-in-out;
+$aside-width-transition: width $aside-width-transition-duration
+    $aside-width-transition-timing-function;
+
 .g-root {
     --gn-aside-top-panel-height: 0px;
 }
@@ -65,6 +74,11 @@ $block: '.#{variables.$ns}aside-header';
         margin-top: var(--gn-top-alert-height, 0);
 
         box-sizing: border-box;
+        // The aside-content lays out at the final width during the width
+        // transition (see the min-width below), so the aside itself is what
+        // clips it at the animating edge.
+        overflow: hidden;
+        transition: $aside-width-transition;
 
         &::after {
             position: absolute;
@@ -96,6 +110,16 @@ $block: '.#{variables.$ns}aside-header';
              * Requires min-height: 0 so flex children can shrink below content height.
              */
             min-height: 0;
+            /**
+             * While the aside width animates, the size variable already holds the
+             * expanded value from the first animation frame. Freezing the inner
+             * layout at that width keeps titles and rows from reflowing mid-transition:
+             * the content overflows and the aside clips it at the animating edge.
+             * While collapsing, PageLayout pins the frozen size to the expanded
+             * width (--gn-aside-header-frozen-size), so the content stays laid
+             * out expanded until the transition ends and is clipped as well.
+             */
+            min-width: var(--gn-aside-header-frozen-size, var(--gn-aside-header-size));
             overflow: hidden;
             width: inherit;
             height: inherit;
@@ -131,6 +155,7 @@ $block: '.#{variables.$ns}aside-header';
             width: var(--gn-aside-header-size);
 
             z-index: -1;
+            transition: $aside-width-transition;
         }
     }
 
@@ -330,6 +355,16 @@ $block: '.#{variables.$ns}aside-header';
 
     &__panels {
         z-index: var(--gn-aside-header-panel-z-index, 98);
+
+        // The drawer root holds the inline `left` offset that tracks the aside
+        // edge, so it must follow the same collapse/expand transition. The
+        // status attribute is always present: it raises specificity above the
+        // uikit rule animating the veil, whose fade is kept in the list.
+        &:global(.g-drawer[data-floating-ui-status]) {
+            transition:
+                left $aside-width-transition-duration $aside-width-transition-timing-function,
+                background-color var(--_--animation-duration, 300ms);
+        }
     }
 
     &__panel {
@@ -361,6 +396,7 @@ $block: '.#{variables.$ns}aside-header';
         width: calc(100% - var(--gn-aside-header-size));
         z-index: var(--gn-aside-header-content-z-index, 95);
         margin-top: var(--gn-top-alert-height, 0);
+        transition: $aside-width-transition;
     }
 
     &__all-pages-panel {

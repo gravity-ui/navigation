@@ -1,6 +1,7 @@
 import React, {PropsWithChildren, Suspense, useMemo} from 'react';
 
 import {Content, ContentProps} from '../../../Content';
+import {ASIDE_HEADER_COLLAPSE_TRANSITION_MS} from '../../../constants';
 import {TopAlertProps} from '../../../types';
 import {AsideHeaderContextProvider, useAsideHeaderContext} from '../../AsideHeaderContext';
 import {getAsideHeaderDensityConfig, getAsideHeaderDensityCssProperties} from '../../density';
@@ -30,6 +31,47 @@ function calcEstimatedTopAlertHeight(topAlert?: TopAlertProps) {
 
 export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {}
 
+/**
+ * True while the collapse width transition is running (the aside is shrinking
+ * from its expanded width to the compact one). The inner content keeps the
+ * expanded presentation during that time and switches to the compact one when
+ * the aside has reached its final width: re-fitting titles, the logo text and
+ * the item highlight on every animation frame reads as jitter, while the
+ * shrinking aside simply clips the frozen expanded layout.
+ *
+ * @param compact - The current compact state of the aside.
+ * @returns Whether the collapse transition is currently running.
+ */
+function useCollapsingAside(compact: boolean) {
+    const [collapsing, setCollapsing] = React.useState(false);
+    const previousCompactRef = React.useRef(compact);
+
+    React.useLayoutEffect(() => {
+        const wasCompact = previousCompactRef.current;
+        previousCompactRef.current = compact;
+
+        if (compact === wasCompact) {
+            // The initial render with the compact state already enabled.
+            return undefined;
+        }
+
+        if (!compact) {
+            setCollapsing(false);
+            return undefined;
+        }
+
+        setCollapsing(true);
+        const timer = window.setTimeout(
+            () => setCollapsing(false),
+            ASIDE_HEADER_COLLAPSE_TRANSITION_MS,
+        );
+
+        return () => window.clearTimeout(timer);
+    }, [compact]);
+
+    return collapsing;
+}
+
 const Layout = ({
     compact,
     className,
@@ -40,9 +82,11 @@ const Layout = ({
     const densityConfig = getAsideHeaderDensityConfig(menuDensity);
     const densityCssProperties = getAsideHeaderDensityCssProperties(menuDensity);
     const size = compact ? densityConfig.compactWidth : densityConfig.expandedWidth;
+    const collapsing = useCollapsingAside(Boolean(compact));
+    const presentationCompact = Boolean(compact) && !collapsing;
     const asideHeaderContextValue = useMemo(
-        () => ({size, compact, menuDensity}),
-        [compact, size, menuDensity],
+        () => ({size, compact: presentationCompact, menuDensity}),
+        [presentationCompact, size, menuDensity],
     );
 
     const estimatedTopAlertHeight = calcEstimatedTopAlertHeight(topAlert);
@@ -70,10 +114,18 @@ const Layout = ({
     return (
         <AsideHeaderContextProvider value={asideHeaderContextValue}>
             <div
-                className={b({compact}, className)}
+                className={b({compact: presentationCompact}, className)}
                 style={{
                     ...densityCssProperties,
                     ...({'--gn-aside-header-size': `${size}px`} as React.CSSProperties),
+                    // While collapsing, the inner content lays out at the
+                    // expanded width (see AsideHeader.module.scss) and the
+                    // animating aside clips it.
+                    ...(collapsing
+                        ? ({
+                              '--gn-aside-header-frozen-size': `${densityConfig.expandedWidth}px`,
+                          } as React.CSSProperties)
+                        : {}),
                 }}
             >
                 {typeof preloadHeightValue === 'number' ? (
