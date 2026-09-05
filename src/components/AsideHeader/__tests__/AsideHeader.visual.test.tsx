@@ -607,18 +607,18 @@ test.describe('AsideHeader', () => {
         await mount(<AsideHeaderExamplesStories.FullNavigation />, mountOptions, viewport);
 
         const quickAccess = page.locator('[id="gravity-ui/navigation-quick-access-composite-bar"]');
-        const alertsItem = quickAccess.locator('button[aria-label="Alerts"]');
-        const removeButton = alertsItem
+        const overviewItem = quickAccess.locator('button[aria-label="Overview"]');
+        const removeButton = overviewItem
             .locator('..')
             .getByRole('button', {name: 'Remove from quick access'});
 
-        await alertsItem.focus();
+        await overviewItem.focus();
         await page.keyboard.press('Tab');
         await expect(removeButton).toBeFocused();
         await page.keyboard.press('Enter');
 
-        await expect(alertsItem).toHaveCount(0);
-        await expect(quickAccess.locator('button[aria-label="Overview"]')).toBeFocused();
+        await expect(overviewItem).toHaveCount(0);
+        await expect(quickAccess.locator('button[aria-label="Home"]')).toBeFocused();
     });
 
     test('highlights a pinned current item only in quick access by default', async ({

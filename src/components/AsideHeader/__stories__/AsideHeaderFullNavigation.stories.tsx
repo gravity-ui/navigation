@@ -190,6 +190,10 @@ function FullNavigationDemo(props: FullNavigationProps) {
             controlledMenuItems.map((item) => ({
                 ...item,
                 current: item.id === currentPageId,
+                compositeBarMenuPopupItems: item.compositeBarMenuPopupItems?.map((child) => ({
+                    ...child,
+                    current: child.id === currentPageId,
+                })),
                 onItemClick: (clicked: AsideHeaderItem) => {
                     if (clicked.type === 'action') {
                         alert('Create');
@@ -201,7 +205,11 @@ function FullNavigationDemo(props: FullNavigationProps) {
         [controlledMenuItems, currentPageId],
     );
 
-    const currentItem = menuItems.find((item) => item.current);
+    const currentItem =
+        menuItems.find((item) => item.current) ??
+        menuItems
+            .flatMap((item) => item.compositeBarMenuPopupItems ?? [])
+            .find((item) => item.current);
     const pageTitle = typeof currentItem?.title === 'string' ? currentItem.title : 'Overview';
 
     return (
