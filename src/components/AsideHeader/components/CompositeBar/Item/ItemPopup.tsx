@@ -134,6 +134,10 @@ export const ItemPopup: React.FC<Props> = ({
             '--_--popup-border-radius': `${popupBorderRadius}px`,
             '--_--popup-title-height': `${POPUP_TITLE_BLOCK_HEIGHT}px`,
             '--g-popup-border-radius': `${popupBorderRadius}px`,
+            // Popovers must appear instantly. `PopoverProps` does not expose Popup's
+            // `disableTransition`, so the enter/exit animation is disabled here; the
+            // style lands on the same `.g-popup` element that owns the transition.
+            transition: 'none',
         } as React.CSSProperties;
     }, [densityConfig.itemExpandedRadius, densityCssProperties, isSingleLabel]);
 
