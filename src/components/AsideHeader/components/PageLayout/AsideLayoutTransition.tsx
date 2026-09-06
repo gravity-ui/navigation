@@ -1,10 +1,19 @@
 import React from 'react';
 
 import {ASIDE_HEADER_COLLAPSE_TRANSITION_MS} from '../../../constants';
+import {COMPOSITE_BAR_ITEM_ID_ATTRIBUTE} from '../CompositeBar/constants';
 
 import {CurrentIndicatorTransition} from './CurrentIndicatorTransition';
+import {CurrentPresentationObserver} from './CurrentPresentationObserver';
 import {
+    CURRENT_ROW_KEY_ATTRIBUTE,
+    CURRENT_ROW_SELECTOR,
+    getCompositeBarSection,
+} from './currentIndicatorDom';
+import {
+    type CurrentIdentitySnapshot,
     type CurrentSnapshot,
+    captureCurrentIdentity,
     captureCurrentPresentation,
     getCurrentRowKey,
     matchCurrentPresentations,
@@ -36,7 +45,7 @@ type Snapshot = {
 };
 type Props = React.HTMLAttributes<HTMLDivElement> & {compact: boolean};
 
-const ITEM_SELECTOR = '[data-gn-composite-bar-item-id]';
+const ITEM_SELECTOR = CURRENT_ROW_SELECTOR;
 const LOGO_SELECTOR = '[class*="gn-aside-header__logo_"]';
 const TITLE_SELECTOR = '[class*="gn-aside-header__quick-access-title_"]';
 
@@ -72,7 +81,7 @@ function cloneAppearance(element: HTMLElement) {
         if (!copy.style) return;
         const row = source.closest<HTMLElement>(ITEM_SELECTOR);
         if (row && (source === row || source.matches('[data-gn-aside-part="surface"]'))) {
-            copy.setAttribute('data-gn-aside-current-row-key', getCurrentRowKey(row));
+            copy.setAttribute(CURRENT_ROW_KEY_ATTRIBUTE, getCurrentRowKey(row));
         }
         for (const property of [
             'color',
@@ -111,8 +120,8 @@ function capture(panel: HTMLElement): Snapshot {
     panel.querySelectorAll<HTMLElement>(ITEM_SELECTOR).forEach((element) => {
         // A quick-access copy and the main item have the same item id, but belong
         // to different composite bars. Nested items inherit their root bar's id.
-        const section = element.closest('[id^="gravity-ui/navigation-"]')?.id ?? 'footer';
-        const id = element.getAttribute('data-gn-composite-bar-item-id');
+        const section = getCompositeBarSection(element);
+        const id = element.getAttribute(COMPOSITE_BAR_ITEM_ID_ATTRIBUTE);
         const row = measureRow(element);
         if (element.hasAttribute('data-gn-aside-nested')) {
             row.group = `${section}/${element.closest('[data-gn-aside-group]')?.getAttribute('data-gn-aside-group')}`;
@@ -126,7 +135,7 @@ function capture(panel: HTMLElement): Snapshot {
     panel.querySelectorAll<HTMLElement>('[data-gn-aside-divider]').forEach((element) => {
         if (element.closest('[data-gn-aside-transition-overlay]')) return;
         const id = element.getAttribute('data-gn-aside-divider');
-        const section = element.closest('[id^="gravity-ui/navigation-"]')?.id ?? 'aside';
+        const section = getCompositeBarSection(element, 'aside');
         const group = element.closest('[data-gn-aside-group]');
         if (id)
             dividers.set(`${section}/${id}`, {
@@ -141,10 +150,10 @@ function capture(panel: HTMLElement): Snapshot {
         const list = element.querySelector<HTMLElement>(':scope > .g-list');
         const header = element.querySelector<HTMLElement>(ITEM_SELECTOR);
         if (!list || !header) return;
-        const section = header.closest('[id^="gravity-ui/navigation-"]')?.id ?? 'footer';
+        const section = getCompositeBarSection(header);
         groups.set(`${section}/${element.getAttribute('data-gn-aside-group')}`, {
             part: measure(list),
-            headerKey: `${section}/${header.getAttribute('data-gn-composite-bar-item-id')}`,
+            headerKey: `${section}/${header.getAttribute(COMPOSITE_BAR_ITEM_ID_ATTRIBUTE)}`,
         });
     });
     const width = panel.getBoundingClientRect().width;
@@ -170,10 +179,23 @@ export class AsideLayoutTransition extends React.Component<
     Snapshot | null
 > {
     private root = React.createRef<HTMLDivElement>();
-    private currentIndicator = new CurrentIndicatorTransition(
-        () => this.root.current,
-        (surfaces) => this.cancelSurfacePaint(surfaces),
-    );
+    private currentIndicator = new CurrentIndicatorTransition(() => this.reconcileObservation());
+    private currentIdentities: CurrentIdentitySnapshot = new Map();
+    private presentationObserver = new CurrentPresentationObserver((identities, surfaces) => {
+        const panel = this.animatedPanel;
+        if (!panel) return;
+        if (!panel.isConnected || !this.root.current?.contains(panel)) {
+            this.cancel();
+            return;
+        }
+        this.currentIdentities = identities;
+        this.surfacePaint.forEach((_animation, surface) => {
+            if (!surface.isConnected || !panel.contains(surface)) surfaces.add(surface);
+        });
+        this.cancelSurfacePaint(surfaces);
+        this.currentIndicator.validate(panel, identities);
+        this.reconcileObservation();
+    });
     private animations: Animation[] = [];
     private surfacePaint = new Map<HTMLElement, Animation>();
     private overlay?: HTMLDivElement;
@@ -191,8 +213,23 @@ export class AsideLayoutTransition extends React.Component<
     getSnapshotBeforeUpdate(previous: Props): Snapshot | null {
         if (previous.compact === this.props.compact) return null;
         const panel = this.root.current?.querySelector<HTMLElement>('[data-gn-aside-panel]');
+        // A synchronous remount can precede observer delivery. Departing parts
+        // belong only to their original panel and must not seed a new snapshot.
+        if (
+            this.animatedPanel &&
+            (this.animatedPanel !== panel || !this.animatedPanel.isConnected)
+        ) {
+            this.cancel();
+        }
         if (!panel) return null;
-        const current = this.currentIndicator.capture(panel);
+        const identities = captureCurrentIdentity(panel);
+        this.presentationObserver.check(panel, identities, true);
+        const current = this.currentIndicator.capture(panel, identities);
+        // Save moving geometry first, then restore live paint before ordinary
+        // snapshots. Layout effects stay alive until every reversal part is read.
+        this.presentationObserver.disconnect();
+        this.animatedPanel = undefined;
+        this.currentIndicator.cancel();
         const snapshot = {...capture(panel), current};
         // Interrupted transitions start at their current screen coordinates,
         // including content still fading out from a previous compact toggle.
@@ -207,6 +244,7 @@ export class AsideLayoutTransition extends React.Component<
         this.departingDividers.forEach(({element, id, group}, key) => {
             snapshot.dividers.set(key, {...measure(element), id, group});
         });
+        this.animatedPanel = panel;
         this.cancel();
         return snapshot;
     }
@@ -254,15 +292,14 @@ export class AsideLayoutTransition extends React.Component<
                 ASIDE_HEADER_COLLAPSE_TRANSITION_MS,
         );
         if (duration <= 0) return;
-        this.animatedPanel = panel;
+        const generation = ++this.generation;
         panel.setAttribute('data-gn-aside-animating', '');
+        this.currentIdentities = captureCurrentIdentity(panel);
+        const targetCurrent = captureCurrentPresentation(panel, this.currentIdentities);
         const options: KeyframeAnimationOptions = {duration, easing: 'ease-in-out', fill: 'both'};
         this.currentIndicator.start(
             panel,
-            matchCurrentPresentations(
-                before.current ?? new Map(),
-                captureCurrentPresentation(panel),
-            ),
+            matchCurrentPresentations(before.current ?? new Map(), targetCurrent),
             options,
             widthTransition?.startTime ?? null,
         );
@@ -330,7 +367,7 @@ export class AsideLayoutTransition extends React.Component<
                     },
                 ]);
             }
-            if (old.surface && row.surface && !this.currentIndicator.manages(row.surface.element)) {
+            if (old.surface && row.surface) {
                 const surface = row.surface;
                 const dx = old.surface.rect.x - old.rect.x - (surface.rect.x - row.rect.x);
                 const dy = old.surface.rect.y - old.rect.y - (surface.rect.y - row.rect.y);
@@ -348,14 +385,27 @@ export class AsideLayoutTransition extends React.Component<
                         borderRadius: surface.borderRadius,
                     },
                 ]);
-                if (old.surface.backgroundColor !== surface.backgroundColor) {
-                    this.surfacePaint.set(
-                        surface.element,
-                        animate(surface.element, [
-                            {backgroundColor: old.surface.backgroundColor},
-                            {backgroundColor: surface.backgroundColor},
-                        ]),
-                    );
+                if (
+                    !this.currentIndicator.manages(surface.element) &&
+                    old.surface.backgroundColor !== surface.backgroundColor
+                ) {
+                    const animation = animate(surface.element, [
+                        {backgroundColor: old.surface.backgroundColor},
+                        {backgroundColor: surface.backgroundColor},
+                    ]);
+                    this.surfacePaint.set(surface.element, animation);
+                    const settled = () => {
+                        if (
+                            this.generation !== generation ||
+                            this.surfacePaint.get(surface.element) !== animation
+                        )
+                            return;
+                        // A finished fill:'both' effect still overrides native
+                        // current/hover CSS until it is explicitly released.
+                        this.cancelSurfacePaint(new Set([surface.element]));
+                        this.reconcileObservation();
+                    };
+                    animation.finished.then(settled, settled);
                 }
             }
         });
@@ -449,7 +499,8 @@ export class AsideLayoutTransition extends React.Component<
             ]);
         });
 
-        const generation = ++this.generation;
+        this.animatedPanel = panel;
+        this.reconcileObservation();
         Promise.all(
             this.animations.map((animation) => animation.finished.catch(() => undefined)),
         ).then(() => {
@@ -477,7 +528,7 @@ export class AsideLayoutTransition extends React.Component<
         [ghost, ...Array.from(ghost.querySelectorAll<HTMLElement>('*'))].forEach((element) => {
             element.removeAttribute('id');
             element.removeAttribute('data-qa');
-            element.removeAttribute('data-gn-composite-bar-item-id');
+            element.removeAttribute(COMPOSITE_BAR_ITEM_ID_ATTRIBUTE);
         });
         const origin = panel.getBoundingClientRect();
         let parent = this.overlay;
@@ -522,13 +573,15 @@ export class AsideLayoutTransition extends React.Component<
     }
 
     private cancel() {
+        this.presentationObserver.disconnect();
         this.generation++;
-        this.currentIndicator.cancel();
         this.animatedPanel?.removeAttribute('data-gn-aside-animating');
         this.animatedPanel = undefined;
+        this.currentIndicator.cancel();
         this.animations.forEach((animation) => animation.cancel());
         this.animations = [];
         this.surfacePaint.clear();
+        this.currentIdentities.clear();
         this.overlay?.remove();
         this.overlay = undefined;
         this.scrollOverlay = undefined;
@@ -538,14 +591,25 @@ export class AsideLayoutTransition extends React.Component<
         this.departingDividers.clear();
     }
 
-    private cancelSurfacePaint(surfaces?: Set<HTMLElement>) {
+    private cancelSurfacePaint(surfaces: Set<HTMLElement>) {
         const cancelled = new Set<Animation>();
         this.surfacePaint.forEach((animation, surface) => {
-            if (surfaces && !surfaces.has(surface)) return;
+            if (!surfaces.has(surface)) return;
             animation.cancel();
             cancelled.add(animation);
             this.surfacePaint.delete(surface);
         });
         this.animations = this.animations.filter((animation) => !cancelled.has(animation));
+    }
+
+    private reconcileObservation() {
+        if (
+            this.animatedPanel &&
+            (this.currentIndicator.hasActiveTransfers || this.surfacePaint.size > 0)
+        ) {
+            this.presentationObserver.observe(this.animatedPanel, this.currentIdentities);
+        } else {
+            this.presentationObserver.disconnect();
+        }
     }
 }

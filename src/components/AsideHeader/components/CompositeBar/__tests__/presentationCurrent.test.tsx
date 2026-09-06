@@ -8,6 +8,7 @@ import {ThemeProvider} from '@gravity-ui/uikit';
 import {render, screen} from '@testing-library/react';
 
 import type {AsideHeaderItem} from '../../../types';
+import {CURRENT_IDS_ATTRIBUTE} from '../../PageLayout/currentIndicatorDom';
 import {Item} from '../Item/Item';
 import {COLLAPSE_ITEM_ID} from '../constants';
 import {getItemPresentationCurrentIds, isItemPresentationCurrent} from '../presentationCurrent';
@@ -34,9 +35,9 @@ describe('presentation current metadata', () => {
         const selected = screen.getByRole('button', {name: 'Selected'});
         const more = screen.getByRole('button', {name: 'More'});
 
-        expect(selected.getAttribute('data-gn-aside-current-ids')).toBe('["selected"]');
+        expect(selected.getAttribute(CURRENT_IDS_ATTRIBUTE)).toBe('["selected"]');
         expect(selected.className).toContain('current');
-        expect(more.getAttribute('data-gn-aside-current-ids')).toBe('["earlier","later"]');
+        expect(more.getAttribute(CURRENT_IDS_ATTRIBUTE)).toBe('["earlier","later"]');
         expect(more.className).toContain('current');
     });
 
@@ -57,9 +58,9 @@ describe('presentation current metadata', () => {
         const popup = screen.getByRole('button', {name: 'Popup'});
         const suppressed = screen.getByRole('button', {name: 'Suppressed'});
 
-        expect(popup.getAttribute('data-gn-aside-current-ids')).toBeNull();
+        expect(popup.getAttribute(CURRENT_IDS_ATTRIBUTE)).toBeNull();
         expect(popup.className).toContain('current');
-        expect(suppressed.getAttribute('data-gn-aside-current-ids')).toBeNull();
+        expect(suppressed.getAttribute(CURRENT_IDS_ATTRIBUTE)).toBeNull();
         expect(suppressed.className).not.toContain('current');
     });
 });

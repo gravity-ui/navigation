@@ -11,6 +11,7 @@ import i18n from '../../../i18n';
 import {isQuickAccessPinEligible} from '../../../quickAccess';
 import {AsideHeaderItem} from '../../../types';
 import {AsideDivider} from '../../AsideDivider';
+import {CURRENT_IDS_ATTRIBUTE} from '../../PageLayout/currentIndicatorDom';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {COLLAPSE_ITEM_ID, COMPOSITE_BAR_ITEM_ID_ATTRIBUTE, ITEM_TYPE_REGULAR} from '../constants';
 import {getItemPresentationCurrentIds} from '../presentationCurrent';
@@ -437,7 +438,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             'data-type': type,
             'data-qa': qa,
             [COMPOSITE_BAR_ITEM_ID_ATTRIBUTE]: props.id,
-            'data-gn-aside-current-ids': currentIdsMetadata,
+            [CURRENT_IDS_ATTRIBUTE]: currentIdsMetadata,
             'data-gn-aside-nested': menuGroupNested ? '' : undefined,
             'aria-label': resolvedAriaLabel,
             onClick: handleRowClick,

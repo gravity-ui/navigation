@@ -1,16 +1,18 @@
 import {
+    CURRENT_GHOST_SUPPRESSED_ATTRIBUTE,
+    CURRENT_ROW_KEY_ATTRIBUTE,
     CURRENT_ROW_SELECTOR,
-    type CurrentPresentation,
+    CURRENT_SUPPRESSED_ATTRIBUTE,
+    SURFACE_SELECTOR,
+} from './currentIndicatorDom';
+import {
+    type CurrentIdentitySnapshot,
     type CurrentSnapshot,
     type CurrentTransfer,
+    captureCurrentIdentity,
     captureCurrentPresentation,
     getCurrentRowKey,
 } from './currentIndicatorModel';
-
-const SURFACE_SELECTOR = '[data-gn-aside-part="surface"]';
-const SUPPRESSED = 'data-gn-aside-current-suppressed';
-const GHOST_SUPPRESSED = 'data-gn-aside-current-ghost-suppressed';
-const ROW_KEY = 'data-gn-aside-current-row-key';
 
 type ActiveTransfer = {
     transfer: CurrentTransfer;
@@ -23,25 +25,21 @@ type ActiveTransfer = {
 
 export class CurrentIndicatorTransition {
     private active = new Set<ActiveTransfer>();
-    private observer?: MutationObserver;
+    private onTransfersChanged?: () => void;
 
-    private getObserverRoot?: () => HTMLElement | null;
-    private onNativePaintInvalidated?: (surfaces?: Set<HTMLElement>) => void;
-    private nativeCurrent: CurrentPresentation[] = [];
-
-    constructor(
-        getObserverRoot?: () => HTMLElement | null,
-        onNativePaintInvalidated?: (surfaces?: Set<HTMLElement>) => void,
-    ) {
-        this.getObserverRoot = getObserverRoot;
-        this.onNativePaintInvalidated = onNativePaintInvalidated;
+    constructor(onTransfersChanged?: () => void) {
+        this.onTransfersChanged = onTransfersChanged;
     }
 
-    capture(panel: HTMLElement): CurrentSnapshot {
+    get hasActiveTransfers(): boolean {
+        return this.active.size > 0;
+    }
+
+    capture(panel: HTMLElement, identities = captureCurrentIdentity(panel)): CurrentSnapshot {
         // A parent can change current and compact in one task, before observer
         // delivery. Restore invalid transfers before reading native paint.
-        this.validate(panel);
-        const snapshot = captureCurrentPresentation(panel);
+        this.validate(panel, identities);
+        const snapshot = captureCurrentPresentation(panel, identities);
         snapshot.forEach((presentation, key) => {
             const active = Array.from(this.active).find(
                 ({transfer}) => transfer.to.row === presentation.row,
@@ -66,27 +64,29 @@ export class CurrentIndicatorTransition {
         startTime: Animation['startTime'],
     ): void {
         this.cancel();
-        this.nativeCurrent = [...captureCurrentPresentation(panel).values()];
         const layers = new Map<HTMLElement, HTMLElement>();
         transfers.forEach((transfer) => {
             const {from, to} = transfer;
             const host = to.row.closest<HTMLElement>('[data-gn-aside-current-container]');
+            // Built-in header/footer rows never change representative and have
+            // no scroll-content indicator container to transport within.
             if (!host || typeof host.animate !== 'function') return;
             const hostRect = host.getBoundingClientRect();
+            const scrollRect = host.closest('[data-gn-aside-scrollport]')?.getBoundingClientRect();
+            const layerLeft = (scrollRect?.left ?? hostRect.left) - hostRect.left;
+            const layerWidth =
+                (scrollRect?.right ?? hostRect.right) - (scrollRect?.left ?? hostRect.left);
             let layer = layers.get(host);
             if (!layer) {
                 layer = document.createElement('div');
                 layer.setAttribute('data-gn-aside-current-indicator-layer', '');
                 layer.setAttribute('aria-hidden', 'true');
                 layer.setAttribute('inert', '');
-                const scrollRect = host
-                    .closest('[data-gn-aside-scrollport]')
-                    ?.getBoundingClientRect();
                 Object.assign(layer.style, {
                     position: 'absolute',
                     insetBlock: '0',
-                    left: '0',
-                    width: `${Math.max(0, (scrollRect?.right ?? hostRect.right) - hostRect.left)}px`,
+                    left: `${layerLeft}px`,
+                    width: `${Math.max(0, layerWidth)}px`,
                     overflow: 'hidden',
                     pointerEvents: 'none',
                     zIndex: '0',
@@ -98,7 +98,7 @@ export class CurrentIndicatorTransition {
             indicator.setAttribute('data-gn-aside-current-indicator', '');
             indicator.style.position = 'absolute';
             const frame = (presentation: CurrentTransfer['from']): Keyframe => ({
-                left: `${presentation.rect.x - hostRect.x}px`,
+                left: `${presentation.rect.left - hostRect.left - layerLeft}px`,
                 top: `${presentation.rect.y - hostRect.y}px`,
                 width: `${presentation.rect.width}px`,
                 height: `${presentation.rect.height}px`,
@@ -117,7 +117,7 @@ export class CurrentIndicatorTransition {
                     return;
                 const surface = row.querySelector<HTMLElement>(SURFACE_SELECTOR);
                 if (surface) {
-                    surface.setAttribute(SUPPRESSED, '');
+                    surface.setAttribute(CURRENT_SUPPRESSED_ATTRIBUTE, '');
                     surfaces.add(surface);
                 }
             });
@@ -132,19 +132,7 @@ export class CurrentIndicatorTransition {
                 () => this.release(active),
             );
         });
-        if (!this.active.size) return;
-        this.observer = new MutationObserver(() => this.validate(panel));
-        this.observer.observe(this.getObserverRoot?.() ?? panel.parentElement ?? panel, {
-            subtree: true,
-            childList: true,
-            attributes: true,
-            attributeFilter: [
-                'data-gn-aside-current-ids',
-                'data-gn-composite-bar-item-id',
-                'data-gn-aside-part',
-                'id',
-            ],
-        });
+        if (this.active.size) this.onTransfersChanged?.();
     }
 
     manages(surface: HTMLElement): boolean {
@@ -153,60 +141,45 @@ export class CurrentIndicatorTransition {
 
     prepareGhost(root: HTMLElement): void {
         const surfaces = [...root.querySelectorAll<HTMLElement>(SURFACE_SELECTOR)];
-        if (root.matches(SURFACE_SELECTOR)) surfaces.push(root);
         surfaces.forEach((surface) => {
-            const key = surface.closest(`[${ROW_KEY}]`)?.getAttribute(ROW_KEY);
+            const key = surface
+                .closest(`[${CURRENT_ROW_KEY_ATTRIBUTE}]`)
+                ?.getAttribute(CURRENT_ROW_KEY_ATTRIBUTE);
             if (
-                surface.hasAttribute(SUPPRESSED) ||
+                surface.hasAttribute(CURRENT_SUPPRESSED_ATTRIBUTE) ||
                 (key && Array.from(this.active).some((active) => active.rowKeys.has(key)))
             ) {
                 // This copy describes an old selection. Its suppression belongs
                 // to the ghost's lifetime, even after current changes in live DOM.
-                surface.setAttribute(GHOST_SUPPRESSED, '');
+                surface.setAttribute(CURRENT_GHOST_SUPPRESSED_ATTRIBUTE, '');
             }
-            surface.removeAttribute(SUPPRESSED);
+            surface.removeAttribute(CURRENT_SUPPRESSED_ATTRIBUTE);
         });
     }
 
     cancel(): void {
         this.active.forEach((active) => this.release(active));
-        this.nativeCurrent = [];
     }
 
-    private validate(panel: HTMLElement) {
+    validate(panel: HTMLElement, identities: CurrentIdentitySnapshot): void {
         if (!this.active.size) return;
-        const current = [...captureCurrentPresentation(panel).values()];
-        const unchanged = (row: CurrentPresentation, rows: CurrentPresentation[]) =>
-            rows.some(
-                (other) =>
-                    row.key === other.key &&
-                    row.row === other.row &&
-                    row.surface === other.surface &&
-                    row.currentIds.length === other.currentIds.length &&
-                    row.currentIds.every((id) => other.currentIds.includes(id)),
-            );
-        const changedSurfaces = new Set(
-            [
-                ...this.nativeCurrent.filter((row) => !unchanged(row, current)),
-                ...current.filter((row) => !unchanged(row, this.nativeCurrent)),
-            ].map(({surface}) => surface),
-        );
-        if (changedSurfaces.size) this.onNativePaintInvalidated?.(changedSurfaces);
-        this.nativeCurrent = current;
+        const counts = new Map<string, number>();
+        identities.forEach(({section, currentIds}) => {
+            currentIds.forEach((id) => {
+                const key = JSON.stringify([section, id]);
+                counts.set(key, (counts.get(key) ?? 0) + 1);
+            });
+        });
         this.active.forEach((active) => {
             const {to} = active.transfer;
-            const matches = current.filter(
-                (presentation) =>
-                    presentation.section === to.section &&
-                    presentation.currentIds.includes(to.currentIds[0]),
-            );
-            const target = matches[0];
+            const target = identities.get(to.row);
             if (
                 !panel.isConnected ||
                 !active.layer.isConnected ||
                 !active.indicator.isConnected ||
-                matches.length !== 1 ||
-                target.row !== to.row ||
+                counts.get(JSON.stringify([to.section, to.currentIds[0]])) !== 1 ||
+                !target ||
+                target.currentIds[0] !== to.currentIds[0] ||
                 target.surface !== to.surface ||
                 target.key !== to.key ||
                 target.currentIds.length !== 1
@@ -214,23 +187,17 @@ export class CurrentIndicatorTransition {
                 this.release(active);
             }
         });
-        // Once the last transport is invalidated its observer ends too. Release
-        // remaining native paint so later clicks during layout cannot be masked.
-        if (!this.active.size) this.onNativePaintInvalidated?.();
     }
 
     private release(active: ActiveTransfer) {
         if (!this.active.delete(active)) return;
         active.surfaces.forEach((surface) => {
-            if (!this.manages(surface)) surface.removeAttribute(SUPPRESSED);
+            if (!this.manages(surface)) surface.removeAttribute(CURRENT_SUPPRESSED_ATTRIBUTE);
         });
         active.animation.cancel();
         active.indicator.remove();
         if (!Array.from(this.active).some(({layer}) => layer === active.layer))
             active.layer.remove();
-        if (!this.active.size) {
-            this.observer?.disconnect();
-            this.observer = undefined;
-        }
+        this.onTransfersChanged?.();
     }
 }

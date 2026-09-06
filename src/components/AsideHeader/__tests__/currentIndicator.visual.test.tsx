@@ -236,22 +236,61 @@ async function expectOnlyIndicatorPaint(page: Page) {
     const panel = await box(page.locator(PANEL));
     const scroll = await box(page.locator(SCROLL));
     const moving = await box(page.locator(INDICATOR));
+    const visible = intersection(intersection(panel, scroll), moving);
+    expect(visible.width).toBeGreaterThan(0);
+    expect(visible.height).toBeGreaterThan(0);
     const paint = await selectionPaint(page, {
-        x: panel.x,
+        x: Math.max(panel.x, scroll.x),
         y: scroll.y,
-        width: panel.width,
+        width: Math.max(
+            0,
+            Math.min(panel.x + panel.width, scroll.x + scroll.width) - Math.max(panel.x, scroll.x),
+        ),
         height: scroll.height,
     });
     expect(paint.selectionPixels).toBeGreaterThan(200);
     if (!paint.bounds) throw new Error('No opaque selection pixels');
-    const top = Math.max(scroll.y, moving.y);
-    const bottom = Math.min(scroll.y + scroll.height, moving.y + moving.height);
-    const right = Math.min(panel.x + panel.width, moving.x + moving.width);
-    expect(Math.abs(paint.bounds.y - top)).toBeLessThanOrEqual(2);
-    expect(Math.abs(paint.bounds.height - (bottom - top))).toBeLessThanOrEqual(2);
-    expect(Math.abs(paint.bounds.x - moving.x)).toBeLessThanOrEqual(2);
-    expect(Math.abs(paint.bounds.width - (right - moving.x))).toBeLessThanOrEqual(2);
+    expect(Math.abs(paint.bounds.y - visible.y)).toBeLessThanOrEqual(2);
+    expect(Math.abs(paint.bounds.height - visible.height)).toBeLessThanOrEqual(2);
+    expect(Math.abs(paint.bounds.x - visible.x)).toBeLessThanOrEqual(2);
+    expect(Math.abs(paint.bounds.width - visible.width)).toBeLessThanOrEqual(2);
 }
+
+test('screenshot paint helpers keep empty and required-region contracts distinct', async ({
+    mount,
+    page,
+}) => {
+    await page.setViewportSize({width: 200, height: 160});
+    await mount(
+        <div
+            data-qa="paint-helper-blue"
+            style={{
+                position: 'fixed',
+                left: 20,
+                top: 30,
+                width: 40,
+                height: 24,
+                background: 'rgb(17, 85, 221)',
+            }}
+        />,
+    );
+    const screenshot = await page.screenshot({animations: 'allow', scale: 'css'});
+    const outside = {x: 300, y: 300, width: 20, height: 20};
+    await expect(
+        comparePaint(page, screenshot, screenshot, [{x: 20, y: 30, width: 0, height: 24}, outside]),
+    ).resolves.toEqual([
+        {changedPixels: 0, inkPixels: 0, retainedInkPixels: 0},
+        {changedPixels: 0, inkPixels: 0, retainedInkPixels: 0},
+    ]);
+    await expect(selectionPaint(page, outside)).rejects.toThrow(
+        'Screenshot sample is outside viewport',
+    );
+
+    const blue = await box(page.locator('[data-qa="paint-helper-blue"]'));
+    const paint = await selectionPaint(page, blue);
+    expect(paint.selectionPixels).toBe(blue.width * blue.height);
+    expect(paint.bounds).toEqual(blue);
+});
 
 for (const menuDensity of ['default', 'compact'] as const) {
     for (const initialCompact of [false, true]) {
@@ -340,6 +379,86 @@ for (const menuDensity of ['default', 'compact'] as const) {
             );
         });
     }
+}
+
+for (const initialCompact of [false, true]) {
+    const direction = initialCompact ? 'expand' : 'collapse';
+    test(`RTL ${direction} uses the full scrollport layer without adding overflow`, async ({
+        mount,
+        page,
+    }) => {
+        await page.setViewportSize({width: 1200, height: 900});
+        await mount(<CurrentIndicatorExample initialCompact={initialCompact} direction="rtl" />);
+        await page.evaluate(() => document.fonts.ready);
+        await expect(page.locator(PANEL)).toHaveCSS('direction', 'rtl');
+        await toggleAsideAndPause(page);
+        for (const progress of [0, 0.5, 0.9]) {
+            await seekAnimations(page, progress);
+            await expect(page.locator(INDICATOR)).toHaveCount(1);
+            const layer = await box(page.locator(LAYER));
+            const scroll = await box(page.locator(SCROLL));
+            expect(layer.x).toBeCloseTo(scroll.x, 1);
+            expect(layer.x + layer.width).toBeCloseTo(scroll.x + scroll.width, 1);
+            if (!initialCompact && progress === 0) {
+                const host = await box(
+                    page.locator(`${SCROLL} > [data-gn-aside-current-container]`),
+                );
+                expect(host.width).toBeLessThan(scroll.width);
+            }
+            await expectOnlyIndicatorPaint(page);
+            await expectNoLayerOverflow(page);
+        }
+        await finishAnimations(page);
+    });
+}
+
+for (const menuDensity of ['default', 'compact'] as const) {
+    test(`${menuDensity} density compact current and hover use suppressible surface color`, async ({
+        mount,
+        page,
+    }) => {
+        await mount(
+            <CurrentIndicatorExample
+                menuDensity={menuDensity}
+                selectionHoverColor="rgb(221, 85, 17)"
+            />,
+        );
+        await page.evaluate(() => document.fonts.ready);
+        await toggleAsideAndPause(page);
+        await seekAnimations(page, 0.5);
+        const participatingRow = page.locator(GROUP);
+        const participatingSurface = participatingRow.locator(SURFACE);
+        await participatingRow.hover();
+        await page.evaluate(() =>
+            document.getAnimations().forEach((animation) => animation.pause()),
+        );
+        await seekAnimations(page, 0.5);
+        await expect(participatingSurface).toHaveAttribute('data-gn-aside-current-suppressed', '');
+        expect(
+            await participatingSurface.evaluate((element) =>
+                getComputedStyle(element).getPropertyValue('--_--row-surface-color').trim(),
+            ),
+        ).toBe('transparent');
+        await expect(participatingSurface).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+        expect(await nativePaintDifference(page)).toBe(0);
+        await finishAnimations(page);
+        await page.mouse.move(1000, 800);
+        const row = page.locator(GROUP);
+        const surface = row.locator(SURFACE);
+        await expect(surface).toHaveCSS('background-color', 'rgb(17, 85, 221)');
+        expect(
+            await row.evaluate((element) =>
+                getComputedStyle(element).getPropertyValue('--_--row-surface-color').trim(),
+            ),
+        ).toBe('rgb(17, 85, 221)');
+        await row.hover();
+        await expect(surface).toHaveCSS('background-color', 'rgb(221, 85, 17)');
+        expect(
+            await row.evaluate((element) =>
+                getComputedStyle(element).getPropertyValue('--_--row-surface-color').trim(),
+            ),
+        ).toBe('rgb(221, 85, 17)');
+    });
 }
 
 for (const scenario of ['plain', 'collapsed-group', 'ambiguous'] as const) {

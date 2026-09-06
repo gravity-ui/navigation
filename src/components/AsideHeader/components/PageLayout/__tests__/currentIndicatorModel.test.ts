@@ -1,6 +1,7 @@
 /** @jest-environment jsdom */
 import {
     type CurrentPresentation,
+    captureCurrentIdentity,
     captureCurrentPresentation,
     getCurrentRowKey,
     matchCurrentPresentations,
@@ -25,6 +26,62 @@ function snapshot(...rows: CurrentPresentation[]) {
 }
 
 describe('current presentation matching', () => {
+    it('captures semantic identity without measuring geometry or styles', () => {
+        const panel = document.createElement('div');
+        panel.innerHTML = `<div id="gravity-ui/navigation-menu-items-composite-bar"><div data-gn-composite-bar-item-id="weekly" data-gn-aside-current-ids='["weekly"]'><span data-gn-aside-part="surface"></span></div></div>`;
+        const row = panel.querySelector<HTMLElement>('[data-gn-composite-bar-item-id]');
+        const surface = panel.querySelector<HTMLElement>('[data-gn-aside-part="surface"]');
+        if (!row || !surface) throw new Error('Missing selection fixture');
+        const rect = jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect');
+        const style = jest.spyOn(window, 'getComputedStyle');
+
+        const identities = captureCurrentIdentity(panel);
+
+        expect(rect).not.toHaveBeenCalled();
+        expect(style).not.toHaveBeenCalled();
+        expect(identities.get(row)).toEqual({
+            key: JSON.stringify(['gravity-ui/navigation-menu-items-composite-bar', 'weekly']),
+            section: 'gravity-ui/navigation-menu-items-composite-bar',
+            rowId: 'weekly',
+            currentIds: ['weekly'],
+            row,
+            surface,
+        });
+        rect.mockRestore();
+        style.mockRestore();
+    });
+
+    it('measures a previously captured identity for its presentation', () => {
+        const panel = document.createElement('div');
+        panel.innerHTML = `<div id="gravity-ui/navigation-menu-items-composite-bar"><div data-gn-composite-bar-item-id="weekly" data-gn-aside-current-ids='["weekly"]'><span data-gn-aside-part="surface"></span></div></div>`;
+        const surface = panel.querySelector<HTMLElement>('[data-gn-aside-part="surface"]');
+        if (!surface) throw new Error('Missing selection fixture');
+        const expectedRect = new DOMRect(10, 20, 100, 40);
+        const rect = jest.spyOn(surface, 'getBoundingClientRect').mockReturnValue(expectedRect);
+        const style = jest.spyOn(window, 'getComputedStyle').mockReturnValue({
+            backgroundColor: 'rgb(0, 0, 255)',
+            borderRadius: '8px',
+        } as CSSStyleDeclaration);
+        const query = jest.spyOn(panel, 'querySelectorAll');
+        const identities = captureCurrentIdentity(panel);
+        expect(query).toHaveBeenCalledTimes(1);
+
+        const rows = [...captureCurrentPresentation(panel, identities).values()];
+
+        expect(query).toHaveBeenCalledTimes(1);
+        expect(rect).toHaveBeenCalledTimes(1);
+        expect(style).toHaveBeenCalledWith(surface);
+        expect(rows).toHaveLength(1);
+        expect(rows[0]).toMatchObject({
+            rect: expectedRect,
+            color: 'rgb(0, 0, 255)',
+            radius: '8px',
+        });
+        rect.mockRestore();
+        style.mockRestore();
+        query.mockRestore();
+    });
+
     it('transfers a unique logical current between different rows', () => {
         const from = presentation('weekly');
         const to = presentation('analytics');
@@ -125,6 +182,33 @@ describe('current presentation matching', () => {
             );
         },
     );
+
+    it('keeps wrapper positions out of row keys while separating composite bars', () => {
+        const panel = document.createElement('div');
+        const mainSection = 'gravity-ui/navigation-menu-items-composite-bar';
+        const quickSection = 'gravity-ui/navigation-quick-access-composite-bar';
+        panel.innerHTML = `
+            <div id="${mainSection}">
+                <div id="${mainSection}-item-0">
+                    <div data-gn-composite-bar-item-id="home" data-gn-aside-current-ids='["home"]'><span data-gn-aside-part="surface"></span></div>
+                </div>
+            </div>
+            <div id="${quickSection}">
+                <div id="${quickSection}-item-0">
+                    <div data-gn-composite-bar-item-id="home" data-gn-aside-current-ids='["home"]'><span data-gn-aside-part="surface"></span></div>
+                </div>
+            </div>`;
+        const rows = panel.querySelectorAll<HTMLElement>('[data-gn-composite-bar-item-id]');
+        const firstMainKey = getCurrentRowKey(rows[0]);
+        rows[0].parentElement?.setAttribute('id', `${mainSection}-item-1`);
+
+        expect(getCurrentRowKey(rows[0])).toBe(firstMainKey);
+        expect(getCurrentRowKey(rows[1])).not.toBe(firstMainKey);
+        expect([...captureCurrentIdentity(panel).values()].map(({section}) => section)).toEqual([
+            mainSection,
+            quickSection,
+        ]);
+    });
 
     it('captures semantic metadata from live rows, excluding decorative copies', () => {
         const panel = document.createElement('div');

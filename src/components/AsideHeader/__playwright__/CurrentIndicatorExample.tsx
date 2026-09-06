@@ -24,7 +24,10 @@ export interface CurrentIndicatorExampleProps {
     pinCurrent?: boolean;
     quickAccessHighlightInMainMenu?: boolean;
     selectionColor?: string;
+    selectionHoverColor?: string;
+    hoverColor?: string;
     replaceableTarget?: boolean;
+    direction?: 'ltr' | 'rtl';
 }
 
 const moreItems: AsideHeaderItem[] = Array.from({length: 28}, (_, index) => ({
@@ -45,6 +48,8 @@ function LocalMenu({
     const [version, setVersion] = React.useState(0);
     const [visible, setVisible] = React.useState(true);
     const [targetVersion, setTargetVersion] = React.useState(0);
+    const [additionalCurrent, setAdditionalCurrent] = React.useState(false);
+    const [forceCollapsedAnalytics, setForceCollapsedAnalytics] = React.useState(false);
     let source = props.mode === 'more' ? moreItems : fullNavigationMenuItems;
     if (props.mode === 'short-group')
         source = source.filter(
@@ -54,7 +59,7 @@ function LocalMenu({
         ...item,
         current:
             item.id === currentId ||
-            (props.mode === 'ambiguous' && item.id === 'analytics-reports'),
+            ((props.mode === 'ambiguous' || additionalCurrent) && item.id === 'analytics-reports'),
         quickAccess: props.pinCurrent ? item.id === currentId : item.id === 'home',
         onItemClick: (clicked: AsideHeaderItem) => setCurrentId(clicked.id),
         itemWrapper:
@@ -84,6 +89,11 @@ function LocalMenu({
                         ...fullNavigationCollapsedGroupIds,
                         analytics: Boolean(props.collapsedAnalytics),
                     }}
+                    collapsedMenuGroupIds={
+                        forceCollapsedAnalytics
+                            ? {...fullNavigationCollapsedGroupIds, analytics: true}
+                            : undefined
+                    }
                     enableQuickAccess={props.enableQuickAccess}
                     quickAccessHighlightInMainMenu={props.quickAccessHighlightInMainMenu}
                     onChangeCompact={onChangeCompact}
@@ -94,6 +104,19 @@ function LocalMenu({
                 />
             )}
             <PageLayout.Content>
+                <button data-qa="indicator-add-current" onClick={() => setAdditionalCurrent(true)}>
+                    Add current Reports
+                </button>
+                <button
+                    data-qa="indicator-reverse-ambiguous"
+                    onClick={() => {
+                        setAdditionalCurrent(true);
+                        setForceCollapsedAnalytics(true);
+                        onChangeCompact(false);
+                    }}
+                >
+                    Reverse with ambiguous current
+                </button>
                 <button
                     data-qa="indicator-replace-target"
                     onClick={() => setTargetVersion((previous) => previous + 1)}
@@ -132,11 +155,12 @@ function LocalMenu({
 export function CurrentIndicatorExample(props: CurrentIndicatorExampleProps) {
     const [compact, setCompact] = React.useState(props.initialCompact ?? false);
     return (
-        <div data-qa="current-indicator-fixture" style={{height: '100vh'}}>
+        <div data-qa="current-indicator-fixture" dir={props.direction} style={{height: '100vh'}}>
             <style>{`
                 [data-qa="current-indicator-fixture"] {
                     --gn-aside-header-item-current-background-color: ${props.selectionColor ?? 'rgb(17, 85, 221)'};
-                    --gn-aside-header-item-current-background-color-hover: ${props.selectionColor ?? 'rgb(17, 85, 221)'};
+                    --gn-aside-header-item-current-background-color-hover: ${props.selectionHoverColor ?? props.selectionColor ?? 'rgb(17, 85, 221)'};
+                    --gn-aside-header-item-background-color-hover: ${props.hoverColor ?? 'var(--g-color-base-simple-hover)'};
                     --gn-aside-header-decoration-expanded-background-color: rgb(246, 211, 101);
                 }
                 [data-qa="current-indicator-fixture"] [class*="gn-aside-header__aside-content_"] {

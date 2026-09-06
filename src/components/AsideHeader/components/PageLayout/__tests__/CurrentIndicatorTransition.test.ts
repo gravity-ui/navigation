@@ -1,6 +1,8 @@
 /** @jest-environment jsdom */
 import {CurrentIndicatorTransition} from '../CurrentIndicatorTransition';
+import {CurrentPresentationObserver} from '../CurrentPresentationObserver';
 import {
+    captureCurrentIdentity,
     captureCurrentPresentation,
     getCurrentRowKey,
     matchCurrentPresentations,
@@ -19,6 +21,8 @@ describe('CurrentIndicatorTransition lifecycle', () => {
     let host: HTMLElement;
     let section: HTMLElement;
     let controller: CurrentIndicatorTransition;
+    let observer: CurrentPresentationObserver;
+    let invalidations: Set<HTMLElement>[];
     let handles: {
         resolve: () => void;
         cancel: jest.Mock;
@@ -51,6 +55,7 @@ describe('CurrentIndicatorTransition lifecycle', () => {
         const target = row('analytics');
         const transfers = matchCurrentPresentations(before, captureCurrentPresentation(panel));
         controller.start(panel, transfers, {duration: 200, fill: 'both'}, 12);
+        observer.observe(panel, captureCurrentIdentity(panel));
         return {source, target};
     }
 
@@ -66,7 +71,15 @@ describe('CurrentIndicatorTransition lifecycle', () => {
         panel.append(host);
         boundary.append(panel);
         document.body.append(boundary);
-        controller = new CurrentIndicatorTransition(() => boundary);
+        invalidations = [];
+        // The fixture supplies the coordinator's subscription ownership.
+        controller = new CurrentIndicatorTransition(() => {
+            if (!controller.hasActiveTransfers) observer.disconnect();
+        });
+        observer = new CurrentPresentationObserver((identities, surfaces) => {
+            if (surfaces.size) invalidations.push(surfaces);
+            controller.validate(panel, identities);
+        });
         handles = [];
         HTMLElement.prototype.animate = jest.fn((frames) => {
             let resolve = () => {};
@@ -82,6 +95,7 @@ describe('CurrentIndicatorTransition lifecycle', () => {
 
     afterEach(() => {
         controller.cancel();
+        observer.disconnect();
         boundary.remove();
         HTMLElement.prototype.animate = originalAnimate;
     });
@@ -135,12 +149,7 @@ describe('CurrentIndicatorTransition lifecycle', () => {
         expect(target.surface.hasAttribute(suppressed)).toBe(false);
     });
 
-    it('releases changed native paint and remaining paint when the last transport is invalidated', async () => {
-        const invalidations: (Set<HTMLElement> | undefined)[] = [];
-        controller = new CurrentIndicatorTransition(
-            () => boundary,
-            (surfaces) => invalidations.push(surfaces),
-        );
+    it('reports only changed native paint when the last transport is invalidated', async () => {
         const home = row('home', false);
         const {target} = start();
         await flush();
@@ -148,18 +157,12 @@ describe('CurrentIndicatorTransition lifecycle', () => {
         target.element.setAttribute('data-gn-aside-current-ids', '[]');
         home.element.setAttribute('data-gn-aside-current-ids', '["home"]');
         await flush();
-        expect(invalidations).toHaveLength(2);
+        expect(invalidations).toHaveLength(1);
         expect(invalidations[0]?.has(home.surface)).toBe(true);
         expect(invalidations[0]?.has(target.surface)).toBe(true);
-        expect(invalidations[1]).toBeUndefined();
     });
 
     it('cancels one ambiguous transfer without removing another in the same layer', async () => {
-        const invalidations: (Set<HTMLElement> | undefined)[] = [];
-        controller = new CurrentIndicatorTransition(
-            () => boundary,
-            (surfaces) => invalidations.push(surfaces),
-        );
         const source = row('weekly');
         const otherSource = row('other');
         otherSource.element.setAttribute('data-gn-aside-current-ids', '["other"]');
@@ -175,6 +178,7 @@ describe('CurrentIndicatorTransition lifecycle', () => {
             {duration: 200},
             null,
         );
+        observer.observe(panel, captureCurrentIdentity(panel));
         expect(panel.querySelectorAll(marker)).toHaveLength(2);
         row('ambiguous');
         await flush();
