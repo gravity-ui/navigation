@@ -13,7 +13,7 @@ import {AsideHeaderItem} from '../../../types';
 import {AsideDivider} from '../../AsideDivider';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {COLLAPSE_ITEM_ID, COMPOSITE_BAR_ITEM_ID_ATTRIBUTE, ITEM_TYPE_REGULAR} from '../constants';
-import {isItemPresentationCurrent} from '../presentationCurrent';
+import {getItemPresentationCurrentIds} from '../presentationCurrent';
 
 import {ItemInnerProps, ItemProps, QuickAccessToggleHandler} from './Item.types';
 import {ItemPopup} from './ItemPopup';
@@ -184,12 +184,15 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const resolvedMenuPopupItems = menuPopupItems ?? props.compositeBarMenuPopupItems;
     const resolvedMenuPopupTitle = menuPopupTitle ?? props.compositeBarMenuPopupTitle;
 
-    const current =
-        !suppressCurrentHighlight &&
-        isItemPresentationCurrent(props, {
-            suppressCurrentItemIds,
-            popupItems: resolvedMenuPopupItems,
-        });
+    const currentIds = suppressCurrentHighlight
+        ? []
+        : getItemPresentationCurrentIds(props, {
+              suppressCurrentItemIds,
+              popupItems: resolvedMenuPopupItems,
+          });
+    const current = currentIds.length > 0;
+    const currentIdsMetadata =
+        !menuPopupRow && currentIds.length ? JSON.stringify(currentIds) : undefined;
     const quickAccessPinItem = quickAccessPinItemProp ?? props;
     const showQuickAccessPin = shouldShowQuickAccessPin({
         enabled: enableQuickAccessPin,
@@ -434,6 +437,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             'data-type': type,
             'data-qa': qa,
             [COMPOSITE_BAR_ITEM_ID_ATTRIBUTE]: props.id,
+            'data-gn-aside-current-ids': currentIdsMetadata,
             'data-gn-aside-nested': menuGroupNested ? '' : undefined,
             'aria-label': resolvedAriaLabel,
             onClick: handleRowClick,

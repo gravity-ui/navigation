@@ -94,6 +94,14 @@ $floating-surface-box-shadow-label:
         pointer-events: none;
         border-radius: inherit;
         background-color: var(--_--row-surface-color);
+
+        &:global([data-gn-aside-current-suppressed]),
+        &:global([data-gn-aside-current-ghost-suppressed]) {
+            // A participating surface has no WAAPI paint morph. Important also
+            // overrides nested-item hover/current rules later in this stylesheet.
+            /* stylelint-disable-next-line declaration-no-important */
+            background-color: transparent !important;
+        }
     }
 
     &_menu-popup-row {
