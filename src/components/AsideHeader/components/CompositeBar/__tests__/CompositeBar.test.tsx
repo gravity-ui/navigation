@@ -122,7 +122,9 @@ describe('CompositeBar', () => {
         const itemButton = screen.getByRole('button', {name: 'Home'});
         // The label Popover is anchored to the icon area inside the menu row.
         // eslint-disable-next-line testing-library/no-node-access
-        const labelPopupTrigger = itemButton.firstElementChild?.firstElementChild;
+        const iconArea = itemButton.querySelector('[data-gn-aside-part="icon"]');
+        // eslint-disable-next-line testing-library/no-node-access
+        const labelPopupTrigger = iconArea?.firstElementChild;
 
         fireEvent.mouseEnter(labelPopupTrigger as Element);
 

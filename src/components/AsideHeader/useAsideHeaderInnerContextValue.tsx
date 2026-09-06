@@ -10,7 +10,7 @@ import {AsideHeaderItem, AsideHeaderProps, InnerPanels, PanelItemProps} from './
 const EMPTY_MENU_ITEMS: AsideHeaderItem[] = [];
 
 export const useAsideHeaderInnerContextValue = (
-    props: AsideHeaderProps & {size: number; presentationCompact?: boolean},
+    props: AsideHeaderProps & {size: number},
 ): AsideHeaderInnerContextType => {
     const {
         size,

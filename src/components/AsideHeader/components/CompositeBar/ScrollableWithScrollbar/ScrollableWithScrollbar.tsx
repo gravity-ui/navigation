@@ -45,7 +45,12 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
 
     return (
         <div className={b(null, className)}>
-            <div ref={scrollRef} className={b('scrollable-inner')} onScroll={scheduleUpdate}>
+            <div
+                ref={scrollRef}
+                className={b('scrollable-inner')}
+                onScroll={scheduleUpdate}
+                data-gn-aside-scrollport
+            >
                 {children}
             </div>
 

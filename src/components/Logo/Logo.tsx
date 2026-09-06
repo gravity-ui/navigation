@@ -49,7 +49,7 @@ export const Logo: React.FC<
         logo = text();
     } else {
         logo = (
-            <div className={b('logo')} style={{fontSize: textSize}}>
+            <div className={b('logo')} data-gn-aside-part="title" style={{fontSize: textSize}}>
                 {text}
             </div>
         );
@@ -68,7 +68,9 @@ export const Logo: React.FC<
 
     const button = (
         <Button {...buttonProps} className={b('btn-logo', buttonClassName)} onClick={onClick}>
-            <span className={b('logo-icon-place', iconPlaceClassName)}>{buttonIcon}</span>
+            <span className={b('logo-icon-place', iconPlaceClassName)} data-gn-aside-part="icon">
+                {buttonIcon}
+            </span>
             {!compact && logo}
         </Button>
     );

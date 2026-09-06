@@ -360,7 +360,12 @@ test.describe('AsideHeader', () => {
         await expect(groupListRow).toHaveCount(1);
         await expect(groupListRow).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
         expect(
-            await nestedItem.evaluate((element) => getComputedStyle(element).backgroundColor),
+            await nestedItem.evaluate(
+                (element) =>
+                    getComputedStyle(
+                        element.querySelector('[data-gn-aside-part="surface"]') ?? element,
+                    ).backgroundColor,
+            ),
         ).not.toBe('rgba(0, 0, 0, 0)');
 
         const itemBox = await nestedItem.boundingBox();
@@ -568,14 +573,21 @@ test.describe('AsideHeader', () => {
         await reportsItem.hover();
         await expect(pin).toBeVisible();
         const rowHoverBackground = await reportsItem.evaluate(
-            (element) => getComputedStyle(element).backgroundColor,
+            (element) =>
+                getComputedStyle(element.querySelector('[data-gn-aside-part="surface"]') ?? element)
+                    .backgroundColor,
         );
         expect(rowHoverBackground).not.toBe('rgba(0, 0, 0, 0)');
 
         await pin.hover();
         await expect
             .poll(() =>
-                reportsItem.evaluate((element) => getComputedStyle(element).backgroundColor),
+                reportsItem.evaluate(
+                    (element) =>
+                        getComputedStyle(
+                            element.querySelector('[data-gn-aside-part="surface"]') ?? element,
+                        ).backgroundColor,
+                ),
             )
             .toBe(rowHoverBackground);
     });
@@ -590,13 +602,22 @@ test.describe('AsideHeader', () => {
         await anchor.hover();
         await expect(pin).toBeVisible();
         const rowHoverBackground = await wrappedRow.evaluate(
-            (element) => getComputedStyle(element).backgroundColor,
+            (element) =>
+                getComputedStyle(element.querySelector('[data-gn-aside-part="surface"]') ?? element)
+                    .backgroundColor,
         );
         expect(rowHoverBackground).not.toBe('rgba(0, 0, 0, 0)');
 
         await pin.hover();
         await expect
-            .poll(() => wrappedRow.evaluate((element) => getComputedStyle(element).backgroundColor))
+            .poll(() =>
+                wrappedRow.evaluate(
+                    (element) =>
+                        getComputedStyle(
+                            element.querySelector('[data-gn-aside-part="surface"]') ?? element,
+                        ).backgroundColor,
+                ),
+            )
             .toBe(rowHoverBackground);
     });
 
@@ -632,10 +653,20 @@ test.describe('AsideHeader', () => {
 
         const quickAccessBackground = await overviewItems
             .nth(0)
-            .evaluate((element) => getComputedStyle(element).backgroundColor);
+            .evaluate(
+                (element) =>
+                    getComputedStyle(
+                        element.querySelector('[data-gn-aside-part="surface"]') ?? element,
+                    ).backgroundColor,
+            );
         const mainMenuBackground = await overviewItems
             .nth(1)
-            .evaluate((element) => getComputedStyle(element).backgroundColor);
+            .evaluate(
+                (element) =>
+                    getComputedStyle(
+                        element.querySelector('[data-gn-aside-part="surface"]') ?? element,
+                    ).backgroundColor,
+            );
 
         expect(quickAccessBackground).not.toBe('rgba(0, 0, 0, 0)');
         expect(mainMenuBackground).toBe('rgba(0, 0, 0, 0)');
@@ -655,7 +686,12 @@ test.describe('AsideHeader', () => {
             expect(
                 await overviewItems
                     .nth(index)
-                    .evaluate((element) => getComputedStyle(element).backgroundColor),
+                    .evaluate(
+                        (element) =>
+                            getComputedStyle(
+                                element.querySelector('[data-gn-aside-part="surface"]') ?? element,
+                            ).backgroundColor,
+                    ),
             ).not.toBe('rgba(0, 0, 0, 0)');
         }
     });

@@ -24,6 +24,15 @@ import {AsideHeader} from '@gravity-ui/navigation';
 The component has two possible states: collapsed, expanded.
 Уou can manage between states using `compact`, `onChangeCompact` props and also hide button with `hideCollapseButton`.
 
+Collapse and expansion animate the sidebar width, item positions, and selection surfaces together.
+Titles are laid out at the target width and revealed during expansion, without rewrapping on each
+frame or a second layout change at the end. Clicking the control again reverses from the currently
+displayed positions. The `compact` state and callbacks always describe the requested target state.
+Users who prefer reduced motion receive an immediate layout change.
+
+All built-in horizontal separators, including `type: 'divider'` items in header, menu, footer,
+and nested groups, resize with the sidebar while preserving their local spacing.
+
 ### Menu density
 
 Use `menuDensity="compact"` to reduce the aside width, item height, icon size, spacing, and corner

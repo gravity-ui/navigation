@@ -47,6 +47,8 @@ type CompositeBarProps = {
     compact: boolean;
     compositeId?: string;
     menuItemClassName?: string;
+    /** Target aside width; avoids one-frame-old AutoSizer widths during transitions. */
+    layoutWidth?: number;
     /**
      * @see AsideHeaderMenuOverflow
      */
@@ -266,6 +268,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
 
                 return (
                     <div
+                        data-gn-aside-group={row.group.id}
                         className={b('menu-group', {
                             expanded: !groupIsCollapsed,
                             collapsed: groupIsCollapsed,
@@ -390,6 +393,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     compact,
     compositeId,
     menuItemClassName,
+    layoutWidth,
     menuOverflow = 'collapse',
     collapsedMenuGroupIds: collapsedMenuGroupIdsProp,
     defaultCollapsedMenuGroupIds,
@@ -466,7 +470,8 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                     {rows.length !== 0 && (
                         <AutoSizer>
                             {(size: Size) => {
-                                const width = Number.isNaN(size.width) ? 0 : size.width;
+                                const width =
+                                    layoutWidth ?? (Number.isNaN(size.width) ? 0 : size.width);
                                 const height = Number.isNaN(size.height) ? 0 : size.height;
 
                                 const {listRows, collapseItems} = getAutosizeCompositeBarRows(
@@ -525,6 +530,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
         node = (
             <div className={b({subheader: true})}>
                 <CompositeBarView
+                    compositeId={compositeId}
                     type="subheader"
                     menuItemClassName={menuItemClassName}
                     compact={compact}

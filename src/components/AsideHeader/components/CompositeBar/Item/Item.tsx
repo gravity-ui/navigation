@@ -10,6 +10,7 @@ import {getAsideHeaderDensityConfig} from '../../../density';
 import i18n from '../../../i18n';
 import {isQuickAccessPinEligible} from '../../../quickAccess';
 import {AsideHeaderItem} from '../../../types';
+import {AsideDivider} from '../../AsideDivider';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {COLLAPSE_ITEM_ID, COMPOSITE_BAR_ITEM_ID_ATTRIBUTE, ITEM_TYPE_REGULAR} from '../constants';
 import {isItemPresentationCurrent} from '../presentationCurrent';
@@ -256,7 +257,13 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     }, [submenuNest, showMenuPopup, compactNavPopoverOpen]);
 
     if (isDivider) {
-        return <div className={b('menu-divider')} />;
+        return (
+            <AsideDivider
+                as="div"
+                className={b('menu-divider')}
+                transitionId={`item/${props.id}`}
+            />
+        );
     }
 
     const compactPopoverDisabled = !enableTooltip || popupVisible || type === 'action';
@@ -318,6 +325,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const ariaLabel = typeof title === 'string' ? title : undefined;
     const resolvedAriaLabel = resolveItemAriaLabel(menuItemAriaProps, ariaLabel);
+    const showSurface = !menuPopupRow && [ITEM_TYPE_REGULAR, 'action'].includes(type);
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
         const wrappedByItemWrapper = typeof itemWrapper === 'function';
@@ -404,12 +412,15 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
         const rowChildren = (
             <>
+                {showSurface && (
+                    <span className={b('surface')} data-gn-aside-part="surface" aria-hidden />
+                )}
                 {menuGroupNestedTreeConnector}
-                <div className={b('icon-place')} ref={highlightedRef}>
+                <div className={b('icon-place')} ref={highlightedRef} data-gn-aside-part="icon">
                     {makeIconNode(iconEl)}
                 </div>
 
-                <div className={b('title')} title={ariaLabel}>
+                <div className={b('title')} data-gn-aside-part="title" title={ariaLabel}>
                     {titleEl}
                 </div>
 
@@ -423,6 +434,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             'data-type': type,
             'data-qa': qa,
             [COMPOSITE_BAR_ITEM_ID_ATTRIBUTE]: props.id,
+            'data-gn-aside-nested': menuGroupNested ? '' : undefined,
             'aria-label': resolvedAriaLabel,
             onClick: handleRowClick,
             onClickCapture: onItemClickCapture,
