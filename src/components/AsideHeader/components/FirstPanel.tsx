@@ -89,6 +89,9 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         quickAccessIsAvailable,
         onToggleQuickAccess,
         qa,
+        // Render the presentation state: it lags behind the target compact
+        // state while the width transition runs (see PageLayout).
+        presentationCompact = compact,
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
     const quickAccessEnabled = enableQuickAccess;
@@ -199,7 +202,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
             menuItemClassName={b('menu-item')}
             compositeId={QUICK_ACCESS_COMPOSITE_ID}
             type="quick-access"
-            compact={compact}
+            compact={presentationCompact}
             items={quickAccessItems}
             onItemClick={onItemClick}
             enableQuickAccessPin={quickAccessIsAvailable}
@@ -212,7 +215,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
             menuItemClassName={b('menu-item')}
             compositeId={MENU_ITEMS_COMPOSITE_ID}
             type="menu"
-            compact={compact}
+            compact={presentationCompact}
             items={visibleMenuItems}
             menuGroups={menuGroups}
             menuGroupNestedIcons={menuGroupNestedIcons}
@@ -231,7 +234,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
     const quickAccessSection = hasQuickAccessItems ? (
         <div className={b('quick-access')}>
-            {!compact && (
+            {!presentationCompact && (
                 <div className={b('quick-access-title')}>{i18n('quick_access_title')}</div>
             )}
             {quickAccessCompositeBar}
@@ -279,7 +282,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     <div className={b('footer', {'with-divider': menuScrollOverflows})}>
                         {renderFooter?.({
                             size,
-                            compact: Boolean(compact),
+                            compact: Boolean(presentationCompact),
                             asideRef,
                         })}
                     </div>

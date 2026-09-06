@@ -17,20 +17,29 @@ interface CollapseButtonProps {
 }
 
 export const CollapseButton = ({className}: CollapseButtonProps) => {
-    const {onChangeCompact, compact, expandTitle, collapseTitle, collapseButtonWrapper} =
-        useAsideHeaderInnerContext();
+    const {
+        onChangeCompact,
+        compact,
+        presentationCompact = compact,
+        expandTitle,
+        collapseTitle,
+        collapseButtonWrapper,
+    } = useAsideHeaderInnerContext();
 
+    // The button reverses the target state: pressing it while the collapse or
+    // expand transition runs must switch the direction instead of re-applying
+    // the command the transition is already moving towards.
     const onCollapseButtonClick = useCallback(() => {
         onChangeCompact?.(!compact);
     }, [compact, onChangeCompact]);
 
-    const buttonTitle = compact
+    const buttonTitle = presentationCompact
         ? expandTitle || i18n('button_expand')
         : collapseTitle || i18n('button_collapse');
 
     const defaultButton = (
         <button
-            className={b({compact}, className)}
+            className={b({compact: presentationCompact}, className)}
             onClick={onCollapseButtonClick}
             title={buttonTitle}
         >
@@ -39,7 +48,13 @@ export const CollapseButton = ({className}: CollapseButtonProps) => {
     );
 
     if (collapseButtonWrapper) {
-        return collapseButtonWrapper(defaultButton, {compact, onChangeCompact});
+        // The wrapper drives the aside, so it needs the target state for its
+        // own control logic — not the lagging presentation the default button
+        // is rendered with.
+        return collapseButtonWrapper(defaultButton, {
+            compact,
+            onChangeCompact,
+        });
     }
 
     return defaultButton;

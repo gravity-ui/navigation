@@ -25,6 +25,9 @@ export const Header = () => {
         subheaderItems,
         compact,
         menuDensity,
+        // Render the presentation state: it lags behind the target compact
+        // state while the width transition runs (see PageLayout).
+        presentationCompact = compact,
     } = useAsideHeaderInnerContext();
     const {compactWidth} = getAsideHeaderDensityConfig(menuDensity);
 
@@ -43,7 +46,7 @@ export const Header = () => {
                     {...logo}
                     className={b('logo', logo.className)}
                     onClick={onLogoClick}
-                    compact={compact}
+                    compact={presentationCompact}
                     buttonClassName={b('logo-button')}
                     iconPlaceClassName={b('logo-icon-place')}
                 />
@@ -53,7 +56,7 @@ export const Header = () => {
                 compositeId={HEADER_COMPOSITE_ID}
                 type="subheader"
                 menuItemClassName={b('menu-item')}
-                compact={compact}
+                compact={presentationCompact}
                 items={subheaderItems || DEFAULT_SUBHEADER_ITEMS}
                 onItemClick={onItemClick}
             />

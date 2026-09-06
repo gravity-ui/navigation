@@ -110,16 +110,6 @@ $aside-width-transition: width $aside-width-transition-duration
              * Requires min-height: 0 so flex children can shrink below content height.
              */
             min-height: 0;
-            /**
-             * While the aside width animates, the size variable already holds the
-             * expanded value from the first animation frame. Freezing the inner
-             * layout at that width keeps titles and rows from reflowing mid-transition:
-             * the content overflows and the aside clips it at the animating edge.
-             * While collapsing, PageLayout pins the frozen size to the expanded
-             * width (--gn-aside-header-frozen-size), so the content stays laid
-             * out expanded until the transition ends and is clipped as well.
-             */
-            min-width: var(--gn-aside-header-frozen-size, var(--gn-aside-header-size));
             overflow: hidden;
             width: inherit;
             height: inherit;
@@ -168,6 +158,18 @@ $aside-width-transition: width $aside-width-transition-duration
         &-content {
             background: transparent;
         }
+    }
+
+    // While the width transition runs, PageLayout pins --gn-aside-header-frozen-size
+    // to the size of the rendered presentation (a reversal keeps the presentation
+    // the transition started from): the inner content keeps that layout and the
+    // animating aside clips it instead of re-fitting on every animation frame.
+    &_frozen-compact &__aside-content {
+        max-width: var(--gn-aside-header-frozen-size);
+    }
+
+    &_frozen-expanded &__aside-content {
+        min-width: var(--gn-aside-header-frozen-size);
     }
 
     &__header {

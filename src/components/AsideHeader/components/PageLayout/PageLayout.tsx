@@ -32,18 +32,17 @@ function calcEstimatedTopAlertHeight(topAlert?: TopAlertProps) {
 export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {}
 
 /**
- * True while the collapse width transition is running (the aside is shrinking
- * from its expanded width to the compact one). The inner content keeps the
- * expanded presentation during that time and switches to the compact one when
- * the aside has reached its final width: re-fitting titles, the logo text and
- * the item highlight on every animation frame reads as jitter, while the
- * shrinking aside simply clips the frozen expanded layout.
+ * While the aside width transition runs, returns the compact state it started
+ * from so the inner content keeps the original visual presentation until the
+ * aside reaches its final width (re-fitting titles, the logo text and the item
+ * highlight on every animation frame reads as jitter). Returns null when the
+ * aside is stable.
  *
  * @param compact - The current compact state of the aside.
- * @returns Whether the collapse transition is currently running.
+ * @returns The compact state to render, or null when no transition is running.
  */
-function useCollapsingAside(compact: boolean) {
-    const [collapsing, setCollapsing] = React.useState(false);
+function useTransitionPresentation(compact: boolean) {
+    const [fromCompact, setFromCompact] = React.useState<boolean | null>(null);
     const previousCompactRef = React.useRef(compact);
 
     React.useLayoutEffect(() => {
@@ -55,21 +54,21 @@ function useCollapsingAside(compact: boolean) {
             return undefined;
         }
 
-        if (!compact) {
-            setCollapsing(false);
-            return undefined;
-        }
-
-        setCollapsing(true);
+        setFromCompact((current) => {
+            // A reversal mid-transition keeps the presentation the transition
+            // started from: the visual state must not jump when the target
+            // flips back before the animation ends.
+            return current === null ? wasCompact : current;
+        });
         const timer = window.setTimeout(
-            () => setCollapsing(false),
+            () => setFromCompact(null),
             ASIDE_HEADER_COLLAPSE_TRANSITION_MS,
         );
 
         return () => window.clearTimeout(timer);
     }, [compact]);
 
-    return collapsing;
+    return fromCompact;
 }
 
 const Layout = ({
@@ -81,12 +80,20 @@ const Layout = ({
 }: PageLayoutProps) => {
     const densityConfig = getAsideHeaderDensityConfig(menuDensity);
     const densityCssProperties = getAsideHeaderDensityCssProperties(menuDensity);
-    const size = compact ? densityConfig.compactWidth : densityConfig.expandedWidth;
-    const collapsing = useCollapsingAside(Boolean(compact));
-    const presentationCompact = Boolean(compact) && !collapsing;
+    const isCompact = Boolean(compact);
+    const size = isCompact ? densityConfig.compactWidth : densityConfig.expandedWidth;
+    const transitionFromCompact = useTransitionPresentation(isCompact);
+    const presentationCompact = transitionFromCompact ?? isCompact;
+    const transitioning = transitionFromCompact !== null;
+    // The frozen layout follows the rendered presentation (not the target):
+    // a reversed transition keeps the presentation it started from.
+    let frozenSize: number | null = null;
+    if (transitioning) {
+        frozenSize = presentationCompact ? densityConfig.compactWidth : densityConfig.expandedWidth;
+    }
     const asideHeaderContextValue = useMemo(
-        () => ({size, compact: presentationCompact, menuDensity}),
-        [presentationCompact, size, menuDensity],
+        () => ({size, compact: isCompact, presentationCompact, menuDensity}),
+        [isCompact, presentationCompact, size, menuDensity],
     );
 
     const estimatedTopAlertHeight = calcEstimatedTopAlertHeight(topAlert);
@@ -114,18 +121,30 @@ const Layout = ({
     return (
         <AsideHeaderContextProvider value={asideHeaderContextValue}>
             <div
-                className={b({compact: presentationCompact}, className)}
+                className={b(
+                    {
+                        compact: presentationCompact,
+                        // The freeze modifiers follow the rendered presentation:
+                        // the frozen expanded layout is wider than the animating
+                        // aside (min-width), the frozen compact one is narrower
+                        // (max-width).
+                        'frozen-compact': transitioning && presentationCompact,
+                        'frozen-expanded': transitioning && !presentationCompact,
+                    },
+                    className,
+                )}
                 style={{
                     ...densityCssProperties,
                     ...({'--gn-aside-header-size': `${size}px`} as React.CSSProperties),
-                    // While collapsing, the inner content lays out at the
-                    // expanded width (see AsideHeader.module.scss) and the
-                    // animating aside clips it.
-                    ...(collapsing
-                        ? ({
-                              '--gn-aside-header-frozen-size': `${densityConfig.expandedWidth}px`,
-                          } as React.CSSProperties)
-                        : {}),
+                    // While the transition runs, the inner content keeps the
+                    // layout it had before the toggle (see the frozen-compact /
+                    // frozen-expanded modifiers in AsideHeader.module.scss)
+                    // and the animating aside clips it.
+                    ...(frozenSize === null
+                        ? {}
+                        : ({
+                              '--gn-aside-header-frozen-size': `${frozenSize}px`,
+                          } as React.CSSProperties)),
                 }}
             >
                 {typeof preloadHeightValue === 'number' ? (
