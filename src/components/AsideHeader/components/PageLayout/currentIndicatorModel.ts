@@ -1,10 +1,22 @@
-export type CurrentPresentation = {
+import {COMPOSITE_BAR_ITEM_ID_ATTRIBUTE} from '../CompositeBar/constants';
+
+import {
+    CURRENT_IDS_ATTRIBUTE,
+    CURRENT_ROW_SELECTOR,
+    SURFACE_SELECTOR,
+    getCompositeBarSection,
+} from './currentIndicatorDom';
+
+export type CurrentIdentity = {
     key: string;
     section: string;
     rowId: string;
     currentIds: string[];
     row: HTMLElement;
     surface: HTMLElement;
+};
+export type CurrentIdentitySnapshot = Map<HTMLElement, CurrentIdentity>;
+export type CurrentPresentation = CurrentIdentity & {
     rect: DOMRect;
     color: string;
     radius: string;
@@ -13,27 +25,23 @@ export type CurrentPresentation = {
 export type CurrentSnapshot = Map<string, CurrentPresentation>;
 export type CurrentTransfer = {from: CurrentPresentation; to: CurrentPresentation};
 
-export const CURRENT_ROW_SELECTOR = '[data-gn-composite-bar-item-id]';
 const DECORATIVE_SELECTOR =
     '[data-gn-aside-transition-overlay], [data-gn-aside-current-indicator-layer]';
 
-function getSection(row: HTMLElement) {
-    // UIKit row wrappers append "-item-N" to the bar ID. They are layout
-    // positions, not sections, and change when a current item moves into More.
-    return row.closest('[id^="gravity-ui/navigation-"][id$="-composite-bar"]')?.id ?? 'footer';
-}
-
 export function getCurrentRowKey(row: HTMLElement): string {
-    return JSON.stringify([getSection(row), row.getAttribute('data-gn-composite-bar-item-id')]);
+    return JSON.stringify([
+        getCompositeBarSection(row),
+        row.getAttribute(COMPOSITE_BAR_ITEM_ID_ATTRIBUTE),
+    ]);
 }
 
-export function captureCurrentPresentation(panel: HTMLElement): CurrentSnapshot {
-    const snapshot: CurrentSnapshot = new Map();
+export function captureCurrentIdentity(panel: HTMLElement): CurrentIdentitySnapshot {
+    const snapshot: CurrentIdentitySnapshot = new Map();
     panel.querySelectorAll<HTMLElement>(CURRENT_ROW_SELECTOR).forEach((row) => {
         if (row.closest(DECORATIVE_SELECTOR)) return;
         let currentIds: unknown;
         try {
-            currentIds = JSON.parse(row.getAttribute('data-gn-aside-current-ids') ?? '[]');
+            currentIds = JSON.parse(row.getAttribute(CURRENT_IDS_ATTRIBUTE) ?? '[]');
         } catch {
             return;
         }
@@ -43,19 +51,31 @@ export function captureCurrentPresentation(panel: HTMLElement): CurrentSnapshot 
             !currentIds.every((id) => typeof id === 'string')
         )
             return;
-        const surface = row.querySelector<HTMLElement>('[data-gn-aside-part="surface"]');
+        const surface = row.querySelector<HTMLElement>(SURFACE_SELECTOR);
         if (!surface) return;
-        const rect = surface.getBoundingClientRect();
-        const style = getComputedStyle(surface);
-        const key = getCurrentRowKey(row);
-        // Preserve duplicate representatives so matching can reject ambiguity.
-        snapshot.set(`${key}/${snapshot.size}`, {
-            key,
-            section: getSection(row),
-            rowId: row.getAttribute('data-gn-composite-bar-item-id') ?? '',
+        snapshot.set(row, {
+            key: getCurrentRowKey(row),
+            section: getCompositeBarSection(row),
+            rowId: row.getAttribute(COMPOSITE_BAR_ITEM_ID_ATTRIBUTE) ?? '',
             currentIds,
             row,
             surface,
+        });
+    });
+    return snapshot;
+}
+
+export function captureCurrentPresentation(
+    panel: HTMLElement,
+    identities = captureCurrentIdentity(panel),
+): CurrentSnapshot {
+    const snapshot: CurrentSnapshot = new Map();
+    identities.forEach((identity) => {
+        const rect = identity.surface.getBoundingClientRect();
+        const style = getComputedStyle(identity.surface);
+        // Preserve duplicate representatives so matching can reject ambiguity.
+        snapshot.set(`${identity.key}/${snapshot.size}`, {
+            ...identity,
             rect,
             color: style.backgroundColor,
             radius: style.borderRadius,

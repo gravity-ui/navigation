@@ -97,10 +97,7 @@ $floating-surface-box-shadow-label:
 
         &:global([data-gn-aside-current-suppressed]),
         &:global([data-gn-aside-current-ghost-suppressed]) {
-            // A participating surface has no WAAPI paint morph. Important also
-            // overrides nested-item hover/current rules later in this stylesheet.
-            /* stylelint-disable-next-line declaration-no-important */
-            background-color: transparent !important;
+            --_--row-surface-color: transparent;
         }
     }
 
@@ -815,37 +812,31 @@ $floating-surface-box-shadow-label:
 
         &#{$class}_current {
             &#{$class}_type_regular {
-                #{$class}__surface {
-                    background-color: var(
-                        --gn-aside-header-item-current-background-color,
-                        var(--_--item-selected-background-color)
-                    );
-                }
+                --_--row-surface-color: var(
+                    --gn-aside-header-item-current-background-color,
+                    var(--_--item-selected-background-color)
+                );
             }
         }
 
         &:hover {
             &#{$class}_type_regular {
-                #{$class}__surface {
-                    background-color: var(
-                        --gn-aside-header-item-current-background-color-hover,
-                        var(
-                            --gn-aside-header-item-current-background-color,
-                            var(--_--item-selected-background-color)
-                        )
-                    );
-                }
+                --_--row-surface-color: var(
+                    --gn-aside-header-item-current-background-color-hover,
+                    var(
+                        --gn-aside-header-item-current-background-color,
+                        var(--_--item-selected-background-color)
+                    )
+                );
             }
         }
 
         &:not(#{$class}_current):hover {
             &#{$class}_type_regular {
-                #{$class}__surface {
-                    background-color: var(
-                        --gn-aside-header-item-background-color-hover,
-                        var(--_--item-background-color-hover)
-                    );
-                }
+                --_--row-surface-color: var(
+                    --gn-aside-header-item-background-color-hover,
+                    var(--_--item-background-color-hover)
+                );
             }
         }
     }

@@ -4,6 +4,8 @@ import {expect} from '@playwright/experimental-ct-react';
 
 import {test} from '~playwright/core';
 
+import {finishAnimations, seekAnimations} from '../__playwright__/transitionTestUtils';
+
 import {AsideHeaderStories} from './helpersPlaywright';
 
 test('resizes the fallback separator with its panel in both directions', async ({mount, page}) => {
@@ -16,13 +18,7 @@ test('resizes the fallback separator with its panel in both directions', async (
             document.getAnimations().forEach((animation) => animation.pause());
         });
         for (const progress of [0, 0.25, 0.5, 0.75, 1]) {
-            await page.evaluate((fraction) => {
-                document.getAnimations().forEach((animation) => {
-                    // eslint-disable-next-line no-param-reassign
-                    animation.currentTime =
-                        Number(animation.effect?.getComputedTiming().duration) * fraction;
-                });
-            }, progress);
+            await seekAnimations(page, progress);
             const widths = await panel.evaluate((element) => {
                 const divider = element.querySelector('[data-gn-aside-divider="header"]');
                 if (!divider) throw new Error('Fallback divider missing');
@@ -33,12 +29,6 @@ test('resizes the fallback separator with its panel in both directions', async (
             });
             expect(widths[1]).toBeCloseTo(widths[0], 1);
         }
-        await page.evaluate(async () => {
-            const animations = document.getAnimations();
-            animations.forEach((animation) => animation.finish());
-            await Promise.all(
-                animations.map((animation) => animation.finished.catch(() => undefined)),
-            );
-        });
+        await finishAnimations(page);
     }
 });
