@@ -322,9 +322,21 @@ $aside-width-transition: width $aside-width-transition-duration
     }
 
     &__unified-menu-content {
+        position: relative;
+        z-index: 0;
         display: flex;
         flex-direction: column;
         min-height: 100%;
+    }
+
+    // Each section paints its indicator above container decoration, beneath
+    // transparent list planes containing text, icons, and native row surfaces.
+    :global([data-gn-aside-current-container])
+        > :not(:global([data-gn-aside-current-indicator-layer])):not(
+            :global([data-gn-aside-divider])
+        ) {
+        position: relative;
+        z-index: 1;
     }
 
     &__menu-items {

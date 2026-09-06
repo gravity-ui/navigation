@@ -6,6 +6,11 @@ import type {Page} from '@playwright/test';
 import {test} from '~playwright/core';
 
 import {AsideTransitionExample} from '../__playwright__/AsideTransitionExample';
+import {
+    finishAnimations as finish,
+    seekAnimations as seek,
+    toggleAsideAndPause as toggleAndPause,
+} from '../__playwright__/transitionTestUtils';
 
 import {AsideHeaderExamplesStories, AsideHeaderStories} from './helpersPlaywright';
 
@@ -88,38 +93,6 @@ for (const menuDensity of ['default', 'compact'] as const) {
             'width',
             menuDensity === 'default' ? '236px' : '220px',
         );
-    });
-}
-
-// Pause real browser animations before the first paint, then inspect exact
-// intermediate frames. This is independent of frame rate on loaded CI machines.
-async function toggleAndPause(page: Page) {
-    await page.evaluate(async () => {
-        const button = document.querySelector<HTMLButtonElement>(
-            'button[class*="gn-collapse-button_"]',
-        );
-        if (!button) throw new Error('Collapse button missing');
-        button.click();
-        await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
-        document.getAnimations().forEach((animation) => animation.pause());
-    });
-}
-
-async function seek(page: Page, progress: number) {
-    await page.evaluate((fraction) => {
-        document.getAnimations().forEach((animation) => {
-            // eslint-disable-next-line no-param-reassign
-            animation.currentTime =
-                Number(animation.effect?.getComputedTiming().duration ?? 0) * fraction;
-        });
-    }, progress);
-}
-
-async function finish(page: Page) {
-    await page.evaluate(async () => {
-        const animations = document.getAnimations();
-        animations.forEach((animation) => animation.finish());
-        await Promise.all(animations.map((animation) => animation.finished.catch(() => undefined)));
     });
 }
 

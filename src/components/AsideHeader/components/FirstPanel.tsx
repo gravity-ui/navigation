@@ -232,7 +232,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
     );
 
     const quickAccessSection = hasQuickAccessItems ? (
-        <div className={b('quick-access')}>
+        <div className={b('quick-access')} data-gn-aside-current-container>
             {!compact && (
                 <div className={b('quick-access-title')}>{i18n('quick_access_title')}</div>
             )}
@@ -279,7 +279,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         className={b('unified-menu-scroll')}
                         onOverflowChange={handleMenuScrollOverflowChange}
                     >
-                        <div className={b('unified-menu-content')}>
+                        <div className={b('unified-menu-content')} data-gn-aside-current-container>
                             {quickAccessSection}
                             {menuSection}
                         </div>

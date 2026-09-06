@@ -2,6 +2,14 @@ import React from 'react';
 
 import {ASIDE_HEADER_COLLAPSE_TRANSITION_MS} from '../../../constants';
 
+import {CurrentIndicatorTransition} from './CurrentIndicatorTransition';
+import {
+    type CurrentSnapshot,
+    captureCurrentPresentation,
+    getCurrentRowKey,
+    matchCurrentPresentations,
+} from './currentIndicatorModel';
+
 type Part = {
     element: HTMLElement;
     rect: DOMRect;
@@ -24,6 +32,7 @@ type Snapshot = {
     dividers: Map<string, Divider>;
     width: number;
     layoutWidth: number;
+    current?: CurrentSnapshot;
 };
 type Props = React.HTMLAttributes<HTMLDivElement> & {compact: boolean};
 
@@ -61,6 +70,10 @@ function cloneAppearance(element: HTMLElement) {
         const style = getComputedStyle(source);
         const copy = copies[index];
         if (!copy.style) return;
+        const row = source.closest<HTMLElement>(ITEM_SELECTOR);
+        if (row && (source === row || source.matches('[data-gn-aside-part="surface"]'))) {
+            copy.setAttribute('data-gn-aside-current-row-key', getCurrentRowKey(row));
+        }
         for (const property of [
             'color',
             'font',
@@ -157,7 +170,12 @@ export class AsideLayoutTransition extends React.Component<
     Snapshot | null
 > {
     private root = React.createRef<HTMLDivElement>();
+    private currentIndicator = new CurrentIndicatorTransition(
+        () => this.root.current,
+        (surfaces) => this.cancelSurfacePaint(surfaces),
+    );
     private animations: Animation[] = [];
+    private surfacePaint = new Map<HTMLElement, Animation>();
     private overlay?: HTMLDivElement;
     private scrollOverlay?: HTMLDivElement;
     private animatedPanel?: HTMLElement;
@@ -174,7 +192,8 @@ export class AsideLayoutTransition extends React.Component<
         if (previous.compact === this.props.compact) return null;
         const panel = this.root.current?.querySelector<HTMLElement>('[data-gn-aside-panel]');
         if (!panel) return null;
-        const snapshot = capture(panel);
+        const current = this.currentIndicator.capture(panel);
+        const snapshot = {...capture(panel), current};
         // Interrupted transitions start at their current screen coordinates,
         // including content still fading out from a previous compact toggle.
         this.departingRows.forEach((element, key) => snapshot.rows.set(key, measureRow(element)));
@@ -238,12 +257,22 @@ export class AsideLayoutTransition extends React.Component<
         this.animatedPanel = panel;
         panel.setAttribute('data-gn-aside-animating', '');
         const options: KeyframeAnimationOptions = {duration, easing: 'ease-in-out', fill: 'both'};
+        this.currentIndicator.start(
+            panel,
+            matchCurrentPresentations(
+                before.current ?? new Map(),
+                captureCurrentPresentation(panel),
+            ),
+            options,
+            widthTransition?.startTime ?? null,
+        );
         const animate = (element: HTMLElement, keyframes: Keyframe[]) => {
             const animation = element.animate(keyframes, options);
             if (widthTransition?.startTime !== null && widthTransition?.startTime !== undefined) {
                 animation.startTime = widthTransition.startTime;
             }
             this.animations.push(animation);
+            return animation;
         };
 
         after.rows.forEach((row, key) => {
@@ -301,7 +330,7 @@ export class AsideLayoutTransition extends React.Component<
                     },
                 ]);
             }
-            if (old.surface && row.surface) {
+            if (old.surface && row.surface && !this.currentIndicator.manages(row.surface.element)) {
                 const surface = row.surface;
                 const dx = old.surface.rect.x - old.rect.x - (surface.rect.x - row.rect.x);
                 const dy = old.surface.rect.y - old.rect.y - (surface.rect.y - row.rect.y);
@@ -311,16 +340,23 @@ export class AsideLayoutTransition extends React.Component<
                         width: `${old.surface.rect.width}px`,
                         height: `${old.surface.rect.height}px`,
                         borderRadius: old.surface.borderRadius,
-                        backgroundColor: old.surface.backgroundColor,
                     },
                     {
                         transform: 'none',
                         width: `${surface.rect.width}px`,
                         height: `${surface.rect.height}px`,
                         borderRadius: surface.borderRadius,
-                        backgroundColor: surface.backgroundColor,
                     },
                 ]);
+                if (old.surface.backgroundColor !== surface.backgroundColor) {
+                    this.surfacePaint.set(
+                        surface.element,
+                        animate(surface.element, [
+                            {backgroundColor: old.surface.backgroundColor},
+                            {backgroundColor: surface.backgroundColor},
+                        ]),
+                    );
+                }
             }
         });
         before.rows.forEach((row, key) => {
@@ -437,6 +473,7 @@ export class AsideLayoutTransition extends React.Component<
             panel.appendChild(this.overlay);
         }
         const ghost = part.clone;
+        this.currentIndicator.prepareGhost(ghost);
         [ghost, ...Array.from(ghost.querySelectorAll<HTMLElement>('*'))].forEach((element) => {
             element.removeAttribute('id');
             element.removeAttribute('data-qa');
@@ -486,10 +523,12 @@ export class AsideLayoutTransition extends React.Component<
 
     private cancel() {
         this.generation++;
+        this.currentIndicator.cancel();
         this.animatedPanel?.removeAttribute('data-gn-aside-animating');
         this.animatedPanel = undefined;
         this.animations.forEach((animation) => animation.cancel());
         this.animations = [];
+        this.surfacePaint.clear();
         this.overlay?.remove();
         this.overlay = undefined;
         this.scrollOverlay = undefined;
@@ -497,5 +536,16 @@ export class AsideLayoutTransition extends React.Component<
         this.departingTitles.clear();
         this.departingGroups.clear();
         this.departingDividers.clear();
+    }
+
+    private cancelSurfacePaint(surfaces?: Set<HTMLElement>) {
+        const cancelled = new Set<Animation>();
+        this.surfacePaint.forEach((animation, surface) => {
+            if (surfaces && !surfaces.has(surface)) return;
+            animation.cancel();
+            cancelled.add(animation);
+            this.surfacePaint.delete(surface);
+        });
+        this.animations = this.animations.filter((animation) => !cancelled.has(animation));
     }
 }
