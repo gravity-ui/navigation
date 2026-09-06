@@ -8,6 +8,7 @@ import {getQuickAccessMenuItems} from '../quickAccess';
 import {b} from '../utils';
 
 import {useVisibleMenuItems} from './AllPagesPanel';
+import {AsideDivider} from './AsideDivider';
 import {CollapseButton} from './CollapseButton/CollapseButton';
 import {CompositeBar} from './CompositeBar';
 import type {QuickAccessToggleHandler} from './CompositeBar/Item/Item.types';
@@ -89,9 +90,6 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         quickAccessIsAvailable,
         onToggleQuickAccess,
         qa,
-        // Render the presentation state: it lags behind the target compact
-        // state while the width transition runs (see PageLayout).
-        presentationCompact = compact,
     } = useAsideHeaderInnerContext();
     const visibleMenuItems = useVisibleMenuItems();
     const quickAccessEnabled = enableQuickAccess;
@@ -202,7 +200,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
             menuItemClassName={b('menu-item')}
             compositeId={QUICK_ACCESS_COMPOSITE_ID}
             type="quick-access"
-            compact={presentationCompact}
+            compact={compact}
             items={quickAccessItems}
             onItemClick={onItemClick}
             enableQuickAccessPin={quickAccessIsAvailable}
@@ -214,8 +212,9 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         <CompositeBar
             menuItemClassName={b('menu-item')}
             compositeId={MENU_ITEMS_COMPOSITE_ID}
+            layoutWidth={size}
             type="menu"
-            compact={presentationCompact}
+            compact={compact}
             items={visibleMenuItems}
             menuGroups={menuGroups}
             menuGroupNestedIcons={menuGroupNestedIcons}
@@ -234,10 +233,11 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
     const quickAccessSection = hasQuickAccessItems ? (
         <div className={b('quick-access')}>
-            {!presentationCompact && (
+            {!compact && (
                 <div className={b('quick-access-title')}>{i18n('quick_access_title')}</div>
             )}
             {quickAccessCompositeBar}
+            <AsideDivider className={b('quick-access-divider')} transitionId="quick-access" />
         </div>
     ) : null;
 
@@ -253,7 +253,12 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
     return (
         <React.Fragment>
-            <div className={b('aside', className)} style={{width: size}} data-qa={qa}>
+            <div
+                className={b('aside', className)}
+                style={{width: size}}
+                data-qa={qa}
+                data-gn-aside-panel
+            >
                 <div className={b('aside-popup-anchor')} ref={asideRef} />
                 {customBackground && (
                     <div className={b('aside-custom-background', customBackgroundClassName)}>
@@ -280,9 +285,10 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         </div>
                     </ScrollableWithScrollbar>
                     <div className={b('footer', {'with-divider': menuScrollOverflows})}>
+                        <AsideDivider className={b('footer-divider')} transitionId="footer" />
                         {renderFooter?.({
                             size,
-                            compact: Boolean(presentationCompact),
+                            compact: Boolean(compact),
                             asideRef,
                         })}
                     </div>

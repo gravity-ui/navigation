@@ -34,13 +34,6 @@ export const useAsideHeaderInnerContext = (): AsideHeaderInnerContextType => {
 
 export interface AsideHeaderContextType {
     compact: boolean;
-    /**
-     * The compact state to render. While the collapse/expand width transition
-     * runs it lags behind `compact` (holding the state the transition started
-     * from), so the inner content does not re-fit on every animation frame.
-     * Defaults to `compact` when omitted.
-     */
-    presentationCompact?: boolean;
     size: number;
     menuDensity?: AsideHeaderMenuDensity;
 }

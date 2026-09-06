@@ -59,6 +59,9 @@ $floating-surface-box-shadow-label:
     --_--item-selected-text-color: var(--g-color-text-primary);
     --_--item-selected-background-color: var(--g-color-base-selection);
 
+    --_--row-surface-color: transparent;
+    position: relative;
+    isolation: isolate;
     display: flex;
     min-width: 0;
     width: 100%;
@@ -82,6 +85,53 @@ $floating-surface-box-shadow-label:
     &:global(.#{variables.$ns}footer-item_regular-size)#{$class}_type_regular {
         height: #{variables.$item-height};
         --gn-aside-header-item-icon-background-size: 38px;
+    }
+
+    &__surface {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        border-radius: inherit;
+        background-color: var(--_--row-surface-color);
+    }
+
+    &_menu-popup-row {
+        background-color: var(--_--row-surface-color);
+    }
+
+    &_compact &__surface {
+        inset: auto;
+        inset-inline-start: calc(
+            (
+                    var(--_--gn-aside-header-density-item-height, #{variables.$item-height}) - var(
+                            --gn-aside-header-item-icon-background-size,
+                            var(--_--item-icon-background-size)
+                        )
+                ) /
+                2
+        );
+        top: calc(
+            (
+                    100% - var(
+                            --gn-aside-header-item-icon-background-size,
+                            var(--_--item-icon-background-size)
+                        )
+                ) /
+                2
+        );
+        width: var(
+            --gn-aside-header-item-icon-background-size,
+            var(--_--item-icon-background-size)
+        );
+        height: var(
+            --gn-aside-header-item-icon-background-size,
+            var(--_--item-icon-background-size)
+        );
+        border-radius: var(
+            --gn-aside-header-item-collapsed-radius,
+            var(--_--item-collapsed-radius)
+        );
     }
 
     &__icon {
@@ -229,7 +279,7 @@ $floating-surface-box-shadow-label:
 
     // The pin is a sibling of the menu item, so hovering it must keep the row hover surface.
     &__interactive-row:hover #{$block}:not(#{$block}_compact)#{$block}_type_regular {
-        background-color: var(
+        --_--row-surface-color: var(
             --gn-aside-header-item-current-background-color-hover,
             var(
                 --gn-aside-header-item-current-background-color,
@@ -241,7 +291,7 @@ $floating-surface-box-shadow-label:
 
     &__interactive-row:hover
         #{$block}:not(#{$block}_compact):not(#{$block}_current)#{$block}_type_regular {
-        background-color: var(
+        --_--row-surface-color: var(
             --gn-aside-header-item-background-color-hover,
             var(--_--item-background-color-hover)
         );
@@ -346,30 +396,39 @@ $floating-surface-box-shadow-label:
         justify-content: center;
         height: var(--gn-composite-bar-item-action-size);
         margin: 0 $actionLeftRightMargin 8px;
-        background: var(--gn-aside-header-item-action-color, var(--_--item-action-color));
-        box-shadow:
-            0px 0px 0px 1px rgba(0, 0, 0, 0.03),
-            0px 5px 6px rgba(0, 0, 0, 0.12);
+        --_--row-surface-color: var(
+            --gn-aside-header-item-action-color,
+            var(--_--item-action-color)
+        );
         border-radius: var(--gn-composite-bar-item-action-size);
         transition:
             transform 0.1s ease-out,
             background-color 0.15s linear;
 
-        &:focus-visible {
+        & #{$class}__surface {
+            box-shadow:
+                0px 0px 0px 1px rgba(0, 0, 0, 0.03),
+                0px 5px 6px rgba(0, 0, 0, 0.12);
+        }
+
+        &:focus-visible #{$class}__surface {
             box-shadow: 0 0 0 2px var(--g-color-line-misc);
         }
 
         &:hover {
-            background-color: var(
+            --_--row-surface-color: var(
                 --gn-aside-header-item-action-color-hover,
                 var(--_--item-action-color-hover)
             );
         }
 
         &:active {
-            box-shadow: 0 1px 2px var(--g-color-sfx-shadow);
             transition: none;
             transform: scale(0.96);
+
+            #{$class}__surface {
+                box-shadow: 0 1px 2px var(--g-color-sfx-shadow);
+            }
         }
 
         & #{$class}__icon-place {
@@ -579,7 +638,7 @@ $floating-surface-box-shadow-label:
     &:not(&_compact) {
         &#{$class}_current {
             &#{$class}_type_regular {
-                background-color: var(
+                --_--row-surface-color: var(
                     --gn-aside-header-item-current-background-color,
                     var(--_--item-selected-background-color)
                 );
@@ -593,7 +652,7 @@ $floating-surface-box-shadow-label:
 
         &:hover {
             &#{$class}_type_regular {
-                background-color: var(
+                --_--row-surface-color: var(
                     --gn-aside-header-item-current-background-color-hover,
                     var(
                         --gn-aside-header-item-current-background-color,
@@ -610,7 +669,7 @@ $floating-surface-box-shadow-label:
 
         &:not(#{$class}_current):hover {
             &#{$class}_type_regular {
-                background-color: var(
+                --_--row-surface-color: var(
                     --gn-aside-header-item-background-color-hover,
                     var(--_--item-background-color-hover)
                 );
@@ -730,35 +789,16 @@ $floating-surface-box-shadow-label:
     }
 
     &_compact {
-        @mixin item-bg {
-            position: relative;
-            background-color: transparent;
-
-            &::before {
-                content: '';
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                z-index: -1;
-                width: var(
-                    --gn-aside-header-item-icon-background-size,
-                    var(--_--item-icon-background-size)
-                );
-                height: var(
-                    --gn-aside-header-item-icon-background-size,
-                    var(--_--item-icon-background-size)
-                );
-                transform: translate(-50%, -50%);
-                border-radius: var(
-                    --gn-aside-header-item-collapsed-radius,
-                    var(--_--item-collapsed-radius)
-                );
-            }
-        }
-
         &#{$class}_type_action {
             width: var(--gn-composite-bar-item-action-size);
             margin-inline: auto;
+
+            #{$class}__surface {
+                inset: 0;
+                width: auto;
+                height: auto;
+                border-radius: inherit;
+            }
 
             & #{$class}__title {
                 margin: 0;
@@ -767,48 +807,36 @@ $floating-surface-box-shadow-label:
 
         &#{$class}_current {
             &#{$class}_type_regular {
-                #{$class}__btn-icon {
-                    @include item-bg();
-
-                    &::before {
-                        background-color: var(
-                            --gn-aside-header-item-current-background-color,
-                            var(--_--item-selected-background-color)
-                        );
-                    }
+                #{$class}__surface {
+                    background-color: var(
+                        --gn-aside-header-item-current-background-color,
+                        var(--_--item-selected-background-color)
+                    );
                 }
             }
         }
 
         &:hover {
             &#{$class}_type_regular {
-                #{$class}__btn-icon {
-                    @include item-bg();
-
-                    &::before {
-                        background-color: var(
-                            --gn-aside-header-item-current-background-color-hover,
-                            var(
-                                --gn-aside-header-item-current-background-color,
-                                var(--_--item-selected-background-color)
-                            )
-                        );
-                    }
+                #{$class}__surface {
+                    background-color: var(
+                        --gn-aside-header-item-current-background-color-hover,
+                        var(
+                            --gn-aside-header-item-current-background-color,
+                            var(--_--item-selected-background-color)
+                        )
+                    );
                 }
             }
         }
 
         &:not(#{$class}_current):hover {
             &#{$class}_type_regular {
-                #{$class}__btn-icon {
-                    @include item-bg();
-
-                    &::before {
-                        background-color: var(
-                            --gn-aside-header-item-background-color-hover,
-                            var(--_--item-background-color-hover)
-                        );
-                    }
+                #{$class}__surface {
+                    background-color: var(
+                        --gn-aside-header-item-background-color-hover,
+                        var(--_--item-background-color-hover)
+                    );
                 }
             }
         }

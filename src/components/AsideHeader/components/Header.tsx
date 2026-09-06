@@ -9,6 +9,7 @@ import {getAsideHeaderDensityConfig} from '../density';
 import {AsideHeaderItem} from '../types';
 import {b} from '../utils';
 
+import {AsideDivider} from './AsideDivider';
 import {CompositeBar} from './CompositeBar';
 
 import headerDividerCollapsedIcon from '../../../../assets/icons/divider-collapsed.svg';
@@ -25,9 +26,6 @@ export const Header = () => {
         subheaderItems,
         compact,
         menuDensity,
-        // Render the presentation state: it lags behind the target compact
-        // state while the width transition runs (see PageLayout).
-        presentationCompact = compact,
     } = useAsideHeaderInnerContext();
     const {compactWidth} = getAsideHeaderDensityConfig(menuDensity);
 
@@ -46,7 +44,7 @@ export const Header = () => {
                     {...logo}
                     className={b('logo', logo.className)}
                     onClick={onLogoClick}
-                    compact={presentationCompact}
+                    compact={compact}
                     buttonClassName={b('logo-button')}
                     iconPlaceClassName={b('logo-icon-place')}
                 />
@@ -56,11 +54,12 @@ export const Header = () => {
                 compositeId={HEADER_COMPOSITE_ID}
                 type="subheader"
                 menuItemClassName={b('menu-item')}
-                compact={presentationCompact}
+                compact={compact}
                 items={subheaderItems || DEFAULT_SUBHEADER_ITEMS}
                 onItemClick={onItemClick}
             />
 
+            <AsideDivider className={b('header-bottom-divider')} transitionId="header" />
             {headerDecoration && (
                 <Icon
                     data={headerDividerCollapsedIcon}

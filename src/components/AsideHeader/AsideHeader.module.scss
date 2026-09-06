@@ -74,9 +74,7 @@ $aside-width-transition: width $aside-width-transition-duration
         margin-top: var(--gn-top-alert-height, 0);
 
         box-sizing: border-box;
-        // The aside-content lays out at the final width during the width
-        // transition (see the min-width below), so the aside itself is what
-        // clips it at the animating edge.
+        // Clip the fixed target layout at the animated outer edge.
         overflow: hidden;
         transition: $aside-width-transition;
 
@@ -111,7 +109,7 @@ $aside-width-transition: width $aside-width-transition-duration
              */
             min-height: 0;
             overflow: hidden;
-            width: inherit;
+            width: var(--gn-aside-header-size);
             height: inherit;
             position: relative;
             z-index: 2;
@@ -160,16 +158,32 @@ $aside-width-transition: width $aside-width-transition-duration
         }
     }
 
-    // While the width transition runs, PageLayout pins --gn-aside-header-frozen-size
-    // to the size of the rendered presentation (a reversal keeps the presentation
-    // the transition started from): the inner content keeps that layout and the
-    // animating aside clips it instead of re-fitting on every animation frame.
-    &_frozen-compact &__aside-content {
-        max-width: var(--gn-aside-header-frozen-size);
-    }
+    // Only the outer edge and the native scroll viewport clip animated rows.
+    // UIKit's individual slots must not cut off a row moving between slots.
+    &__aside:global([data-gn-aside-animating]) {
+        :global([data-gn-aside-divider]) {
+            // Menu dividers live in flex rows at the target layout width.
+            // Do not let those rows shrink the independently animated line.
+            flex-shrink: 0;
+        }
 
-    &_frozen-expanded &__aside-content {
-        min-width: var(--gn-aside-header-frozen-size);
+        #{$class}__aside-content {
+            overflow: visible;
+        }
+
+        :global(.g-list__item),
+        :global(.g-list__item-content) {
+            min-width: 0;
+            overflow: visible;
+        }
+
+        :global([data-gn-aside-scrollport]) {
+            width: var(--_--gn-aside-header-expanded-width);
+        }
+
+        #{$class}__unified-menu-content {
+            width: var(--gn-aside-header-size);
+        }
     }
 
     &__header {
@@ -210,7 +224,7 @@ $aside-width-transition: width $aside-width-transition-duration
             );
         }
 
-        &::after {
+        #{$class}__header-bottom-divider {
             position: absolute;
             bottom: 12px;
             left: 0;
@@ -228,7 +242,7 @@ $aside-width-transition: width $aside-width-transition-duration
     &__aside-content_with-quick-access &__header {
         padding-bottom: var(--_--section-divider-gap);
 
-        &::after {
+        #{$class}__header-bottom-divider {
             bottom: 0;
             left: var(--_--item-margin-inline);
             right: var(--_--item-margin-inline);
@@ -252,7 +266,7 @@ $aside-width-transition: width $aside-width-transition-duration
             display: block;
         }
 
-        &::after {
+        #{$class}__header-bottom-divider {
             display: none;
         }
     }
@@ -279,13 +293,13 @@ $aside-width-transition: width $aside-width-transition-duration
         width: 100%;
         padding-block: var(--_--section-divider-gap);
         margin-bottom: var(--_--section-divider-gap);
+    }
 
-        &::after {
-            @include section-divider-line;
+    &__quick-access-divider {
+        @include section-divider-line;
 
-            bottom: 0;
-            z-index: 1;
-        }
+        bottom: 0;
+        z-index: 1;
     }
 
     &__quick-access-title {
@@ -334,7 +348,7 @@ $aside-width-transition: width $aside-width-transition-duration
         flex-direction: column;
         margin: var(--g-spacing-2) var(--_--item-margin-inline);
 
-        &::before {
+        #{$class}__footer-divider {
             content: '';
             position: absolute;
             top: calc(-1 * var(--g-spacing-2));
@@ -350,7 +364,7 @@ $aside-width-transition: width $aside-width-transition-duration
             pointer-events: none;
         }
 
-        &_with-divider::before {
+        &_with-divider #{$class}__footer-divider {
             opacity: 1;
         }
     }
@@ -399,6 +413,15 @@ $aside-width-transition: width $aside-width-transition-duration
         z-index: var(--gn-aside-header-content-z-index, 95);
         margin-top: var(--gn-top-alert-height, 0);
         transition: $aside-width-transition;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &__aside,
+        &__content,
+        &__aside-custom-background,
+        &__panels:global(.g-drawer[data-floating-ui-status]) {
+            transition: none;
+        }
     }
 
     &__all-pages-panel {
