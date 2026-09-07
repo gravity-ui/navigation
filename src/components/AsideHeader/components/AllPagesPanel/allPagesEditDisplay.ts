@@ -49,7 +49,8 @@ export function rowsToAllPagesDisplayItems(
  * View-mode list: original items plus a clickable header row for each group that has
  * its own action (`MenuGroup.onItemClick` / `href`), inserted before the group's first
  * item; actionable groups without items are appended at the end. Groups without an
- * action are not represented by a row, as before.
+ * action are not represented by a row, as before. When an actionable group also sets
+ * `hideItemsInAllPages`, its items are omitted and only the header row is listed.
  */
 export function getAllPagesViewModeFlatItems(
     asideHeaderItems: AsideHeaderItem[],
@@ -80,6 +81,10 @@ export function getAllPagesViewModeFlatItems(
         if (group && !insertedGroupIds.has(group.id)) {
             insertedGroupIds.add(group.id);
             result.push(makeHeaderRow(group, item.category));
+        }
+
+        if (group?.hideItemsInAllPages) {
+            continue;
         }
 
         result.push(item);

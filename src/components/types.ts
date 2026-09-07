@@ -95,6 +95,13 @@ export interface MenuGroup {
      * compact (collapsed) sidebar. The children popup keeps working as usual.
      */
     hideCompactChevron?: boolean;
+    /**
+     * When `true` and the group has its own action (`onItemClick` and/or `href`),
+     * the group items are not listed in the All pages panel (view mode) — the group
+     * is represented only by its clickable header row. Has no effect for groups
+     * without an action.
+     */
+    hideItemsInAllPages?: boolean;
 }
 
 export interface LogoProps {

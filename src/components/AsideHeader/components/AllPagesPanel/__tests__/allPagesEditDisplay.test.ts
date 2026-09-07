@@ -102,6 +102,35 @@ describe('allPagesEditDisplay', () => {
         expect(header.onItemClick).toBe(groupClick);
     });
 
+    it('getAllPagesViewModeFlatItems lists only the header row for an actionable group with hideItemsInAllPages', () => {
+        const clickableGroups: MenuGroup[] = [
+            {
+                id: 'analytics',
+                title: 'Analytics',
+                icon: Gear,
+                href: '/a',
+                hideItemsInAllPages: true,
+            },
+        ];
+
+        const flat = getAllPagesViewModeFlatItems(items, clickableGroups);
+
+        expect(flat.map((i) => i.id)).toEqual([
+            'home',
+            '__gn-composite-bar__group-header__analytics',
+            's1',
+            'help',
+        ]);
+    });
+
+    it('getAllPagesViewModeFlatItems ignores hideItemsInAllPages for groups without an action', () => {
+        const groupsWithFlag: MenuGroup[] = [
+            {id: 'analytics', title: 'Analytics', icon: Gear, hideItemsInAllPages: true},
+        ];
+
+        expect(getAllPagesViewModeFlatItems(items, groupsWithFlag)).toEqual(items);
+    });
+
     it('getAllPagesViewModeFlatItems keeps the header in the default section when items have no category', () => {
         const noCategoryItems: AsideHeaderItem[] = [
             {id: 'o1', title: 'Overview', icon: Gear, groupId: 'analytics'},
