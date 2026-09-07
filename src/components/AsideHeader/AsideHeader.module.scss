@@ -57,6 +57,19 @@ $aside-width-transition: width $aside-width-transition-duration
     position: relative;
     background-color: var(--g-color-base-background);
 
+    // Reset both variables for every layout and portaled Drawer instance.
+    &__compact-transition {
+        --_--gn-aside-width-transition: #{$aside-width-transition};
+        --_--gn-aside-drawer-transition: left #{$aside-width-transition-duration}
+                #{$aside-width-transition-timing-function},
+            background-color var(--_--animation-duration, 300ms);
+
+        &_disabled {
+            --_--gn-aside-width-transition: none;
+            --_--gn-aside-drawer-transition: background-color var(--_--animation-duration, 300ms);
+        }
+    }
+
     &__aside {
         position: sticky;
         top: var(--gn-top-alert-height, 0);
@@ -76,7 +89,7 @@ $aside-width-transition: width $aside-width-transition-duration
         box-sizing: border-box;
         // Clip the fixed target layout at the animated outer edge.
         overflow: hidden;
-        transition: $aside-width-transition;
+        transition: var(--_--gn-aside-width-transition);
 
         &::after {
             position: absolute;
@@ -143,7 +156,7 @@ $aside-width-transition: width $aside-width-transition-duration
             width: var(--gn-aside-header-size);
 
             z-index: -1;
-            transition: $aside-width-transition;
+            transition: var(--_--gn-aside-width-transition);
         }
     }
 
@@ -389,9 +402,7 @@ $aside-width-transition: width $aside-width-transition-duration
         // status attribute is always present: it raises specificity above the
         // uikit rule animating the veil, whose fade is kept in the list.
         &:global(.g-drawer[data-floating-ui-status]) {
-            transition:
-                left $aside-width-transition-duration $aside-width-transition-timing-function,
-                background-color var(--_--animation-duration, 300ms);
+            transition: var(--_--gn-aside-drawer-transition);
         }
     }
 
@@ -424,7 +435,7 @@ $aside-width-transition: width $aside-width-transition-duration
         width: calc(100% - var(--gn-aside-header-size));
         z-index: var(--gn-aside-header-content-z-index, 95);
         margin-top: var(--gn-top-alert-height, 0);
-        transition: $aside-width-transition;
+        transition: var(--_--gn-aside-width-transition);
     }
 
     @media (prefers-reduced-motion: reduce) {

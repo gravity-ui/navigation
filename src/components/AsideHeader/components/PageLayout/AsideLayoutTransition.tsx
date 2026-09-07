@@ -43,7 +43,10 @@ type Snapshot = {
     layoutWidth: number;
     current?: CurrentSnapshot;
 };
-type Props = React.HTMLAttributes<HTMLDivElement> & {compact: boolean};
+type Props = React.HTMLAttributes<HTMLDivElement> & {
+    compact: boolean;
+    compactTransition?: boolean;
+};
 
 const ITEM_SELECTOR = CURRENT_ROW_SELECTOR;
 const LOGO_SELECTOR = '[class*="gn-aside-header__logo_"]';
@@ -204,6 +207,7 @@ export class AsideLayoutTransition extends React.Component<
     private departingRows = new Map<string, HTMLElement>();
     private departingTitles = new Map<string, HTMLElement>();
     private generation = 0;
+    private pendingStart?: object;
     private departingGroups = new Map<string, {element: HTMLElement; headerKey: string}>();
     private departingDividers = new Map<
         string,
@@ -211,6 +215,10 @@ export class AsideLayoutTransition extends React.Component<
     >();
 
     getSnapshotBeforeUpdate(previous: Props): Snapshot | null {
+        if (this.props.compactTransition === false) {
+            if (this.animatedPanel || this.pendingStart) this.cancel();
+            return null;
+        }
         if (previous.compact === this.props.compact) return null;
         const panel = this.root.current?.querySelector<HTMLElement>('[data-gn-aside-panel]');
         // A synchronous remount can precede observer delivery. Departing parts
@@ -252,11 +260,15 @@ export class AsideLayoutTransition extends React.Component<
     componentDidUpdate(_previous: Props, _state: Record<string, never>, before: Snapshot | null) {
         if (!before) return;
         const generation = this.generation;
+        const pendingStart = {};
+        this.pendingStart = pendingStart;
         // AutoSizer's mount/update can synchronously enqueue another React commit.
         // Let that commit finish before reading the target rows, but still install
         // the inverse transforms in the same task, before the browser paints.
         queueMicrotask(() => {
-            if (generation === this.generation && this.root.current) this.start(before);
+            if (generation !== this.generation) return;
+            if (this.pendingStart === pendingStart) this.pendingStart = undefined;
+            if (this.root.current) this.start(before);
         });
     }
 
@@ -265,11 +277,12 @@ export class AsideLayoutTransition extends React.Component<
     }
 
     render() {
-        const {compact: _compact, ...props} = this.props;
+        const {compactTransition: _compactTransition, compact: _compact, ...props} = this.props;
         return <div {...props} ref={this.root} />;
     }
 
     private start(before: Snapshot) {
+        if (this.props.compactTransition === false) return;
         const panel = this.root.current?.querySelector<HTMLElement>('[data-gn-aside-panel]');
         if (
             !panel ||
@@ -574,6 +587,7 @@ export class AsideLayoutTransition extends React.Component<
 
     private cancel() {
         this.presentationObserver.disconnect();
+        this.pendingStart = undefined;
         this.generation++;
         this.animatedPanel?.removeAttribute('data-gn-aside-animating');
         this.animatedPanel = undefined;

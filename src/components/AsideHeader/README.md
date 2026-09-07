@@ -40,6 +40,27 @@ quick-access highlight settings and the theme's selection transparency are prese
 change during this movement restores native highlighting while the layout continues animating.
 Ambiguous selections retain existing native highlighting; reduced motion switches immediately.
 
+### Disabling compact transitions
+
+Set `compactTransition={false}` on `AsideHeader` or `PageLayout` (default: `true`).
+Aside and content widths, custom background width, row and divider geometry, current-item
+highlighting, and the offset of an open Drawer immediately follow the target `compact` state.
+Disabling the flag during a transition finishes it immediately and releases transition resources.
+Re-enabling it without changing `compact` does not animate; simultaneous updates use the new flag.
+Children stay mounted. `PageLayoutAside` and `AsideFallback` inherit the layout setting.
+
+Hover effects, independent Drawer opening/closing, and the opacity effects of the bottom divider
+and custom scrollbar are preserved. The existing `prefers-reduced-motion` behavior is unchanged.
+
+```tsx
+<AsideHeader compact={compact} compactTransition={false} onChangeCompact={setCompact} />
+
+<PageLayout compact={compact} compactTransition={false}>
+  <PageLayoutAside menuItems={menuItems} onChangeCompact={setCompact} />
+  <PageLayout.Content>{children}</PageLayout.Content>
+</PageLayout>
+```
+
 ### Menu density
 
 Use `menuDensity="compact"` to reduce the aside width, item height, icon size, spacing, and corner
@@ -282,6 +303,7 @@ With the advanced layout, pass `menuGroupNestedIcons` to `PageLayoutAside`.
 | collapseButtonWrapper          | Wrapper for `CollapseButton` allowing customization of the default button appearance                                                                                                                                               | `(defaultButton: React.ReactNode, data: {compact: boolean; onChangeCompact?: (compact: boolean) => void}) => React.ReactNode` |                           |
 | collapseTitle                  | `CollapseButton` title for collapsing navigation                                                                                                                                                                                   |                                                           `string`                                                            | `"Свернуть"` `"Collapse"` |
 | compact                        | Navigation visual state                                                                                                                                                                                                            |                                                           `boolean`                                                           |          `false`          |
+| compactTransition              | Animate compact layout geometry and highlighting. Also available on `PageLayout`.                                                                                                                                                  |                                                           `boolean`                                                           |          `true`           |
 | customBackground               | `AsideHeader` background                                                                                                                                                                                                           |                                                       `React.ReactNode`                                                       |                           |
 | customBackgroundClassName      | Override default background container's styles                                                                                                                                                                                     |                                                           `string`                                                            |                           |
 | expandTitle                    | `CollapseButton` title for expanding navigation                                                                                                                                                                                    |                                                           `string`                                                            | `"Развернуть"` `"Expand"` |

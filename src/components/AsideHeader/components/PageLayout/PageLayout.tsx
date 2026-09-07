@@ -5,7 +5,7 @@ import {TopAlertProps} from '../../../types';
 import {AsideHeaderContextProvider, useAsideHeaderContext} from '../../AsideHeaderContext';
 import {getAsideHeaderDensityConfig, getAsideHeaderDensityCssProperties} from '../../density';
 import {LayoutProps} from '../../types';
-import {b} from '../../utils';
+import {b, getCompactTransitionClassName} from '../../utils';
 
 import {AsideLayoutTransition} from './AsideLayoutTransition';
 
@@ -34,6 +34,7 @@ export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {}
 
 const Layout = ({
     compact,
+    compactTransition = true,
     className,
     children,
     topAlert,
@@ -44,8 +45,8 @@ const Layout = ({
     const isCompact = Boolean(compact);
     const size = isCompact ? densityConfig.compactWidth : densityConfig.expandedWidth;
     const asideHeaderContextValue = useMemo(
-        () => ({size, compact: isCompact, menuDensity}),
-        [isCompact, size, menuDensity],
+        () => ({size, compact: isCompact, compactTransition, menuDensity}),
+        [isCompact, compactTransition, size, menuDensity],
     );
 
     const estimatedTopAlertHeight = calcEstimatedTopAlertHeight(topAlert);
@@ -74,7 +75,11 @@ const Layout = ({
         <AsideHeaderContextProvider value={asideHeaderContextValue}>
             <AsideLayoutTransition
                 compact={isCompact}
-                className={b({compact: isCompact}, className)}
+                compactTransition={compactTransition}
+                className={b({compact: isCompact}, [
+                    getCompactTransitionClassName(compactTransition),
+                    className ?? '',
+                ])}
                 style={{
                     ...densityCssProperties,
                     ...({'--gn-aside-header-size': `${size}px`} as React.CSSProperties),

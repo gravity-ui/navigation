@@ -40,6 +40,27 @@ footer и вложенных группах, изменяют ширину вм�
 время переноса возвращает обычное выделение, а анимация раскладки продолжается. При неоднозначном
 выделении сохраняется обычное отображение; при уменьшении движения переключение мгновенное.
 
+### Отключение анимации compact
+
+Укажите `compactTransition={false}` у `AsideHeader` или `PageLayout` (по умолчанию `true`).
+Ширина панели, контента и пользовательского фона, геометрия пунктов и разделителей, выделение
+текущего пункта и смещение открытого Drawer сразу соответствуют целевому `compact`.
+Выключение флага во время перехода немедленно завершает его и освобождает ресурсы анимации.
+Включение без изменения `compact` ничего не анимирует; при совместном обновлении действует новый флаг.
+Дочерние компоненты остаются смонтированными. `PageLayoutAside` и `AsideFallback` наследуют настройку layout.
+
+Hover-эффекты, самостоятельное открытие и закрытие Drawer, эффекты opacity нижнего разделителя
+и пользовательского скроллбара сохраняются. Поведение `prefers-reduced-motion` не меняется.
+
+```tsx
+<AsideHeader compact={compact} compactTransition={false} onChangeCompact={setCompact} />
+
+<PageLayout compact={compact} compactTransition={false}>
+  <PageLayoutAside menuItems={menuItems} onChangeCompact={setCompact} />
+  <PageLayout.Content>{children}</PageLayout.Content>
+</PageLayout>
+```
+
 ### Плотность меню
 
 Используйте `menuDensity="compact"`, чтобы уменьшить ширину панели, высоту пунктов, размер иконок,
@@ -283,6 +304,7 @@ export const Aside: FC = () => {
 | collapseButtonWrapper          | Обертка для `CollapseButton`, позволяющая кастомизировать вид дефолтной кнопки.                                                                                                                                                                                        | `(defaultButton: React.ReactNode, data: {compact: boolean; onChangeCompact?: (compact: boolean) => void}) => React.ReactNode` |                           |
 | collapseTitle                  | Заголовок `CollapseButton` для сворачивания элемента навигации.                                                                                                                                                                                                        |                                                           `string`                                                            | `"Свернуть"` `"Collapse"` |
 | compact                        | Визуальное состояние элемента навигации.                                                                                                                                                                                                                               |                                                           `boolean`                                                           |          `false`          |
+| compactTransition              | Анимация геометрии и выделения при изменении compact. Доступно также у `PageLayout`.                                                                                                                                                                                   |                                                           `boolean`                                                           |          `true`           |
 | customBackground               | Фон `AsideHeader`.                                                                                                                                                                                                                                                     |                                                       `React.ReactNode`                                                       |                           |
 | customBackgroundClassName      | Переопределяет стили контейнера фона по умолчанию.                                                                                                                                                                                                                     |                                                           `string`                                                            |                           |
 | expandTitle                    | Заголовок `CollapseButton` для разворачивания элемента навигации.                                                                                                                                                                                                      |                                                           `string`                                                            | `"Развернуть"` `"Expand"` |
