@@ -67,6 +67,52 @@ async function captureFooter(page: Page, name: string, direction: 'ltr' | 'rtl',
 }
 
 for (const menuDensity of ['default', 'compact'] as const) {
+    for (const direction of ['ltr', 'rtl'] as const) {
+        for (const footer of ['regular', 'empty', 'custom'] as const) {
+            test(`shows compact toggle across entire aside (${menuDensity}, ${direction}, ${footer})`, async ({
+                mount,
+                page,
+            }) => {
+                await page.setViewportSize(viewport);
+                await mount(
+                    <CollapseButtonExample {...{menuDensity, direction, footer}} />,
+                    undefined,
+                    viewport,
+                );
+                await page.mouse.move(500, 300);
+                const panel = page.locator(panelSelector);
+                const button = page.locator(buttonSelector);
+                await expect(button).toHaveCSS('opacity', '0');
+                const hoverTargets = [
+                    panel.locator('[class*="gn-aside-header__logo_"]'),
+                    page.getByRole('button', {name: 'Home', exact: true}),
+                    panel,
+                    page.locator(anchorSelector),
+                ];
+                for (const transitionEnabled of [true, false]) {
+                    if (!transitionEnabled)
+                        await page
+                            .getByRole('button', {name: 'Toggle transition', exact: true})
+                            .click();
+                    for (const target of hoverTargets) {
+                        await target.hover();
+                        await finishAnimations(page);
+                        await expect(button).toHaveCSS('opacity', '1');
+                        await expect(button).toHaveCSS('transform', 'none');
+                    }
+                    await button.hover();
+                    await finishAnimations(page);
+                    await expect(button).toHaveCSS('opacity', '1');
+                    await page.mouse.move(500, 300);
+                    await finishAnimations(page);
+                    await expect(button).toHaveCSS('opacity', '0');
+                }
+                await button.click();
+                await expect(button).toHaveAttribute('aria-expanded', 'true');
+                await expect(page.getByRole('status', {name: 'Compact changes'})).toHaveText('1');
+            });
+        }
+    }
     for (const footer of ['empty', 'custom'] as const) {
         for (const direction of ['ltr', 'rtl'] as const) {
             test(`fallback hover and focus (${footer}, ${menuDensity}, ${direction})`, async ({
@@ -81,6 +127,7 @@ for (const menuDensity of ['default', 'compact'] as const) {
                 );
                 const fallback = page.locator('[data-gn-collapse-fallback]');
                 const button = page.locator(buttonSelector);
+                await page.mouse.move(500, 300);
                 await expect(fallback).toHaveAttribute('data-gn-collapse-anchor', '');
                 await expect(button).toHaveCSS('opacity', '0');
                 await fallback.hover();
@@ -121,6 +168,7 @@ for (const menuDensity of ['default', 'compact'] as const) {
                     viewport,
                 );
                 await finishAnimations(page);
+                await page.mouse.move(500, 300);
                 const button = page.locator(buttonSelector);
                 if (state === 'compact-hover') await page.locator(anchorSelector).hover();
                 if (state === 'expanded-hover') await button.hover();

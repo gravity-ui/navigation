@@ -65,8 +65,8 @@ and custom scrollbar are preserved. The existing `prefers-reduced-motion` behavi
 
 The collapse button sits at the aside edge beside the last visible `FooterItem`. The row keeps its
 own action and menu; in expanded mode it reserves 24 px for the button. In compact mode, hovering
-the row or the button, or focusing the button from the keyboard, reveals the control. The selected
-row's built-in tooltip is suppressed in compact mode even when `enableTooltip={true}`. With no
+anywhere in the aside or over the button, or focusing the button from the keyboard, reveals the
+control. The selected row's built-in tooltip is suppressed in compact mode even when `enableTooltip={true}`. With no
 visible `FooterItem`, a blank bottom row provides the same control. `hideCollapseButton` removes
 the control, reserved space, and blank row.
 
