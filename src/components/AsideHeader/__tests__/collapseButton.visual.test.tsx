@@ -67,6 +67,40 @@ async function captureFooter(page: Page, name: string, direction: 'ltr' | 'rtl',
 }
 
 for (const menuDensity of ['default', 'compact'] as const) {
+    for (const footer of ['empty', 'custom'] as const) {
+        for (const direction of ['ltr', 'rtl'] as const) {
+            test(`fallback hover and focus (${footer}, ${menuDensity}, ${direction})`, async ({
+                mount,
+                page,
+            }) => {
+                await page.setViewportSize(viewport);
+                await mount(
+                    <CollapseButtonExample {...{footer, menuDensity, direction}} />,
+                    undefined,
+                    viewport,
+                );
+                const fallback = page.locator('[data-gn-collapse-fallback]');
+                const button = page.locator(buttonSelector);
+                await expect(fallback).toHaveAttribute('data-gn-collapse-anchor', '');
+                await expect(button).toHaveCSS('opacity', '0');
+                await fallback.hover();
+                await expect(button).toHaveCSS('opacity', '1');
+                await expect(button).toHaveCSS('transform', 'none');
+                await page.mouse.move(500, 300);
+                await expect(button).toHaveCSS('opacity', '0');
+                await page.getByRole('button', {name: 'All pages', exact: true}).focus();
+                await page.keyboard.press('Tab');
+                await expect(button).toBeFocused();
+                await expect(button).toHaveCSS('opacity', '1');
+                await button.click();
+                await expect(button).toHaveAttribute('aria-expanded', 'true');
+                await expect(page.getByRole('status', {name: 'Compact changes'})).toHaveText('1');
+                await page.getByRole('button', {name: 'Hide toggle'}).click();
+                await expect(fallback).toHaveCount(0);
+                await expect(button).toHaveCount(0);
+            });
+        }
+    }
     for (const direction of ['ltr', 'rtl'] as const) {
         for (const state of [
             'compact-hidden',
@@ -160,6 +194,7 @@ for (const menuDensity of ['default', 'compact'] as const) {
 
     for (const footer of ['action', 'two-line', 'empty', 'custom'] as const) {
         test(`collapse button measures ${footer} footer ${menuDensity}`, async ({mount, page}) => {
+            const withFooterItems = footer === 'action' || footer === 'two-line';
             await page.setViewportSize(viewport);
             await mount(
                 <CollapseButtonExample
@@ -176,6 +211,13 @@ for (const menuDensity of ['default', 'compact'] as const) {
             // TopAlert measures its height after mount; wait for the shared sticky geometry
             // and ResizeObserver delivery before comparing row and button positions.
             await expect
+                .poll(() =>
+                    page
+                        .locator(panelSelector)
+                        .evaluate((panel) => parseFloat(getComputedStyle(panel).top)),
+                )
+                .toBeGreaterThan(0);
+            await expect
                 .poll(async () => {
                     const current = await geometry(page);
                     const anchor =
@@ -190,7 +232,7 @@ for (const menuDensity of ['default', 'compact'] as const) {
             const initial = await geometry(page);
             expect(initial.panel.width).toBe(menuDensity === 'default' ? 236 : 220);
             expect(initial.button.right).toBeLessThan(initial.panel.right);
-            if (initial.anchor) {
+            if (initial.anchor && withFooterItems) {
                 expect(initial.anchor.right).toBeLessThanOrEqual(initial.slot.x);
                 expect(initial.button.y + initial.button.height / 2).toBeCloseTo(
                     initial.anchor.y + initial.anchor.height / 2,
@@ -204,7 +246,7 @@ for (const menuDensity of ['default', 'compact'] as const) {
                 await expect(page.locator(anchorSelector)).toHaveCSS('margin-inline-start', '10px');
                 await expect(page.locator(anchorSelector)).toHaveCSS('margin-inline-end', '34px');
             }
-            if (initial.anchor) {
+            if (initial.anchor && withFooterItems) {
                 const adornment = await page
                     .locator(anchorSelector)
                     .getByTestId('adornment')
@@ -222,6 +264,32 @@ for (const menuDensity of ['default', 'compact'] as const) {
             expect((await geometry(page)).slot.width).toBe(20);
         });
     }
+}
+
+for (const footer of ['regular', 'empty'] as const) {
+    test(`footer density height is independent from menu height (${footer})`, async ({
+        mount,
+        page,
+    }) => {
+        await page.setViewportSize(viewport);
+        await mount(
+            <CollapseButtonExample footer={footer} initialCompact={false} />,
+            undefined,
+            viewport,
+        );
+        await page.locator('[data-gn-aside-collapse-layer]').evaluate((layer) => {
+            layer.parentElement?.style.setProperty(
+                '--_--gn-aside-header-density-footer-item-height',
+                '48px',
+            );
+        });
+        await expect(page.locator(slotSelector)).toHaveCSS('height', '48px');
+        await expect(page.locator(anchorSelector)).toHaveCSS('height', '48px');
+        await expect(page.getByRole('button', {name: 'Home', exact: true})).toHaveCSS(
+            'height',
+            '40px',
+        );
+    });
 }
 
 test('collapse button follows reordered and hidden rows without resizing footer', async ({

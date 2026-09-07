@@ -303,6 +303,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             {!hideCollapseButton && !collapseAnchor.selected && (
                                 <div
                                     data-gn-collapse-fallback
+                                    data-gn-collapse-anchor=""
                                     className={b('collapse-fallback')}
                                     ref={collapseAnchor.fallbackRef}
                                 />

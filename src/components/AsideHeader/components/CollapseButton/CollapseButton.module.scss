@@ -20,26 +20,25 @@ $block: '.#{variables.$ns}collapse-button';
         opacity 150ms ease-in-out,
         transform 150ms ease-in-out;
 
+    :global([dir='rtl']) & {
+        --_--collapse-appearance-shift: 2px;
+        --_--collapse-icon-direction: -1;
+    }
+
     &_compact {
         opacity: 0;
-        transform: translateX(-2px);
+        transform: translateX(var(--_--collapse-appearance-shift, -2px));
         background: var(
             --gn-aside-header-collapsed-background-color,
             var(--gn-aside-header-background-color, var(--g-color-base-background))
         );
-        &:where(:dir(rtl)) {
-            transform: translateX(2px);
-        }
     }
 
+    &__icon {
+        transform: scaleX(var(--_--collapse-icon-direction, 1));
+    }
     &:not(&_compact) &__icon {
-        transform: rotate(180deg);
-    }
-    &:dir(rtl) &__icon {
-        transform: rotate(180deg);
-    }
-    &:not(&_compact):dir(rtl) &__icon {
-        transform: none;
+        transform: rotate(180deg) scaleX(var(--_--collapse-icon-direction, 1));
     }
 
     &:hover {
@@ -72,7 +71,7 @@ $block: '.#{variables.$ns}collapse-button';
         bottom: var(--g-spacing-2);
         inset-inline-end: var(--_--item-margin-inline);
         width: 24px;
-        height: var(--_--gn-aside-header-density-item-height, #{variables.$item-height});
+        height: var(--_--gn-aside-header-density-footer-item-height, #{variables.$item-height});
         border-radius: 8px;
         transition: var(--_--gn-aside-collapse-geometry-transition);
         &_compact {

@@ -373,7 +373,7 @@ $aside-width-transition: width $aside-width-transition-duration
     }
 
     &__collapse-fallback {
-        height: var(--_--gn-aside-header-density-item-height, #{variables.$item-height});
+        height: var(--_--gn-aside-header-density-footer-item-height, #{variables.$item-height});
         flex-shrink: 0;
     }
 
