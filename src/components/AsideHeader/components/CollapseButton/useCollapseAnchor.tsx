@@ -105,11 +105,11 @@ export function useCollapseAnchor(enabled: boolean, compact: boolean) {
                 slotRef.current?.getAnimations?.().forEach((animation) => {
                     if (!('transitionProperty' in animation)) animation.cancel();
                 });
-                const next = last && id ? {element: last, id} : null;
+                const next: Selection | null = last && id ? {element: last, id} : null;
                 selectionRef.current = next;
-                if (last) {
-                    (last as HTMLElement).setAttribute('data-gn-collapse-anchor', '');
-                    resize?.observe(last);
+                if (next) {
+                    next.element.setAttribute('data-gn-collapse-anchor', '');
+                    resize?.observe(next.element);
                 }
                 setSelection(next);
             }

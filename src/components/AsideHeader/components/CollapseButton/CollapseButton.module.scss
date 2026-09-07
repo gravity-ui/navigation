@@ -71,7 +71,10 @@ $block: '.#{variables.$ns}collapse-button';
         bottom: var(--g-spacing-2);
         inset-inline-end: var(--_--item-margin-inline);
         width: 24px;
-        height: var(--_--gn-aside-header-density-footer-item-height, #{variables.$item-height});
+        height: var(
+            --_--gn-aside-header-density-footer-item-height,
+            #{variables.$compact-item-height}
+        );
         border-radius: 8px;
         transition: var(--_--gn-aside-collapse-geometry-transition);
         &_compact {
