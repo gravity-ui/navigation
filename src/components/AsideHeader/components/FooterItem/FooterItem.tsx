@@ -23,18 +23,17 @@ export interface FooterItemProps extends AsideHeaderItem {
 export function FooterItem({regularSize, ...props}: FooterItemProps) {
     const anchor = React.useContext(CollapseAnchorContext);
     const register = anchor?.register;
-    const row = React.useRef<HTMLElement | null>(null);
+    const [registrationId] = React.useState(() => Symbol());
     const cleanup = React.useRef<() => void>();
     const rowRef = React.useCallback(
         (element: HTMLElement | null) => {
             cleanup.current?.();
             cleanup.current = undefined;
-            row.current = element;
-            if (element && register) cleanup.current = register(element);
+            if (element && register) cleanup.current = register(element, registrationId);
         },
-        [register],
+        [register, registrationId],
     );
-    const suppressTooltip = Boolean(anchor?.compact && anchor.selected === row.current);
+    const suppressTooltip = Boolean(anchor?.compact && anchor.selectedId === registrationId);
     const {menuDensity} = useAsideHeaderContext();
     const {iconSize} = getAsideHeaderDensityConfig(menuDensity);
 

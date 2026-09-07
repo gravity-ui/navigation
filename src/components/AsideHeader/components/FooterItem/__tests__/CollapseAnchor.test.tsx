@@ -52,6 +52,21 @@ const view = (props: Partial<React.ComponentProps<typeof AsideHeader>>) => (
 );
 
 describe('floating collapse anchor', () => {
+    it.each([undefined, () => <div>custom footer</div>])(
+        'uses its fallback row as the only hover anchor',
+        (renderFooter) => {
+            const {container, rerender} = render(view({compact: true, renderFooter}));
+            const fallback = container.querySelector('[data-gn-collapse-fallback]');
+            expect(fallback).not.toBeNull();
+            expect(container.querySelector('[data-gn-collapse-anchor]')).toBe(fallback);
+            rerender(view({compact: true, renderFooter: footer(['row'])}));
+            expect(container.querySelector('[data-gn-collapse-fallback]')).toBeNull();
+            expect(container.querySelectorAll('[data-gn-collapse-anchor]')).toHaveLength(1);
+            expect(container.querySelector('[data-gn-collapse-anchor]')).toBe(
+                screen.getByRole('button', {name: 'row'}),
+            );
+        },
+    );
     it('selects last visible registered row and follows reorder, hiding and cleanup', async () => {
         const {container, rerender} = render(view({renderFooter: footer(['a', 'b'])}));
         const selected = () => container.querySelector('[data-gn-collapse-anchor]');
@@ -61,7 +76,9 @@ describe('floating collapse anchor', () => {
         rerender(view({renderFooter: footer(['b', 'a'], 'a')}));
         await waitFor(() => expect(selected()).toBe(screen.getByRole('button', {name: 'b'})));
         rerender(view({renderFooter: () => <div>custom footer</div>}));
-        await waitFor(() => expect(selected()).toBeNull());
+        await waitFor(() =>
+            expect(selected()).toBe(container.querySelector('[data-gn-collapse-fallback]')),
+        );
         expect(container.querySelector('[data-gn-collapse-fallback]')).not.toBeNull();
         rerender(view({hideCollapseButton: true, renderFooter: footer(['a'])}));
         expect(container.querySelector('[data-gn-aside-collapse-layer]')).toBeNull();
@@ -155,6 +172,127 @@ describe('floating collapse anchor', () => {
             expect(row.hasAttribute('data-gn-collapse-anchor')).toBe(false);
         } finally {
             styleSpy.mockRestore();
+            unmount();
+            global.ResizeObserver = original;
+        }
+    });
+    it.each(['transitionend', 'transitioncancel'])(
+        'skips width-only frames and reconciles heights, idle resizes and %s',
+        (eventType) => {
+            const original = global.ResizeObserver;
+            const observers: {callback: ResizeObserverCallback; observe: jest.Mock}[] = [];
+            global.ResizeObserver = jest
+                .fn()
+                .mockImplementation((callback: ResizeObserverCallback) => {
+                    const observer = {
+                        callback,
+                        observe: jest.fn(),
+                        unobserve: jest.fn(),
+                        disconnect: jest.fn(),
+                    };
+                    observers.push(observer);
+                    return observer;
+                });
+            const {container, unmount} = render(view({renderFooter: footer(['a', 'b'])}));
+            const panel = container.querySelector('[data-gn-aside-panel]') as HTMLElement;
+            const observer = observers.find((item) =>
+                item.observe.mock.calls.some(([target]) => target === panel),
+            );
+            if (!observer) throw new Error('Collapse observer missing');
+            const resize = (width: number, height = 500) =>
+                act(() =>
+                    observer.callback(
+                        [
+                            {
+                                target: panel,
+                                contentRect: {width, height},
+                            } as unknown as ResizeObserverEntry,
+                        ],
+                        {} as ResizeObserver,
+                    ),
+                );
+            resize(56);
+            panel.setAttribute('data-gn-aside-animating', '');
+            const getStyle = window.getComputedStyle;
+            const styleSpy = jest.spyOn(window, 'getComputedStyle');
+            try {
+                resize(80);
+                resize(120);
+                resize(200);
+                expect(styleSpy).not.toHaveBeenCalled();
+                resize(200, 480);
+                expect(styleSpy).toHaveBeenCalled();
+                styleSpy.mockClear();
+                panel.removeAttribute('data-gn-aside-animating');
+                resize(220, 480);
+                expect(styleSpy).toHaveBeenCalled();
+                const row = screen.getByRole('button', {name: 'b'});
+                // A CSS visibility change does not change the observed box height.
+                styleSpy.mockImplementation((element, pseudo) => {
+                    const style = getStyle(element, pseudo);
+                    return element === row
+                        ? new Proxy(style, {
+                              get: (target, name) =>
+                                  name === 'visibility' ? 'hidden' : Reflect.get(target, name),
+                          })
+                        : style;
+                });
+                panel.setAttribute('data-gn-aside-animating', '');
+                resize(236, 480);
+                expect(row.hasAttribute('data-gn-collapse-anchor')).toBe(true);
+                const finish = (target: HTMLElement, property: string) => {
+                    const event = new Event(eventType, {bubbles: true});
+                    Object.defineProperty(event, 'propertyName', {value: property});
+                    fireEvent(target, event);
+                };
+                finish(panel, 'opacity');
+                finish(row, 'width');
+                expect(row.hasAttribute('data-gn-collapse-anchor')).toBe(true);
+                finish(panel, 'width');
+                expect(row.hasAttribute('data-gn-collapse-anchor')).toBe(false);
+                expect(
+                    screen.getByRole('button', {name: 'a'}).hasAttribute('data-gn-collapse-anchor'),
+                ).toBe(true);
+            } finally {
+                styleSpy.mockRestore();
+                unmount();
+                global.ResizeObserver = original;
+            }
+        },
+    );
+    it('does not use a partial offset when the anchor leaves the panel offset chain', () => {
+        const original = global.ResizeObserver;
+        const observers: {callback: ResizeObserverCallback; observe: jest.Mock}[] = [];
+        global.ResizeObserver = jest.fn().mockImplementation((callback: ResizeObserverCallback) => {
+            const observer = {
+                callback,
+                observe: jest.fn(),
+                unobserve: jest.fn(),
+                disconnect: jest.fn(),
+            };
+            observers.push(observer);
+            return observer;
+        });
+        const {container, unmount} = render(view({renderFooter: footer(['row'])}));
+        const panel = container.querySelector('[data-gn-aside-panel]') as HTMLElement;
+        const slot = container.querySelector('[data-gn-aside-collapse-slot]') as HTMLElement;
+        const row = screen.getByRole('button', {name: 'row'});
+        const observer = observers.find((item) =>
+            item.observe.mock.calls.some(([target]) => target === panel),
+        );
+        if (!observer) throw new Error('Collapse observer missing');
+        Object.defineProperties(row, {
+            offsetParent: {value: panel, configurable: true},
+            offsetTop: {value: 500},
+        });
+        try {
+            act(() => observer.callback([], {} as ResizeObserver));
+            expect(slot.style.top).toBe('500px');
+            Object.defineProperty(row, 'offsetParent', {value: null});
+            act(() => observer.callback([], {} as ResizeObserver));
+            expect(slot.style.top).toBe('');
+            expect(slot.style.bottom).toBe('');
+        } finally {
             unmount();
             global.ResizeObserver = original;
         }
