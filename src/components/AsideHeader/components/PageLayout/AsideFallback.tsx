@@ -12,10 +12,16 @@ import headerDividerCollapsedIcon from '../../../../../assets/icons/divider-coll
 
 interface Props extends QAProps {
     headerDecoration?: boolean;
+    hideSectionDividers?: boolean;
     subheaderItemsCount?: number;
 }
 
-export const AsideFallback: React.FC<Props> = ({headerDecoration, subheaderItemsCount = 0, qa}) => {
+export const AsideFallback: React.FC<Props> = ({
+    headerDecoration,
+    hideSectionDividers,
+    subheaderItemsCount = 0,
+    qa,
+}) => {
     const {compact, menuDensity} = useAsideHeaderContext();
     const {compactWidth, itemHeight} = getAsideHeaderDensityConfig(menuDensity);
 
@@ -30,7 +36,12 @@ export const AsideFallback: React.FC<Props> = ({headerDecoration, subheaderItems
             data-qa={qa}
             data-gn-aside-panel
         >
-            <div className={b('aside-content', {'with-decoration': headerDecoration})}>
+            <div
+                className={b('aside-content', {
+                    'with-decoration': headerDecoration,
+                    'hide-section-dividers': hideSectionDividers,
+                })}
+            >
                 <div className={b('header', {'with-decoration': headerDecoration})}>
                     <div style={{height: subheaderHeight}} />
                     <AsideDivider className={b('header-bottom-divider')} transitionId="header" />
