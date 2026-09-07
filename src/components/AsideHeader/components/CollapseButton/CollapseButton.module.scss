@@ -87,8 +87,7 @@ $block: '.#{variables.$ns}collapse-button';
 
 // The layer follows the aside directly, including through display:contents consumers.
 
-:global([data-gn-aside-panel]):has(:global([data-gn-collapse-anchor]):hover)
-    + :global([data-gn-aside-collapse-layer]),
+:global([data-gn-aside-panel]):hover + :global([data-gn-aside-collapse-layer]),
 :global([data-gn-aside-panel][data-gn-aside-animating]) + :global([data-gn-aside-collapse-layer]) {
     #{$block} {
         opacity: 1;
