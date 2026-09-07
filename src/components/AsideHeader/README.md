@@ -49,7 +49,7 @@ Disabling the flag during a transition finishes it immediately and releases tran
 Re-enabling it without changing `compact` does not animate; simultaneous updates use the new flag.
 Children stay mounted. `PageLayoutAside` and `AsideFallback` inherit the layout setting.
 
-Hover effects, independent Drawer opening/closing, and the opacity effects of the bottom divider
+Hover effects, independent Drawer opening/closing, and the opacity effects of the footer divider
 and custom scrollbar are preserved. The existing `prefers-reduced-motion` behavior is unchanged.
 
 ```tsx
@@ -57,6 +57,57 @@ and custom scrollbar are preserved. The existing `prefers-reduced-motion` behavi
 
 <PageLayout compact={compact} compactTransition={false}>
   <PageLayoutAside menuItems={menuItems} onChangeCompact={setCompact} />
+  <PageLayout.Content>{children}</PageLayout.Content>
+</PageLayout>
+```
+
+### Collapse button (v7)
+
+The collapse button sits at the aside edge beside the last visible `FooterItem`. The row keeps its
+own action and menu; in expanded mode it reserves 24 px for the button. In compact mode, hovering
+the row or the button, or focusing the button from the keyboard, reveals the control. The selected
+row's built-in tooltip is suppressed in compact mode even when `enableTooltip={true}`. With no
+visible `FooterItem`, a blank bottom row provides the same control. `hideCollapseButton` removes
+the control, reserved space, and blank row.
+
+The button remains keyboard accessible and retains focus when toggled. `expandTitle` and
+`collapseTitle` set its accessible name. `compactTransition={false}` disables its geometry
+transitions while preserving hover appearance; reduced motion disables both.
+
+At the standard z-index, the compact tab extends 10 px over the edge of open All pages and custom
+`panelItems` Drawers. Clicking it changes `compact` and keeps the panel open. Its transparent layer
+does not intercept clicks outside the button. The layer uses
+`calc(var(--gn-aside-header-z-index, 100) + 1)`. Consumer z-index settings determine custom stacking;
+portaled Popups (including `asideRef` with `right-end`) may cover the tab and retain their normal
+position and behavior. The compact button background follows the collapsed aside background,
+then the general aside background, then the theme background. Matching an arbitrary
+`customBackground` is not guaranteed.
+
+In v7, `collapseButtonWrapper` decorates the edge control. Move any full-width additional content
+previously rendered by this wrapper into `renderFooter`:
+
+```tsx
+<PageLayoutAside
+  collapseButtonWrapper={(button) => <span className="collapse-decoration">{button}</span>}
+  renderFooter={({compact}) => (
+    <>
+      <div>Additional footer content</div>
+      <FooterItem id="account" title="Account" icon={Person} compact={compact} />
+    </>
+  )}
+/>
+```
+
+`PageLayoutAside` must participate directly in the flex layout of `PageLayout`. React components,
+Fragments, Context providers, and Suspense are supported without extra DOM boxes. If a consumer
+needs a DOM wrapper, give it `display: contents`; an ordinary block wrapper is unsupported.
+The library does not change consumer wrapper styles automatically.
+
+```tsx
+<PageLayout compact={compact}>
+  <div style={{display: 'contents'}}>
+    <PageLayoutAside menuItems={menuItems} onChangeCompact={setCompact} />
+  </div>
   <PageLayout.Content>{children}</PageLayout.Content>
 </PageLayout>
 ```

@@ -249,6 +249,7 @@ function FullNavigationDemo(props: FullNavigationProps) {
                         onItemClick: () => alert('Services'),
                     },
                 ]}
+                // The last visible FooterItem anchors the edge collapse control.
                 renderFooter={({compact: footerCompact}) => (
                     <React.Fragment>
                         <FooterItem

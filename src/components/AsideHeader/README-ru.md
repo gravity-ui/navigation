@@ -49,7 +49,7 @@ footer и вложенных группах, изменяют ширину вм�
 Включение без изменения `compact` ничего не анимирует; при совместном обновлении действует новый флаг.
 Дочерние компоненты остаются смонтированными. `PageLayoutAside` и `AsideFallback` наследуют настройку layout.
 
-Hover-эффекты, самостоятельное открытие и закрытие Drawer, эффекты opacity нижнего разделителя
+Hover-эффекты, самостоятельное открытие и закрытие Drawer, эффекты opacity разделителя футера
 и пользовательского скроллбара сохраняются. Поведение `prefers-reduced-motion` не меняется.
 
 ```tsx
@@ -57,6 +57,56 @@ Hover-эффекты, самостоятельное открытие и зак�
 
 <PageLayout compact={compact} compactTransition={false}>
   <PageLayoutAside menuItems={menuItems} onChangeCompact={setCompact} />
+  <PageLayout.Content>{children}</PageLayout.Content>
+</PageLayout>
+```
+
+### Кнопка сворачивания (v7)
+
+Кнопка расположена на краю aside рядом с последним видимым `FooterItem`. Действие и меню строки
+сохраняются; в expanded строка резервирует 24 px для кнопки. В compact переключатель появляется
+при наведении на строку или кнопку и при фокусе с клавиатуры. Встроенная подсказка выбранной строки
+подавляется в compact даже при `enableTooltip={true}`. Если видимых `FooterItem` нет, для такого же
+переключателя резервируется пустая нижняя строка. `hideCollapseButton` убирает кнопку,
+резервирование места и пустую строку.
+
+Кнопка доступна с клавиатуры и сохраняет фокус при переключении. `expandTitle` и `collapseTitle`
+задают доступное имя. `compactTransition={false}` отключает переходы геометрии, сохраняя появление
+при наведении; reduced motion отключает оба вида анимации.
+
+При стандартных z-index язычок выступает на 10 px поверх края открытого Drawer All pages или
+пользовательского `panelItems`. Клик переключает `compact` и оставляет панель открытой. Прозрачный
+слой не перехватывает клики вне кнопки. Z-index слоя —
+`calc(var(--gn-aside-header-z-index, 100) + 1)`. При пользовательских z-index порядок определяется
+настройками потребителя. Portaled Popup, в том числе с `asideRef` и `right-end`, может перекрывать
+язычок; его положение и поведение сохраняются. Фон compact-кнопки берётся из фона свёрнутого aside,
+затем общего фона aside, затем фона темы. Совпадение с произвольным `customBackground` не гарантируется.
+
+В v7 `collapseButtonWrapper` оформляет переключатель на краю aside. Полноширинный дополнительный
+контент, который раньше возвращался этой обёрткой, нужно перенести в `renderFooter`:
+
+```tsx
+<PageLayoutAside
+  collapseButtonWrapper={(button) => <span className="collapse-decoration">{button}</span>}
+  renderFooter={({compact}) => (
+    <>
+      <div>Дополнительный контент футера</div>
+      <FooterItem id="account" title="Аккаунт" icon={Person} compact={compact} />
+    </>
+  )}
+/>
+```
+
+`PageLayoutAside` должен непосредственно участвовать во flex-layout `PageLayout`. React-компоненты,
+Fragment, Context и Suspense поддерживаются без дополнительных DOM-боксов. Если нужна DOM-обёртка
+потребителя, задайте ей `display: contents`; обычная block-обёртка не поддерживается.
+Библиотека не меняет стили обёрток потребителя автоматически.
+
+```tsx
+<PageLayout compact={compact}>
+  <div style={{display: 'contents'}}>
+    <PageLayoutAside menuItems={menuItems} onChangeCompact={setCompact} />
+  </div>
   <PageLayout.Content>{children}</PageLayout.Content>
 </PageLayout>
 ```

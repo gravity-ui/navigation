@@ -1,6 +1,6 @@
 import React, {useCallback, useRef, useState} from 'react';
 
-import {setRef} from '@gravity-ui/uikit';
+import {setRef, useUniqId} from '@gravity-ui/uikit';
 
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import i18n from '../i18n';
@@ -10,6 +10,7 @@ import {b} from '../utils';
 import {useVisibleMenuItems} from './AllPagesPanel';
 import {AsideDivider} from './AsideDivider';
 import {CollapseButton} from './CollapseButton/CollapseButton';
+import {CollapseAnchorContext, useCollapseAnchor} from './CollapseButton/useCollapseAnchor';
 import {CompositeBar} from './CompositeBar';
 import type {QuickAccessToggleHandler} from './CompositeBar/Item/Item.types';
 import {ScrollableWithScrollbar} from './CompositeBar/ScrollableWithScrollbar';
@@ -91,6 +92,8 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         onToggleQuickAccess,
         qa,
     } = useAsideHeaderInnerContext();
+    const panelId = useUniqId();
+    const collapseAnchor = useCollapseAnchor(!hideCollapseButton, compact);
     const visibleMenuItems = useVisibleMenuItems();
     const quickAccessEnabled = enableQuickAccess;
     const quickAccessItems = React.useMemo(
@@ -258,6 +261,8 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 style={{width: size}}
                 data-qa={qa}
                 data-gn-aside-panel
+                id={panelId}
+                ref={collapseAnchor.panelRef}
             >
                 <div className={b('aside-popup-anchor')} ref={asideRef} />
                 {customBackground && (
@@ -284,17 +289,31 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             {menuSection}
                         </div>
                     </ScrollableWithScrollbar>
-                    <div className={b('footer', {'with-divider': menuScrollOverflows})}>
-                        <AsideDivider className={b('footer-divider')} transitionId="footer" />
-                        {renderFooter?.({
-                            size,
-                            compact: Boolean(compact),
-                            asideRef,
-                        })}
+                    <div
+                        className={b('footer', {'with-divider': menuScrollOverflows})}
+                        ref={collapseAnchor.footerRef}
+                    >
+                        <CollapseAnchorContext.Provider value={collapseAnchor.context}>
+                            <AsideDivider className={b('footer-divider')} transitionId="footer" />
+                            {renderFooter?.({
+                                size,
+                                compact: Boolean(compact),
+                                asideRef,
+                            })}
+                            {!hideCollapseButton && !collapseAnchor.selected && (
+                                <div
+                                    data-gn-collapse-fallback
+                                    className={b('collapse-fallback')}
+                                    ref={collapseAnchor.fallbackRef}
+                                />
+                            )}
+                        </CollapseAnchorContext.Provider>
                     </div>
-                    {!hideCollapseButton && <CollapseButton />}
                 </div>
             </div>
+            {!hideCollapseButton && (
+                <CollapseButton panelId={panelId} slotRef={collapseAnchor.slotRef} />
+            )}
             <Panels />
         </React.Fragment>
     );
