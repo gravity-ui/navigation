@@ -71,6 +71,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         size,
         onItemClick,
         headerDecoration,
+        hideSectionDividers,
         menuMoreTitle,
         onMenuMoreClick,
         renderFooter,
@@ -274,6 +275,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 <div
                     className={b('aside-content', {
                         'with-decoration': headerDecoration,
+                        'hide-section-dividers': hideSectionDividers,
                         'with-quick-access': quickAccessEnabled,
                         'with-quick-access-items': quickAccessEnabled && hasQuickAccessItems,
                     })}

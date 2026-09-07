@@ -18,6 +18,7 @@ import {DEFAULT_LOGO} from './moc';
 
 interface FullNavigationProps {
     initialCompact?: boolean;
+    hideSectionDividers?: boolean;
     compactTransition?: boolean;
     menuDensity?: AsideHeaderProps['menuDensity'];
     menuGroupNestedIcons?: AsideHeaderProps['menuGroupNestedIcons'];
@@ -29,6 +30,10 @@ export default {
     title: 'components/AsideHeader/Examples',
     component: FullNavigationDemo,
     argTypes: {
+        hideSectionDividers: {
+            control: 'boolean',
+            description: 'Hide header/footer section separators and their spacing toward the menu',
+        },
         initialCompact: {
             control: 'boolean',
             description: 'Initial collapsed state; use the sidebar control to switch at runtime',
@@ -225,6 +230,7 @@ function FullNavigationDemo(props: FullNavigationProps) {
         >
             <PageLayoutAside
                 headerDecoration={false}
+                hideSectionDividers={props.hideSectionDividers}
                 logo={DEFAULT_LOGO}
                 menuItems={menuItems}
                 menuGroups={fullNavigationMenuGroups}
@@ -298,6 +304,7 @@ export const FullNavigation = FullNavigationTemplate.bind({});
 FullNavigation.storyName = 'Full navigation';
 FullNavigation.args = {
     initialCompact: false,
+    hideSectionDividers: false,
     menuDensity: 'compact',
     compactTransition: true,
     menuGroupNestedIcons: true,
