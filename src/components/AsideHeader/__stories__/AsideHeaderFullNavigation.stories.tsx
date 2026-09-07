@@ -32,7 +32,8 @@ export default {
     argTypes: {
         hideSectionDividers: {
             control: 'boolean',
-            description: 'Hide header/footer section separators and their spacing toward the menu',
+            description:
+                'Hide header/footer separators and spacing; show indicators at scroll edges with hidden content',
         },
         initialCompact: {
             control: 'boolean',

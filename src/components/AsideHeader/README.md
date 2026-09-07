@@ -551,3 +551,5 @@ You can customize the inner content, make alert closeable if necessary. For read
 | `--gn-aside-header-panel-z-index`                         | Aside header panel (Drawer component) z-index                             |
 | `--gn-aside-header-pane-top-z-index`                      | Top pane z-index                                                          |
 | `--gn-aside-header-content-z-index`                       | Content (right part) z-index                                              |
+
+With `hideSectionDividers=true`, indicators appear at the menu scroll edges only while content is hidden beyond that edge: bottom at the start, both in the middle, top at the end, neither without overflow. They do not restore spacing. With `false`, the existing footer separator remains visible whenever the menu overflows, including at the end. The Quick Access separator stays inside the scrolling content and can coexist with these indicators. Setting `--gn-aside-header-divider-horizontal-color: transparent` also hides the scroll indicators.
