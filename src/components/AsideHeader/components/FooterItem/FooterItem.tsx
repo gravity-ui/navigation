@@ -4,6 +4,7 @@ import {block, createBlock} from '../../../utils/cn';
 import {useAsideHeaderContext} from '../../AsideHeaderContext';
 import {getAsideHeaderDensityConfig} from '../../density';
 import {AsideHeaderItem} from '../../types';
+import {CollapseAnchorContext} from '../CollapseButton/useCollapseAnchor';
 import {Item} from '../CompositeBar/Item/Item';
 
 import styles from './FooterItem.module.scss';
@@ -20,12 +21,28 @@ export interface FooterItemProps extends AsideHeaderItem {
 }
 
 export function FooterItem({regularSize, ...props}: FooterItemProps) {
+    const anchor = React.useContext(CollapseAnchorContext);
+    const register = anchor?.register;
+    const row = React.useRef<HTMLElement | null>(null);
+    const cleanup = React.useRef<() => void>();
+    const rowRef = React.useCallback(
+        (element: HTMLElement | null) => {
+            cleanup.current?.();
+            cleanup.current = undefined;
+            row.current = element;
+            if (element && register) cleanup.current = register(element);
+        },
+        [register],
+    );
+    const suppressTooltip = Boolean(anchor?.compact && anchor.selected === row.current);
     const {menuDensity} = useAsideHeaderContext();
     const {iconSize} = getAsideHeaderDensityConfig(menuDensity);
 
     return (
         <Item
             {...props}
+            rowRef={rowRef}
+            enableTooltip={suppressTooltip ? false : props.enableTooltip}
             iconSize={iconSize}
             className={`${b({compact: props.compact})} ${bGlobal({'regular-size': regularSize})}`}
         />

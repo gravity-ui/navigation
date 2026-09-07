@@ -781,3 +781,108 @@ describe('AsideLayoutTransition current presentation ownership', () => {
         await flush();
     });
 });
+
+describe('collapse slot transport', () => {
+    it('animates only Y, reverses from screen geometry and cancels when disabled', async () => {
+        const originalAnimate = HTMLElement.prototype.animate;
+        const originalGetAnimations = HTMLElement.prototype.getAnimations;
+        const originalRect = HTMLElement.prototype.getBoundingClientRect;
+        const originalMatchMedia = window.matchMedia;
+        const handles: {element: HTMLElement; frames: Keyframe[]; cancel: jest.Mock}[] = [];
+        HTMLElement.prototype.animate = function (frames) {
+            const cancel = jest.fn();
+            handles.push({element: this, frames: frames as Keyframe[], cancel});
+            return {finished: new Promise(() => {}), cancel} as unknown as Animation;
+        };
+        HTMLElement.prototype.getAnimations = () => [];
+        HTMLElement.prototype.getBoundingClientRect = function () {
+            return new DOMRect(10, Number(this.dataset.y ?? 0), 24, 40);
+        };
+        window.matchMedia = jest.fn().mockReturnValue({matches: false});
+        const view = (compact: boolean, enabled = true) => (
+            <AsideLayoutTransition compact={compact} compactTransition={enabled}>
+                <div data-gn-aside-panel>
+                    <div data-gn-collapse-anchor />
+                </div>
+                <div data-gn-aside-collapse-layer>
+                    <div
+                        data-testid="slot"
+                        data-gn-aside-collapse-slot
+                        data-y={compact ? 50 : 100}
+                    />
+                </div>
+            </AsideLayoutTransition>
+        );
+        const {rerender, unmount} = render(view(false));
+        try {
+            rerender(view(true));
+            await act(async () => {
+                await Promise.resolve();
+            });
+            const first = handles.find((handle) => handle.element === screen.getByTestId('slot'));
+            expect(first?.frames).toEqual([{transform: 'translateY(50px)'}, {transform: 'none'}]);
+            screen.getByTestId('slot').dataset.y = '75';
+            rerender(view(false));
+            await act(async () => {
+                await Promise.resolve();
+            });
+            expect(first?.cancel).toHaveBeenCalled();
+            const second = handles[handles.length - 1];
+            expect(second.frames).toEqual([{transform: 'translateY(-25px)'}, {transform: 'none'}]);
+            rerender(view(false, false));
+            expect(second.cancel).toHaveBeenCalled();
+        } finally {
+            unmount();
+            HTMLElement.prototype.animate = originalAnimate;
+            HTMLElement.prototype.getAnimations = originalGetAnimations;
+            HTMLElement.prototype.getBoundingClientRect = originalRect;
+            window.matchMedia = originalMatchMedia;
+        }
+    });
+});
+
+describe('collapse anchor decoration', () => {
+    it('does not copy footer anchor identity into departing ghosts', async () => {
+        const originalAnimate = HTMLElement.prototype.animate;
+        const originalGetAnimations = HTMLElement.prototype.getAnimations;
+        const originalRect = HTMLElement.prototype.getBoundingClientRect;
+        const originalMatchMedia = window.matchMedia;
+        HTMLElement.prototype.animate = () =>
+            ({finished: new Promise(() => {}), cancel: jest.fn()}) as unknown as Animation;
+        HTMLElement.prototype.getAnimations = () => [];
+        HTMLElement.prototype.getBoundingClientRect = () => new DOMRect(10, 20, 100, 40);
+        window.matchMedia = jest.fn().mockReturnValue({matches: false});
+        const view = (compact: boolean) => (
+            <AsideLayoutTransition compact={compact}>
+                <div data-gn-aside-panel>
+                    {!compact && (
+                        <div
+                            style={{opacity: 1}}
+                            data-gn-composite-bar-item-id="footer"
+                            data-gn-collapse-anchor
+                        />
+                    )}
+                </div>
+            </AsideLayoutTransition>
+        );
+        const {rerender, unmount} = render(view(false));
+        try {
+            rerender(view(true));
+            await act(async () => {
+                await Promise.resolve();
+            });
+            // A decorative clone must not remain a selected hover/geometry anchor.
+            // eslint-disable-next-line testing-library/no-node-access
+            const ghost = document.querySelector('[data-gn-aside-transition-overlay]');
+            expect(ghost).not.toBeNull();
+            // eslint-disable-next-line testing-library/no-node-access
+            expect(ghost?.querySelector('[data-gn-collapse-anchor]')).toBeNull();
+        } finally {
+            unmount();
+            HTMLElement.prototype.animate = originalAnimate;
+            HTMLElement.prototype.getAnimations = originalGetAnimations;
+            HTMLElement.prototype.getBoundingClientRect = originalRect;
+            window.matchMedia = originalMatchMedia;
+        }
+    });
+});

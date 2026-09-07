@@ -738,7 +738,9 @@ test('scrolling moves and clips the indicator without adding scrollable overflow
     mount,
     page,
 }, testInfo) => {
-    await page.setViewportSize({width: 1200, height: 420});
+    // Leave the moving indicator below the menu edge before scrolling it into
+    // the footer boundary; the edge control no longer occupies a bottom strip.
+    await page.setViewportSize({width: 1200, height: 380});
     await mount(<CurrentIndicatorExample initialCompact />);
     await page.evaluate(() => document.fonts.ready);
     const scroll = page.locator(SCROLL);

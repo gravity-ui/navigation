@@ -44,6 +44,19 @@ const waitForMenuColumnSettled = async (page: Page) => {
     await expect(page.locator(footerWithDivider)).toHaveCount(0);
 };
 
+// Pin the font used by the Linux snapshots: the generic monospace alias can
+// resolve to different installed system fonts across Chromium processes.
+const prepareCodeFont = async (page: Page) => {
+    await page.locator('code').evaluateAll((elements) => {
+        elements.forEach((element) => {
+            (element as HTMLElement).style.setProperty(
+                'font-family',
+                '"WenQuanYi Zen Hei Mono", monospace',
+            );
+        });
+    });
+};
+
 test.describe('AsideHeader', () => {
     /** Order matches exports in `@stories__/AsideHeader.stories.tsx`. Explicit components — dynamic `Stories[key]` breaks Playwright CT. */
     test('render story: <Showcase>', async ({mount, expectScreenshot}) => {
@@ -897,18 +910,22 @@ test.describe('AsideHeader', () => {
         await expectScreenshot();
     });
 
-    test('render story: <AboveMenuContent>', async ({mount, expectScreenshot}) => {
+    test('render story: <AboveMenuContent>', async ({mount, page, expectScreenshot}) => {
         await mount(<AsideHeaderStories.AboveMenuContent />, mountOptions, viewport);
+        await prepareCodeFont(page);
+
         await expectScreenshot();
     });
 
-    test('render story: <AboveMenuContentCompact>', async ({mount, expectScreenshot}) => {
+    test('render story: <AboveMenuContentCompact>', async ({mount, page, expectScreenshot}) => {
         await mount(<AsideHeaderStories.AboveMenuContentCompact />, mountOptions, viewport);
+        await prepareCodeFont(page);
         await expectScreenshot();
     });
 
-    test('render story: <AboveMenuContentScrollbar>', async ({mount, expectScreenshot}) => {
+    test('render story: <AboveMenuContentScrollbar>', async ({mount, page, expectScreenshot}) => {
         await mount(<AsideHeaderStories.AboveMenuContentScrollbar />, mountOptions, viewport);
+        await prepareCodeFont(page);
         await expectScreenshot();
     });
 });

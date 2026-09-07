@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {ChevronDown, ChevronRight} from '@gravity-ui/icons';
-import {Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
+import {Icon, Popup, PopupPlacement, PopupProps, setRef} from '@gravity-ui/uikit';
 
 import {MakeItemParams} from '../../../../types';
 import {createBlock} from '../../../../utils/cn';
@@ -170,6 +170,13 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const [compactNavPopoverOpen, setCompactNavPopoverOpen] = React.useState(false);
 
     const ref = React.useRef<HTMLElement>(null);
+    const mergedRowRef = React.useCallback(
+        (element: HTMLElement | null) => {
+            setRef(ref, element);
+            setRef(props.rowRef, element);
+        },
+        [props.rowRef],
+    );
     const anchorRef = resolveAnchorRef(anchoreRefProp, ref);
     const highlightedRef = React.useRef<HTMLDivElement>(null);
     const interactiveRowRef = React.useRef<HTMLDivElement>(null);
@@ -459,7 +466,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
         if (href) {
             tagNode = (
-                <a {...rowEventProps} href={href} ref={ref as React.RefObject<HTMLAnchorElement>}>
+                <a {...rowEventProps} href={href} ref={mergedRowRef}>
                     {rowChildren}
                 </a>
             );
@@ -468,14 +475,14 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 <div
                     {...rowEventProps}
                     role={menuItemAriaProps?.role ?? 'button'}
-                    ref={ref as React.RefObject<HTMLDivElement>}
+                    ref={mergedRowRef}
                 >
                     {rowChildren}
                 </div>
             );
         } else {
             tagNode = (
-                <button {...rowEventProps} ref={ref as React.RefObject<HTMLButtonElement>}>
+                <button {...rowEventProps} ref={mergedRowRef}>
                     {rowChildren}
                 </button>
             );

@@ -228,7 +228,6 @@ for (const menuDensity of ['default', 'compact'] as const) {
                 'header',
                 'quick-access',
                 'footer',
-                'collapse',
             ]);
             await toggleAndPause(page);
             for (const progress of [0, 0.25, 0.5]) {

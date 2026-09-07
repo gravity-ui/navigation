@@ -58,7 +58,15 @@ async function geometry(page: Page) {
                     (animation) =>
                         !(
                             animation instanceof CSSTransition &&
-                            ['opacity', 'background-color'].includes(animation.transitionProperty)
+                            (['opacity', 'background-color'].includes(
+                                animation.transitionProperty,
+                            ) ||
+                                // The inner button's 2px appearance motion is independent from
+                                // compact geometry. Slot Y/width/inset animations remain checked.
+                                (animation.transitionProperty === 'transform' &&
+                                    (
+                                        (animation.effect as KeyframeEffect).target as Element
+                                    )?.matches('button[class*="gn-collapse-button_"]')))
                         ),
                 )
                 .map((animation) => ({

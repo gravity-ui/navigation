@@ -42,6 +42,7 @@ type Snapshot = {
     width: number;
     layoutWidth: number;
     current?: CurrentSnapshot;
+    collapse?: {element: HTMLElement; y: number; anchor: Element | null};
 };
 type Props = React.HTMLAttributes<HTMLDivElement> & {
     compact: boolean;
@@ -163,7 +164,17 @@ function capture(panel: HTMLElement): Snapshot {
     const layoutWidth =
         Number.parseFloat(getComputedStyle(panel).getPropertyValue('--gn-aside-header-size')) ||
         width;
-    return {rows, groups, dividers, width, layoutWidth};
+    const slot = panel.nextElementSibling?.matches('[data-gn-aside-collapse-layer]')
+        ? panel.nextElementSibling.querySelector<HTMLElement>('[data-gn-aside-collapse-slot]')
+        : null;
+    const collapse = slot
+        ? {
+              element: slot,
+              y: slot.getBoundingClientRect().y,
+              anchor: panel.querySelector('[data-gn-collapse-anchor]'),
+          }
+        : undefined;
+    return {rows, groups, dividers, width, layoutWidth, collapse};
 }
 
 function translation(x: number, y: number, transform = 'none') {
@@ -324,6 +335,18 @@ export class AsideLayoutTransition extends React.Component<
             this.animations.push(animation);
             return animation;
         };
+
+        if (
+            before.collapse &&
+            after.collapse &&
+            before.collapse.element === after.collapse.element &&
+            before.collapse.anchor === after.collapse.anchor
+        ) {
+            animate(after.collapse.element, [
+                {transform: `translateY(${before.collapse.y - after.collapse.y}px)`},
+                {transform: 'none'},
+            ]);
+        }
 
         after.rows.forEach((row, key) => {
             if (row.group && after.groups.has(row.group)) return;
@@ -541,6 +564,7 @@ export class AsideLayoutTransition extends React.Component<
         [ghost, ...Array.from(ghost.querySelectorAll<HTMLElement>('*'))].forEach((element) => {
             element.removeAttribute('id');
             element.removeAttribute('data-qa');
+            element.removeAttribute('data-gn-collapse-anchor');
             element.removeAttribute(COMPOSITE_BAR_ITEM_ID_ATTRIBUTE);
         });
         const origin = panel.getBoundingClientRect();
