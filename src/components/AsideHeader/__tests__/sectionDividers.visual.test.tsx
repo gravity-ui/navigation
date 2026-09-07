@@ -110,8 +110,16 @@ for (const compact of [false, true]) {
                 const scrollBox = await scroll.boundingBox();
                 const startBox = await start.boundingBox();
                 const aboveBox = await page.locator('[data-qa="above-menu"]').boundingBox();
-                expect(startBox?.y).toBe(scrollBox?.y);
-                expect(startBox?.y).toBe((aboveBox?.y ?? 0) + (aboveBox?.height ?? 0));
+                if (!scrollBox || !startBox || !aboveBox) {
+                    throw new Error(
+                        'Expected visible scrollport, scroll-start indicator and above-menu content',
+                    );
+                }
+                expect(startBox.y).toBe(scrollBox.y);
+                expect(startBox.y).toBe(aboveBox.y + aboveBox.height);
+                const originalColor = await start.evaluate(
+                    (el) => getComputedStyle(el).backgroundColor,
+                );
                 await page.locator('[data-gn-aside-panel]').evaluate((el) => {
                     (el as HTMLElement).style.setProperty(
                         '--gn-aside-header-divider-horizontal-color',
@@ -119,6 +127,12 @@ for (const compact of [false, true]) {
                     );
                 });
                 await expect(start).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+                await page.locator('[data-gn-aside-panel]').evaluate((el) => {
+                    (el as HTMLElement).style.removeProperty(
+                        '--gn-aside-header-divider-horizontal-color',
+                    );
+                });
+                await expect(start).toHaveCSS('background-color', originalColor);
                 await page.setViewportSize({width: 1000, height: 2400});
                 await expect(start).toHaveCSS('opacity', '0');
                 await expect(end).toHaveCSS('opacity', '0');
