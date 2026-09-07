@@ -33,7 +33,7 @@ Users who prefer reduced motion receive an immediate layout change.
 All built-in horizontal separators, including `type: 'divider'` items in header, menu, footer,
 and nested groups, resize with the sidebar while preserving their local spacing.
 
-The experimental current-item transition follows changes to `compact`: when a selected child
+The current-item transition follows changes to `compact`: when a selected child
 becomes represented by its group or **More**, one background moves between those rows. It also
 supports reversing an unfinished transition. Ordinary page selection remains immediate, and
 quick-access highlight settings and the theme's selection transparency are preserved. A current
