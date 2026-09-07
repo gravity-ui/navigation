@@ -208,6 +208,153 @@ describe('AsideLayoutTransition lifecycle', () => {
     });
 });
 
+describe('AsideLayoutTransition compactTransition', () => {
+    type Handle = {cancel: jest.Mock; finished: Promise<void>; frames: Keyframe[]};
+    const originalAnimate = HTMLElement.prototype.animate;
+    const originalGetAnimations = HTMLElement.prototype.getAnimations;
+    const originalRect = HTMLElement.prototype.getBoundingClientRect;
+    const originalMatchMedia = window.matchMedia;
+    const originalQueueMicrotask = global.queueMicrotask;
+    let handles: Handle[];
+    let microtasks: VoidFunction[];
+
+    const view = (
+        compact: boolean,
+        compactTransition: boolean | undefined,
+        child: React.ReactNode = (
+            <button data-gn-composite-bar-item-id="home">
+                Home
+                <span
+                    data-gn-aside-part="surface"
+                    style={{backgroundColor: compact ? 'blue' : 'gray'}}
+                />
+            </button>
+        ),
+    ) => (
+        <AsideLayoutTransition
+            compact={compact}
+            compactTransition={compactTransition}
+            data-testid="transition-root"
+        >
+            <div data-gn-aside-panel>{child}</div>
+        </AsideLayoutTransition>
+    );
+
+    beforeEach(() => {
+        handles = [];
+        microtasks = [];
+        HTMLElement.prototype.animate = jest.fn((frames) => {
+            const handle = {
+                cancel: jest.fn(),
+                finished: new Promise<void>(() => {}),
+                frames: frames as Keyframe[],
+            };
+            handles.push(handle);
+            return handle as unknown as Animation;
+        });
+        HTMLElement.prototype.getAnimations = () => [];
+        HTMLElement.prototype.getBoundingClientRect = () => new DOMRect(10, 20, 100, 40);
+        window.matchMedia = jest.fn().mockReturnValue({matches: false});
+        global.queueMicrotask = (callback) => microtasks.push(callback);
+    });
+
+    afterEach(() => {
+        HTMLElement.prototype.animate = originalAnimate;
+        HTMLElement.prototype.getAnimations = originalGetAnimations;
+        HTMLElement.prototype.getBoundingClientRect = originalRect;
+        window.matchMedia = originalMatchMedia;
+        global.queueMicrotask = originalQueueMicrotask;
+        jest.restoreAllMocks();
+    });
+
+    it.each([
+        [false, true],
+        [true, false],
+    ])('does not animate a %s to %s compact change when disabled', (from, to) => {
+        const snapshots = jest.spyOn(AsideLayoutTransition.prototype, 'getSnapshotBeforeUpdate');
+        const {rerender} = render(view(from, false));
+        rerender(view(to, false));
+        expect(snapshots).toHaveLastReturnedWith(null);
+        expect(microtasks).toHaveLength(0);
+        expect(handles).toHaveLength(0);
+    });
+
+    it('cancels an active transition when disabled without a compact change', () => {
+        const {rerender} = render(view(false, true));
+        rerender(view(true, true));
+        expect(microtasks).toHaveLength(1);
+        microtasks.shift()?.();
+        expect(handles.length).toBeGreaterThan(0);
+        expect(handles.some(({frames}) => 'backgroundColor' in frames[0])).toBe(true);
+        rerender(view(true, false));
+        handles.forEach(({cancel}) => expect(cancel).toHaveBeenCalledTimes(1));
+    });
+
+    it('invalidates a queued snapshot across disable and re-enable', () => {
+        const {rerender} = render(view(false, true));
+        rerender(view(true, true));
+        expect(microtasks).toHaveLength(1);
+        const stale = microtasks.shift();
+        rerender(view(true, false));
+        rerender(view(true, true));
+        stale?.();
+        expect(handles).toHaveLength(0);
+
+        rerender(view(false, true));
+        expect(microtasks).toHaveLength(1);
+        microtasks.shift()?.();
+        expect(handles.length).toBeGreaterThan(0);
+    });
+
+    it('cancels active work and skips capture when compact and the flag change together', () => {
+        const snapshots = jest.spyOn(AsideLayoutTransition.prototype, 'getSnapshotBeforeUpdate');
+        const {rerender} = render(view(false, true));
+        rerender(view(true, true));
+        microtasks.shift()?.();
+        expect(handles.length).toBeGreaterThan(0);
+        snapshots.mockClear();
+        rerender(view(false, false));
+        expect(snapshots).toHaveLastReturnedWith(null);
+        handles.forEach(({cancel}) => expect(cancel).toHaveBeenCalledTimes(1));
+        expect(microtasks).toHaveLength(0);
+    });
+
+    it('does not clean up observers when disabled while idle', () => {
+        const disconnect = jest.spyOn(MutationObserver.prototype, 'disconnect');
+        const {rerender} = render(view(false, true));
+        rerender(view(false, false));
+        rerender(view(false, false, <button data-gn-composite-bar-item-id="home">Changed</button>));
+        expect(disconnect).not.toHaveBeenCalled();
+        expect(microtasks).toHaveLength(0);
+    });
+
+    it('keeps its child mounted and does not forward transition props to the DOM', () => {
+        const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+        const mounted = jest.fn();
+        const Child = () => {
+            React.useEffect(() => {
+                mounted();
+            }, []);
+            return <input aria-label="Stable child" />;
+        };
+        const child = <Child />;
+        const {rerender} = render(view(false, true, child));
+        const input = screen.getByRole('textbox', {name: 'Stable child'});
+        input.focus();
+        rerender(view(false, false, child));
+        expect(mounted).toHaveBeenCalledTimes(1);
+        // Focus and raw attribute ownership are the behavior under test here.
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(document.activeElement).toBe(input);
+        const root = screen.getByTestId('transition-root');
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(root.hasAttribute('compact')).toBe(false);
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(root.hasAttribute('compactTransition')).toBe(false);
+        expect(error).not.toHaveBeenCalled();
+    });
+});
+
 describe('AsideLayoutTransition current presentation ownership', () => {
     type Handle = {
         element: HTMLElement;

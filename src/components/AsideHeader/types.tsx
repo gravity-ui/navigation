@@ -14,6 +14,8 @@ export interface PanelItemProps extends DrawerProps {
 
 export interface LayoutProps {
     compact: boolean;
+    /** Animate compact layout changes. @default true */
+    compactTransition?: boolean;
     className?: string;
     topAlert?: TopAlertProps;
     /**

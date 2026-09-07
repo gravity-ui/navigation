@@ -3,10 +3,10 @@ import React from 'react';
 import {Drawer} from '@gravity-ui/uikit';
 
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
-import {b} from '../utils';
+import {b, getCompactTransitionClassName} from '../utils';
 
 export const Panels = () => {
-    const {panelItems, onClosePanel, size} = useAsideHeaderInnerContext();
+    const {panelItems, onClosePanel, size, compactTransition = true} = useAsideHeaderInnerContext();
 
     return panelItems ? (
         <React.Fragment>
@@ -14,7 +14,7 @@ export const Panels = () => {
                 <Drawer
                     {...rest}
                     key={id}
-                    className={b('panels')}
+                    className={b('panels', getCompactTransitionClassName(compactTransition))}
                     onOpenChange={(open) => !open && onClosePanel?.()}
                     style={{...itemStyle, left: size, top: 'var(--gn-top-alert-height, 0px)'}}
                     contentClassName={b('panel', className)}

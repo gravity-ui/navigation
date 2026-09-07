@@ -18,6 +18,7 @@ import {DEFAULT_LOGO} from './moc';
 
 interface FullNavigationProps {
     initialCompact?: boolean;
+    compactTransition?: boolean;
     menuDensity?: AsideHeaderProps['menuDensity'];
     menuGroupNestedIcons?: AsideHeaderProps['menuGroupNestedIcons'];
     enableQuickAccess?: AsideHeaderProps['enableQuickAccess'];
@@ -31,6 +32,10 @@ export default {
         initialCompact: {
             control: 'boolean',
             description: 'Initial collapsed state; use the sidebar control to switch at runtime',
+        },
+        compactTransition: {
+            control: 'boolean',
+            description: 'Animate compact layout changes',
         },
         menuDensity: {
             control: 'inline-radio',
@@ -213,7 +218,11 @@ function FullNavigationDemo(props: FullNavigationProps) {
     const pageTitle = typeof currentItem?.title === 'string' ? currentItem.title : 'Overview';
 
     return (
-        <PageLayout compact={compact} menuDensity={props.menuDensity}>
+        <PageLayout
+            compact={compact}
+            compactTransition={props.compactTransition}
+            menuDensity={props.menuDensity}
+        >
             <PageLayoutAside
                 headerDecoration={false}
                 logo={DEFAULT_LOGO}
@@ -289,6 +298,7 @@ FullNavigation.storyName = 'Full navigation';
 FullNavigation.args = {
     initialCompact: false,
     menuDensity: 'compact',
+    compactTransition: true,
     menuGroupNestedIcons: true,
     enableQuickAccess: true,
     quickAccessHighlightInMainMenu: false,

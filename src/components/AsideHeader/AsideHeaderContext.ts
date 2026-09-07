@@ -34,12 +34,14 @@ export const useAsideHeaderInnerContext = (): AsideHeaderInnerContextType => {
 
 export interface AsideHeaderContextType {
     compact: boolean;
+    compactTransition?: boolean;
     size: number;
     menuDensity?: AsideHeaderMenuDensity;
 }
 
 const AsideHeaderContext = React.createContext<AsideHeaderContextType | undefined>({
     compact: false,
+    compactTransition: true,
     size: 0,
     menuDensity: 'default',
 });
