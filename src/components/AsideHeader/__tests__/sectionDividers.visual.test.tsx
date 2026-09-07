@@ -25,7 +25,9 @@ for (const compact of [false, true]) {
                     id: String(i),
                     title: `Item ${i}`,
                     icon: Gear,
+                    quickAccess: i === 0,
                 })),
+                aboveMenuContent: <div data-qa="above-menu">Above menu</div>,
                 renderFooter: () => <div>Footer</div>,
             };
             const component = await mount(<AsideHeader {...props} />, undefined, {
@@ -62,7 +64,69 @@ for (const compact of [false, true]) {
                     page.locator('[class*="gn-aside-header__header-divider_"]'),
                 ).toBeHidden();
             }
+            const start = page.locator('[data-gn-aside-divider="scroll-start"]');
+            const end = page.locator('[data-gn-aside-divider="scroll-end"]');
+            const scroll = page.locator('[data-gn-aside-scrollport]');
+            await expect(start).toHaveCSS('opacity', '0');
+            await expect(end).toHaveCSS('opacity', compact ? '0' : '1');
+            if (quickAccess) {
+                expect(
+                    await page
+                        .locator('[data-gn-aside-divider]')
+                        .evaluateAll((els) =>
+                            els.map((el) => el.getAttribute('data-gn-aside-divider')),
+                        ),
+                ).toEqual(['header', 'quick-access', 'scroll-start', 'scroll-end', 'footer']);
+            }
+            if (!compact) {
+                const geometry = () =>
+                    scroll.evaluate((el) => {
+                        const rows = el.querySelectorAll('[data-gn-composite-bar-item-id]');
+                        const rect = el.getBoundingClientRect();
+                        return {
+                            height: el.clientHeight,
+                            first: rows[0]?.getBoundingClientRect().top - rect.top + el.scrollTop,
+                            last:
+                                rows[rows.length - 1]?.getBoundingClientRect().top -
+                                rect.top +
+                                el.scrollTop,
+                        };
+                    });
+                const before = await geometry();
+                expect(Number.isFinite(before.first)).toBe(true);
+                expect(Number.isFinite(before.last)).toBe(true);
+                await scroll.evaluate((el) => {
+                    el.scrollTo(0, (el.scrollHeight - el.clientHeight) / 2);
+                });
+                await expect(start).toHaveCSS('opacity', '1');
+                await expect(end).toHaveCSS('opacity', '1');
+                expect(await geometry()).toEqual(before);
+                await scroll.evaluate((el) => {
+                    el.scrollTo(0, el.scrollHeight);
+                });
+                await expect(start).toHaveCSS('opacity', '1');
+                await expect(end).toHaveCSS('opacity', '0');
+                expect(await geometry()).toEqual(before);
+                const scrollBox = await scroll.boundingBox();
+                const startBox = await start.boundingBox();
+                const aboveBox = await page.locator('[data-qa="above-menu"]').boundingBox();
+                expect(startBox?.y).toBe(scrollBox?.y);
+                expect(startBox?.y).toBe((aboveBox?.y ?? 0) + (aboveBox?.height ?? 0));
+                await page.locator('[data-gn-aside-panel]').evaluate((el) => {
+                    (el as HTMLElement).style.setProperty(
+                        '--gn-aside-header-divider-horizontal-color',
+                        'transparent',
+                    );
+                });
+                await expect(start).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+                await page.setViewportSize({width: 1000, height: 2400});
+                await expect(start).toHaveCSS('opacity', '0');
+                await expect(end).toHaveCSS('opacity', '0');
+                await page.setViewportSize({width: 1000, height: 400});
+            }
             await component.update(<AsideHeader {...props} />);
+            await expect(start).toHaveCount(0);
+            await expect(end).toHaveCount(0);
             await expect(footer).toHaveCSS('opacity', compact ? '0' : '1');
             expect(
                 await header.evaluate(

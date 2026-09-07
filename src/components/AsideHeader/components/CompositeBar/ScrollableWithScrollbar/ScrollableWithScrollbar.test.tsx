@@ -3,7 +3,7 @@
  */
 import React from 'react';
 
-import {act, render, screen} from '@testing-library/react';
+import {act, fireEvent, render, screen} from '@testing-library/react';
 
 import {ScrollableWithScrollbar} from './ScrollableWithScrollbar';
 
@@ -280,6 +280,67 @@ describe('ScrollableWithScrollbar', () => {
 
         unmount();
         global.ResizeObserver = originalResizeObserver;
+        jest.useRealTimers();
+    });
+});
+
+describe('scroll-edge indicators', () => {
+    it('tracks both edges with tolerance and mounts indicators only when enabled', () => {
+        jest.useFakeTimers();
+        const {container, rerender, unmount} = render(
+            <ScrollableWithScrollbar>
+                <div>Content</div>
+            </ScrollableWithScrollbar>,
+        );
+        // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+        const scroll = container.querySelector('[data-gn-aside-scrollport]') as HTMLElement;
+        let scrollTop = 0;
+        let scrollHeight = 200;
+        Object.defineProperties(scroll, {
+            clientHeight: {configurable: true, get: () => 100},
+            scrollHeight: {configurable: true, get: () => scrollHeight},
+            scrollTop: {configurable: true, get: () => scrollTop},
+        });
+        const indicators = () =>
+            // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+            Array.from(container.querySelectorAll('[data-gn-aside-divider]'));
+        const update = () => {
+            fireEvent.scroll(scroll);
+            act(() => {
+                jest.runOnlyPendingTimers();
+            });
+        };
+        const visible = () => indicators().map((el) => el.className.includes('visible'));
+        expect(indicators()).toHaveLength(0);
+        rerender(
+            <ScrollableWithScrollbar showScrollDividers>
+                <div>Content</div>
+            </ScrollableWithScrollbar>,
+        );
+        update();
+        expect(visible()).toEqual([false, true]);
+        scrollTop = 1;
+        update();
+        expect(visible()).toEqual([false, true]);
+        scrollTop = 2;
+        update();
+        expect(visible()).toEqual([true, true]);
+        scrollTop = 99;
+        update();
+        expect(visible()).toEqual([true, false]);
+        scrollTop = 100;
+        update();
+        expect(visible()).toEqual([true, false]);
+        scrollHeight = 101;
+        update();
+        expect(visible()).toEqual([false, false]);
+        rerender(
+            <ScrollableWithScrollbar>
+                <div>Content</div>
+            </ScrollableWithScrollbar>,
+        );
+        expect(indicators()).toHaveLength(0);
+        unmount();
         jest.useRealTimers();
     });
 });

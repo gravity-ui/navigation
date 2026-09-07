@@ -19,6 +19,8 @@ type UseScrollableScrollbarSyncResult = {
     trackRef: React.RefObject<HTMLDivElement>;
     thumbRef: React.RefObject<HTMLDivElement>;
     overflows: boolean;
+    canScrollUp: boolean;
+    canScrollDown: boolean;
     thumb: ThumbGeometry;
     scheduleUpdate: () => void;
     handleThumbPointerDown: (event: React.PointerEvent<HTMLDivElement>) => void;
@@ -40,7 +42,11 @@ export function useScrollableScrollbarSync(): UseScrollableScrollbarSyncResult {
     const thumbRef = useRef<HTMLDivElement>(null);
 
     const [overflows, setOverflows] = useState(false);
-    const [thumb, setThumb] = useState<ThumbGeometry>({top: 0, height: 0});
+    const [geometry, setGeometry] = useState({
+        thumb: {top: 0, height: 0} as ThumbGeometry,
+        canScrollUp: false,
+        canScrollDown: false,
+    });
 
     const rafIdRef = useRef<number | null>(null);
     const scheduleUpdate = useCallback(() => {
@@ -63,7 +69,7 @@ export function useScrollableScrollbarSync(): UseScrollableScrollbarSyncResult {
             setOverflows(isOverflowing);
 
             if (!isOverflowing) {
-                setThumb({top: 0, height: 0});
+                setGeometry({thumb: {top: 0, height: 0}, canScrollUp: false, canScrollDown: false});
                 return;
             }
 
@@ -76,7 +82,12 @@ export function useScrollableScrollbarSync(): UseScrollableScrollbarSyncResult {
                 scrollHeight - clientHeight > 0 ? scrollTop / (scrollHeight - clientHeight) : 0;
             const top = maxTop * scrollRatio;
 
-            setThumb({top, height});
+            setGeometry({
+                thumb: {top, height},
+                canScrollUp: isOverflowing && scrollTop > SUBPIXEL_OVERFLOW_PX,
+                canScrollDown:
+                    isOverflowing && scrollHeight - clientHeight - scrollTop > SUBPIXEL_OVERFLOW_PX,
+            });
         });
     }, []);
 
@@ -249,7 +260,7 @@ export function useScrollableScrollbarSync(): UseScrollableScrollbarSyncResult {
         trackRef,
         thumbRef,
         overflows,
-        thumb,
+        ...geometry,
         scheduleUpdate,
         handleThumbPointerDown,
         handleTrackPointerDown,

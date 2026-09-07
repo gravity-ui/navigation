@@ -285,6 +285,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     <ScrollableWithScrollbar
                         className={b('unified-menu-scroll')}
                         onOverflowChange={handleMenuScrollOverflowChange}
+                        showScrollDividers={hideSectionDividers}
                     >
                         <div className={b('unified-menu-content')} data-gn-aside-current-container>
                             {quickAccessSection}

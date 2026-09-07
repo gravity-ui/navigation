@@ -122,7 +122,8 @@ interface AsideHeaderDefaultProps {
      */
     onQuickAccessChange?: (item: AsideHeaderItem, quickAccess: boolean) => void;
     headerDecoration?: boolean;
-    /** Hides header/footer section separators and their spacing toward the menu. @default false */
+    /** Hides header/footer separators and their spacing; scroll-edge indicators remain visible
+     * while content is hidden beyond the respective edge. @default false */
     hideSectionDividers?: boolean;
     /**
      * When provided, the map is the source of truth for which menu groups are collapsed

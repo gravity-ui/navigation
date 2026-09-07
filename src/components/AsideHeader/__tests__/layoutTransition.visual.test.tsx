@@ -474,3 +474,48 @@ test('keeps the collapsing selection painted and preserves themed title ghosts',
     await finish(page);
     await expect(page.locator('[data-gn-aside-transition-overlay]')).toHaveCount(0);
 });
+
+test('scroll-edge lines follow the outer width through compact transition and reversal', async ({
+    mount,
+    page,
+}) => {
+    await mount(
+        <AsideHeaderExamplesStories.FullNavigation hideSectionDividers initialCompact={false} />,
+    );
+    await page.evaluate(() => document.fonts.ready);
+    const geometry = () =>
+        page.evaluate(() => {
+            const panel = document.querySelector('[data-gn-aside-panel]');
+            const lines = Array.from(
+                document.querySelectorAll(
+                    '[data-gn-aside-divider="scroll-start"], [data-gn-aside-divider="scroll-end"]',
+                ),
+            );
+            if (!panel || lines.length !== 2) throw new Error('Scroll-edge lines missing');
+            const outer = panel.getBoundingClientRect();
+            return lines.map((line) => {
+                const rect = line.getBoundingClientRect();
+                return {left: rect.left - outer.left, right: outer.right - rect.right};
+            });
+        });
+    const before = await geometry();
+    await toggleAndPause(page);
+    for (const progress of [0, 0.25, 0.5]) {
+        await seek(page, progress);
+        const current = await geometry();
+        current.forEach((line, i) => {
+            expect(line.left).toBeCloseTo(before[i].left, 1);
+            expect(line.right).toBeCloseTo(before[i].right, 1);
+        });
+    }
+    await toggleAndPause(page);
+    for (const progress of [0, 0.5, 1]) {
+        await seek(page, progress);
+        const current = await geometry();
+        current.forEach((line, i) => {
+            expect(line.left).toBeCloseTo(before[i].left, 1);
+            expect(line.right).toBeCloseTo(before[i].right, 1);
+        });
+    }
+    await finish(page);
+});

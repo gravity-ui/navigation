@@ -26,6 +26,32 @@ $block: '.#{variables.$ns}scrollable-with-scrollbar';
         }
     }
 
+    &__scroll-divider {
+        position: absolute;
+        inset-inline: 0;
+        height: 1px;
+        z-index: 2;
+        pointer-events: none;
+        background-color: var(
+            --gn-aside-header-divider-horizontal-color,
+            var(--g-color-line-generic)
+        );
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+
+        &_start {
+            inset-block-start: 0;
+        }
+
+        &_end {
+            inset-block-end: 0;
+        }
+
+        &_visible {
+            opacity: 1;
+        }
+    }
+
     &__scrollbar-track {
         position: absolute;
         top: 0;
