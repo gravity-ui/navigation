@@ -350,6 +350,53 @@ test.describe('AsideHeader', () => {
         await expectScreenshot();
     });
 
+    for (const menuDensity of ['default', 'compact'] as const) {
+        test(`centers multiline titles and aligns icons with the first line (${menuDensity})`, async ({
+            mount,
+            page,
+        }) => {
+            await mount(
+                <AsideHeaderExamplesStories.FullNavigation
+                    enableQuickAccess={false}
+                    menuDensity={menuDensity}
+                />,
+                mountOptions,
+                viewport,
+            );
+
+            const item = page.locator('button[aria-label="Weekly operational performance"]');
+            await item.click();
+            const group = page.locator('[data-gn-aside-group="analytics"]');
+            await expect(group.locator('[class*="connector_spine-active"]')).toHaveCount(2);
+            await expect(item.locator('[class*="tree-svg_active"]')).toHaveCount(1);
+            const nestedContents = group.locator(
+                '[class*="__menu-group-nested-list-item_"] > .g-list__item-content',
+            );
+            for (const content of await nestedContents.all()) {
+                await expect(content).toHaveCSS('overflow', 'visible');
+            }
+            const row = await item.boundingBox();
+            const icon = await item.locator('[data-gn-aside-part="icon"] svg.g-icon').boundingBox();
+            const title = await item.locator('[class*="__title-text_"]').boundingBox();
+
+            const connector = await item
+                .locator('[class*="__menu-group-nested-tree-svg_"]')
+                .boundingBox();
+
+            if (!row || !icon || !title || !connector) {
+                throw new Error('Menu content is not visible');
+            }
+            expect(title.height).toBeGreaterThan(icon.height);
+            expect(Math.abs(icon.y - row.y - 4)).toBeLessThanOrEqual(1);
+            expect(
+                Math.abs(connector.y + connector.height / 2 - icon.y - icon.height / 2),
+            ).toBeLessThanOrEqual(1);
+            expect(
+                Math.abs(title.y + title.height / 2 - (row.y + row.height / 2)),
+            ).toBeLessThanOrEqual(1);
+        });
+    }
+
     test('highlights only the hovered item inside an expanded group', async ({
         mount,
         page,
@@ -390,6 +437,7 @@ test.describe('AsideHeader', () => {
         const spineHeight = await page
             .locator('[class*="gn-composite-bar__menu-group-nested-list-item_"]')
             .filter({has: nestedItem})
+            .locator('[class*="__menu-group-nested-connector_"]')
             .evaluate((element) => Number.parseFloat(getComputedStyle(element, '::after').height));
 
         expect(itemBox?.height).toBe(44);
