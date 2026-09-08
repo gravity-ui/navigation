@@ -81,6 +81,11 @@ $menu-group-tree-connector-width: 16px;
     }
 
     &__menu-group-nested-list-item[class] {
+        // The connector extends through the gap below the item content.
+        & > :global(.g-list__item-content) {
+            overflow: visible;
+        }
+
         position: relative;
         overflow: visible;
         box-sizing: border-box;
@@ -92,19 +97,19 @@ $menu-group-tree-connector-width: 16px;
         &:global(.g-list__item_active.g-list__item_selected) {
             background-color: transparent;
         }
+    }
 
-        // Keep the vertical spine on the full List row so it also paints through the row gap.
-        &:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            inset-inline-start: calc(
-                var(--_--gn-aside-header-density-item-height, #{variables.$item-height}) / 2 - 0.5px
-            );
-            inset-block: 0;
-            width: 1px;
-            background: var(--gn-aside-header-menu-group-tree-line-color, #c1c3c7);
-            pointer-events: none;
-        }
+    // Keep both spine colors inside the item stacking context, through the row gap.
+    &__menu-group-nested-list-item:not(:last-child) &__menu-group-nested-connector::after {
+        content: '';
+        position: absolute;
+        inset-inline-start: calc(50% - 0.5px);
+        top: 0;
+        bottom: calc(-1 * var(--_--menu-item-gap));
+        width: 1px;
+        background: var(--gn-aside-header-menu-group-tree-line-color, #c1c3c7);
+        pointer-events: none;
+        z-index: -1;
     }
 
     &__menu-group-nested-connector {
@@ -114,6 +119,7 @@ $menu-group-tree-connector-width: 16px;
         pointer-events: none;
         display: flex;
         overflow: visible;
+        isolation: isolate;
 
         // Active color overlays the row-level spine; the elbow itself is rendered by SVG.
         &_spine-active::before {

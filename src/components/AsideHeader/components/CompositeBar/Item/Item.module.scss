@@ -368,24 +368,18 @@ $floating-surface-box-shadow-label:
             outline: none;
             color: inherit;
         }
-
-        #{$class}_title-lines_2 & {
-            align-items: flex-start;
-        }
     }
 
     &_title-lines_2 {
-        align-items: flex-start;
+        #{$class}__icon-place {
+            align-self: flex-start;
+            align-items: flex-start;
+        }
 
         #{$class}__icon-place,
         #{$class}__title,
         #{$class}__chevron {
             padding-block: var(--g-spacing-1);
-        }
-
-        #{$class}__icon-place,
-        #{$class}__title {
-            align-items: flex-start;
         }
     }
 
