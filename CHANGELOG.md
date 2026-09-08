@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.6.0](https://github.com/gravity-ui/navigation/compare/v6.5.1...v6.6.0) (2026-09-08)
+
+
+### Features
+
+* **AsideHeader:** add MenuGroup.hideItemsInAllPage ([#673](https://github.com/gravity-ui/navigation/issues/673)) ([bd3a01e](https://github.com/gravity-ui/navigation/commit/bd3a01e295ba55c5b06f16328e07266d4805516e))
+
 ## [6.5.1](https://github.com/gravity-ui/navigation/compare/v6.5.0...v6.5.1) (2026-09-04)
 
 
