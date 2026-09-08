@@ -236,7 +236,18 @@ test('keeps children, focus, callbacks and independent Drawer transitions', asyn
     await mount(<CompactTransitionExample />);
     await finishAnimations(page);
     await clickAndFrame(page, 'Toggle drawer');
-    expect(await page.evaluate(() => document.getAnimations().length)).toBeGreaterThan(0);
+    await expect
+        .poll(() =>
+            page.evaluate(() => {
+                const animations = document.getAnimations().filter((animation) => {
+                    const target = (animation.effect as KeyframeEffect).target;
+                    return target instanceof Element && target.matches('.g-drawer__item');
+                });
+                animations.forEach((animation) => animation.pause());
+                return animations.length;
+            }),
+        )
+        .toBeGreaterThan(0);
     await finishAnimations(page);
     const input = page.getByRole('textbox', {name: 'Persistent input'});
     await input.fill('Local state');
@@ -262,7 +273,18 @@ test('keeps children, focus, callbacks and independent Drawer transitions', asyn
         [],
     );
     await clickAndFrame(page, 'Toggle drawer');
-    expect(await page.evaluate(() => document.getAnimations().length)).toBeGreaterThan(0);
+    await expect
+        .poll(() =>
+            page.evaluate(() => {
+                const animations = document.getAnimations().filter((animation) => {
+                    const target = (animation.effect as KeyframeEffect).target;
+                    return target instanceof Element && target.matches('.g-drawer__item');
+                });
+                animations.forEach((animation) => animation.pause());
+                return animations.length;
+            }),
+        )
+        .toBeGreaterThan(0);
     await finishAnimations(page);
     await expect(page.getByText('Drawer content', {exact: true})).toBeVisible();
 });
