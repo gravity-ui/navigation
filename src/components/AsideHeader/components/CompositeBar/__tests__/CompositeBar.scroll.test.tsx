@@ -299,7 +299,7 @@ describe('CompositeBar menuOverflow="scroll"', () => {
 
         renderBar({items: groupItems, menuGroups, menuOverflow: 'scroll', compact: false});
 
-        expect(screen.queryByRole('button', {name: 'Access', expanded: true})).toBeNull();
+        expect(screen.queryByRole('button', {expanded: true})).toBeNull();
     });
 
     it('fires the group action on header click (no toggle) when the group has onItemClick', () => {
@@ -352,7 +352,7 @@ describe('CompositeBar menuOverflow="scroll"', () => {
         });
 
         // The interactive chevron is the only 'Access' control exposing aria-expanded.
-        fireEvent.click(screen.getByRole('button', {name: 'Access', expanded: true}));
+        fireEvent.click(screen.getByRole('button', {name: 'Collapse Access', expanded: true}));
 
         expect(onToggleMenuGroupCollapsed).toHaveBeenCalledWith('g1');
         expect(onItemClick).not.toHaveBeenCalled();
@@ -376,7 +376,7 @@ describe('CompositeBar menuOverflow="scroll"', () => {
         const link = screen.getByRole('link', {name: 'Access'});
         expect(link.getAttribute('href')).toBe('/access');
 
-        fireEvent.click(screen.getByRole('button', {name: 'Access', expanded: true}));
+        fireEvent.click(screen.getByRole('button', {name: 'Collapse Access', expanded: true}));
         expect(onToggleMenuGroupCollapsed).toHaveBeenCalledWith('g1');
     });
 

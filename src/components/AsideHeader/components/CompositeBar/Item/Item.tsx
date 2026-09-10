@@ -326,7 +326,8 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             inlineGroupHeader,
             hasPopupItems: Boolean(resolvedMenuPopupItems?.length),
         });
-        const chevronClick = inlineGroupHeader ? onGroupHeaderChevronClick : undefined;
+        const chevronClick =
+            showChevron && inlineGroupHeader ? onGroupHeaderChevronClick : undefined;
         /* With a sibling chevron control, the wrapper becomes the outer box of the row,
            so the external className (outer layout) is applied to it instead of the row. */
         const rowClassName = b(
@@ -370,12 +371,14 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         let chevronNode: React.ReactNode = null;
         let chevronControl: React.ReactNode = null;
 
-        if (showChevron && chevronClick) {
+        if (chevronClick) {
             chevronControl = (
                 <button
                     type="button"
                     className={b('chevron', {interactive: true})}
-                    aria-label={resolvedAriaLabel ?? getChevronFallbackLabel(groupHeaderExpanded)}
+                    aria-label={[getChevronFallbackLabel(groupHeaderExpanded), resolvedAriaLabel]
+                        .filter(Boolean)
+                        .join(' ')}
                     aria-expanded={groupHeaderExpanded}
                     onClick={(event) => {
                         event.stopPropagation();
@@ -388,19 +391,13 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     />
                 </button>
             );
-        } else if (showChevron && inlineGroupHeader) {
+        } else if (showChevron) {
             chevronNode = (
                 <div className={b('chevron')}>
                     <Icon
                         data={groupHeaderExpanded ? ChevronDown : ChevronRight}
                         size={CHEVRON_SIZE}
                     />
-                </div>
-            );
-        } else if (showChevron) {
-            chevronNode = (
-                <div className={b('chevron')}>
-                    <Icon data={ChevronRight} size={CHEVRON_SIZE} />
                 </div>
             );
         }

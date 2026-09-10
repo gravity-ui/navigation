@@ -613,7 +613,10 @@ $floating-surface-box-shadow-dark:
     }
 
     &__group-header-row {
-        --gn-aside-header-item-expanded-radius: #{variables.$item-expanded-radius};
+        --_--item-expanded-radius: var(
+            --_--gn-aside-header-density-item-expanded-radius,
+            #{variables.$item-expanded-radius}
+        );
         --_--item-background-color-hover: var(--g-color-base-simple-hover);
         --_--item-selected-background-color: var(--g-color-base-selection);
         --_--item-chevron-padding-right: var(--g-spacing-1);
@@ -627,7 +630,10 @@ $floating-surface-box-shadow-dark:
                 --gn-aside-header-item-background-color-hover,
                 var(--_--item-background-color-hover)
             );
-            border-radius: var(--gn-aside-header-item-expanded-radius);
+            border-radius: var(
+                --gn-aside-header-item-expanded-radius,
+                var(--_--item-expanded-radius)
+            );
         }
 
         &_current {
@@ -635,7 +641,10 @@ $floating-surface-box-shadow-dark:
                 --gn-aside-header-item-current-background-color,
                 var(--_--item-selected-background-color)
             );
-            border-radius: var(--gn-aside-header-item-expanded-radius);
+            border-radius: var(
+                --gn-aside-header-item-expanded-radius,
+                var(--_--item-expanded-radius)
+            );
         }
 
         &_current:hover {
