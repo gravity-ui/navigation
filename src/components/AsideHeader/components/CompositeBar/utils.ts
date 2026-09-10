@@ -116,8 +116,10 @@ export function makeGroupHeaderAsideItem(group: MenuGroup): AsideHeaderItem {
         title: group.title,
         icon: group.icon,
         iconSize: group.iconSize,
-        // Do not set `current` from children: only nested items should show selection;
-        // otherwise the group header and root List row highlight the whole group block.
+        // `current` comes only from the group itself (its own page), never from
+        // children: nested items show their own selection, and the root List row
+        // must not highlight the whole group block.
+        current: group.current,
     };
 }
 

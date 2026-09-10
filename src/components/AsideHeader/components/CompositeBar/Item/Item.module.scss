@@ -615,6 +615,7 @@ $floating-surface-box-shadow-dark:
     &__group-header-row {
         --gn-aside-header-item-expanded-radius: #{variables.$item-expanded-radius};
         --_--item-background-color-hover: var(--g-color-base-simple-hover);
+        --_--item-selected-background-color: var(--g-color-base-selection);
         --_--item-chevron-padding-right: var(--g-spacing-1);
 
         display: flex;
@@ -628,6 +629,28 @@ $floating-surface-box-shadow-dark:
             );
             border-radius: var(--gn-aside-header-item-expanded-radius);
         }
+
+        &_current {
+            background-color: var(
+                --gn-aside-header-item-current-background-color,
+                var(--_--item-selected-background-color)
+            );
+            border-radius: var(--gn-aside-header-item-expanded-radius);
+        }
+
+        &_current:hover {
+            background-color: var(
+                --gn-aside-header-item-current-background-color-hover,
+                var(
+                    --gn-aside-header-item-current-background-color,
+                    var(--_--item-selected-background-color)
+                )
+            );
+        }
+    }
+
+    &#{$class}_with-chevron-control#{$class}_current#{$class}_type_regular {
+        background-color: transparent;
     }
 
     &_with-chevron-control {

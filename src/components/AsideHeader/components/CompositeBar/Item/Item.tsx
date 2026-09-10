@@ -469,7 +469,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
         if (chevronControl) {
             tagNode = (
-                <div className={b('group-header-row', className)}>
+                <div className={b('group-header-row', {current}, className)}>
                     {tagNode}
                     {chevronControl}
                 </div>

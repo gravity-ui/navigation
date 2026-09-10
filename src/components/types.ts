@@ -91,6 +91,11 @@ export interface MenuGroup {
      */
     href?: string;
     /**
+     * Marks the group header row as the current page, like `MenuItem.current`.
+     * Only the header row is highlighted; nested items keep their own states.
+     */
+    current?: boolean;
+    /**
      * When `true` and the group has its own action (`onItemClick` and/or `href`),
      * the group items are not listed in the All pages panel (view mode) — the group
      * is represented only by its clickable header row. Has no effect for groups

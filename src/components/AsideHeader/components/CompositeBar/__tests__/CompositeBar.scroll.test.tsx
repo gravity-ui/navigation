@@ -379,4 +379,48 @@ describe('CompositeBar menuOverflow="scroll"', () => {
         fireEvent.click(screen.getByRole('button', {name: 'Access', expanded: true}));
         expect(onToggleMenuGroupCollapsed).toHaveBeenCalledWith('g1');
     });
+
+    it('highlights the group header as current when MenuGroup.current is set', () => {
+        const menuGroups: MenuGroup[] = [
+            {id: 'g1', title: 'Access', icon: Gear, href: '/access', current: true},
+        ];
+        const groupItems: AsideHeaderItem[] = [
+            {id: 'ssh', title: 'SSH Keys', icon: Gear, groupId: 'g1'},
+        ];
+
+        renderBar({items: groupItems, menuGroups, menuOverflow: 'scroll', compact: false});
+
+        const link = screen.getByRole('link', {name: 'Access'});
+        expect(link.className).toContain('gn-composite-bar-item_current');
+        /* eslint-disable testing-library/no-node-access */
+        expect(
+            document.querySelector('.gn-composite-bar-item__group-header-row_current'),
+        ).not.toBeNull();
+        // The root list row must not be selected: only the header row is highlighted.
+        expect(document.querySelector('.g-list__item_selected')).toBeNull();
+        /* eslint-enable testing-library/no-node-access */
+    });
+
+    it('highlights a collapsed clickable group header when its child is current', () => {
+        const menuGroups: MenuGroup[] = [{id: 'g1', title: 'Access', icon: Gear, href: '/access'}];
+        const groupItems: AsideHeaderItem[] = [
+            {id: 'ssh', title: 'SSH Keys', icon: Gear, groupId: 'g1', current: true},
+        ];
+
+        renderBar({
+            items: groupItems,
+            menuGroups,
+            menuOverflow: 'scroll',
+            compact: false,
+            collapsedMenuGroupIds: {g1: true},
+        });
+
+        const link = screen.getByRole('link', {name: 'Access'});
+        expect(link.className).toContain('gn-composite-bar-item_current');
+        /* eslint-disable testing-library/no-node-access */
+        expect(
+            document.querySelector('.gn-composite-bar-item__group-header-row_current'),
+        ).not.toBeNull();
+        /* eslint-enable testing-library/no-node-access */
+    });
 });
