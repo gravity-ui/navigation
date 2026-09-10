@@ -4,6 +4,8 @@
 $block: '.#{variables.$ns}composite-bar-item';
 
 $actionLeftRightMargin: 10px;
+// Width of the quick access pin: a uikit button with size="s".
+$quickAccessPinSize: 24px;
 $floating-surface-box-shadow-light:
     0 0 0 1px var(--g-color-line-generic-solid),
     0 3px 10px 0 var(--g-color-sfx-shadow),
@@ -240,12 +242,14 @@ $floating-surface-box-shadow-label:
     &__quick-access-pin-slot {
         position: absolute;
         inset-block: 0;
-        inset-inline-end: var(--_--gn-aside-header-density-item-title-gap-end, var(--g-spacing-2));
+        // Trail the row edge like the group chevron does. The slot is exactly as wide as
+        // the pin, so no dead area separates the control from that edge.
+        inset-inline-end: var(--g-spacing-1);
         z-index: 1;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 32px;
+        width: $quickAccessPinSize;
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
@@ -259,9 +263,9 @@ $floating-surface-box-shadow-label:
     }
 
     &_with-quick-access-pin &__title {
-        margin-inline-end: calc(
-            32px + var(--_--gn-aside-header-density-item-title-gap-end, var(--g-spacing-2))
-        );
+        // Reserve the slot plus its inset, keeping the same gap between title and pin as
+        // between pin and row edge.
+        margin-inline-end: calc(#{$quickAccessPinSize} + 2 * var(--g-spacing-1));
     }
 
     &__interactive-row:hover &__quick-access-pin-slot:not(&__quick-access-pin-slot_suppressed) {
