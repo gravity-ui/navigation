@@ -417,24 +417,25 @@ describe('ItemPopup helpers', () => {
         ).toEqual({mainAxis: 14, crossAxis: -30});
     });
 
-    it('narrows a nested popup so its gap to the parent matches the aside gap', () => {
+    it('keeps 4px of whitespace between chained popups at any item height', () => {
+        // `mainAxis` measures from the anchored row, which sits 4px inside the parent
+        // popup border box; each popup then paints a 1px shadow ring outside that box.
+        // 10 therefore renders as 4px of visible whitespace between the popups.
         expect(
             getItemPopoverOffset({
                 isSingleLabel: false,
                 itemHeight: 40,
                 popupRowHeight: 32,
                 nested: true,
-                itemMarginInline: 8,
             }),
         ).toEqual({mainAxis: 10, crossAxis: 0});
         expect(
             getItemPopoverOffset({
                 isSingleLabel: false,
-                itemHeight: 40,
+                itemHeight: 32,
                 popupRowHeight: 32,
                 nested: true,
-                itemMarginInline: 6,
             }),
-        ).toEqual({mainAxis: 12, crossAxis: 0});
+        ).toEqual({mainAxis: 10, crossAxis: -4});
     });
 });
