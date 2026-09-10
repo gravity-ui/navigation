@@ -41,6 +41,20 @@ for (const compact of [false, true]) {
                 (el) => getComputedStyle(el.parentElement as HTMLElement).paddingBottom,
             );
             expect(parseFloat(originalPadding)).toBeGreaterThan(0);
+            if (!compact) {
+                // Dividers outside the menu scrollport reach both aside edges. The
+                // quick-access one is excluded: it scrolls with the menu content.
+                const panelBox = await page.locator('[data-gn-aside-panel]').boundingBox();
+                const headerBox = await header.boundingBox();
+                const footerBox = await footer.boundingBox();
+                if (!panelBox || !headerBox || !footerBox) {
+                    throw new Error('Expected a visible panel with header and footer dividers');
+                }
+                expect(headerBox.x).toBe(panelBox.x);
+                expect(headerBox.width).toBe(panelBox.width);
+                expect(footerBox.x).toBe(panelBox.x);
+                expect(footerBox.width).toBe(panelBox.width);
+            }
             await component.update(<AsideHeader {...props} hideSectionDividers />);
             await expect(header).toBeHidden();
             await expect(footer).toBeHidden();
