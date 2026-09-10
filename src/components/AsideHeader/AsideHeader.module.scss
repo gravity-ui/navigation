@@ -262,11 +262,10 @@ $aside-width-transition: width $aside-width-transition-duration
         &__header {
         padding-bottom: var(--_--section-divider-gap);
 
+        // Keep the full-bleed span of the default placement: section dividers outside the
+        // menu scrollport reach both aside edges, like the footer one.
         #{$class}__header-bottom-divider {
             bottom: 0;
-            left: var(--_--item-margin-inline);
-            right: var(--_--item-margin-inline);
-            width: auto;
         }
     }
 
