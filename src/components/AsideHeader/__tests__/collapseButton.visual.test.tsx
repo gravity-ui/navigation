@@ -205,6 +205,58 @@ for (const menuDensity of ['default', 'compact'] as const) {
         }
     }
 
+    test(`collapse button hover color ${menuDensity}`, async ({mount, page}) => {
+        await page.setViewportSize(viewport);
+        await mount(<CollapseButtonExample menuDensity={menuDensity} />, undefined, viewport);
+        await finishAnimations(page);
+        const button = page.locator(buttonSelector);
+
+        // Sample the painted button surface a quarter across, clear of the icon glyph:
+        // computed styles cannot compare the two states, because only the compact button
+        // carries an opaque background of its own.
+        const surface = async () => {
+            const {button: box} = await geometry(page);
+            const shot = await page.screenshot({
+                clip: {x: box.x, y: box.y, width: box.width, height: box.height},
+                animations: 'disabled',
+            });
+            return page.evaluate(async (png) => {
+                const image = new Image();
+                image.src = `data:image/png;base64,${png}`;
+                await image.decode();
+                const canvas = document.createElement('canvas');
+                canvas.width = image.naturalWidth;
+                canvas.height = image.naturalHeight;
+                const context = canvas.getContext('2d');
+                if (!context) throw new Error('Screenshot pixel context unavailable');
+                context.drawImage(image, 0, 0);
+                const pixel = context.getImageData(
+                    Math.floor(canvas.width / 4),
+                    Math.floor(canvas.height / 2),
+                    1,
+                    1,
+                ).data;
+                return [pixel[0], pixel[1], pixel[2], pixel[3]];
+            }, shot.toString('base64'));
+        };
+
+        // The example mounts compact, so the aside expands on the first click.
+        await button.hover();
+        await expect(button).toHaveCSS('opacity', '1');
+        const compactHover = await surface();
+        await button.click();
+        await expect(button).toHaveAttribute('aria-expanded', 'true');
+        await finishAnimations(page);
+        await button.hover();
+        await expect(button).toHaveCSS('opacity', '1');
+        const expandedHover = await surface();
+        await page.mouse.move(500, 300);
+        const expandedIdle = await surface();
+
+        expect(expandedHover).not.toEqual(expandedIdle);
+        expect(compactHover).toEqual(expandedHover);
+    });
+
     for (const kind of ['all-pages', 'custom'] as const) {
         test(`collapse button above ${kind} panel ${menuDensity}`, async ({mount, page}) => {
             await page.setViewportSize(viewport);
