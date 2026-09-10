@@ -20,6 +20,10 @@ const b = createBlock('composite-bar-item', styles);
 
 const POPUP_PADDING = 4;
 const POPUP_MAIN_AXIS_OFFSET = 14;
+/** Whitespace between the painted borders of two chained popups. */
+const NESTED_POPUP_GAP = 4;
+/** `.g-popup` paints its border as a 1px shadow spread outside the border box. */
+const POPUP_SHADOW_RING = 1;
 const SOLO_LABEL_POPUP_ITEM_HEIGHT = 28;
 const SOLO_LABEL_POPUP_BORDER_RADIUS = 4;
 const POPUP_TITLE_BLOCK_HEIGHT = 30;
@@ -31,7 +35,6 @@ export function getItemPopoverOffset({
     popupRowHeight,
     titleHeight = 0,
     nested = false,
-    itemMarginInline = 0,
 }: {
     isSingleLabel: boolean;
     itemHeight: number;
@@ -39,18 +42,16 @@ export function getItemPopoverOffset({
     titleHeight?: number;
     /** The popup opens from a row inside another popup. */
     nested?: boolean;
-    /** Aside item inline margin: the first-level popup gap to the aside border. */
-    itemMarginInline?: number;
 }): NonNullable<PopupProps['offset']> {
     if (isSingleLabel) {
         return {mainAxis: POPUP_MAIN_AXIS_OFFSET, crossAxis: 0};
     }
 
     // A nested popup anchors to a row that sits `POPUP_PADDING` inside the parent popup
-    // border. Compensate for that padding and for the aside item margin so chained popups
-    // keep the same visual gap to each other as a first-level popup keeps to the aside.
+    // border box, and both popups paint a shadow ring outside that box. Compensate for
+    // both so chained popups keep `NESTED_POPUP_GAP` of whitespace at any density.
     const mainAxis = nested
-        ? POPUP_MAIN_AXIS_OFFSET - itemMarginInline + POPUP_PADDING
+        ? NESTED_POPUP_GAP + 2 * POPUP_SHADOW_RING + POPUP_PADDING
         : POPUP_MAIN_AXIS_OFFSET;
     const firstRowOffsetInAnchor = (itemHeight - popupRowHeight) / 2;
 
@@ -174,15 +175,8 @@ export const ItemPopup: React.FC<Props> = ({
                 popupRowHeight: POPUP_REGULAR_ITEM_HEIGHT,
                 titleHeight: title ? POPUP_TITLE_BLOCK_HEIGHT : 0,
                 nested: Boolean(parentPopupNest),
-                itemMarginInline: densityConfig.itemMarginInline,
             }),
-        [
-            densityConfig.itemHeight,
-            densityConfig.itemMarginInline,
-            isSingleLabel,
-            parentPopupNest,
-            title,
-        ],
+        [densityConfig.itemHeight, isSingleLabel, parentPopupNest, title],
     );
 
     const registerNestedOpen = React.useCallback((delta: number) => {

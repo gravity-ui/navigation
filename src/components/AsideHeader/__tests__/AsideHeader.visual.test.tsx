@@ -595,6 +595,28 @@ test.describe('AsideHeader', () => {
         await expect(groupItem).toBeVisible();
     });
 
+    test('leaves 4px of whitespace between chained popups', async ({mount, page}) => {
+        await mount(<NestedMorePopupExample />, mountOptions, viewport);
+
+        await page.locator('button[aria-label="More"]').hover();
+        const groupItem = page.locator('button[aria-label="Nested group"]');
+        await groupItem.hover();
+        await expect(page.locator('button[aria-label="Group child A"]')).toBeVisible();
+
+        const popups = page.locator('.g-popup_open').filter({has: page.locator('.g-list')});
+        await expect(popups).toHaveCount(2);
+        const parentBox = await popups.first().boundingBox();
+        const nestedBox = await popups.last().boundingBox();
+
+        if (!parentBox || !nestedBox) {
+            throw new Error('Expected both chained popups to be visible');
+        }
+
+        // Popups paint their border as a 1px shadow spread outside the border box, so 4px
+        // of visible whitespace means the border boxes sit 6px apart.
+        expect(nestedBox.x - (parentBox.x + parentBox.width)).toBe(6);
+    });
+
     test('pins from an expanded row without navigating', async ({mount, page}) => {
         await mount(<AsideHeaderExamplesStories.FullNavigation />, mountOptions, viewport);
 
