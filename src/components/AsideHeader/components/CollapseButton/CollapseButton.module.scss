@@ -43,9 +43,13 @@ $block: '.#{variables.$ns}collapse-button';
 
     &:hover {
         color: var(--g-color-text-primary);
-    }
-    &:not(&_compact):hover {
-        background: var(--g-color-base-simple-hover);
+        // The hover token is translucent, and the compact button owns an opaque
+        // background that masks the aside edge it overhangs. Paint the hover as a layer
+        // above that background so both states read as the same grey.
+        background-image: linear-gradient(
+            var(--g-color-base-simple-hover),
+            var(--g-color-base-simple-hover)
+        );
     }
     &:focus-visible {
         outline: 2px solid var(--g-color-line-focus);
