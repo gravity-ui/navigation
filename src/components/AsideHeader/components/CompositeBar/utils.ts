@@ -131,6 +131,10 @@ function makeOverflowGroupAsideItem(
         id: `__gn-composite-bar__group-overflow__${group.id}`,
         title: group.title,
         icon: group.icon,
+        iconSize: group.iconSize,
+        current: group.current,
+        href: group.href,
+        onItemClick: group.onItemClick,
         compositeBarMenuPopupItems: children,
         compositeBarMenuPopupTitle: group.popupTitle,
     };
