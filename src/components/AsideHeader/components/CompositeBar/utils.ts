@@ -115,8 +115,11 @@ export function makeGroupHeaderAsideItem(group: MenuGroup): AsideHeaderItem {
         id: `${COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX}${group.id}`,
         title: group.title,
         icon: group.icon,
-        // Do not set `current` from children: only nested items should show selection;
-        // otherwise the group header and root List row highlight the whole group block.
+        iconSize: group.iconSize,
+        // `current` comes only from the group itself (its own page), never from
+        // children: nested items show their own selection, and the root List row
+        // must not highlight the whole group block.
+        current: group.current,
     };
 }
 
@@ -128,6 +131,10 @@ function makeOverflowGroupAsideItem(
         id: `__gn-composite-bar__group-overflow__${group.id}`,
         title: group.title,
         icon: group.icon,
+        iconSize: group.iconSize,
+        current: group.current,
+        href: group.href,
+        onItemClick: group.onItemClick,
         compositeBarMenuPopupItems: children,
         compositeBarMenuPopupTitle: group.popupTitle,
     };

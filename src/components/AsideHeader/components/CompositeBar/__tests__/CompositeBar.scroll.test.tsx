@@ -290,4 +290,137 @@ describe('CompositeBar menuOverflow="scroll"', () => {
             'title-text_lines_2',
         );
     });
+
+    it('does not render a separate chevron control when the group has no own action', () => {
+        const menuGroups: MenuGroup[] = [{id: 'g1', title: 'Access', icon: Gear}];
+        const groupItems: AsideHeaderItem[] = [
+            {id: 'ssh', title: 'SSH Keys', icon: Gear, groupId: 'g1'},
+        ];
+
+        renderBar({items: groupItems, menuGroups, menuOverflow: 'scroll', compact: false});
+
+        expect(screen.queryByRole('button', {expanded: true})).toBeNull();
+    });
+
+    it('fires the group action on header click (no toggle) when the group has onItemClick', () => {
+        const onToggleMenuGroupCollapsed = jest.fn();
+        const onItemClick = jest.fn();
+        const groupClick = jest.fn();
+        const menuGroups: MenuGroup[] = [
+            {id: 'g1', title: 'Access', icon: Gear, onItemClick: groupClick},
+        ];
+        const groupItems: AsideHeaderItem[] = [
+            {id: 'ssh', title: 'SSH Keys', icon: Gear, groupId: 'g1'},
+        ];
+
+        renderBar({
+            items: groupItems,
+            menuGroups,
+            menuOverflow: 'scroll',
+            compact: false,
+            onItemClick,
+            onToggleMenuGroupCollapsed,
+        });
+
+        fireEvent.click(screen.getByText('Access'));
+
+        expect(onItemClick).toHaveBeenCalledWith(
+            expect.objectContaining({onItemClick: groupClick}),
+            false,
+            expect.any(Object),
+        );
+        expect(onToggleMenuGroupCollapsed).not.toHaveBeenCalled();
+    });
+
+    it('toggles the group only via the chevron when the group has its own action', () => {
+        const onToggleMenuGroupCollapsed = jest.fn();
+        const onItemClick = jest.fn();
+        const menuGroups: MenuGroup[] = [
+            {id: 'g1', title: 'Access', icon: Gear, onItemClick: jest.fn()},
+        ];
+        const groupItems: AsideHeaderItem[] = [
+            {id: 'ssh', title: 'SSH Keys', icon: Gear, groupId: 'g1'},
+        ];
+
+        renderBar({
+            items: groupItems,
+            menuGroups,
+            menuOverflow: 'scroll',
+            compact: false,
+            onItemClick,
+            onToggleMenuGroupCollapsed,
+        });
+
+        // The interactive chevron is the only 'Access' control exposing aria-expanded.
+        fireEvent.click(screen.getByRole('button', {name: 'Collapse Access', expanded: true}));
+
+        expect(onToggleMenuGroupCollapsed).toHaveBeenCalledWith('g1');
+        expect(onItemClick).not.toHaveBeenCalled();
+    });
+
+    it('renders the group header as a link when the group has href', () => {
+        const onToggleMenuGroupCollapsed = jest.fn();
+        const menuGroups: MenuGroup[] = [{id: 'g1', title: 'Access', icon: Gear, href: '/access'}];
+        const groupItems: AsideHeaderItem[] = [
+            {id: 'ssh', title: 'SSH Keys', icon: Gear, groupId: 'g1'},
+        ];
+
+        renderBar({
+            items: groupItems,
+            menuGroups,
+            menuOverflow: 'scroll',
+            compact: false,
+            onToggleMenuGroupCollapsed,
+        });
+
+        const link = screen.getByRole('link', {name: 'Access'});
+        expect(link.getAttribute('href')).toBe('/access');
+
+        fireEvent.click(screen.getByRole('button', {name: 'Collapse Access', expanded: true}));
+        expect(onToggleMenuGroupCollapsed).toHaveBeenCalledWith('g1');
+    });
+
+    it('highlights the group header as current when MenuGroup.current is set', () => {
+        const menuGroups: MenuGroup[] = [
+            {id: 'g1', title: 'Access', icon: Gear, href: '/access', current: true},
+        ];
+        const groupItems: AsideHeaderItem[] = [
+            {id: 'ssh', title: 'SSH Keys', icon: Gear, groupId: 'g1'},
+        ];
+
+        renderBar({items: groupItems, menuGroups, menuOverflow: 'scroll', compact: false});
+
+        const link = screen.getByRole('link', {name: 'Access'});
+        expect(link.className).toContain('gn-composite-bar-item_current');
+        /* eslint-disable testing-library/no-node-access */
+        expect(
+            document.querySelector('.gn-composite-bar-item__group-header-row_current'),
+        ).not.toBeNull();
+        // The root list row must not be selected: only the header row is highlighted.
+        expect(document.querySelector('.g-list__item_selected')).toBeNull();
+        /* eslint-enable testing-library/no-node-access */
+    });
+
+    it('highlights a collapsed clickable group header when its child is current', () => {
+        const menuGroups: MenuGroup[] = [{id: 'g1', title: 'Access', icon: Gear, href: '/access'}];
+        const groupItems: AsideHeaderItem[] = [
+            {id: 'ssh', title: 'SSH Keys', icon: Gear, groupId: 'g1', current: true},
+        ];
+
+        renderBar({
+            items: groupItems,
+            menuGroups,
+            menuOverflow: 'scroll',
+            compact: false,
+            collapsedMenuGroupIds: {g1: true},
+        });
+
+        const link = screen.getByRole('link', {name: 'Access'});
+        expect(link.className).toContain('gn-composite-bar-item_current');
+        /* eslint-disable testing-library/no-node-access */
+        expect(
+            document.querySelector('.gn-composite-bar-item__group-header-row_current'),
+        ).not.toBeNull();
+        /* eslint-enable testing-library/no-node-access */
+    });
 });

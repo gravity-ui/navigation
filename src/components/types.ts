@@ -68,6 +68,7 @@ export interface MenuGroup {
     id: string;
     title: string;
     icon?: IconProps['data'];
+    iconSize?: number | string;
     /** Hide the group from display */
     hidden?: boolean;
     /**
@@ -75,6 +76,32 @@ export interface MenuGroup {
      * Does not affect the group title displayed anywhere else.
      */
     popupTitle?: string;
+    /**
+     * Optional main action for the group header, mirroring `MenuItem.onItemClick`
+     * (receives the synthetic group-header item). When the group has its own action
+     * (`onItemClick` and/or `href`), in the inline layout (`menuOverflow="scroll"`,
+     * expanded sidebar) clicking the header row triggers the action like a regular
+     * menu item, and only the chevron toggles expand/collapse. Such groups are also
+     * listed as a clickable row in the All pages panel (view mode).
+     */
+    onItemClick?: MenuItem['onItemClick'];
+    /**
+     * Optional link for the group header; renders the header row as an anchor.
+     * Same click behavior split as `onItemClick`.
+     */
+    href?: string;
+    /**
+     * Marks the group header row as the current page, like `MenuItem.current`.
+     * Only the header row is highlighted; nested items keep their own states.
+     */
+    current?: boolean;
+    /**
+     * When `true` and the group has its own action (`onItemClick` and/or `href`),
+     * the group items are not listed in the All pages panel (view mode) — the group
+     * is represented only by its clickable header row. Has no effect for groups
+     * without an action.
+     */
+    hideItemsInAllPages?: boolean;
 }
 
 export interface LogoProps {

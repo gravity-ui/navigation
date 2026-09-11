@@ -110,6 +110,11 @@ describe('CompositeBar utils', () => {
             expect(header.current).toBeFalsy();
         });
 
+        it('makeGroupHeaderAsideItem passes MenuGroup.iconSize to the header row', () => {
+            const header = makeGroupHeaderAsideItem({id: 'g1', title: 'G1', iconSize: 24});
+            expect(header.iconSize).toBe(24);
+        });
+
         it('getSelectedCompositeBarRowIndex ignores current on group children', () => {
             const rows = buildCompositeBarRows(
                 [
@@ -145,6 +150,33 @@ describe('CompositeBar utils', () => {
 
             const overflowGroup = collapseItems.find((i) => i.compositeBarMenuPopupItems?.length);
             expect(overflowGroup?.compositeBarMenuPopupItems?.map((c) => c.id)).toEqual(['c1']);
+        });
+
+        it('keeps the group own action, current and iconSize on the overflow row', () => {
+            const groupClick = jest.fn();
+            const groups: MenuGroup[] = [
+                {
+                    id: 'g1',
+                    title: 'G1',
+                    iconSize: 24,
+                    current: true,
+                    href: '/g1',
+                    onItemClick: groupClick,
+                },
+            ];
+            const items: AsideHeaderItem[] = [
+                {id: 'a', title: 'A'},
+                {id: 'c1', title: 'C1', groupId: 'g1'},
+            ];
+            const rows = buildCompositeBarRows(items, groups);
+
+            const {collapseItems} = getAutosizeCompositeBarRows(rows, 1, getMoreButtonItem('More'));
+
+            const overflowGroup = collapseItems.find((i) => i.compositeBarMenuPopupItems?.length);
+            expect(overflowGroup?.iconSize).toBe(24);
+            expect(overflowGroup?.current).toBe(true);
+            expect(overflowGroup?.href).toBe('/g1');
+            expect(overflowGroup?.onItemClick).toBe(groupClick);
         });
 
         it('uses density when deciding whether items fit', () => {
