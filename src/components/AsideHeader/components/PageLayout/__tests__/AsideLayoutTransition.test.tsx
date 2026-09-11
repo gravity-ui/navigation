@@ -328,6 +328,153 @@ describe('AsideLayoutTransition compactTransition', () => {
         expect(microtasks).toHaveLength(0);
     });
 
+    it('does not clone target DOM while starting a transition', () => {
+        const child = (
+            <button data-gn-composite-bar-item-id="home" style={{opacity: 1}}>
+                <span data-gn-aside-part="icon">
+                    <svg>
+                        <path />
+                    </svg>
+                </span>
+                <span data-gn-aside-part="title" style={{opacity: 1}}>
+                    Home
+                </span>
+                <span data-gn-aside-part="surface" />
+            </button>
+        );
+        const {rerender} = render(view(false, true, child));
+        rerender(view(true, true, child));
+        const clones = jest.spyOn(Node.prototype, 'cloneNode');
+        act(() => microtasks.splice(0).forEach((callback) => callback()));
+        expect(clones).not.toHaveBeenCalled();
+    });
+
+    it('captures only standalone ghost candidates before an update', () => {
+        const child = (
+            <button data-gn-composite-bar-item-id="home" style={{opacity: 1}}>
+                <span data-gn-aside-part="icon">
+                    <svg>
+                        <path />
+                    </svg>
+                </span>
+                <span data-gn-aside-part="title" style={{opacity: 1}}>
+                    Home
+                </span>
+                <span data-gn-aside-part="surface" />
+            </button>
+        );
+        const {rerender} = render(view(false, true, child));
+        const targets: Element[] = [];
+        const cloneNode = Node.prototype.cloneNode;
+        const clones = jest.spyOn(Node.prototype, 'cloneNode').mockImplementation(function (
+            this: Node,
+            deep?: boolean,
+        ) {
+            targets.push(this as Element);
+            return cloneNode.call(this, deep);
+        });
+        rerender(view(true, true, child));
+        expect(clones).toHaveBeenCalledTimes(2);
+        expect(targets.map((node) => node.getAttribute('data-gn-aside-part'))).toEqual([
+            null,
+            'title',
+        ]);
+    });
+
+    it('captures a group and nested title without a standalone nested row', () => {
+        const child = (
+            <div data-gn-aside-group="group">
+                <button data-gn-composite-bar-item-id="header" style={{opacity: 1}}>
+                    Group
+                </button>
+                <div className="g-list">
+                    <button
+                        data-gn-composite-bar-item-id="nested"
+                        data-gn-aside-nested
+                        style={{opacity: 1}}
+                    >
+                        <span data-gn-aside-part="title" style={{opacity: 1}}>
+                            Nested title
+                        </span>
+                    </button>
+                </div>
+            </div>
+        );
+        const {rerender} = render(view(false, true, child));
+        const targets: Element[] = [];
+        const cloneNode = Node.prototype.cloneNode;
+        jest.spyOn(Node.prototype, 'cloneNode').mockImplementation(function (
+            this: Node,
+            deep?: boolean,
+        ) {
+            targets.push(this as Element);
+            return cloneNode.call(this, deep);
+        });
+        rerender(view(true, true, child));
+        expect(
+            targets.some((node) => node.getAttribute('data-gn-composite-bar-item-id') === 'nested'),
+        ).toBe(false);
+        expect(targets.some((node) => node.getAttribute('data-gn-aside-part') === 'title')).toBe(
+            true,
+        );
+        expect(targets.some((node) => node.matches('.g-list'))).toBe(true);
+    });
+
+    it('skips missing decorative copies while preserving surface animation and cleanup', () => {
+        const child = (compact: boolean) => (
+            <>
+                <button data-gn-composite-bar-item-id="home" style={{opacity: 1}}>
+                    <span data-gn-aside-part="title" style={{opacity: compact ? 0 : 1}}>
+                        Home
+                    </span>
+                    <span data-gn-aside-part="surface" />
+                </button>
+                {!compact && (
+                    <>
+                        <button data-gn-composite-bar-item-id="departing" style={{opacity: 1}}>
+                            Departing
+                        </button>
+                        <div data-gn-aside-group="group">
+                            <button data-gn-composite-bar-item-id="header" style={{opacity: 1}}>
+                                Group
+                            </button>
+                            <div className="g-list">
+                                <button
+                                    data-gn-composite-bar-item-id="nested"
+                                    data-gn-aside-nested
+                                    style={{opacity: 1}}
+                                >
+                                    Nested
+                                </button>
+                            </div>
+                        </div>
+                    </>
+                )}
+            </>
+        );
+        const diagnostics = jest.spyOn(console, 'error').mockImplementation(() => {});
+        const snapshots = jest.spyOn(AsideLayoutTransition.prototype, 'getSnapshotBeforeUpdate');
+        const {rerender, unmount} = render(view(false, true, child(false)));
+        rerender(view(true, true, child(true)));
+        const captured = snapshots.mock.results[0];
+        if (captured.type !== 'return' || !captured.value)
+            throw new Error('Expected before snapshot');
+        expect(captured.value.groups.has('footer/group')).toBe(true);
+        captured.value.appearances.clear();
+        act(() => microtasks.splice(0).forEach((callback) => callback()));
+        expect(diagnostics).toHaveBeenCalledWith('Missing pre-update aside ghost appearance');
+        expect(handles.some(({frames}) => frames.some((frame) => 'width' in frame))).toBe(true);
+        const findDecoration = (selector: string) =>
+            // eslint-disable-next-line testing-library/no-node-access
+            document.querySelector(selector);
+        expect(findDecoration('[data-gn-aside-transition-overlay]')).toBeNull();
+        expect(findDecoration('[data-gn-aside-animating]')).not.toBeNull();
+        rerender(view(true, false, child(true)));
+        expect(findDecoration('[data-gn-aside-animating]')).toBeNull();
+        expect(handles.every(({cancel}) => cancel.mock.calls.length > 0)).toBe(true);
+        unmount();
+    });
+
     it('keeps its child mounted and does not forward transition props to the DOM', () => {
         const error = jest.spyOn(console, 'error').mockImplementation(() => {});
         const mounted = jest.fn();

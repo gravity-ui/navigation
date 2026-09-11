@@ -27,7 +27,6 @@ type Part = {
     transform: string;
     backgroundColor: string;
     borderRadius: string;
-    clone: HTMLElement;
     clipPath: string;
     clipRect?: DOMRect;
 };
@@ -64,7 +63,6 @@ function measure(element: HTMLElement): Part {
         transform: style.transform,
         backgroundColor: style.backgroundColor,
         borderRadius: style.borderRadius,
-        clone: cloneAppearance(element),
         clipPath: style.clipPath,
         clipRect: element
             .closest('[data-gn-aside-scrollport], [data-gn-aside-transition-scroll-clip]')
@@ -177,6 +175,23 @@ function capture(panel: HTMLElement): Snapshot {
     return {rows, groups, dividers, width, layoutWidth, collapse};
 }
 
+type BeforeSnapshot = Snapshot & {appearances: Map<Part, HTMLElement>};
+
+function canCreateRowGhost(row: Row, snapshot: Snapshot): boolean {
+    return row.opacity !== 0 && !(row.group && snapshot.groups.has(row.group));
+}
+
+function captureGhostAppearances(snapshot: Snapshot): Map<Part, HTMLElement> {
+    const appearances = new Map<Part, HTMLElement>();
+    const save = (part: Part) => appearances.set(part, cloneAppearance(part.element));
+    snapshot.rows.forEach((row) => {
+        if (canCreateRowGhost(row, snapshot)) save(row);
+        if (row.title && row.title.opacity > 0) save(row.title);
+    });
+    snapshot.groups.forEach(({part}) => save(part));
+    return appearances;
+}
+
 function translation(x: number, y: number, transform = 'none') {
     return `translate(${x}px, ${y}px) ${transform === 'none' ? '' : transform}`;
 }
@@ -190,7 +205,7 @@ function translation(x: number, y: number, transform = 'none') {
 export class AsideLayoutTransition extends React.Component<
     Props,
     Record<string, never>,
-    Snapshot | null
+    BeforeSnapshot | null
 > {
     private root = React.createRef<HTMLDivElement>();
     private currentIndicator = new CurrentIndicatorTransition(() => this.reconcileObservation());
@@ -225,7 +240,7 @@ export class AsideLayoutTransition extends React.Component<
         {element: HTMLElement; id: string; group?: string}
     >();
 
-    getSnapshotBeforeUpdate(previous: Props): Snapshot | null {
+    getSnapshotBeforeUpdate(previous: Props): BeforeSnapshot | null {
         if (this.props.compactTransition === false) {
             if (this.animatedPanel || this.pendingStart) this.cancel();
             return null;
@@ -263,12 +278,20 @@ export class AsideLayoutTransition extends React.Component<
         this.departingDividers.forEach(({element, id, group}, key) => {
             snapshot.dividers.set(key, {...measure(element), id, group});
         });
+        const before: BeforeSnapshot = {
+            ...snapshot,
+            appearances: captureGhostAppearances(snapshot),
+        };
         this.animatedPanel = panel;
         this.cancel();
-        return snapshot;
+        return before;
     }
 
-    componentDidUpdate(_previous: Props, _state: Record<string, never>, before: Snapshot | null) {
+    componentDidUpdate(
+        _previous: Props,
+        _state: Record<string, never>,
+        before: BeforeSnapshot | null,
+    ) {
         if (!before) return;
         const generation = this.generation;
         const pendingStart = {};
@@ -292,7 +315,7 @@ export class AsideLayoutTransition extends React.Component<
         return <div {...props} ref={this.root} />;
     }
 
-    private start(before: Snapshot) {
+    private start(before: BeforeSnapshot) {
         if (this.props.compactTransition === false) return;
         const panel = this.root.current?.querySelector<HTMLElement>('[data-gn-aside-panel]');
         if (
@@ -393,15 +416,20 @@ export class AsideLayoutTransition extends React.Component<
                     {opacity: row.title.opacity, transform: 'none'},
                 ]);
             } else if (old.title && old.title.opacity > 0) {
-                const ghost = this.addGhost(panel, old.title);
-                this.departingTitles.set(key, ghost);
-                animate(ghost, [
-                    {opacity: old.title.opacity, transform: 'none'},
-                    {
-                        opacity: 0,
-                        transform: translation(row.rect.x - old.rect.x, row.rect.y - old.rect.y),
-                    },
-                ]);
+                const ghost = this.addGhost(panel, old.title, before.appearances);
+                if (ghost) {
+                    this.departingTitles.set(key, ghost);
+                    animate(ghost, [
+                        {opacity: old.title.opacity, transform: 'none'},
+                        {
+                            opacity: 0,
+                            transform: translation(
+                                row.rect.x - old.rect.x,
+                                row.rect.y - old.rect.y,
+                            ),
+                        },
+                    ]);
+                }
             }
             if (old.surface && row.surface) {
                 const surface = row.surface;
@@ -446,13 +474,9 @@ export class AsideLayoutTransition extends React.Component<
             }
         });
         before.rows.forEach((row, key) => {
-            if (
-                after.rows.has(key) ||
-                row.opacity === 0 ||
-                (row.group && before.groups.has(row.group))
-            )
-                return;
-            const ghost = this.addGhost(panel, row);
+            if (after.rows.has(key) || !canCreateRowGhost(row, before)) return;
+            const ghost = this.addGhost(panel, row, before.appearances);
+            if (!ghost) return;
             this.departingRows.set(key, ghost);
             animate(ghost, [{opacity: row.opacity}, {opacity: 0}]);
         });
@@ -504,7 +528,8 @@ export class AsideLayoutTransition extends React.Component<
         });
         before.groups.forEach((group, key) => {
             if (after.groups.has(key)) return;
-            const ghost = this.addGhost(panel, group.part);
+            const ghost = this.addGhost(panel, group.part, before.appearances);
+            if (!ghost) return;
             this.departingGroups.set(key, {element: ghost, headerKey: group.headerKey});
             // Departing groups are decorative clones, but their dividers still
             // resize with the aside. Retain keyed geometry for a mid-flight reversal.
@@ -544,7 +569,19 @@ export class AsideLayoutTransition extends React.Component<
         });
     }
 
-    private addGhost(panel: HTMLElement, part: Part) {
+    private addGhost(
+        panel: HTMLElement,
+        part: Part,
+        appearances: Map<Part, HTMLElement>,
+    ): HTMLElement | undefined {
+        const ghost = appearances.get(part);
+        if (!ghost) {
+            if (process.env.NODE_ENV !== 'production') {
+                // eslint-disable-next-line no-console
+                console.error('Missing pre-update aside ghost appearance');
+            }
+            return undefined;
+        }
         if (!this.overlay) {
             this.overlay = document.createElement('div');
             this.overlay.setAttribute('aria-hidden', 'true');
@@ -559,7 +596,6 @@ export class AsideLayoutTransition extends React.Component<
             });
             panel.appendChild(this.overlay);
         }
-        const ghost = part.clone;
         this.currentIndicator.prepareGhost(ghost);
         [ghost, ...Array.from(ghost.querySelectorAll<HTMLElement>('*'))].forEach((element) => {
             element.removeAttribute('id');
