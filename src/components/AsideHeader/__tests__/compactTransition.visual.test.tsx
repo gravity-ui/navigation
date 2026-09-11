@@ -235,19 +235,34 @@ test('keeps children, focus, callbacks and independent Drawer transitions', asyn
     });
     await mount(<CompactTransitionExample />);
     await finishAnimations(page);
+
+    // Observe the Drawer opening, not closing: closing unmounts the item on a timer, so a
+    // single stalled frame outlives the whole 300ms transform and leaves nothing to sample.
+    // Overriding the duration the Drawer sets inline keeps the opening transition running
+    // until it is observed, whatever the frame rate.
     await clickAndFrame(page, 'Toggle drawer');
+    await finishAnimations(page);
+    const slowDrawer = await page.addStyleTag({
+        content: '.g-drawer { --_--animation-duration: 10s !important; }',
+    });
+    await page
+        .getByRole('button', {name: 'Toggle drawer', exact: true, includeHidden: true})
+        .evaluate((button) => button.click());
     await expect
         .poll(() =>
-            page.evaluate(() => {
-                const animations = document.getAnimations().filter((animation) => {
-                    const target = (animation.effect as KeyframeEffect).target;
-                    return target instanceof Element && target.matches('.g-drawer__item');
-                });
-                animations.forEach((animation) => animation.pause());
-                return animations.length;
-            }),
+            page.evaluate(
+                () =>
+                    document.getAnimations().filter((animation) => {
+                        const target = (animation.effect as KeyframeEffect).target;
+                        return target instanceof Element && target.matches('.g-drawer__item');
+                    }).length,
+            ),
         )
         .toBeGreaterThan(0);
+    await slowDrawer.evaluate((tag) => tag.remove());
+    await finishAnimations(page);
+    // Close it again: the open overlay hides the page content from the accessibility tree.
+    await clickAndFrame(page, 'Toggle drawer');
     await finishAnimations(page);
     const input = page.getByRole('textbox', {name: 'Persistent input'});
     await input.fill('Local state');
