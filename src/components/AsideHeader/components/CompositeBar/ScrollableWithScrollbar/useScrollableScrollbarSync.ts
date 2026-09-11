@@ -100,17 +100,16 @@ export function useScrollableScrollbarSync(): UseScrollableScrollbarSyncResult {
 
         scheduleUpdate();
 
-        if (typeof ResizeObserver === 'undefined') {
-            return undefined;
-        }
-
-        const observer = new ResizeObserver(scheduleUpdate);
-        observer.observe(el);
+        // `ResizeObserver` is missing in jsdom, so keep it optional: the mutation
+        // observer below is set up either way.
+        const observer =
+            typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(scheduleUpdate);
+        observer?.observe(el);
         // Observe the direct content child as well: its content-box changes whenever
         // the rendered content changes (rows, titles, adornments, groups, density).
         const contentEl = el.firstElementChild;
         if (contentEl) {
-            observer.observe(contentEl);
+            observer?.observe(contentEl);
         }
 
         // Content can also change without resizing any observed box: the collapse-mode
@@ -127,7 +126,7 @@ export function useScrollableScrollbarSync(): UseScrollableScrollbarSyncResult {
         });
 
         return () => {
-            observer.disconnect();
+            observer?.disconnect();
             mutationObserver.disconnect();
         };
     }, [scheduleUpdate]);
