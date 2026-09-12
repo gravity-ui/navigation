@@ -2,6 +2,13 @@ import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from '
 
 const MIN_THUMB_HEIGHT = 24;
 
+/**
+ * A fractional container height can make the integer scrollHeight exceed clientHeight
+ * by this many pixels. Such a delta is sub-pixel rounding, not meaningfully scrollable
+ * content, so it is not reported as overflow.
+ */
+const SUBPIXEL_OVERFLOW_PX = 1;
+
 type ThumbGeometry = {
     top: number;
     height: number;
@@ -12,6 +19,8 @@ type UseScrollableScrollbarSyncResult = {
     trackRef: React.RefObject<HTMLDivElement>;
     thumbRef: React.RefObject<HTMLDivElement>;
     overflows: boolean;
+    canScrollUp: boolean;
+    canScrollDown: boolean;
     thumb: ThumbGeometry;
     scheduleUpdate: () => void;
     handleThumbPointerDown: (event: React.PointerEvent<HTMLDivElement>) => void;
@@ -33,7 +42,11 @@ export function useScrollableScrollbarSync(): UseScrollableScrollbarSyncResult {
     const thumbRef = useRef<HTMLDivElement>(null);
 
     const [overflows, setOverflows] = useState(false);
-    const [thumb, setThumb] = useState<ThumbGeometry>({top: 0, height: 0});
+    const [geometry, setGeometry] = useState({
+        thumb: {top: 0, height: 0} as ThumbGeometry,
+        canScrollUp: false,
+        canScrollDown: false,
+    });
 
     const rafIdRef = useRef<number | null>(null);
     const scheduleUpdate = useCallback(() => {
@@ -51,12 +64,12 @@ export function useScrollableScrollbarSync(): UseScrollableScrollbarSyncResult {
             }
 
             const {scrollHeight, clientHeight} = el;
-            const isOverflowing = scrollHeight > clientHeight;
+            const isOverflowing = scrollHeight - clientHeight > SUBPIXEL_OVERFLOW_PX;
 
             setOverflows(isOverflowing);
 
             if (!isOverflowing) {
-                setThumb({top: 0, height: 0});
+                setGeometry({thumb: {top: 0, height: 0}, canScrollUp: false, canScrollDown: false});
                 return;
             }
 
@@ -69,7 +82,12 @@ export function useScrollableScrollbarSync(): UseScrollableScrollbarSyncResult {
                 scrollHeight - clientHeight > 0 ? scrollTop / (scrollHeight - clientHeight) : 0;
             const top = maxTop * scrollRatio;
 
-            setThumb({top, height});
+            setGeometry({
+                thumb: {top, height},
+                canScrollUp: isOverflowing && scrollTop > SUBPIXEL_OVERFLOW_PX,
+                canScrollDown:
+                    isOverflowing && scrollHeight - clientHeight - scrollTop > SUBPIXEL_OVERFLOW_PX,
+            });
         });
     }, []);
 
@@ -82,19 +100,35 @@ export function useScrollableScrollbarSync(): UseScrollableScrollbarSyncResult {
 
         scheduleUpdate();
 
-        if (typeof ResizeObserver === 'undefined') {
-            return undefined;
-        }
-
-        const observer = new ResizeObserver(scheduleUpdate);
-        observer.observe(el);
-        // CompositeBar is the single direct child. Its content-box changes when
-        // row type, title, adornment, group state, or density changes.
+        // `ResizeObserver` is missing in jsdom, so keep it optional: the mutation
+        // observer below is set up either way.
+        const observer =
+            typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(scheduleUpdate);
+        observer?.observe(el);
+        // Observe the direct content child as well: its content-box changes whenever
+        // the rendered content changes (rows, titles, adornments, groups, density).
         const contentEl = el.firstElementChild;
         if (contentEl) {
-            observer.observe(contentEl);
+            observer?.observe(contentEl);
         }
-        return () => observer.disconnect();
+
+        // Content can also change without resizing any observed box: the collapse-mode
+        // menu resizes its content wrapper via an inline style (AutoSizer), which
+        // changes scrollHeight while every observed box stays the same, leaving the
+        // overflow state stale. Re-measure on content mutations too (rAF-throttled
+        // by scheduleUpdate).
+        const mutationObserver = new MutationObserver(scheduleUpdate);
+        mutationObserver.observe(el, {
+            childList: true,
+            subtree: true,
+            characterData: true,
+            attributes: true,
+        });
+
+        return () => {
+            observer?.disconnect();
+            mutationObserver.disconnect();
+        };
     }, [scheduleUpdate]);
 
     useEffect(() => {
@@ -225,7 +259,7 @@ export function useScrollableScrollbarSync(): UseScrollableScrollbarSyncResult {
         trackRef,
         thumbRef,
         overflows,
-        thumb,
+        ...geometry,
         scheduleUpdate,
         handleThumbPointerDown,
         handleTrackPointerDown,

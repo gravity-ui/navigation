@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {ChevronDown, ChevronRight} from '@gravity-ui/icons';
-import {Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
+import {Icon, Popup, PopupPlacement, PopupProps, setRef} from '@gravity-ui/uikit';
 
 import {MakeItemParams} from '../../../../types';
 import {createBlock} from '../../../../utils/cn';
@@ -10,9 +10,11 @@ import {getAsideHeaderDensityConfig} from '../../../density';
 import i18n from '../../../i18n';
 import {isQuickAccessPinEligible} from '../../../quickAccess';
 import {AsideHeaderItem} from '../../../types';
+import {AsideDivider} from '../../AsideDivider';
+import {CURRENT_IDS_ATTRIBUTE} from '../../PageLayout/currentIndicatorDom';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
 import {COLLAPSE_ITEM_ID, COMPOSITE_BAR_ITEM_ID_ATTRIBUTE, ITEM_TYPE_REGULAR} from '../constants';
-import {isItemPresentationCurrent} from '../presentationCurrent';
+import {getItemPresentationCurrentIds} from '../presentationCurrent';
 
 import {ItemInnerProps, ItemProps, QuickAccessToggleHandler} from './Item.types';
 import {ItemPopup} from './ItemPopup';
@@ -168,6 +170,13 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const [compactNavPopoverOpen, setCompactNavPopoverOpen] = React.useState(false);
 
     const ref = React.useRef<HTMLElement>(null);
+    const mergedRowRef = React.useCallback(
+        (element: HTMLElement | null) => {
+            setRef(ref, element);
+            setRef(props.rowRef, element);
+        },
+        [props.rowRef],
+    );
     const anchorRef = resolveAnchorRef(anchoreRefProp, ref);
     const highlightedRef = React.useRef<HTMLDivElement>(null);
     const interactiveRowRef = React.useRef<HTMLDivElement>(null);
@@ -183,12 +192,15 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const resolvedMenuPopupItems = menuPopupItems ?? props.compositeBarMenuPopupItems;
     const resolvedMenuPopupTitle = menuPopupTitle ?? props.compositeBarMenuPopupTitle;
 
-    const current =
-        !suppressCurrentHighlight &&
-        isItemPresentationCurrent(props, {
-            suppressCurrentItemIds,
-            popupItems: resolvedMenuPopupItems,
-        });
+    const currentIds = suppressCurrentHighlight
+        ? []
+        : getItemPresentationCurrentIds(props, {
+              suppressCurrentItemIds,
+              popupItems: resolvedMenuPopupItems,
+          });
+    const current = currentIds.length > 0;
+    const currentIdsMetadata =
+        !menuPopupRow && currentIds.length ? JSON.stringify(currentIds) : undefined;
     const quickAccessPinItem = quickAccessPinItemProp ?? props;
     const showQuickAccessPin = shouldShowQuickAccessPin({
         enabled: enableQuickAccessPin,
@@ -256,7 +268,13 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     }, [submenuNest, showMenuPopup, compactNavPopoverOpen]);
 
     if (isDivider) {
-        return <div className={b('menu-divider')} />;
+        return (
+            <AsideDivider
+                as="div"
+                className={b('menu-divider')}
+                transitionId={`item/${props.id}`}
+            />
+        );
     }
 
     const compactPopoverDisabled = !enableTooltip || popupVisible || type === 'action';
@@ -318,6 +336,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const ariaLabel = typeof title === 'string' ? title : undefined;
     const resolvedAriaLabel = resolveItemAriaLabel(menuItemAriaProps, ariaLabel);
+    const showSurface = !menuPopupRow && [ITEM_TYPE_REGULAR, 'action'].includes(type);
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
         const wrappedByItemWrapper = typeof itemWrapper === 'function';
@@ -404,12 +423,15 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
         const rowChildren = (
             <>
+                {showSurface && (
+                    <span className={b('surface')} data-gn-aside-part="surface" aria-hidden />
+                )}
                 {menuGroupNestedTreeConnector}
-                <div className={b('icon-place')} ref={highlightedRef}>
+                <div className={b('icon-place')} ref={highlightedRef} data-gn-aside-part="icon">
                     {makeIconNode(iconEl)}
                 </div>
 
-                <div className={b('title')} title={ariaLabel}>
+                <div className={b('title')} data-gn-aside-part="title" title={ariaLabel}>
                     {titleEl}
                 </div>
 
@@ -423,6 +445,8 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             'data-type': type,
             'data-qa': qa,
             [COMPOSITE_BAR_ITEM_ID_ATTRIBUTE]: props.id,
+            [CURRENT_IDS_ATTRIBUTE]: currentIdsMetadata,
+            'data-gn-aside-nested': menuGroupNested ? '' : undefined,
             'aria-label': resolvedAriaLabel,
             onClick: handleRowClick,
             onClickCapture: onItemClickCapture,
@@ -442,7 +466,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
         if (href) {
             tagNode = (
-                <a {...rowEventProps} href={href} ref={ref as React.RefObject<HTMLAnchorElement>}>
+                <a {...rowEventProps} href={href} ref={mergedRowRef}>
                     {rowChildren}
                 </a>
             );
@@ -451,14 +475,14 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 <div
                     {...rowEventProps}
                     role={menuItemAriaProps?.role ?? 'button'}
-                    ref={ref as React.RefObject<HTMLDivElement>}
+                    ref={mergedRowRef}
                 >
                     {rowChildren}
                 </div>
             );
         } else {
             tagNode = (
-                <button {...rowEventProps} ref={ref as React.RefObject<HTMLButtonElement>}>
+                <button {...rowEventProps} ref={mergedRowRef}>
                     {rowChildren}
                 </button>
             );

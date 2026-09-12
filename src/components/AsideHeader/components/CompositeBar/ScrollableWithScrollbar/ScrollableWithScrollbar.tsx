@@ -1,6 +1,7 @@
 import React, {FC, ReactNode, useEffect} from 'react';
 
 import {createBlock} from '../../../../utils/cn';
+import {AsideDivider} from '../../AsideDivider';
 
 import {useScrollableScrollbarSync} from './useScrollableScrollbarSync';
 
@@ -11,8 +12,7 @@ const b = createBlock('scrollable-with-scrollbar', styles);
 type ScrollableWithScrollbarProps = {
     children: ReactNode;
     className?: string;
-    /** Grow with content up to the quick access height cap, then scroll. */
-    capped?: boolean;
+    showScrollDividers?: boolean;
     /** Called when scrollable content overflows the allocated height. */
     onOverflowChange?: (overflows: boolean) => void;
 };
@@ -24,7 +24,7 @@ type ScrollableWithScrollbarProps = {
 export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
     children,
     className,
-    capped = false,
+    showScrollDividers = false,
     onOverflowChange,
 }) => {
     const {
@@ -32,6 +32,8 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
         trackRef,
         thumbRef,
         overflows,
+        canScrollUp,
+        canScrollDown,
         thumb,
         scheduleUpdate,
         handleThumbPointerDown,
@@ -47,11 +49,28 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
     }, [onOverflowChange]);
 
     return (
-        <div className={b({capped}, className)}>
-            <div ref={scrollRef} className={b('scrollable-inner')} onScroll={scheduleUpdate}>
+        <div className={b(null, className)}>
+            <div
+                ref={scrollRef}
+                className={b('scrollable-inner')}
+                onScroll={scheduleUpdate}
+                data-gn-aside-scrollport
+            >
                 {children}
             </div>
 
+            {showScrollDividers && (
+                <React.Fragment>
+                    <AsideDivider
+                        transitionId="scroll-start"
+                        className={b('scroll-divider', {start: true, visible: canScrollUp})}
+                    />
+                    <AsideDivider
+                        transitionId="scroll-end"
+                        className={b('scroll-divider', {end: true, visible: canScrollDown})}
+                    />
+                </React.Fragment>
+            )}
             {overflows ? (
                 <div
                     ref={trackRef}

@@ -14,6 +14,8 @@ export interface PanelItemProps extends DrawerProps {
 
 export interface LayoutProps {
     compact: boolean;
+    /** Animate compact layout changes. @default true */
+    compactTransition?: boolean;
     className?: string;
     topAlert?: TopAlertProps;
     /**
@@ -38,12 +40,13 @@ interface EditMenuProps {
 }
 
 /**
- * Menu overflow behavior.
- * - `collapse` — extra items collapse under a "More" popup (default).
- * - `scroll` — all items remain visible inside a scrollable container with a native thin scrollbar.
+ * Menu overflow behavior for menu items.
+ * - `collapse` — extra menu items collapse under a "More" popup (default).
+ * - `scroll` — all menu items remain visible inside a scrollable column with a native thin scrollbar.
  *
- * In compact mode the menu always falls back to `collapse` regardless of this value
- * because a scrollbar over icon-only items is awkward.
+ * The distinction applies to menu items only: quick access and the menu always share a single
+ * scroll container that scrolls when the column does not fit the available height. In compact
+ * mode menu items still fall back to `collapse` regardless of this value.
  */
 export type AsideHeaderMenuOverflow = 'collapse' | 'scroll';
 
@@ -119,6 +122,9 @@ interface AsideHeaderDefaultProps {
      */
     onQuickAccessChange?: (item: AsideHeaderItem, quickAccess: boolean) => void;
     headerDecoration?: boolean;
+    /** Hides header/footer separators and their spacing; scroll-edge indicators remain visible
+     * while content is hidden beyond the respective edge. @default false */
+    hideSectionDividers?: boolean;
     /**
      * When provided, the map is the source of truth for which menu groups are collapsed
      * in inline (`menuOverflow: 'scroll'`) layout. Keys are `MenuGroup.id`, values mean collapsed.
@@ -133,12 +139,6 @@ interface AsideHeaderDefaultProps {
      * `collapsedMenuGroupIds` when using controlled mode.
      */
     onToggleMenuGroupCollapsed?: (groupId: string) => void;
-    /**
-     * Uses one scroll container for quick access and the main menu in expanded
-     * `menuOverflow="scroll"` mode. Otherwise quick access has its own capped area.
-     * @default false
-     */
-    unifiedMenuScroll?: boolean;
 }
 
 export type AsideHeaderInnerProps = AsideHeaderGeneralProps &

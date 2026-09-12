@@ -13,7 +13,7 @@ import {CompositeBar} from '../components/CompositeBar/CompositeBar';
 import {PageLayout} from '../components/PageLayout/PageLayout';
 import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
 import {isQuickAccessPinEligible} from '../quickAccess';
-import type {AsideHeaderItem} from '../types';
+import type {AsideHeaderItem, AsideHeaderMenuOverflow} from '../types';
 
 const quickAccessOverflowItems: AsideHeaderItem[] = fullNavigationMenuItems.map((item) => ({
     ...item,
@@ -36,10 +36,10 @@ const quickAccessOverflowItems: AsideHeaderItem[] = fullNavigationMenuItems.map(
 }));
 
 export function QuickAccessOverflowExample({
-    unifiedMenuScroll = false,
+    menuOverflow = 'scroll',
     compact = false,
 }: {
-    unifiedMenuScroll?: boolean;
+    menuOverflow?: AsideHeaderMenuOverflow;
     compact?: boolean;
 }) {
     return (
@@ -48,16 +48,16 @@ export function QuickAccessOverflowExample({
                 logo={{text: 'Navigation'}}
                 menuItems={quickAccessOverflowItems}
                 menuGroups={fullNavigationMenuGroups}
-                menuOverflow="scroll"
+                menuOverflow={menuOverflow}
                 defaultCollapsedMenuGroupIds={fullNavigationCollapsedGroupIds}
                 enableQuickAccess
                 onQuickAccessChange={() => {}}
-                unifiedMenuScroll={unifiedMenuScroll}
-                renderFooter={
-                    compact
-                        ? () => <div data-qa="quick-access-overflow-footer">Footer</div>
-                        : undefined
+                aboveMenuContent={
+                    compact ? undefined : (
+                        <div data-qa="quick-access-overflow-above-menu">Above menu</div>
+                    )
                 }
+                renderFooter={() => <div data-qa="quick-access-overflow-footer">Footer</div>}
                 hideCollapseButton
             />
             <PageLayout.Content>

@@ -24,6 +24,94 @@ import {AsideHeader} from '@gravity-ui/navigation';
 The component has two possible states: collapsed, expanded.
 Уou can manage between states using `compact`, `onChangeCompact` props and also hide button with `hideCollapseButton`.
 
+Collapse and expansion animate the sidebar width, item positions, and selection surfaces together.
+Titles are laid out at the target width and revealed during expansion, without rewrapping on each
+frame or a second layout change at the end. Clicking the control again reverses from the currently
+displayed positions. The `compact` state and callbacks always describe the requested target state.
+Users who prefer reduced motion receive an immediate layout change.
+
+All built-in horizontal separators, including `type: 'divider'` items in header, menu, footer,
+and nested groups, resize with the sidebar while preserving their local spacing.
+
+The current-item transition follows changes to `compact`: when a selected child
+becomes represented by its group or **More**, one background moves between those rows. It also
+supports reversing an unfinished transition. Ordinary page selection remains immediate, and
+quick-access highlight settings and the theme's selection transparency are preserved. A current
+change during this movement restores native highlighting while the layout continues animating.
+Ambiguous selections retain existing native highlighting; reduced motion switches immediately.
+
+### Disabling compact transitions
+
+Set `compactTransition={false}` on `AsideHeader` or `PageLayout` (default: `true`).
+Aside and content widths, custom background width, row and divider geometry, current-item
+highlighting, and the offset of an open Drawer immediately follow the target `compact` state.
+Disabling the flag during a transition finishes it immediately and releases transition resources.
+Re-enabling it without changing `compact` does not animate; simultaneous updates use the new flag.
+Children stay mounted. `PageLayoutAside` and `AsideFallback` inherit the layout setting.
+
+Hover effects, independent Drawer opening/closing, and the opacity effects of the footer divider
+and custom scrollbar are preserved. The existing `prefers-reduced-motion` behavior is unchanged.
+
+```tsx
+<AsideHeader compact={compact} compactTransition={false} onChangeCompact={setCompact} />
+
+<PageLayout compact={compact} compactTransition={false}>
+  <PageLayoutAside menuItems={menuItems} onChangeCompact={setCompact} />
+  <PageLayout.Content>{children}</PageLayout.Content>
+</PageLayout>
+```
+
+### Collapse button (v7)
+
+The collapse button sits at the aside edge beside the last visible `FooterItem`. The row keeps its
+own action and menu; in expanded mode it reserves 24 px for the button. In compact mode, hovering
+anywhere in the aside or over the button, or focusing the button from the keyboard, reveals the
+control. The selected row's built-in tooltip is suppressed in compact mode even when `enableTooltip={true}`. With no
+visible `FooterItem`, a blank bottom row provides the same control. `hideCollapseButton` removes
+the control, reserved space, and blank row.
+
+The button remains keyboard accessible and retains focus when toggled. `expandTitle` and
+`collapseTitle` set its accessible name. `compactTransition={false}` disables its geometry
+transitions while preserving hover appearance; reduced motion disables both.
+
+At the standard z-index, the compact tab extends 10 px over the edge of open All pages and custom
+`panelItems` Drawers. Clicking it changes `compact` and keeps the panel open. Its transparent layer
+does not intercept clicks outside the button. The layer uses
+`calc(var(--gn-aside-header-z-index, 100) + 1)`. Consumer z-index settings determine custom stacking;
+portaled Popups (including `asideRef` with `right-end`) may cover the tab and retain their normal
+position and behavior. The compact button background follows the collapsed aside background,
+then the general aside background, then the theme background. Matching an arbitrary
+`customBackground` is not guaranteed.
+
+In v7, `collapseButtonWrapper` decorates the edge control. Move any full-width additional content
+previously rendered by this wrapper into `renderFooter`:
+
+```tsx
+<PageLayoutAside
+  collapseButtonWrapper={(button) => <span className="collapse-decoration">{button}</span>}
+  renderFooter={({compact}) => (
+    <>
+      <div>Additional footer content</div>
+      <FooterItem id="account" title="Account" icon={Person} compact={compact} />
+    </>
+  )}
+/>
+```
+
+`PageLayoutAside` must participate directly in the flex layout of `PageLayout`. React components,
+Fragments, Context providers, and Suspense are supported without extra DOM boxes. If a consumer
+needs a DOM wrapper, give it `display: contents`; an ordinary block wrapper is unsupported.
+The library does not change consumer wrapper styles automatically.
+
+```tsx
+<PageLayout compact={compact}>
+  <div style={{display: 'contents'}}>
+    <PageLayoutAside menuItems={menuItems} onChangeCompact={setCompact} />
+  </div>
+  <PageLayout.Content>{children}</PageLayout.Content>
+</PageLayout>
+```
+
 ### Menu density
 
 Use `menuDensity="compact"` to reduce the aside width, item height, icon size, spacing, and corner
@@ -47,6 +135,14 @@ the normalized value from context.
 ### Top decoration
 
 Navigation highlights top section with Logo and Subheader items using `headerDecoration` props.
+
+### Section dividers
+
+`hideSectionDividers` hides the header/footer separators (including the collapsed header decoration SVG) and their spacing toward the menu. Header background, outer spacing, and separators inside the menu/Quick Access are preserved.
+
+With `hideSectionDividers=true`, indicators appear at the menu scroll edges only while content is hidden beyond that edge: bottom at the start, both in the middle, top at the end, neither without overflow. They do not restore spacing. With `false`, the existing footer separator remains visible whenever the menu overflows, including at the end. The Quick Access separator stays inside the scrolling content and can coexist with these indicators. Setting `--gn-aside-header-divider-horizontal-color: transparent` also hides the scroll indicators.
+
+The property is supported by `AsideHeader` and `PageLayoutAside`. `AsideFallback` supports hiding separators and spacing only: it has no scrollable menu and does not render scroll-edge indicators.
 
 ### Custom background
 
@@ -108,10 +204,10 @@ By default, an active quick-access item is highlighted only in the quick-access 
 `quickAccessHighlightInMainMenu` to preserve its highlight in both places. Disable
 `enableQuickAccess` to hide the section and pin controls without clearing item flags.
 
-Quick access has an independently scrollable area capped at five rows in both expanded and compact
-navigation. In an expanded sidebar with `menuOverflow="scroll"`, set `unifiedMenuScroll` to put
-quick access and the main menu into a single scroll container instead. The main compact menu keeps
-its existing collapse/overflow behavior.
+Quick access and the menu rows scroll together in a single container in all modes: when the column
+does not fit the available height, both sections scroll as one while the header, footer, and
+`aboveMenuContent` stay fixed. In a compact sidebar, items that do not fit still collapse under
+**More**.
 
 `quickAccess` and `pinned` serve different purposes: `quickAccess` duplicates an item in the quick
 access section, while the existing `pinned` flag prevents an item from being hidden in **All pages**.
@@ -120,7 +216,7 @@ access section, while the existing `pinned` flag prevents an item from being hid
 
 Pass **`aboveMenuContent`** to render arbitrary content between the header (logo and `subheaderItems`) and the main **`menuItems`** list.
 
-With **`menuOverflow="scroll"`**, that block stays fixed above the scrollable menu column; only the menu rows scroll.
+That block stays fixed above the scrollable column: quick access and the menu rows scroll together beneath it when the column does not fit the height.
 
 **Example:**
 
@@ -266,10 +362,12 @@ With the advanced layout, pass `menuGroupNestedIcons` to `PageLayoutAside`.
 | collapseButtonWrapper          | Wrapper for `CollapseButton` allowing customization of the default button appearance                                                                                                                                               | `(defaultButton: React.ReactNode, data: {compact: boolean; onChangeCompact?: (compact: boolean) => void}) => React.ReactNode` |                           |
 | collapseTitle                  | `CollapseButton` title for collapsing navigation                                                                                                                                                                                   |                                                           `string`                                                            | `"Свернуть"` `"Collapse"` |
 | compact                        | Navigation visual state                                                                                                                                                                                                            |                                                           `boolean`                                                           |          `false`          |
+| compactTransition              | Animate compact layout geometry and highlighting. Also available on `PageLayout`.                                                                                                                                                  |                                                           `boolean`                                                           |          `true`           |
 | customBackground               | `AsideHeader` background                                                                                                                                                                                                           |                                                       `React.ReactNode`                                                       |                           |
 | customBackgroundClassName      | Override default background container's styles                                                                                                                                                                                     |                                                           `string`                                                            |                           |
 | expandTitle                    | `CollapseButton` title for expanding navigation                                                                                                                                                                                    |                                                           `string`                                                            | `"Развернуть"` `"Expand"` |
 | headerDecoration               | Color background of the top section with logo and subheader items                                                                                                                                                                  |                                                           `boolean`                                                           |          `false`          |
+| hideSectionDividers            | Hides header/footer separators and spacing, showing scroll-edge indicators instead. See [Section dividers](#section-dividers).                                                                                                     |                                                           `boolean`                                                           |          `false`          |
 | hideCollapseButton             | Hiding `CollapseButton`. Use `compact` prop for setting default navigation state                                                                                                                                                   |                                                           `boolean`                                                           |          `false`          |
 | logo                           | Logo container includes icon, title, handling clicks                                                                                                                                                                               |                [`Logo`](https://github.com/gravity-ui/navigation/blob/main/src/components/Logo/Readme.md#logo)                |                           |
 | menuItems                      | Items in the navigation middle section                                                                                                                                                                                             |                                                   `Array<AsideHeaderItem>`                                                    |           `[]`            |
@@ -278,7 +376,6 @@ With the advanced layout, pass `menuGroupNestedIcons` to `PageLayoutAside`.
 | menuDensity                    | Visual density of the aside and menu items. `compact` reduces dimensions without changing interaction behavior.                                                                                                                    |                                                   `'default' \| 'compact'`                                                    |        `'default'`        |
 | enableQuickAccess              | Renders items marked with `quickAccess` in a separate section and enables pin controls when `onQuickAccessChange` is provided.                                                                                                     |                                                           `boolean`                                                           |          `false`          |
 | quickAccessHighlightInMainMenu | Keeps a pinned current item highlighted in the main menu as well as in quick access.                                                                                                                                               |                                                           `boolean`                                                           |          `false`          |
-| unifiedMenuScroll              | Uses one scroll container for quick access and the main menu in expanded `menuOverflow="scroll"` mode.                                                                                                                             |                                                           `boolean`                                                           |          `false`          |
 | defaultMenuItems               | Default list for resetting **All pages** edits                                                                                                                                                                                     |                                                   `Array<AsideHeaderItem>`                                                    |                           |
 | menuOverflow                   | Overflow behavior for the composite menu; see [`menuOverflow`](#composite-menu-overflow-menuoverflow). **`collapse`** (default): extras under «More». **`scroll`**: scrollable column. Compact sidebar always uses **`collapse`**. |                                                   `'collapse' \| 'scroll'`                                                    |       `'collapse'`        |
 | collapsedMenuGroupIds          | Controlled map (`MenuGroup.id` → collapsed) when `menuOverflow` is **`scroll`**                                                                                                                                                    |                                                   `Record<string, boolean>`                                                   |                           |
@@ -294,7 +391,7 @@ With the advanced layout, pass `menuGroupNestedIcons` to `PageLayoutAside`.
 | onToggleMenuGroupCollapsed     | User toggled group expand/collapse in **`menuOverflow='scroll'`** layout; combine with **`collapsedMenuGroupIds`** when controlled                                                                                                 |                                                  `(groupId: string) => void`                                                  |                           |
 | onAllPagesClick                | Callback will be called when "All pages" button is clicked                                                                                                                                                                         |                                                         `() => void;`                                                         |                           |
 | openModalSubscriber            | Function notifies `AsideHeader` about Modals visibility changes                                                                                                                                                                    |                                             `( (open: boolean) => void) => void`                                              |                           |
-| aboveMenuContent               | Optional content between the header and **`menuItems`**; stays fixed above the scrollable list when **`menuOverflow="scroll"`**.                                                                                                   |                                                       `React.ReactNode`                                                       |                           |
+| aboveMenuContent               | Optional content between the header and **`menuItems`**; stays fixed above the scrollable column (quick access and menu).                                                                                                          |                                                       `React.ReactNode`                                                       |                           |
 | panelItems                     | Items for `Drawer` component. Used for show additional information over main content                                                                                                                                               |       [`Array<DrawerItem>`](https://github.com/gravity-ui/navigation/tree/main/src/components/Drawer#draweritem-props)        |           `[]`            |
 | renderContent                  | Function rendering the main content at the right of the `AsideHeader`                                                                                                                                                              |                                          `(data: {size: number}) => React.ReactNode`                                          |                           |
 | renderFooter                   | Function rendering the navigation bottom section                                                                                                                                                                                   |                                          `(data: {size: number}) => React.ReactNode`                                          |                           |
@@ -312,7 +409,7 @@ The middle section uses a composite bar. **`menuOverflow`** chooses how overflow
 | **`collapse`** | Default. Items that do not fit are collected under a **«More»** entry (popup).             |
 | **`scroll`**   | The menu list becomes a scrollable column so every row stays reachable without **«More»**. |
 
-When the sidebar is **`compact`** (collapsed to icons), overflow **always** behaves like **`collapse`**, regardless of `menuOverflow`, because scrolling a strip of icon-only rows is awkward.
+When the sidebar is **`compact`** (collapsed to icons), items that do not fit **always** collapse under **«More»**, regardless of `menuOverflow`; the column itself (quick access and menu) scrolls in a single container when height runs out.
 
 With **`menuOverflow="scroll"`** and **`menuGroups`**, group headers can expand/collapse inline. Use **`collapsedMenuGroupIds`** / **`defaultCollapsedMenuGroupIds`** and **`onToggleMenuGroupCollapsed`** to control or observe that state (keys are `MenuGroup.id`). An expanded group shows its children as an inline hierarchy; a collapsed group exposes the same children in a popup on hover/focus. `menuGroupNestedIcons` controls child icons in both representations.
 

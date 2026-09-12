@@ -10,3 +10,13 @@ $block: '.#{variables.$ns}footer-item';
         var(--_--gn-aside-header-density-item-expanded-radius, #{variables.$item-expanded-radius})
     );
 }
+
+#{$block}:global([data-gn-collapse-anchor]):not(#{$block}_compact) {
+    margin-inline: 0 24px;
+    width: calc(100% - 24px);
+
+    &:global([data-type='action']) {
+        margin-inline: 10px 34px;
+        width: calc(100% - 44px);
+    }
+}

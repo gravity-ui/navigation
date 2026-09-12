@@ -4,6 +4,8 @@
 $block: '.#{variables.$ns}composite-bar-item';
 
 $actionLeftRightMargin: 10px;
+// Width of the quick access pin: a uikit button with size="s".
+$quickAccessPinSize: 24px;
 $floating-surface-box-shadow-light:
     0 0 0 1px var(--g-color-line-generic-solid),
     0 3px 10px 0 var(--g-color-sfx-shadow),
@@ -12,6 +14,13 @@ $floating-surface-box-shadow-dark:
     0 0 0 1px var(--g-color-line-generic-solid),
     0 4px 12px 0 var(--g-color-sfx-veil),
     0 10px 24px -2px var(--g-color-sfx-shadow-heavy);
+// The single-item label tooltip is a small always-dark surface: the multi-layer
+// floating shadow reads as too heavy on it, so it keeps the outline ring plus a
+// single soft layer. Its element is forced to the dark theme, so the tokens
+// always resolve from the dark palette.
+$floating-surface-box-shadow-label:
+    0 0 0 1px var(--g-color-line-generic-solid),
+    0 2px 8px 0 var(--g-color-sfx-shadow);
 
 @mixin floating-surface-box-shadow-default {
     --_--floating-surface-box-shadow-default: #{$floating-surface-box-shadow-light};
@@ -52,6 +61,9 @@ $floating-surface-box-shadow-dark:
     --_--item-selected-text-color: var(--g-color-text-primary);
     --_--item-selected-background-color: var(--g-color-base-selection);
 
+    --_--row-surface-color: transparent;
+    position: relative;
+    isolation: isolate;
     display: flex;
     min-width: 0;
     width: 100%;
@@ -75,6 +87,58 @@ $floating-surface-box-shadow-dark:
     &:global(.#{variables.$ns}footer-item_regular-size)#{$class}_type_regular {
         height: #{variables.$item-height};
         --gn-aside-header-item-icon-background-size: 38px;
+    }
+
+    &__surface {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        border-radius: inherit;
+        background-color: var(--_--row-surface-color);
+
+        &:global([data-gn-aside-current-suppressed]),
+        &:global([data-gn-aside-current-ghost-suppressed]) {
+            --_--row-surface-color: transparent;
+        }
+    }
+
+    &_menu-popup-row {
+        background-color: var(--_--row-surface-color);
+    }
+
+    &_compact &__surface {
+        inset: auto;
+        inset-inline-start: calc(
+            (
+                    var(--_--gn-aside-header-density-item-height, #{variables.$item-height}) - var(
+                            --gn-aside-header-item-icon-background-size,
+                            var(--_--item-icon-background-size)
+                        )
+                ) /
+                2
+        );
+        top: calc(
+            (
+                    100% - var(
+                            --gn-aside-header-item-icon-background-size,
+                            var(--_--item-icon-background-size)
+                        )
+                ) /
+                2
+        );
+        width: var(
+            --gn-aside-header-item-icon-background-size,
+            var(--_--item-icon-background-size)
+        );
+        height: var(
+            --gn-aside-header-item-icon-background-size,
+            var(--_--item-icon-background-size)
+        );
+        border-radius: var(
+            --gn-aside-header-item-collapsed-radius,
+            var(--_--item-collapsed-radius)
+        );
     }
 
     &__icon {
@@ -178,12 +242,14 @@ $floating-surface-box-shadow-dark:
     &__quick-access-pin-slot {
         position: absolute;
         inset-block: 0;
-        inset-inline-end: var(--_--gn-aside-header-density-item-title-gap-end, var(--g-spacing-2));
+        // Trail the row edge like the group chevron does. The slot is exactly as wide as
+        // the pin, so no dead area separates the control from that edge.
+        inset-inline-end: var(--g-spacing-1);
         z-index: 1;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 32px;
+        width: $quickAccessPinSize;
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
@@ -197,9 +263,9 @@ $floating-surface-box-shadow-dark:
     }
 
     &_with-quick-access-pin &__title {
-        margin-inline-end: calc(
-            32px + var(--_--gn-aside-header-density-item-title-gap-end, var(--g-spacing-2))
-        );
+        // Reserve the slot plus its inset, keeping the same gap between title and pin as
+        // between pin and row edge.
+        margin-inline-end: calc(#{$quickAccessPinSize} + 2 * var(--g-spacing-1));
     }
 
     &__interactive-row:hover &__quick-access-pin-slot:not(&__quick-access-pin-slot_suppressed) {
@@ -222,7 +288,7 @@ $floating-surface-box-shadow-dark:
 
     // The pin is a sibling of the menu item, so hovering it must keep the row hover surface.
     &__interactive-row:hover #{$block}:not(#{$block}_compact)#{$block}_type_regular {
-        background-color: var(
+        --_--row-surface-color: var(
             --gn-aside-header-item-current-background-color-hover,
             var(
                 --gn-aside-header-item-current-background-color,
@@ -234,7 +300,7 @@ $floating-surface-box-shadow-dark:
 
     &__interactive-row:hover
         #{$block}:not(#{$block}_compact):not(#{$block}_current)#{$block}_type_regular {
-        background-color: var(
+        --_--row-surface-color: var(
             --gn-aside-header-item-background-color-hover,
             var(--_--item-background-color-hover)
         );
@@ -306,24 +372,18 @@ $floating-surface-box-shadow-dark:
             outline: none;
             color: inherit;
         }
-
-        #{$class}_title-lines_2 & {
-            align-items: flex-start;
-        }
     }
 
     &_title-lines_2 {
-        align-items: flex-start;
+        #{$class}__icon-place {
+            align-self: flex-start;
+            align-items: flex-start;
+        }
 
         #{$class}__icon-place,
         #{$class}__title,
         #{$class}__chevron {
             padding-block: var(--g-spacing-1);
-        }
-
-        #{$class}__icon-place,
-        #{$class}__title {
-            align-items: flex-start;
         }
     }
 
@@ -339,30 +399,39 @@ $floating-surface-box-shadow-dark:
         justify-content: center;
         height: var(--gn-composite-bar-item-action-size);
         margin: 0 $actionLeftRightMargin 8px;
-        background: var(--gn-aside-header-item-action-color, var(--_--item-action-color));
-        box-shadow:
-            0px 0px 0px 1px rgba(0, 0, 0, 0.03),
-            0px 5px 6px rgba(0, 0, 0, 0.12);
+        --_--row-surface-color: var(
+            --gn-aside-header-item-action-color,
+            var(--_--item-action-color)
+        );
         border-radius: var(--gn-composite-bar-item-action-size);
         transition:
             transform 0.1s ease-out,
             background-color 0.15s linear;
 
-        &:focus-visible {
+        & #{$class}__surface {
+            box-shadow:
+                0px 0px 0px 1px rgba(0, 0, 0, 0.03),
+                0px 5px 6px rgba(0, 0, 0, 0.12);
+        }
+
+        &:focus-visible #{$class}__surface {
             box-shadow: 0 0 0 2px var(--g-color-line-misc);
         }
 
         &:hover {
-            background-color: var(
+            --_--row-surface-color: var(
                 --gn-aside-header-item-action-color-hover,
                 var(--_--item-action-color-hover)
             );
         }
 
         &:active {
-            box-shadow: 0 1px 2px var(--g-color-sfx-shadow);
             transition: none;
             transform: scale(0.96);
+
+            #{$class}__surface {
+                box-shadow: 0 1px 2px var(--g-color-sfx-shadow);
+            }
         }
 
         & #{$class}__icon-place {
@@ -414,6 +483,10 @@ $floating-surface-box-shadow-dark:
     &__icon-popover_single-label {
         --_--popup-min-width: 0;
         --_--popup-row-padding-inline: var(--g-spacing-2);
+        box-shadow: var(
+            --gn-aside-header-floating-surface-box-shadow,
+            #{$floating-surface-box-shadow-label}
+        );
     }
 
     &__icon-popover_item-type_action {
@@ -568,7 +641,7 @@ $floating-surface-box-shadow-dark:
     &:not(&_compact) {
         &#{$class}_current {
             &#{$class}_type_regular {
-                background-color: var(
+                --_--row-surface-color: var(
                     --gn-aside-header-item-current-background-color,
                     var(--_--item-selected-background-color)
                 );
@@ -582,7 +655,7 @@ $floating-surface-box-shadow-dark:
 
         &:hover {
             &#{$class}_type_regular {
-                background-color: var(
+                --_--row-surface-color: var(
                     --gn-aside-header-item-current-background-color-hover,
                     var(
                         --gn-aside-header-item-current-background-color,
@@ -599,7 +672,7 @@ $floating-surface-box-shadow-dark:
 
         &:not(#{$class}_current):hover {
             &#{$class}_type_regular {
-                background-color: var(
+                --_--row-surface-color: var(
                     --gn-aside-header-item-background-color-hover,
                     var(--_--item-background-color-hover)
                 );
@@ -719,35 +792,16 @@ $floating-surface-box-shadow-dark:
     }
 
     &_compact {
-        @mixin item-bg {
-            position: relative;
-            background-color: transparent;
-
-            &::before {
-                content: '';
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                z-index: -1;
-                width: var(
-                    --gn-aside-header-item-icon-background-size,
-                    var(--_--item-icon-background-size)
-                );
-                height: var(
-                    --gn-aside-header-item-icon-background-size,
-                    var(--_--item-icon-background-size)
-                );
-                transform: translate(-50%, -50%);
-                border-radius: var(
-                    --gn-aside-header-item-collapsed-radius,
-                    var(--_--item-collapsed-radius)
-                );
-            }
-        }
-
         &#{$class}_type_action {
             width: var(--gn-composite-bar-item-action-size);
             margin-inline: auto;
+
+            #{$class}__surface {
+                inset: 0;
+                width: auto;
+                height: auto;
+                border-radius: inherit;
+            }
 
             & #{$class}__title {
                 margin: 0;
@@ -756,49 +810,31 @@ $floating-surface-box-shadow-dark:
 
         &#{$class}_current {
             &#{$class}_type_regular {
-                #{$class}__btn-icon {
-                    @include item-bg();
-
-                    &::before {
-                        background-color: var(
-                            --gn-aside-header-item-current-background-color,
-                            var(--_--item-selected-background-color)
-                        );
-                    }
-                }
+                --_--row-surface-color: var(
+                    --gn-aside-header-item-current-background-color,
+                    var(--_--item-selected-background-color)
+                );
             }
         }
 
         &:hover {
             &#{$class}_type_regular {
-                #{$class}__btn-icon {
-                    @include item-bg();
-
-                    &::before {
-                        background-color: var(
-                            --gn-aside-header-item-current-background-color-hover,
-                            var(
-                                --gn-aside-header-item-current-background-color,
-                                var(--_--item-selected-background-color)
-                            )
-                        );
-                    }
-                }
+                --_--row-surface-color: var(
+                    --gn-aside-header-item-current-background-color-hover,
+                    var(
+                        --gn-aside-header-item-current-background-color,
+                        var(--_--item-selected-background-color)
+                    )
+                );
             }
         }
 
         &:not(#{$class}_current):hover {
             &#{$class}_type_regular {
-                #{$class}__btn-icon {
-                    @include item-bg();
-
-                    &::before {
-                        background-color: var(
-                            --gn-aside-header-item-background-color-hover,
-                            var(--_--item-background-color-hover)
-                        );
-                    }
-                }
+                --_--row-surface-color: var(
+                    --gn-aside-header-item-background-color-hover,
+                    var(--_--item-background-color-hover)
+                );
             }
         }
     }

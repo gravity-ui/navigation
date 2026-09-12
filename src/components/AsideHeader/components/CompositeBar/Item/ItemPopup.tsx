@@ -20,6 +20,10 @@ const b = createBlock('composite-bar-item', styles);
 
 const POPUP_PADDING = 4;
 const POPUP_MAIN_AXIS_OFFSET = 14;
+/** Whitespace between the painted borders of two chained popups. */
+const NESTED_POPUP_GAP = 4;
+/** `.g-popup` paints its border as a 1px shadow spread outside the border box. */
+const POPUP_SHADOW_RING = 1;
 const SOLO_LABEL_POPUP_ITEM_HEIGHT = 28;
 const SOLO_LABEL_POPUP_BORDER_RADIUS = 4;
 const POPUP_TITLE_BLOCK_HEIGHT = 30;
@@ -30,20 +34,29 @@ export function getItemPopoverOffset({
     itemHeight,
     popupRowHeight,
     titleHeight = 0,
+    nested = false,
 }: {
     isSingleLabel: boolean;
     itemHeight: number;
     popupRowHeight: number;
     titleHeight?: number;
+    /** The popup opens from a row inside another popup. */
+    nested?: boolean;
 }): NonNullable<PopupProps['offset']> {
     if (isSingleLabel) {
         return {mainAxis: POPUP_MAIN_AXIS_OFFSET, crossAxis: 0};
     }
 
+    // A nested popup anchors to a row that sits `POPUP_PADDING` inside the parent popup
+    // border box, and both popups paint a shadow ring outside that box. Compensate for
+    // both so chained popups keep `NESTED_POPUP_GAP` of whitespace at any density.
+    const mainAxis = nested
+        ? NESTED_POPUP_GAP + 2 * POPUP_SHADOW_RING + POPUP_PADDING
+        : POPUP_MAIN_AXIS_OFFSET;
     const firstRowOffsetInAnchor = (itemHeight - popupRowHeight) / 2;
 
     return {
-        mainAxis: POPUP_MAIN_AXIS_OFFSET,
+        mainAxis,
         crossAxis: firstRowOffsetInAnchor - POPUP_PADDING - titleHeight,
     };
 }
@@ -101,6 +114,7 @@ export const ItemPopup: React.FC<Props> = ({
     suppressCurrentItemIds,
 }) => {
     const asideHeaderContext = useSafeAsideHeaderContext();
+    const parentPopupNest = React.useContext(ItemPopupNestContext);
     const theme = useThemeValue();
     const densityConfig = getAsideHeaderDensityConfig(asideHeaderContext?.menuDensity);
     const nestedOpenCountRef = React.useRef(0);
@@ -134,6 +148,10 @@ export const ItemPopup: React.FC<Props> = ({
             '--_--popup-border-radius': `${popupBorderRadius}px`,
             '--_--popup-title-height': `${POPUP_TITLE_BLOCK_HEIGHT}px`,
             '--g-popup-border-radius': `${popupBorderRadius}px`,
+            // Popovers must appear instantly. `PopoverProps` does not expose Popup's
+            // `disableTransition`, so the enter/exit animation is disabled here; the
+            // style lands on the same `.g-popup` element that owns the transition.
+            transition: 'none',
         } as React.CSSProperties;
     }, [densityConfig.itemExpandedRadius, densityCssProperties, isSingleLabel]);
 
@@ -156,8 +174,9 @@ export const ItemPopup: React.FC<Props> = ({
                 itemHeight: densityConfig.itemHeight,
                 popupRowHeight: POPUP_REGULAR_ITEM_HEIGHT,
                 titleHeight: title ? POPUP_TITLE_BLOCK_HEIGHT : 0,
+                nested: Boolean(parentPopupNest),
             }),
-        [densityConfig.itemHeight, isSingleLabel, title],
+        [densityConfig.itemHeight, isSingleLabel, parentPopupNest, title],
     );
 
     const registerNestedOpen = React.useCallback((delta: number) => {
