@@ -238,7 +238,9 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
     const quickAccessSection = hasQuickAccessItems ? (
         <div className={b('quick-access')} data-gn-aside-current-container>
             {!compact && (
-                <div className={b('quick-access-title')}>{i18n('quick_access_title')}</div>
+                <div className={b('quick-access-title')} data-gn-aside-part="quick-access-title">
+                    {i18n('quick_access_title')}
+                </div>
             )}
             {quickAccessCompositeBar}
             <AsideDivider className={b('quick-access-divider')} transitionId="quick-access" />

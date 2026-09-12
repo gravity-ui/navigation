@@ -42,6 +42,7 @@ export const Header = () => {
             {logo && (
                 <Logo
                     {...logo}
+                    data-gn-aside-transition-row="logo"
                     className={b('logo', logo.className)}
                     onClick={onLogoClick}
                     compact={compact}

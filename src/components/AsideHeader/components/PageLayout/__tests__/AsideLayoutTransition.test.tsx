@@ -3,6 +3,7 @@ import React from 'react';
 
 import {act, fireEvent, render, screen} from '@testing-library/react';
 
+import {Logo} from '../../../../Logo';
 import {AsideLayoutTransition} from '../AsideLayoutTransition';
 
 const {flushSync} = jest.requireActual<{flushSync: (callback: () => void) => void}>('react-dom');
@@ -327,6 +328,54 @@ describe('AsideLayoutTransition compactTransition', () => {
         expect(disconnect).not.toHaveBeenCalled();
         expect(microtasks).toHaveLength(0);
     });
+
+    it.each(['unmapped', 'hash-only'])(
+        'captures logo and quick-access title with %s classes',
+        (mode) => {
+            const child = (compact: boolean) => (
+                <>
+                    <Logo
+                        text="Workspace"
+                        compact={compact}
+                        className={mode === 'unmapped' ? 'gn-aside-header__logo' : 'a1b2c3'}
+                        data-gn-aside-transition-row="logo"
+                    />
+                    {!compact && (
+                        <div
+                            className={
+                                mode === 'unmapped'
+                                    ? 'gn-aside-header__quick-access-title'
+                                    : 'd4e5f6'
+                            }
+                            data-gn-aside-part="quick-access-title"
+                            style={{opacity: 1}}
+                        >
+                            Quick access
+                        </div>
+                    )}
+                </>
+            );
+            const snapshots = jest.spyOn(
+                AsideLayoutTransition.prototype,
+                'getSnapshotBeforeUpdate',
+            );
+            const {rerender} = render(view(false, true, child(false)));
+            rerender(view(true, true, child(true)));
+            const captured = snapshots.mock.results[0];
+            if (captured.type !== 'return' || !captured.value)
+                throw new Error('Expected before snapshot');
+            expect(
+                captured.value.rows
+                    .get('logo')
+                    ?.element.getAttribute('data-gn-aside-transition-row'),
+            ).toBe('logo');
+            expect(captured.value.rows.has('quick-access-title')).toBe(true);
+            act(() => microtasks.splice(0).forEach((callback) => callback()));
+            expect(handles.some(({frames}) => frames.some((frame) => frame.opacity === 0))).toBe(
+                true,
+            );
+        },
+    );
 
     it('does not clone target DOM while starting a transition', () => {
         const child = (
