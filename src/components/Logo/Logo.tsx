@@ -10,7 +10,12 @@ import styles from './Logo.module.scss';
 const b = createBlock('logo', styles);
 
 export const Logo: React.FC<
-    LogoProps & {compact?: boolean; buttonClassName?: string; iconPlaceClassName?: string}
+    LogoProps & {
+        compact?: boolean;
+        buttonClassName?: string;
+        iconPlaceClassName?: string;
+        'data-gn-aside-transition-row'?: 'logo';
+    }
 > = ({
     text,
     icon,
@@ -28,6 +33,7 @@ export const Logo: React.FC<
     buttonClassName,
     'aria-label': ariaLabel,
     'aria-labelledby': ariaLabelledby,
+    'data-gn-aside-transition-row': transitionRow,
 }) => {
     const hasWrapper = typeof wrapper === 'function';
 
@@ -76,7 +82,7 @@ export const Logo: React.FC<
     );
 
     return (
-        <div className={b(null, className)}>
+        <div className={b(null, className)} data-gn-aside-transition-row={transitionRow}>
             {hasWrapper ? wrapper(button, Boolean(compact)) : button}
         </div>
     );

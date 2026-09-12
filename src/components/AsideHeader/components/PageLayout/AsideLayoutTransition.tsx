@@ -49,8 +49,8 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
 };
 
 const ITEM_SELECTOR = CURRENT_ROW_SELECTOR;
-const LOGO_SELECTOR = '[class*="gn-aside-header__logo_"]';
-const TITLE_SELECTOR = '[class*="gn-aside-header__quick-access-title_"]';
+const LOGO_SELECTOR = '[data-gn-aside-transition-row="logo"]';
+const TITLE_SELECTOR = '[data-gn-aside-part="quick-access-title"]';
 
 function measure(element: HTMLElement): Part {
     const rect = element.getBoundingClientRect();
