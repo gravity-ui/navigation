@@ -49,7 +49,7 @@ export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
     }, [onOverflowChange]);
 
     return (
-        <div className={b(null, className)}>
+        <div className={b({'shadow-start': canScrollUp, 'shadow-end': canScrollDown}, className)}>
             <div
                 ref={scrollRef}
                 className={b('scrollable-inner')}

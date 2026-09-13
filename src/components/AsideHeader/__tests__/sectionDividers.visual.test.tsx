@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {Gear} from '@gravity-ui/icons';
+import {ThemeProvider} from '@gravity-ui/uikit';
 import {expect} from '@playwright/experimental-ct-react';
 
 import {test} from '~playwright/core';
@@ -161,6 +162,64 @@ for (const compact of [false, true]) {
                     (el) => getComputedStyle(el.parentElement as HTMLElement).paddingBottom,
                 ),
             ).toBe(originalPadding);
+        });
+    }
+}
+
+for (const theme of ['light', 'dark'] as const) {
+    for (const hideSectionDividers of [false, true]) {
+        test(`scroll shadows follow hidden content: theme=${theme}, hideSectionDividers=${hideSectionDividers}`, async ({
+            mount,
+            page,
+        }) => {
+            await page.setViewportSize({width: 1000, height: 600});
+            const view = (count: number) => (
+                <ThemeProvider theme={theme}>
+                    <AsideHeader
+                        compact={false}
+                        compactTransition={false}
+                        hideSectionDividers={hideSectionDividers}
+                        logo={{text: 'Logo'}}
+                        menuOverflow="scroll"
+                        menuItems={Array.from({length: count}, (_, i) => ({
+                            id: String(i),
+                            title: `Item ${i}`,
+                            icon: Gear,
+                        }))}
+                        renderFooter={() => <div>Footer</div>}
+                    />
+                </ThemeProvider>
+            );
+            const component = await mount(view(40));
+            const scroll = page.locator('[data-gn-aside-scrollport]');
+            const shadows = () =>
+                scroll.evaluate((element) => {
+                    const host = element.parentElement;
+                    if (!host) throw new Error('Expected scroll container');
+                    return ['::before', '::after'].map(
+                        (pseudo) => getComputedStyle(host, pseudo).opacity,
+                    );
+                });
+            await expect.poll(shadows).toEqual(['0', '0.7']);
+            await scroll.evaluate((element) => {
+                element.scrollTo({top: (element.scrollHeight - element.clientHeight) / 2});
+            });
+            await expect.poll(shadows).toEqual(['0.7', '0.7']);
+            await scroll.evaluate((element) => {
+                element.scrollTo({top: element.scrollHeight});
+            });
+            await expect.poll(shadows).toEqual(['0.7', '0']);
+            await expect(
+                page.locator(
+                    `[data-gn-aside-divider="${hideSectionDividers ? 'scroll-end' : 'footer'}"]`,
+                ),
+            ).toHaveCSS('opacity', hideSectionDividers ? '0' : '1');
+            await scroll.evaluate((element) => {
+                element.scrollTo({top: 0});
+            });
+            await expect.poll(shadows).toEqual(['0', '0.7']);
+            await component.update(view(1));
+            await expect.poll(shadows).toEqual(['0', '0']);
         });
     }
 }
