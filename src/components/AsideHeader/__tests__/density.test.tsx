@@ -97,6 +97,9 @@ describe('AsideHeader menu density', () => {
         expect(layout.style.getPropertyValue('--_--gn-aside-header-density-item-height')).toBe(
             '32px',
         );
+        expect(
+            layout.style.getPropertyValue('--_--gn-aside-header-density-footer-item-height'),
+        ).toBe('32px');
         expect(screen.getByTestId('context').getAttribute('data-density')).toBe('compact');
         expect(screen.getByTestId('context').getAttribute('data-size')).toBe('220');
     });

@@ -139,7 +139,7 @@ describe('CompositeBar', () => {
             '[data-gn-aside-part="icon"]',
         )?.firstElementChild;
         /* eslint-enable testing-library/no-node-access */
-        expect(labelPopupTrigger).not.toBeNull();
+        expect(labelPopupTrigger).toBeTruthy();
 
         fireEvent.mouseEnter(labelPopupTrigger as Element);
 
