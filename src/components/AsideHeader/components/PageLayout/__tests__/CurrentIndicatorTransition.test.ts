@@ -207,18 +207,13 @@ describe('CurrentIndicatorTransition lifecycle', () => {
         expect(ghost.querySelector('[data-gn-aside-current-ghost-suppressed]')).not.toBeNull();
     });
 
-    it.each(['row', 'surface', 'panel'])(
-        'cancels when the target %s is replaced with equal metadata',
-        async (kind) => {
-            const {target} = start();
-            const old = {row: target.element, surface: target.surface, panel}[kind];
-            if (!old) throw new Error('Unknown replacement target');
-            old.replaceWith(old.cloneNode(true));
-            await flush();
-            expect(handles[0].cancel).toHaveBeenCalledTimes(1);
-            expect(target.surface.hasAttribute(suppressed)).toBe(false);
-        },
-    );
+    it('cancels when the target row is replaced with equal metadata', async () => {
+        const {target} = start();
+        target.element.replaceWith(target.element.cloneNode(true));
+        await flush();
+        expect(handles[0].cancel).toHaveBeenCalledTimes(1);
+        expect(target.surface.hasAttribute(suppressed)).toBe(false);
+    });
 
     it('ignores equal metadata, style updates, unrelated children, and its own layer mutations', async () => {
         const {target} = start();

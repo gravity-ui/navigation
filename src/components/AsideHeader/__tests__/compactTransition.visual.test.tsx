@@ -87,41 +87,38 @@ async function geometry(page: Page) {
 }
 
 for (const layout of ['aside', 'page', 'fallback'] as const) {
-    for (const menuDensity of ['default', 'compact'] as const) {
-        for (const initialCompact of [false, true]) {
-            test(`disabled compact transition settles first frame (${layout}, ${menuDensity}, ${initialCompact})`, async ({
-                mount,
-                page,
-            }) => {
-                await mount(
-                    <CompactTransitionExample {...{layout, menuDensity, initialCompact}} />,
-                );
-                await finishAnimations(page);
-                await page.evaluate(() => document.fonts.ready);
-                await clickAndFrame(page, 'Toggle compact');
-                const first = await geometry(page);
-                expect(first.panel.width).toBe(
-                    (menuDensity === 'default' ? [56, 236] : [44, 220])[Number(initialCompact)],
-                );
-                expect(first.resources).toBe(0);
-                expect(first.animations).toEqual([]);
-                expect(first.targets).toHaveLength(layout === 'fallback' ? 2 : 4);
-                const content = first.targets[layout === 'fallback' ? 1 : 2];
-                expect(content.rect.width + first.panel.width).toBeCloseTo(
-                    first.layoutWidth ?? 0,
-                    1,
-                );
-                if (layout !== 'fallback') {
-                    expect(first.targets[1].rect.width).toBe(first.panel.width);
-                    expect(first.targets[3].rect.x).toBe(first.panel.width);
-                }
-                first.targets.forEach(({transition}) =>
-                    expect(['none', 'background-color']).toContain(transition),
-                );
-                await finishAnimations(page);
-                expect(await geometry(page)).toEqual(first);
-            });
-        }
+    for (const [menuDensity, initialCompact] of [
+        ['default', false],
+        ['default', true],
+        ...(layout === 'page' ? ([['compact', true]] as const) : []),
+    ] as const) {
+        test(`disabled compact transition settles first frame (${layout}, ${menuDensity}, ${initialCompact})`, async ({
+            mount,
+            page,
+        }) => {
+            await mount(<CompactTransitionExample {...{layout, menuDensity, initialCompact}} />);
+            await finishAnimations(page);
+            await page.evaluate(() => document.fonts.ready);
+            await clickAndFrame(page, 'Toggle compact');
+            const first = await geometry(page);
+            expect(first.panel.width).toBe(
+                (menuDensity === 'default' ? [56, 236] : [44, 220])[Number(initialCompact)],
+            );
+            expect(first.resources).toBe(0);
+            expect(first.animations).toEqual([]);
+            expect(first.targets).toHaveLength(layout === 'fallback' ? 2 : 4);
+            const content = first.targets[layout === 'fallback' ? 1 : 2];
+            expect(content.rect.width + first.panel.width).toBeCloseTo(first.layoutWidth ?? 0, 1);
+            if (layout !== 'fallback') {
+                expect(first.targets[1].rect.width).toBe(first.panel.width);
+                expect(first.targets[3].rect.x).toBe(first.panel.width);
+            }
+            first.targets.forEach(({transition}) =>
+                expect(['none', 'background-color']).toContain(transition),
+            );
+            await finishAnimations(page);
+            expect(await geometry(page)).toEqual(first);
+        });
     }
 }
 

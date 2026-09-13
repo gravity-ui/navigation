@@ -111,25 +111,40 @@ describe('CompositeBar', () => {
         expect(screen.getByText('Ресурсы')).toBeTruthy();
     });
 
-    it('preserves current item data when clicking its row in the collapsed label popup', () => {
+    it('preserves current item data and invokes callbacks once in the compact hover popup', () => {
         jest.useFakeTimers();
 
-        const onItemClick = jest.fn();
-        const items: AsideHeaderItem[] = [{id: 'home', title: 'Home', icon: Gear, current: true}];
+        const userItemClick = jest.fn();
+        // Emulates the AsideHeader handler, which invokes item.onItemClick at the end.
+        // A double invocation would toggle the All pages panel back closed.
+        const onItemClick = jest.fn((item, collapsed, event) => {
+            item.onItemClick?.(item, collapsed, event);
+        });
+        const items: AsideHeaderItem[] = [
+            {
+                id: 'home',
+                title: 'Home',
+                icon: Gear,
+                current: true,
+                onItemClick: userItemClick,
+            },
+        ];
 
         renderCompositeBar({items, onItemClick, compact: true});
 
-        const itemButton = screen.getByRole('button', {name: 'Home'});
+        const row = screen.getByRole('button', {name: 'Home'});
         // The label Popover is anchored to the icon area inside the menu row.
-        // eslint-disable-next-line testing-library/no-node-access
-        const iconArea = itemButton.querySelector('[data-gn-aside-part="icon"]');
-        // eslint-disable-next-line testing-library/no-node-access
-        const labelPopupTrigger = iconArea?.firstElementChild;
+        /* eslint-disable testing-library/no-node-access */
+        const labelPopupTrigger = row.querySelector(
+            '[data-gn-aside-part="icon"]',
+        )?.firstElementChild;
+        /* eslint-enable testing-library/no-node-access */
+        expect(labelPopupTrigger).not.toBeNull();
 
         fireEvent.mouseEnter(labelPopupTrigger as Element);
 
         act(() => {
-            jest.advanceTimersByTime(150);
+            jest.advanceTimersByTime(200);
         });
 
         const popupItemButton = screen.getAllByRole('button', {name: 'Home'})[1];
@@ -142,6 +157,8 @@ describe('CompositeBar', () => {
             true,
             expect.any(Object),
         );
+        expect(onItemClick).toHaveBeenCalledTimes(1);
+        expect(userItemClick).toHaveBeenCalledTimes(1);
         expect(screen.getAllByRole('button', {name: 'Home'})).toHaveLength(2);
 
         jest.useRealTimers();
@@ -166,42 +183,6 @@ describe('CompositeBar', () => {
         fireEvent.click(groupHeader);
         expect(screen.getByText('Ресурсы')).toBeTruthy();
         expect(screen.getByText('Workbook 1')).toBeTruthy();
-    });
-
-    it('invokes onItemClick once when clicking the row inside the compact hover popup', () => {
-        jest.useFakeTimers();
-
-        const userItemClick = jest.fn();
-        // Emulates the AsideHeader handler, which invokes item.onItemClick at the end.
-        // A double invocation would toggle the All pages panel back closed.
-        const onItemClick = jest.fn((item, collapsed, event) => {
-            item.onItemClick?.(item, collapsed, event);
-        });
-
-        renderCompositeBar({
-            items: [{id: 'home', title: 'Home', icon: Gear, onItemClick: userItemClick}],
-            onItemClick,
-            compact: true,
-        });
-
-        const row = screen.getByRole('button', {name: 'Home'});
-        // Popover trigger in compact mode is the inner icon box, not the row button
-        // eslint-disable-next-line testing-library/no-node-access
-        const iconBox = row.querySelector('.gn-composite-bar-item__btn-icon') as HTMLElement;
-        fireEvent.mouseEnter(iconBox);
-        act(() => {
-            jest.advanceTimersByTime(200);
-        });
-
-        const popupRow = screen.getAllByText('Home').find((el) => !row.contains(el));
-        expect(popupRow).toBeTruthy();
-
-        fireEvent.click(popupRow as HTMLElement);
-
-        expect(onItemClick).toHaveBeenCalledTimes(1);
-        expect(userItemClick).toHaveBeenCalledTimes(1);
-
-        jest.useRealTimers();
     });
 
     it('does not render popupTitle when it is not set on the MenuGroup', () => {

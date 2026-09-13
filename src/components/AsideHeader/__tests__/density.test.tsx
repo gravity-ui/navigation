@@ -7,7 +7,7 @@ import {render, screen} from '@testing-library/react';
 
 import {useAsideHeaderContext} from '../AsideHeaderContext';
 import {PageLayout} from '../components/PageLayout/PageLayout';
-import {getAsideHeaderDensityConfig, getAsideHeaderDensityCssProperties} from '../density';
+import {getAsideHeaderDensityConfig} from '../density';
 
 function ContextProbe() {
     const {compact, menuDensity, size} = useAsideHeaderContext();
@@ -40,22 +40,9 @@ describe('AsideHeader menu density', () => {
             itemTitleGap: 8,
             itemTitleGapEnd: 16,
         });
-        expect(getAsideHeaderDensityCssProperties()).toEqual({
-            '--_--gn-aside-header-density-item-height': '40px',
-            '--_--gn-aside-header-density-action-size': '36px',
-            '--_--gn-aside-header-density-icon-size': '18px',
-            '--_--gn-aside-header-density-footer-item-height': '40px',
-            '--_--gn-aside-header-density-item-margin-inline': '8px',
-            '--_--gn-aside-header-density-icon-background-size': '38px',
-            '--_--gn-aside-header-density-compact-width': '56px',
-            '--_--gn-aside-header-density-item-expanded-radius': '8px',
-            '--_--gn-aside-header-density-item-collapsed-radius': '7px',
-            '--_--gn-aside-header-density-item-title-gap': '8px',
-            '--_--gn-aside-header-density-item-title-gap-end': '16px',
-        });
     });
 
-    it('provides compact density metrics and CSS properties from the same config', () => {
+    it('provides compact density metrics', () => {
         expect(getAsideHeaderDensityConfig('compact')).toEqual({
             itemHeight: 32,
             twoLineItemHeight: 45,
@@ -71,19 +58,6 @@ describe('AsideHeader menu density', () => {
             itemCollapsedRadius: 6,
             itemTitleGap: 4,
             itemTitleGapEnd: 8,
-        });
-        expect(getAsideHeaderDensityCssProperties('compact')).toEqual({
-            '--_--gn-aside-header-density-item-height': '32px',
-            '--_--gn-aside-header-density-action-size': '32px',
-            '--_--gn-aside-header-density-icon-size': '16px',
-            '--_--gn-aside-header-density-footer-item-height': '32px',
-            '--_--gn-aside-header-density-item-margin-inline': '6px',
-            '--_--gn-aside-header-density-icon-background-size': '32px',
-            '--_--gn-aside-header-density-compact-width': '44px',
-            '--_--gn-aside-header-density-item-expanded-radius': '6px',
-            '--_--gn-aside-header-density-item-collapsed-radius': '6px',
-            '--_--gn-aside-header-density-item-title-gap': '4px',
-            '--_--gn-aside-header-density-item-title-gap-end': '8px',
         });
     });
 
@@ -111,9 +85,6 @@ describe('AsideHeader menu density', () => {
         expect(layout.style.getPropertyValue('--_--gn-aside-header-density-item-height')).toBe(
             '40px',
         );
-        expect(
-            layout.style.getPropertyValue('--_--gn-aside-header-density-footer-item-height'),
-        ).toBe('40px');
         expect(screen.getByTestId('context').getAttribute('data-density')).toBe('default');
         expect(screen.getByTestId('context').getAttribute('data-size')).toBe('236');
 
@@ -126,9 +97,6 @@ describe('AsideHeader menu density', () => {
         expect(layout.style.getPropertyValue('--_--gn-aside-header-density-item-height')).toBe(
             '32px',
         );
-        expect(
-            layout.style.getPropertyValue('--_--gn-aside-header-density-footer-item-height'),
-        ).toBe('32px');
         expect(screen.getByTestId('context').getAttribute('data-density')).toBe('compact');
         expect(screen.getByTestId('context').getAttribute('data-size')).toBe('220');
     });

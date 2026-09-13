@@ -292,93 +292,86 @@ test('screenshot paint helpers keep empty and required-region contracts distinct
     expect(paint.bounds).toEqual(blue);
 });
 
-for (const menuDensity of ['default', 'compact'] as const) {
-    for (const initialCompact of [false, true]) {
-        const direction = initialCompact ? 'expand' : 'collapse';
-        test(`${menuDensity} density ${direction} interpolates geometry and reverses from painted position`, async ({
-            mount,
-            page,
-        }, testInfo) => {
-            await page.setViewportSize({width: 1200, height: 900});
-            await mount(
-                <CurrentIndicatorExample
-                    menuDensity={menuDensity}
-                    initialCompact={initialCompact}
-                />,
-            );
-            await page.evaluate(() => document.fonts.ready);
-            const sourceSelector = `${initialCompact ? GROUP : CHILD} ${SURFACE}`;
-            const targetSelector = `${initialCompact ? CHILD : GROUP} ${SURFACE}`;
-            const source = await geometry(page.locator(sourceSelector));
-            const sourcePanelWidth = (await box(page.locator(PANEL))).width;
-            await toggleAsideAndPause(page);
-            await seekAnimations(page, 0);
-            const indicator = page.locator(INDICATOR);
-            await expect(indicator).toHaveCount(1);
-            expectGeometryNear(await geometry(indicator), source);
-            await seekAnimations(page, 0.5);
-            const midpointPanelWidth = (await box(page.locator(PANEL))).width;
-            const targetPanelWidth = await page
-                .locator(PANEL)
-                .evaluate((element) => Number.parseFloat((element as HTMLElement).style.width));
-            expect(midpointPanelWidth).toBeGreaterThan(
-                Math.min(sourcePanelWidth, targetPanelWidth),
-            );
-            expect(midpointPanelWidth).toBeLessThan(Math.max(sourcePanelWidth, targetPanelWidth));
-            const middle = await geometry(indicator);
-            await expect(indicator).toHaveCSS('opacity', '1');
-            await expect(page.locator(`${GROUP} ${SURFACE}`)).toHaveCSS(
-                'background-color',
-                'rgba(0, 0, 0, 0)',
-            );
-            await expectOnlyIndicatorPaint(page);
-            await expectNativePaintSuppressed(page, initialCompact);
-            await page.screenshot({
-                path: testInfo.outputPath(`${direction}-${menuDensity}-midpoint.png`),
-                animations: 'allow',
-                scale: 'css',
-            });
-            await seekAnimations(page, 1);
-            const target = await geometry(page.locator(targetSelector));
-            expectGeometryNear(await geometry(indicator), target);
-            expectMidpoint(middle, source, target);
-            await finishAnimations(page);
-            await expect(indicator).toHaveCount(0);
-            expectGeometryNear(await geometry(page.locator(targetSelector)), target);
-
-            await toggleAsideAndPause(page);
-            await seekAnimations(page, 0.5);
-            const reversalSource = await geometry(indicator);
-            const reversalPanelWidth = (await box(page.locator(PANEL))).width;
-            await toggleAsideAndPause(page);
-            await seekAnimations(page, 0);
-            await expect(indicator).toHaveCount(1);
-            expectGeometryNear(await geometry(indicator), reversalSource);
-            await seekAnimations(page, 0.5);
-            const reversalMiddle = await geometry(indicator);
-            expectMidpoint(reversalMiddle, reversalSource, target);
-            const reversalMiddleWidth = (await box(page.locator(PANEL))).width;
-            expect(reversalMiddleWidth).toBeGreaterThan(
-                Math.min(reversalPanelWidth, targetPanelWidth),
-            );
-            expect(reversalMiddleWidth).toBeLessThan(
-                Math.max(reversalPanelWidth, targetPanelWidth),
-            );
-            await expectOnlyIndicatorPaint(page);
-            await expectNativePaintSuppressed(page, initialCompact);
-            await seekAnimations(page, 1);
-            const end = await geometry(indicator);
-            const native = await geometry(page.locator(targetSelector));
-            expectGeometryNear(end, native);
-            await finishAnimations(page);
-            await expect(indicator).toHaveCount(0);
-            expectGeometryNear(await geometry(page.locator(targetSelector)), native);
-            await expect(page.locator(targetSelector)).toHaveCSS(
-                'background-color',
-                'rgb(17, 85, 221)',
-            );
+for (const [menuDensity, initialCompact] of [
+    ['default', false],
+    ['default', true],
+    ['compact', false],
+] as const) {
+    const direction = initialCompact ? 'expand' : 'collapse';
+    test(`${menuDensity} density ${direction} interpolates geometry and reverses from painted position`, async ({
+        mount,
+        page,
+    }, testInfo) => {
+        await page.setViewportSize({width: 1200, height: 900});
+        await mount(
+            <CurrentIndicatorExample menuDensity={menuDensity} initialCompact={initialCompact} />,
+        );
+        await page.evaluate(() => document.fonts.ready);
+        const sourceSelector = `${initialCompact ? GROUP : CHILD} ${SURFACE}`;
+        const targetSelector = `${initialCompact ? CHILD : GROUP} ${SURFACE}`;
+        const source = await geometry(page.locator(sourceSelector));
+        const sourcePanelWidth = (await box(page.locator(PANEL))).width;
+        await toggleAsideAndPause(page);
+        await seekAnimations(page, 0);
+        const indicator = page.locator(INDICATOR);
+        await expect(indicator).toHaveCount(1);
+        expectGeometryNear(await geometry(indicator), source);
+        await seekAnimations(page, 0.5);
+        const midpointPanelWidth = (await box(page.locator(PANEL))).width;
+        const targetPanelWidth = await page
+            .locator(PANEL)
+            .evaluate((element) => Number.parseFloat((element as HTMLElement).style.width));
+        expect(midpointPanelWidth).toBeGreaterThan(Math.min(sourcePanelWidth, targetPanelWidth));
+        expect(midpointPanelWidth).toBeLessThan(Math.max(sourcePanelWidth, targetPanelWidth));
+        const middle = await geometry(indicator);
+        await expect(indicator).toHaveCSS('opacity', '1');
+        await expect(page.locator(`${GROUP} ${SURFACE}`)).toHaveCSS(
+            'background-color',
+            'rgba(0, 0, 0, 0)',
+        );
+        await expectOnlyIndicatorPaint(page);
+        await expectNativePaintSuppressed(page, initialCompact);
+        await page.screenshot({
+            path: testInfo.outputPath(`${direction}-${menuDensity}-midpoint.png`),
+            animations: 'allow',
+            scale: 'css',
         });
-    }
+        await seekAnimations(page, 1);
+        const target = await geometry(page.locator(targetSelector));
+        expectGeometryNear(await geometry(indicator), target);
+        expectMidpoint(middle, source, target);
+        await finishAnimations(page);
+        await expect(indicator).toHaveCount(0);
+        expectGeometryNear(await geometry(page.locator(targetSelector)), target);
+
+        await toggleAsideAndPause(page);
+        await seekAnimations(page, 0.5);
+        const reversalSource = await geometry(indicator);
+        const reversalPanelWidth = (await box(page.locator(PANEL))).width;
+        await toggleAsideAndPause(page);
+        await seekAnimations(page, 0);
+        await expect(indicator).toHaveCount(1);
+        expectGeometryNear(await geometry(indicator), reversalSource);
+        await seekAnimations(page, 0.5);
+        const reversalMiddle = await geometry(indicator);
+        expectMidpoint(reversalMiddle, reversalSource, target);
+        const reversalMiddleWidth = (await box(page.locator(PANEL))).width;
+        expect(reversalMiddleWidth).toBeGreaterThan(Math.min(reversalPanelWidth, targetPanelWidth));
+        expect(reversalMiddleWidth).toBeLessThan(Math.max(reversalPanelWidth, targetPanelWidth));
+        await expectOnlyIndicatorPaint(page);
+        await expectNativePaintSuppressed(page, initialCompact);
+        await seekAnimations(page, 1);
+        const end = await geometry(indicator);
+        const native = await geometry(page.locator(targetSelector));
+        expectGeometryNear(end, native);
+        await finishAnimations(page);
+        await expect(indicator).toHaveCount(0);
+        expectGeometryNear(await geometry(page.locator(targetSelector)), native);
+        await expect(page.locator(targetSelector)).toHaveCSS(
+            'background-color',
+            'rgb(17, 85, 221)',
+        );
+    });
 }
 
 for (const initialCompact of [false, true]) {

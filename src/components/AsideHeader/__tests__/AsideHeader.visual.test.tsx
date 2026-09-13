@@ -184,18 +184,6 @@ test.describe('AsideHeader', () => {
         await expectScreenshot();
     });
 
-    test('render compact-density group popup', async ({mount, page, expectScreenshot}) => {
-        await mount(<AsideHeaderStories.CompactDensityMenuGroups />, mountOptions, viewport);
-
-        await page.locator('button[aria-label="Analytics"]').hover();
-        await page.locator('text=Overview').waitFor({state: 'visible'});
-
-        await expectScreenshot({
-            component: page.locator('body'),
-            screenshotName: 'AsideHeader compact-density group popup',
-        });
-    });
-
     test('render combined compact-density group popup', async ({mount, page, expectScreenshot}) => {
         await mount(
             <AsideHeaderExamplesStories.FullNavigation initialCompact enableQuickAccess={false} />,

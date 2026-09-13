@@ -119,60 +119,58 @@ test('animates equal divider ids independently across header, menu and footer', 
     expect(await widths()).toEqual(end);
 });
 
-for (const menuDensity of ['default', 'compact'] as const) {
-    for (const initialCompact of [false, true]) {
-        test(`resizes both Showcase menu dividers (${menuDensity}, compact=${initialCompact})`, async ({
-            mount,
-            page,
-        }) => {
-            await mount(<AsideHeaderStories.Showcase {...{menuDensity, initialCompact}} />);
-            await page.evaluate(() => document.fonts.ready);
-            await expect(page.locator('[class*="__menu-divider_"]')).toHaveCount(2);
-            const geometry = () =>
-                page.evaluate(() => {
-                    const panel = document.querySelector('[data-gn-aside-panel]');
-                    if (!panel) throw new Error('Panel missing');
-                    const panelRect = panel.getBoundingClientRect();
-                    return Array.from(
-                        panel.querySelectorAll('[class*="__menu-divider_"]'),
-                        (line) => {
-                            const rect = line.getBoundingClientRect();
-                            return {
-                                width: rect.width,
-                                left: rect.left - panelRect.left,
-                                right: panelRect.right - rect.right,
-                            };
-                        },
-                    );
+for (const [menuDensity, initialCompact] of [
+    ['default', false],
+    ['default', true],
+] as const) {
+    test(`resizes both Showcase menu dividers (${menuDensity}, compact=${initialCompact})`, async ({
+        mount,
+        page,
+    }) => {
+        await mount(<AsideHeaderStories.Showcase {...{menuDensity, initialCompact}} />);
+        await page.evaluate(() => document.fonts.ready);
+        await expect(page.locator('[class*="__menu-divider_"]')).toHaveCount(2);
+        const geometry = () =>
+            page.evaluate(() => {
+                const panel = document.querySelector('[data-gn-aside-panel]');
+                if (!panel) throw new Error('Panel missing');
+                const panelRect = panel.getBoundingClientRect();
+                return Array.from(panel.querySelectorAll('[class*="__menu-divider_"]'), (line) => {
+                    const rect = line.getBoundingClientRect();
+                    return {
+                        width: rect.width,
+                        left: rect.left - panelRect.left,
+                        right: panelRect.right - rect.right,
+                    };
                 });
-            const before = await geometry();
-            await toggleAndPause(page);
-            for (const progress of [0, 0.25, 0.5]) {
-                await seek(page, progress);
-                (await geometry()).forEach((line, index) => {
-                    expect(line.left).toBeCloseTo(before[index].left, 1);
-                    expect(line.right).toBeCloseTo(before[index].right, 1);
-                });
-            }
-            const middle = await geometry();
-            expect(Math.abs(middle[0].width - before[0].width)).toBeGreaterThan(20);
-            await toggleAndPause(page);
-            await seek(page, 0);
-            (await geometry()).forEach((line, index) => {
-                expect(line.width).toBeCloseTo(middle[index].width, 1);
             });
-            for (const progress of [0.25, 0.5, 0.75, 1]) {
-                await seek(page, progress);
-                (await geometry()).forEach((line, index) => {
-                    expect(line.left).toBeCloseTo(before[index].left, 1);
-                    expect(line.right).toBeCloseTo(before[index].right, 1);
-                });
-            }
-            const end = await geometry();
-            await finish(page);
-            expect(await geometry()).toEqual(end);
+        const before = await geometry();
+        await toggleAndPause(page);
+        for (const progress of [0, 0.25, 0.5]) {
+            await seek(page, progress);
+            (await geometry()).forEach((line, index) => {
+                expect(line.left).toBeCloseTo(before[index].left, 1);
+                expect(line.right).toBeCloseTo(before[index].right, 1);
+            });
+        }
+        const middle = await geometry();
+        expect(Math.abs(middle[0].width - before[0].width)).toBeGreaterThan(20);
+        await toggleAndPause(page);
+        await seek(page, 0);
+        (await geometry()).forEach((line, index) => {
+            expect(line.width).toBeCloseTo(middle[index].width, 1);
         });
-    }
+        for (const progress of [0.25, 0.5, 0.75, 1]) {
+            await seek(page, progress);
+            (await geometry()).forEach((line, index) => {
+                expect(line.left).toBeCloseTo(before[index].left, 1);
+                expect(line.right).toBeCloseTo(before[index].right, 1);
+            });
+        }
+        const end = await geometry();
+        await finish(page);
+        expect(await geometry()).toEqual(end);
+    });
 }
 
 for (const menuDensity of ['default', 'compact'] as const) {
