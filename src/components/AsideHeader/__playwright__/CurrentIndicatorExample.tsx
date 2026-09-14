@@ -13,7 +13,7 @@ import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
 import type {AsideHeaderMenuDensity} from '../density';
 import type {AsideHeaderItem} from '../types';
 
-export interface CurrentIndicatorExampleProps {
+interface CurrentIndicatorExampleProps {
     initialCompact?: boolean;
     menuDensity?: AsideHeaderMenuDensity;
     initialCurrentId?: string;

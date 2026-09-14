@@ -7,7 +7,7 @@ import {
     getCompositeBarSection,
 } from './currentIndicatorDom';
 
-export type CurrentIdentity = {
+type CurrentIdentity = {
     key: string;
     section: string;
     rowId: string;
