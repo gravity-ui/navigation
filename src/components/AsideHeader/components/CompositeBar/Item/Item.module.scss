@@ -778,19 +778,6 @@ $floating-surface-box-shadow-label:
         }
     }
 
-    &_compact &__chevron {
-        position: absolute;
-        right: 8px;
-        margin: 0;
-        padding: 0;
-        align-self: auto;
-
-        svg {
-            stroke: currentColor;
-            stroke-width: 1;
-        }
-    }
-
     &_compact {
         &#{$class}_type_action {
             width: var(--gn-composite-bar-item-action-size);
