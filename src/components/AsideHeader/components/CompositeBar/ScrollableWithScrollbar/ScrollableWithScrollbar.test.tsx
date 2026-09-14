@@ -6,8 +6,64 @@ import React from 'react';
 import {act, fireEvent, render, screen} from '@testing-library/react';
 
 import {ScrollableWithScrollbar} from './ScrollableWithScrollbar';
+import {useScrollableScrollbarSync} from './useScrollableScrollbarSync';
 
 describe('ScrollableWithScrollbar', () => {
+    it('preserves geometry identity after mutations that do not change scroll metrics', async () => {
+        jest.useFakeTimers();
+        const onGeometry = jest.fn();
+        function Probe() {
+            const {scrollRef, scheduleUpdate, thumb, canScrollUp, canScrollDown} =
+                useScrollableScrollbarSync();
+            React.useEffect(() => {
+                onGeometry({thumb, canScrollUp, canScrollDown});
+            }, [thumb, canScrollUp, canScrollDown]);
+            return (
+                <div ref={scrollRef} data-gn-aside-scrollport onScroll={scheduleUpdate}>
+                    <div data-testid="stable-content">Content</div>
+                </div>
+            );
+        }
+        const {container, unmount} = render(<Probe />);
+        // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+        const scroll = container.querySelector('[data-gn-aside-scrollport]');
+        let scrollHeight = 80;
+        Object.defineProperties(scroll, {
+            clientHeight: {get: () => 100},
+            scrollHeight: {get: () => scrollHeight},
+        });
+        const flush = async () => {
+            await act(async () => {
+                await Promise.resolve();
+                jest.runOnlyPendingTimers();
+            });
+        };
+        try {
+            await flush();
+            for (const overflowing of [false, true]) {
+                if (overflowing) {
+                    scrollHeight = 200;
+                    fireEvent.scroll(scroll as Element);
+                    await flush();
+                    expect(onGeometry).toHaveBeenLastCalledWith({
+                        thumb: {top: 0, height: 50},
+                        canScrollUp: false,
+                        canScrollDown: true,
+                    });
+                }
+                onGeometry.mockClear();
+                screen
+                    .getByTestId('stable-content')
+                    .setAttribute('data-update', String(overflowing));
+                await flush();
+                expect(onGeometry).not.toHaveBeenCalled();
+            }
+        } finally {
+            unmount();
+            jest.useRealTimers();
+        }
+    });
+
     it('recalculates overflow when the rendered content changes size', () => {
         jest.useFakeTimers();
 

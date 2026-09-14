@@ -48,6 +48,17 @@ export function useScrollableScrollbarSync(): UseScrollableScrollbarSyncResult {
         canScrollDown: false,
     });
 
+    const updateGeometry = useCallback((next: typeof geometry) => {
+        setGeometry((previous) =>
+            previous.thumb.top === next.thumb.top &&
+            previous.thumb.height === next.thumb.height &&
+            previous.canScrollUp === next.canScrollUp &&
+            previous.canScrollDown === next.canScrollDown
+                ? previous
+                : next,
+        );
+    }, []);
+
     const rafIdRef = useRef<number | null>(null);
     const scheduleUpdate = useCallback(() => {
         if (rafIdRef.current !== null) {
@@ -69,7 +80,11 @@ export function useScrollableScrollbarSync(): UseScrollableScrollbarSyncResult {
             setOverflows(isOverflowing);
 
             if (!isOverflowing) {
-                setGeometry({thumb: {top: 0, height: 0}, canScrollUp: false, canScrollDown: false});
+                updateGeometry({
+                    thumb: {top: 0, height: 0},
+                    canScrollUp: false,
+                    canScrollDown: false,
+                });
                 return;
             }
 
@@ -82,14 +97,14 @@ export function useScrollableScrollbarSync(): UseScrollableScrollbarSyncResult {
                 scrollHeight - clientHeight > 0 ? scrollTop / (scrollHeight - clientHeight) : 0;
             const top = maxTop * scrollRatio;
 
-            setGeometry({
+            updateGeometry({
                 thumb: {top, height},
                 canScrollUp: isOverflowing && scrollTop > SUBPIXEL_OVERFLOW_PX,
                 canScrollDown:
                     isOverflowing && scrollHeight - clientHeight - scrollTop > SUBPIXEL_OVERFLOW_PX,
             });
         });
-    }, []);
+    }, [updateGeometry]);
 
     useEffect(() => {
         const el = scrollRef.current;
