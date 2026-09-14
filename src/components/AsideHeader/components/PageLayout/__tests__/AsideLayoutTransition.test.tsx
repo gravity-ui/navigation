@@ -24,8 +24,10 @@ describe('AsideLayoutTransition lifecycle', () => {
         };
         HTMLElement.prototype.getAnimations = () => [];
         HTMLElement.prototype.getBoundingClientRect = function () {
-            return this.id.endsWith('item-1')
-                ? new DOMRect(30, 40, 100, 40)
+            // The snapshot measures the button, not its UIKit wrapper.
+            // eslint-disable-next-line testing-library/no-node-access
+            return this.parentElement?.id.endsWith('item-1')
+                ? new DOMRect(30, 50, 100, 40)
                 : new DOMRect(10, 20, 100, 40);
         };
         window.matchMedia = jest.fn().mockReturnValue({matches: false});
@@ -36,24 +38,33 @@ describe('AsideLayoutTransition lifecycle', () => {
                         <div
                             id={`gravity-ui/navigation-menu-items-composite-bar-item-${compact ? 1 : 0}`}
                         >
-                            <button data-gn-composite-bar-item-id="home">Home</button>
+                            <button
+                                data-gn-composite-bar-item-id="home"
+                                style={{transform: 'none'}}
+                            >
+                                Home
+                            </button>
                         </div>
                     </div>
                 </div>
             </AsideLayoutTransition>
         );
         const {rerender, unmount} = render(view(false));
+        const originalRow = screen.getByRole('button', {name: 'Home'});
         try {
             rerender(view(true));
             await act(async () => {
                 await Promise.resolve();
             });
             const row = screen.getByRole('button', {name: 'Home'});
+            expect(row).toBe(originalRow);
             const rowAnimations = handles.filter(({element}) => element === row);
             expect(rowAnimations).toHaveLength(1);
             expect(rowAnimations[0].frames).toEqual([
-                expect.objectContaining({transform: expect.stringContaining('translate(')}),
-                expect.objectContaining({transform: expect.any(String)}),
+                expect.objectContaining({
+                    transform: expect.stringMatching(/^translate\(-20px, -30px\)\s*$/),
+                }),
+                expect.objectContaining({transform: 'none'}),
             ]);
         } finally {
             unmount();
