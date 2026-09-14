@@ -735,6 +735,11 @@ test('scrolling moves and clips the indicator without adding scrollable overflow
     // the footer boundary; the edge control no longer occupies a bottom strip.
     await page.setViewportSize({width: 1200, height: 380});
     await mount(<CurrentIndicatorExample initialCompact />);
+    // Measure the exact selection color at the clip edge without the decorative
+    // scroll shadow tinting it. Shadow visibility is covered by sectionDividers.
+    await page.locator(PANEL).evaluate((element) => {
+        (element as HTMLElement).style.setProperty('--g-color-sfx-shadow', 'transparent');
+    });
     await page.evaluate(() => document.fonts.ready);
     const scroll = page.locator(SCROLL);
     await toggleAsideAndPause(page);

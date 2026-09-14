@@ -53,7 +53,7 @@ async function captureFooter(page: Page, name: string, direction: 'ltr' | 'rtl',
     const y = Math.max(0, button.y - 50);
     for (const colorScheme of ['light', 'dark'] as const) {
         await page.emulateMedia({colorScheme});
-        await expect(page.locator('.g-root')).toHaveClass(
+        await expect(page.locator('body.g-root')).toHaveClass(
             new RegExp(`g-root_theme_${colorScheme}`),
         );
         await page.evaluate(() => document.fonts.ready);
