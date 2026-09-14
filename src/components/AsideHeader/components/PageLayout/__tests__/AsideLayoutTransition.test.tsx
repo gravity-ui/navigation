@@ -320,6 +320,54 @@ describe('AsideLayoutTransition compactTransition', () => {
         expect(microtasks).toHaveLength(0);
     });
 
+    it.each(['queued', 'active'])(
+        'skips snapshot work and cancels %s work when reduced motion is enabled',
+        (phase) => {
+            const draw = (compact: boolean) =>
+                view(
+                    compact,
+                    true,
+                    <button data-gn-composite-bar-item-id="home" style={{opacity: 1}}>
+                        Home
+                        <span
+                            data-gn-aside-part="surface"
+                            style={{backgroundColor: compact ? 'blue' : 'gray'}}
+                        />
+                    </button>,
+                );
+            const {rerender} = render(draw(false));
+            rerender(draw(true));
+            const pending = microtasks.shift();
+            expect(pending).toBeDefined();
+            if (phase === 'active') {
+                pending?.();
+                expect(handles.length).toBeGreaterThan(0);
+            }
+            const previousHandles = [...handles];
+            const rect = jest.fn(HTMLElement.prototype.getBoundingClientRect);
+            HTMLElement.prototype.getBoundingClientRect = rect;
+            const clone = jest.spyOn(Node.prototype, 'cloneNode');
+            const style = jest.spyOn(window, 'getComputedStyle');
+            const snapshots = jest.spyOn(
+                AsideLayoutTransition.prototype,
+                'getSnapshotBeforeUpdate',
+            );
+            window.matchMedia = jest.fn().mockReturnValue({matches: true});
+
+            rerender(draw(false));
+
+            expect(snapshots).toHaveLastReturnedWith(null);
+            expect(rect).not.toHaveBeenCalled();
+            expect(clone).not.toHaveBeenCalled();
+            expect(style).not.toHaveBeenCalled();
+            previousHandles.forEach(({cancel}) => expect(cancel).toHaveBeenCalledTimes(1));
+            expect(microtasks).toHaveLength(0);
+            window.matchMedia = jest.fn().mockReturnValue({matches: false});
+            if (phase === 'queued') pending?.();
+            expect(handles).toHaveLength(previousHandles.length);
+        },
+    );
+
     it('does not clean up observers when disabled while idle', () => {
         const disconnect = jest.spyOn(MutationObserver.prototype, 'disconnect');
         const {rerender} = render(view(false, true));

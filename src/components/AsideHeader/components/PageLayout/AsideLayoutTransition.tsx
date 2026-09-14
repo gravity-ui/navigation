@@ -246,6 +246,10 @@ export class AsideLayoutTransition extends React.Component<
             return null;
         }
         if (previous.compact === this.props.compact) return null;
+        if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+            if (this.animatedPanel || this.pendingStart) this.cancel();
+            return null;
+        }
         const panel = this.root.current?.querySelector<HTMLElement>('[data-gn-aside-panel]');
         // A synchronous remount can precede observer delivery. Departing parts
         // belong only to their original panel and must not seed a new snapshot.
