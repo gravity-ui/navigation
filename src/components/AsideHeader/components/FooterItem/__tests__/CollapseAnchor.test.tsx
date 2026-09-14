@@ -27,10 +27,6 @@ jest.mock('../../CompositeBar/Item/ItemPopup', () => {
         ),
     };
 });
-jest.mock('../../../../../../assets/icons/control-menu-button.svg', () => ({
-    __esModule: true,
-    default: () => null,
-}));
 jest.mock('../../../../../../assets/icons/divider-collapsed.svg', () => ({
     __esModule: true,
     default: () => null,

@@ -12,10 +12,6 @@ import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
 import {AsideHeaderProps} from '../types';
 
 jest.mock('../i18n');
-jest.mock('../../../../assets/icons/control-menu-button.svg', () => ({
-    __esModule: true,
-    default: () => null,
-}));
 jest.mock('../../../../assets/icons/divider-collapsed.svg', () => ({
     __esModule: true,
     default: () => null,
