@@ -47,7 +47,12 @@ type CompositeBarProps = {
     compact: boolean;
     compositeId?: string;
     menuItemClassName?: string;
-    /** Target aside width; avoids one-frame-old AutoSizer widths during transitions. */
+    /**
+     * Target width of the autosized menu content, used before AutoSizer catches
+     * up with a layout transition. FirstPanel passes the aside width because
+     * the menu container spans it fully and horizontal spacing belongs to rows.
+     * If the container gains horizontal insets, pass its available content width.
+     */
     layoutWidth?: number;
     /**
      * @see AsideHeaderMenuOverflow
