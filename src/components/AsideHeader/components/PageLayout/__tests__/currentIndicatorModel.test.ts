@@ -26,6 +26,8 @@ function snapshot(...rows: CurrentPresentation[]) {
 }
 
 describe('current presentation matching', () => {
+    afterEach(() => jest.restoreAllMocks());
+
     it('captures semantic identity without measuring geometry or styles', () => {
         const panel = document.createElement('div');
         panel.innerHTML = `<div id="gravity-ui/navigation-menu-items-composite-bar"><div data-gn-composite-bar-item-id="weekly" data-gn-aside-current-ids='["weekly"]'><span data-gn-aside-part="surface"></span></div></div>`;
@@ -47,8 +49,6 @@ describe('current presentation matching', () => {
             row,
             surface,
         });
-        rect.mockRestore();
-        style.mockRestore();
     });
 
     it('measures a previously captured identity for its presentation', () => {
@@ -77,9 +77,6 @@ describe('current presentation matching', () => {
             color: 'rgb(0, 0, 255)',
             radius: '8px',
         });
-        rect.mockRestore();
-        style.mockRestore();
-        query.mockRestore();
     });
 
     it('transfers a unique logical current between different rows', () => {

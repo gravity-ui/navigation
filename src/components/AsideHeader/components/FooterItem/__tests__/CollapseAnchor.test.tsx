@@ -54,6 +54,14 @@ const view = (props: Partial<React.ComponentProps<typeof AsideHeader>>) => (
     </ThemeProvider>
 );
 
+const initialResizeObserver = global.ResizeObserver;
+
+// Registered after RTL's auto-cleanup, so teardown still uses the installed mocks.
+afterEach(() => {
+    jest.restoreAllMocks();
+    global.ResizeObserver = initialResizeObserver;
+});
+
 describe('floating collapse anchor', () => {
     it.each([undefined, () => <div>custom footer</div>])(
         'uses its fallback row as the only hover anchor',

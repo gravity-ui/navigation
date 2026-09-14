@@ -8,6 +8,15 @@ import {act, fireEvent, render, screen} from '@testing-library/react';
 import {ScrollableWithScrollbar} from './ScrollableWithScrollbar';
 import {useScrollableScrollbarSync} from './useScrollableScrollbarSync';
 
+const initialResizeObserver = global.ResizeObserver;
+
+// Registered after RTL's auto-cleanup, so teardown still uses the installed mocks.
+afterEach(() => {
+    jest.restoreAllMocks();
+    global.ResizeObserver = initialResizeObserver;
+    jest.useRealTimers();
+});
+
 describe('ScrollableWithScrollbar', () => {
     it('preserves geometry identity after mutations that do not change scroll metrics', async () => {
         jest.useFakeTimers();
@@ -356,7 +365,10 @@ describe('scroll-edge indicators', () => {
                 jest.runOnlyPendingTimers();
             });
         };
-        const visible = () => indicators().map((el) => el.className.includes('visible'));
+        const visible = () =>
+            indicators().map((el) =>
+                el.classList.contains('gn-scrollable-with-scrollbar__scroll-divider_visible'),
+            );
         expect(indicators()).toHaveLength(0);
         rerender(
             <ScrollableWithScrollbar showScrollDividers>

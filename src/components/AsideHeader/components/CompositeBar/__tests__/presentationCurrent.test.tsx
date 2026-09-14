@@ -36,9 +36,9 @@ describe('presentation current metadata', () => {
         const more = screen.getByRole('button', {name: 'More'});
 
         expect(selected.getAttribute(CURRENT_IDS_ATTRIBUTE)).toBe('["selected"]');
-        expect(selected.className).toContain('current');
+        expect(selected.classList.contains('gn-composite-bar-item_current')).toBe(true);
         expect(more.getAttribute(CURRENT_IDS_ATTRIBUTE)).toBe('["earlier","later"]');
-        expect(more.className).toContain('current');
+        expect(more.classList.contains('gn-composite-bar-item_current')).toBe(true);
     });
 
     it('omits popup metadata while only suppressed rows lose selected styling', () => {
@@ -59,9 +59,9 @@ describe('presentation current metadata', () => {
         const suppressed = screen.getByRole('button', {name: 'Suppressed'});
 
         expect(popup.getAttribute(CURRENT_IDS_ATTRIBUTE)).toBeNull();
-        expect(popup.className).toContain('current');
+        expect(popup.classList.contains('gn-composite-bar-item_current')).toBe(true);
         expect(suppressed.getAttribute(CURRENT_IDS_ATTRIBUTE)).toBeNull();
-        expect(suppressed.className).not.toContain('current');
+        expect(suppressed.classList.contains('gn-composite-bar-item_current')).toBe(false);
     });
 });
 

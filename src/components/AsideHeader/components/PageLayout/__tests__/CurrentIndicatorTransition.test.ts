@@ -94,10 +94,17 @@ describe('CurrentIndicatorTransition lifecycle', () => {
     });
 
     afterEach(() => {
-        controller.cancel();
-        observer.disconnect();
-        boundary.remove();
-        HTMLElement.prototype.animate = originalAnimate;
+        try {
+            controller.cancel();
+        } finally {
+            try {
+                observer.disconnect();
+            } finally {
+                boundary.remove();
+                jest.restoreAllMocks();
+                HTMLElement.prototype.animate = originalAnimate;
+            }
+        }
     });
 
     it('transports one rectangle and suppresses both participating live surfaces', () => {
@@ -238,6 +245,5 @@ describe('CurrentIndicatorTransition lifecycle', () => {
         controller.cancel();
         expect(next.target.surface.hasAttribute(suppressed)).toBe(false);
         expect(disconnect).toHaveBeenCalledTimes(2);
-        disconnect.mockRestore();
     });
 });
