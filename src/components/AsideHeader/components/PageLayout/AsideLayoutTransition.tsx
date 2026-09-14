@@ -325,7 +325,7 @@ export class AsideLayoutTransition extends React.Component<
         if (
             !panel ||
             typeof panel.animate !== 'function' ||
-            window.matchMedia('(prefers-reduced-motion: reduce)').matches
+            window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
         )
             return;
 
