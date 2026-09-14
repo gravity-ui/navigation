@@ -6,8 +6,6 @@ import {
     ChartColumn,
     ChartLine,
     ChartPie,
-    CircleExclamation,
-    Clock,
     Cloud,
     CreditCard,
     Database,
@@ -17,7 +15,6 @@ import {
     House,
     Key,
     LayoutHeaderCellsLarge,
-    ListCheck,
     ListTimeline,
     Person,
     Persons,
@@ -89,29 +86,6 @@ export const fullNavigationMenuItems: AsideHeaderItem[] = [
         icon: Bell,
         groupId: 'monitoring',
         category: 'Monitoring',
-        // Subgroup demo: `compositeBarMenuPopupItems` is the same mechanism the "More"
-        // popover uses for collapsed groups; it renders the children in an Alerts flyout.
-        compositeBarMenuPopupTitle: 'Alerts',
-        compositeBarMenuPopupItems: [
-            {
-                id: 'monitoring-alerts-active',
-                title: 'Active alerts',
-                icon: CircleExclamation,
-                category: 'Monitoring',
-            },
-            {
-                id: 'monitoring-alerts-rules',
-                title: 'Alert rules',
-                icon: ListCheck,
-                category: 'Monitoring',
-            },
-            {
-                id: 'monitoring-alerts-history',
-                title: 'Alert history',
-                icon: Clock,
-                category: 'Monitoring',
-            },
-        ],
     },
     {
         id: 'monitoring-logs',
