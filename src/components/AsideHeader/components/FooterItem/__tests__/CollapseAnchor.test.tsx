@@ -13,13 +13,20 @@ import {PageLayoutAside} from '../../PageLayout/PageLayoutAside';
 import {FooterItem} from '../FooterItem';
 
 jest.mock('../../../i18n');
-jest.mock('../../CompositeBar/Item/ItemPopup', () => ({
-    ItemPopup: ({children, disabled}: {children: React.ReactNode; disabled: boolean}) => (
-        <span data-testid="label-popup" data-disabled={String(disabled)}>
-            {children}
-        </span>
-    ),
-}));
+// Exercise the real popup lifecycle while exposing its disabled state to existing assertions.
+jest.mock('../../CompositeBar/Item/ItemPopup', () => {
+    const actual = jest.requireActual<typeof import('../../CompositeBar/Item/ItemPopup')>(
+        '../../CompositeBar/Item/ItemPopup',
+    );
+    return {
+        ...actual,
+        ItemPopup: (props: React.ComponentProps<typeof actual.ItemPopup>) => (
+            <span data-testid="label-popup" data-disabled={String(props.disabled)}>
+                <actual.ItemPopup {...props} />
+            </span>
+        ),
+    };
+});
 jest.mock('../../../../../../assets/icons/control-menu-button.svg', () => ({
     __esModule: true,
     default: () => null,
@@ -84,6 +91,55 @@ describe('floating collapse anchor', () => {
         expect(container.querySelector('[data-gn-aside-collapse-layer]')).toBeNull();
         expect(container.querySelector('[data-gn-collapse-fallback]')).toBeNull();
         expect(selected()).toBeNull();
+    });
+    it('keeps a footer row eligible after its label popup closes', async () => {
+        function Example() {
+            const [showLast, setShowLast] = React.useState(true);
+            return (
+                <>
+                    <button onClick={() => setShowLast(false)}>Remove last row</button>
+                    {view({
+                        compact: true,
+                        renderFooter: ({compact}) => (
+                            <>
+                                <FooterItem
+                                    key="a"
+                                    id="a"
+                                    title="a"
+                                    icon={Gear}
+                                    compact={compact}
+                                />
+                                {showLast && (
+                                    <FooterItem
+                                        key="b"
+                                        id="b"
+                                        title="b"
+                                        icon={Gear}
+                                        compact={compact}
+                                    />
+                                )}
+                            </>
+                        ),
+                    })}
+                </>
+            );
+        }
+        const {container} = render(<Example />);
+        const row = screen.getByRole('button', {name: 'a'});
+        expect(container.querySelector('[data-gn-collapse-anchor]')).toBe(
+            screen.getByRole('button', {name: 'b'}),
+        );
+        const trigger = row.querySelector('[data-gn-aside-part="icon"] [aria-haspopup="dialog"]');
+        expect(trigger).toBeTruthy();
+        fireEvent.mouseEnter(trigger as Element);
+        await waitFor(() => expect(screen.getAllByRole('button', {name: 'a'})).toHaveLength(2));
+        fireEvent.click(screen.getAllByRole('button', {name: 'a'})[1]);
+        await waitFor(() => expect(screen.getAllByRole('button', {name: 'a'})).toHaveLength(1));
+        fireEvent.click(screen.getByRole('button', {name: 'Remove last row'}));
+        expect(screen.getByRole('button', {name: 'a'})).toBe(row);
+        await waitFor(() => expect(container.querySelector('[data-gn-collapse-anchor]')).toBe(row));
+        expect(container.querySelectorAll('[data-gn-collapse-anchor]')).toHaveLength(1);
+        expect(container.querySelector('[data-gn-collapse-fallback]')).toBeNull();
     });
     it('links a stable native button to its panel, retains focus and places the layer adjacent', () => {
         const onChangeCompact = jest.fn();

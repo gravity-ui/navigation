@@ -10,7 +10,7 @@ export type QuickAccessToggleHandler = (
 export interface ItemProps extends AsideHeaderItem {}
 
 export interface ItemInnerProps extends ItemProps {
-    /** Internal registration of the original DOM row (never a highlighted copy). */
+    /** Internal registration of the original DOM row (never a popup or highlighted copy). */
     rowRef?: React.Ref<HTMLElement>;
     className?: string;
     popupItemClassName?: string;

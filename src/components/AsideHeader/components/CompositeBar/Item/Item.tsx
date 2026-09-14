@@ -50,6 +50,20 @@ function shouldShowMenuPopup({
     );
 }
 
+function shouldShowLabelPopup({
+    isDivider,
+    compact,
+    hasPopupItems,
+    disabled,
+}: {
+    isDivider: boolean;
+    compact?: boolean;
+    hasPopupItems: boolean;
+    disabled: boolean;
+}) {
+    return !isDivider && Boolean(compact) && !hasPopupItems && !disabled;
+}
+
 function shouldShowChevron({
     compact,
     inlineGroupHeader,
@@ -167,7 +181,8 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         onGroupHeaderChevronClick,
     } = props;
 
-    const [compactNavPopoverOpen, setCompactNavPopoverOpen] = React.useState(false);
+    const [labelPopupOpen, setLabelPopupOpen] = React.useState(false);
+    const [menuPopupOpen, setMenuPopupOpen] = React.useState(false);
 
     const ref = React.useRef<HTMLElement>(null);
     const mergedRowRef = React.useCallback(
@@ -236,7 +251,8 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             }
 
             if (newOpen) {
-                setCompactNavPopoverOpen(false);
+                setLabelPopupOpen(false);
+                setMenuPopupOpen(false);
             }
 
             onOpenChangePopup?.(newOpen, event, reason);
@@ -253,10 +269,23 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         groupHeaderExpanded,
     });
 
+    const compactPopoverDisabled = !enableTooltip || popupVisible || type === 'action';
+    const labelPopupAvailable = shouldShowLabelPopup({
+        isDivider,
+        compact,
+        hasPopupItems: Boolean(resolvedMenuPopupItems?.length),
+        disabled: compactPopoverDisabled,
+    });
+
+    React.useEffect(() => {
+        if (!showMenuPopup) setMenuPopupOpen(false);
+        if (!labelPopupAvailable) setLabelPopupOpen(false);
+    }, [showMenuPopup, labelPopupAvailable]);
+
     const submenuNest = React.useContext(ItemPopupNestContext);
 
     React.useEffect(() => {
-        if (!submenuNest || !showMenuPopup || !compactNavPopoverOpen) {
+        if (!submenuNest || !showMenuPopup || !menuPopupOpen) {
             return undefined;
         }
 
@@ -265,7 +294,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         return () => {
             submenuNest.registerNestedOpen(-1);
         };
-    }, [submenuNest, showMenuPopup, compactNavPopoverOpen]);
+    }, [submenuNest, showMenuPopup, menuPopupOpen]);
 
     if (isDivider) {
         return (
@@ -277,7 +306,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         );
     }
 
-    const compactPopoverDisabled = !enableTooltip || popupVisible || type === 'action';
     const expandedTitleLines = getExpandedTitleLines({
         type,
         compact,
@@ -309,10 +337,10 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 items={[quickAccessPinItem]}
                 variant="label"
                 highlightCurrentItem={false}
-                open={compactNavPopoverOpen}
+                open={labelPopupOpen}
                 onOpenChange={(nextOpen) => {
                     if (nextOpen && compactPopoverDisabled) return;
-                    setCompactNavPopoverOpen(nextOpen);
+                    setLabelPopupOpen(nextOpen);
                 }}
                 hideIcon
                 itemClassName={popupItemClassName}
@@ -366,7 +394,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
         const handleRowClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
             if (compact && !collapsedItem && !showMenuPopup && !current) {
-                setCompactNavPopoverOpen(false);
+                setLabelPopupOpen(false);
             }
 
             if (event.detail > 0) {
@@ -504,11 +532,11 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 <ItemPopup
                     items={expandedMenuRows}
                     title={resolvedMenuPopupTitle}
-                    open={compactNavPopoverOpen}
+                    open={menuPopupOpen}
                     itemClassName={popupItemClassName}
                     hideIcon={menuPopupHideIcon}
                     nestedPopupHideIcon={menuPopupNestedHideIcon}
-                    onOpenChange={setCompactNavPopoverOpen}
+                    onOpenChange={setMenuPopupOpen}
                     collapsed={collapsedItem ? true : compact}
                     onPopupItemClick={onPopupItemClick}
                     onItemClick={onItemClick}

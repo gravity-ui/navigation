@@ -285,6 +285,7 @@ export const ItemPopup: React.FC<Props> = ({
                         return (
                             <Item
                                 {...item}
+                                rowRef={undefined}
                                 qa={undefined}
                                 compact={false}
                                 menuPopupRow

@@ -5,7 +5,7 @@ import React from 'react';
 
 import {Gear} from '@gravity-ui/icons';
 import {ThemeProvider} from '@gravity-ui/uikit';
-import {fireEvent, render, screen} from '@testing-library/react';
+import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 
 import {MenuGroup} from '../../../../types';
 import {AsideHeaderInnerContextProvider} from '../../../AsideHeaderContext';
@@ -195,6 +195,45 @@ describe('CompositeBar menuOverflow="scroll"', () => {
 
         expect(screen.getByText('Access tools')).toBeTruthy();
         expect(screen.getByText('SSH Keys')).toBeTruthy();
+    });
+
+    it('does not reopen a group popup after expanding and collapsing the group', async () => {
+        function Example() {
+            const [collapsed, setCollapsed] = React.useState(true);
+            return (
+                <ThemeProvider theme="light">
+                    <button onClick={() => setCollapsed(!collapsed)}>
+                        Toggle group externally
+                    </button>
+                    <AsideHeaderInnerContextProvider value={contextValue}>
+                        <CompositeBar
+                            type="menu"
+                            compact={false}
+                            menuOverflow="scroll"
+                            menuGroups={[{id: 'g1', title: 'Access', icon: Gear}]}
+                            items={[{id: 'ssh', title: 'SSH Keys', icon: Gear, groupId: 'g1'}]}
+                            collapsedMenuGroupIds={{g1: collapsed}}
+                        />
+                    </AsideHeaderInnerContextProvider>
+                </ThemeProvider>
+            );
+        }
+        const {container} = render(<Example />);
+        // Distinguish the portaled popup row from the expanded inline child.
+        const popupChild = () =>
+            // eslint-disable-next-line testing-library/no-node-access, testing-library/no-container
+            screen.queryAllByText('SSH Keys').find((element) => !container.contains(element));
+        fireEvent.mouseEnter(screen.getByRole('button', {name: 'Access'}));
+        await waitFor(() => expect(popupChild()).toBeTruthy());
+        fireEvent.click(screen.getByRole('button', {name: 'Toggle group externally'}));
+        await waitFor(() => expect(popupChild()).toBeUndefined());
+        expect(screen.getByText('SSH Keys')).toBeTruthy();
+        fireEvent.mouseLeave(screen.getByRole('button', {name: 'Access'}));
+        fireEvent.click(screen.getByRole('button', {name: 'Toggle group externally'}));
+        await waitFor(() => expect(popupChild()).toBeUndefined());
+        expect(screen.queryByText('SSH Keys')).toBeNull();
+        fireEvent.mouseEnter(screen.getByRole('button', {name: 'Access'}));
+        await waitFor(() => expect(popupChild()).toBeTruthy());
     });
 
     it('selects a popup child without expanding its collapsed inline group', () => {
