@@ -409,6 +409,7 @@ $floating-surface-box-shadow-label:
             background-color 0.15s linear;
 
         & #{$class}__surface {
+            transition: background-color 0.15s linear;
             box-shadow:
                 0px 0px 0px 1px rgba(0, 0, 0, 0.03),
                 0px 5px 6px rgba(0, 0, 0, 0.12);
@@ -430,6 +431,7 @@ $floating-surface-box-shadow-label:
             transform: scale(0.96);
 
             #{$class}__surface {
+                transition: none;
                 box-shadow: 0 1px 2px var(--g-color-sfx-shadow);
             }
         }

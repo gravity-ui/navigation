@@ -454,10 +454,53 @@ test.describe('AsideHeader', () => {
             .locator('[class*="gn-composite-bar__root-menu-item_"]')
             .filter({has: action});
 
+        const surface = action.locator('[data-gn-aside-part="surface"]');
+        await action.evaluate((element) => {
+            element.style.setProperty('--gn-aside-header-item-action-color', 'rgb(0, 0, 0)');
+            element.style.setProperty(
+                '--gn-aside-header-item-action-color-hover',
+                'rgb(100, 100, 100)',
+            );
+        });
+        await expect(surface).toHaveCSS('background-color', 'rgb(0, 0, 0)');
+        await surface.evaluate((element) => {
+            element.addEventListener(
+                'transitionrun',
+                () => {
+                    element.getAnimations().forEach((animation) => animation.pause());
+                },
+                {once: true},
+            );
+        });
         await action.hover();
+        const duration = await surface.evaluate((element) => {
+            const animation = element
+                .getAnimations()
+                .find(
+                    (candidate) =>
+                        candidate instanceof CSSTransition &&
+                        candidate.transitionProperty === 'background-color',
+                );
+            if (!animation)
+                throw new Error('Expected a background-color transition on the action surface');
+            animation.pause();
+            const effectDuration = Number(animation.effect?.getComputedTiming().duration);
+            animation.currentTime = effectDuration / 2;
+            return effectDuration;
+        });
+        expect(duration).toBe(150);
+        await expect(surface).toHaveCSS('transition-timing-function', 'linear');
+        await expect(surface).toHaveCSS('background-color', 'rgb(50, 50, 50)');
 
         await expect(actionListRow).toHaveCount(1);
         await expect(actionListRow).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+        await page.mouse.down();
+        try {
+            await expect(surface).toHaveCSS('transition-property', 'none');
+            await expect(surface).toHaveCSS('background-color', 'rgb(100, 100, 100)');
+        } finally {
+            await page.mouse.up();
+        }
     });
 
     test('render collapsed inline group popup', async ({mount, page, expectScreenshot}) => {
