@@ -5,7 +5,9 @@ import {TopAlertProps} from '../../../types';
 import {AsideHeaderContextProvider, useAsideHeaderContext} from '../../AsideHeaderContext';
 import {getAsideHeaderDensityConfig, getAsideHeaderDensityCssProperties} from '../../density';
 import {LayoutProps} from '../../types';
-import {b} from '../../utils';
+import {b, getCompactTransitionClassName} from '../../utils';
+
+import {AsideLayoutTransition} from './AsideLayoutTransition';
 
 const TopAlert = React.lazy(() =>
     import('../../../TopAlert').then((module) => ({default: module.TopAlert})),
@@ -32,6 +34,7 @@ export interface PageLayoutProps extends PropsWithChildren<LayoutProps> {}
 
 const Layout = ({
     compact,
+    compactTransition = true,
     className,
     children,
     topAlert,
@@ -39,10 +42,11 @@ const Layout = ({
 }: PageLayoutProps) => {
     const densityConfig = getAsideHeaderDensityConfig(menuDensity);
     const densityCssProperties = getAsideHeaderDensityCssProperties(menuDensity);
-    const size = compact ? densityConfig.compactWidth : densityConfig.expandedWidth;
+    const isCompact = Boolean(compact);
+    const size = isCompact ? densityConfig.compactWidth : densityConfig.expandedWidth;
     const asideHeaderContextValue = useMemo(
-        () => ({size, compact, menuDensity}),
-        [compact, size, menuDensity],
+        () => ({size, compact: isCompact, compactTransition, menuDensity}),
+        [isCompact, compactTransition, size, menuDensity],
     );
 
     const estimatedTopAlertHeight = calcEstimatedTopAlertHeight(topAlert);
@@ -69,11 +73,19 @@ const Layout = ({
 
     return (
         <AsideHeaderContextProvider value={asideHeaderContextValue}>
-            <div
-                className={b({compact}, className)}
+            <AsideLayoutTransition
+                compact={isCompact}
+                compactTransition={compactTransition}
+                className={b({compact: isCompact}, [
+                    getCompactTransitionClassName(compactTransition),
+                    className ?? '',
+                ])}
                 style={{
                     ...densityCssProperties,
                     ...({'--gn-aside-header-size': `${size}px`} as React.CSSProperties),
+                    ...({
+                        '--_--gn-aside-header-expanded-width': `${densityConfig.expandedWidth}px`,
+                    } as React.CSSProperties),
                 }}
             >
                 {typeof preloadHeightValue === 'number' ? (
@@ -89,7 +101,7 @@ const Layout = ({
                     </Suspense>
                 )}
                 <div className={b('pane-container')}>{children}</div>
-            </div>
+            </AsideLayoutTransition>
         </AsideHeaderContextProvider>
     );
 };

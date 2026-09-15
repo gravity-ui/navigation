@@ -9,6 +9,7 @@ import {getAsideHeaderDensityConfig} from '../density';
 import {AsideHeaderItem} from '../types';
 import {b} from '../utils';
 
+import {AsideDivider} from './AsideDivider';
 import {CompositeBar} from './CompositeBar';
 
 import headerDividerCollapsedIcon from '../../../../assets/icons/divider-collapsed.svg';
@@ -41,6 +42,7 @@ export const Header = () => {
             {logo && (
                 <Logo
                     {...logo}
+                    data-gn-aside-transition-row="logo"
                     className={b('logo', logo.className)}
                     onClick={onLogoClick}
                     compact={compact}
@@ -58,6 +60,7 @@ export const Header = () => {
                 onItemClick={onItemClick}
             />
 
+            <AsideDivider className={b('header-bottom-divider')} transitionId="header" />
             {headerDecoration && (
                 <Icon
                     data={headerDividerCollapsedIcon}

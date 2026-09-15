@@ -5,15 +5,16 @@ import {AsideHeaderInnerContextProvider, useAsideHeaderContext} from '../../Asid
 import {AsideHeaderProps} from '../../types';
 import {useAsideHeaderInnerContextValue} from '../../useAsideHeaderInnerContextValue';
 
-type Props = Omit<AsideHeaderProps, 'compact' | 'size' | 'menuDensity'>;
+type Props = Omit<AsideHeaderProps, 'compact' | 'compactTransition' | 'size' | 'menuDensity'>;
 
 export const PageLayoutAside = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
-    const {size, compact, menuDensity} = useAsideHeaderContext();
+    const {size, compact, compactTransition = true, menuDensity} = useAsideHeaderContext();
 
     const asideHeaderInnerContextValue = useAsideHeaderInnerContextValue({
         ...props,
         size,
         compact,
+        compactTransition,
         menuDensity,
     });
 

@@ -86,7 +86,6 @@ export const fullNavigationMenuItems: AsideHeaderItem[] = [
         icon: Bell,
         groupId: 'monitoring',
         category: 'Monitoring',
-        quickAccess: true,
     },
     {
         id: 'monitoring-logs',

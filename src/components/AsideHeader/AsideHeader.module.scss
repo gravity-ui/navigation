@@ -3,6 +3,15 @@
 
 $block: '.#{variables.$ns}aside-header';
 
+// Aside collapse/expand animates the width, so the aside and the content area
+// (its width is derived from the same size) must share one transition: their
+// widths have to sum up to 100% at every animation frame.
+// Keep the duration in sync with ASIDE_HEADER_COLLAPSE_TRANSITION_MS (constants.ts).
+$aside-width-transition-duration: 0.2s;
+$aside-width-transition-timing-function: ease-in-out;
+$aside-width-transition: width $aside-width-transition-duration
+    $aside-width-transition-timing-function;
+
 .g-root {
     --gn-aside-top-panel-height: 0px;
 }
@@ -48,6 +57,25 @@ $block: '.#{variables.$ns}aside-header';
     position: relative;
     background-color: var(--g-color-base-background);
 
+    // Reset both variables for every layout and portaled Drawer instance.
+    &__compact-transition {
+        --_--gn-aside-width-transition: #{$aside-width-transition};
+        --_--gn-aside-collapse-geometry-transition: inset-inline-end
+                #{$aside-width-transition-duration} #{$aside-width-transition-timing-function},
+            width #{$aside-width-transition-duration} #{$aside-width-transition-timing-function},
+            border-radius #{$aside-width-transition-duration}
+                #{$aside-width-transition-timing-function};
+        --_--gn-aside-drawer-transition: left #{$aside-width-transition-duration}
+                #{$aside-width-transition-timing-function},
+            background-color var(--_--animation-duration, 300ms);
+
+        &_disabled {
+            --_--gn-aside-width-transition: none;
+            --_--gn-aside-collapse-geometry-transition: none;
+            --_--gn-aside-drawer-transition: background-color var(--_--animation-duration, 300ms);
+        }
+    }
+
     &__aside {
         position: sticky;
         top: var(--gn-top-alert-height, 0);
@@ -65,11 +93,14 @@ $block: '.#{variables.$ns}aside-header';
         margin-top: var(--gn-top-alert-height, 0);
 
         box-sizing: border-box;
+        // Clip the fixed target layout at the animated outer edge.
+        overflow: hidden;
+        transition: var(--_--gn-aside-width-transition);
 
         &::after {
             position: absolute;
             top: 0;
-            right: 0;
+            inset-inline-end: 0;
             z-index: 2;
             width: 1px;
             height: 100%;
@@ -91,8 +122,13 @@ $block: '.#{variables.$ns}aside-header';
 
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
-            width: inherit;
+            /**
+             * Keep overflow inside the unified scroll container (not the aside / page).
+             * Requires min-height: 0 so flex children can shrink below content height.
+             */
+            min-height: 0;
+            overflow: hidden;
+            width: var(--gn-aside-header-size);
             height: inherit;
             position: relative;
             z-index: 2;
@@ -103,15 +139,6 @@ $block: '.#{variables.$ns}aside-header';
             & > #{$class}-logo {
                 margin: 8px 0;
             }
-        }
-
-        /**
-         * Scrollable menu: keep overflow inside the custom scrollbar host (not the aside / page).
-         * Requires min-height: 0 so flex children can shrink below content height.
-         */
-        &_menu-overflow-scroll #{$class}__aside-content {
-            min-height: 0;
-            overflow: hidden;
         }
 
         &-content_with-decoration {
@@ -135,6 +162,7 @@ $block: '.#{variables.$ns}aside-header';
             width: var(--gn-aside-header-size);
 
             z-index: -1;
+            transition: var(--_--gn-aside-width-transition);
         }
     }
 
@@ -146,6 +174,34 @@ $block: '.#{variables.$ns}aside-header';
 
         &-content {
             background: transparent;
+        }
+    }
+
+    // Only the outer edge and the native scroll viewport clip animated rows.
+    // UIKit's individual slots must not cut off a row moving between slots.
+    &__aside:global([data-gn-aside-animating]) {
+        :global([data-gn-aside-divider]) {
+            // Menu dividers live in flex rows at the target layout width.
+            // Do not let those rows shrink the independently animated line.
+            flex-shrink: 0;
+        }
+
+        #{$class}__aside-content {
+            overflow: visible;
+        }
+
+        :global(.g-list__item),
+        :global(.g-list__item-content) {
+            min-width: 0;
+            overflow: visible;
+        }
+
+        :global([data-gn-aside-scrollport]) {
+            width: var(--_--gn-aside-header-expanded-width);
+        }
+
+        #{$class}__unified-menu-content {
+            width: var(--gn-aside-header-size);
         }
     }
 
@@ -187,7 +243,7 @@ $block: '.#{variables.$ns}aside-header';
             );
         }
 
-        &::after {
+        #{$class}__header-bottom-divider {
             position: absolute;
             bottom: 12px;
             left: 0;
@@ -202,18 +258,20 @@ $block: '.#{variables.$ns}aside-header';
         }
     }
 
-    &__aside-content_with-quick-access &__header {
+    &__aside-content_with-quick-access:not(#{$class}__aside-content_hide-section-dividers)
+        &__header {
         padding-bottom: var(--_--section-divider-gap);
 
-        &::after {
+        // Keep the full-bleed span of the default placement: section dividers outside the
+        // menu scrollport reach both aside edges, like the footer one.
+        #{$class}__header-bottom-divider {
             bottom: 0;
-            left: var(--_--item-margin-inline);
-            right: var(--_--item-margin-inline);
-            width: auto;
         }
     }
 
-    &__aside-content_with-quick-access:not(#{$class}__aside-content_with-quick-access-items)
+    &__aside-content_with-quick-access:not(#{$class}__aside-content_with-quick-access-items):not(
+            #{$class}__aside-content_hide-section-dividers
+        )
         &__header {
         margin-bottom: var(--_--section-divider-gap);
     }
@@ -229,7 +287,7 @@ $block: '.#{variables.$ns}aside-header';
             display: block;
         }
 
-        &::after {
+        #{$class}__header-bottom-divider {
             display: none;
         }
     }
@@ -256,23 +314,13 @@ $block: '.#{variables.$ns}aside-header';
         width: 100%;
         padding-block: var(--_--section-divider-gap);
         margin-bottom: var(--_--section-divider-gap);
+    }
 
-        &::after {
-            @include section-divider-line;
+    &__quick-access-divider {
+        @include section-divider-line;
 
-            bottom: 0;
-            z-index: 1;
-        }
-
-        &_scrollable {
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
-        }
-
-        &_unified {
-            flex: none;
-        }
+        bottom: 0;
+        z-index: 1;
     }
 
     &__quick-access-title {
@@ -295,9 +343,21 @@ $block: '.#{variables.$ns}aside-header';
     }
 
     &__unified-menu-content {
+        position: relative;
+        z-index: 0;
         display: flex;
         flex-direction: column;
         min-height: 100%;
+    }
+
+    // Each section paints its indicator above container decoration, beneath
+    // transparent list planes containing text, icons, and native row surfaces.
+    :global([data-gn-aside-current-container])
+        > :not(:global([data-gn-aside-current-indicator-layer])):not(
+            :global([data-gn-aside-divider])
+        ) {
+        position: relative;
+        z-index: 1;
     }
 
     &__menu-items {
@@ -314,6 +374,14 @@ $block: '.#{variables.$ns}aside-header';
         border-radius: var(--gn-aside-header-item-expanded-radius, var(--_--item-expanded-radius));
     }
 
+    &__collapse-fallback {
+        height: var(
+            --_--gn-aside-header-density-footer-item-height,
+            #{variables.$compact-item-height}
+        );
+        flex-shrink: 0;
+    }
+
     &__footer {
         position: relative;
         flex-shrink: 0;
@@ -321,7 +389,7 @@ $block: '.#{variables.$ns}aside-header';
         flex-direction: column;
         margin: var(--g-spacing-2) var(--_--item-margin-inline);
 
-        &::before {
+        #{$class}__footer-divider {
             content: '';
             position: absolute;
             top: calc(-1 * var(--g-spacing-2));
@@ -337,13 +405,45 @@ $block: '.#{variables.$ns}aside-header';
             pointer-events: none;
         }
 
-        &_with-divider::before {
+        &_with-divider #{$class}__footer-divider {
             opacity: 1;
+        }
+    }
+
+    &__aside-content_hide-section-dividers {
+        #{$class}__header {
+            padding-bottom: 0;
+            margin-bottom: 0;
+
+            &::before {
+                height: 100%;
+            }
+
+            #{$class}__header-bottom-divider,
+            #{$class}__header-divider {
+                display: none;
+            }
+        }
+
+        #{$class}__footer-divider {
+            display: none;
+        }
+
+        #{$class}__footer {
+            margin-top: 0;
         }
     }
 
     &__panels {
         z-index: var(--gn-aside-header-panel-z-index, 98);
+
+        // The drawer root holds the inline `left` offset that tracks the aside
+        // edge, so it must follow the same collapse/expand transition. The
+        // status attribute is always present: it raises specificity above the
+        // uikit rule animating the veil, whose fade is kept in the list.
+        &:global(.g-drawer[data-floating-ui-status]) {
+            transition: var(--_--gn-aside-drawer-transition);
+        }
     }
 
     &__panel {
@@ -375,6 +475,16 @@ $block: '.#{variables.$ns}aside-header';
         width: calc(100% - var(--gn-aside-header-size));
         z-index: var(--gn-aside-header-content-z-index, 95);
         margin-top: var(--gn-top-alert-height, 0);
+        transition: var(--_--gn-aside-width-transition);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &__aside,
+        &__content,
+        &__aside-custom-background,
+        &__panels:global(.g-drawer[data-floating-ui-status]) {
+            transition: none;
+        }
     }
 
     &__all-pages-panel {

@@ -6,6 +6,7 @@ import type {Meta, StoryFn} from '@storybook/react-webpack5';
 
 import {MenuGroup} from '../../types';
 import {AsideHeader} from '../AsideHeader';
+import {FooterItem} from '../components/FooterItem/FooterItem';
 import {AsideFallback} from '../components/PageLayout/AsideFallback';
 import {PageLayout} from '../components/PageLayout/PageLayout';
 import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
@@ -260,26 +261,24 @@ const CollapseButtonWrapperTemplate: StoryFn = (args) => {
                 menuItems={menuItemsShowcase}
                 logo={DEFAULT_LOGO}
                 onChangeCompact={setCompact}
-                collapseButtonWrapper={(defaultButton, {compact}) => (
-                    <React.Fragment>
+                collapseButtonWrapper={(defaultButton) => (
+                    <span style={{filter: 'drop-shadow(0 1px 3px var(--g-color-sfx-shadow))'}}>
                         {defaultButton}
-                        <div
-                            style={{
-                                backgroundColor: 'var(--g-color-base-generic)',
-                                padding: '5px',
-                            }}
-                        >
+                    </span>
+                )}
+                renderFooter={() => (
+                    <React.Fragment>
+                        <div style={{backgroundColor: 'var(--g-color-base-generic)', padding: 5}}>
                             <Flex justifyContent="center" alignItems="center">
-                                {
-                                    <Icon
-                                        size={14}
-                                        data={logoIcon}
-                                        className={compact ? undefined : spacing({mr: 1})}
-                                    />
-                                }
-                                {compact ? null : <Text color="secondary">{'Gravity UI'}</Text>}
+                                <Icon
+                                    size={14}
+                                    data={logoIcon}
+                                    className={compact ? undefined : spacing({mr: 1})}
+                                />
+                                {compact ? null : <Text color="secondary">Gravity UI</Text>}
                             </Flex>
                         </div>
+                        <FooterItem id="settings" title="Settings" icon={Gear} compact={compact} />
                     </React.Fragment>
                 )}
                 qa={'pl-aside-collapse-wrapper'}

@@ -18,20 +18,30 @@ import {DEFAULT_LOGO} from './moc';
 
 interface FullNavigationProps {
     initialCompact?: boolean;
+    hideSectionDividers?: boolean;
+    compactTransition?: boolean;
     menuDensity?: AsideHeaderProps['menuDensity'];
     menuGroupNestedIcons?: AsideHeaderProps['menuGroupNestedIcons'];
     enableQuickAccess?: AsideHeaderProps['enableQuickAccess'];
     quickAccessHighlightInMainMenu?: AsideHeaderProps['quickAccessHighlightInMainMenu'];
-    unifiedMenuScroll?: AsideHeaderProps['unifiedMenuScroll'];
 }
 
 export default {
     title: 'components/AsideHeader/Examples',
     component: FullNavigationDemo,
     argTypes: {
+        hideSectionDividers: {
+            control: 'boolean',
+            description:
+                'Hide header/footer separators and spacing; show indicators at scroll edges with hidden content',
+        },
         initialCompact: {
             control: 'boolean',
             description: 'Initial collapsed state; use the sidebar control to switch at runtime',
+        },
+        compactTransition: {
+            control: 'boolean',
+            description: 'Animate compact layout changes',
         },
         menuDensity: {
             control: 'inline-radio',
@@ -49,10 +59,6 @@ export default {
         quickAccessHighlightInMainMenu: {
             control: 'boolean',
             description: 'Keep pinned current items highlighted in the main menu as well',
-        },
-        unifiedMenuScroll: {
-            control: 'boolean',
-            description: 'Use one scroll container for quick access and the main menu',
         },
     },
     parameters: {
@@ -195,6 +201,10 @@ function FullNavigationDemo(props: FullNavigationProps) {
             controlledMenuItems.map((item) => ({
                 ...item,
                 current: item.id === currentPageId,
+                compositeBarMenuPopupItems: item.compositeBarMenuPopupItems?.map((child) => ({
+                    ...child,
+                    current: child.id === currentPageId,
+                })),
                 onItemClick: (clicked: AsideHeaderItem) => {
                     if (clicked.type === 'action') {
                         alert('Create');
@@ -206,13 +216,22 @@ function FullNavigationDemo(props: FullNavigationProps) {
         [controlledMenuItems, currentPageId],
     );
 
-    const currentItem = menuItems.find((item) => item.current);
+    const currentItem =
+        menuItems.find((item) => item.current) ??
+        menuItems
+            .flatMap((item) => item.compositeBarMenuPopupItems ?? [])
+            .find((item) => item.current);
     const pageTitle = typeof currentItem?.title === 'string' ? currentItem.title : 'Overview';
 
     return (
-        <PageLayout compact={compact} menuDensity={props.menuDensity}>
+        <PageLayout
+            compact={compact}
+            compactTransition={props.compactTransition}
+            menuDensity={props.menuDensity}
+        >
             <PageLayoutAside
                 headerDecoration={false}
+                hideSectionDividers={props.hideSectionDividers}
                 logo={DEFAULT_LOGO}
                 menuItems={menuItems}
                 menuGroups={fullNavigationMenuGroups}
@@ -223,7 +242,6 @@ function FullNavigationDemo(props: FullNavigationProps) {
                 enableQuickAccess={props.enableQuickAccess}
                 quickAccessHighlightInMainMenu={props.quickAccessHighlightInMainMenu}
                 onQuickAccessChange={handleQuickAccessChange}
-                unifiedMenuScroll={props.unifiedMenuScroll}
                 subheaderItems={[
                     {
                         id: 'search',
@@ -238,6 +256,7 @@ function FullNavigationDemo(props: FullNavigationProps) {
                         onItemClick: () => alert('Services'),
                     },
                 ]}
+                // The last visible FooterItem anchors the edge collapse control.
                 renderFooter={({compact: footerCompact}) => (
                     <React.Fragment>
                         <FooterItem
@@ -286,9 +305,10 @@ export const FullNavigation = FullNavigationTemplate.bind({});
 FullNavigation.storyName = 'Full navigation';
 FullNavigation.args = {
     initialCompact: false,
+    hideSectionDividers: false,
     menuDensity: 'compact',
+    compactTransition: true,
     menuGroupNestedIcons: true,
     enableQuickAccess: true,
     quickAccessHighlightInMainMenu: false,
-    unifiedMenuScroll: false,
 };

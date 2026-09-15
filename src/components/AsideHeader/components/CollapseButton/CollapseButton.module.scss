@@ -3,47 +3,118 @@
 
 $block: '.#{variables.$ns}collapse-button';
 
-$buttonHeight: 20px;
-
 #{$block} {
-    --_--focus-outline-color: var(--g-color-line-focus);
-    --_--focus-outline-offset: 0;
-
     @include mixins.button-reset();
 
-    min-height: $buttonHeight;
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-top: 1px solid
-        var(--gn-aside-header-divider-horizontal-color, var(--_--horizontal-divider-line-color));
-    position: relative;
-    box-sizing: content-box;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    pointer-events: auto;
+    color: var(--g-color-text-secondary);
+    opacity: 1;
+    transform: translateX(0);
+    transition:
+        opacity 150ms ease-in-out,
+        transform 150ms ease-in-out;
 
-    &::before {
-        content: '';
-        position: absolute;
-        z-index: -1;
-        inset: 0 2px 2px;
+    :global([dir='rtl']) & {
+        --_--collapse-appearance-shift: 2px;
+        --_--collapse-icon-direction: -1;
     }
 
-    &:focus-visible::before {
-        outline: var(--_--focus-outline-color) solid 2px;
-        outline-offset: var(--_--focus-outline-offset);
-    }
-
-    &:not(&_compact) {
-        #{$block}__icon {
-            transform: rotate(180deg);
-        }
-    }
-
-    &:hover #{$block}__icon {
-        color: var(--g-color-text-primary);
+    &_compact {
+        opacity: 0;
+        transform: translateX(var(--_--collapse-appearance-shift, -2px));
+        background: var(
+            --gn-aside-header-collapsed-background-color,
+            var(--gn-aside-header-background-color, var(--g-color-base-background))
+        );
     }
 
     &__icon {
-        color: var(--g-color-text-secondary);
+        transform: scaleX(var(--_--collapse-icon-direction, 1));
+    }
+    &:not(&_compact) &__icon {
+        transform: rotate(180deg) scaleX(var(--_--collapse-icon-direction, 1));
+    }
+
+    &:hover {
+        color: var(--g-color-text-primary);
+        // The hover token is translucent, and the compact button owns an opaque
+        // background that masks the aside edge it overhangs. Paint the hover as a layer
+        // above that background so both states read as the same grey.
+        background-image: linear-gradient(
+            var(--g-color-base-simple-hover),
+            var(--g-color-base-simple-hover)
+        );
+    }
+    &:focus-visible {
+        outline: 2px solid var(--g-color-line-focus);
+        outline-offset: -2px;
+    }
+
+    &__layer {
+        width: 0;
+        min-width: 0;
+        flex: 0 0 0;
+        overflow: visible;
+        position: sticky;
+        top: var(--gn-top-alert-height, 0);
+        height: 100vh;
+        max-height: calc(100vh - var(--gn-top-alert-height, 0));
+        margin-top: var(--gn-top-alert-height, 0);
+        pointer-events: none;
+        z-index: calc(var(--gn-aside-header-z-index, 100) + 1);
+    }
+
+    &__slot {
+        position: absolute;
+        bottom: var(--g-spacing-2);
+        inset-inline-end: var(--_--item-margin-inline);
+        width: 24px;
+        height: var(
+            --_--gn-aside-header-density-footer-item-height,
+            #{variables.$compact-item-height}
+        );
+        border-radius: 8px;
+        transition: var(--_--gn-aside-collapse-geometry-transition);
+        &_compact {
+            inset-inline-end: -10px;
+            width: 20px;
+            border-radius: 12px;
+        }
+    }
+}
+
+// The layer follows the aside directly, including through display:contents consumers.
+
+:global([data-gn-aside-panel]):hover + :global([data-gn-aside-collapse-layer]),
+:global([data-gn-aside-panel][data-gn-aside-animating]) + :global([data-gn-aside-collapse-layer]) {
+    #{$block} {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+#{$block}:hover,
+#{$block}:focus-visible {
+    opacity: 1;
+    transform: none;
+}
+
+@media (hover: none) {
+    #{$block} {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #{$block},
+    #{$block}__slot {
+        transition: none;
     }
 }

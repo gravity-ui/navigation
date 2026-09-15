@@ -7,7 +7,7 @@ import {render, screen} from '@testing-library/react';
 
 import {useAsideHeaderContext} from '../AsideHeaderContext';
 import {PageLayout} from '../components/PageLayout/PageLayout';
-import {getAsideHeaderDensityConfig, getAsideHeaderDensityCssProperties} from '../density';
+import {getAsideHeaderDensityConfig} from '../density';
 
 function ContextProbe() {
     const {compact, menuDensity, size} = useAsideHeaderContext();
@@ -34,7 +34,7 @@ describe('AsideHeader menu density', () => {
             iconBackgroundSize: 38,
             compactWidth: 56,
             expandedWidth: 236,
-            footerItemHeight: 32,
+            footerItemHeight: 40,
             itemExpandedRadius: 8,
             itemCollapsedRadius: 7,
             itemTitleGap: 8,
@@ -42,7 +42,7 @@ describe('AsideHeader menu density', () => {
         });
     });
 
-    it('provides compact density metrics and CSS properties from the same config', () => {
+    it('provides compact density metrics', () => {
         expect(getAsideHeaderDensityConfig('compact')).toEqual({
             itemHeight: 32,
             twoLineItemHeight: 45,
@@ -58,19 +58,6 @@ describe('AsideHeader menu density', () => {
             itemCollapsedRadius: 6,
             itemTitleGap: 4,
             itemTitleGapEnd: 8,
-        });
-        expect(getAsideHeaderDensityCssProperties('compact')).toEqual({
-            '--_--gn-aside-header-density-item-height': '32px',
-            '--_--gn-aside-header-density-action-size': '32px',
-            '--_--gn-aside-header-density-icon-size': '16px',
-            '--_--gn-aside-header-density-footer-item-height': '32px',
-            '--_--gn-aside-header-density-item-margin-inline': '6px',
-            '--_--gn-aside-header-density-icon-background-size': '32px',
-            '--_--gn-aside-header-density-compact-width': '44px',
-            '--_--gn-aside-header-density-item-expanded-radius': '6px',
-            '--_--gn-aside-header-density-item-collapsed-radius': '6px',
-            '--_--gn-aside-header-density-item-title-gap': '4px',
-            '--_--gn-aside-header-density-item-title-gap-end': '8px',
         });
     });
 
@@ -110,6 +97,9 @@ describe('AsideHeader menu density', () => {
         expect(layout.style.getPropertyValue('--_--gn-aside-header-density-item-height')).toBe(
             '32px',
         );
+        expect(
+            layout.style.getPropertyValue('--_--gn-aside-header-density-footer-item-height'),
+        ).toBe('32px');
         expect(screen.getByTestId('context').getAttribute('data-density')).toBe('compact');
         expect(screen.getByTestId('context').getAttribute('data-size')).toBe('220');
     });

@@ -1,6 +1,6 @@
 import React, {useCallback, useRef, useState} from 'react';
 
-import {setRef} from '@gravity-ui/uikit';
+import {setRef, useUniqId} from '@gravity-ui/uikit';
 
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import i18n from '../i18n';
@@ -8,7 +8,9 @@ import {getQuickAccessMenuItems} from '../quickAccess';
 import {b} from '../utils';
 
 import {useVisibleMenuItems} from './AllPagesPanel';
+import {AsideDivider} from './AsideDivider';
 import {CollapseButton} from './CollapseButton/CollapseButton';
+import {CollapseAnchorContext, useCollapseAnchor} from './CollapseButton/useCollapseAnchor';
 import {CompositeBar} from './CompositeBar';
 import type {QuickAccessToggleHandler} from './CompositeBar/Item/Item.types';
 import {ScrollableWithScrollbar} from './CompositeBar/ScrollableWithScrollbar';
@@ -69,6 +71,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         size,
         onItemClick,
         headerDecoration,
+        hideSectionDividers,
         menuMoreTitle,
         onMenuMoreClick,
         renderFooter,
@@ -88,9 +91,10 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         quickAccessHighlightInMainMenu = false,
         quickAccessIsAvailable,
         onToggleQuickAccess,
-        unifiedMenuScroll = false,
         qa,
     } = useAsideHeaderInnerContext();
+    const panelId = useUniqId();
+    const collapseAnchor = useCollapseAnchor(!hideCollapseButton, compact);
     const visibleMenuItems = useVisibleMenuItems();
     const quickAccessEnabled = enableQuickAccess;
     const quickAccessItems = React.useMemo(
@@ -105,7 +109,6 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         [quickAccessEnabled, quickAccessHighlightInMainMenu, quickAccessItems],
     );
     const hasQuickAccessItems = quickAccessItems.length > 0;
-    const isUnifiedMenuScroll = unifiedMenuScroll && menuOverflow === 'scroll' && !compact;
     const [menuScrollOverflows, setMenuScrollOverflows] = useState(false);
     const asideRef = useRef<HTMLDivElement>(null);
     const pendingQuickAccessFocusRef = useRef<PendingQuickAccessFocus>();
@@ -113,12 +116,6 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
     const handleMenuScrollOverflowChange = useCallback((overflows: boolean) => {
         setMenuScrollOverflows(overflows);
     }, []);
-
-    React.useEffect(() => {
-        if (menuOverflow !== 'scroll' || compact || !visibleMenuItems.length) {
-            setMenuScrollOverflows(false);
-        }
-    }, [compact, menuOverflow, visibleMenuItems.length]);
 
     const handleQuickAccessToggle = React.useCallback<QuickAccessToggleHandler>(
         (item, event) => {
@@ -219,6 +216,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         <CompositeBar
             menuItemClassName={b('menu-item')}
             compositeId={MENU_ITEMS_COMPOSITE_ID}
+            layoutWidth={size}
             type="menu"
             compact={compact}
             items={visibleMenuItems}
@@ -238,36 +236,22 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
     );
 
     const quickAccessSection = hasQuickAccessItems ? (
-        <div
-            className={b('quick-access', {
-                scrollable: !isUnifiedMenuScroll,
-                unified: isUnifiedMenuScroll,
-            })}
-        >
+        <div className={b('quick-access')} data-gn-aside-current-container>
             {!compact && (
-                <div className={b('quick-access-title')}>{i18n('quick_access_title')}</div>
+                <div className={b('quick-access-title')} data-gn-aside-part="quick-access-title">
+                    {i18n('quick_access_title')}
+                </div>
             )}
-            {isUnifiedMenuScroll ? (
-                quickAccessCompositeBar
-            ) : (
-                <ScrollableWithScrollbar capped>{quickAccessCompositeBar}</ScrollableWithScrollbar>
-            )}
+            {quickAccessCompositeBar}
+            <AsideDivider className={b('quick-access-divider')} transitionId="quick-access" />
         </div>
     ) : null;
 
-    const menuSectionContent = visibleMenuItems.length ? (
+    const menuSection = visibleMenuItems.length ? (
         menuCompositeBar
     ) : (
         <div className={b('menu-items')} />
     );
-    const menuSection =
-        menuOverflow === 'scroll' && !compact && !isUnifiedMenuScroll ? (
-            <ScrollableWithScrollbar onOverflowChange={handleMenuScrollOverflowChange}>
-                {menuSectionContent}
-            </ScrollableWithScrollbar>
-        ) : (
-            menuSectionContent
-        );
 
     React.useEffect(() => {
         setRef<HTMLDivElement>(ref, asideRef.current);
@@ -276,13 +260,12 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
     return (
         <React.Fragment>
             <div
-                className={b(
-                    'aside',
-                    {'menu-overflow-scroll': menuOverflow === 'scroll' && !compact},
-                    className,
-                )}
+                className={b('aside', className)}
                 style={{width: size}}
                 data-qa={qa}
+                data-gn-aside-panel
+                id={panelId}
+                ref={collapseAnchor.panelRef}
             >
                 <div className={b('aside-popup-anchor')} ref={asideRef} />
                 {customBackground && (
@@ -294,38 +277,49 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 <div
                     className={b('aside-content', {
                         'with-decoration': headerDecoration,
+                        'hide-section-dividers': hideSectionDividers,
                         'with-quick-access': quickAccessEnabled,
                         'with-quick-access-items': quickAccessEnabled && hasQuickAccessItems,
                     })}
                 >
                     <Header />
                     {aboveMenuContent}
-                    {isUnifiedMenuScroll ? (
-                        <ScrollableWithScrollbar
-                            className={b('unified-menu-scroll')}
-                            onOverflowChange={handleMenuScrollOverflowChange}
-                        >
-                            <div className={b('unified-menu-content')}>
-                                {quickAccessSection}
-                                {menuSection}
-                            </div>
-                        </ScrollableWithScrollbar>
-                    ) : (
-                        <React.Fragment>
+                    <ScrollableWithScrollbar
+                        className={b('unified-menu-scroll')}
+                        onOverflowChange={handleMenuScrollOverflowChange}
+                        showScrollDividers={hideSectionDividers}
+                    >
+                        <div className={b('unified-menu-content')} data-gn-aside-current-container>
                             {quickAccessSection}
                             {menuSection}
-                        </React.Fragment>
-                    )}
-                    <div className={b('footer', {'with-divider': menuScrollOverflows})}>
-                        {renderFooter?.({
-                            size,
-                            compact: Boolean(compact),
-                            asideRef,
-                        })}
+                        </div>
+                    </ScrollableWithScrollbar>
+                    <div
+                        className={b('footer', {'with-divider': menuScrollOverflows})}
+                        ref={collapseAnchor.footerRef}
+                    >
+                        <CollapseAnchorContext.Provider value={collapseAnchor.context}>
+                            <AsideDivider className={b('footer-divider')} transitionId="footer" />
+                            {renderFooter?.({
+                                size,
+                                compact: Boolean(compact),
+                                asideRef,
+                            })}
+                            {!hideCollapseButton && !collapseAnchor.selected && (
+                                <div
+                                    data-gn-collapse-fallback
+                                    data-gn-collapse-anchor=""
+                                    className={b('collapse-fallback')}
+                                    ref={collapseAnchor.fallbackRef}
+                                />
+                            )}
+                        </CollapseAnchorContext.Provider>
                     </div>
-                    {!hideCollapseButton && <CollapseButton />}
                 </div>
             </div>
+            {!hideCollapseButton && (
+                <CollapseButton panelId={panelId} slotRef={collapseAnchor.slotRef} />
+            )}
             <Panels />
         </React.Fragment>
     );
