@@ -62,6 +62,24 @@ afterEach(() => {
     global.ResizeObserver = initialResizeObserver;
 });
 
+function mockResizeObservers() {
+    const observers: ResizeObserverMock[] = [];
+    class ResizeObserverMock implements ResizeObserver {
+        observe = jest.fn();
+        unobserve = jest.fn();
+        disconnect = jest.fn();
+
+        readonly callback: ResizeObserverCallback;
+
+        constructor(callback: ResizeObserverCallback) {
+            this.callback = callback;
+            observers.push(this);
+        }
+    }
+    global.ResizeObserver = ResizeObserverMock;
+    return observers;
+}
+
 describe('floating collapse anchor', () => {
     it.each([undefined, () => <div>custom footer</div>])(
         'uses its fallback row as the only hover anchor',
@@ -191,18 +209,7 @@ describe('floating collapse anchor', () => {
         );
     });
     it('reselects an anchor when CSS visibility changes through a resize notification', () => {
-        const original = global.ResizeObserver;
-        const observers: {callback: ResizeObserverCallback; observe: jest.Mock}[] = [];
-        global.ResizeObserver = jest.fn().mockImplementation((callback: ResizeObserverCallback) => {
-            const observer = {
-                callback,
-                observe: jest.fn(),
-                unobserve: jest.fn(),
-                disconnect: jest.fn(),
-            };
-            observers.push(observer);
-            return observer;
-        });
+        const observers = mockResizeObservers();
         const {container, unmount} = render(view({renderFooter: footer(['a', 'b'])}));
         const panel = container.querySelector('[data-gn-aside-panel]');
         const row = screen.getByRole('button', {name: 'b'});
@@ -233,26 +240,12 @@ describe('floating collapse anchor', () => {
         } finally {
             styleSpy.mockRestore();
             unmount();
-            global.ResizeObserver = original;
         }
     });
     it.each(['transitionend', 'transitioncancel'])(
         'skips width-only frames and reconciles heights, idle resizes and %s',
         (eventType) => {
-            const original = global.ResizeObserver;
-            const observers: {callback: ResizeObserverCallback; observe: jest.Mock}[] = [];
-            global.ResizeObserver = jest
-                .fn()
-                .mockImplementation((callback: ResizeObserverCallback) => {
-                    const observer = {
-                        callback,
-                        observe: jest.fn(),
-                        unobserve: jest.fn(),
-                        disconnect: jest.fn(),
-                    };
-                    observers.push(observer);
-                    return observer;
-                });
+            const observers = mockResizeObservers();
             const {container, unmount} = render(view({renderFooter: footer(['a', 'b'])}));
             const panel = container.querySelector('[data-gn-aside-panel]') as HTMLElement;
             const observer = observers.find((item) =>
@@ -316,23 +309,11 @@ describe('floating collapse anchor', () => {
             } finally {
                 styleSpy.mockRestore();
                 unmount();
-                global.ResizeObserver = original;
             }
         },
     );
     it('does not use a partial offset when the anchor leaves the panel offset chain', () => {
-        const original = global.ResizeObserver;
-        const observers: {callback: ResizeObserverCallback; observe: jest.Mock}[] = [];
-        global.ResizeObserver = jest.fn().mockImplementation((callback: ResizeObserverCallback) => {
-            const observer = {
-                callback,
-                observe: jest.fn(),
-                unobserve: jest.fn(),
-                disconnect: jest.fn(),
-            };
-            observers.push(observer);
-            return observer;
-        });
+        const observers = mockResizeObservers();
         const {container, unmount} = render(view({renderFooter: footer(['row'])}));
         const panel = container.querySelector('[data-gn-aside-panel]') as HTMLElement;
         const slot = container.querySelector('[data-gn-aside-collapse-slot]') as HTMLElement;
@@ -354,17 +335,10 @@ describe('floating collapse anchor', () => {
             expect(slot.style.bottom).toBe('');
         } finally {
             unmount();
-            global.ResizeObserver = original;
         }
     });
     it('disconnects observation and removes anchor registration when hidden or unmounted', () => {
-        const original = global.ResizeObserver;
-        const observers: {observe: jest.Mock; unobserve: jest.Mock; disconnect: jest.Mock}[] = [];
-        global.ResizeObserver = jest.fn().mockImplementation(() => {
-            const observer = {observe: jest.fn(), unobserve: jest.fn(), disconnect: jest.fn()};
-            observers.push(observer);
-            return observer;
-        });
+        const observers = mockResizeObservers();
         const {container, rerender, unmount} = render(view({renderFooter: footer(['row'])}));
         const panel = container.querySelector('[data-gn-aside-panel]');
         const row = screen.getByRole('button', {name: 'row'});
@@ -376,7 +350,6 @@ describe('floating collapse anchor', () => {
         expect(observer?.disconnect).toHaveBeenCalledTimes(1);
         expect(row.hasAttribute('data-gn-collapse-anchor')).toBe(false);
         unmount();
-        global.ResizeObserver = original;
     });
     it('isolates instances and supports display contents and wrappers', async () => {
         const {container} = render(

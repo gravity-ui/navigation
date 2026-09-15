@@ -17,6 +17,24 @@ afterEach(() => {
     jest.useRealTimers();
 });
 
+function mockResizeObservers() {
+    const observers: ResizeObserverMock[] = [];
+    class ResizeObserverMock implements ResizeObserver {
+        observe = jest.fn();
+        unobserve = jest.fn();
+        disconnect = jest.fn();
+
+        readonly callback: ResizeObserverCallback;
+
+        constructor(callback: ResizeObserverCallback) {
+            this.callback = callback;
+            observers.push(this);
+        }
+    }
+    global.ResizeObserver = ResizeObserverMock;
+    return observers;
+}
+
 describe('ScrollableWithScrollbar', () => {
     it('preserves geometry identity after mutations that do not change scroll metrics', async () => {
         jest.useFakeTimers();
@@ -76,26 +94,15 @@ describe('ScrollableWithScrollbar', () => {
     it('recalculates overflow when the rendered content changes size', () => {
         jest.useFakeTimers();
 
-        let resizeCallback: ResizeObserverCallback = () => {};
-        const observe = jest.fn();
-        const disconnect = jest.fn();
-        const originalResizeObserver = global.ResizeObserver;
-
-        global.ResizeObserver = class ResizeObserverMock implements ResizeObserver {
-            observe = observe;
-            unobserve = jest.fn();
-            disconnect = disconnect;
-
-            constructor(callback: ResizeObserverCallback) {
-                resizeCallback = callback;
-            }
-        };
+        const observers = mockResizeObservers();
 
         const {container, unmount} = render(
             <ScrollableWithScrollbar>
                 <div data-testid="content-child">Content</div>
             </ScrollableWithScrollbar>,
         );
+
+        const [{callback: resizeCallback, observe, disconnect}] = observers;
 
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
         const scrollElement = container.querySelector<HTMLElement>(
@@ -130,27 +137,13 @@ describe('ScrollableWithScrollbar', () => {
 
         unmount();
         expect(disconnect).toHaveBeenCalled();
-        global.ResizeObserver = originalResizeObserver;
         jest.useRealTimers();
     });
 
     it('reports every overflow transition through onOverflowChange', () => {
         jest.useFakeTimers();
 
-        let resizeCallback: ResizeObserverCallback = () => {};
-        const observe = jest.fn();
-        const disconnect = jest.fn();
-        const originalResizeObserver = global.ResizeObserver;
-
-        global.ResizeObserver = class ResizeObserverMock implements ResizeObserver {
-            observe = observe;
-            unobserve = jest.fn();
-            disconnect = disconnect;
-
-            constructor(callback: ResizeObserverCallback) {
-                resizeCallback = callback;
-            }
-        };
+        const observers = mockResizeObservers();
 
         const onOverflowChange = jest.fn();
         const {container, unmount} = render(
@@ -158,6 +151,8 @@ describe('ScrollableWithScrollbar', () => {
                 <div data-testid="content-child">Content</div>
             </ScrollableWithScrollbar>,
         );
+
+        const [{callback: resizeCallback}] = observers;
 
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
         const scrollElement = container.querySelector<HTMLElement>(
@@ -199,22 +194,13 @@ describe('ScrollableWithScrollbar', () => {
         ]);
 
         unmount();
-        global.ResizeObserver = originalResizeObserver;
         jest.useRealTimers();
     });
 
     it('reports overflow changes driven by DOM mutations without a resize callback', async () => {
         jest.useFakeTimers();
 
-        const observe = jest.fn();
-        const disconnect = jest.fn();
-        const originalResizeObserver = global.ResizeObserver;
-
-        global.ResizeObserver = class ResizeObserverMock implements ResizeObserver {
-            observe = observe;
-            unobserve = jest.fn();
-            disconnect = disconnect;
-        };
+        mockResizeObservers();
         const disconnectMutationObserver = jest.spyOn(MutationObserver.prototype, 'disconnect');
 
         const onOverflowChange = jest.fn();
@@ -274,33 +260,21 @@ describe('ScrollableWithScrollbar', () => {
         unmount();
         expect(disconnectMutationObserver).toHaveBeenCalled();
         disconnectMutationObserver.mockRestore();
-        global.ResizeObserver = originalResizeObserver;
         jest.useRealTimers();
     });
 
     it('ignores sub-pixel overflow at the 1px boundary but reports 2px', () => {
         jest.useFakeTimers();
 
-        let resizeCallback: ResizeObserverCallback = () => {};
-        const observe = jest.fn();
-        const disconnect = jest.fn();
-        const originalResizeObserver = global.ResizeObserver;
-
-        global.ResizeObserver = class ResizeObserverMock implements ResizeObserver {
-            observe = observe;
-            unobserve = jest.fn();
-            disconnect = disconnect;
-
-            constructor(callback: ResizeObserverCallback) {
-                resizeCallback = callback;
-            }
-        };
+        const observers = mockResizeObservers();
 
         const {container, unmount} = render(
             <ScrollableWithScrollbar>
                 <div data-testid="content-child">Content</div>
             </ScrollableWithScrollbar>,
         );
+
+        const [{callback: resizeCallback}] = observers;
 
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
         const scrollElement = container.querySelector<HTMLElement>(
@@ -334,7 +308,6 @@ describe('ScrollableWithScrollbar', () => {
         expect(queryScrollbarTrack()).not.toBeNull();
 
         unmount();
-        global.ResizeObserver = originalResizeObserver;
         jest.useRealTimers();
     });
 });
