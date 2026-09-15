@@ -969,8 +969,10 @@ test('transports one solid selection from Weekly to Analytics at the midpoint', 
     expect(middle.width).toBeLessThan(source.width);
     expect(middle.height).toBeGreaterThan(destination.height);
     expect(middle.height).toBeLessThan(source.height);
-    const end = await indicator.boundingBox();
-    expect(end).toEqual(destination);
+    expectGeometryNear(
+        await geometry(indicator),
+        await geometry(page.locator(`${GROUP} ${SURFACE}`)),
+    );
     await finishAnimations(page);
     await expect(indicator).toHaveCount(0);
     await expect(page.locator(`${GROUP} ${SURFACE}`)).toHaveCSS(
