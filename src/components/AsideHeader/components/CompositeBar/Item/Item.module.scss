@@ -733,10 +733,6 @@ $floating-surface-box-shadow-label:
         }
     }
 
-    &#{$class}_with-chevron-control#{$class}_current#{$class}_type_regular {
-        background-color: transparent;
-    }
-
     &_with-chevron-control {
         width: auto;
         height: auto;
@@ -745,8 +741,13 @@ $floating-surface-box-shadow-label:
         min-width: 0;
     }
 
-    &#{$class}_with-chevron-control:not(#{$class}_current):hover#{$class}_type_regular {
-        background-color: transparent;
+    /* Row hover/current backgrounds are painted by the inner `__surface` element via
+       `--_--row-surface-color`. Inside the group wrapper the wrapper paints them itself
+       (covering the chevron control too), so the row surface is muted. The selector
+       mirrors the strength of the base `:hover`/`_current` rules that set the variable. */
+    &__group-header-row
+        > #{$class}#{$class}_with-chevron-control:not(#{$class}_compact)#{$class}_type_regular {
+        --_--row-surface-color: transparent;
     }
 
     &__chevron {

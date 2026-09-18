@@ -50,6 +50,11 @@ export interface ItemInnerProps extends ItemProps {
      * itself can carry the group's own main action.
      */
     onGroupHeaderChevronClick?: (event: React.SyntheticEvent) => void;
+    /**
+     * Close the children popup after the row's own click. Used for group anchors
+     * with their own action: the click navigates, so the hover popup must not stay.
+     */
+    closeMenuPopupOnItemClick?: boolean;
     /** Inline menu-group tree (L-connector) rendered inside the row, before the icon slot. */
     menuGroupNestedTreeConnector?: React.ReactNode;
     /** Inline expanded menu-group child row. */

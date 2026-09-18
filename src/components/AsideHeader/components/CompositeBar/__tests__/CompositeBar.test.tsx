@@ -185,6 +185,34 @@ describe('CompositeBar', () => {
         expect(screen.getByText('Workbook 1')).toBeTruthy();
     });
 
+    it('closes the compact group popup when clicking a group header with its own action', () => {
+        const onItemClick = jest.fn();
+        const groupClick = jest.fn();
+        const items: AsideHeaderItem[] = [
+            {id: 'wb-1', title: 'Workbook 1', icon: Gear, groupId: 'resources'},
+        ];
+        const menuGroups: MenuGroup[] = [
+            {
+                id: 'resources',
+                title: 'Resources Group',
+                popupTitle: 'Ресурсы',
+                icon: Gear,
+                onItemClick: groupClick,
+            },
+        ];
+
+        renderCompositeBar({items, onItemClick, menuGroups, compact: true});
+
+        const groupHeader = screen.getByText('Resources Group');
+        fireEvent.click(groupHeader);
+        expect(onItemClick).toHaveBeenCalledWith(
+            expect.objectContaining({onItemClick: groupClick}),
+            false,
+            expect.any(Object),
+        );
+        expect(screen.queryByText('Ресурсы')).toBeNull();
+    });
+
     it('does not render popupTitle when it is not set on the MenuGroup', () => {
         const onItemClick = jest.fn();
         const items: AsideHeaderItem[] = [

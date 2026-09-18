@@ -41,6 +41,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         editMenuProps,
         menuGroups,
         onMenuGroupsChanged,
+        onClosePanel,
     } = useAsideHeaderInnerContext();
 
     const menuItemsRef = useRef(menuItems);
@@ -73,8 +74,12 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         (item, _index, _forwardKey, event) => {
             // TODO: make event an optional argument
             item.onItemClick?.(item, false, event as React.MouseEvent<HTMLElement, MouseEvent>);
+
+            if (!item.current) {
+                onClosePanel?.();
+            }
         },
-        [],
+        [onClosePanel],
     );
 
     const togglePageVisibility = useCallback(
