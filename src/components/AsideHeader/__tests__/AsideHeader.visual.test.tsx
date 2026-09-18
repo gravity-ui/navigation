@@ -94,8 +94,13 @@ test.describe('AsideHeader', () => {
         await expectScreenshot();
     });
 
-    test('render story: <AdvancedCompactDensity>', async ({mount, expectScreenshot}) => {
+    test('render story: <AdvancedCompactDensity>', async ({mount, page, expectScreenshot}) => {
         await mount(<AsideHeaderStories.AdvancedCompactDensity />, mountOptions, viewport);
+        await page.mouse.move(500, 300);
+        await expect(page.locator('button[class*="gn-collapse-button_"]')).toHaveCSS(
+            'opacity',
+            '0',
+        );
         await expectScreenshot();
     });
 

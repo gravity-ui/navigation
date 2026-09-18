@@ -206,7 +206,10 @@ $aside-width-transition: width $aside-width-transition-duration
     }
 
     &__header {
-        --gn-aside-header-header-divider-height: 29px;
+        --gn-aside-header-header-divider-height: var(
+            --_--gn-aside-header-density-header-divider-height,
+            29px
+        );
 
         position: relative;
         z-index: 1;
@@ -214,11 +217,12 @@ $aside-width-transition: width $aside-width-transition-duration
         box-sizing: border-box;
         width: calc(100%);
         padding-top: 8px;
-        padding-bottom: 22px;
+        padding-bottom: var(--_--header-padding-bottom, 22px);
 
         #{$class}__header-divider {
             position: absolute;
-            bottom: 0;
+            // Share the background's edge calculation to avoid a rounding gap at compact density.
+            top: calc(100% - var(--gn-aside-header-header-divider-height));
             left: 0;
             z-index: -2;
             display: none;
@@ -260,7 +264,7 @@ $aside-width-transition: width $aside-width-transition-duration
 
     &__aside-content_with-quick-access:not(#{$class}__aside-content_hide-section-dividers)
         &__header {
-        padding-bottom: var(--_--section-divider-gap);
+        padding-bottom: var(--_--header-padding-bottom, var(--_--section-divider-gap));
 
         // Keep the full-bleed span of the default placement: section dividers outside the
         // menu scrollport reach both aside edges, like the footer one.
@@ -283,6 +287,10 @@ $aside-width-transition: width $aside-width-transition-duration
     }
 
     &_compact &__header_with-decoration {
+        // Keep the original clearance in proportion to the curved edge. Quick access
+        // must not replace it with the smaller gap used by straight section dividers.
+        --_--header-padding-bottom: calc(var(--gn-aside-header-header-divider-height) * 22 / 29);
+
         #{$class}__header-divider {
             display: block;
         }

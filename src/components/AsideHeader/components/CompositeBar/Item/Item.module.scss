@@ -480,6 +480,12 @@ $floating-surface-box-shadow-label:
             --gn-aside-header-floating-surface-box-shadow,
             var(--_--floating-surface-box-shadow-default)
         );
+
+        // Solo labels also carry .g-root to apply their dark theme. Its page background
+        // must not override the popup surface when UIKit's root styles are loaded last.
+        &:global(.g-popup) {
+            background-color: var(--g-popup-background-color, var(--g-color-base-float));
+        }
     }
 
     &__icon-popover_single-label {

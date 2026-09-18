@@ -3,9 +3,8 @@ import React, {useCallback} from 'react';
 import {Icon} from '@gravity-ui/uikit';
 
 import {Logo} from '../../Logo';
-import {HEADER_DIVIDER_HEIGHT} from '../../constants';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
-import {getAsideHeaderDensityConfig} from '../density';
+import {getAsideHeaderDecorationHeight, getAsideHeaderDensityConfig} from '../density';
 import {AsideHeaderItem} from '../types';
 import {b} from '../utils';
 
@@ -66,7 +65,7 @@ export const Header = () => {
                     data={headerDividerCollapsedIcon}
                     className={b('header-divider')}
                     width={compactWidth}
-                    height={HEADER_DIVIDER_HEIGHT}
+                    height={getAsideHeaderDecorationHeight(menuDensity)}
                 />
             )}
         </div>

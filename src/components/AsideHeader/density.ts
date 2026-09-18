@@ -4,6 +4,7 @@ import {
     ASIDE_HEADER_COMPACT_WIDTH,
     ASIDE_HEADER_EXPANDED_WIDTH,
     ASIDE_HEADER_ICON_SIZE,
+    HEADER_DIVIDER_HEIGHT,
     ITEM_HEIGHT,
 } from '../constants';
 
@@ -80,9 +81,16 @@ export function getAsideHeaderDensityCssProperties(
         '--_--gn-aside-header-density-item-margin-inline': `${config.itemMarginInline}px`,
         '--_--gn-aside-header-density-icon-background-size': `${config.iconBackgroundSize}px`,
         '--_--gn-aside-header-density-compact-width': `${config.compactWidth}px`,
+        '--_--gn-aside-header-density-header-divider-height': `${getAsideHeaderDecorationHeight(density)}px`,
         '--_--gn-aside-header-density-item-expanded-radius': `${config.itemExpandedRadius}px`,
         '--_--gn-aside-header-density-item-collapsed-radius': `${config.itemCollapsedRadius}px`,
         '--_--gn-aside-header-density-item-title-gap': `${config.itemTitleGap}px`,
         '--_--gn-aside-header-density-item-title-gap-end': `${config.itemTitleGapEnd}px`,
     } as CSSProperties;
+}
+
+export function getAsideHeaderDecorationHeight(density: AsideHeaderMenuDensity = 'default') {
+    const {compactWidth} = getAsideHeaderDensityConfig(density);
+
+    return (HEADER_DIVIDER_HEIGHT * compactWidth) / ASIDE_HEADER_COMPACT_WIDTH;
 }
