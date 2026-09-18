@@ -179,6 +179,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         quickAccessPinItem: quickAccessPinItemProp,
         onToggleQuickAccess,
         onGroupHeaderChevronClick,
+        closeMenuPopupOnItemClick = false,
     } = props;
 
     const [labelPopupOpen, setLabelPopupOpen] = React.useState(false);
@@ -395,6 +396,10 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         const handleRowClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
             if (compact && !collapsedItem && !showMenuPopup && !current) {
                 setLabelPopupOpen(false);
+            }
+
+            if (closeMenuPopupOnItemClick) {
+                setMenuPopupOpen(false);
             }
 
             if (event.detail > 0) {
