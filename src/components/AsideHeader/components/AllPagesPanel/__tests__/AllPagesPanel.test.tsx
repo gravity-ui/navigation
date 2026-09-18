@@ -47,6 +47,11 @@ describe('AllPagesPanel item click', () => {
 
         expect(itemClick).toHaveBeenCalledTimes(1);
         expect(onClosePanel).toHaveBeenCalledTimes(1);
+        // The panel closes before the item action, so an action that opens
+        // another panel is not clobbered by this close (sidebar handler parity).
+        expect(onClosePanel.mock.invocationCallOrder[0]).toBeLessThan(
+            itemClick.mock.invocationCallOrder[0],
+        );
     });
 
     it('keeps the panel open when clicking the current item', () => {
