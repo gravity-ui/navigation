@@ -74,6 +74,11 @@ The button remains keyboard accessible and retains focus when toggled. `expandTi
 `collapseTitle` set its accessible name. `compactTransition={false}` disables its geometry
 transitions while preserving hover appearance; reduced motion disables both.
 
+While the aside animates towards compact the button stays hidden, so its collapsed appearance never
+lands on an aside that is still at its expanded width; hover reveals it once the layout settles. A
+keyboard-focused button stays visible throughout. Expanding is unaffected — the button is visible
+for the whole transition.
+
 At the standard z-index, the compact tab extends 10 px over the edge of open All pages and custom
 `panelItems` Drawers. Clicking it changes `compact` and keeps the panel open. Its transparent layer
 does not intercept clicks outside the button. The layer uses
