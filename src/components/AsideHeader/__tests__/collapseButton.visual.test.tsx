@@ -265,6 +265,24 @@ test('collapse button hover color default', async ({mount, page}) => {
     expect(compactHover).toEqual(expandedHover);
 });
 
+test('collapse button keeps a hairline border only while compact', async ({mount, page}) => {
+    await page.setViewportSize(viewport);
+    await mount(<CollapseButtonExample menuDensity="default" />, undefined, viewport);
+    await finishAnimations(page);
+    const button = page.locator(buttonSelector);
+
+    // The compact button overhangs the aside edge with an opaque fill; the ring is what
+    // keeps the vertical divider readable around it. Expanded, the button sits inside the
+    // panel over the same surface, so the ring must be gone.
+    await expect(button).toHaveAttribute('aria-expanded', 'false');
+    await expect(button).toHaveCSS('box-shadow', /0px 0px 0px 1px/);
+
+    await button.click();
+    await expect(button).toHaveAttribute('aria-expanded', 'true');
+    await finishAnimations(page);
+    await expect(button).toHaveCSS('box-shadow', 'none');
+});
+
 for (const kind of ['all-pages', 'custom'] as const) {
     test(`collapse button above ${kind} panel default`, async ({mount, page}) => {
         const menuDensity = 'default';

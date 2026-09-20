@@ -32,6 +32,12 @@ $block: '.#{variables.$ns}collapse-button';
             --gn-aside-header-collapsed-background-color,
             var(--gn-aside-header-background-color, var(--g-color-base-background))
         );
+        // The compact button overhangs the aside edge and masks the vertical divider with
+        // its opaque background. A hairline ring closes that gap: the divider reads as if
+        // it routes around the button instead of stopping at an invisible white pill.
+        box-shadow: 0 0 0 1px
+            var(--gn-aside-header-collapse-button-border-color, var(--g-color-line-generic-accent));
+        color: var(--g-color-text-primary);
     }
 
     &__icon {
