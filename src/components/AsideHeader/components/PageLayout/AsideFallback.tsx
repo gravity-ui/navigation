@@ -2,9 +2,8 @@ import React from 'react';
 
 import {Icon, QAProps} from '@gravity-ui/uikit';
 
-import {HEADER_DIVIDER_HEIGHT} from '../../../constants';
 import {useAsideHeaderContext} from '../../AsideHeaderContext';
-import {getAsideHeaderDensityConfig} from '../../density';
+import {getAsideHeaderDecorationHeight, getAsideHeaderDensityConfig} from '../../density';
 import {b} from '../../utils';
 import {AsideDivider} from '../AsideDivider';
 
@@ -50,7 +49,7 @@ export const AsideFallback: React.FC<Props> = ({
                             data={headerDividerCollapsedIcon}
                             className={b('header-divider')}
                             width={compactWidth}
-                            height={HEADER_DIVIDER_HEIGHT}
+                            height={getAsideHeaderDecorationHeight(menuDensity)}
                         />
                     ) : null}
                 </div>

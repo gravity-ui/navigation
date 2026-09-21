@@ -367,7 +367,7 @@ export const ItemPopup: React.FC<Props> = ({
             className={b(
                 'icon-popover',
                 {'item-type': type, 'single-label': isSingleLabel},
-                isSingleLabel ? `g-root g-root_theme_${soloPopupTheme}` : undefined,
+                isSingleLabel ? `g-root_theme_${soloPopupTheme}` : undefined,
             )}
             style={popoverStyle}
             content={content}

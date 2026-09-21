@@ -5,6 +5,7 @@ $menu-group-tree-connector-width: 16px;
 
 #{$block} {
     --_--menu-group-tree-connector-width: #{$menu-group-tree-connector-width};
+    --_--menu-group-tree-line-width: var(--gn-aside-header-menu-group-tree-line-width, 1px);
     --_--menu-item-gap: 0px;
 
     flex: 1 0 auto;
@@ -103,10 +104,10 @@ $menu-group-tree-connector-width: 16px;
     &__menu-group-nested-list-item:not(:last-child) &__menu-group-nested-connector::after {
         content: '';
         position: absolute;
-        inset-inline-start: calc(50% - 0.5px);
+        inset-inline-start: calc(50% - var(--_--menu-group-tree-line-width) / 2);
         top: 0;
         bottom: calc(-1 * var(--_--menu-item-gap));
-        width: 1px;
+        width: var(--_--menu-group-tree-line-width);
         background: var(--gn-aside-header-menu-group-tree-line-color, #c1c3c7);
         pointer-events: none;
         z-index: -1;
@@ -125,10 +126,10 @@ $menu-group-tree-connector-width: 16px;
         &_spine-active::before {
             content: '';
             position: absolute;
-            inset-inline-start: calc(50% - 0.5px);
+            inset-inline-start: calc(50% - var(--_--menu-group-tree-line-width) / 2);
             top: 0;
             bottom: calc(-1 * var(--_--menu-item-gap));
-            width: 1px;
+            width: var(--_--menu-group-tree-line-width);
             background: var(
                 --gn-aside-header-menu-group-tree-line-active-color,
                 var(--g-color-base-brand)
@@ -155,6 +156,7 @@ $menu-group-tree-connector-width: 16px;
         max-width: $menu-group-tree-connector-width;
         height: var(--_--gn-aside-header-density-item-height, #{variables.$item-height});
         stroke: var(--gn-aside-header-menu-group-tree-line-color, #c1c3c7);
+        stroke-width: var(--_--menu-group-tree-line-width);
 
         &_active {
             stroke: var(

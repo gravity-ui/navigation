@@ -363,7 +363,6 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                                                                 }
                                                                 fill="none"
                                                                 strokeLinecap="butt"
-                                                                strokeWidth="1.3"
                                                                 vectorEffect="non-scaling-stroke"
                                                             />
                                                         </svg>
