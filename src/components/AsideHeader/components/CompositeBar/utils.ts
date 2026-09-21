@@ -5,7 +5,11 @@ import {MenuGroup} from '../../../types';
 import {AsideHeaderMenuDensity, getAsideHeaderDensityConfig} from '../../density';
 import {AsideHeaderItem} from '../../types';
 
-import {COLLAPSE_ITEM_ID, COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX} from './constants';
+import {
+    COLLAPSE_ITEM_ID,
+    COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX,
+    COMPOSITE_BAR_GROUP_OVERFLOW_ID_PREFIX,
+} from './constants';
 import type {CompositeBarRow} from './grouping';
 import {isItemPresentationCurrent} from './presentationCurrent';
 
@@ -128,7 +132,7 @@ function makeOverflowGroupAsideItem(
     children: AsideHeaderItem[],
 ): AsideHeaderItem {
     return {
-        id: `__gn-composite-bar__group-overflow__${group.id}`,
+        id: `${COMPOSITE_BAR_GROUP_OVERFLOW_ID_PREFIX}${group.id}`,
         title: group.title,
         icon: group.icon,
         iconSize: group.iconSize,

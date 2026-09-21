@@ -112,6 +112,7 @@ export const useAsideHeaderInnerContextValue = (
         onClosePanel: innerOnClosePanel,
         allPagesIsAvailable,
         quickAccessIsAvailable,
+        innerVisiblePanel,
         menuItems: innerMenuItems,
         panelItems: innerPanelItems,
         size,
