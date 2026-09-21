@@ -74,6 +74,11 @@ Hover-эффекты, самостоятельное открытие и зак�
 задают доступное имя. `compactTransition={false}` отключает переходы геометрии, сохраняя появление
 при наведении; reduced motion отключает оба вида анимации.
 
+Во время анимации сворачивания кнопка скрыта, поэтому её свёрнутый вид не оказывается поверх ещё
+широкой панели; после завершения раскладки она снова появляется по наведению. Кнопка с фокусом
+с клавиатуры остаётся видимой всё это время. Разворачивание не затронуто — там кнопка видна
+на протяжении всего перехода.
+
 При стандартных z-index язычок выступает на 10 px поверх края открытого Drawer All pages или
 пользовательского `panelItems`. Клик переключает `compact` и оставляет панель открытой. Прозрачный
 слой не перехватывает клики вне кнопки. Z-index слоя —
@@ -81,6 +86,9 @@ Hover-эффекты, самостоятельное открытие и зак�
 настройками потребителя. Portaled Popup, в том числе с `asideRef` и `right-end`, может перекрывать
 язычок; его положение и поведение сохраняются. Фон compact-кнопки берётся из фона свёрнутого aside,
 затем общего фона aside, затем фона темы. Совпадение с произвольным `customBackground` не гарантируется.
+В compact кнопка дополнительно получает обводку 1 px, чтобы вертикальный разделитель визуально
+обходил её, а не обрывался о непрозрачную заливку; цвет переопределяется через
+`--gn-aside-header-collapse-button-border-color`. В развернутом состоянии обводки нет.
 
 В v7 `collapseButtonWrapper` оформляет переключатель на краю aside. Полноширинный дополнительный
 контент, который раньше возвращался этой обёрткой, нужно перенести в `renderFooter`:
@@ -526,36 +534,37 @@ const [collapsedGroups, setCollapsedGroups] = React.useState<Record<string, bool
 
 ## API CSS
 
-| Имя                                                       | Описание                                                                                          |     Значение по умолчанию      |
-| :-------------------------------------------------------- | :------------------------------------------------------------------------------------------------ | :----------------------------: |
-| `--gn-aside-header-decoration-collapsed-background-color` | Цвет оформления элемента навигации в свернутом состоянии.                                         | `--g-color-base-warning-light` |
-| `--gn-aside-header-decoration-expanded-background-color`  | Цвет оформления элемента навигации в развернутом состоянии.                                       | `--g-color-base-warning-light` |
-| `--gn-aside-header-background-color`                      | Цвет основного фона элемента навигации.                                                           |  `--g-color-base-background`   |
-| `--gn-aside-header-collapsed-background-color`            | Цвет фона элемента навигации в свернутом состоянии.                                               |  `--g-color-base-background`   |
-| `--gn-aside-header-expanded-background-color`             | Цвет фона элемента навигации в развернутом состоянии.                                             |  `--g-color-base-background`   |
-| `--gn-aside-header-divider-horizontal-color`              | Цвет всех горизонтальных разделителей.                                                            |    `--g-color-line-generic`    |
-| `--gn-aside-header-divider-vertical-color`                | Цвет вертикального разделителя между `AsideHeader` и содержимым.                                  |    `--g-color-line-generic`    |
-| `--gn-aside-header-menu-group-tree-line-color`            | Цвет линий дерева вложенных групп меню (неактивные сегменты).                                     |           `#c1c3c7`            |
-| `--gn-aside-header-menu-group-tree-line-active-color`     | Цвет линий дерева для активной ветки во вложенных группах меню.                                   |     `--g-color-base-brand`     |
-| `--gn-aside-header-menu-group-tree-line-width`            | Толщина прямых и скруглённых линий дерева вложенных групп меню.                                   |             `1px`              |
-| `--gn-aside-header-floating-surface-box-shadow`           | Тень всплывающих поверхностей навигации.                                                          |                                |
-| `--gn-aside-top-panel-height`                             | Высота верхнего алерта `AsideHeader` (**только для чтения**).                                     |              0 px              |
-| `--gn-aside-header-padding-top`                           | Отступ сверху для элемента навигации. Используется при скрытии элементов логотипа и подзаголовка. |                                |
-| Элемент                                                   |                                                                                                   |                                |
-| `--gn-aside-header-general-item-icon-color`               | Цвет иконок для элементов подзаголовка и футера.                                                  |    `--g-color-text-primary`    |
-| `--gn-aside-header-item-icon-color`                       | Цвет иконок для элементов `CompositeBar`.                                                         |     `--g-color-text-misc`      |
-| `--gn-aside-header-item-text-color`                       | Цвет текста элементов.                                                                            |    `--g-color-text-primary`    |
-| `--gn-aside-header-item-background-color-hover`           | Цвет текста при ховере.                                                                           | `--g-color-base-simple-hover`  |
-| Выбранный элемент                                         |                                                                                                   |                                |
-| `--gn-aside-header-item-current-background-color`         | Цвет фона выбранного элемента.                                                                    |   `--g-color-base-selection`   |
-| `--gn-aside-header-item-current-icon-color`               | Цвет иконки выбранного элемента.                                                                  |                                |
-| `--gn-aside-header-item-current-text-color`               | Цвет текста выбранного элемента.                                                                  |    `--g-color-text-primary`    |
-| `--gn-aside-header-item-current-background-color-hover`   | Цвет иконки выбранного элемента при ховере.                                                       |                                |
-| `--gn-aside-header-item-collapsed-radius`                 | Радиус скругления углов элемента навигации в свернутом состоянии.                                 |              7 px              |
-| `--gn-aside-header-item-expanded-radius`                  | Радиус скругления углов элемента навигации в развернутом состоянии.                               |                                |
-| `--gn-aside-header-item-chevron-padding-right`            | Правый отступ блока шеврона в строках меню (заголовки групп, флайауты).                           |                                |
-| Наложение элементов (CSS-свойство `z-index`)              |                                                                                                   |                                |
-| `--gn-aside-header-z-index`                               | `z-index` для `AsideHeader`.                                                                      |              100               |
-| `--gn-aside-header-panel-z-index`                         | `z-index` для выдвижной панели `AsideHeader` (компонент `Drawer`).                                |               98               |
-| `--gn-aside-header-pane-top-z-index`                      | `z-index` для верхней панели.                                                                     |               98               |
-| `--gn-aside-header-content-z-index`                       | `z-index` для содержимого (область справа).                                                       |               95               |
+| Имя                                                       | Описание                                                                                          |      Значение по умолчанию      |
+| :-------------------------------------------------------- | :------------------------------------------------------------------------------------------------ | :-----------------------------: |
+| `--gn-aside-header-decoration-collapsed-background-color` | Цвет оформления элемента навигации в свернутом состоянии.                                         | `--g-color-base-warning-light`  |
+| `--gn-aside-header-decoration-expanded-background-color`  | Цвет оформления элемента навигации в развернутом состоянии.                                       | `--g-color-base-warning-light`  |
+| `--gn-aside-header-background-color`                      | Цвет основного фона элемента навигации.                                                           |   `--g-color-base-background`   |
+| `--gn-aside-header-collapsed-background-color`            | Цвет фона элемента навигации в свернутом состоянии.                                               |   `--g-color-base-background`   |
+| `--gn-aside-header-expanded-background-color`             | Цвет фона элемента навигации в развернутом состоянии.                                             |   `--g-color-base-background`   |
+| `--gn-aside-header-divider-horizontal-color`              | Цвет всех горизонтальных разделителей.                                                            |    `--g-color-line-generic`     |
+| `--gn-aside-header-divider-vertical-color`                | Цвет вертикального разделителя между `AsideHeader` и содержимым.                                  |    `--g-color-line-generic`     |
+| `--gn-aside-header-collapse-button-border-color`          | Цвет тонкой обводки кнопки сворачивания в свернутом состоянии.                                    | `--g-color-line-generic-accent` |
+| `--gn-aside-header-menu-group-tree-line-color`            | Цвет линий дерева вложенных групп меню (неактивные сегменты).                                     |            `#c1c3c7`            |
+| `--gn-aside-header-menu-group-tree-line-active-color`     | Цвет линий дерева для активной ветки во вложенных группах меню.                                   |     `--g-color-base-brand`      |
+| `--gn-aside-header-menu-group-tree-line-width`            | Толщина прямых и скруглённых линий дерева вложенных групп меню.                                   |              `1px`              |
+| `--gn-aside-header-floating-surface-box-shadow`           | Тень всплывающих поверхностей навигации.                                                          |                                 |
+| `--gn-aside-top-panel-height`                             | Высота верхнего алерта `AsideHeader` (**только для чтения**).                                     |              0 px               |
+| `--gn-aside-header-padding-top`                           | Отступ сверху для элемента навигации. Используется при скрытии элементов логотипа и подзаголовка. |                                 |
+| Элемент                                                   |                                                                                                   |                                 |
+| `--gn-aside-header-general-item-icon-color`               | Цвет иконок для элементов подзаголовка и футера.                                                  |    `--g-color-text-primary`     |
+| `--gn-aside-header-item-icon-color`                       | Цвет иконок для элементов `CompositeBar`.                                                         |      `--g-color-text-misc`      |
+| `--gn-aside-header-item-text-color`                       | Цвет текста элементов.                                                                            |    `--g-color-text-primary`     |
+| `--gn-aside-header-item-background-color-hover`           | Цвет текста при ховере.                                                                           |  `--g-color-base-simple-hover`  |
+| Выбранный элемент                                         |                                                                                                   |                                 |
+| `--gn-aside-header-item-current-background-color`         | Цвет фона выбранного элемента.                                                                    |   `--g-color-base-selection`    |
+| `--gn-aside-header-item-current-icon-color`               | Цвет иконки выбранного элемента.                                                                  |                                 |
+| `--gn-aside-header-item-current-text-color`               | Цвет текста выбранного элемента.                                                                  |    `--g-color-text-primary`     |
+| `--gn-aside-header-item-current-background-color-hover`   | Цвет иконки выбранного элемента при ховере.                                                       |                                 |
+| `--gn-aside-header-item-collapsed-radius`                 | Радиус скругления углов элемента навигации в свернутом состоянии.                                 |              7 px               |
+| `--gn-aside-header-item-expanded-radius`                  | Радиус скругления углов элемента навигации в развернутом состоянии.                               |                                 |
+| `--gn-aside-header-item-chevron-padding-right`            | Правый отступ блока шеврона в строках меню (заголовки групп, флайауты).                           |                                 |
+| Наложение элементов (CSS-свойство `z-index`)              |                                                                                                   |                                 |
+| `--gn-aside-header-z-index`                               | `z-index` для `AsideHeader`.                                                                      |               100               |
+| `--gn-aside-header-panel-z-index`                         | `z-index` для выдвижной панели `AsideHeader` (компонент `Drawer`).                                |               98                |
+| `--gn-aside-header-pane-top-z-index`                      | `z-index` для верхней панели.                                                                     |               98                |
+| `--gn-aside-header-content-z-index`                       | `z-index` для содержимого (область справа).                                                       |               95                |

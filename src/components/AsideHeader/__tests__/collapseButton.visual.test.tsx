@@ -265,6 +265,24 @@ test('collapse button hover color default', async ({mount, page}) => {
     expect(compactHover).toEqual(expandedHover);
 });
 
+test('collapse button keeps a hairline border only while compact', async ({mount, page}) => {
+    await page.setViewportSize(viewport);
+    await mount(<CollapseButtonExample menuDensity="default" />, undefined, viewport);
+    await finishAnimations(page);
+    const button = page.locator(buttonSelector);
+
+    // The compact button overhangs the aside edge with an opaque fill; the ring is what
+    // keeps the vertical divider readable around it. Expanded, the button sits inside the
+    // panel over the same surface, so the ring must be gone.
+    await expect(button).toHaveAttribute('aria-expanded', 'false');
+    await expect(button).toHaveCSS('box-shadow', /0px 0px 0px 1px/);
+
+    await button.click();
+    await expect(button).toHaveAttribute('aria-expanded', 'true');
+    await finishAnimations(page);
+    await expect(button).toHaveCSS('box-shadow', 'none');
+});
+
 for (const kind of ['all-pages', 'custom'] as const) {
     test(`collapse button above ${kind} panel default`, async ({mount, page}) => {
         const menuDensity = 'default';
@@ -485,6 +503,66 @@ for (const direction of ['ltr', 'rtl'] as const) {
         await expect(page.locator(buttonSelector)).toHaveCSS('opacity', '1');
     });
 }
+
+test('collapse button stays hidden while the aside animates to compact', async ({mount, page}) => {
+    await page.setViewportSize(viewport);
+    await mount(<CollapseButtonExample initialCompact={false} />, undefined, viewport);
+    await finishAnimations(page);
+    const button = page.locator(buttonSelector);
+    const panel = page.locator(panelSelector);
+
+    await page.mouse.move(700, 400);
+    await expect(button).toHaveCSS('opacity', '1');
+
+    // React swaps in the compact modifier on the first frame of the collapse. Painting the button
+    // during the transition would park the finished collapsed control - rotated chevron, border,
+    // opaque fill - on top of an aside still at its expanded width, then drop it at the end.
+    await toggleAsideAndPause(page);
+    await expect(panel).toHaveAttribute('data-gn-aside-animating', '');
+    await expect(button).toHaveAttribute('aria-expanded', 'false');
+    await expect(button).toHaveCSS('opacity', '0');
+    await seekAnimations(page, 0.5);
+    await expect(button).toHaveCSS('opacity', '0');
+    await finishAnimations(page);
+    await expect(button).toHaveCSS('opacity', '0');
+
+    // Hover reveals it again once the layout has settled.
+    await panel.hover();
+    await finishAnimations(page);
+    await expect(button).toHaveCSS('opacity', '1');
+});
+
+test('collapse button keeps keyboard focus visible while the aside animates', async ({
+    mount,
+    page,
+}) => {
+    await page.setViewportSize(viewport);
+    // Start compact: in the expanded footer row the anchor is not the button's Tab predecessor.
+    await mount(<CollapseButtonExample />, undefined, viewport);
+    await finishAnimations(page);
+    const button = page.locator(buttonSelector);
+    const panel = page.locator(panelSelector);
+
+    await page.locator(anchorSelector).focus();
+    await page.keyboard.press('Tab');
+    await expect(button).toBeFocused();
+    await page.keyboard.press('Enter');
+    await finishAnimations(page);
+    await expect(button).toHaveAttribute('aria-expanded', 'true');
+    await page.keyboard.press('Enter');
+    await button.evaluate(async () => {
+        await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+        document.getAnimations().forEach((animation) => animation.pause());
+    });
+
+    // The hide-while-animating rule must not swallow a keyboard-focused control.
+    await expect(panel).toHaveAttribute('data-gn-aside-animating', '');
+    await expect(button).toHaveAttribute('aria-expanded', 'false');
+    await expect(button).toHaveCSS('opacity', '1');
+    await finishAnimations(page);
+    await expect(button).toBeFocused();
+    await expect(button).toHaveCSS('opacity', '1');
+});
 
 test('collapse button honors reduced motion and raised aside z-index', async ({mount, page}) => {
     await page.emulateMedia({reducedMotion: 'reduce'});

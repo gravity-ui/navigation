@@ -74,6 +74,11 @@ The button remains keyboard accessible and retains focus when toggled. `expandTi
 `collapseTitle` set its accessible name. `compactTransition={false}` disables its geometry
 transitions while preserving hover appearance; reduced motion disables both.
 
+While the aside animates towards compact the button stays hidden, so its collapsed appearance never
+lands on an aside that is still at its expanded width; hover reveals it once the layout settles. A
+keyboard-focused button stays visible throughout. Expanding is unaffected — the button is visible
+for the whole transition.
+
 At the standard z-index, the compact tab extends 10 px over the edge of open All pages and custom
 `panelItems` Drawers. Clicking it changes `compact` and keeps the panel open. Its transparent layer
 does not intercept clicks outside the button. The layer uses
@@ -81,7 +86,9 @@ does not intercept clicks outside the button. The layer uses
 portaled Popups (including `asideRef` with `right-end`) may cover the tab and retain their normal
 position and behavior. The compact button background follows the collapsed aside background,
 then the general aside background, then the theme background. Matching an arbitrary
-`customBackground` is not guaranteed.
+`customBackground` is not guaranteed. In compact the button also draws a 1 px border so the
+vertical divider reads as routing around it instead of stopping at the opaque fill; override it
+with `--gn-aside-header-collapse-button-border-color`. The expanded button keeps no border.
 
 In v7, `collapseButtonWrapper` decorates the edge control. Move any full-width additional content
 previously rendered by this wrapper into `renderFooter`:
@@ -536,6 +543,7 @@ You can customize the inner content, make alert closeable if necessary. For read
 | `--gn-aside-header-expanded-background-color`             | Expanded navigation background color                                      |
 | `--gn-aside-header-divider-horizontal-color`              | All horizontal divider line color                                         |
 | `--gn-aside-header-divider-vertical-color`                | Vertical divider line color between `AsideHeader` and content             |
+| `--gn-aside-header-collapse-button-border-color`          | Collapse button hairline border color in the collapsed state              |
 | `--gn-aside-header-menu-group-tree-line-color`            | Tree connector lines for nested menu groups (inactive segments)           |
 | `--gn-aside-header-menu-group-tree-line-active-color`     | Tree connector lines for the active branch in nested menu groups          |
 | `--gn-aside-header-menu-group-tree-line-width`            | Width of straight and curved tree connector lines; defaults to `1px`      |
