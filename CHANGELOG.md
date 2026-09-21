@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.6.1](https://github.com/gravity-ui/navigation/compare/v6.6.0...v6.6.1) (2026-09-21)
+
+
+### Bug Fixes
+
+* **AsideHeader:** replace the dead --gn-aside-top-panel-height with --gn-top-alert-height ([#681](https://github.com/gravity-ui/navigation/issues/681)) ([3decc0d](https://github.com/gravity-ui/navigation/commit/3decc0d7c960c5f24b8a8698e2a7c41ac0c23267))
+
 ## [6.6.0](https://github.com/gravity-ui/navigation/compare/v6.5.1...v6.6.0) (2026-09-08)
 
 
