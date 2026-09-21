@@ -2,10 +2,6 @@
 
 $block: '.#{variables.$ns}aside-header';
 
-.g-root {
-    --gn-aside-top-panel-height: 0px;
-}
-
 #{$block} {
     $class: &;
     --gn-aside-header-min-width: 56px;
