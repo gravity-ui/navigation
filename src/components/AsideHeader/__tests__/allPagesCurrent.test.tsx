@@ -88,4 +88,24 @@ describe('current highlighting while the All pages panel is open', () => {
             expect(row.className).not.toContain(CURRENT_CLASS);
         }
     });
+
+    it('keeps the current highlight when a consumer item reuses the reserved id without the panel', () => {
+        render(
+            <ThemeProvider theme="light">
+                <AsideHeader
+                    compact={false}
+                    // No onMenuItemsChanged: the built-in All pages panel does not exist.
+                    menuItems={[
+                        {id: 'all-pages', title: 'Reserved', icon: Gear},
+                        {id: 'home', title: 'Home', icon: Gear, current: true},
+                    ]}
+                    renderContent={() => null}
+                />
+            </ThemeProvider>,
+        );
+
+        fireEvent.click(getRow('Reserved'));
+
+        expect(getRow('Home').className).toContain(CURRENT_CLASS);
+    });
 });
