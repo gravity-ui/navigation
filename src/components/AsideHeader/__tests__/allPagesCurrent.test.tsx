@@ -55,4 +55,37 @@ describe('current highlighting while the All pages panel is open', () => {
         expect(getRow('Home').className).toContain(CURRENT_CLASS);
         expect(getRow('All pages').className).not.toContain(CURRENT_CLASS);
     });
+
+    it('mutes the quick access row of the current item as well', () => {
+        render(
+            <ThemeProvider theme="light">
+                <AsideHeader
+                    compact={false}
+                    menuItems={[
+                        {
+                            id: 'home',
+                            title: 'Home',
+                            icon: Gear,
+                            current: true,
+                            quickAccess: true,
+                        },
+                    ]}
+                    enableQuickAccess
+                    onQuickAccessChange={jest.fn()}
+                    onMenuItemsChanged={jest.fn()}
+                    renderContent={() => null}
+                />
+            </ThemeProvider>,
+        );
+
+        // Two rows for the same item: the quick access section and the main menu.
+        const homeRows = screen.getAllByRole('button', {name: 'Home', hidden: true});
+        expect(homeRows).toHaveLength(2);
+
+        fireEvent.click(getRow('All pages'));
+
+        for (const row of screen.getAllByRole('button', {name: 'Home', hidden: true})) {
+            expect(row.className).not.toContain(CURRENT_CLASS);
+        }
+    });
 });
