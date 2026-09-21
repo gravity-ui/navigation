@@ -1,6 +1,6 @@
 import type {MenuGroup} from '../../../types';
 import {AsideHeaderItem} from '../../types';
-import {COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX} from '../CompositeBar/constants';
+import {parseGroupHeaderItemId} from '../CompositeBar/constants';
 import {
     type CompositeBarRow,
     buildCompositeBarRows,
@@ -15,14 +15,11 @@ export const ALL_PAGES_PANEL_ROW_BUILD_OPTIONS = {
 } as const;
 
 export function isCompositeBarGroupHeaderItem(item: AsideHeaderItem): boolean {
-    return item.id.startsWith(COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX);
+    return parseGroupHeaderItemId(item.id) !== undefined;
 }
 
 export function getCompositeBarHeaderGroupId(itemId: string): string | undefined {
-    if (!itemId.startsWith(COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX)) {
-        return undefined;
-    }
-    return itemId.slice(COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX.length);
+    return parseGroupHeaderItemId(itemId);
 }
 
 export function rowsToAllPagesDisplayItems(

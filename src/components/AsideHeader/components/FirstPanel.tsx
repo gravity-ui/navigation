@@ -16,9 +16,9 @@ import {CompositeBar} from './CompositeBar';
 import type {QuickAccessToggleHandler} from './CompositeBar/Item/Item.types';
 import {ScrollableWithScrollbar} from './CompositeBar/ScrollableWithScrollbar';
 import {
-    COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX,
-    COMPOSITE_BAR_GROUP_OVERFLOW_ID_PREFIX,
     COMPOSITE_BAR_ITEM_ID_ATTRIBUTE,
+    getGroupHeaderItemId,
+    getGroupOverflowItemId,
 } from './CompositeBar/constants';
 import {Header} from './Header';
 import {Panels} from './Panels';
@@ -124,8 +124,8 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         }
         for (const group of menuGroups ?? []) {
             if (group.current) {
-                ids.add(`${COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX}${group.id}`);
-                ids.add(`${COMPOSITE_BAR_GROUP_OVERFLOW_ID_PREFIX}${group.id}`);
+                ids.add(getGroupHeaderItemId(group.id));
+                ids.add(getGroupOverflowItemId(group.id));
             }
         }
         return ids.size > 0 ? ids : undefined;

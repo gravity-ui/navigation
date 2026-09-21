@@ -5,11 +5,7 @@ import {MenuGroup} from '../../../types';
 import {AsideHeaderMenuDensity, getAsideHeaderDensityConfig} from '../../density';
 import {AsideHeaderItem} from '../../types';
 
-import {
-    COLLAPSE_ITEM_ID,
-    COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX,
-    COMPOSITE_BAR_GROUP_OVERFLOW_ID_PREFIX,
-} from './constants';
+import {COLLAPSE_ITEM_ID, getGroupHeaderItemId, getGroupOverflowItemId} from './constants';
 import type {CompositeBarRow} from './grouping';
 import {isItemPresentationCurrent} from './presentationCurrent';
 
@@ -116,7 +112,7 @@ export function getMoreButtonItem(
 
 export function makeGroupHeaderAsideItem(group: MenuGroup): AsideHeaderItem {
     return {
-        id: `${COMPOSITE_BAR_GROUP_HEADER_ID_PREFIX}${group.id}`,
+        id: getGroupHeaderItemId(group.id),
         title: group.title,
         icon: group.icon,
         iconSize: group.iconSize,
@@ -132,7 +128,7 @@ function makeOverflowGroupAsideItem(
     children: AsideHeaderItem[],
 ): AsideHeaderItem {
     return {
-        id: `${COMPOSITE_BAR_GROUP_OVERFLOW_ID_PREFIX}${group.id}`,
+        id: getGroupOverflowItemId(group.id),
         title: group.title,
         icon: group.icon,
         iconSize: group.iconSize,
