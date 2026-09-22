@@ -273,11 +273,18 @@ $aside-width-transition: width $aside-width-transition-duration
         }
     }
 
-    &__aside-content_with-quick-access:not(#{$class}__aside-content_with-quick-access-items):not(
-            #{$class}__aside-content_hide-section-dividers
-        )
+    // The gap after the header divider belongs to the header itself.
+    &__aside-content_with-quick-access:not(#{$class}__aside-content_hide-section-dividers)
         &__header {
         margin-bottom: var(--_--section-divider-gap);
+    }
+
+    // Unless the quick access section starts right below the divider: its own top padding
+    // provides that gap. With above-menu content in between the padding scrolls away with
+    // the menu, so the header keeps the gap.
+    &__aside-content_with-quick-access-items:not(#{$class}__aside-content_with-above-menu)
+        &__header {
+        margin-bottom: 0;
     }
 
     &_compact &__header {
