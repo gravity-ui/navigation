@@ -320,13 +320,13 @@ describe('CompositeBar menuOverflow="scroll"', () => {
         expect(document.querySelector('[data-qa="ssh-icon"]')).toBeNull();
     });
 
-    it('applies a two-line title modifier to expanded rows', () => {
+    it('lets expanded rows size themselves without a title option', () => {
         renderBar({
-            items: [{id: 'long', title: 'A deliberately long title', titleLines: 2}],
+            items: [{id: 'long', title: 'A deliberately long title'}],
         });
 
-        expect(screen.getByText('A deliberately long title').className).toContain(
-            'title-text_lines_2',
+        expect(screen.getByRole('button', {name: 'A deliberately long title'}).className).toContain(
+            'auto-height',
         );
     });
 

@@ -13,6 +13,7 @@ export function CollapseButtonExample({
     menuDensity = 'default',
     direction = 'ltr',
     footer = 'regular',
+    accountTitle = 'Account with a longer display name',
     contentsWrapper = false,
     topAlert = false,
     below = false,
@@ -24,6 +25,7 @@ export function CollapseButtonExample({
     menuDensity?: AsideHeaderMenuDensity;
     direction?: 'ltr' | 'rtl';
     footer?: 'regular' | 'action' | 'two-line' | 'empty' | 'custom';
+    accountTitle?: string;
     contentsWrapper?: boolean;
     topAlert?: boolean;
     below?: boolean;
@@ -91,14 +93,9 @@ export function CollapseButtonExample({
                                       <FooterItem
                                           id={id}
                                           compact={compact}
-                                          title={
-                                              id === 'account'
-                                                  ? 'Account with a longer display name'
-                                                  : 'Settings'
-                                          }
+                                          title={id === 'account' ? accountTitle : 'Settings'}
                                           icon={id === 'account' ? Person : Gear}
                                           type={footer === 'action' ? 'action' : 'regular'}
-                                          titleLines={footer === 'two-line' ? 2 : 1}
                                           rightAdornment={
                                               compact ? undefined : (
                                                   <span data-qa="adornment">3</span>

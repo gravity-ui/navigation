@@ -380,7 +380,12 @@ test.describe('AsideHeader', () => {
                 throw new Error('Menu content is not visible');
             }
             expect(title.height).toBeGreaterThan(icon.height);
-            expect(Math.abs(icon.y - row.y - 4)).toBeLessThanOrEqual(1);
+            const lineHeight = await item
+                .locator('[class*="__title-text_"]')
+                .evaluate((element) => parseFloat(getComputedStyle(element).lineHeight));
+            expect(
+                Math.abs(icon.y + icon.height / 2 - title.y - lineHeight / 2),
+            ).toBeLessThanOrEqual(1);
             expect(
                 Math.abs(connector.y + connector.height / 2 - icon.y - icon.height / 2),
             ).toBeLessThanOrEqual(1);

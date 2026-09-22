@@ -12,6 +12,8 @@ import {isItemPresentationCurrent} from './presentationCurrent';
 type CompositeBarItemLayoutOptions = {
     /** Collapsed sidebar (icon-only rows): multi-line titles use the regular row height. */
     sidebarCompact?: boolean;
+    /** Actual CSS row heights, scoped to this bar and its available width. */
+    measuredHeights?: ReadonlyMap<string, number>;
 };
 
 function getRegularItemHeight(
@@ -21,9 +23,10 @@ function getRegularItemHeight(
 ) {
     const config = getAsideHeaderDensityConfig(menuDensity);
 
-    return compositeItem.titleLines === 2 && !layout?.sidebarCompact
-        ? config.twoLineItemHeight
-        : config.itemHeight;
+    return (
+        (!layout?.sidebarCompact && layout?.measuredHeights?.get(compositeItem.id)) ||
+        config.itemHeight
+    );
 }
 
 export function getItemHeight(
@@ -87,12 +90,12 @@ function getItemsMinHeight(
 ) {
     const pinnedItems = getPinnedItems(compositeItems);
     const afterMoreButtonItems = compositeItems.filter(({afterMoreButton}) => afterMoreButton);
-    const {itemHeight} = getAsideHeaderDensityConfig(menuDensity);
-
     return (
         getItemsHeight(pinnedItems, menuDensity, layout) +
         getItemsHeight(afterMoreButtonItems, menuDensity, layout) +
-        (pinnedItems.length === compositeItems.length ? 0 : itemHeight)
+        (pinnedItems.length === compositeItems.length
+            ? 0
+            : getItemHeight(getMoreButtonItem(undefined, menuDensity), menuDensity, layout))
     );
 }
 

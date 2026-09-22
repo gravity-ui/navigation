@@ -12,7 +12,6 @@ export type AsideHeaderMenuDensity = 'default' | 'compact';
 
 interface AsideHeaderDensityConfig {
     itemHeight: number;
-    twoLineItemHeight: number;
     actionSize: number;
     actionItemHeight: number;
     iconSize: number;
@@ -30,7 +29,6 @@ interface AsideHeaderDensityConfig {
 const ASIDE_HEADER_DENSITY_CONFIG: Record<AsideHeaderMenuDensity, AsideHeaderDensityConfig> = {
     default: {
         itemHeight: ITEM_HEIGHT,
-        twoLineItemHeight: 56,
         actionSize: 36,
         actionItemHeight: 50,
         iconSize: ASIDE_HEADER_ICON_SIZE,
@@ -46,7 +44,6 @@ const ASIDE_HEADER_DENSITY_CONFIG: Record<AsideHeaderMenuDensity, AsideHeaderDen
     },
     compact: {
         itemHeight: 32,
-        twoLineItemHeight: 45,
         actionSize: 32,
         actionItemHeight: 46,
         iconSize: 16,
