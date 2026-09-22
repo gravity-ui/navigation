@@ -237,3 +237,46 @@ for (const theme of ['light', 'dark'] as const) {
         });
     }
 }
+
+for (const compact of [false, true]) {
+    test(`above menu content keeps the header gap with quick access items: compact=${compact}`, async ({
+        mount,
+        page,
+    }) => {
+        const makeProps = (pinnedCount: number) => ({
+            compact,
+            compactTransition: false,
+            headerDecoration: true,
+            enableQuickAccess: true,
+            onQuickAccessChange: () => {},
+            logo: {text: 'Logo'},
+            menuOverflow: 'scroll' as const,
+            menuItems: Array.from({length: 10}, (_, i) => ({
+                id: String(i),
+                title: `Item ${i}`,
+                icon: Gear,
+                quickAccess: i < pinnedCount,
+            })),
+            aboveMenuContent: <div data-qa="above-menu">Above menu</div>,
+            renderFooter: () => <div>Footer</div>,
+        });
+        const component = await mount(<AsideHeader {...makeProps(0)} />, undefined, {
+            width: 1000,
+            height: 600,
+        });
+        const headerGap = () =>
+            page.locator('[data-qa="above-menu"]').evaluate((el) => {
+                const header = el.previousElementSibling as HTMLElement;
+                return Math.round(
+                    el.getBoundingClientRect().top - header.getBoundingClientRect().bottom,
+                );
+            });
+        const gapWithoutQuickAccessItems = await headerGap();
+        expect(gapWithoutQuickAccessItems).toBeGreaterThan(0);
+        await component.update(<AsideHeader {...makeProps(2)} />);
+        await expect(page.locator('[data-gn-aside-divider="quick-access"]')).toHaveCount(1);
+        // Pinning items moves the section gap into the quick access block, which scrolls
+        // below the fixed above-menu content. The header must keep providing its own gap.
+        await expect.poll(headerGap).toBe(gapWithoutQuickAccessItems);
+    });
+}

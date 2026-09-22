@@ -280,6 +280,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         'hide-section-dividers': hideSectionDividers,
                         'with-quick-access': quickAccessEnabled,
                         'with-quick-access-items': quickAccessEnabled && hasQuickAccessItems,
+                        'with-above-menu': Boolean(aboveMenuContent),
                     })}
                 >
                     <Header />
