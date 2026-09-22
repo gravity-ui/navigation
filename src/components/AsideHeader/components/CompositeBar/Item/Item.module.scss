@@ -378,8 +378,18 @@ $floating-surface-box-shadow-label:
 
     // The text determines the height. No line-count state or fixed two-line height.
     &_auto-height {
-        --_--item-padding-block: max(var(--g-spacing-1), (var(--_--item-min-height) - 1lh) / 2);
-        --_--menu-group-tree-connector-hook-inset-block: calc(var(--_--item-padding-block) + 0.5lh);
+        --_--item-line-height: var(--g-text-body-1-line-height);
+        --_--item-padding-block: max(
+            var(--g-spacing-1),
+            (var(--_--item-min-height) - var(--_--item-line-height)) / 2
+        );
+        --_--menu-group-tree-connector-hook-inset-block: calc(
+            var(--_--item-padding-block) + var(--_--item-line-height) / 2
+        );
+
+        @supports (height: 1lh) {
+            --_--item-line-height: 1lh;
+        }
 
         box-sizing: border-box;
         height: auto;
@@ -388,7 +398,7 @@ $floating-surface-box-shadow-label:
 
         #{$class}__icon-place {
             align-self: flex-start;
-            height: 1lh;
+            height: var(--_--item-line-height);
         }
 
         #{$class}__title-text {

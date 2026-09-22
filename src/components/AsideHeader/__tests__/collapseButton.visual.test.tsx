@@ -320,19 +320,20 @@ for (const kind of ['all-pages', 'custom'] as const) {
 
 const footerMeasurementCases = [
     {footer: 'action', menuDensity: 'default'},
-    {footer: 'two-line', menuDensity: 'default'},
+    {footer: 'regular', menuDensity: 'default'},
     {footer: 'empty', menuDensity: 'default'},
     {footer: 'custom', menuDensity: 'default'},
-    {footer: 'two-line', menuDensity: 'compact'},
+    {footer: 'regular', menuDensity: 'compact'},
 ] as const;
 
 for (const {footer, menuDensity} of footerMeasurementCases) {
     test(`collapse button measures ${footer} footer ${menuDensity}`, async ({mount, page}) => {
-        const withFooterItems = footer === 'action' || footer === 'two-line';
+        const withFooterItems = footer === 'action' || footer === 'regular';
         await page.setViewportSize(viewport);
         await mount(
             <CollapseButtonExample
                 {...{menuDensity, footer}}
+                accountTitle="Account with a longer display name"
                 initialCompact={false}
                 below
                 topAlert
@@ -467,7 +468,8 @@ for (const direction of ['ltr', 'rtl'] as const) {
             <CollapseButtonExample
                 direction={direction}
                 initialCompact={false}
-                footer="two-line"
+                footer="regular"
+                accountTitle="Account with a longer display name"
                 movingFooter
             />,
             undefined,

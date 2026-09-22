@@ -185,6 +185,88 @@ test('automatic title is stable at fractional wrap boundaries and follows typogr
     await expectIconAtFirstLine(long);
 });
 
+test('More preserves its trigger, popup and keyboard focus when menu objects are recreated', async ({
+    mount,
+    page,
+}) => {
+    const component = await mount(
+        <AutomaticTitleExample menuOverflow="collapse" height={100} recreateItems />,
+    );
+    const menu = page.getByTestId('menu');
+    const more = menu.getByRole('button', {name: 'More', exact: true});
+    await expect(more).toBeVisible();
+    await expect(row(menu, 'long')).toHaveCount(0);
+    await more.hover();
+    await more.focus();
+    const popupItem = row(page.locator('.g-popup'), 'long');
+    await expect(popupItem).toBeVisible();
+    const triggerNode = await more.elementHandle();
+    const popupNode = await popupItem.elementHandle();
+    if (!triggerNode || !popupNode) throw new Error('Missing More popup');
+
+    for (const focused of [more, popupItem]) {
+        await focused.focus();
+        for (let i = 0; i < 3; i++) {
+            // A parent update without moving focus to the fixture control.
+            await page
+                .getByRole('button', {name: /Rerender parent/})
+                .evaluate((node) => node.click());
+            await expect(focused).toBeFocused();
+            await expect(popupItem).toBeVisible();
+            expect(await triggerNode.evaluate((node) => node.isConnected)).toBe(true);
+            expect(await popupNode.evaluate((node) => node.isConnected)).toBe(true);
+        }
+    }
+
+    // The same id must be remeasured when its rich title changes while hidden in More.
+    await component.update(
+        <AutomaticTitleExample
+            menuOverflow="collapse"
+            height={100}
+            recreateItems
+            title="Monitoring"
+        />,
+    );
+    await expect(row(menu, 'long')).toBeVisible();
+    await expect(row(menu, 'last')).toBeVisible();
+    await expect(more).toHaveCount(0);
+});
+
+test('automatic title has a UIKit line-height fallback without lh support', async ({
+    mount,
+    page,
+}) => {
+    await mount(<AutomaticTitleExample grouped />);
+    const removed = await page.evaluate(() => {
+        let count = 0;
+        const removeLhSupport = (sheet: CSSStyleSheet | CSSGroupingRule) => {
+            for (let i = sheet.cssRules.length - 1; i >= 0; i--) {
+                const rule = sheet.cssRules[i];
+                if (rule instanceof CSSSupportsRule && rule.conditionText.includes('1lh')) {
+                    sheet.deleteRule(i);
+                    count++;
+                } else if (rule instanceof CSSGroupingRule) {
+                    removeLhSupport(rule);
+                }
+            }
+        };
+        for (const sheet of document.styleSheets) removeLhSupport(sheet);
+        return count;
+    });
+    expect(removed).toBeGreaterThan(0);
+    const menu = page.getByTestId('menu');
+    const long = row(menu, 'long');
+    await expect.poll(() => lines(long)).toBe(2);
+    await expectIconAtFirstLine(row(menu, 'short'));
+    await expectIconAtFirstLine(long);
+    await long.evaluate((node) => {
+        node.style.setProperty('--g-text-body-1-line-height', '28px');
+        node.style.setProperty('line-height', 'var(--g-text-body-1-line-height)');
+    });
+    await expectIconAtFirstLine(long);
+    expect(await height(long)).toBeGreaterThanOrEqual(64);
+});
+
 test('automatic title reserves adornments and the group chevron with rich text', async ({
     mount,
     page,

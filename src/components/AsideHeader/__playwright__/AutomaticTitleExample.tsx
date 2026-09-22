@@ -19,6 +19,7 @@ export function AutomaticTitleExample({
     quickAccess = false,
     adornment = false,
     groupTitle = 'Group',
+    recreateItems = false,
 }: {
     width?: number;
     height?: number;
@@ -30,7 +31,9 @@ export function AutomaticTitleExample({
     quickAccess?: boolean;
     adornment?: boolean;
     groupTitle?: string;
+    recreateItems?: boolean;
 }) {
+    const [renderVersion, setRenderVersion] = React.useState(0);
     const items = React.useMemo<AsideHeaderItem[]>(
         () => [
             {id: 'short', title: 'Overview', icon: Gear, pinned: true},
@@ -46,6 +49,9 @@ export function AutomaticTitleExample({
         [title, grouped, adornment],
     );
     const onToggleQuickAccess = () => {};
+    const renderedItems = recreateItems
+        ? items.map((item) => ({...item, title: <span>{item.title}</span>, onItemClick: () => {}}))
+        : items;
     return (
         <React.StrictMode>
             <AsideHeaderContextProvider
@@ -71,7 +77,7 @@ export function AutomaticTitleExample({
                         <CompositeBar
                             type="menu"
                             compact={compact}
-                            items={items}
+                            items={renderedItems}
                             menuOverflow={menuOverflow}
                             menuMoreTitle="More"
                             menuGroups={
@@ -84,6 +90,11 @@ export function AutomaticTitleExample({
                         />
                     </div>
                     <FooterItem id="footer" title={title} icon={Gear} compact={compact} />
+                    {recreateItems && (
+                        <button onClick={() => setRenderVersion((value) => value + 1)}>
+                            Rerender parent {renderVersion}
+                        </button>
+                    )}
                 </div>
             </AsideHeaderContextProvider>
         </React.StrictMode>

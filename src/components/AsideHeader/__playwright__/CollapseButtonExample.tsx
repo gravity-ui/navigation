@@ -24,7 +24,7 @@ export function CollapseButtonExample({
     initialCompact?: boolean;
     menuDensity?: AsideHeaderMenuDensity;
     direction?: 'ltr' | 'rtl';
-    footer?: 'regular' | 'action' | 'two-line' | 'empty' | 'custom';
+    footer?: 'regular' | 'action' | 'empty' | 'custom';
     accountTitle?: string;
     contentsWrapper?: boolean;
     topAlert?: boolean;

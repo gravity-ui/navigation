@@ -107,10 +107,6 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     const ref = useRef<List<CompositeBarRow>>(null);
     const {menuDensity} = useAsideHeaderContext();
     const hideNestedIcons = !menuGroupNestedIcons;
-    const itemLayout = useMemo(
-        () => (compact ? {sidebarCompact: true as const} : undefined),
-        [compact],
-    );
 
     const onMouseLeave = useCallback(() => {
         if (compact && document.hasFocus()) {
@@ -155,19 +151,15 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     const itemHeight = useCallback(
         (row: CompositeBarRow) => {
             if (row.kind === 'item') {
-                return getItemHeight(row.item, menuDensity, itemLayout);
+                return getItemHeight(row.item, menuDensity);
             }
-            const headerH = getItemHeight(
-                makeGroupHeaderAsideItem(row.group),
-                menuDensity,
-                itemLayout,
-            );
+            const headerH = getItemHeight(makeGroupHeaderAsideItem(row.group), menuDensity);
             if (!inlineGroupChildren || isGroupCollapsed(row.group.id)) {
                 return headerH;
             }
-            return headerH + getItemsHeight(row.items, menuDensity, itemLayout);
+            return headerH + getItemsHeight(row.items, menuDensity);
         },
-        [inlineGroupChildren, isGroupCollapsed, itemLayout, menuDensity],
+        [inlineGroupChildren, isGroupCollapsed, menuDensity],
     );
 
     const itemsHeight = useCallback(
@@ -423,13 +415,43 @@ export const CompositeBar: FC<CompositeBarProps> = ({
 }) => {
     const rows = useMemo(() => buildCompositeBarRows(items, menuGroups), [items, menuGroups]);
     const {menuDensity} = useAsideHeaderContext();
+    const hasQuickAccessHandler = Boolean(onToggleQuickAccess);
     const measurementScope = useMemo(
-        () => ({rows, compact, menuDensity, enableQuickAccessPin, menuItemClassName, layoutWidth}),
-        [rows, compact, menuDensity, enableQuickAccessPin, menuItemClassName, layoutWidth],
+        () => ({
+            compact,
+            menuDensity,
+            enableQuickAccessPin,
+            hasQuickAccessHandler,
+            menuItemClassName,
+            layoutWidth,
+        }),
+        [
+            compact,
+            menuDensity,
+            enableQuickAccessPin,
+            hasQuickAccessHandler,
+            menuItemClassName,
+            layoutWidth,
+        ],
+    );
+    const measurementItems = useMemo(
+        () => [
+            ...rows.map((row) =>
+                row.kind === 'item'
+                    ? row.item
+                    : {
+                          ...makeGroupHeaderAsideItem(row.group),
+                          compositeBarMenuPopupItems: row.items,
+                      },
+            ),
+            getMoreButtonItem(menuMoreTitle, menuDensity),
+        ],
+        [rows, menuMoreTitle, menuDensity],
     );
     const {ref: measurementRef, heights} = useMeasuredRowHeights(
+        measurementItems,
         measurementScope,
-        type === 'menu' && menuOverflow === 'collapse' && !compact,
+        type === 'menu' && menuOverflow === 'collapse' && !compact && rows.length > 0,
     );
 
     const isCollapsedControlled = collapsedMenuGroupIdsProp !== undefined;
