@@ -80,22 +80,8 @@ function shouldShowChevron({
     return !compact && hasPopupItems;
 }
 
-function getExpandedTitleLines({
-    type,
-    compact,
-    menuPopupRow,
-    titleLines,
-}: {
-    type: string;
-    compact?: boolean;
-    menuPopupRow?: boolean;
-    titleLines?: ItemInnerProps['titleLines'];
-}) {
-    if (type !== ITEM_TYPE_REGULAR || compact || menuPopupRow) {
-        return 1;
-    }
-
-    return titleLines;
+function hasAutomaticHeight(type: string, compact?: boolean, menuPopupRow?: boolean) {
+    return type === ITEM_TYPE_REGULAR && !compact && !menuPopupRow;
 }
 
 function shouldShowQuickAccessPin({
@@ -307,13 +293,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         );
     }
 
-    const expandedTitleLines = getExpandedTitleLines({
-        type,
-        compact,
-        menuPopupRow,
-        titleLines: props.titleLines,
-    });
-
     const makeIconNode = (iconEl: React.ReactNode, withCompactPopover = true): React.ReactNode => {
         if (!compact) {
             return iconEl;
@@ -367,6 +346,8 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const resolvedAriaLabel = resolveItemAriaLabel(menuItemAriaProps, ariaLabel);
     const showSurface = !menuPopupRow && [ITEM_TYPE_REGULAR, 'action'].includes(type);
 
+    const autoHeight = hasAutomaticHeight(type, compact, menuPopupRow);
+
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
         const wrappedByItemWrapper = typeof itemWrapper === 'function';
         const showChevron = shouldShowChevron({
@@ -387,7 +368,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 'menu-group-nested': menuGroupNested,
                 'menu-popup-row': menuPopupRow,
                 'with-quick-access-pin': showQuickAccessPin,
-                'title-lines': expandedTitleLines?.toString(),
+                'auto-height': autoHeight,
                 'with-chevron-control': Boolean(chevronClick),
             },
             chevronClick ? undefined : className,
@@ -610,7 +591,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const titleNode = renderItemTitle({
         title,
         rightAdornment,
-        titleLines: expandedTitleLines,
     });
     const params = {icon: iconNode, title: titleNode};
     let highlightedNode = null;

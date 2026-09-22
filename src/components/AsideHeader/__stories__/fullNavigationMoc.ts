@@ -68,7 +68,6 @@ export const fullNavigationMenuItems: AsideHeaderItem[] = [
     {
         id: 'analytics-dashboards',
         title: 'Weekly operational performance',
-        titleLines: 2,
         icon: LayoutHeaderCellsLarge,
         groupId: 'analytics',
         category: 'Analytics',

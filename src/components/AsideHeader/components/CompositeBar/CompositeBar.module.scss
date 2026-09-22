@@ -50,6 +50,22 @@ $menu-group-tree-connector-width: 16px;
         flex: none;
     }
 
+    // UIKit's non-virtualized List supports intrinsic row sizing. Release its
+    // content wrapper too, so nested lists and pin/chevron wrappers can grow.
+    &_auto-height &__root-menu-item > :global(.g-list__item-content),
+    &_auto-height &__menu-group-nested-list-item > :global(.g-list__item-content) {
+        height: auto;
+        min-width: 0;
+    }
+
+    &__item-row {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        width: 100%;
+        height: 100%;
+    }
+
     &__menu-group {
         display: flex;
         flex-direction: column;
@@ -101,19 +117,33 @@ $menu-group-tree-connector-width: 16px;
     }
 
     // Keep both spine colors inside the item stacking context, through the row gap.
-    &__menu-group-nested-list-item:not(:last-child) &__menu-group-nested-connector::after {
+    &__menu-group-nested-connector::after {
         content: '';
         position: absolute;
         inset-inline-start: calc(50% - var(--_--menu-group-tree-line-width) / 2);
         top: 0;
-        bottom: calc(-1 * var(--_--menu-item-gap));
+        // The last row still needs a stem above its elbow when typography shifts it down.
+        bottom: calc(100% - var(--_--menu-group-tree-hook-top));
         width: var(--_--menu-group-tree-line-width);
         background: var(--gn-aside-header-menu-group-tree-line-color, #c1c3c7);
         pointer-events: none;
         z-index: -1;
     }
 
+    &__menu-group-nested-list-item:not(:last-child) &__menu-group-nested-connector::after {
+        bottom: calc(-1 * var(--_--menu-item-gap));
+    }
+
     &__menu-group-nested-connector {
+        --_--menu-group-tree-hook-top: max(
+            0px,
+            var(--_--menu-group-tree-connector-hook-inset-block, 50%) - var(
+                    --_--gn-aside-header-density-item-height,
+                    #{variables.$item-height}
+                ) /
+                2
+        );
+
         position: relative;
         width: $menu-group-tree-connector-width;
         box-sizing: content-box;
@@ -123,7 +153,8 @@ $menu-group-tree-connector-width: 16px;
         isolation: isolate;
 
         // Active color overlays the row-level spine; the elbow itself is rendered by SVG.
-        &_spine-active::before {
+        &_spine-active::before,
+        &_active::before {
             content: '';
             position: absolute;
             inset-inline-start: calc(50% - var(--_--menu-group-tree-line-width) / 2);
@@ -137,19 +168,18 @@ $menu-group-tree-connector-width: 16px;
             pointer-events: none;
             z-index: 1;
         }
+
+        // On the selected row, only the stem leading into its elbow is active.
+        &_active::before {
+            bottom: calc(100% - var(--_--menu-group-tree-hook-top));
+        }
     }
 
     &__menu-group-nested-tree-svg {
         fill: none;
         position: absolute;
         inset-inline-start: 0;
-        inset-block-start: calc(
-            var(--_--menu-group-tree-connector-hook-inset-block, 50%) - var(
-                    --_--gn-aside-header-density-item-height,
-                    #{variables.$item-height}
-                ) /
-                2
-        );
+        inset-block-start: var(--_--menu-group-tree-hook-top);
         display: block;
         flex-shrink: 0;
         min-width: $menu-group-tree-connector-width;
@@ -172,6 +202,8 @@ $menu-group-tree-connector-width: 16px;
     }
 
     &__menu-group-nested-row-inner {
+        display: flex;
+        align-items: center;
         width: 100%;
         min-width: 0;
         height: 100%;

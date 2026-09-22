@@ -320,19 +320,20 @@ for (const kind of ['all-pages', 'custom'] as const) {
 
 const footerMeasurementCases = [
     {footer: 'action', menuDensity: 'default'},
-    {footer: 'two-line', menuDensity: 'default'},
+    {footer: 'regular', menuDensity: 'default'},
     {footer: 'empty', menuDensity: 'default'},
     {footer: 'custom', menuDensity: 'default'},
-    {footer: 'two-line', menuDensity: 'compact'},
+    {footer: 'regular', menuDensity: 'compact'},
 ] as const;
 
 for (const {footer, menuDensity} of footerMeasurementCases) {
     test(`collapse button measures ${footer} footer ${menuDensity}`, async ({mount, page}) => {
-        const withFooterItems = footer === 'action' || footer === 'two-line';
+        const withFooterItems = footer === 'action' || footer === 'regular';
         await page.setViewportSize(viewport);
         await mount(
             <CollapseButtonExample
                 {...{menuDensity, footer}}
+                accountTitle="Account with a longer display name"
                 initialCompact={false}
                 below
                 topAlert
@@ -400,7 +401,7 @@ for (const {footer, menuDensity} of footerMeasurementCases) {
 test('footer density height is independent from menu height (regular)', async ({mount, page}) => {
     await page.setViewportSize(viewport);
     await mount(
-        <CollapseButtonExample footer="regular" initialCompact={false} />,
+        <CollapseButtonExample footer="regular" initialCompact={false} accountTitle="Account" />,
         undefined,
         viewport,
     );
@@ -415,14 +416,13 @@ test('footer density height is independent from menu height (regular)', async ({
     await expect(page.getByRole('button', {name: 'Home', exact: true})).toHaveCSS('height', '40px');
 });
 
-test('collapse button follows reordered and hidden rows without resizing footer', async ({
+test('collapse button follows reordered and hidden rows with automatic heights', async ({
     mount,
     page,
 }) => {
     await page.setViewportSize(viewport);
     await mount(<CollapseButtonExample initialCompact={false} below />, undefined, viewport);
     await finishAnimations(page);
-    const initial = await geometry(page);
     await expect(page.locator(anchorSelector)).toHaveAttribute(
         'data-gn-composite-bar-item-id',
         'account',
@@ -432,7 +432,18 @@ test('collapse button follows reordered and hidden rows without resizing footer'
         'data-gn-composite-bar-item-id',
         'settings',
     );
-    expect((await geometry(page)).button.y).toBe(initial.button.y);
+    await expect
+        .poll(async () => {
+            const current = await geometry(page);
+            if (!current.anchor) throw new Error('Missing replacement anchor');
+            return (
+                current.button.y +
+                current.button.height / 2 -
+                current.anchor.y -
+                current.anchor.height / 2
+            );
+        })
+        .toBeCloseTo(0, 1);
     await page.getByRole('button', {name: 'Reverse footer'}).click();
     await page.getByRole('button', {name: 'Hide account'}).click();
     await expect(page.locator(anchorSelector)).toHaveAttribute(
@@ -457,7 +468,8 @@ for (const direction of ['ltr', 'rtl'] as const) {
             <CollapseButtonExample
                 direction={direction}
                 initialCompact={false}
-                footer="two-line"
+                footer="regular"
+                accountTitle="Account with a longer display name"
                 movingFooter
             />,
             undefined,

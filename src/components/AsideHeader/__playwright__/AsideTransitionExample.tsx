@@ -35,7 +35,6 @@ export function AsideTransitionExample({
                 {
                     id: 'long',
                     title: 'A long menu title on two lines',
-                    titleLines: 2,
                     icon: Gear,
                     current: true,
                     pinned: true,

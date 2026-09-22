@@ -240,11 +240,13 @@ describe('ItemPopup', () => {
 
     it('forces a two-line menu item to one line inside the popup', () => {
         renderItemPopup({
-            items: [{id: 'item1', title: 'Long popup title', titleLines: 2}],
+            items: [{id: 'item1', title: 'Long popup title'}],
             open: true,
         });
 
-        expect(screen.getByText('Long popup title').className).not.toContain('title-text_lines_2');
+        expect(screen.getByRole('button', {name: 'Long popup title'}).className).not.toContain(
+            'auto-height',
+        );
     });
 
     it.each([

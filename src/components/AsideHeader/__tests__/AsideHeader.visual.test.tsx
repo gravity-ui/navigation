@@ -380,7 +380,12 @@ test.describe('AsideHeader', () => {
                 throw new Error('Menu content is not visible');
             }
             expect(title.height).toBeGreaterThan(icon.height);
-            expect(Math.abs(icon.y - row.y - 4)).toBeLessThanOrEqual(1);
+            const lineHeight = await item
+                .locator('[class*="__title-text_"]')
+                .evaluate((element) => parseFloat(getComputedStyle(element).lineHeight));
+            expect(
+                Math.abs(icon.y + icon.height / 2 - title.y - lineHeight / 2),
+            ).toBeLessThanOrEqual(1);
             expect(
                 Math.abs(connector.y + connector.height / 2 - icon.y - icon.height / 2),
             ).toBeLessThanOrEqual(1);
@@ -433,9 +438,17 @@ test.describe('AsideHeader', () => {
             .locator('[class*="__menu-group-nested-connector_"]')
             .evaluate((element) => Number.parseFloat(getComputedStyle(element, '::after').height));
 
-        expect(itemBox?.height).toBe(44);
-        expect(titleBox?.height).toBe(itemBox?.height);
-        expect(spineHeight).toBe(45);
+        if (!itemBox || !titleBox) throw new Error('Missing nested item geometry');
+        const lineHeight = await nestedItem.evaluate((element) =>
+            Number.parseFloat(getComputedStyle(element).lineHeight),
+        );
+        expect(titleBox.height).toBe(2 * lineHeight);
+        expect(itemBox.height).toBeGreaterThan(titleBox.height);
+        expect(titleBox.y - itemBox.y).toBeCloseTo(
+            itemBox.y + itemBox.height - titleBox.y - titleBox.height,
+            1,
+        );
+        expect(spineHeight).toBe(itemBox.height + 1);
         expect(
             itemBox && previousItemBox ? itemBox.y - previousItemBox.y - previousItemBox.height : 0,
         ).toBe(1);

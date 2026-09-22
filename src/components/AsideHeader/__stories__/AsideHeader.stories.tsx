@@ -67,6 +67,72 @@ CompactDensityCollapsed.args = {
     hideCollapseButton: true,
 };
 
+export const AutomaticTitles: StoryFn<AsideHeaderProps> = (args) => {
+    const [compact, setCompact] = React.useState(false);
+    const [russian, setRussian] = React.useState(true);
+    const [quickAccess, setQuickAccess] = React.useState<Record<string, boolean>>({
+        synthetics: true,
+    });
+    return (
+        <AsideHeader
+            {...args}
+            compact={compact}
+            onChangeCompact={setCompact}
+            logo={DEFAULT_LOGO}
+            enableQuickAccess
+            onQuickAccessChange={(item, pinned) =>
+                setQuickAccess((previous) => ({...previous, [item.id]: pinned}))
+            }
+            menuGroups={[
+                {id: 'monitoring', title: russian ? 'Мониторинг' : 'Monitoring', icon: Gear},
+            ]}
+            menuItems={[
+                {
+                    id: 'overview',
+                    title: russian ? 'Обзор' : 'Overview',
+                    icon: Gear,
+                    current: true,
+                    quickAccess: quickAccess.overview,
+                },
+                {
+                    id: 'synthetics',
+                    title: russian ? 'Синтетический мониторинг' : 'Synthetic monitoring',
+                    icon: Gear,
+                    groupId: 'monitoring',
+                    quickAccess: quickAccess.synthetics,
+                },
+                {
+                    id: 'notifications',
+                    quickAccess: quickAccess.notifications,
+                    title: russian ? 'Способы уведомления' : 'Notification methods',
+                    icon: Gear,
+                    groupId: 'monitoring',
+                },
+                {
+                    id: 'long',
+                    quickAccess: quickAccess.long,
+                    title: russian
+                        ? 'Очень длинное название раздела, которое не помещается даже в две строки'
+                        : 'A very long section title that does not fit even on two lines',
+                    icon: Gear,
+                    groupId: 'monitoring',
+                },
+            ]}
+            renderContent={() => (
+                <Flex gap="2" className={spacing({p: 5})}>
+                    <Button selected={russian} onClick={() => setRussian(true)}>
+                        Русский
+                    </Button>
+                    <Button selected={!russian} onClick={() => setRussian(false)}>
+                        English
+                    </Button>
+                </Flex>
+            )}
+        />
+    );
+};
+AutomaticTitles.args = {menuDensity: 'compact', menuOverflow: 'scroll'};
+
 const CustomThemeTemplate: StoryFn = (args) => (
     <React.Fragment>
         <style>

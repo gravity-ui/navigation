@@ -32,19 +32,21 @@ describe('CompositeBar utils', () => {
             expect(getItemHeight(divider, 'compact')).toBe(15);
         });
 
-        it('uses the two-line height only in an expanded sidebar row', () => {
-            const item: AsideHeaderItem = {id: 'two-lines', title: 'Two lines', titleLines: 2};
+        it('uses measured heights for overflow, but keeps icon-only rows fixed', () => {
+            const item: AsideHeaderItem = {id: 'long', title: 'Long title'};
+            const measuredHeights = new Map([['long', 57.5]]);
 
-            expect(getItemHeight(item)).toBe(56);
-            expect(getItemHeight(item, 'compact')).toBe(45);
-            expect(getItemHeight(item, 'default', {sidebarCompact: true})).toBe(40);
-            expect(getItemHeight(item, 'compact', {sidebarCompact: true})).toBe(32);
+            expect(getItemHeight(item, 'default', {measuredHeights})).toBe(57.5);
+            expect(getItemHeight(item, 'compact', {measuredHeights})).toBe(57.5);
+            expect(getItemHeight(item, 'compact', {measuredHeights, sidebarCompact: true})).toBe(
+                32,
+            );
         });
     });
 
     describe('getPopupItemHeight', () => {
         it('returns POPUP_REGULAR_ITEM_HEIGHT for regular items', () => {
-            const item: AsideHeaderItem = {id: 'r', title: 'Regular', titleLines: 2};
+            const item: AsideHeaderItem = {id: 'r', title: 'Regular'};
             expect(getPopupItemHeight(item)).toBe(POPUP_REGULAR_ITEM_HEIGHT);
         });
 

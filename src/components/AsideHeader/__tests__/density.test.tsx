@@ -26,7 +26,6 @@ describe('AsideHeader menu density', () => {
     it('keeps the current metrics in default density', () => {
         expect(getAsideHeaderDensityConfig()).toEqual({
             itemHeight: 40,
-            twoLineItemHeight: 56,
             actionSize: 36,
             actionItemHeight: 50,
             iconSize: 18,
@@ -45,7 +44,6 @@ describe('AsideHeader menu density', () => {
     it('provides compact density metrics', () => {
         expect(getAsideHeaderDensityConfig('compact')).toEqual({
             itemHeight: 32,
-            twoLineItemHeight: 45,
             actionSize: 32,
             actionItemHeight: 46,
             iconSize: 16,

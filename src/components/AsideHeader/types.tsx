@@ -163,12 +163,6 @@ export interface AsideHeaderItem extends MenuItem {
      */
     quickAccess?: boolean;
     /**
-     * Maximum number of title lines in the expanded sidebar.
-     * Collapsed (icon-only) sidebar and popup rows always use one line.
-     * When omitted, the legacy two-line clamp is preserved.
-     */
-    titleLines?: 1 | 2;
-    /**
      * @internal CompositeBar: group children rendered from the "More" overflow popover.
      */
     compositeBarMenuPopupItems?: AsideHeaderItem[];

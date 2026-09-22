@@ -471,10 +471,13 @@ Optional configuration for the **All pages** panel (drag-and-drop, pins, reset).
 
 ### `AsideHeaderItem`
 
-`titleLines?: 1 | 2` controls the maximum title lines in the expanded sidebar. When omitted, the
-legacy two-line clamp is preserved.
-Compact sidebar and popup rows always use one line. A two-line row is included in menu overflow
-measurements, so it does not overlap the footer or incorrectly move neighboring items under More.
+In the expanded sidebar, titles automatically use one or two lines according to the available width.
+Short titles keep the regular row height; longer titles wrap and increase it. Text beyond the second
+line is truncated with an ellipsis. This adapts to locale, width and font changes, including nested
+items, group headers, quick access and `FooterItem`. Icons and tree elbows align with the center of
+the first text line. The collapsed sidebar keeps fixed-height icons;
+popup rows remain single-line. More overflow uses the actual row heights. No line-count option is
+needed: when migrating from a v7 prerelease, remove `titleLines` from your menu data.
 
 | Name                   | Description                                                                                                                                                                                      |                                                                         Type                                                                         |             Default             |
 | :--------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------: |
@@ -496,7 +499,6 @@ measurements, so it does not overlap the footer or incorrectly move neighboring 
 | quickAccess            | Renders an eligible leaf item in the quick-access section when `enableQuickAccess` is enabled. This is independent from the All pages `pinned` flag.                                             |                                                                      `boolean`                                                                       |             `false`             |
 | rightAdornment         | Customize right side of the menu item                                                                                                                                                            |                                                                  `React.ReactNode`                                                                   |                                 |
 | title                  | The menu item title                                                                                                                                                                              |                                                                  `React.ReactNode`                                                                   |                                 |
-| titleLines             | Maximum title lines in the expanded sidebar. Collapsed (icon-only) sidebar and popup rows always use one line.                                                                                   |                                                                       `1 \| 2`                                                                       |               `2`               |
 | tooltipText            | Tooltip content                                                                                                                                                                                  |                                                                  `React.ReactNode`                                                                   |                                 |
 | type                   | The menu item type changes appearance: `"regular"`, `"action"`, `"divider"`                                                                                                                      |                                                                       `string`                                                                       |           `"regular"`           |
 | qa                     | The value to be passed to `data-qa` attribute                                                                                                                                                    |                                                                       `string`                                                                       |                                 |

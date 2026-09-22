@@ -37,6 +37,7 @@ $floating-surface-box-shadow-label:
     @include mixins.accessibility-button;
 
     $class: &;
+    --_--item-min-height: var(--_--gn-aside-header-density-item-height, #{variables.$item-height});
     --gn-composite-bar-item-action-size: var(--_--gn-aside-header-density-action-size, 36px);
     --_--item-expanded-radius: var(
         --_--gn-aside-header-density-item-expanded-radius,
@@ -74,10 +75,12 @@ $floating-surface-box-shadow-label:
     margin-inline: auto;
 
     &:global(.#{variables.$ns}footer-item)#{$class}_type_regular {
-        height: var(
+        height: auto;
+        --_--item-min-height: var(
             --_--gn-aside-header-density-footer-item-height,
             #{variables.$compact-item-height}
         );
+        min-height: var(--_--item-min-height);
         --gn-aside-header-item-icon-background-size: var(
             --_--gn-aside-header-density-footer-item-height,
             #{variables.$compact-item-height}
@@ -85,7 +88,7 @@ $floating-surface-box-shadow-label:
     }
 
     &:global(.#{variables.$ns}footer-item_regular-size)#{$class}_type_regular {
-        height: #{variables.$item-height};
+        --_--item-min-height: #{variables.$item-height};
         --gn-aside-header-item-icon-background-size: 38px;
     }
 
@@ -188,6 +191,8 @@ $floating-surface-box-shadow-label:
     &__title {
         display: flex;
         align-items: center;
+        flex: 1 1 auto;
+        min-width: 0;
         overflow: hidden;
         margin: 0 var(--_--gn-aside-header-density-item-title-gap-end, var(--g-spacing-4)) 0
             var(--_--gn-aside-header-density-item-title-gap, var(--g-spacing-2));
@@ -200,6 +205,8 @@ $floating-surface-box-shadow-label:
         -webkit-line-clamp: 1;
         line-clamp: 1;
         overflow: hidden;
+        min-width: 0;
+        overflow-wrap: anywhere;
         text-align: start;
 
         color: var(--gn-aside-header-item-text-color, var(--_--item-text-color));
@@ -210,15 +217,10 @@ $floating-surface-box-shadow-label:
                 var(--_--item-selected-text-color)
             );
         }
-
-        &_lines_2 {
-            /* NOTE @vladimir-kuba: 2 lines fit in the dedicated two-line row height. */
-            -webkit-line-clamp: 2;
-            line-clamp: 2;
-        }
     }
 
     &__title-adornment {
+        flex-shrink: 0;
         margin: 0 10px;
     }
 
@@ -374,16 +376,35 @@ $floating-surface-box-shadow-label:
         }
     }
 
-    &_title-lines_2 {
-        #{$class}__icon-place {
-            align-self: flex-start;
-            align-items: flex-start;
+    // The text determines the height. No line-count state or fixed two-line height.
+    &_auto-height {
+        --_--item-line-height: var(--g-text-body-1-line-height);
+        --_--item-padding-block: max(
+            var(--g-spacing-1),
+            (var(--_--item-min-height) - var(--_--item-line-height)) / 2
+        );
+        --_--menu-group-tree-connector-hook-inset-block: calc(
+            var(--_--item-padding-block) + var(--_--item-line-height) / 2
+        );
+
+        @supports (height: 1lh) {
+            --_--item-line-height: 1lh;
         }
 
-        #{$class}__icon-place,
-        #{$class}__title,
-        #{$class}__chevron {
-            padding-block: var(--g-spacing-1);
+        box-sizing: border-box;
+        height: auto;
+        min-height: var(--_--item-min-height);
+        padding-block: var(--_--item-padding-block);
+
+        #{$class}__icon-place {
+            align-self: flex-start;
+            height: var(--_--item-line-height);
+        }
+
+        #{$class}__title-text {
+            white-space: normal;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
         }
     }
 
@@ -631,12 +652,6 @@ $floating-surface-box-shadow-label:
         #{$class}__title {
             flex: 1 1 auto;
             min-width: 0;
-        }
-
-        &#{$class}_title-lines_2 {
-            --_--menu-group-tree-connector-hook-inset-block: calc(
-                var(--g-spacing-1) + var(--_--gn-aside-header-density-icon-size, 18px) / 2
-            );
         }
     }
 

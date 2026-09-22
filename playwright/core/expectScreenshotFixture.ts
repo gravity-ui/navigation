@@ -12,24 +12,27 @@ export const expectScreenshotFixture: PlaywrightFixture<ExpectScreenshotFixture>
         screenshotName,
         ...pageScreenshotOptions
     } = {}) => {
-        const captureScreenshot = async () => {
-            return (component || page.locator('.playwright-wrapper-test')).screenshot({
-                animations: 'disabled',
-                ...pageScreenshotOptions,
-            });
+        const target = component || page.locator('.playwright-wrapper-test');
+        const nameScreenshot = testInfo.titlePath.slice(1).join(' ');
+        const options = {
+            animations: 'disabled' as const,
+            scale: 'device' as const,
+            threshold: 0.1,
+            ...pageScreenshotOptions,
         };
 
-        const nameScreenshot = testInfo.titlePath.slice(1).join(' ');
-
-        expect(await captureScreenshot()).toMatchSnapshot({
-            name: `${screenshotName || nameScreenshot} light.png`,
-        });
+        // Wait for stable frames after layout, font and theme updates.
+        await expect(target).toHaveScreenshot(
+            `${screenshotName || nameScreenshot} light.png`,
+            options,
+        );
 
         await page.emulateMedia({colorScheme: 'dark'});
 
-        expect(await captureScreenshot()).toMatchSnapshot({
-            name: `${screenshotName || nameScreenshot} dark.png`,
-        });
+        await expect(target).toHaveScreenshot(
+            `${screenshotName || nameScreenshot} dark.png`,
+            options,
+        );
     };
 
     await use(expectScreenshot);
