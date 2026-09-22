@@ -10,6 +10,7 @@ import {test} from '~playwright/core';
 import {CollapseButtonExample} from '../__playwright__/CollapseButtonExample';
 import {
     finishAnimations,
+    pauseNextAsideTransition,
     seekAnimations,
     toggleAsideAndPause,
 } from '../__playwright__/transitionTestUtils';
@@ -561,11 +562,8 @@ test('collapse button keeps keyboard focus visible while the aside animates', as
     await page.keyboard.press('Enter');
     await finishAnimations(page);
     await expect(button).toHaveAttribute('aria-expanded', 'true');
+    await pauseNextAsideTransition(page);
     await page.keyboard.press('Enter');
-    await button.evaluate(async () => {
-        await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
-        document.getAnimations().forEach((animation) => animation.pause());
-    });
 
     // The hide-while-animating rule must not swallow a keyboard-focused control.
     await expect(panel).toHaveAttribute('data-gn-aside-animating', '');
