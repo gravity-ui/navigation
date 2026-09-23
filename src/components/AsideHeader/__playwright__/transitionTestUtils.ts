@@ -29,3 +29,18 @@ export async function finishAnimations(page: Page) {
         await Promise.all(animations.map((animation) => animation.finished.catch(() => undefined)));
     });
 }
+
+// Pause the next aside transition from the task that starts it. A keyboard toggle reaches the
+// page in its own protocol round trip, so pausing on a later frame can land after the short
+// transition has already finished on a slow runner. The mutation callback runs as soon as
+// the transition marks the panel, after it has created its animations and before any frame.
+export async function pauseNextAsideTransition(page: Page) {
+    await page.locator('[data-gn-aside-panel]').evaluate((panel) => {
+        const observer = new MutationObserver(() => {
+            if (!panel.hasAttribute('data-gn-aside-animating')) return;
+            observer.disconnect();
+            document.getAnimations().forEach((animation) => animation.pause());
+        });
+        observer.observe(panel, {attributes: true, attributeFilter: ['data-gn-aside-animating']});
+    });
+}
