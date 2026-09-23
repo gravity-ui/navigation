@@ -1,12 +1,13 @@
 import React, {MouseEvent, useCallback, useRef} from 'react';
 
 import {Pin, PinFill} from '@gravity-ui/icons';
-import {Button, Icon} from '@gravity-ui/uikit';
+import {Button, Icon, Tooltip} from '@gravity-ui/uikit';
 
 import {AsideHeaderItem} from 'src/components/AsideHeader/types';
 import {MakeItemParams} from 'src/components/types';
 
 import {createBlock} from '../../../../utils/cn';
+import i18n from '../i18n';
 
 import styles from './AllPagesListItem.module.scss';
 
@@ -50,12 +51,21 @@ export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
                     {params.icon}
                     <span className={b('text')}>{params.title}</span>
                     {editMode && !item.preventUserRemoving && (
-                        <Button
-                            onClick={onPinButtonClick}
-                            view={item.hidden ? 'flat-secondary' : 'flat-action'}
+                        <Tooltip
+                            content={i18n(
+                                item.hidden ? 'all-panel.item.pin' : 'all-panel.item.unpin',
+                            )}
                         >
-                            <Button.Icon>{item.hidden ? <Pin /> : <PinFill />}</Button.Icon>
-                        </Button>
+                            <Button
+                                aria-label={i18n(
+                                    item.hidden ? 'all-panel.item.pin' : 'all-panel.item.unpin',
+                                )}
+                                onClick={onPinButtonClick}
+                                view={item.hidden ? 'flat-secondary' : 'flat-action'}
+                            >
+                                <Button.Icon>{item.hidden ? <Pin /> : <PinFill />}</Button.Icon>
+                            </Button>
+                        </Tooltip>
                     )}
                 </Tag>
             );

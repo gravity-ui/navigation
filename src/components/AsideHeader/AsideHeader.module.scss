@@ -12,10 +12,6 @@ $aside-width-transition-timing-function: ease-in-out;
 $aside-width-transition: width $aside-width-transition-duration
     $aside-width-transition-timing-function;
 
-.g-root {
-    --gn-aside-top-panel-height: 0px;
-}
-
 #{$block} {
     $class: &;
     --gn-aside-header-min-width: var(--_--gn-aside-header-density-compact-width, 56px);

@@ -1,5 +1,91 @@
 # Changelog
 
+## [7.0.0](https://github.com/gravity-ui/navigation/compare/v6.6.1...v7.0.0) (2026-09-23)
+
+### ⚠ BREAKING CHANGES
+
+v7 keeps the v6 props API: no props were removed or renamed. The breaking changes are in `AsideHeader` layout and behavior.
+
+* **AsideHeader:** the collapse button is no longer a full-width bar at the bottom of the aside. It now sits at the aside edge beside the last visible `FooterItem` (or on a blank bottom row when there are no footer items) and appears on hover/focus in the compact state. `hideCollapseButton` removes the control, its reserved space and the blank row.
+* **AsideHeader:** `collapseButtonWrapper` now decorates only the edge control. Move any full-width content previously rendered by this wrapper into `renderFooter`.
+* **AsideHeader:** in the expanded sidebar, menu titles automatically take one or two lines depending on the available width, so long titles increase the row height. Compact rows and popup rows stay single-line.
+* **AsideHeader:** in the compact state, the built-in tooltip of the selected row is suppressed even when `enableTooltip={true}`.
+* **AsideHeader:** `MenuGroup.hideCompactChevron` is deprecated and has no effect: the compact sidebar no longer renders a chevron on the group anchor.
+
+### Features
+
+* **AsideHeader:** added `menuDensity: 'default' | 'compact'` for a denser aside and menu items ([#664](https://github.com/gravity-ui/navigation/issues/664)).
+* **AsideHeader:** added combined menu groups with inline tree hierarchy, group popups and `menuGroupNestedIcons` ([#666](https://github.com/gravity-ui/navigation/issues/666)).
+* **AsideHeader:** added quick access: `enableQuickAccess`, `AsideHeaderItem.quickAccess`, `onQuickAccessChange` and `quickAccessHighlightInMainMenu` ([#667](https://github.com/gravity-ui/navigation/issues/667)).
+* **AsideHeader:** quick access and the menu share one scroll area; added `compactTransition` to opt out of compact-layout animation and `hideSectionDividers` to replace header/footer separators with scroll-edge indicators ([#674](https://github.com/gravity-ui/navigation/issues/674)).
+* **AsideHeader:** menu group headers support `onItemClick`, `href`, `current`, `iconSize` and `hideItemsInAllPages`, including the More overflow row ([#676](https://github.com/gravity-ui/navigation/issues/676)).
+* **AsideHeader:** the compact collapse button draws a 1 px border, customizable with `--gn-aside-header-collapse-button-border-color` ([#680](https://github.com/gravity-ui/navigation/issues/680)).
+* **AsideHeader:** menu titles are sized automatically, with no line-count option ([#684](https://github.com/gravity-ui/navigation/issues/684)).
+
+### Bug Fixes
+
+* **AsideHeader:** close popups and the All pages panel after a navigation click ([#677](https://github.com/gravity-ui/navigation/issues/677)).
+* **AsideHeader:** correct decoration, tree lines and popup backgrounds ([#678](https://github.com/gravity-ui/navigation/issues/678)).
+* **AsideHeader:** close the All pages panel before the item action ([#679](https://github.com/gravity-ui/navigation/issues/679)).
+* **AsideHeader:** keep the header gap above `aboveMenuContent` ([#685](https://github.com/gravity-ui/navigation/issues/685)).
+* **AsideHeader:** mute consumer current items while the All pages panel is open ([#683](https://github.com/gravity-ui/navigation/issues/683)).
+
+## [6.6.1](https://github.com/gravity-ui/navigation/compare/v6.6.0...v6.6.1) (2026-09-21)
+
+
+### Bug Fixes
+
+* **AsideHeader:** replace the dead --gn-aside-top-panel-height with --gn-top-alert-height ([#681](https://github.com/gravity-ui/navigation/issues/681)) ([3decc0d](https://github.com/gravity-ui/navigation/commit/3decc0d7c960c5f24b8a8698e2a7c41ac0c23267))
+
+## [6.6.0](https://github.com/gravity-ui/navigation/compare/v6.5.1...v6.6.0) (2026-09-08)
+
+
+### Features
+
+* **AsideHeader:** add MenuGroup.hideItemsInAllPage ([#673](https://github.com/gravity-ui/navigation/issues/673)) ([bd3a01e](https://github.com/gravity-ui/navigation/commit/bd3a01e295ba55c5b06f16328e07266d4805516e))
+
+## [6.5.1](https://github.com/gravity-ui/navigation/compare/v6.5.0...v6.5.1) (2026-09-04)
+
+
+### Bug Fixes
+
+* **AsideHeader:** support MenuGroup.iconSize for group header row ([#671](https://github.com/gravity-ui/navigation/issues/671)) ([a932aad](https://github.com/gravity-ui/navigation/commit/a932aadfce104f2f71fb7dc6a0d3a56ff112f514))
+
+## [6.5.0](https://github.com/gravity-ui/navigation/compare/v6.4.2...v6.5.0) (2026-09-04)
+
+
+### Features
+
+* **AsideHeader:** allow menu group headers to act as regular menu item ([#669](https://github.com/gravity-ui/navigation/issues/669)) ([c63c8f0](https://github.com/gravity-ui/navigation/commit/c63c8f0643fef12062344f2bf02a4e330928e188))
+
+## [6.4.2](https://github.com/gravity-ui/navigation/compare/v6.4.1...v6.4.2) (2026-08-25)
+
+
+### Bug Fixes
+
+* correct ru translation ([#660](https://github.com/gravity-ui/navigation/issues/660)) ([4a43f0a](https://github.com/gravity-ui/navigation/commit/4a43f0a67f680aa79dfe59d643bb95726c56bbf4))
+
+## [6.4.1](https://github.com/gravity-ui/navigation/compare/v6.4.0...v6.4.1) (2026-08-13)
+
+
+### Bug Fixes
+
+* **Footer:** prevent menu collapse in narrow containers ([#662](https://github.com/gravity-ui/navigation/issues/662)) ([c087c18](https://github.com/gravity-ui/navigation/commit/c087c18bf380bc52f847d5c29a5529717e043cbc))
+
+## [6.4.0](https://github.com/gravity-ui/navigation/compare/v6.3.1...v6.4.0) (2026-07-29)
+
+
+### Features
+
+* **AllPagesPanel:** added tooltip for the pin icon ([#658](https://github.com/gravity-ui/navigation/issues/658)) ([893d9b2](https://github.com/gravity-ui/navigation/commit/893d9b2551a1aac2d2bc539cb27ab505502c081f))
+
+## [6.3.1](https://github.com/gravity-ui/navigation/compare/v6.3.0...v6.3.1) (2026-07-21)
+
+
+### Bug Fixes
+
+* **HotkeysPanel:** make hotkeys list scrollable ([#656](https://github.com/gravity-ui/navigation/issues/656)) ([4cf723d](https://github.com/gravity-ui/navigation/commit/4cf723d29b5db0f41fc670caa7c92bb15d2ce8ce))
+
 ## [6.3.0](https://github.com/gravity-ui/navigation/compare/v6.2.0...v6.3.0) (2026-07-15)
 
 
