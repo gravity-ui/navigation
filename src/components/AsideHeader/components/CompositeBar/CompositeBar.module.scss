@@ -1,14 +1,69 @@
 @use '../../../variables';
 
 $block: '.#{variables.$ns}composite-bar';
+$menu-group-tree-connector-width: 16px;
 
 #{$block} {
+    --_--menu-group-tree-connector-width: #{$menu-group-tree-connector-width};
+    --_--menu-group-tree-line-width: var(--gn-aside-header-menu-group-tree-line-width, 1px);
+    --_--menu-item-gap: 0px;
+
     flex: 1 0 auto;
     width: 100%;
-    min-height: #{variables.$item-height};
+    min-height: var(--_--gn-aside-header-density-item-height, #{variables.$item-height});
 
     & &__root-menu-item[class] {
         background-color: transparent;
+    }
+
+    &_inline-groups &__root-menu-item[class],
+    &_quick-access &__root-menu-item[class] {
+        position: relative;
+        overflow: visible;
+        box-sizing: border-box;
+        background: none;
+        padding-block-end: var(--_--menu-item-gap);
+
+        /**
+         * List marks the whole row active when one of its descendants is hovered.
+         * Item owns its hover/selection visuals, so the structural List row must
+         * always stay transparent.
+         */
+        &:global(.g-list__item_active),
+        &:global(.g-list__item_selected),
+        &:global(.g-list__item_active.g-list__item_selected) {
+            background: none;
+        }
+    }
+
+    &_inline-groups {
+        --_--menu-item-gap: 1px;
+    }
+
+    &_quick-access {
+        --_--menu-item-gap: 1px;
+        --gn-aside-header-item-icon-color: var(
+            --gn-aside-header-general-item-icon-color,
+            var(--g-color-text-primary)
+        );
+
+        flex: none;
+    }
+
+    // UIKit's non-virtualized List supports intrinsic row sizing. Release its
+    // content wrapper too, so nested lists and pin/chevron wrappers can grow.
+    &_auto-height &__root-menu-item > :global(.g-list__item-content),
+    &_auto-height &__menu-group-nested-list-item > :global(.g-list__item-content) {
+        height: auto;
+        min-width: 0;
+    }
+
+    &__item-row {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        width: 100%;
+        height: 100%;
     }
 
     &__menu-group {
@@ -26,62 +81,112 @@ $block: '.#{variables.$ns}composite-bar';
         flex: 0 0 auto;
         box-sizing: border-box;
         width: 100%;
-        min-height: #{variables.$item-height};
+        min-height: var(--_--gn-aside-header-density-item-height, #{variables.$item-height});
     }
 
     &__menu-group-nested-item[class] {
         position: relative;
-        padding-inline-start: var(--g-spacing-3);
+
+        #{$block}__menu-group-nested-connector {
+            position: absolute;
+            inset-inline-start: calc(
+                var(--_--gn-aside-header-density-item-height, #{variables.$item-height}) / 2 -
+                    #{$menu-group-tree-connector-width} / 2
+            );
+            inset-block: 0;
+        }
     }
 
     &__menu-group-nested-list-item[class] {
+        // The connector extends through the gap below the item content.
+        & > :global(.g-list__item-content) {
+            overflow: visible;
+        }
+
         position: relative;
-        background-color: transparent;
         overflow: visible;
+        box-sizing: border-box;
+        padding-block-end: var(--_--menu-item-gap);
+        background-color: transparent;
+
+        &:global(.g-list__item_active),
+        &:global(.g-list__item_selected),
+        &:global(.g-list__item_active.g-list__item_selected) {
+            background-color: transparent;
+        }
+    }
+
+    // Keep both spine colors inside the item stacking context, through the row gap.
+    &__menu-group-nested-connector::after {
+        content: '';
+        position: absolute;
+        inset-inline-start: calc(50% - var(--_--menu-group-tree-line-width) / 2);
+        top: 0;
+        // The last row still needs a stem above its elbow when typography shifts it down.
+        bottom: calc(100% - var(--_--menu-group-tree-hook-top));
+        width: var(--_--menu-group-tree-line-width);
+        background: var(--gn-aside-header-menu-group-tree-line-color, #c1c3c7);
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    &__menu-group-nested-list-item:not(:last-child) &__menu-group-nested-connector::after {
+        bottom: calc(-1 * var(--_--menu-item-gap));
     }
 
     &__menu-group-nested-connector {
+        --_--menu-group-tree-hook-top: max(
+            0px,
+            var(--_--menu-group-tree-connector-hook-inset-block, 50%) - var(
+                    --_--gn-aside-header-density-item-height,
+                    #{variables.$item-height}
+                ) /
+                2
+        );
+
         position: relative;
-        width: 16px;
+        width: $menu-group-tree-connector-width;
         box-sizing: content-box;
         pointer-events: none;
         display: flex;
+        overflow: visible;
+        isolation: isolate;
 
-        // Vertical spine between rows (straight segments; elbow is SVG path).
-        &::before {
+        // Active color overlays the row-level spine; the elbow itself is rendered by SVG.
+        &_spine-active::before,
+        &_active::before {
             content: '';
             position: absolute;
-            inset-inline-start: calc(50% - 0.5px);
+            inset-inline-start: calc(50% - var(--_--menu-group-tree-line-width) / 2);
             top: 0;
-            bottom: 0;
-            width: 1px;
-            height: 100%;
-            background: var(--gn-aside-header-menu-group-tree-line-color, #c1c3c7);
-            pointer-events: none;
-        }
-
-        &_spine-active::before {
+            bottom: calc(-1 * var(--_--menu-item-gap));
+            width: var(--_--menu-group-tree-line-width);
             background: var(
                 --gn-aside-header-menu-group-tree-line-active-color,
                 var(--g-color-base-brand)
             );
+            pointer-events: none;
             z-index: 1;
         }
-    }
 
-    &__menu-group-nested-list-item:last-child &__menu-group-nested-connector::before {
-        display: none;
+        // On the selected row, only the stem leading into its elbow is active.
+        &_active::before {
+            bottom: calc(100% - var(--_--menu-group-tree-hook-top));
+        }
     }
 
     &__menu-group-nested-tree-svg {
         fill: none;
-        position: relative;
+        position: absolute;
+        inset-inline-start: 0;
+        inset-block-start: var(--_--menu-group-tree-hook-top);
         display: block;
         flex-shrink: 0;
-        min-width: 16px;
-        max-width: 16px;
-        height: #{variables.$item-height};
+        min-width: $menu-group-tree-connector-width;
+        max-width: $menu-group-tree-connector-width;
+        height: var(--_--gn-aside-header-density-item-height, #{variables.$item-height});
         stroke: var(--gn-aside-header-menu-group-tree-line-color, #c1c3c7);
+        stroke-width: var(--_--menu-group-tree-line-width);
 
         &_active {
             stroke: var(
@@ -89,9 +194,16 @@ $block: '.#{variables.$ns}composite-bar';
                 var(--g-color-base-brand)
             );
         }
+
+        // Logical insets move the connector column in RTL; mirror the elbow toward the item too.
+        :global([dir='rtl']) & {
+            transform: scaleX(-1);
+        }
     }
 
     &__menu-group-nested-row-inner {
+        display: flex;
+        align-items: center;
         width: 100%;
         min-width: 0;
         height: 100%;

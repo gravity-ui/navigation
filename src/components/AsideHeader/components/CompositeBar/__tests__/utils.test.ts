@@ -15,6 +15,35 @@ import {
 } from '../utils';
 
 describe('CompositeBar utils', () => {
+    describe('getItemHeight', () => {
+        it('uses the selected density for regular items', () => {
+            const item: AsideHeaderItem = {id: 'regular', title: 'Regular'};
+
+            expect(getItemHeight(item)).toBe(40);
+            expect(getItemHeight(item, 'compact')).toBe(32);
+        });
+
+        it('uses density for action height and keeps divider height unchanged', () => {
+            const action: AsideHeaderItem = {id: 'action', title: 'Action', type: 'action'};
+            const divider: AsideHeaderItem = {id: 'divider', title: 'Divider', type: 'divider'};
+
+            expect(getItemHeight(action)).toBe(50);
+            expect(getItemHeight(action, 'compact')).toBe(46);
+            expect(getItemHeight(divider, 'compact')).toBe(15);
+        });
+
+        it('uses measured heights for overflow, but keeps icon-only rows fixed', () => {
+            const item: AsideHeaderItem = {id: 'long', title: 'Long title'};
+            const measuredHeights = new Map([['long', 57.5]]);
+
+            expect(getItemHeight(item, 'default', {measuredHeights})).toBe(57.5);
+            expect(getItemHeight(item, 'compact', {measuredHeights})).toBe(57.5);
+            expect(getItemHeight(item, 'compact', {measuredHeights, sidebarCompact: true})).toBe(
+                32,
+            );
+        });
+    });
+
     describe('getPopupItemHeight', () => {
         it('returns POPUP_REGULAR_ITEM_HEIGHT for regular items', () => {
             const item: AsideHeaderItem = {id: 'r', title: 'Regular'};
@@ -98,6 +127,15 @@ describe('CompositeBar utils', () => {
             );
             expect(getSelectedCompositeBarRowIndex(rows)).toBeUndefined();
         });
+
+        it('getSelectedCompositeBarRowIndex uses presentation-current suppression', () => {
+            const rows: CompositeBarRow[] = [
+                {kind: 'item', item: {id: 'current', title: 'Current', current: true}},
+            ];
+
+            expect(getSelectedCompositeBarRowIndex(rows)).toBe(0);
+            expect(getSelectedCompositeBarRowIndex(rows, new Set(['current']))).toBeUndefined();
+        });
     });
 
     describe('getAutosizeCompositeBarRows', () => {
@@ -114,6 +152,52 @@ describe('CompositeBar utils', () => {
 
             const overflowGroup = collapseItems.find((i) => i.compositeBarMenuPopupItems?.length);
             expect(overflowGroup?.compositeBarMenuPopupItems?.map((c) => c.id)).toEqual(['c1']);
+        });
+
+        it('keeps the group own action, current and iconSize on the overflow row', () => {
+            const groupClick = jest.fn();
+            const groups: MenuGroup[] = [
+                {
+                    id: 'g1',
+                    title: 'G1',
+                    iconSize: 24,
+                    current: true,
+                    href: '/g1',
+                    onItemClick: groupClick,
+                },
+            ];
+            const items: AsideHeaderItem[] = [
+                {id: 'a', title: 'A'},
+                {id: 'c1', title: 'C1', groupId: 'g1'},
+            ];
+            const rows = buildCompositeBarRows(items, groups);
+
+            const {collapseItems} = getAutosizeCompositeBarRows(rows, 1, getMoreButtonItem('More'));
+
+            const overflowGroup = collapseItems.find((i) => i.compositeBarMenuPopupItems?.length);
+            expect(overflowGroup?.iconSize).toBe(24);
+            expect(overflowGroup?.current).toBe(true);
+            expect(overflowGroup?.href).toBe('/g1');
+            expect(overflowGroup?.onItemClick).toBe(groupClick);
+        });
+
+        it('uses density when deciding whether items fit', () => {
+            const rows: CompositeBarRow[] = [
+                {kind: 'item', item: {id: 'a', title: 'A'}},
+                {kind: 'item', item: {id: 'b', title: 'B'}},
+                {kind: 'item', item: {id: 'c', title: 'C'}},
+            ];
+
+            const defaultResult = getAutosizeCompositeBarRows(rows, 96, getMoreButtonItem('More'));
+            const compactResult = getAutosizeCompositeBarRows(
+                rows,
+                96,
+                getMoreButtonItem('More', 'compact'),
+                'compact',
+            );
+
+            expect(defaultResult.collapseItems.map(({id}) => id)).toEqual(['b', 'c']);
+            expect(compactResult.collapseItems).toEqual([]);
         });
     });
 });

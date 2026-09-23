@@ -1,6 +1,7 @@
-import React, {FC, ReactNode} from 'react';
+import React, {FC, ReactNode, useEffect} from 'react';
 
 import {createBlock} from '../../../../utils/cn';
+import {AsideDivider} from '../../AsideDivider';
 
 import {useScrollableScrollbarSync} from './useScrollableScrollbarSync';
 
@@ -8,16 +9,12 @@ import styles from './ScrollableWithScrollbar.module.scss';
 
 const b = createBlock('scrollable-with-scrollbar', styles);
 
-const EMPTY_DEPS: React.DependencyList = [];
-
 type ScrollableWithScrollbarProps = {
     children: ReactNode;
     className?: string;
-    /**
-     * Extra dependencies that should trigger a recalculation of the bottom
-     * shadow and custom scrollbar thumb (e.g. when the rendered items change).
-     */
-    recalcDeps?: React.DependencyList;
+    showScrollDividers?: boolean;
+    /** Called when scrollable content overflows the allocated height. */
+    onOverflowChange?: (overflows: boolean) => void;
 };
 
 // Hides the native scrollbar and renders a custom thumb synced with the
@@ -27,26 +24,53 @@ type ScrollableWithScrollbarProps = {
 export const ScrollableWithScrollbar: FC<ScrollableWithScrollbarProps> = ({
     children,
     className,
-    recalcDeps = EMPTY_DEPS,
+    showScrollDividers = false,
+    onOverflowChange,
 }) => {
     const {
         scrollRef,
         trackRef,
         thumbRef,
-        hasContentBelow,
         overflows,
+        canScrollUp,
+        canScrollDown,
         thumb,
         scheduleUpdate,
         handleThumbPointerDown,
         handleTrackPointerDown,
-    } = useScrollableScrollbarSync(recalcDeps);
+    } = useScrollableScrollbarSync();
+
+    useEffect(() => {
+        onOverflowChange?.(overflows);
+    }, [onOverflowChange, overflows]);
+
+    useEffect(() => {
+        return () => onOverflowChange?.(false);
+    }, [onOverflowChange]);
 
     return (
-        <div className={b({'bottom-shadow': hasContentBelow}, className)}>
-            <div ref={scrollRef} className={b('scrollable-inner')} onScroll={scheduleUpdate}>
+        <div className={b({'shadow-start': canScrollUp, 'shadow-end': canScrollDown}, className)}>
+            <div
+                ref={scrollRef}
+                className={b('scrollable-inner')}
+                onScroll={scheduleUpdate}
+                data-gn-aside-scrollport
+            >
                 {children}
             </div>
 
+            {showScrollDividers && (
+                <React.Fragment>
+                    <AsideDivider
+                        transitionId="scroll-start"
+                        className={b('scroll-divider', {start: true, visible: canScrollUp})}
+                    />
+                    <AsideDivider
+                        transitionId="scroll-end"
+                        className={b('scroll-divider', {end: true, visible: canScrollDown})}
+                    />
+                </React.Fragment>
+            )}
             {overflows ? (
                 <div
                     ref={trackRef}

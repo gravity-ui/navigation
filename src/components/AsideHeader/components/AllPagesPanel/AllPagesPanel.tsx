@@ -41,6 +41,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
         editMenuProps,
         menuGroups,
         onMenuGroupsChanged,
+        onClosePanel,
     } = useAsideHeaderInnerContext();
 
     const menuItemsRef = useRef(menuItems);
@@ -71,10 +72,16 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
 
     const onItemClick = useCallback<NonNullable<ListProps<AsideHeaderItem>['onItemClick']>>(
         (item, _index, _forwardKey, event) => {
+            // Close before the item action, like the sidebar handler does:
+            // the action may open another panel, which must survive this click.
+            if (!item.current) {
+                onClosePanel?.();
+            }
+
             // TODO: make event an optional argument
             item.onItemClick?.(item, false, event as React.MouseEvent<HTMLElement, MouseEvent>);
         },
-        [],
+        [onClosePanel],
     );
 
     const togglePageVisibility = useCallback(

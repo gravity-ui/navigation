@@ -1,24 +1,82 @@
-import React, {useRef} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 
-import {setRef} from '@gravity-ui/uikit';
+import {setRef, useUniqId} from '@gravity-ui/uikit';
 
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import i18n from '../i18n';
+import {getQuickAccessMenuItems} from '../quickAccess';
+import {ALL_PAGES_ID} from '../types';
 import {b} from '../utils';
 
 import {useVisibleMenuItems} from './AllPagesPanel';
+import {AsideDivider} from './AsideDivider';
 import {CollapseButton} from './CollapseButton/CollapseButton';
+import {CollapseAnchorContext, useCollapseAnchor} from './CollapseButton/useCollapseAnchor';
 import {CompositeBar} from './CompositeBar';
+import type {QuickAccessToggleHandler} from './CompositeBar/Item/Item.types';
+import {ScrollableWithScrollbar} from './CompositeBar/ScrollableWithScrollbar';
+import {
+    COMPOSITE_BAR_ITEM_ID_ATTRIBUTE,
+    getGroupHeaderItemId,
+    getGroupOverflowItemId,
+} from './CompositeBar/constants';
 import {Header} from './Header';
 import {Panels} from './Panels';
 
 const MENU_ITEMS_COMPOSITE_ID = 'gravity-ui/navigation-menu-items-composite-bar';
+const QUICK_ACCESS_COMPOSITE_ID = 'gravity-ui/navigation-quick-access-composite-bar';
+const FOCUSABLE_ITEM_SELECTOR = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+type PendingQuickAccessFocus = {
+    itemId: string;
+    nextItemId?: string;
+    previousItemId?: string;
+    trigger: HTMLButtonElement;
+};
+
+function findCompositeBar(root: HTMLElement, id: string) {
+    return Array.from(root.querySelectorAll<HTMLElement>('[id]')).find(
+        (element) => element.id === id,
+    );
+}
+
+function findCompositeBarItemFocusTarget(root?: HTMLElement, itemId?: string) {
+    if (!root) {
+        return undefined;
+    }
+
+    const itemElements = Array.from(
+        root.querySelectorAll<HTMLElement>(`[${COMPOSITE_BAR_ITEM_ID_ATTRIBUTE}]`),
+    );
+    const itemElement = itemId
+        ? itemElements.find(
+              (element) => element.getAttribute(COMPOSITE_BAR_ITEM_ID_ATTRIBUTE) === itemId,
+          )
+        : itemElements[0];
+
+    if (!itemElement) {
+        return undefined;
+    }
+
+    if (itemElement.matches(FOCUSABLE_ITEM_SELECTOR)) {
+        return itemElement;
+    }
+
+    const wrappingFocusable = itemElement.closest<HTMLElement>(FOCUSABLE_ITEM_SELECTOR);
+
+    if (wrappingFocusable && root.contains(wrappingFocusable)) {
+        return wrappingFocusable;
+    }
+
+    return itemElement.querySelector<HTMLElement>(FOCUSABLE_ITEM_SELECTOR) ?? undefined;
+}
 
 export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
     const {
         size,
         onItemClick,
         headerDecoration,
+        hideSectionDividers,
         menuMoreTitle,
         onMenuMoreClick,
         renderFooter,
@@ -28,16 +86,211 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         className,
         hideCollapseButton,
         menuGroups,
+        menuGroupNestedIcons,
         menuOverflow,
         collapsedMenuGroupIds,
         defaultCollapsedMenuGroupIds,
         onToggleMenuGroupCollapsed,
         aboveMenuContent,
+        enableQuickAccess = false,
+        quickAccessHighlightInMainMenu = false,
+        quickAccessIsAvailable,
+        onToggleQuickAccess,
         qa,
+        innerVisiblePanel,
     } = useAsideHeaderInnerContext();
+    const panelId = useUniqId();
+    const collapseAnchor = useCollapseAnchor(!hideCollapseButton, compact);
     const visibleMenuItems = useVisibleMenuItems();
+    const quickAccessEnabled = enableQuickAccess;
+    const quickAccessItems = React.useMemo(
+        () => (quickAccessEnabled ? getQuickAccessMenuItems(visibleMenuItems, menuGroups) : []),
+        [menuGroups, quickAccessEnabled, visibleMenuItems],
+    );
+    /**
+     * While a library-owned panel (All pages) is open, its menu row is the only
+     * current one: consumer currents (items and group rows) are visually muted.
+     */
+    const innerPanelSuppressedIds = React.useMemo(() => {
+        if (innerVisiblePanel === undefined) {
+            return undefined;
+        }
 
+        const ids = new Set<string>();
+        for (const item of visibleMenuItems) {
+            if (item.current && item.id !== ALL_PAGES_ID) {
+                ids.add(item.id);
+            }
+        }
+        for (const group of menuGroups ?? []) {
+            if (group.current) {
+                ids.add(getGroupHeaderItemId(group.id));
+                ids.add(getGroupOverflowItemId(group.id));
+            }
+        }
+        return ids.size > 0 ? ids : undefined;
+    }, [innerVisiblePanel, menuGroups, visibleMenuItems]);
+    const suppressedCurrentItemIds = React.useMemo(() => {
+        const quickAccessSuppressed =
+            quickAccessEnabled && !quickAccessHighlightInMainMenu
+                ? quickAccessItems.map((item) => item.id)
+                : [];
+
+        if (!innerPanelSuppressedIds && quickAccessSuppressed.length === 0) {
+            return undefined;
+        }
+        return new Set([...(innerPanelSuppressedIds ?? []), ...quickAccessSuppressed]);
+    }, [
+        innerPanelSuppressedIds,
+        quickAccessEnabled,
+        quickAccessHighlightInMainMenu,
+        quickAccessItems,
+    ]);
+    const hasQuickAccessItems = quickAccessItems.length > 0;
+    const [menuScrollOverflows, setMenuScrollOverflows] = useState(false);
     const asideRef = useRef<HTMLDivElement>(null);
+    const pendingQuickAccessFocusRef = useRef<PendingQuickAccessFocus>();
+
+    const handleMenuScrollOverflowChange = useCallback((overflows: boolean) => {
+        setMenuScrollOverflows(overflows);
+    }, []);
+
+    const handleQuickAccessToggle = React.useCallback<QuickAccessToggleHandler>(
+        (item, event) => {
+            if (
+                item.quickAccess &&
+                event?.detail === 0 &&
+                event.currentTarget.ownerDocument.activeElement === event.currentTarget
+            ) {
+                const itemIndex = quickAccessItems.findIndex(
+                    (quickAccessItem) => quickAccessItem.id === item.id,
+                );
+
+                pendingQuickAccessFocusRef.current = {
+                    itemId: item.id,
+                    nextItemId: quickAccessItems[itemIndex + 1]?.id,
+                    previousItemId: quickAccessItems[itemIndex - 1]?.id,
+                    trigger: event.currentTarget,
+                };
+            }
+
+            onToggleQuickAccess(item);
+        },
+        [onToggleQuickAccess, quickAccessItems],
+    );
+
+    React.useEffect(() => {
+        const pendingFocus = pendingQuickAccessFocusRef.current;
+
+        if (
+            !pendingFocus ||
+            quickAccessItems.some((quickAccessItem) => quickAccessItem.id === pendingFocus.itemId)
+        ) {
+            return;
+        }
+
+        const ownerDocument = pendingFocus.trigger.ownerDocument;
+        const asideRoot = asideRef.current?.parentElement;
+
+        if (!asideRoot) {
+            pendingQuickAccessFocusRef.current = undefined;
+            return;
+        }
+
+        const quickAccessRoot = findCompositeBar(asideRoot, QUICK_ACCESS_COMPOSITE_ID);
+        const menuRoot = findCompositeBar(asideRoot, MENU_ITEMS_COMPOSITE_ID);
+        const remainingQuickAccessIds = new Set(quickAccessItems.map((item) => item.id));
+        const adjacentQuickAccessItemId = [
+            pendingFocus.nextItemId,
+            pendingFocus.previousItemId,
+        ].find((itemId) => itemId && remainingQuickAccessIds.has(itemId));
+        const focusTarget =
+            findCompositeBarItemFocusTarget(quickAccessRoot, adjacentQuickAccessItemId) ??
+            findCompositeBarItemFocusTarget(menuRoot, pendingFocus.itemId) ??
+            findCompositeBarItemFocusTarget(quickAccessRoot) ??
+            findCompositeBarItemFocusTarget(menuRoot) ??
+            asideRoot.querySelector<HTMLElement>(FOCUSABLE_ITEM_SELECTOR);
+        const ownerWindow = ownerDocument.defaultView;
+
+        if (!focusTarget || !ownerWindow) {
+            pendingQuickAccessFocusRef.current = undefined;
+            return;
+        }
+
+        // Finish the keyboard activation first: focus applied during the click can otherwise
+        // be reset to body when the removed button completes its native activation lifecycle.
+        ownerWindow.requestAnimationFrame(() => {
+            if (pendingQuickAccessFocusRef.current !== pendingFocus) {
+                return;
+            }
+
+            pendingQuickAccessFocusRef.current = undefined;
+            const nextActiveElement = ownerDocument.activeElement;
+
+            // Do not steal focus if the user moved it before an asynchronous controlled update.
+            if (
+                nextActiveElement === ownerDocument.body ||
+                nextActiveElement === ownerDocument.documentElement
+            ) {
+                focusTarget.focus();
+            }
+        });
+    }, [quickAccessItems]);
+
+    const quickAccessCompositeBar = (
+        <CompositeBar
+            menuItemClassName={b('menu-item')}
+            compositeId={QUICK_ACCESS_COMPOSITE_ID}
+            type="quick-access"
+            compact={compact}
+            items={quickAccessItems}
+            onItemClick={onItemClick}
+            enableQuickAccessPin={quickAccessIsAvailable}
+            onToggleQuickAccess={handleQuickAccessToggle}
+            suppressCurrentItemIds={innerPanelSuppressedIds}
+        />
+    );
+
+    const menuCompositeBar = (
+        <CompositeBar
+            menuItemClassName={b('menu-item')}
+            compositeId={MENU_ITEMS_COMPOSITE_ID}
+            layoutWidth={size}
+            type="menu"
+            compact={compact}
+            items={visibleMenuItems}
+            menuGroups={menuGroups}
+            menuGroupNestedIcons={menuGroupNestedIcons}
+            menuMoreTitle={menuMoreTitle ?? i18n('label_more')}
+            onItemClick={onItemClick}
+            onMoreClick={onMenuMoreClick}
+            menuOverflow={menuOverflow}
+            collapsedMenuGroupIds={collapsedMenuGroupIds}
+            defaultCollapsedMenuGroupIds={defaultCollapsedMenuGroupIds}
+            onToggleMenuGroupCollapsed={onToggleMenuGroupCollapsed}
+            enableQuickAccessPin={quickAccessIsAvailable}
+            onToggleQuickAccess={onToggleQuickAccess}
+            suppressCurrentItemIds={suppressedCurrentItemIds}
+        />
+    );
+
+    const quickAccessSection = hasQuickAccessItems ? (
+        <div className={b('quick-access')} data-gn-aside-current-container>
+            {!compact && (
+                <div className={b('quick-access-title')} data-gn-aside-part="quick-access-title">
+                    {i18n('quick_access_title')}
+                </div>
+            )}
+            {quickAccessCompositeBar}
+            <AsideDivider className={b('quick-access-divider')} transitionId="quick-access" />
+        </div>
+    ) : null;
+
+    const menuSection = visibleMenuItems.length ? (
+        menuCompositeBar
+    ) : (
+        <div className={b('menu-items')} />
+    );
 
     React.useEffect(() => {
         setRef<HTMLDivElement>(ref, asideRef.current);
@@ -46,13 +299,12 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
     return (
         <React.Fragment>
             <div
-                className={b(
-                    'aside',
-                    {'menu-overflow-scroll': menuOverflow === 'scroll' && !compact},
-                    className,
-                )}
+                className={b('aside', className)}
                 style={{width: size}}
                 data-qa={qa}
+                data-gn-aside-panel
+                id={panelId}
+                ref={collapseAnchor.panelRef}
             >
                 <div className={b('aside-popup-anchor')} ref={asideRef} />
                 {customBackground && (
@@ -61,38 +313,53 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     </div>
                 )}
 
-                <div className={b('aside-content', {['with-decoration']: headerDecoration})}>
+                <div
+                    className={b('aside-content', {
+                        'with-decoration': headerDecoration,
+                        'hide-section-dividers': hideSectionDividers,
+                        'with-quick-access': quickAccessEnabled,
+                        'with-quick-access-items': quickAccessEnabled && hasQuickAccessItems,
+                        'with-above-menu': Boolean(aboveMenuContent),
+                    })}
+                >
                     <Header />
                     {aboveMenuContent}
-                    {visibleMenuItems?.length ? (
-                        <CompositeBar
-                            menuItemClassName={b('menu-item')}
-                            compositeId={MENU_ITEMS_COMPOSITE_ID}
-                            type="menu"
-                            compact={compact}
-                            items={visibleMenuItems}
-                            menuGroups={menuGroups}
-                            menuMoreTitle={menuMoreTitle ?? i18n('label_more')}
-                            onItemClick={onItemClick}
-                            onMoreClick={onMenuMoreClick}
-                            menuOverflow={menuOverflow}
-                            collapsedMenuGroupIds={collapsedMenuGroupIds}
-                            defaultCollapsedMenuGroupIds={defaultCollapsedMenuGroupIds}
-                            onToggleMenuGroupCollapsed={onToggleMenuGroupCollapsed}
-                        />
-                    ) : (
-                        <div className={b('menu-items')} />
-                    )}
-                    <div className={b('footer')}>
-                        {renderFooter?.({
-                            size,
-                            compact: Boolean(compact),
-                            asideRef,
-                        })}
+                    <ScrollableWithScrollbar
+                        className={b('unified-menu-scroll')}
+                        onOverflowChange={handleMenuScrollOverflowChange}
+                        showScrollDividers={hideSectionDividers}
+                    >
+                        <div className={b('unified-menu-content')} data-gn-aside-current-container>
+                            {quickAccessSection}
+                            {menuSection}
+                        </div>
+                    </ScrollableWithScrollbar>
+                    <div
+                        className={b('footer', {'with-divider': menuScrollOverflows})}
+                        ref={collapseAnchor.footerRef}
+                    >
+                        <CollapseAnchorContext.Provider value={collapseAnchor.context}>
+                            <AsideDivider className={b('footer-divider')} transitionId="footer" />
+                            {renderFooter?.({
+                                size,
+                                compact: Boolean(compact),
+                                asideRef,
+                            })}
+                            {!hideCollapseButton && !collapseAnchor.selected && (
+                                <div
+                                    data-gn-collapse-fallback
+                                    data-gn-collapse-anchor=""
+                                    className={b('collapse-fallback')}
+                                    ref={collapseAnchor.fallbackRef}
+                                />
+                            )}
+                        </CollapseAnchorContext.Provider>
                     </div>
-                    {!hideCollapseButton && <CollapseButton />}
                 </div>
             </div>
+            {!hideCollapseButton && (
+                <CollapseButton panelId={panelId} slotRef={collapseAnchor.slotRef} />
+            )}
             <Panels />
         </React.Fragment>
     );

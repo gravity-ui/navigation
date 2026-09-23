@@ -6,6 +6,7 @@ import type {Meta, StoryFn} from '@storybook/react-webpack5';
 
 import {MenuGroup} from '../../types';
 import {AsideHeader} from '../AsideHeader';
+import {FooterItem} from '../components/FooterItem/FooterItem';
 import {AsideFallback} from '../components/PageLayout/AsideFallback';
 import {PageLayout} from '../components/PageLayout/PageLayout';
 import {PageLayoutAside} from '../components/PageLayout/PageLayoutAside';
@@ -53,6 +54,85 @@ Compact.args = {
     hideCollapseButton: true,
 };
 
+const CompactDensityTemplate: StoryFn = (args) => <AsideHeaderShowcase {...args} />;
+export const CompactDensity = CompactDensityTemplate.bind({});
+CompactDensity.args = {
+    menuDensity: 'compact',
+};
+
+export const CompactDensityCollapsed = CompactDensityTemplate.bind({});
+CompactDensityCollapsed.args = {
+    initialCompact: true,
+    menuDensity: 'compact',
+    hideCollapseButton: true,
+};
+
+export const AutomaticTitles: StoryFn<AsideHeaderProps> = (args) => {
+    const [compact, setCompact] = React.useState(false);
+    const [russian, setRussian] = React.useState(true);
+    const [quickAccess, setQuickAccess] = React.useState<Record<string, boolean>>({
+        synthetics: true,
+    });
+    return (
+        <AsideHeader
+            {...args}
+            compact={compact}
+            onChangeCompact={setCompact}
+            logo={DEFAULT_LOGO}
+            enableQuickAccess
+            onQuickAccessChange={(item, pinned) =>
+                setQuickAccess((previous) => ({...previous, [item.id]: pinned}))
+            }
+            menuGroups={[
+                {id: 'monitoring', title: russian ? 'Мониторинг' : 'Monitoring', icon: Gear},
+            ]}
+            menuItems={[
+                {
+                    id: 'overview',
+                    title: russian ? 'Обзор' : 'Overview',
+                    icon: Gear,
+                    current: true,
+                    quickAccess: quickAccess.overview,
+                },
+                {
+                    id: 'synthetics',
+                    title: russian ? 'Синтетический мониторинг' : 'Synthetic monitoring',
+                    icon: Gear,
+                    groupId: 'monitoring',
+                    quickAccess: quickAccess.synthetics,
+                },
+                {
+                    id: 'notifications',
+                    quickAccess: quickAccess.notifications,
+                    title: russian ? 'Способы уведомления' : 'Notification methods',
+                    icon: Gear,
+                    groupId: 'monitoring',
+                },
+                {
+                    id: 'long',
+                    quickAccess: quickAccess.long,
+                    title: russian
+                        ? 'Очень длинное название раздела, которое не помещается даже в две строки'
+                        : 'A very long section title that does not fit even on two lines',
+                    icon: Gear,
+                    groupId: 'monitoring',
+                },
+            ]}
+            renderContent={() => (
+                <Flex gap="2" className={spacing({p: 5})}>
+                    <Button selected={russian} onClick={() => setRussian(true)}>
+                        Русский
+                    </Button>
+                    <Button selected={!russian} onClick={() => setRussian(false)}>
+                        English
+                    </Button>
+                </Flex>
+            )}
+        />
+    );
+};
+AutomaticTitles.args = {menuDensity: 'compact', menuOverflow: 'scroll'};
+
 const CustomThemeTemplate: StoryFn = (args) => (
     <React.Fragment>
         <style>
@@ -97,17 +177,18 @@ CustomBackground.args = {
 };
 
 const AdvancedUsageTemplate: StoryFn = (args) => {
-    const [compact, setCompact] = React.useState(args.initialCompact);
+    const {initialCompact, menuDensity, ...asideProps} = args;
+    const [compact, setCompact] = React.useState(initialCompact);
 
     return (
-        <PageLayout compact={compact}>
+        <PageLayout compact={compact} menuDensity={menuDensity}>
             <PageLayoutAside
                 headerDecoration
                 menuItems={menuItemsShowcase}
                 logo={DEFAULT_LOGO}
                 onChangeCompact={setCompact}
                 qa={'pl-aside'}
-                {...args}
+                {...asideProps}
             />
 
             <PageLayout.Content>PageContent</PageLayout.Content>
@@ -119,6 +200,12 @@ export const AdvancedUsage = AdvancedUsageTemplate.bind({});
 
 AdvancedUsage.args = {
     initialCompact: true,
+};
+
+export const AdvancedCompactDensity = AdvancedUsageTemplate.bind({});
+AdvancedCompactDensity.args = {
+    initialCompact: true,
+    menuDensity: 'compact',
 };
 
 const TopAlertTemplate: StoryFn<AsideHeaderShowcaseProps> = (args) => (
@@ -230,39 +317,38 @@ export function LineClamp() {
 }
 
 const CollapseButtonWrapperTemplate: StoryFn = (args) => {
-    const [compact, setCompact] = React.useState(args.initialCompact);
+    const {initialCompact, menuDensity, ...asideProps} = args;
+    const [compact, setCompact] = React.useState(initialCompact);
 
     return (
-        <PageLayout compact={compact}>
+        <PageLayout compact={compact} menuDensity={menuDensity}>
             <PageLayoutAside
                 headerDecoration
                 menuItems={menuItemsShowcase}
                 logo={DEFAULT_LOGO}
                 onChangeCompact={setCompact}
-                collapseButtonWrapper={(defaultButton, {compact}) => (
-                    <React.Fragment>
+                collapseButtonWrapper={(defaultButton) => (
+                    <span style={{filter: 'drop-shadow(0 1px 3px var(--g-color-sfx-shadow))'}}>
                         {defaultButton}
-                        <div
-                            style={{
-                                backgroundColor: 'var(--g-color-base-generic)',
-                                padding: '5px',
-                            }}
-                        >
+                    </span>
+                )}
+                renderFooter={() => (
+                    <React.Fragment>
+                        <div style={{backgroundColor: 'var(--g-color-base-generic)', padding: 5}}>
                             <Flex justifyContent="center" alignItems="center">
-                                {
-                                    <Icon
-                                        size={14}
-                                        data={logoIcon}
-                                        className={compact ? undefined : spacing({mr: 1})}
-                                    />
-                                }
-                                {compact ? null : <Text color="secondary">{'Gravity UI'}</Text>}
+                                <Icon
+                                    size={14}
+                                    data={logoIcon}
+                                    className={compact ? undefined : spacing({mr: 1})}
+                                />
+                                {compact ? null : <Text color="secondary">Gravity UI</Text>}
                             </Flex>
                         </div>
+                        <FooterItem id="settings" title="Settings" icon={Gear} compact={compact} />
                     </React.Fragment>
                 )}
                 qa={'pl-aside-collapse-wrapper'}
-                {...args}
+                {...asideProps}
             />
         </PageLayout>
     );
@@ -322,6 +408,7 @@ const menuItemsWithGroupsForAllPages: AsideHeaderProps['menuItems'] = [
 
 function MenuGroupsWithAllPagesDemo(props: {
     initialCompact?: boolean;
+    menuDensity?: AsideHeaderProps['menuDensity'];
     menuOverflow?: AsideHeaderProps['menuOverflow'];
     description: React.ReactNode;
 }) {
@@ -333,7 +420,7 @@ function MenuGroupsWithAllPagesDemo(props: {
         React.useState<AsideHeaderProps['menuGroups']>(menuGroupsData);
 
     return (
-        <PageLayout compact={compact}>
+        <PageLayout compact={compact} menuDensity={props.menuDensity}>
             <PageLayoutAside
                 headerDecoration={false}
                 logo={DEFAULT_LOGO}
@@ -357,6 +444,7 @@ function MenuGroupsWithAllPagesDemo(props: {
 const MenuGroupsTemplate: StoryFn = (args) => (
     <MenuGroupsWithAllPagesDemo
         initialCompact={args.initialCompact}
+        menuDensity={args.menuDensity}
         description={
             <>
                 Default menuOverflow (overflow items move under &quot;More&quot;). Groups use
@@ -375,6 +463,7 @@ MenuGroups.args = {
 const MenuGroupsCompactTemplate: StoryFn = (args) => (
     <MenuGroupsWithAllPagesDemo
         initialCompact={args.initialCompact}
+        menuDensity={args.menuDensity}
         description={
             <>
                 Compact sidebar: same overflow behavior as MenuGroups when the rail is narrow. Hover
@@ -390,10 +479,17 @@ MenuGroupsCompact.args = {
     initialCompact: true,
 };
 
+export const CompactDensityMenuGroups = MenuGroupsCompactTemplate.bind({});
+CompactDensityMenuGroups.args = {
+    initialCompact: true,
+    menuDensity: 'compact',
+};
+
 const MenuGroupsScrollbarTemplate: StoryFn = (args) => (
     <MenuGroupsWithAllPagesDemo
         menuOverflow="scroll"
         initialCompact={args.initialCompact}
+        menuDensity={args.menuDensity}
         description={
             <>
                 Non-compact: menuOverflow=&quot;scroll&quot; — groups render as nested lists with
@@ -475,11 +571,14 @@ const manyMenuItems: AsideHeaderProps['menuItems'] = Array.from({length: 25}, (_
     current: index === 0,
 }));
 
-const ScrollableModeTemplate: StoryFn<{initialCompact?: boolean}> = (args) => {
+const ScrollableModeTemplate: StoryFn<{
+    initialCompact?: boolean;
+    menuDensity?: AsideHeaderProps['menuDensity'];
+}> = (args) => {
     const [compact, setCompact] = React.useState(args.initialCompact ?? false);
 
     return (
-        <PageLayout compact={compact}>
+        <PageLayout compact={compact} menuDensity={args.menuDensity}>
             <PageLayoutAside
                 headerDecoration
                 logo={DEFAULT_LOGO}
@@ -570,6 +669,7 @@ const renderAboveMenuContent = ({
 
 const AboveMenuContentDemo = (props: {
     initialCompact?: boolean;
+    menuDensity?: AsideHeaderProps['menuDensity'];
     menuOverflow?: AsideHeaderProps['menuOverflow'];
     description: React.ReactNode;
 }) => {
@@ -585,7 +685,7 @@ const AboveMenuContentDemo = (props: {
     }, [project]);
 
     return (
-        <PageLayout compact={compact}>
+        <PageLayout compact={compact} menuDensity={props.menuDensity}>
             <PageLayoutAside
                 headerDecoration
                 logo={DEFAULT_LOGO}
@@ -612,6 +712,7 @@ const AboveMenuContentDemo = (props: {
 const AboveMenuContentTemplate: StoryFn = (args) => (
     <AboveMenuContentDemo
         initialCompact={args.initialCompact}
+        menuDensity={args.menuDensity}
         description={
             <>
                 Sidebar with <code>aboveMenuContent</code> (select above menu).
@@ -628,6 +729,7 @@ AboveMenuContent.args = {
 const AboveMenuContentCompactTemplate: StoryFn = (args) => (
     <AboveMenuContentDemo
         initialCompact={args.initialCompact}
+        menuDensity={args.menuDensity}
         description={
             <>
                 Compact sidebar with <code>aboveMenuContent</code> (select above menu). Many items
@@ -646,6 +748,7 @@ const AboveMenuContentScrollbarTemplate: StoryFn = (args) => (
     <AboveMenuContentDemo
         menuOverflow="scroll"
         initialCompact={args.initialCompact}
+        menuDensity={args.menuDensity}
         description={
             <>
                 Expanded sidebar: <code>aboveMenuContent</code> stays fixed above the scrollable

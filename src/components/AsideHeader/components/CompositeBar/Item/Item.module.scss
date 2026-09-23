@@ -4,13 +4,45 @@
 $block: '.#{variables.$ns}composite-bar-item';
 
 $actionLeftRightMargin: 10px;
+// Width of the quick access pin: a uikit button with size="s".
+$quickAccessPinSize: 24px;
+$floating-surface-box-shadow-light:
+    0 0 0 1px var(--g-color-line-generic-solid),
+    0 3px 10px 0 var(--g-color-sfx-shadow),
+    0 8px 20px -4px var(--g-color-sfx-shadow);
+$floating-surface-box-shadow-dark:
+    0 0 0 1px var(--g-color-line-generic-solid),
+    0 4px 12px 0 var(--g-color-sfx-veil),
+    0 10px 24px -2px var(--g-color-sfx-shadow-heavy);
+// The single-item label tooltip is a small always-dark surface: the multi-layer
+// floating shadow reads as too heavy on it, so it keeps the outline ring plus a
+// single soft layer. Its element is forced to the dark theme, so the tokens
+// always resolve from the dark palette.
+$floating-surface-box-shadow-label:
+    0 0 0 1px var(--g-color-line-generic-solid),
+    0 2px 8px 0 var(--g-color-sfx-shadow);
+
+@mixin floating-surface-box-shadow-default {
+    --_--floating-surface-box-shadow-default: #{$floating-surface-box-shadow-light};
+
+    :global(.g-root_theme_dark) &,
+    :global(.g-root_theme_dark-hc) &,
+    &:global(.g-root_theme_dark),
+    &:global(.g-root_theme_dark-hc) {
+        --_--floating-surface-box-shadow-default: #{$floating-surface-box-shadow-dark};
+    }
+}
 
 #{$block} {
     @include mixins.accessibility-button;
 
     $class: &;
-    --gn-composite-bar-item-action-size: 36px;
-    --gn-aside-header-item-expanded-radius: #{variables.$item-expanded-radius};
+    --_--item-min-height: var(--_--gn-aside-header-density-item-height, #{variables.$item-height});
+    --gn-composite-bar-item-action-size: var(--_--gn-aside-header-density-action-size, 36px);
+    --_--item-expanded-radius: var(
+        --_--gn-aside-header-density-item-expanded-radius,
+        #{variables.$item-expanded-radius}
+    );
 
     --_--horizontal-divider-line-color: var(--g-color-line-generic);
 
@@ -19,7 +51,7 @@ $actionLeftRightMargin: 10px;
     --_--item-general-icon-color: var(--g-color-text-primary);
     --_--item-icon-color: var(--g-color-text-complementary);
     --_--item-text-color: var(--g-color-text-primary);
-    --_--item-collapsed-radius: 7px;
+    --_--item-collapsed-radius: var(--_--gn-aside-header-density-item-collapsed-radius, 7px);
 
     --_--item-action-color: var(--g-color-base-float);
     --_--item-action-color-hover: var(--g-color-base-float-hover);
@@ -30,6 +62,9 @@ $actionLeftRightMargin: 10px;
     --_--item-selected-text-color: var(--g-color-text-primary);
     --_--item-selected-background-color: var(--g-color-base-selection);
 
+    --_--row-surface-color: transparent;
+    position: relative;
+    isolation: isolate;
     display: flex;
     min-width: 0;
     width: 100%;
@@ -40,13 +75,73 @@ $actionLeftRightMargin: 10px;
     margin-inline: auto;
 
     &:global(.#{variables.$ns}footer-item)#{$class}_type_regular {
-        height: #{variables.$compact-item-height};
-        --gn-aside-header-item-icon-background-size: 32px;
+        height: auto;
+        --_--item-min-height: var(
+            --_--gn-aside-header-density-footer-item-height,
+            #{variables.$compact-item-height}
+        );
+        min-height: var(--_--item-min-height);
+        --gn-aside-header-item-icon-background-size: var(
+            --_--gn-aside-header-density-footer-item-height,
+            #{variables.$compact-item-height}
+        );
     }
 
     &:global(.#{variables.$ns}footer-item_regular-size)#{$class}_type_regular {
-        height: #{variables.$item-height};
+        --_--item-min-height: #{variables.$item-height};
         --gn-aside-header-item-icon-background-size: 38px;
+    }
+
+    &__surface {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        border-radius: inherit;
+        background-color: var(--_--row-surface-color);
+
+        &:global([data-gn-aside-current-suppressed]),
+        &:global([data-gn-aside-current-ghost-suppressed]) {
+            --_--row-surface-color: transparent;
+        }
+    }
+
+    &_menu-popup-row {
+        background-color: var(--_--row-surface-color);
+    }
+
+    &_compact &__surface {
+        inset: auto;
+        inset-inline-start: calc(
+            (
+                    var(--_--gn-aside-header-density-item-height, #{variables.$item-height}) - var(
+                            --gn-aside-header-item-icon-background-size,
+                            var(--_--item-icon-background-size)
+                        )
+                ) /
+                2
+        );
+        top: calc(
+            (
+                    100% - var(
+                            --gn-aside-header-item-icon-background-size,
+                            var(--_--item-icon-background-size)
+                        )
+                ) /
+                2
+        );
+        width: var(
+            --gn-aside-header-item-icon-background-size,
+            var(--_--item-icon-background-size)
+        );
+        height: var(
+            --gn-aside-header-item-icon-background-size,
+            var(--_--item-icon-background-size)
+        );
+        border-radius: var(
+            --gn-aside-header-item-collapsed-radius,
+            var(--_--item-collapsed-radius)
+        );
     }
 
     &__icon {
@@ -90,23 +185,28 @@ $actionLeftRightMargin: 10px;
         align-items: center;
         justify-content: center;
         height: 100%;
-        width: var(--_--item-height, #{variables.$item-height});
+        width: var(--_--gn-aside-header-density-item-height, #{variables.$item-height});
     }
 
     &__title {
         display: flex;
         align-items: center;
+        flex: 1 1 auto;
+        min-width: 0;
         overflow: hidden;
-        margin: 0 var(--g-spacing-4) 0 var(--g-spacing-2);
+        margin: 0 var(--_--gn-aside-header-density-item-title-gap-end, var(--g-spacing-4)) 0
+            var(--_--gn-aside-header-density-item-title-gap, var(--g-spacing-2));
     }
 
     &__title-text {
         /* stylelint-disable-next-line value-no-vendor-prefix */
         display: -webkit-box;
         -webkit-box-orient: vertical;
-        /* NOTE @vladimir-kuba: 2 lines fits in container height, more lines leads overflow container */
-        -webkit-line-clamp: 2;
+        -webkit-line-clamp: 1;
+        line-clamp: 1;
         overflow: hidden;
+        min-width: 0;
+        overflow-wrap: anywhere;
         text-align: start;
 
         color: var(--gn-aside-header-item-text-color, var(--_--item-text-color));
@@ -120,7 +220,109 @@ $actionLeftRightMargin: 10px;
     }
 
     &__title-adornment {
+        flex-shrink: 0;
         margin: 0 10px;
+    }
+
+    /**
+     * Keep the pin next to the row instead of nesting a button inside the row button/link.
+     * The slot reserves its width, so long titles never render below the control.
+     */
+    &__interactive-row {
+        position: relative;
+        align-self: flex-start;
+        width: 100%;
+        height: 100%;
+        min-width: 0;
+
+        & > :first-child {
+            width: 100%;
+            min-width: 0;
+        }
+    }
+
+    &__quick-access-pin-slot {
+        position: absolute;
+        inset-block: 0;
+        // Trail the row edge like the group chevron does. The slot is exactly as wide as
+        // the pin, so no dead area separates the control from that edge.
+        inset-inline-end: var(--g-spacing-1);
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: $quickAccessPinSize;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: none;
+
+        &_suppressed {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+    }
+
+    &_with-quick-access-pin &__title {
+        // Reserve the slot plus its inset, keeping the same gap between title and pin as
+        // between pin and row edge.
+        margin-inline-end: calc(#{$quickAccessPinSize} + 2 * var(--g-spacing-1));
+    }
+
+    &__interactive-row:hover &__quick-access-pin-slot:not(&__quick-access-pin-slot_suppressed) {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transition:
+            opacity 0.15s ease var(--_--gn-aside-header-quick-access-pin-hover-delay, 200ms),
+            visibility 0s linear var(--_--gn-aside-header-quick-access-pin-hover-delay, 200ms);
+    }
+
+    // Keyboard focus must expose the next control immediately so it joins the Tab sequence.
+    &__interactive-row:focus-within
+        &__quick-access-pin-slot:not(&__quick-access-pin-slot_suppressed) {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transition: none;
+    }
+
+    // The pin is a sibling of the menu item, so hovering it must keep the row hover surface.
+    &__interactive-row:hover #{$block}:not(#{$block}_compact)#{$block}_type_regular {
+        --_--row-surface-color: var(
+            --gn-aside-header-item-current-background-color-hover,
+            var(
+                --gn-aside-header-item-current-background-color,
+                var(--_--item-selected-background-color)
+            )
+        );
+        border-radius: var(--gn-aside-header-item-expanded-radius, var(--_--item-expanded-radius));
+    }
+
+    &__interactive-row:hover
+        #{$block}:not(#{$block}_compact):not(#{$block}_current)#{$block}_type_regular {
+        --_--row-surface-color: var(
+            --gn-aside-header-item-background-color-hover,
+            var(--_--item-background-color-hover)
+        );
+    }
+
+    &__quick-access-pin {
+        flex-shrink: 0;
+        color: var(--g-color-text-complementary);
+
+        &_pinned {
+            color: var(--g-color-text-secondary);
+        }
+
+        &:hover {
+            color: var(--g-color-text-primary);
+        }
+
+        :global(.g-button__icon) {
+            color: inherit;
+        }
     }
 
     &__collapse-item {
@@ -174,6 +376,38 @@ $actionLeftRightMargin: 10px;
         }
     }
 
+    // The text determines the height. No line-count state or fixed two-line height.
+    &_auto-height {
+        --_--item-line-height: var(--g-text-body-1-line-height);
+        --_--item-padding-block: max(
+            var(--g-spacing-1),
+            (var(--_--item-min-height) - var(--_--item-line-height)) / 2
+        );
+        --_--menu-group-tree-connector-hook-inset-block: calc(
+            var(--_--item-padding-block) + var(--_--item-line-height) / 2
+        );
+
+        @supports (height: 1lh) {
+            --_--item-line-height: 1lh;
+        }
+
+        box-sizing: border-box;
+        height: auto;
+        min-height: var(--_--item-min-height);
+        padding-block: var(--_--item-padding-block);
+
+        #{$class}__icon-place {
+            align-self: flex-start;
+            height: var(--_--item-line-height);
+        }
+
+        #{$class}__title-text {
+            white-space: normal;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+        }
+    }
+
     &__btn-icon {
         width: 100%;
         height: 100%;
@@ -186,30 +420,41 @@ $actionLeftRightMargin: 10px;
         justify-content: center;
         height: var(--gn-composite-bar-item-action-size);
         margin: 0 $actionLeftRightMargin 8px;
-        background: var(--gn-aside-header-item-action-color, var(--_--item-action-color));
-        box-shadow:
-            0px 0px 0px 1px rgba(0, 0, 0, 0.03),
-            0px 5px 6px rgba(0, 0, 0, 0.12);
+        --_--row-surface-color: var(
+            --gn-aside-header-item-action-color,
+            var(--_--item-action-color)
+        );
         border-radius: var(--gn-composite-bar-item-action-size);
         transition:
             transform 0.1s ease-out,
             background-color 0.15s linear;
 
-        &:focus-visible {
+        & #{$class}__surface {
+            transition: background-color 0.15s linear;
+            box-shadow:
+                0px 0px 0px 1px rgba(0, 0, 0, 0.03),
+                0px 5px 6px rgba(0, 0, 0, 0.12);
+        }
+
+        &:focus-visible #{$class}__surface {
             box-shadow: 0 0 0 2px var(--g-color-line-misc);
         }
 
         &:hover {
-            background-color: var(
+            --_--row-surface-color: var(
                 --gn-aside-header-item-action-color-hover,
                 var(--_--item-action-color-hover)
             );
         }
 
         &:active {
-            box-shadow: 0 1px 2px var(--g-color-sfx-shadow);
             transition: none;
             transform: scale(0.96);
+
+            #{$class}__surface {
+                transition: none;
+                box-shadow: 0 1px 2px var(--g-color-sfx-shadow);
+            }
         }
 
         & #{$class}__icon-place {
@@ -241,11 +486,30 @@ $actionLeftRightMargin: 10px;
     }
 
     &__icon-popover {
+        --_--popup-min-width: 200px;
+        --_--popup-row-padding-inline: var(--g-spacing-3);
+        --_--popup-icon-place-width: var(--_--gn-aside-header-density-icon-size, 18px);
+        @include floating-surface-box-shadow-default;
         display: flex;
         box-sizing: border-box;
-        padding: var(--g-spacing-2);
+        min-width: var(--_--popup-min-width);
+        padding: var(--_--popup-padding);
         align-items: center;
-        border-radius: 12px;
+        border-radius: var(--_--popup-border-radius);
+        overflow: hidden;
+        box-shadow: var(
+            --gn-aside-header-floating-surface-box-shadow,
+            var(--_--floating-surface-box-shadow-default)
+        );
+    }
+
+    &__icon-popover_single-label {
+        --_--popup-min-width: 0;
+        --_--popup-row-padding-inline: var(--g-spacing-2);
+        box-shadow: var(
+            --gn-aside-header-floating-surface-box-shadow,
+            #{$floating-surface-box-shadow-label}
+        );
     }
 
     &__icon-popover_item-type_action {
@@ -254,19 +518,69 @@ $actionLeftRightMargin: 10px;
 
     &__popup-content {
         box-sizing: border-box;
-        border-radius: var(--gn-aside-header-item-expanded-radius);
+        width: 100%;
+        border-radius: var(
+            --gn-aside-header-item-expanded-radius,
+            var(
+                --_--gn-aside-header-density-item-expanded-radius,
+                #{variables.$item-expanded-radius}
+            )
+        );
+    }
+
+    &__popup-content_single-label {
+        overflow: hidden;
     }
 
     &__popup-content &__root-menu-item[class] {
-        background-color: transparent;
+        position: relative;
+        overflow: visible;
+        box-sizing: border-box;
+        background: none;
+        padding-block-end: 1px;
+
+        &:global(.g-list__item_active),
+        &:global(.g-list__item_selected),
+        &:global(.g-list__item_active.g-list__item_selected) {
+            background: none;
+        }
     }
 
     &__popup-title {
-        padding: var(--g-spacing-1) var(--g-spacing-2) 6px;
-        color: var(--g-color-text-primary);
+        @include mixins.text-body-1;
+
+        display: block;
+        box-sizing: border-box;
+        height: var(--_--popup-title-height);
+        padding: 6px var(--_--popup-row-padding-inline);
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: var(--g-color-text-secondary);
         font-weight: var(--g-text-subheader-font-weight);
-        font-size: var(--g-text-subheader-2-font-size);
-        line-height: var(--g-text-subheader-2-line-height);
+    }
+
+    &__popup-content &__popup-item#{$class}_hide-icon {
+        #{$class}__title {
+            flex: 1 1 auto;
+            min-width: 0;
+            margin: 0 var(--_--gn-aside-header-density-item-title-gap-end, var(--g-spacing-4)) 0
+                var(--_--popup-row-padding-inline);
+        }
+    }
+
+    &__popup-content &__popup-item:not(#{$class}_hide-icon) {
+        padding-inline-start: var(--_--popup-row-padding-inline);
+
+        #{$class}__icon-place {
+            width: var(--_--popup-icon-place-width);
+        }
+
+        #{$class}__title {
+            flex: 1 1 auto;
+            min-width: 0;
+            margin-left: var(--g-spacing-2);
+        }
     }
 
     &__popup-item {
@@ -274,7 +588,37 @@ $actionLeftRightMargin: 10px;
 
         &#{$class}_type_regular {
             height: #{variables.$compact-item-height};
-            border-radius: var(--gn-aside-header-item-expanded-radius);
+            border-radius: var(
+                --gn-aside-header-item-expanded-radius,
+                var(
+                    --_--gn-aside-header-density-item-expanded-radius,
+                    #{variables.$item-expanded-radius}
+                )
+            );
+        }
+    }
+
+    &__popup-content_single-label &__root-menu-item[class] {
+        align-items: stretch;
+    }
+
+    &__popup-content_single-label &__popup-item#{$class}_type_regular {
+        height: 100%;
+        min-height: 0;
+        border-radius: var(--_--popup-border-radius);
+    }
+
+    &__popup-content_single-label &__popup-item#{$class}_hide-icon {
+        #{$class}__title {
+            margin: 0 var(--_--popup-row-padding-inline);
+        }
+
+        #{$class}__title-text {
+            /* stylelint-disable-next-line value-no-vendor-prefix */
+            display: block;
+            -webkit-line-clamp: unset;
+            line-clamp: unset;
+            white-space: nowrap;
         }
     }
 
@@ -288,21 +632,47 @@ $actionLeftRightMargin: 10px;
         }
     }
 
+    &_menu-group-nested {
+        padding-inline-start: calc(
+            var(--_--gn-aside-header-density-item-height, #{variables.$item-height}) / 2 +
+                var(--_--menu-group-tree-connector-width, 16px) / 2 + var(--g-spacing-1)
+        );
+
+        &#{$class}_hide-icon {
+            padding-inline-start: calc(
+                var(--_--gn-aside-header-density-item-height, #{variables.$item-height}) +
+                    var(--_--gn-aside-header-density-item-title-gap, var(--g-spacing-2))
+            );
+
+            #{$class}__title {
+                margin-left: 0;
+            }
+        }
+
+        #{$class}__title {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+    }
+
     &:not(&_compact) {
         &#{$class}_current {
             &#{$class}_type_regular {
-                background-color: var(
+                --_--row-surface-color: var(
                     --gn-aside-header-item-current-background-color,
                     var(--_--item-selected-background-color)
                 );
 
-                border-radius: var(--gn-aside-header-item-expanded-radius);
+                border-radius: var(
+                    --gn-aside-header-item-expanded-radius,
+                    var(--_--item-expanded-radius)
+                );
             }
         }
 
         &:hover {
             &#{$class}_type_regular {
-                background-color: var(
+                --_--row-surface-color: var(
                     --gn-aside-header-item-current-background-color-hover,
                     var(
                         --gn-aside-header-item-current-background-color,
@@ -310,25 +680,35 @@ $actionLeftRightMargin: 10px;
                     )
                 );
 
-                border-radius: var(--gn-aside-header-item-expanded-radius);
+                border-radius: var(
+                    --gn-aside-header-item-expanded-radius,
+                    var(--_--item-expanded-radius)
+                );
             }
         }
 
         &:not(#{$class}_current):hover {
             &#{$class}_type_regular {
-                background-color: var(
+                --_--row-surface-color: var(
                     --gn-aside-header-item-background-color-hover,
                     var(--_--item-background-color-hover)
                 );
 
-                border-radius: var(--gn-aside-header-item-expanded-radius);
+                border-radius: var(
+                    --gn-aside-header-item-expanded-radius,
+                    var(--_--item-expanded-radius)
+                );
             }
         }
     }
 
     &__group-header-row {
-        --gn-aside-header-item-expanded-radius: #{variables.$item-expanded-radius};
+        --_--item-expanded-radius: var(
+            --_--gn-aside-header-density-item-expanded-radius,
+            #{variables.$item-expanded-radius}
+        );
         --_--item-background-color-hover: var(--g-color-base-simple-hover);
+        --_--item-selected-background-color: var(--g-color-base-selection);
         --_--item-chevron-padding-right: var(--g-spacing-1);
 
         display: flex;
@@ -340,7 +720,31 @@ $actionLeftRightMargin: 10px;
                 --gn-aside-header-item-background-color-hover,
                 var(--_--item-background-color-hover)
             );
-            border-radius: var(--gn-aside-header-item-expanded-radius);
+            border-radius: var(
+                --gn-aside-header-item-expanded-radius,
+                var(--_--item-expanded-radius)
+            );
+        }
+
+        &_current {
+            background-color: var(
+                --gn-aside-header-item-current-background-color,
+                var(--_--item-selected-background-color)
+            );
+            border-radius: var(
+                --gn-aside-header-item-expanded-radius,
+                var(--_--item-expanded-radius)
+            );
+        }
+
+        &_current:hover {
+            background-color: var(
+                --gn-aside-header-item-current-background-color-hover,
+                var(
+                    --gn-aside-header-item-current-background-color,
+                    var(--_--item-selected-background-color)
+                )
+            );
         }
     }
 
@@ -352,8 +756,13 @@ $actionLeftRightMargin: 10px;
         min-width: 0;
     }
 
-    &#{$class}_with-chevron-control:not(#{$class}_current):hover#{$class}_type_regular {
-        background-color: transparent;
+    /* Row hover/current backgrounds are painted by the inner `__surface` element via
+       `--_--row-surface-color`. Inside the group wrapper the wrapper paints them itself
+       (covering the chevron control too), so the row surface is muted. The selector
+       mirrors the strength of the base `:hover`/`_current` rules that set the variable. */
+    &__group-header-row
+        > #{$class}#{$class}_with-chevron-control:not(#{$class}_compact)#{$class}_type_regular {
+        --_--row-surface-color: transparent;
     }
 
     &__chevron {
@@ -387,48 +796,17 @@ $actionLeftRightMargin: 10px;
         }
     }
 
-    &_compact &__chevron {
-        position: absolute;
-        right: 8px;
-        margin: 0;
-        padding: 0;
-        align-self: auto;
-
-        svg {
-            stroke: currentColor;
-            stroke-width: 1;
-        }
-    }
-
     &_compact {
-        @mixin item-bg {
-            position: relative;
-            background-color: transparent;
-
-            &::before {
-                content: '';
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                z-index: -1;
-                width: var(
-                    --gn-aside-header-item-icon-background-size,
-                    var(--_--item-icon-background-size)
-                );
-                height: var(
-                    --gn-aside-header-item-icon-background-size,
-                    var(--_--item-icon-background-size)
-                );
-                transform: translate(-50%, -50%);
-                border-radius: var(
-                    --gn-aside-header-item-collapsed-radius,
-                    var(--_--item-collapsed-radius)
-                );
-            }
-        }
-
         &#{$class}_type_action {
             width: var(--gn-composite-bar-item-action-size);
+            margin-inline: auto;
+
+            #{$class}__surface {
+                inset: 0;
+                width: auto;
+                height: auto;
+                border-radius: inherit;
+            }
 
             & #{$class}__title {
                 margin: 0;
@@ -437,49 +815,31 @@ $actionLeftRightMargin: 10px;
 
         &#{$class}_current {
             &#{$class}_type_regular {
-                #{$class}__btn-icon {
-                    @include item-bg();
-
-                    &::before {
-                        background-color: var(
-                            --gn-aside-header-item-current-background-color,
-                            var(--_--item-selected-background-color)
-                        );
-                    }
-                }
+                --_--row-surface-color: var(
+                    --gn-aside-header-item-current-background-color,
+                    var(--_--item-selected-background-color)
+                );
             }
         }
 
         &:hover {
             &#{$class}_type_regular {
-                #{$class}__btn-icon {
-                    @include item-bg();
-
-                    &::before {
-                        background-color: var(
-                            --gn-aside-header-item-current-background-color-hover,
-                            var(
-                                --gn-aside-header-item-current-background-color,
-                                var(--_--item-selected-background-color)
-                            )
-                        );
-                    }
-                }
+                --_--row-surface-color: var(
+                    --gn-aside-header-item-current-background-color-hover,
+                    var(
+                        --gn-aside-header-item-current-background-color,
+                        var(--_--item-selected-background-color)
+                    )
+                );
             }
         }
 
         &:not(#{$class}_current):hover {
             &#{$class}_type_regular {
-                #{$class}__btn-icon {
-                    @include item-bg();
-
-                    &::before {
-                        background-color: var(
-                            --gn-aside-header-item-background-color-hover,
-                            var(--_--item-background-color-hover)
-                        );
-                    }
-                }
+                --_--row-surface-color: var(
+                    --gn-aside-header-item-background-color-hover,
+                    var(--_--item-background-color-hover)
+                );
             }
         }
     }

@@ -11,24 +11,31 @@ $block: '.#{variables.$ns}scrollable-with-scrollbar';
     --_--scrollbar-width: var(--gn-aside-scrollbar-width, 8px);
     --_--scrollbar-thumb-width: var(--gn-aside-scrollbar-thumb-width, 4px);
 
-    &::before {
+    &::before,
+    &::after {
         content: '';
         position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 100%;
+        inset-inline: 0;
+        height: 12px;
+        z-index: 2;
         pointer-events: none;
-        background: var(
-            --gn-aside-bottom-shadow-color,
-            linear-gradient(to bottom, transparent 0%, transparent 50%, rgba(0, 0, 0, 0.08) 100%)
-        );
-        transition: opacity 0.3s ease-in-out;
         opacity: 0;
+        transition: opacity 0.3s ease-in-out;
     }
 
-    &#{$block}_bottom-shadow::before {
-        opacity: 1;
+    &::before {
+        inset-block-start: 0;
+        background: linear-gradient(to bottom, var(--g-color-sfx-shadow), transparent);
+    }
+
+    &::after {
+        inset-block-end: 0;
+        background: linear-gradient(to top, var(--g-color-sfx-shadow), transparent);
+    }
+
+    &_shadow-start::before,
+    &_shadow-end::after {
+        opacity: 0.7;
     }
 
     &__scrollable-inner {
@@ -43,6 +50,32 @@ $block: '.#{variables.$ns}scrollable-with-scrollbar';
             display: none;
             width: 0;
             height: 0;
+        }
+    }
+
+    &__scroll-divider {
+        position: absolute;
+        inset-inline: 0;
+        height: 1px;
+        z-index: 2;
+        pointer-events: none;
+        background-color: var(
+            --gn-aside-header-divider-horizontal-color,
+            var(--g-color-line-generic)
+        );
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+
+        &_start {
+            inset-block-start: 0;
+        }
+
+        &_end {
+            inset-block-end: 0;
+        }
+
+        &_visible {
+            opacity: 1;
         }
     }
 
@@ -72,24 +105,4 @@ $block: '.#{variables.$ns}scrollable-with-scrollbar';
     &:hover &__scrollbar-thumb {
         opacity: 1;
     }
-}
-
-:global(.g-root_theme_light) #{$block},
-:global(.g-root_theme_light-hc) #{$block} {
-    --gn-aside-bottom-shadow-color: linear-gradient(
-        to bottom,
-        transparent 0%,
-        transparent 50%,
-        rgba(0, 0, 0, 0.08) 100%
-    );
-}
-
-:global(.g-root_theme_dark) #{$block},
-:global(.g-root_theme_dark-hc) #{$block} {
-    --gn-aside-bottom-shadow-color: linear-gradient(
-        to bottom,
-        transparent 0%,
-        transparent 80%,
-        rgba(0, 0, 0, 0.4) 100%
-    );
 }

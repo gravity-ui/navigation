@@ -72,7 +72,7 @@ export interface MenuGroup {
     /** Hide the group from display */
     hidden?: boolean;
     /**
-     * Optional title shown only in the compact popup that lists group children.
+     * Optional title shown in a popup that lists group children.
      * Does not affect the group title displayed anywhere else.
      */
     popupTitle?: string;
@@ -91,8 +91,14 @@ export interface MenuGroup {
      */
     href?: string;
     /**
-     * When `true`, the small chevron is not rendered on the group anchor in the
-     * compact (collapsed) sidebar. The children popup keeps working as usual.
+     * Marks the group header row as the current page, like `MenuItem.current`.
+     * Only the header row is highlighted; nested items keep their own states.
+     */
+    current?: boolean;
+    /**
+     * @deprecated No-op since v7: the compact sidebar never renders a chevron on the
+     * group anchor. The children popup keeps working as usual. Will be removed in the
+     * next major version.
      */
     hideCompactChevron?: boolean;
     /**

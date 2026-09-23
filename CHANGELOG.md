@@ -1,5 +1,35 @@
 # Changelog
 
+## [Unreleased]
+
+### ⚠ BREAKING CHANGES
+
+v7 keeps the v6 props API: no props were removed or renamed. The breaking changes are in `AsideHeader` layout and behavior.
+
+* **AsideHeader:** the collapse button is no longer a full-width bar at the bottom of the aside. It now sits at the aside edge beside the last visible `FooterItem` (or on a blank bottom row when there are no footer items) and appears on hover/focus in the compact state. `hideCollapseButton` removes the control, its reserved space and the blank row.
+* **AsideHeader:** `collapseButtonWrapper` now decorates only the edge control. Move any full-width content previously rendered by this wrapper into `renderFooter`.
+* **AsideHeader:** in the expanded sidebar, menu titles automatically take one or two lines depending on the available width, so long titles increase the row height. Compact rows and popup rows stay single-line.
+* **AsideHeader:** in the compact state, the built-in tooltip of the selected row is suppressed even when `enableTooltip={true}`.
+* **AsideHeader:** `MenuGroup.hideCompactChevron` is deprecated and has no effect: the compact sidebar no longer renders a chevron on the group anchor.
+
+### Features
+
+* **AsideHeader:** added `menuDensity: 'default' | 'compact'` for a denser aside and menu items ([#664](https://github.com/gravity-ui/navigation/issues/664)).
+* **AsideHeader:** added combined menu groups with inline tree hierarchy, group popups and `menuGroupNestedIcons` ([#666](https://github.com/gravity-ui/navigation/issues/666)).
+* **AsideHeader:** added quick access: `enableQuickAccess`, `AsideHeaderItem.quickAccess`, `onQuickAccessChange` and `quickAccessHighlightInMainMenu` ([#667](https://github.com/gravity-ui/navigation/issues/667)).
+* **AsideHeader:** quick access and the menu share one scroll area; added `compactTransition` to opt out of compact-layout animation and `hideSectionDividers` to replace header/footer separators with scroll-edge indicators ([#674](https://github.com/gravity-ui/navigation/issues/674)).
+* **AsideHeader:** menu group headers support `onItemClick`, `href`, `current`, `iconSize` and `hideItemsInAllPages`, including the More overflow row ([#676](https://github.com/gravity-ui/navigation/issues/676)).
+* **AsideHeader:** the compact collapse button draws a 1 px border, customizable with `--gn-aside-header-collapse-button-border-color` ([#680](https://github.com/gravity-ui/navigation/issues/680)).
+* **AsideHeader:** menu titles are sized automatically, with no line-count option ([#684](https://github.com/gravity-ui/navigation/issues/684)).
+
+### Bug Fixes
+
+* **AsideHeader:** close popups and the All pages panel after a navigation click ([#677](https://github.com/gravity-ui/navigation/issues/677)).
+* **AsideHeader:** correct decoration, tree lines and popup backgrounds ([#678](https://github.com/gravity-ui/navigation/issues/678)).
+* **AsideHeader:** close the All pages panel before the item action ([#679](https://github.com/gravity-ui/navigation/issues/679)).
+* **AsideHeader:** keep the header gap above `aboveMenuContent` ([#685](https://github.com/gravity-ui/navigation/issues/685)).
+* **AsideHeader:** mute consumer current items while the All pages panel is open ([#683](https://github.com/gravity-ui/navigation/issues/683)).
+
 ## [6.6.1](https://github.com/gravity-ui/navigation/compare/v6.6.0...v6.6.1) (2026-09-21)
 
 

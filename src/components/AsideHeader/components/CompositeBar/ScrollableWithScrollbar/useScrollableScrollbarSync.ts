@@ -1,8 +1,13 @@
 import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 
-const EMPTY_DEPS: React.DependencyList = [];
-
 const MIN_THUMB_HEIGHT = 24;
+
+/**
+ * A fractional container height can make the integer scrollHeight exceed clientHeight
+ * by this many pixels. Such a delta is sub-pixel rounding, not meaningfully scrollable
+ * content, so it is not reported as overflow.
+ */
+const SUBPIXEL_OVERFLOW_PX = 1;
 
 type ThumbGeometry = {
     top: number;
@@ -13,8 +18,9 @@ type UseScrollableScrollbarSyncResult = {
     scrollRef: React.RefObject<HTMLDivElement>;
     trackRef: React.RefObject<HTMLDivElement>;
     thumbRef: React.RefObject<HTMLDivElement>;
-    hasContentBelow: boolean;
     overflows: boolean;
+    canScrollUp: boolean;
+    canScrollDown: boolean;
     thumb: ThumbGeometry;
     scheduleUpdate: () => void;
     handleThumbPointerDown: (event: React.PointerEvent<HTMLDivElement>) => void;
@@ -22,25 +28,36 @@ type UseScrollableScrollbarSyncResult = {
 };
 
 /**
- * Keeps a custom scrollbar thumb and bottom shadow in sync with a native
- * scroll layer. The scroll element handles touch/keyboard; wheel events on the
- * overlay track are forwarded to it (the track sits above the scroller, so
- * they would not scroll otherwise). Wheel, touch, and keyboard on the
- * scrollable area itself are unchanged.
+ * Keeps a custom scrollbar thumb in sync with a native scroll layer. The
+ * scroll element handles touch/keyboard; wheel events on the overlay track are
+ * forwarded to it (the track sits above the scroller, so they would not scroll
+ * otherwise). Wheel, touch, and keyboard on the scrollable area itself are
+ * unchanged.
  *
- * @param recalcDeps - extra deps that should trigger thumb/shadow recalculation
  * @returns refs, scroll state, thumb geometry, and pointer handlers for the UI
  */
-export function useScrollableScrollbarSync(
-    recalcDeps: React.DependencyList = EMPTY_DEPS,
-): UseScrollableScrollbarSyncResult {
+export function useScrollableScrollbarSync(): UseScrollableScrollbarSyncResult {
     const scrollRef = useRef<HTMLDivElement>(null);
     const trackRef = useRef<HTMLDivElement>(null);
     const thumbRef = useRef<HTMLDivElement>(null);
 
-    const [hasContentBelow, setHasContentBelow] = useState(false);
     const [overflows, setOverflows] = useState(false);
-    const [thumb, setThumb] = useState<ThumbGeometry>({top: 0, height: 0});
+    const [geometry, setGeometry] = useState({
+        thumb: {top: 0, height: 0} as ThumbGeometry,
+        canScrollUp: false,
+        canScrollDown: false,
+    });
+
+    const updateGeometry = useCallback((next: typeof geometry) => {
+        setGeometry((previous) =>
+            previous.thumb.top === next.thumb.top &&
+            previous.thumb.height === next.thumb.height &&
+            previous.canScrollUp === next.canScrollUp &&
+            previous.canScrollDown === next.canScrollDown
+                ? previous
+                : next,
+        );
+    }, []);
 
     const rafIdRef = useRef<number | null>(null);
     const scheduleUpdate = useCallback(() => {
@@ -57,16 +74,17 @@ export function useScrollableScrollbarSync(
                 return;
             }
 
-            const {scrollTop, scrollHeight, clientHeight} = el;
-            const isOverflowing = scrollHeight > clientHeight;
-            // `-1` guards against subpixel rounding at the bottom.
-            const notAtBottom = scrollTop + clientHeight < scrollHeight - 1;
+            const {scrollHeight, clientHeight} = el;
+            const isOverflowing = scrollHeight - clientHeight > SUBPIXEL_OVERFLOW_PX;
 
             setOverflows(isOverflowing);
-            setHasContentBelow(isOverflowing && notAtBottom);
 
             if (!isOverflowing) {
-                setThumb({top: 0, height: 0});
+                updateGeometry({
+                    thumb: {top: 0, height: 0},
+                    canScrollUp: false,
+                    canScrollDown: false,
+                });
                 return;
             }
 
@@ -74,13 +92,19 @@ export function useScrollableScrollbarSync(
             const rawHeight = clientHeight * ratio;
             const height = Math.max(rawHeight, MIN_THUMB_HEIGHT);
             const maxTop = clientHeight - height;
+            const {scrollTop} = el;
             const scrollRatio =
                 scrollHeight - clientHeight > 0 ? scrollTop / (scrollHeight - clientHeight) : 0;
             const top = maxTop * scrollRatio;
 
-            setThumb({top, height});
+            updateGeometry({
+                thumb: {top, height},
+                canScrollUp: isOverflowing && scrollTop > SUBPIXEL_OVERFLOW_PX,
+                canScrollDown:
+                    isOverflowing && scrollHeight - clientHeight - scrollTop > SUBPIXEL_OVERFLOW_PX,
+            });
         });
-    }, []);
+    }, [updateGeometry]);
 
     useEffect(() => {
         const el = scrollRef.current;
@@ -91,15 +115,36 @@ export function useScrollableScrollbarSync(
 
         scheduleUpdate();
 
-        if (typeof ResizeObserver === 'undefined') {
-            return undefined;
+        // `ResizeObserver` is missing in jsdom, so keep it optional: the mutation
+        // observer below is set up either way.
+        const observer =
+            typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(scheduleUpdate);
+        observer?.observe(el);
+        // Observe the direct content child as well: its content-box changes whenever
+        // the rendered content changes (rows, titles, adornments, groups, density).
+        const contentEl = el.firstElementChild;
+        if (contentEl) {
+            observer?.observe(contentEl);
         }
 
-        const observer = new ResizeObserver(scheduleUpdate);
-        observer.observe(el);
-        return () => observer.disconnect();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [scheduleUpdate, ...recalcDeps]);
+        // Content can also change without resizing any observed box: the collapse-mode
+        // menu resizes its content wrapper via an inline style (AutoSizer), which
+        // changes scrollHeight while every observed box stays the same, leaving the
+        // overflow state stale. Re-measure on content mutations too (rAF-throttled
+        // by scheduleUpdate).
+        const mutationObserver = new MutationObserver(scheduleUpdate);
+        mutationObserver.observe(el, {
+            childList: true,
+            subtree: true,
+            characterData: true,
+            attributes: true,
+        });
+
+        return () => {
+            observer?.disconnect();
+            mutationObserver.disconnect();
+        };
+    }, [scheduleUpdate]);
 
     useEffect(() => {
         return () => {
@@ -228,9 +273,8 @@ export function useScrollableScrollbarSync(
         scrollRef,
         trackRef,
         thumbRef,
-        hasContentBelow,
         overflows,
-        thumb,
+        ...geometry,
         scheduleUpdate,
         handleThumbPointerDown,
         handleTrackPointerDown,

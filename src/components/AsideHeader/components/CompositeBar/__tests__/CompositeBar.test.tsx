@@ -8,9 +8,14 @@ import {ThemeProvider} from '@gravity-ui/uikit';
 import {act, fireEvent, render, screen} from '@testing-library/react';
 
 import {MenuGroup} from '../../../../types';
-import {AsideHeaderInnerContextProvider} from '../../../AsideHeaderContext';
+import {
+    AsideHeaderInnerContextProvider,
+    AsideHeaderInnerContextType,
+} from '../../../AsideHeaderContext';
 import {AsideHeaderItem} from '../../../types';
 import {CompositeBar} from '../CompositeBar';
+
+jest.mock('../../../i18n');
 
 // Mock AutoSizer to render children with a fixed small height that forces items to collapse
 jest.mock('react-virtualized-auto-sizer', () => ({
@@ -19,13 +24,15 @@ jest.mock('react-virtualized-auto-sizer', () => ({
         children({width: 200, height: 80}),
 }));
 
-const contextValue = {
+const contextValue: AsideHeaderInnerContextType = {
     compact: false,
     size: 200,
     menuItems: [],
     allPagesIsAvailable: false,
+    quickAccessIsAvailable: false,
     onItemClick: () => {},
-} as any;
+    onToggleQuickAccess: () => {},
+};
 
 function renderCompositeBar(props: {
     items: AsideHeaderItem[];
@@ -33,6 +40,7 @@ function renderCompositeBar(props: {
     compact?: boolean;
     menuMoreTitle?: string;
     menuGroups?: MenuGroup[];
+    suppressCurrentItemIds?: ReadonlySet<string>;
 }) {
     return render(
         <ThemeProvider theme="light">
@@ -44,6 +52,7 @@ function renderCompositeBar(props: {
                     compact={props.compact ?? false}
                     onItemClick={props.onItemClick}
                     menuMoreTitle={props.menuMoreTitle ?? 'More'}
+                    suppressCurrentItemIds={props.suppressCurrentItemIds}
                 />
             </AsideHeaderInnerContextProvider>
         </ThemeProvider>,
@@ -102,27 +111,55 @@ describe('CompositeBar', () => {
         expect(screen.getByText('Ресурсы')).toBeTruthy();
     });
 
-    it('does not close compact icon tooltip when clicking the current leaf menu item', () => {
+    it('preserves current item data and invokes callbacks once in the compact hover popup', () => {
         jest.useFakeTimers();
 
-        const onItemClick = jest.fn();
-        const items: AsideHeaderItem[] = [{id: 'home', title: 'Home', icon: Gear, current: true}];
+        const userItemClick = jest.fn();
+        // Emulates the AsideHeader handler, which invokes item.onItemClick at the end.
+        // A double invocation would toggle the All pages panel back closed.
+        const onItemClick = jest.fn((item, collapsed, event) => {
+            item.onItemClick?.(item, collapsed, event);
+        });
+        const items: AsideHeaderItem[] = [
+            {
+                id: 'home',
+                title: 'Home',
+                icon: Gear,
+                current: true,
+                onItemClick: userItemClick,
+            },
+        ];
 
         renderCompositeBar({items, onItemClick, compact: true});
 
-        const itemButton = screen.getByRole('button');
+        const row = screen.getByRole('button', {name: 'Home'});
+        // The label Popover is anchored to the icon area inside the menu row.
+        /* eslint-disable testing-library/no-node-access */
+        const labelPopupTrigger = row.querySelector(
+            '[data-gn-aside-part="icon"]',
+        )?.firstElementChild;
+        /* eslint-enable testing-library/no-node-access */
+        expect(labelPopupTrigger).toBeTruthy();
 
-        fireEvent.mouseEnter(itemButton);
+        fireEvent.mouseEnter(labelPopupTrigger as Element);
 
         act(() => {
-            jest.advanceTimersByTime(150);
+            jest.advanceTimersByTime(200);
         });
 
-        expect(screen.getByText('Home')).toBeTruthy();
+        const popupItemButton = screen.getAllByRole('button', {name: 'Home'})[1];
+        expect(popupItemButton).toBeTruthy();
 
-        fireEvent.click(itemButton);
+        fireEvent.click(popupItemButton);
 
-        expect(screen.getByText('Home')).toBeTruthy();
+        expect(onItemClick).toHaveBeenCalledWith(
+            expect.objectContaining({id: 'home', current: true}),
+            true,
+            expect.any(Object),
+        );
+        expect(onItemClick).toHaveBeenCalledTimes(1);
+        expect(userItemClick).toHaveBeenCalledTimes(1);
+        expect(screen.getAllByRole('button', {name: 'Home'})).toHaveLength(2);
 
         jest.useRealTimers();
     });
@@ -148,72 +185,32 @@ describe('CompositeBar', () => {
         expect(screen.getByText('Workbook 1')).toBeTruthy();
     });
 
-    it('invokes onItemClick once when clicking the row inside the compact hover popup', () => {
-        jest.useFakeTimers();
-
-        const userItemClick = jest.fn();
-        // Emulates the AsideHeader handler, which invokes item.onItemClick at the end.
-        // A double invocation would toggle the All pages panel back closed.
-        const onItemClick = jest.fn((item, collapsed, event) => {
-            item.onItemClick?.(item, collapsed, event);
-        });
-
-        renderCompositeBar({
-            items: [{id: 'home', title: 'Home', icon: Gear, onItemClick: userItemClick}],
-            onItemClick,
-            compact: true,
-        });
-
-        const row = screen.getByRole('button', {name: 'Home'});
-        // Popover trigger in compact mode is the inner icon box, not the row button
-        // eslint-disable-next-line testing-library/no-node-access
-        const iconBox = row.querySelector('.gn-composite-bar-item__btn-icon') as HTMLElement;
-        fireEvent.mouseEnter(iconBox);
-        act(() => {
-            jest.advanceTimersByTime(200);
-        });
-
-        const popupRow = screen.getAllByText('Home').find((el) => !row.contains(el));
-        expect(popupRow).toBeTruthy();
-
-        fireEvent.click(popupRow as HTMLElement);
-
-        expect(onItemClick).toHaveBeenCalledTimes(1);
-        expect(userItemClick).toHaveBeenCalledTimes(1);
-
-        jest.useRealTimers();
-    });
-
-    it('renders the chevron on the compact group anchor by default', () => {
+    it('closes the compact group popup when clicking a group header with its own action', () => {
         const onItemClick = jest.fn();
-        const items: AsideHeaderItem[] = [
-            {id: 'wb-1', title: 'Workbook 1', icon: Gear, groupId: 'resources'},
-        ];
-        const menuGroups: MenuGroup[] = [{id: 'resources', title: 'Resources Group', icon: Gear}];
-
-        renderCompositeBar({items, onItemClick, menuGroups, compact: true});
-
-        // eslint-disable-next-line testing-library/no-node-access
-        expect(document.querySelector('.gn-composite-bar-item__chevron')).not.toBeNull();
-    });
-
-    it('hides the chevron on the compact group anchor when hideCompactChevron is set', () => {
-        const onItemClick = jest.fn();
+        const groupClick = jest.fn();
         const items: AsideHeaderItem[] = [
             {id: 'wb-1', title: 'Workbook 1', icon: Gear, groupId: 'resources'},
         ];
         const menuGroups: MenuGroup[] = [
-            {id: 'resources', title: 'Resources Group', icon: Gear, hideCompactChevron: true},
+            {
+                id: 'resources',
+                title: 'Resources Group',
+                popupTitle: 'Ресурсы',
+                icon: Gear,
+                onItemClick: groupClick,
+            },
         ];
 
         renderCompositeBar({items, onItemClick, menuGroups, compact: true});
 
-        // eslint-disable-next-line testing-library/no-node-access
-        expect(document.querySelector('.gn-composite-bar-item__chevron')).toBeNull();
-
-        // The children popup still opens from the anchor.
-        fireEvent.click(screen.getByText('Resources Group'));
-        expect(screen.getByText('Workbook 1')).toBeTruthy();
+        const groupHeader = screen.getByText('Resources Group');
+        fireEvent.click(groupHeader);
+        expect(onItemClick).toHaveBeenCalledWith(
+            expect.objectContaining({onItemClick: groupClick}),
+            false,
+            expect.any(Object),
+        );
+        expect(screen.queryByText('Ресурсы')).toBeNull();
     });
 
     it('does not render popupTitle when it is not set on the MenuGroup', () => {
@@ -252,5 +249,32 @@ describe('CompositeBar', () => {
         expect(screen.getByText('Ресурсы')).toBeTruthy();
         expect(screen.getByText('Workbook 1')).toBeTruthy();
         expect(screen.getByText('Workbook 2')).toBeTruthy();
+    });
+
+    it('suppresses the aggregate current state of More and its popup item', () => {
+        const onItemClick = jest.fn();
+        const currentItem: AsideHeaderItem = {
+            id: 'current',
+            title: 'Current',
+            icon: Gear,
+            current: true,
+            quickAccess: true,
+        };
+
+        renderCompositeBar({
+            items: [
+                {id: 'first', title: 'First', icon: Gear},
+                currentItem,
+                {id: 'last', title: 'Last', icon: Gear},
+            ],
+            onItemClick,
+            suppressCurrentItemIds: new Set([currentItem.id]),
+        });
+
+        const moreButton = screen.getByRole('button', {name: 'More'});
+        expect(moreButton.className).not.toContain('current');
+
+        fireEvent.click(moreButton);
+        expect(screen.getByRole('button', {name: 'Current'}).className).not.toContain('current');
     });
 });

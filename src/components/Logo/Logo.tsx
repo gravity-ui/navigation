@@ -10,7 +10,12 @@ import styles from './Logo.module.scss';
 const b = createBlock('logo', styles);
 
 export const Logo: React.FC<
-    LogoProps & {compact?: boolean; buttonClassName?: string; iconPlaceClassName?: string}
+    LogoProps & {
+        compact?: boolean;
+        buttonClassName?: string;
+        iconPlaceClassName?: string;
+        'data-gn-aside-transition-row'?: 'logo';
+    }
 > = ({
     text,
     icon,
@@ -28,6 +33,7 @@ export const Logo: React.FC<
     buttonClassName,
     'aria-label': ariaLabel,
     'aria-labelledby': ariaLabelledby,
+    'data-gn-aside-transition-row': transitionRow,
 }) => {
     const hasWrapper = typeof wrapper === 'function';
 
@@ -49,7 +55,7 @@ export const Logo: React.FC<
         logo = text();
     } else {
         logo = (
-            <div className={b('logo')} style={{fontSize: textSize}}>
+            <div className={b('logo')} data-gn-aside-part="title" style={{fontSize: textSize}}>
                 {text}
             </div>
         );
@@ -68,13 +74,15 @@ export const Logo: React.FC<
 
     const button = (
         <Button {...buttonProps} className={b('btn-logo', buttonClassName)} onClick={onClick}>
-            <span className={b('logo-icon-place', iconPlaceClassName)}>{buttonIcon}</span>
+            <span className={b('logo-icon-place', iconPlaceClassName)} data-gn-aside-part="icon">
+                {buttonIcon}
+            </span>
             {!compact && logo}
         </Button>
     );
 
     return (
-        <div className={b(null, className)}>
+        <div className={b(null, className)} data-gn-aside-transition-row={transitionRow}>
             {hasWrapper ? wrapper(button, Boolean(compact)) : button}
         </div>
     );

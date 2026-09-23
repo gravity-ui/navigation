@@ -3,11 +3,12 @@ import React, {useCallback} from 'react';
 import {Icon} from '@gravity-ui/uikit';
 
 import {Logo} from '../../Logo';
-import {ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT} from '../../constants';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
+import {getAsideHeaderDecorationHeight, getAsideHeaderDensityConfig} from '../density';
 import {AsideHeaderItem} from '../types';
 import {b} from '../utils';
 
+import {AsideDivider} from './AsideDivider';
 import {CompositeBar} from './CompositeBar';
 
 import headerDividerCollapsedIcon from '../../../../assets/icons/divider-collapsed.svg';
@@ -16,8 +17,16 @@ const DEFAULT_SUBHEADER_ITEMS: AsideHeaderItem[] = [];
 const HEADER_COMPOSITE_ID = 'gravity-ui/navigation-header-composite-bar';
 
 export const Header = () => {
-    const {logo, onItemClick, onClosePanel, headerDecoration, subheaderItems, compact} =
-        useAsideHeaderInnerContext();
+    const {
+        logo,
+        onItemClick,
+        onClosePanel,
+        headerDecoration,
+        subheaderItems,
+        compact,
+        menuDensity,
+    } = useAsideHeaderInnerContext();
+    const {compactWidth} = getAsideHeaderDensityConfig(menuDensity);
 
     const onLogoClick = useCallback(
         (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -32,6 +41,8 @@ export const Header = () => {
             {logo && (
                 <Logo
                     {...logo}
+                    data-gn-aside-transition-row="logo"
+                    className={b('logo', logo.className)}
                     onClick={onLogoClick}
                     compact={compact}
                     buttonClassName={b('logo-button')}
@@ -48,12 +59,13 @@ export const Header = () => {
                 onItemClick={onItemClick}
             />
 
+            <AsideDivider className={b('header-bottom-divider')} transitionId="header" />
             {headerDecoration && (
                 <Icon
                     data={headerDividerCollapsedIcon}
                     className={b('header-divider')}
-                    width={ASIDE_HEADER_COMPACT_WIDTH}
-                    height={HEADER_DIVIDER_HEIGHT}
+                    width={compactWidth}
+                    height={getAsideHeaderDecorationHeight(menuDensity)}
                 />
             )}
         </div>

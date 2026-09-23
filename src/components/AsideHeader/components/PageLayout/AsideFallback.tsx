@@ -2,35 +2,54 @@ import React from 'react';
 
 import {Icon, QAProps} from '@gravity-ui/uikit';
 
-import {ASIDE_HEADER_COMPACT_WIDTH, HEADER_DIVIDER_HEIGHT, ITEM_HEIGHT} from '../../../constants';
 import {useAsideHeaderContext} from '../../AsideHeaderContext';
+import {getAsideHeaderDecorationHeight, getAsideHeaderDensityConfig} from '../../density';
 import {b} from '../../utils';
+import {AsideDivider} from '../AsideDivider';
 
 import headerDividerCollapsedIcon from '../../../../../assets/icons/divider-collapsed.svg';
 
 interface Props extends QAProps {
     headerDecoration?: boolean;
+    hideSectionDividers?: boolean;
     subheaderItemsCount?: number;
 }
 
-export const AsideFallback: React.FC<Props> = ({headerDecoration, subheaderItemsCount = 0, qa}) => {
-    const {compact} = useAsideHeaderContext();
+export const AsideFallback: React.FC<Props> = ({
+    headerDecoration,
+    hideSectionDividers,
+    subheaderItemsCount = 0,
+    qa,
+}) => {
+    const {compact, menuDensity} = useAsideHeaderContext();
+    const {compactWidth, itemHeight} = getAsideHeaderDensityConfig(menuDensity);
 
     const widthVar = compact ? '--gn-aside-header-min-width' : '--gn-aside-header-size';
 
-    const subheaderHeight = (1 + subheaderItemsCount) * ITEM_HEIGHT;
+    const subheaderHeight = (1 + subheaderItemsCount) * itemHeight;
 
     return (
-        <div className={b('aside')} style={{width: `var(${widthVar})`}} data-qa={qa}>
-            <div className={b('aside-content', {'with-decoration': headerDecoration})}>
+        <div
+            className={b('aside')}
+            style={{width: `var(${widthVar})`}}
+            data-qa={qa}
+            data-gn-aside-panel
+        >
+            <div
+                className={b('aside-content', {
+                    'with-decoration': headerDecoration,
+                    'hide-section-dividers': hideSectionDividers,
+                })}
+            >
                 <div className={b('header', {'with-decoration': headerDecoration})}>
                     <div style={{height: subheaderHeight}} />
+                    <AsideDivider className={b('header-bottom-divider')} transitionId="header" />
                     {compact && headerDecoration ? (
                         <Icon
                             data={headerDividerCollapsedIcon}
                             className={b('header-divider')}
-                            width={ASIDE_HEADER_COMPACT_WIDTH}
-                            height={HEADER_DIVIDER_HEIGHT}
+                            width={compactWidth}
+                            height={getAsideHeaderDecorationHeight(menuDensity)}
                         />
                     ) : null}
                 </div>

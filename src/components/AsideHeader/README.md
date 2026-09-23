@@ -24,9 +24,132 @@ import {AsideHeader} from '@gravity-ui/navigation';
 The component has two possible states: collapsed, expanded.
 Уou can manage between states using `compact`, `onChangeCompact` props and also hide button with `hideCollapseButton`.
 
+Collapse and expansion animate the sidebar width, item positions, and selection surfaces together.
+Titles are laid out at the target width and revealed during expansion, without rewrapping on each
+frame or a second layout change at the end. Clicking the control again reverses from the currently
+displayed positions. The `compact` state and callbacks always describe the requested target state.
+Users who prefer reduced motion receive an immediate layout change.
+
+All built-in horizontal separators, including `type: 'divider'` items in header, menu, footer,
+and nested groups, resize with the sidebar while preserving their local spacing.
+
+The current-item transition follows changes to `compact`: when a selected child
+becomes represented by its group or **More**, one background moves between those rows. It also
+supports reversing an unfinished transition. Ordinary page selection remains immediate, and
+quick-access highlight settings and the theme's selection transparency are preserved. A current
+change during this movement restores native highlighting while the layout continues animating.
+Ambiguous selections retain existing native highlighting; reduced motion switches immediately.
+
+### Disabling compact transitions
+
+Set `compactTransition={false}` on `AsideHeader` or `PageLayout` (default: `true`).
+Aside and content widths, custom background width, row and divider geometry, current-item
+highlighting, and the offset of an open Drawer immediately follow the target `compact` state.
+Disabling the flag during a transition finishes it immediately and releases transition resources.
+Re-enabling it without changing `compact` does not animate; simultaneous updates use the new flag.
+Children stay mounted. `PageLayoutAside` and `AsideFallback` inherit the layout setting.
+
+Hover effects, independent Drawer opening/closing, and the opacity effects of the footer divider
+and custom scrollbar are preserved. The existing `prefers-reduced-motion` behavior is unchanged.
+
+```tsx
+<AsideHeader compact={compact} compactTransition={false} onChangeCompact={setCompact} />
+
+<PageLayout compact={compact} compactTransition={false}>
+  <PageLayoutAside menuItems={menuItems} onChangeCompact={setCompact} />
+  <PageLayout.Content>{children}</PageLayout.Content>
+</PageLayout>
+```
+
+### Collapse button (v7)
+
+The collapse button sits at the aside edge beside the last visible `FooterItem`. The row keeps its
+own action and menu; in expanded mode it reserves 24 px for the button. In compact mode, hovering
+anywhere in the aside or over the button, or focusing the button from the keyboard, reveals the
+control. The selected row's built-in tooltip is suppressed in compact mode even when `enableTooltip={true}`. With no
+visible `FooterItem`, a blank bottom row provides the same control. `hideCollapseButton` removes
+the control, reserved space, and blank row.
+
+The button remains keyboard accessible and retains focus when toggled. `expandTitle` and
+`collapseTitle` set its accessible name. `compactTransition={false}` disables its geometry
+transitions while preserving hover appearance; reduced motion disables both.
+
+While the aside animates towards compact the button stays hidden, so its collapsed appearance never
+lands on an aside that is still at its expanded width; hover reveals it once the layout settles. A
+keyboard-focused button stays visible throughout. Expanding is unaffected — the button is visible
+for the whole transition.
+
+At the standard z-index, the compact tab extends 10 px over the edge of open All pages and custom
+`panelItems` Drawers. Clicking it changes `compact` and keeps the panel open. Its transparent layer
+does not intercept clicks outside the button. The layer uses
+`calc(var(--gn-aside-header-z-index, 100) + 1)`. Consumer z-index settings determine custom stacking;
+portaled Popups (including `asideRef` with `right-end`) may cover the tab and retain their normal
+position and behavior. The compact button background follows the collapsed aside background,
+then the general aside background, then the theme background. Matching an arbitrary
+`customBackground` is not guaranteed. In compact the button also draws a 1 px border so the
+vertical divider reads as routing around it instead of stopping at the opaque fill; override it
+with `--gn-aside-header-collapse-button-border-color`. The expanded button keeps no border.
+
+In v7, `collapseButtonWrapper` decorates the edge control. Move any full-width additional content
+previously rendered by this wrapper into `renderFooter`:
+
+```tsx
+<PageLayoutAside
+  collapseButtonWrapper={(button) => <span className="collapse-decoration">{button}</span>}
+  renderFooter={({compact}) => (
+    <>
+      <div>Additional footer content</div>
+      <FooterItem id="account" title="Account" icon={Person} compact={compact} />
+    </>
+  )}
+/>
+```
+
+`PageLayoutAside` must participate directly in the flex layout of `PageLayout`. React components,
+Fragments, Context providers, and Suspense are supported without extra DOM boxes. If a consumer
+needs a DOM wrapper, give it `display: contents`; an ordinary block wrapper is unsupported.
+The library does not change consumer wrapper styles automatically.
+
+```tsx
+<PageLayout compact={compact}>
+  <div style={{display: 'contents'}}>
+    <PageLayoutAside menuItems={menuItems} onChangeCompact={setCompact} />
+  </div>
+  <PageLayout.Content>{children}</PageLayout.Content>
+</PageLayout>
+```
+
+### Menu density
+
+Use `menuDensity="compact"` to reduce the aside width, item height, icon size, spacing, and corner
+radius without changing how the navigation behaves. Density is independent from the collapsed or
+expanded state controlled by `compact`, so both properties can be combined.
+
+```tsx
+<AsideHeader
+  compact={compact}
+  menuDensity="compact"
+  menuItems={menuItems}
+  onChangeCompact={setCompact}
+/>
+```
+
+The default value is `default`, which preserves the previous dimensions. Compact density reduces
+menu, subheader, and footer item icons; it does not resize the standard 24 px logo icon.
+With the advanced layout pattern, pass `menuDensity` to `PageLayout`; `PageLayoutAside` inherits
+the normalized value from context.
+
 ### Top decoration
 
 Navigation highlights top section with Logo and Subheader items using `headerDecoration` props.
+
+### Section dividers
+
+`hideSectionDividers` hides the header/footer separators (including the collapsed header decoration SVG) and their spacing toward the menu. Header background, outer spacing, and separators inside the menu/Quick Access are preserved.
+
+With `hideSectionDividers=true`, indicators appear at the menu scroll edges only while content is hidden beyond that edge: bottom at the start, both in the middle, top at the end, neither without overflow. They do not restore spacing. With `false`, the existing footer separator remains visible whenever the menu overflows, including at the end. The Quick Access separator stays inside the scrolling content and can coexist with these indicators. Setting `--gn-aside-header-divider-horizontal-color: transparent` also hides the scroll indicators.
+
+The property is supported by `AsideHeader` and `PageLayoutAside`. `AsideFallback` supports hiding separators and spacing only: it has no scrollable menu and does not render scroll-edge indicators.
 
 ### Custom background
 
@@ -52,15 +175,60 @@ With additional configuration via `AllPages` users can further customize menu to
 
 The `onMenuItemsChanged` callback is required for adding extra component `All Pages` which displays panel for editing the list of visible menu items.
 
+While the built-in **All pages** panel is open, its menu row is the only one highlighted as
+current: current highlights of consumer menu items, group header rows, and quick access rows are
+visually muted and restored as soon as the panel closes. Item data is not modified — `current`
+flags stay intact in `menuItems` and in the panel itself.
+
 **Important note**: A user manages a modified list of the menu items that they receive from the callback and provides the new state of items to `AsideHeader`.
 
 The elements of this block can have multiple tooltips.
+
+#### Quick access
+
+Set `enableQuickAccess` to render menu items marked with `quickAccess: true` in a separate section
+and to expose pin controls for eligible leaf items. Quick access is controlled: the component never
+mutates `menuItems`; update the item in `onQuickAccessChange` and pass the resulting array back.
+Without `onQuickAccessChange`, marked items remain visible as a read-only section and pin controls
+are hidden.
+
+```tsx
+const [menuItems, setMenuItems] = React.useState<AsideHeaderItem[]>(initialMenuItems);
+
+<AsideHeader
+  {...props}
+  menuItems={menuItems}
+  enableQuickAccess
+  onQuickAccessChange={(changedItem, quickAccess) => {
+    setMenuItems((items) =>
+      items.map((item) => (item.id === changedItem.id ? {...item, quickAccess} : item)),
+    );
+  }}
+/>;
+```
+
+Only visible regular leaf items can be pinned. Actions, dividers, group headers, **More**, and
+**All pages** are excluded. Group children are eligible and can be pinned from either an expanded
+group or its popup. In a compact sidebar, pin controls are available in group and **More** popups;
+the solo item popup remains an informational label without actions.
+
+By default, an active quick-access item is highlighted only in the quick-access section. Set
+`quickAccessHighlightInMainMenu` to preserve its highlight in both places. Disable
+`enableQuickAccess` to hide the section and pin controls without clearing item flags.
+
+Quick access and the menu rows scroll together in a single container in all modes: when the column
+does not fit the available height, both sections scroll as one while the header, footer, and
+`aboveMenuContent` stay fixed. In a compact sidebar, items that do not fit still collapse under
+**More**.
+
+`quickAccess` and `pinned` serve different purposes: `quickAccess` duplicates an item in the quick
+access section, while the existing `pinned` flag prevents an item from being hidden in **All pages**.
 
 #### Content above the menu (`aboveMenuContent`)
 
 Pass **`aboveMenuContent`** to render arbitrary content between the header (logo and `subheaderItems`) and the main **`menuItems`** list.
 
-With **`menuOverflow="scroll"`**, that block stays fixed above the scrollable menu column; only the menu rows scroll.
+That block stays fixed above the scrollable column: quick access and the menu rows scroll together beneath it when the column does not fit the height.
 
 **Example:**
 
@@ -193,42 +361,56 @@ export const Aside: FC = () => {
 
 ## Properties
 
-| Name                         | Description                                                                                                                                                                                                                        |                                                             Type                                                              |          Default          |
-| :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------: | :-----------------------: |
-| className                    | HTML `class` attribute of the Logo                                                                                                                                                                                                 |                                                           `string`                                                            |                           |
-| collapseButtonWrapper        | Wrapper for `CollapseButton` allowing customization of the default button appearance                                                                                                                                               | `(defaultButton: React.ReactNode, data: {compact: boolean; onChangeCompact?: (compact: boolean) => void}) => React.ReactNode` |                           |
-| collapseTitle                | `CollapseButton` title for collapsing navigation                                                                                                                                                                                   |                                                           `string`                                                            | `"Свернуть"` `"Collapse"` |
-| compact                      | Navigation visual state                                                                                                                                                                                                            |                                                           `boolean`                                                           |          `false`          |
-| customBackground             | `AsideHeader` background                                                                                                                                                                                                           |                                                       `React.ReactNode`                                                       |                           |
-| customBackgroundClassName    | Override default background container's styles                                                                                                                                                                                     |                                                           `string`                                                            |                           |
-| expandTitle                  | `CollapseButton` title for expanding navigation                                                                                                                                                                                    |                                                           `string`                                                            | `"Развернуть"` `"Expand"` |
-| headerDecoration             | Color background of the top section with logo and subheader items                                                                                                                                                                  |                                                           `boolean`                                                           |          `false`          |
-| hideCollapseButton           | Hiding `CollapseButton`. Use `compact` prop for setting default navigation state                                                                                                                                                   |                                                           `boolean`                                                           |          `false`          |
-| logo                         | Logo container includes icon, title, handling clicks                                                                                                                                                                               |                [`Logo`](https://github.com/gravity-ui/navigation/blob/main/src/components/Logo/Readme.md#logo)                |                           |
-| menuItems                    | Items in the navigation middle section                                                                                                                                                                                             |                                                   `Array<AsideHeaderItem>`                                                    |           `[]`            |
-| menuGroups                   | Declares groups for the middle section; see [`MenuGroup`](#menugroup). Items attach via `AsideHeaderItem.groupId`.                                                                                                                 |                                                         `MenuGroup[]`                                                         |                           |
-| defaultMenuItems             | Default list for resetting **All pages** edits                                                                                                                                                                                     |                                                   `Array<AsideHeaderItem>`                                                    |                           |
-| menuOverflow                 | Overflow behavior for the composite menu; see [`menuOverflow`](#composite-menu-overflow-menuoverflow). **`collapse`** (default): extras under «More». **`scroll`**: scrollable column. Compact sidebar always uses **`collapse`**. |                                                   `'collapse' \| 'scroll'`                                                    |       `'collapse'`        |
-| collapsedMenuGroupIds        | Controlled map (`MenuGroup.id` → collapsed) when `menuOverflow` is **`scroll`**                                                                                                                                                    |                                                   `Record<string, boolean>`                                                   |                           |
-| defaultCollapsedMenuGroupIds | Initial group collapsed state when `collapsedMenuGroupIds` is uncontrolled                                                                                                                                                         |                                                   `Record<string, boolean>`                                                   |                           |
-| editMenuProps                | Optional hooks for the **All pages** panel; see [`editMenuProps`](#editmenuprops).                                                                                                                                                 |                                                               —                                                               |                           |
-| menuMoreTitle                | Additional element title of menuItems if elements don't fit                                                                                                                                                                        |                                                           `string`                                                            |     `"Ещё"` `"More"`      |
-| onChangeCompact              | Callback will be called when changing navigation visual state                                                                                                                                                                      |                                                 `(compact: boolean) => void;`                                                 |                           |
-| onClosePanel                 | Callback will be called when closing panel. You can add panels via `PanelItems` prop                                                                                                                                               |                                                         `() => void;`                                                         |                           |
-| onMenuItemsChanged           | Callback will be called when updating list of the menuItems in `AllPagesPanel`                                                                                                                                                     |                                           `(items: Array<AsideHeaderItem>) => void`                                           |                           |
-| onMenuGroupsChanged          | Callback **only from All pages**: user toggled **menu group** visibility (`MenuGroup.hidden`) via group header pin. Use controlled `menuGroups`; not emitted for programmatic updates unrelated to All pages.                      |                                           `(menuGroups: Array<MenuGroup>) => void`                                            |                           |
-| onMenuMoreClick              | Callback will be called when some items don't fit and "more" button is clicked                                                                                                                                                     |                                                         `() => void;`                                                         |                           |
-| onToggleMenuGroupCollapsed   | User toggled group expand/collapse in **`menuOverflow='scroll'`** layout; combine with **`collapsedMenuGroupIds`** when controlled                                                                                                 |                                                  `(groupId: string) => void`                                                  |                           |
-| onAllPagesClick              | Callback will be called when "All pages" button is clicked                                                                                                                                                                         |                                                         `() => void;`                                                         |                           |
-| openModalSubscriber          | Function notifies `AsideHeader` about Modals visibility changes                                                                                                                                                                    |                                             `( (open: boolean) => void) => void`                                              |                           |
-| aboveMenuContent             | Optional content between the header and **`menuItems`**; stays fixed above the scrollable list when **`menuOverflow="scroll"`**.                                                                                                   |                                                       `React.ReactNode`                                                       |                           |
-| panelItems                   | Items for `Drawer` component. Used for show additional information over main content                                                                                                                                               |       [`Array<DrawerItem>`](https://github.com/gravity-ui/navigation/tree/main/src/components/Drawer#draweritem-props)        |           `[]`            |
-| renderContent                | Function rendering the main content at the right of the `AsideHeader`                                                                                                                                                              |                                          `(data: {size: number}) => React.ReactNode`                                          |                           |
-| renderFooter                 | Function rendering the navigation bottom section                                                                                                                                                                                   |                                          `(data: {size: number}) => React.ReactNode`                                          |                           |
-| ref                          | `ref` to target popup anchor                                                                                                                                                                                                       |                                    `React.ForwardedRef<HTMLDivElement, AsideHeaderProps>`                                     |                           |
-| subheaderItems               | Items in the navigation top section under Logo                                                                                                                                                                                     |                                                   `Array<AsideHeaderItem>`                                                    |           `[]`            |
-| topAlert                     | The container above the navigation based on the uikit `Alert` component                                                                                                                                                            |                                                          `TopAlert`                                                           |                           |
-| qa                           | The value to be passed to `data-qa` attribute of the `AsideHeader` container                                                                                                                                                       |                                                           `string`                                                            |                           |
+The combined menu-group presentation adds one display option:
+
+- `menuGroupNestedIcons?: boolean` (default `true`) shows child icons both in inline groups and
+  group popups.
+
+With the advanced layout, pass `menuGroupNestedIcons` to `PageLayoutAside`.
+
+| Name                           | Description                                                                                                                                                                                                                        |                                                             Type                                                              |          Default          |
+| :----------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------: | :-----------------------: |
+| className                      | HTML `class` attribute of the Logo                                                                                                                                                                                                 |                                                           `string`                                                            |                           |
+| collapseButtonWrapper          | Wrapper for `CollapseButton` allowing customization of the default button appearance                                                                                                                                               | `(defaultButton: React.ReactNode, data: {compact: boolean; onChangeCompact?: (compact: boolean) => void}) => React.ReactNode` |                           |
+| collapseTitle                  | `CollapseButton` title for collapsing navigation                                                                                                                                                                                   |                                                           `string`                                                            | `"Свернуть"` `"Collapse"` |
+| compact                        | Navigation visual state                                                                                                                                                                                                            |                                                           `boolean`                                                           |          `false`          |
+| compactTransition              | Animate compact layout geometry and highlighting. Also available on `PageLayout`.                                                                                                                                                  |                                                           `boolean`                                                           |          `true`           |
+| customBackground               | `AsideHeader` background                                                                                                                                                                                                           |                                                       `React.ReactNode`                                                       |                           |
+| customBackgroundClassName      | Override default background container's styles                                                                                                                                                                                     |                                                           `string`                                                            |                           |
+| expandTitle                    | `CollapseButton` title for expanding navigation                                                                                                                                                                                    |                                                           `string`                                                            | `"Развернуть"` `"Expand"` |
+| headerDecoration               | Color background of the top section with logo and subheader items                                                                                                                                                                  |                                                           `boolean`                                                           |          `false`          |
+| hideSectionDividers            | Hides header/footer separators and spacing, showing scroll-edge indicators instead. See [Section dividers](#section-dividers).                                                                                                     |                                                           `boolean`                                                           |          `false`          |
+| hideCollapseButton             | Hiding `CollapseButton`. Use `compact` prop for setting default navigation state                                                                                                                                                   |                                                           `boolean`                                                           |          `false`          |
+| logo                           | Logo container includes icon, title, handling clicks                                                                                                                                                                               |                [`Logo`](https://github.com/gravity-ui/navigation/blob/main/src/components/Logo/Readme.md#logo)                |                           |
+| menuItems                      | Items in the navigation middle section                                                                                                                                                                                             |                                                   `Array<AsideHeaderItem>`                                                    |           `[]`            |
+| menuGroups                     | Declares groups for the middle section; see [`MenuGroup`](#menugroup). Items attach via `AsideHeaderItem.groupId`.                                                                                                                 |                                                         `MenuGroup[]`                                                         |                           |
+| menuGroupNestedIcons           | Shows child item icons in inline groups and group popups.                                                                                                                                                                          |                                                           `boolean`                                                           |          `true`           |
+| menuDensity                    | Visual density of the aside and menu items. `compact` reduces dimensions without changing interaction behavior.                                                                                                                    |                                                   `'default' \| 'compact'`                                                    |        `'default'`        |
+| enableQuickAccess              | Renders items marked with `quickAccess` in a separate section and enables pin controls when `onQuickAccessChange` is provided.                                                                                                     |                                                           `boolean`                                                           |          `false`          |
+| quickAccessHighlightInMainMenu | Keeps a pinned current item highlighted in the main menu as well as in quick access.                                                                                                                                               |                                                           `boolean`                                                           |          `false`          |
+| defaultMenuItems               | Default list for resetting **All pages** edits                                                                                                                                                                                     |                                                   `Array<AsideHeaderItem>`                                                    |                           |
+| menuOverflow                   | Overflow behavior for the composite menu; see [`menuOverflow`](#composite-menu-overflow-menuoverflow). **`collapse`** (default): extras under «More». **`scroll`**: scrollable column. Compact sidebar always uses **`collapse`**. |                                                   `'collapse' \| 'scroll'`                                                    |       `'collapse'`        |
+| collapsedMenuGroupIds          | Controlled map (`MenuGroup.id` → collapsed) when `menuOverflow` is **`scroll`**                                                                                                                                                    |                                                   `Record<string, boolean>`                                                   |                           |
+| defaultCollapsedMenuGroupIds   | Initial group collapsed state when `collapsedMenuGroupIds` is uncontrolled                                                                                                                                                         |                                                   `Record<string, boolean>`                                                   |                           |
+| editMenuProps                  | Optional hooks for the **All pages** panel; see [`editMenuProps`](#editmenuprops).                                                                                                                                                 |                                                               —                                                               |                           |
+| menuMoreTitle                  | Additional element title of menuItems if elements don't fit                                                                                                                                                                        |                                                           `string`                                                            |     `"Ещё"` `"More"`      |
+| onChangeCompact                | Callback will be called when changing navigation visual state                                                                                                                                                                      |                                                 `(compact: boolean) => void;`                                                 |                           |
+| onClosePanel                   | Callback will be called when closing panel. You can add panels via `PanelItems` prop                                                                                                                                               |                                                         `() => void;`                                                         |                           |
+| onMenuItemsChanged             | Callback will be called when updating list of the menuItems in `AllPagesPanel`                                                                                                                                                     |                                           `(items: Array<AsideHeaderItem>) => void`                                           |                           |
+| onQuickAccessChange            | Called with the original menu item and its requested next quick-access state. Use it to update controlled `menuItems`.                                                                                                             |                                    `(item: AsideHeaderItem, quickAccess: boolean) => void`                                    |                           |
+| onMenuGroupsChanged            | Callback **only from All pages**: user toggled **menu group** visibility (`MenuGroup.hidden`) via group header pin. Use controlled `menuGroups`; not emitted for programmatic updates unrelated to All pages.                      |                                           `(menuGroups: Array<MenuGroup>) => void`                                            |                           |
+| onMenuMoreClick                | Callback will be called when some items don't fit and "more" button is clicked                                                                                                                                                     |                                                         `() => void;`                                                         |                           |
+| onToggleMenuGroupCollapsed     | User toggled group expand/collapse in **`menuOverflow='scroll'`** layout; combine with **`collapsedMenuGroupIds`** when controlled                                                                                                 |                                                  `(groupId: string) => void`                                                  |                           |
+| onAllPagesClick                | Callback will be called when "All pages" button is clicked                                                                                                                                                                         |                                                         `() => void;`                                                         |                           |
+| openModalSubscriber            | Function notifies `AsideHeader` about Modals visibility changes                                                                                                                                                                    |                                             `( (open: boolean) => void) => void`                                              |                           |
+| aboveMenuContent               | Optional content between the header and **`menuItems`**; stays fixed above the scrollable column (quick access and menu).                                                                                                          |                                                       `React.ReactNode`                                                       |                           |
+| panelItems                     | Items for `Drawer` component. Used for show additional information over main content                                                                                                                                               |       [`Array<DrawerItem>`](https://github.com/gravity-ui/navigation/tree/main/src/components/Drawer#draweritem-props)        |           `[]`            |
+| renderContent                  | Function rendering the main content at the right of the `AsideHeader`                                                                                                                                                              |                                          `(data: {size: number}) => React.ReactNode`                                          |                           |
+| renderFooter                   | Function rendering the navigation bottom section                                                                                                                                                                                   |                                          `(data: {size: number}) => React.ReactNode`                                          |                           |
+| ref                            | `ref` to target popup anchor                                                                                                                                                                                                       |                                    `React.ForwardedRef<HTMLDivElement, AsideHeaderProps>`                                     |                           |
+| subheaderItems                 | Items in the navigation top section under Logo                                                                                                                                                                                     |                                                   `Array<AsideHeaderItem>`                                                    |           `[]`            |
+| topAlert                       | The container above the navigation based on the uikit `Alert` component                                                                                                                                                            |                                                          `TopAlert`                                                           |                           |
+| qa                             | The value to be passed to `data-qa` attribute of the `AsideHeader` container                                                                                                                                                       |                                                           `string`                                                            |                           |
 
 ### Composite menu overflow (`menuOverflow`)
 
@@ -239,13 +421,27 @@ The middle section uses a composite bar. **`menuOverflow`** chooses how overflow
 | **`collapse`** | Default. Items that do not fit are collected under a **«More»** entry (popup).             |
 | **`scroll`**   | The menu list becomes a scrollable column so every row stays reachable without **«More»**. |
 
-When the sidebar is **`compact`** (collapsed to icons), overflow **always** behaves like **`collapse`**, regardless of `menuOverflow`, because scrolling a strip of icon-only rows is awkward.
+When the sidebar is **`compact`** (collapsed to icons), items that do not fit **always** collapse under **«More»**, regardless of `menuOverflow`; the column itself (quick access and menu) scrolls in a single container when height runs out.
 
-With **`menuOverflow="scroll"`** and **`menuGroups`**, group headers can expand/collapse inline. Use **`collapsedMenuGroupIds`** / **`defaultCollapsedMenuGroupIds`** and **`onToggleMenuGroupCollapsed`** to control or observe that state (keys are `MenuGroup.id`).
+With **`menuOverflow="scroll"`** and **`menuGroups`**, group headers can expand/collapse inline. Use **`collapsedMenuGroupIds`** / **`defaultCollapsedMenuGroupIds`** and **`onToggleMenuGroupCollapsed`** to control or observe that state (keys are `MenuGroup.id`). An expanded group shows its children as an inline hierarchy; a collapsed group exposes the same children in a popup on hover/focus. `menuGroupNestedIcons` controls child icons in both representations.
+
+```tsx
+const [collapsedGroups, setCollapsedGroups] = React.useState<Record<string, boolean>>({});
+
+<AsideHeader
+  {...props}
+  menuOverflow="scroll"
+  menuGroups={menuGroups}
+  collapsedMenuGroupIds={collapsedGroups}
+  onToggleMenuGroupCollapsed={(groupId) => {
+    setCollapsedGroups((current) => ({...current, [groupId]: !current[groupId]}));
+  }}
+/>;
+```
 
 **`defaultMenuItems`** is the baseline list used when resetting **All pages** edits. Configure sorting, pins, group visibility toggles, and reset via **[`editMenuProps`](#editmenuprops)** below.
 
-In compact mode, groups collapse to a single icon anchor (`MenuGroup.icon`); the group's children are revealed in a popup whose heading is taken from `MenuGroup.popupTitle`.
+In compact mode, groups collapse to a single icon anchor (`MenuGroup.icon`); the group's children are revealed in a popup whose heading is taken from `MenuGroup.popupTitle`. A standalone compact item uses a lightweight dark popup surface for its single-line label and preserves high-contrast mode as `dark-hc`. Group and overflow popups keep the current UIKit theme.
 Inline expand/collapse (**`collapsedMenuGroupIds`** / **`onToggleMenuGroupCollapsed`**) does not apply here — it is only used when **`menuOverflow="scroll"`**.
 
 ### `MenuGroup`
@@ -259,10 +455,11 @@ Shape for entries in `menuGroups`. When `menuGroups` is set, middle-section item
 | `icon`                | Optional [`Icon`](https://github.com/gravity-ui/uikit/tree/main/src/components/Icon) data for the group header.                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | `iconSize`            | Group header icon size; set it to the same value as on menu items so the group row matches them (e.g. in the **All pages** panel).                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | `hidden`              | When `true`, hides the group from the main navigation; items in that group are omitted there. The **All pages** panel can still surface the group row for visibility edits when callbacks like `onMenuGroupsChanged` are used.                                                                                                                                                                                                                                                                                                                                   |
-| `popupTitle`          | Optional heading used **only** in the compact sidebar popup that lists a group’s children. Does not replace `title` for the inline group header or other surfaces.                                                                                                                                                                                                                                                                                                                                                                                               |
+| `popupTitle`          | Optional heading used in a popup that lists a group’s children. Does not replace `title` for the inline group header or other surfaces.                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | `onItemClick`         | Optional main action for the group header (same signature as `AsideHeaderItem.onItemClick`; receives the synthetic group-header item). When the group has its own action (`onItemClick` and/or `href`), in the inline layout (`menuOverflow="scroll"`, expanded sidebar) clicking the header row triggers the action like a regular menu item, and **only the chevron** toggles expand/collapse. Without an own action the whole header row toggles the group, as before. Such groups are also listed as a clickable row in the **All pages** panel (view mode). |
 | `href`                | Optional link for the group header; renders the header row as an anchor. Same click-behavior split as `onItemClick`.                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `hideCompactChevron`  | When `true`, the small chevron is not rendered on the group anchor in the compact (collapsed) sidebar. The children popup keeps working as usual.                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `current`             | Marks the group header row as the current page, like `AsideHeaderItem.current`. Only the header row is highlighted; nested items keep their own states.                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `hideCompactChevron`  | Deprecated, no-op since v7: the compact sidebar never renders a chevron on the group anchor.                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `hideItemsInAllPages` | When `true` and the group has its own action (`onItemClick` and/or `href`), the group items are not listed in the **All pages** panel (view mode) — the group is represented only by its clickable header row. Has no effect for groups without an action.                                                                                                                                                                                                                                                                                                       |
 
 ### `editMenuProps`
@@ -279,6 +476,14 @@ Optional configuration for the **All pages** panel (drag-and-drop, pins, reset).
 | `onToggleMenuGroup`        | Fired when the user toggles a **menu group’s** visibility via the pin on the group header in **All pages**—keep **`menuGroups`** in sync with **`onMenuGroupsChanged`**. |
 
 ### `AsideHeaderItem`
+
+In the expanded sidebar, titles automatically use one or two lines according to the available width.
+Short titles keep the regular row height; longer titles wrap and increase it. Text beyond the second
+line is truncated with an ellipsis. This adapts to locale, width and font changes, including nested
+items, group headers, quick access and `FooterItem`. Icons and tree elbows align with the center of
+the first text line. The collapsed sidebar keeps fixed-height icons;
+popup rows remain single-line. More overflow uses the actual row heights. No line-count option is
+needed: when migrating from a v7 prerelease, remove `titleLines` from your menu data.
 
 | Name                   | Description                                                                                                                                                                                      |                                                                         Type                                                                         |             Default             |
 | :--------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------: |
@@ -297,6 +502,7 @@ Optional configuration for the **All pages** panel (drag-and-drop, pins, reset).
 | onItemClickCapture     | Callback will be called when clicking on the item                                                                                                                                                |                                                       ` (event: React.SyntheticEvent) => void`                                                       |                                 |
 | order                  | Determine the display order in the navigation                                                                                                                                                    |                                                                       `number`                                                                       |                                 |
 | pinned                 | The parameter restricts hiding menu item                                                                                                                                                         |                                                                      `boolean`                                                                       |             `false`             |
+| quickAccess            | Renders an eligible leaf item in the quick-access section when `enableQuickAccess` is enabled. This is independent from the All pages `pinned` flag.                                             |                                                                      `boolean`                                                                       |             `false`             |
 | rightAdornment         | Customize right side of the menu item                                                                                                                                                            |                                                                  `React.ReactNode`                                                                   |                                 |
 | title                  | The menu item title                                                                                                                                                                              |                                                                  `React.ReactNode`                                                                   |                                 |
 | tooltipText            | Tooltip content                                                                                                                                                                                  |                                                                  `React.ReactNode`                                                                   |                                 |
@@ -345,8 +551,11 @@ You can customize the inner content, make alert closeable if necessary. For read
 | `--gn-aside-header-expanded-background-color`             | Expanded navigation background color                                      |
 | `--gn-aside-header-divider-horizontal-color`              | All horizontal divider line color                                         |
 | `--gn-aside-header-divider-vertical-color`                | Vertical divider line color between `AsideHeader` and content             |
+| `--gn-aside-header-collapse-button-border-color`          | Collapse button hairline border color in the collapsed state              |
 | `--gn-aside-header-menu-group-tree-line-color`            | Tree connector lines for nested menu groups (inactive segments)           |
 | `--gn-aside-header-menu-group-tree-line-active-color`     | Tree connector lines for the active branch in nested menu groups          |
+| `--gn-aside-header-menu-group-tree-line-width`            | Width of straight and curved tree connector lines; defaults to `1px`      |
+| `--gn-aside-header-floating-surface-box-shadow`           | Box shadow for navigation popups                                          |
 | `--gn-top-alert-height`                                   | **Read only**.`AsideHeader` top alert height                              |
 | `--gn-aside-header-padding-top`                           | Navigation top padding. May be helpful when logo and subheader items hide |
 | Item                                                      |                                                                           |

@@ -5,14 +5,16 @@ import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
 
 import {MenuGroup} from '../../../types';
 import {createBlock} from '../../../utils/cn';
+import {useAsideHeaderContext} from '../../AsideHeaderContext';
 import {AsideHeaderItem, AsideHeaderMenuOverflow} from '../../types';
 
 import {Item} from './Item/Item';
-import {ItemProps} from './Item/Item.types';
-import {ScrollableWithScrollbar} from './ScrollableWithScrollbar';
+import {ItemProps, QuickAccessToggleHandler} from './Item/Item.types';
 import {COLLAPSE_ITEM_ID} from './constants';
 import {buildCompositeBarRows} from './grouping';
 import type {CompositeBarRow} from './grouping';
+import {isItemPresentationCurrent} from './presentationCurrent';
+import {useMeasuredRowHeights} from './useMeasuredRowHeights';
 import {
     getAutosizeCompositeBarRows,
     getCompositeBarRowsMinHeight,
@@ -21,7 +23,6 @@ import {
     getMoreButtonItem,
     getReorderedCompositeBarRows,
     getSelectedCompositeBarRowIndex,
-    getSelectedItemIndex,
     makeGroupHeaderAsideItem,
 } from './utils';
 
@@ -34,9 +35,8 @@ const MENU_GROUP_NESTED_TREE_CONNECTOR_PATH =
     'M8.03125 0V10.07935C8.03125 15.558375 11.5846 20 15.9678 20';
 
 type CompositeBarProps = {
-    type: 'menu' | 'subheader';
+    type: 'menu' | 'subheader' | 'quick-access';
     items: AsideHeaderItem[];
-    className?: string;
     menuGroups?: MenuGroup[];
     onItemClick?: (
         item: AsideHeaderItem,
@@ -49,16 +49,27 @@ type CompositeBarProps = {
     compositeId?: string;
     menuItemClassName?: string;
     /**
+     * Target width of the autosized menu content, used before AutoSizer catches
+     * up with a layout transition. FirstPanel passes the aside width because
+     * the menu container spans it fully and horizontal spacing belongs to rows.
+     * If the container gains horizontal insets, pass its available content width.
+     */
+    layoutWidth?: number;
+    /**
      * @see AsideHeaderMenuOverflow
      */
     menuOverflow?: AsideHeaderMenuOverflow;
     collapsedMenuGroupIds?: Record<string, boolean>;
     defaultCollapsedMenuGroupIds?: Record<string, boolean>;
     onToggleMenuGroupCollapsed?: (groupId: string) => void;
+    enableQuickAccessPin?: boolean;
+    onToggleQuickAccess?: QuickAccessToggleHandler;
+    suppressCurrentItemIds?: ReadonlySet<string>;
+    menuGroupNestedIcons?: boolean;
 };
 
 type CompositeBarViewProps = {
-    type: 'menu' | 'subheader';
+    type: 'menu' | 'subheader' | 'quick-access';
     compositeId?: string;
     compact: boolean;
     menuItemClassName?: string;
@@ -70,6 +81,10 @@ type CompositeBarViewProps = {
     inlineGroupChildren: boolean;
     isGroupCollapsed: (groupId: string) => boolean;
     onToggleGroupCollapsed: (groupId: string) => void;
+    enableQuickAccessPin?: boolean;
+    onToggleQuickAccess?: QuickAccessToggleHandler;
+    suppressCurrentItemIds?: ReadonlySet<string>;
+    menuGroupNestedIcons?: boolean;
 };
 
 const CompositeBarView: FC<CompositeBarViewProps> = ({
@@ -84,14 +99,24 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     inlineGroupChildren,
     isGroupCollapsed,
     onToggleGroupCollapsed,
+    enableQuickAccessPin,
+    onToggleQuickAccess,
+    suppressCurrentItemIds,
+    menuGroupNestedIcons = true,
 }) => {
     const ref = useRef<List<CompositeBarRow>>(null);
+    const {menuDensity} = useAsideHeaderContext();
+    const hideNestedIcons = !menuGroupNestedIcons;
 
     const onMouseLeave = useCallback(() => {
         if (compact && document.hasFocus()) {
-            ref.current?.activateItem(undefined as unknown as number);
+            ref.current?.activateItem();
         }
     }, [compact]);
+
+    const deactivateParentListItem = useCallback(() => {
+        ref.current?.activateItem();
+    }, []);
 
     const onPopupItemClick = useCallback(
         (
@@ -126,15 +151,15 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
     const itemHeight = useCallback(
         (row: CompositeBarRow) => {
             if (row.kind === 'item') {
-                return getItemHeight(row.item);
+                return getItemHeight(row.item, menuDensity);
             }
-            const headerH = getItemHeight(makeGroupHeaderAsideItem(row.group));
+            const headerH = getItemHeight(makeGroupHeaderAsideItem(row.group), menuDensity);
             if (!inlineGroupChildren || isGroupCollapsed(row.group.id)) {
                 return headerH;
             }
-            return headerH + getItemsHeight(row.items);
+            return headerH + getItemsHeight(row.items, menuDensity);
         },
-        [inlineGroupChildren, isGroupCollapsed],
+        [inlineGroupChildren, isGroupCollapsed, menuDensity],
     );
 
     const itemsHeight = useCallback(
@@ -142,14 +167,23 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
         [itemHeight],
     );
 
+    const selectedRootItemIndex = useMemo(() => {
+        if (type !== 'menu') {
+            return undefined;
+        }
+
+        return getSelectedCompositeBarRowIndex(rows, suppressCurrentItemIds);
+    }, [rows, suppressCurrentItemIds, type]);
+
     return (
         <List<CompositeBarRow>
             id={compositeId}
             ref={ref}
+            className={b({'inline-groups': inlineGroupChildren, 'auto-height': !compact})}
             items={rows}
-            selectedItemIndex={type === 'menu' ? getSelectedCompositeBarRowIndex(rows) : undefined}
-            itemHeight={itemHeight}
-            itemsHeight={itemsHeight}
+            selectedItemIndex={selectedRootItemIndex}
+            itemHeight={compact ? itemHeight : undefined}
+            itemsHeight={compact ? itemsHeight : undefined}
             itemClassName={b('root-menu-item', menuItemClassName)}
             virtualized={false}
             filterable={false}
@@ -168,16 +202,31 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                     }
 
                     return (
-                        <Item
-                            {...item}
-                            compact={compact}
-                            popupItemClassName={menuItemClassName}
-                            menuPopupItems={menuPopupItems}
-                            menuPopupTitle={menuPopupTitle}
-                            onMouseLeave={onMouseLeave}
-                            onPopupItemClick={onPopupItemClick}
-                            onItemClick={onItemClickByIndex(item.onItemClick)}
-                        />
+                        <div
+                            className={b('item-row')}
+                            style={{
+                                height:
+                                    item.type && item.type !== 'regular'
+                                        ? getItemHeight(item, menuDensity)
+                                        : undefined,
+                            }}
+                        >
+                            <Item
+                                {...item}
+                                compact={compact}
+                                popupItemClassName={menuItemClassName}
+                                menuPopupItems={menuPopupItems}
+                                menuPopupTitle={menuPopupTitle}
+                                menuPopupNestedHideIcon={hideNestedIcons}
+                                onMouseLeave={onMouseLeave}
+                                onPopupItemClick={onPopupItemClick}
+                                onItemClick={onItemClickByIndex(item.onItemClick)}
+                                suppressCurrentItemIds={suppressCurrentItemIds}
+                                enableQuickAccessPin={enableQuickAccessPin}
+                                quickAccessPinItem={item}
+                                onToggleQuickAccess={onToggleQuickAccess}
+                            />
+                        </div>
                     );
                 }
 
@@ -197,23 +246,33 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                             popupItemClassName={menuItemClassName}
                             menuPopupItems={row.items}
                             menuPopupTitle={row.group.popupTitle}
+                            menuPopupHideIcon={hideNestedIcons}
                             className={b('menu-group-header')}
-                            hideCompactChevron={row.group.hideCompactChevron}
+                            closeMenuPopupOnItemClick={groupHasOwnAction}
                             onMouseLeave={onMouseLeave}
                             onPopupItemClick={onPopupItemClick}
                             onItemClick={onHeaderItemClick}
+                            suppressCurrentItemIds={suppressCurrentItemIds}
+                            enableQuickAccessPin={enableQuickAccessPin}
+                            onToggleQuickAccess={onToggleQuickAccess}
                         />
                     );
                 }
 
-                const selectedItemIndex = getSelectedItemIndex(row.items);
+                const selectedItemIndex = row.items.findIndex((item) =>
+                    isItemPresentationCurrent(item, {suppressCurrentItemIds}),
+                );
+                const normalizedSelectedItemIndex =
+                    selectedItemIndex === -1 ? undefined : selectedItemIndex;
 
                 return (
                     <div
+                        data-gn-aside-group={row.group.id}
                         className={b('menu-group', {
                             expanded: !groupIsCollapsed,
                             collapsed: groupIsCollapsed,
                         })}
+                        onMouseEnter={deactivateParentListItem}
                     >
                         <Item
                             {...headerItem}
@@ -222,7 +281,12 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                             popupItemClassName={menuItemClassName}
                             className={b('menu-group-header')}
                             groupHeaderExpanded={!groupIsCollapsed}
+                            menuPopupItems={groupIsCollapsed ? row.items : undefined}
+                            menuPopupTitle={groupIsCollapsed ? row.group.popupTitle : undefined}
+                            menuPopupHideIcon={hideNestedIcons}
+                            closeMenuPopupOnItemClick={groupHasOwnAction}
                             onMouseLeave={onMouseLeave}
+                            onPopupItemClick={onPopupItemClick}
                             onGroupHeaderChevronClick={
                                 groupHasOwnAction
                                     ? () => onToggleGroupCollapsed(row.group.id)
@@ -234,24 +298,33 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                                 }
                                 onHeaderItemClick(item, isItemCollapsed, event);
                             }}
+                            suppressCurrentItemIds={suppressCurrentItemIds}
+                            enableQuickAccessPin={enableQuickAccessPin}
+                            onToggleQuickAccess={onToggleQuickAccess}
                         />
                         {!groupIsCollapsed && (
                             <List<AsideHeaderItem>
                                 items={row.items}
-                                selectedItemIndex={selectedItemIndex}
-                                itemHeight={getItemHeight}
-                                itemsHeight={getItemsHeight}
+                                selectedItemIndex={normalizedSelectedItemIndex}
                                 itemClassName={b('menu-group-nested-list-item')}
                                 virtualized={false}
                                 filterable={false}
                                 sortable={false}
                                 renderItem={(nestedItem, _isActive, groupItemIndex) => {
                                     const spineActive =
-                                        selectedItemIndex !== undefined &&
-                                        groupItemIndex < selectedItemIndex;
+                                        normalizedSelectedItemIndex !== undefined &&
+                                        groupItemIndex < normalizedSelectedItemIndex;
 
                                     return (
-                                        <div className={b('menu-group-nested-row-inner')}>
+                                        <div
+                                            className={b('menu-group-nested-row-inner')}
+                                            style={{
+                                                height:
+                                                    nestedItem.type && nestedItem.type !== 'regular'
+                                                        ? getItemHeight(nestedItem, menuDensity)
+                                                        : undefined,
+                                            }}
+                                        >
                                             <Item
                                                 {...nestedItem}
                                                 className={[
@@ -261,11 +334,18 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                                                     .filter(Boolean)
                                                     .join(' ')}
                                                 compact={compact}
+                                                hideIcon={hideNestedIcons}
+                                                menuGroupNested
                                                 menuGroupNestedTreeConnector={
                                                     <span
                                                         className={b(
                                                             'menu-group-nested-connector',
-                                                            {'spine-active': spineActive},
+                                                            {
+                                                                'spine-active': spineActive,
+                                                                active:
+                                                                    normalizedSelectedItemIndex ===
+                                                                    groupItemIndex,
+                                                            },
                                                         )}
                                                         aria-hidden
                                                     >
@@ -274,7 +354,7 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                                                                 'menu-group-nested-tree-svg',
                                                                 {
                                                                     active:
-                                                                        selectedItemIndex ===
+                                                                        normalizedSelectedItemIndex ===
                                                                         groupItemIndex,
                                                                 },
                                                             )}
@@ -287,7 +367,6 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                                                                 }
                                                                 fill="none"
                                                                 strokeLinecap="butt"
-                                                                strokeWidth="1.3"
                                                                 vectorEffect="non-scaling-stroke"
                                                             />
                                                         </svg>
@@ -297,6 +376,10 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                                                 onItemClick={onItemClickByIndex(
                                                     nestedItem.onItemClick,
                                                 )}
+                                                suppressCurrentItemIds={suppressCurrentItemIds}
+                                                enableQuickAccessPin={enableQuickAccessPin}
+                                                quickAccessPinItem={nestedItem}
+                                                onToggleQuickAccess={onToggleQuickAccess}
                                             />
                                         </div>
                                     );
@@ -312,7 +395,6 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
 
 export const CompositeBar: FC<CompositeBarProps> = ({
     type,
-    className,
     items,
     menuGroups,
     menuMoreTitle,
@@ -321,12 +403,56 @@ export const CompositeBar: FC<CompositeBarProps> = ({
     compact,
     compositeId,
     menuItemClassName,
+    layoutWidth,
     menuOverflow = 'collapse',
     collapsedMenuGroupIds: collapsedMenuGroupIdsProp,
     defaultCollapsedMenuGroupIds,
     onToggleMenuGroupCollapsed,
+    enableQuickAccessPin,
+    onToggleQuickAccess,
+    suppressCurrentItemIds,
+    menuGroupNestedIcons = true,
 }) => {
     const rows = useMemo(() => buildCompositeBarRows(items, menuGroups), [items, menuGroups]);
+    const {menuDensity} = useAsideHeaderContext();
+    const hasQuickAccessHandler = Boolean(onToggleQuickAccess);
+    const measurementScope = useMemo(
+        () => ({
+            compact,
+            menuDensity,
+            enableQuickAccessPin,
+            hasQuickAccessHandler,
+            menuItemClassName,
+            layoutWidth,
+        }),
+        [
+            compact,
+            menuDensity,
+            enableQuickAccessPin,
+            hasQuickAccessHandler,
+            menuItemClassName,
+            layoutWidth,
+        ],
+    );
+    const measurementItems = useMemo(
+        () => [
+            ...rows.map((row) =>
+                row.kind === 'item'
+                    ? row.item
+                    : {
+                          ...makeGroupHeaderAsideItem(row.group),
+                          compositeBarMenuPopupItems: row.items,
+                      },
+            ),
+            getMoreButtonItem(menuMoreTitle, menuDensity),
+        ],
+        [rows, menuMoreTitle, menuDensity],
+    );
+    const {ref: measurementRef, heights} = useMeasuredRowHeights(
+        measurementItems,
+        measurementScope,
+        type === 'menu' && menuOverflow === 'collapse' && !compact && rows.length > 0,
+    );
 
     const isCollapsedControlled = collapsedMenuGroupIdsProp !== undefined;
     const [uncontrolledCollapsed, setUncontrolledCollapsed] = useState<Record<string, boolean>>(
@@ -355,19 +481,6 @@ export const CompositeBar: FC<CompositeBarProps> = ({
 
     const scrollableRows = useMemo(() => getReorderedCompositeBarRows(rows), [rows]);
 
-    const scrollRecalcKey = useMemo(
-        () =>
-            `${items.length}:${menuGroups?.length ?? 0}:${JSON.stringify(
-                Object.keys(collapsedMap)
-                    .sort()
-                    .reduce<Record<string, boolean>>((acc, k) => {
-                        acc[k] = Boolean(collapsedMap[k]);
-                        return acc;
-                    }, {}),
-            )}`,
-        [items.length, menuGroups?.length, collapsedMap],
-    );
-
     if (rows.length === 0) {
         return null;
     }
@@ -376,37 +489,47 @@ export const CompositeBar: FC<CompositeBarProps> = ({
 
     if (type === 'menu') {
         if (menuOverflow === 'scroll' && !compact) {
-            node = (
-                <ScrollableWithScrollbar className={className} recalcDeps={[scrollRecalcKey]}>
-                    <CompositeBarView
-                        compositeId={compositeId}
-                        type="menu"
-                        compact={compact}
-                        rows={scrollableRows}
-                        onItemClick={onItemClick}
-                        onMoreClick={onMoreClick}
-                        menuItemClassName={menuItemClassName}
-                        inlineGroupChildren={inlineGroupChildren}
-                        isGroupCollapsed={isGroupCollapsed}
-                        onToggleGroupCollapsed={onToggleGroupCollapsed}
-                    />
-                </ScrollableWithScrollbar>
+            const menuView = (
+                <CompositeBarView
+                    compositeId={compositeId}
+                    type="menu"
+                    compact={compact}
+                    rows={scrollableRows}
+                    onItemClick={onItemClick}
+                    onMoreClick={onMoreClick}
+                    menuItemClassName={menuItemClassName}
+                    inlineGroupChildren={inlineGroupChildren}
+                    isGroupCollapsed={isGroupCollapsed}
+                    onToggleGroupCollapsed={onToggleGroupCollapsed}
+                    enableQuickAccessPin={enableQuickAccessPin}
+                    onToggleQuickAccess={onToggleQuickAccess}
+                    suppressCurrentItemIds={suppressCurrentItemIds}
+                    menuGroupNestedIcons={menuGroupNestedIcons}
+                />
             );
+
+            node = menuView;
         } else {
-            const minHeight = getCompositeBarRowsMinHeight(rows);
-            const collapseItem = getMoreButtonItem(menuMoreTitle);
+            const itemLayout = compact
+                ? {sidebarCompact: true as const}
+                : {measuredHeights: heights};
+            const minHeight = getCompositeBarRowsMinHeight(rows, menuDensity, itemLayout);
+            const collapseItem = getMoreButtonItem(menuMoreTitle, menuDensity);
             node = (
-                <div className={b({autosizer: true})} style={{minHeight}}>
+                <div ref={measurementRef} className={b({autosizer: true})} style={{minHeight}}>
                     {rows.length !== 0 && (
                         <AutoSizer>
                             {(size: Size) => {
-                                const width = Number.isNaN(size.width) ? 0 : size.width;
+                                const width =
+                                    layoutWidth ?? (Number.isNaN(size.width) ? 0 : size.width);
                                 const height = Number.isNaN(size.height) ? 0 : size.height;
 
                                 const {listRows, collapseItems} = getAutosizeCompositeBarRows(
                                     rows,
                                     height,
                                     collapseItem,
+                                    menuDensity,
+                                    itemLayout,
                                 );
                                 return (
                                     <div style={{width, height}}>
@@ -422,6 +545,10 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                                             inlineGroupChildren={false}
                                             isGroupCollapsed={isGroupCollapsed}
                                             onToggleGroupCollapsed={onToggleGroupCollapsed}
+                                            enableQuickAccessPin={enableQuickAccessPin}
+                                            onToggleQuickAccess={onToggleQuickAccess}
+                                            suppressCurrentItemIds={suppressCurrentItemIds}
+                                            menuGroupNestedIcons={menuGroupNestedIcons}
                                         />
                                     </div>
                                 );
@@ -431,10 +558,30 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                 </div>
             );
         }
+    } else if (type === 'quick-access') {
+        node = (
+            <div className={b({'quick-access': true})}>
+                <CompositeBarView
+                    compositeId={compositeId}
+                    type="quick-access"
+                    menuItemClassName={menuItemClassName}
+                    compact={compact}
+                    rows={rows}
+                    onItemClick={onItemClick}
+                    inlineGroupChildren={false}
+                    isGroupCollapsed={isGroupCollapsed}
+                    onToggleGroupCollapsed={onToggleGroupCollapsed}
+                    enableQuickAccessPin={enableQuickAccessPin}
+                    onToggleQuickAccess={onToggleQuickAccess}
+                    suppressCurrentItemIds={suppressCurrentItemIds}
+                />
+            </div>
+        );
     } else {
         node = (
             <div className={b({subheader: true})}>
                 <CompositeBarView
+                    compositeId={compositeId}
                     type="subheader"
                     menuItemClassName={menuItemClassName}
                     compact={compact}
@@ -443,6 +590,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                     inlineGroupChildren={false}
                     isGroupCollapsed={isGroupCollapsed}
                     onToggleGroupCollapsed={onToggleGroupCollapsed}
+                    menuGroupNestedIcons={menuGroupNestedIcons}
                 />
             </div>
         );

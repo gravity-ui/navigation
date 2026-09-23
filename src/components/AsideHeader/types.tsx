@@ -6,6 +6,7 @@ import {RenderContentType} from '../Content';
 import {LogoProps, MenuGroup, MenuItem, OpenModalSubscriber, TopAlertProps} from '../types';
 
 import {AsideHeaderContextType} from './AsideHeaderContext';
+import {AsideHeaderMenuDensity} from './density';
 
 export interface PanelItemProps extends DrawerProps {
     id: string;
@@ -13,8 +14,16 @@ export interface PanelItemProps extends DrawerProps {
 
 export interface LayoutProps {
     compact: boolean;
+    /** Animate compact layout changes. @default true */
+    compactTransition?: boolean;
     className?: string;
     topAlert?: TopAlertProps;
+    /**
+     * Menu item density. `compact` reduces item height, icon size, spacing, and aside width
+     * without changing navigation behavior.
+     * @default 'default'
+     */
+    menuDensity?: AsideHeaderMenuDensity;
 }
 
 interface EditMenuProps {
@@ -31,12 +40,13 @@ interface EditMenuProps {
 }
 
 /**
- * Menu overflow behavior.
- * - `collapse` — extra items collapse under a "More" popup (default).
- * - `scroll` — all items remain visible inside a scrollable container with a native thin scrollbar.
+ * Menu overflow behavior for menu items.
+ * - `collapse` — extra menu items collapse under a "More" popup (default).
+ * - `scroll` — all menu items remain visible inside a scrollable column with a native thin scrollbar.
  *
- * In compact mode the menu always falls back to `collapse` regardless of this value
- * because a scrollbar over icon-only items is awkward.
+ * The distinction applies to menu items only: quick access and the menu always share a single
+ * scroll container that scrolls when the column does not fit the available height. In compact
+ * mode menu items still fall back to `collapse` regardless of this value.
  */
 export type AsideHeaderMenuOverflow = 'collapse' | 'scroll';
 
@@ -83,13 +93,38 @@ interface AsideHeaderDefaultProps {
     menuItems?: AsideHeaderItem[];
     menuGroups?: MenuGroup[];
     /**
+     * Shows icons for child items in inline groups and group popups.
+     * @default true
+     */
+    menuGroupNestedIcons?: boolean;
+    /**
      * Called only from **All pages** edit mode when the user toggles visibility of a **menu group** (group header pin), updating `menuGroup.hidden`.
      * Use with controlled `menuGroups`; not emitted for programmatic `menuGroups` changes outside All pages.
      */
     onMenuGroupsChanged?: (menuGroups: MenuGroup[]) => void;
     defaultMenuItems?: AsideHeaderItem[];
     onMenuItemsChanged?: (items: AsideHeaderItem[]) => void;
+    /**
+     * Enables the quick access section and pin controls for eligible leaf menu items.
+     * The state remains controlled by `menuItems`; use `onQuickAccessChange` to update it.
+     * @default false
+     */
+    enableQuickAccess?: boolean;
+    /**
+     * Keeps the active item highlighted in the main menu when the same item is also
+     * rendered in quick access.
+     * @default false
+     */
+    quickAccessHighlightInMainMenu?: boolean;
+    /**
+     * Called when a user pins or unpins an eligible leaf item. The library does not
+     * mutate `menuItems`; the consumer should provide the updated controlled value.
+     */
+    onQuickAccessChange?: (item: AsideHeaderItem, quickAccess: boolean) => void;
     headerDecoration?: boolean;
+    /** Hides header/footer separators and their spacing; scroll-edge indicators remain visible
+     * while content is hidden beyond the respective edge. @default false */
+    hideSectionDividers?: boolean;
     /**
      * When provided, the map is the source of truth for which menu groups are collapsed
      * in inline (`menuOverflow: 'scroll'`) layout. Keys are `MenuGroup.id`, values mean collapsed.
@@ -123,6 +158,10 @@ export enum InnerPanels {
 export const ALL_PAGES_ID = InnerPanels.AllPages;
 
 export interface AsideHeaderItem extends MenuItem {
+    /**
+     * Shows an eligible leaf item in the quick access section when quick access is enabled.
+     */
+    quickAccess?: boolean;
     /**
      * @internal CompositeBar: group children rendered from the "More" overflow popover.
      */

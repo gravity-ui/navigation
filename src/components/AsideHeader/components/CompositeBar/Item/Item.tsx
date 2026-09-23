@@ -1,18 +1,25 @@
 import React from 'react';
 
-import {ChevronDown, ChevronRight, ChevronUp} from '@gravity-ui/icons';
-import {Icon, Popup, PopupPlacement, PopupProps} from '@gravity-ui/uikit';
+import {ChevronDown, ChevronRight} from '@gravity-ui/icons';
+import {Icon, Popup, PopupPlacement, PopupProps, setRef} from '@gravity-ui/uikit';
 
-import {ASIDE_HEADER_ICON_SIZE} from '../../../../constants';
 import {MakeItemParams} from '../../../../types';
 import {createBlock} from '../../../../utils/cn';
+import {useSafeAsideHeaderContext} from '../../../AsideHeaderContext';
+import {getAsideHeaderDensityConfig} from '../../../density';
 import i18n from '../../../i18n';
+import {isQuickAccessPinEligible} from '../../../quickAccess';
+import {AsideHeaderItem} from '../../../types';
+import {AsideDivider} from '../../AsideDivider';
+import {CURRENT_IDS_ATTRIBUTE} from '../../PageLayout/currentIndicatorDom';
 import {HighlightedItem} from '../HighlightedItem/HighlightedItem';
-import {COLLAPSE_ITEM_ID, ITEM_TYPE_REGULAR} from '../constants';
+import {COLLAPSE_ITEM_ID, COMPOSITE_BAR_ITEM_ID_ATTRIBUTE, ITEM_TYPE_REGULAR} from '../constants';
+import {getItemPresentationCurrentIds} from '../presentationCurrent';
 
-import {ItemInnerProps, ItemProps} from './Item.types';
+import {ItemInnerProps, ItemProps, QuickAccessToggleHandler} from './Item.types';
 import {ItemPopup} from './ItemPopup';
 import {ItemPopupNestContext} from './ItemPopupNestContext';
+import {ItemQuickAccessPin} from './ItemQuickAccessPin';
 import {renderItemTitle} from './renderItemTitle';
 
 import styles from './Item.module.scss';
@@ -22,7 +29,82 @@ const b = createBlock('composite-bar-item', styles);
 const defaultPopupPlacement: PopupPlacement = ['right-end'];
 const defaultPopupOffset: NonNullable<PopupProps['offset']> = {mainAxis: 14};
 const CHEVRON_SIZE = 16;
-const CHEVRON_SIZE_COMPACT = 10;
+
+function shouldShowMenuPopup({
+    type,
+    popupItems,
+    collapsedItem,
+    inlineGroupHeader,
+    groupHeaderExpanded,
+}: {
+    type: string;
+    popupItems?: ItemInnerProps['menuPopupItems'];
+    collapsedItem: boolean;
+    inlineGroupHeader: boolean;
+    groupHeaderExpanded?: boolean;
+}) {
+    return (
+        type !== 'divider' &&
+        Boolean(popupItems?.length) &&
+        (collapsedItem || !inlineGroupHeader || !groupHeaderExpanded)
+    );
+}
+
+function shouldShowLabelPopup({
+    isDivider,
+    compact,
+    hasPopupItems,
+    disabled,
+}: {
+    isDivider: boolean;
+    compact?: boolean;
+    hasPopupItems: boolean;
+    disabled: boolean;
+}) {
+    return !isDivider && Boolean(compact) && !hasPopupItems && !disabled;
+}
+
+function shouldShowChevron({
+    compact,
+    inlineGroupHeader,
+    hasPopupItems,
+}: {
+    compact?: boolean;
+    inlineGroupHeader: boolean;
+    hasPopupItems: boolean;
+}) {
+    if (inlineGroupHeader) {
+        return !compact;
+    }
+
+    return !compact && hasPopupItems;
+}
+
+function hasAutomaticHeight(type: string, compact?: boolean, menuPopupRow?: boolean) {
+    return type === ITEM_TYPE_REGULAR && !compact && !menuPopupRow;
+}
+
+function shouldShowQuickAccessPin({
+    enabled,
+    compact,
+    popupItems,
+    item,
+    onToggle,
+}: {
+    enabled?: boolean;
+    compact?: boolean;
+    popupItems?: AsideHeaderItem[];
+    item: AsideHeaderItem;
+    onToggle?: QuickAccessToggleHandler;
+}) {
+    return (
+        Boolean(enabled) &&
+        !compact &&
+        !popupItems?.length &&
+        isQuickAccessPinEligible(item) &&
+        typeof onToggle === 'function'
+    );
+}
 
 function getChevronFallbackLabel(expanded: boolean | undefined): string {
     return expanded ? i18n('button_collapse') : i18n('button_expand');
@@ -40,14 +122,6 @@ function resolveAnchorRef(
     fallback: React.RefObject<HTMLElement>,
 ): React.RefObject<HTMLElement> {
     return anchorRef?.current ? anchorRef : fallback;
-}
-
-function shouldShowFlyoutChevron(
-    hasPopupItems: boolean,
-    compact?: boolean,
-    hideCompactChevron?: boolean,
-): boolean {
-    return hasPopupItems && !(compact && hideCompactChevron);
 }
 
 export const Item: React.FC<ItemInnerProps> = (props) => {
@@ -78,29 +152,80 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         href,
         qa,
         hideIcon = false,
+        menuPopupHideIcon,
+        menuPopupNestedHideIcon,
         stopClickPropagation = false,
         menuGroupNestedTreeConnector,
+        menuGroupNested,
         menuItemAriaProps,
+        menuPopupRow,
+        suppressCurrentHighlight = false,
+        suppressCurrentItemIds,
+        enableQuickAccessPin,
+        quickAccessPinItem: quickAccessPinItemProp,
+        onToggleQuickAccess,
         onGroupHeaderChevronClick,
-        hideCompactChevron,
+        closeMenuPopupOnItemClick = false,
     } = props;
 
-    const [compactNavPopoverOpen, setCompactNavPopoverOpen] = React.useState(false);
+    const [labelPopupOpen, setLabelPopupOpen] = React.useState(false);
+    const [menuPopupOpen, setMenuPopupOpen] = React.useState(false);
 
     const ref = React.useRef<HTMLElement>(null);
+    const mergedRowRef = React.useCallback(
+        (element: HTMLElement | null) => {
+            setRef(ref, element);
+            setRef(props.rowRef, element);
+        },
+        [props.rowRef],
+    );
     const anchorRef = resolveAnchorRef(anchoreRefProp, ref);
     const highlightedRef = React.useRef<HTMLDivElement>(null);
+    const interactiveRowRef = React.useRef<HTMLDivElement>(null);
 
     const type = props.type || ITEM_TYPE_REGULAR;
     const icon = props.icon;
-    const iconSize = props.iconSize || ASIDE_HEADER_ICON_SIZE;
+    const asideHeaderContext = useSafeAsideHeaderContext();
+    const defaultIconSize = getAsideHeaderDensityConfig(asideHeaderContext?.menuDensity).iconSize;
+    const iconSize = props.iconSize || defaultIconSize;
     const iconQa = props.iconQa;
     const collapsedItem = props.id === COLLAPSE_ITEM_ID;
     const inlineGroupHeader = groupHeaderExpanded !== undefined;
     const resolvedMenuPopupItems = menuPopupItems ?? props.compositeBarMenuPopupItems;
     const resolvedMenuPopupTitle = menuPopupTitle ?? props.compositeBarMenuPopupTitle;
 
-    const current = props.current || resolvedMenuPopupItems?.some((item) => item.current) || false;
+    const currentIds = suppressCurrentHighlight
+        ? []
+        : getItemPresentationCurrentIds(props, {
+              suppressCurrentItemIds,
+              popupItems: resolvedMenuPopupItems,
+          });
+    const current = currentIds.length > 0;
+    const currentIdsMetadata =
+        !menuPopupRow && currentIds.length ? JSON.stringify(currentIds) : undefined;
+    const quickAccessPinItem = quickAccessPinItemProp ?? props;
+    const showQuickAccessPin = shouldShowQuickAccessPin({
+        enabled: enableQuickAccessPin,
+        compact,
+        popupItems: resolvedMenuPopupItems,
+        item: quickAccessPinItem,
+        onToggle: onToggleQuickAccess,
+    });
+    const [quickAccessPinSuppressed, setQuickAccessPinSuppressed] = React.useState(false);
+
+    const handleToggleQuickAccess = React.useCallback(
+        (event: React.MouseEvent<HTMLButtonElement>) => {
+            onToggleQuickAccess?.(quickAccessPinItem, event);
+
+            // Pointer clicks should not leave the control under the cursor after the row moves.
+            // Keep keyboard-triggered controls visible and focused.
+            if (event.detail > 0) {
+                setQuickAccessPinSuppressed(true);
+                event.currentTarget.blur();
+            }
+        },
+        [onToggleQuickAccess, quickAccessPinItem],
+    );
 
     const handleOpenChangePopup = React.useCallback<NonNullable<ItemProps['onOpenChangePopup']>>(
         (newOpen, event, reason) => {
@@ -113,7 +238,8 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             }
 
             if (newOpen) {
-                setCompactNavPopoverOpen(false);
+                setLabelPopupOpen(false);
+                setMenuPopupOpen(false);
             }
 
             onOpenChangePopup?.(newOpen, event, reason);
@@ -122,15 +248,31 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     );
 
     const isDivider = type === 'divider';
-    const showMenuPopup =
-        !isDivider &&
-        Boolean(resolvedMenuPopupItems?.length) &&
-        (collapsedItem || !inlineGroupHeader);
+    const showMenuPopup = shouldShowMenuPopup({
+        type,
+        popupItems: resolvedMenuPopupItems,
+        collapsedItem,
+        inlineGroupHeader,
+        groupHeaderExpanded,
+    });
+
+    const compactPopoverDisabled = !enableTooltip || popupVisible || type === 'action';
+    const labelPopupAvailable = shouldShowLabelPopup({
+        isDivider,
+        compact,
+        hasPopupItems: Boolean(resolvedMenuPopupItems?.length),
+        disabled: compactPopoverDisabled,
+    });
+
+    React.useEffect(() => {
+        if (!showMenuPopup) setMenuPopupOpen(false);
+        if (!labelPopupAvailable) setLabelPopupOpen(false);
+    }, [showMenuPopup, labelPopupAvailable]);
 
     const submenuNest = React.useContext(ItemPopupNestContext);
 
     React.useEffect(() => {
-        if (!submenuNest || !showMenuPopup || !compactNavPopoverOpen) {
+        if (!submenuNest || !showMenuPopup || !menuPopupOpen) {
             return undefined;
         }
 
@@ -139,19 +281,17 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         return () => {
             submenuNest.registerNestedOpen(-1);
         };
-    }, [submenuNest, showMenuPopup, compactNavPopoverOpen]);
+    }, [submenuNest, showMenuPopup, menuPopupOpen]);
 
     if (isDivider) {
-        return <div className={b('menu-divider')} />;
+        return (
+            <AsideDivider
+                as="div"
+                className={b('menu-divider')}
+                transitionId={`item/${props.id}`}
+            />
+        );
     }
-
-    const compactPopoverDisabled = !enableTooltip || popupVisible || type === 'action';
-
-    const showFlyoutChevron = shouldShowFlyoutChevron(
-        Boolean(resolvedMenuPopupItems?.length),
-        compact,
-        hideCompactChevron,
-    );
 
     const makeIconNode = (iconEl: React.ReactNode, withCompactPopover = true): React.ReactNode => {
         if (!compact) {
@@ -174,11 +314,13 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
         return (
             <ItemPopup
-                items={[props]}
-                open={compactNavPopoverOpen}
+                items={[quickAccessPinItem]}
+                variant="label"
+                highlightCurrentItem={false}
+                open={labelPopupOpen}
                 onOpenChange={(nextOpen) => {
                     if (nextOpen && compactPopoverDisabled) return;
-                    setCompactNavPopoverOpen(nextOpen);
+                    setLabelPopupOpen(nextOpen);
                 }}
                 hideIcon
                 itemClassName={popupItemClassName}
@@ -193,6 +335,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                  * `item.onItemClick` and trigger the handler twice (toggling All pages back).
                  */
                 onItemClick={onItemClick}
+                suppressCurrentItemIds={suppressCurrentItemIds}
             >
                 {iconButton}
             </ItemPopup>
@@ -201,10 +344,19 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
     const ariaLabel = typeof title === 'string' ? title : undefined;
     const resolvedAriaLabel = resolveItemAriaLabel(menuItemAriaProps, ariaLabel);
+    const showSurface = !menuPopupRow && [ITEM_TYPE_REGULAR, 'action'].includes(type);
+
+    const autoHeight = hasAutomaticHeight(type, compact, menuPopupRow);
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
         const wrappedByItemWrapper = typeof itemWrapper === 'function';
-        const chevronClick = inlineGroupHeader ? onGroupHeaderChevronClick : undefined;
+        const showChevron = shouldShowChevron({
+            compact,
+            inlineGroupHeader,
+            hasPopupItems: Boolean(resolvedMenuPopupItems?.length),
+        });
+        const chevronClick =
+            showChevron && inlineGroupHeader ? onGroupHeaderChevronClick : undefined;
         /* With a sibling chevron control, the wrapper becomes the outer box of the row,
            so the external className (outer layout) is applied to it instead of the row. */
         const rowClassName = b(
@@ -213,6 +365,10 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 current,
                 compact,
                 'hide-icon': hideIcon,
+                'menu-group-nested': menuGroupNested,
+                'menu-popup-row': menuPopupRow,
+                'with-quick-access-pin': showQuickAccessPin,
+                'auto-height': autoHeight,
                 'with-chevron-control': Boolean(chevronClick),
             },
             chevronClick ? undefined : className,
@@ -220,7 +376,22 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
         const handleRowClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
             if (compact && !collapsedItem && !showMenuPopup && !current) {
-                setCompactNavPopoverOpen(false);
+                setLabelPopupOpen(false);
+            }
+
+            if (closeMenuPopupOnItemClick) {
+                setMenuPopupOpen(false);
+            }
+
+            if (event.detail > 0) {
+                const activeElement = event.currentTarget.ownerDocument.activeElement;
+
+                if (
+                    activeElement instanceof HTMLElement &&
+                    interactiveRowRef.current?.contains(activeElement)
+                ) {
+                    activeElement.blur();
+                }
             }
 
             onItemClick?.(props, collapsedItem, event);
@@ -230,8 +401,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             }
         };
 
-        const chevronSize = compact ? CHEVRON_SIZE_COMPACT : CHEVRON_SIZE;
-
         let chevronNode: React.ReactNode = null;
         let chevronControl: React.ReactNode = null;
 
@@ -240,38 +409,43 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 <button
                     type="button"
                     className={b('chevron', {interactive: true})}
-                    aria-label={resolvedAriaLabel ?? getChevronFallbackLabel(groupHeaderExpanded)}
+                    aria-label={[getChevronFallbackLabel(groupHeaderExpanded), resolvedAriaLabel]
+                        .filter(Boolean)
+                        .join(' ')}
                     aria-expanded={groupHeaderExpanded}
                     onClick={(event) => {
                         event.stopPropagation();
                         chevronClick(event);
                     }}
                 >
-                    <Icon data={groupHeaderExpanded ? ChevronUp : ChevronDown} size={chevronSize} />
+                    <Icon
+                        data={groupHeaderExpanded ? ChevronDown : ChevronRight}
+                        size={CHEVRON_SIZE}
+                    />
                 </button>
             );
-        } else if (inlineGroupHeader) {
+        } else if (showChevron) {
             chevronNode = (
                 <div className={b('chevron')}>
-                    <Icon data={groupHeaderExpanded ? ChevronUp : ChevronDown} size={chevronSize} />
-                </div>
-            );
-        } else if (showFlyoutChevron) {
-            chevronNode = (
-                <div className={b('chevron')}>
-                    <Icon data={ChevronRight} size={chevronSize} />
+                    <Icon
+                        data={groupHeaderExpanded ? ChevronDown : ChevronRight}
+                        size={CHEVRON_SIZE}
+                    />
                 </div>
             );
         }
 
         const rowChildren = (
             <>
+                {showSurface && (
+                    <span className={b('surface')} data-gn-aside-part="surface" aria-hidden />
+                )}
                 {menuGroupNestedTreeConnector}
-                <div className={b('icon-place')} ref={highlightedRef}>
+                <div className={b('icon-place')} ref={highlightedRef} data-gn-aside-part="icon">
                     {makeIconNode(iconEl)}
                 </div>
 
-                <div className={b('title')} title={ariaLabel}>
+                <div className={b('title')} data-gn-aside-part="title" title={ariaLabel}>
                     {titleEl}
                 </div>
 
@@ -284,6 +458,9 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             className: rowClassName,
             'data-type': type,
             'data-qa': qa,
+            [COMPOSITE_BAR_ITEM_ID_ATTRIBUTE]: props.id,
+            [CURRENT_IDS_ATTRIBUTE]: currentIdsMetadata,
+            'data-gn-aside-nested': menuGroupNested ? '' : undefined,
             'aria-label': resolvedAriaLabel,
             onClick: handleRowClick,
             onClickCapture: onItemClickCapture,
@@ -303,7 +480,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
         if (href) {
             tagNode = (
-                <a {...rowEventProps} href={href} ref={ref as React.RefObject<HTMLAnchorElement>}>
+                <a {...rowEventProps} href={href} ref={mergedRowRef}>
                     {rowChildren}
                 </a>
             );
@@ -312,14 +489,14 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 <div
                     {...rowEventProps}
                     role={menuItemAriaProps?.role ?? 'button'}
-                    ref={ref as React.RefObject<HTMLDivElement>}
+                    ref={mergedRowRef}
                 >
                     {rowChildren}
                 </div>
             );
         } else {
             tagNode = (
-                <button {...rowEventProps} ref={ref as React.RefObject<HTMLButtonElement>}>
+                <button {...rowEventProps} ref={mergedRowRef}>
                     {rowChildren}
                 </button>
             );
@@ -327,7 +504,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
 
         if (chevronControl) {
             tagNode = (
-                <div className={b('group-header-row', className)}>
+                <div className={b('group-header-row', {current}, className)}>
                     {tagNode}
                     {chevronControl}
                 </div>
@@ -341,12 +518,17 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 <ItemPopup
                     items={expandedMenuRows}
                     title={resolvedMenuPopupTitle}
-                    open={compactNavPopoverOpen}
+                    open={menuPopupOpen}
                     itemClassName={popupItemClassName}
-                    onOpenChange={setCompactNavPopoverOpen}
+                    hideIcon={menuPopupHideIcon}
+                    nestedPopupHideIcon={menuPopupNestedHideIcon}
+                    onOpenChange={setMenuPopupOpen}
                     collapsed={collapsedItem ? true : compact}
                     onPopupItemClick={onPopupItemClick}
                     onItemClick={onItemClick}
+                    enableQuickAccessPin={enableQuickAccessPin}
+                    onToggleQuickAccess={onToggleQuickAccess}
+                    suppressCurrentItemIds={suppressCurrentItemIds}
                 >
                     {tagNode}
                 </ItemPopup>
@@ -376,11 +558,40 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         return createdNode;
     };
 
+    const wrapWithQuickAccessPin = (rowNode: React.ReactNode) => {
+        if (!showQuickAccessPin) {
+            return rowNode;
+        }
+
+        return (
+            <div
+                ref={interactiveRowRef}
+                className={b('interactive-row', {'menu-popup': menuPopupRow})}
+                onMouseLeave={() => setQuickAccessPinSuppressed(false)}
+            >
+                {rowNode}
+                <span
+                    className={b('quick-access-pin-slot', {
+                        suppressed: quickAccessPinSuppressed,
+                    })}
+                >
+                    <ItemQuickAccessPin
+                        quickAccess={quickAccessPinItem.quickAccess}
+                        onToggle={handleToggleQuickAccess}
+                    />
+                </span>
+            </div>
+        );
+    };
+
     const iconNode =
         hideIcon || !icon ? null : (
             <Icon qa={iconQa} data={icon} size={iconSize} className={b('icon')} />
         );
-    const titleNode = renderItemTitle({title, rightAdornment});
+    const titleNode = renderItemTitle({
+        title,
+        rightAdornment,
+    });
     const params = {icon: iconNode, title: titleNode};
     let highlightedNode = null;
     let node;
@@ -388,7 +599,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const opts = {compact: Boolean(compact), collapsed: false, item: props, ref};
 
     if (typeof itemWrapper === 'function') {
-        node = itemWrapper(params, makeNode, opts) as React.ReactElement;
+        node = wrapWithQuickAccessPin(itemWrapper(params, makeNode, opts) as React.ReactElement);
         highlightedNode =
             bringForward &&
             (itemWrapper(
@@ -397,7 +608,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 opts,
             ) as React.ReactElement);
     } else {
-        node = makeNode(params);
+        node = wrapWithQuickAccessPin(makeNode(params));
         highlightedNode = bringForward && makeIconNode(iconNode, false);
     }
 
