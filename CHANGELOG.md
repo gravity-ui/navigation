@@ -1,5 +1,61 @@
 # Changelog
 
+## [6.6.1](https://github.com/gravity-ui/navigation/compare/v6.6.0...v6.6.1) (2026-09-21)
+
+
+### Bug Fixes
+
+* **AsideHeader:** replace the dead --gn-aside-top-panel-height with --gn-top-alert-height ([#681](https://github.com/gravity-ui/navigation/issues/681)) ([3decc0d](https://github.com/gravity-ui/navigation/commit/3decc0d7c960c5f24b8a8698e2a7c41ac0c23267))
+
+## [6.6.0](https://github.com/gravity-ui/navigation/compare/v6.5.1...v6.6.0) (2026-09-08)
+
+
+### Features
+
+* **AsideHeader:** add MenuGroup.hideItemsInAllPage ([#673](https://github.com/gravity-ui/navigation/issues/673)) ([bd3a01e](https://github.com/gravity-ui/navigation/commit/bd3a01e295ba55c5b06f16328e07266d4805516e))
+
+## [6.5.1](https://github.com/gravity-ui/navigation/compare/v6.5.0...v6.5.1) (2026-09-04)
+
+
+### Bug Fixes
+
+* **AsideHeader:** support MenuGroup.iconSize for group header row ([#671](https://github.com/gravity-ui/navigation/issues/671)) ([a932aad](https://github.com/gravity-ui/navigation/commit/a932aadfce104f2f71fb7dc6a0d3a56ff112f514))
+
+## [6.5.0](https://github.com/gravity-ui/navigation/compare/v6.4.2...v6.5.0) (2026-09-04)
+
+
+### Features
+
+* **AsideHeader:** allow menu group headers to act as regular menu item ([#669](https://github.com/gravity-ui/navigation/issues/669)) ([c63c8f0](https://github.com/gravity-ui/navigation/commit/c63c8f0643fef12062344f2bf02a4e330928e188))
+
+## [6.4.2](https://github.com/gravity-ui/navigation/compare/v6.4.1...v6.4.2) (2026-08-25)
+
+
+### Bug Fixes
+
+* correct ru translation ([#660](https://github.com/gravity-ui/navigation/issues/660)) ([4a43f0a](https://github.com/gravity-ui/navigation/commit/4a43f0a67f680aa79dfe59d643bb95726c56bbf4))
+
+## [6.4.1](https://github.com/gravity-ui/navigation/compare/v6.4.0...v6.4.1) (2026-08-13)
+
+
+### Bug Fixes
+
+* **Footer:** prevent menu collapse in narrow containers ([#662](https://github.com/gravity-ui/navigation/issues/662)) ([c087c18](https://github.com/gravity-ui/navigation/commit/c087c18bf380bc52f847d5c29a5529717e043cbc))
+
+## [6.4.0](https://github.com/gravity-ui/navigation/compare/v6.3.1...v6.4.0) (2026-07-29)
+
+
+### Features
+
+* **AllPagesPanel:** added tooltip for the pin icon ([#658](https://github.com/gravity-ui/navigation/issues/658)) ([893d9b2](https://github.com/gravity-ui/navigation/commit/893d9b2551a1aac2d2bc539cb27ab505502c081f))
+
+## [6.3.1](https://github.com/gravity-ui/navigation/compare/v6.3.0...v6.3.1) (2026-07-21)
+
+
+### Bug Fixes
+
+* **HotkeysPanel:** make hotkeys list scrollable ([#656](https://github.com/gravity-ui/navigation/issues/656)) ([4cf723d](https://github.com/gravity-ui/navigation/commit/4cf723d29b5db0f41fc670caa7c92bb15d2ce8ce))
+
 ## [6.3.0](https://github.com/gravity-ui/navigation/compare/v6.2.0...v6.3.0) (2026-07-15)
 
 

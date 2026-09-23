@@ -40,4 +40,20 @@ test.describe('Footer', () => {
 
         await expectScreenshot();
     });
+
+    test('render story: <ManyItems> in a narrow container', async ({
+        mount,
+        expectScreenshot,
+        defaultDelay,
+    }) => {
+        await mount(<FooterStories.ManyItems />, undefined, {
+            padding: 20,
+            width: 320,
+            height: 720,
+        });
+
+        await defaultDelay();
+
+        await expectScreenshot();
+    });
 });
