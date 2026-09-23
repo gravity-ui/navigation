@@ -96,6 +96,12 @@ export interface MenuGroup {
      */
     current?: boolean;
     /**
+     * @deprecated No-op since v7: the compact sidebar never renders a chevron on the
+     * group anchor. The children popup keeps working as usual. Will be removed in the
+     * next major version.
+     */
+    hideCompactChevron?: boolean;
+    /**
      * When `true` and the group has its own action (`onItemClick` and/or `href`),
      * the group items are not listed in the All pages panel (view mode) — the group
      * is represented only by its clickable header row. Has no effect for groups
