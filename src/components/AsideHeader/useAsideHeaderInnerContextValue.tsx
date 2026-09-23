@@ -45,7 +45,9 @@ export const useAsideHeaderInnerContextValue = (
 
     const onItemClick = useCallback(
         (item: MenuItem, collapsed: boolean, event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-            if (item.id === ALL_PAGES_MENU_ITEM.id) {
+            // Without the built-in panel a consumer item with the reserved id
+            // is an ordinary item and must not toggle the inner panel state.
+            if (allPagesIsAvailable && item.id === ALL_PAGES_MENU_ITEM.id) {
                 onClosePanel?.();
                 setInnerVisiblePanel((prev) =>
                     prev === InnerPanels.AllPages ? undefined : InnerPanels.AllPages,
@@ -55,7 +57,7 @@ export const useAsideHeaderInnerContextValue = (
             }
             item.onItemClick?.(item, collapsed, event);
         },
-        [innerOnClosePanel, ALL_PAGES_MENU_ITEM, onClosePanel],
+        [allPagesIsAvailable, innerOnClosePanel, ALL_PAGES_MENU_ITEM, onClosePanel],
     );
 
     const onToggleQuickAccess = useCallback(
@@ -112,6 +114,7 @@ export const useAsideHeaderInnerContextValue = (
         onClosePanel: innerOnClosePanel,
         allPagesIsAvailable,
         quickAccessIsAvailable,
+        innerVisiblePanel,
         menuItems: innerMenuItems,
         panelItems: innerPanelItems,
         size,

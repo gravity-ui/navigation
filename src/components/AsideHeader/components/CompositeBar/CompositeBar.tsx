@@ -573,6 +573,7 @@ export const CompositeBar: FC<CompositeBarProps> = ({
                     onToggleGroupCollapsed={onToggleGroupCollapsed}
                     enableQuickAccessPin={enableQuickAccessPin}
                     onToggleQuickAccess={onToggleQuickAccess}
+                    suppressCurrentItemIds={suppressCurrentItemIds}
                 />
             </div>
         );

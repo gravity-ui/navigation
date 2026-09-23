@@ -1,13 +1,14 @@
 import React from 'react';
 
 import {AsideHeaderMenuDensity} from './density';
-import {AsideHeaderInnerProps, AsideHeaderItem} from './types';
+import {AsideHeaderInnerProps, AsideHeaderItem, InnerPanels} from './types';
 
 export interface AsideHeaderInnerContextType extends AsideHeaderInnerProps {
     menuItems: AsideHeaderItem[];
     defaultMenuItems?: AsideHeaderItem[];
     allPagesIsAvailable: boolean;
     quickAccessIsAvailable: boolean;
+    innerVisiblePanel?: InnerPanels;
     onItemClick: (
         item: AsideHeaderItem,
         collapsed: boolean,

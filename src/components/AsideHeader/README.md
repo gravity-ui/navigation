@@ -175,6 +175,11 @@ With additional configuration via `AllPages` users can further customize menu to
 
 The `onMenuItemsChanged` callback is required for adding extra component `All Pages` which displays panel for editing the list of visible menu items.
 
+While the built-in **All pages** panel is open, its menu row is the only one highlighted as
+current: current highlights of consumer menu items, group header rows, and quick access rows are
+visually muted and restored as soon as the panel closes. Item data is not modified — `current`
+flags stay intact in `menuItems` and in the panel itself.
+
 **Important note**: A user manages a modified list of the menu items that they receive from the callback and provides the new state of items to `AsideHeader`.
 
 The elements of this block can have multiple tooltips.

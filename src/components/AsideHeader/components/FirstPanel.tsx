@@ -5,6 +5,7 @@ import {setRef, useUniqId} from '@gravity-ui/uikit';
 import {useAsideHeaderInnerContext} from '../AsideHeaderContext';
 import i18n from '../i18n';
 import {getQuickAccessMenuItems} from '../quickAccess';
+import {ALL_PAGES_ID} from '../types';
 import {b} from '../utils';
 
 import {useVisibleMenuItems} from './AllPagesPanel';
@@ -14,7 +15,11 @@ import {CollapseAnchorContext, useCollapseAnchor} from './CollapseButton/useColl
 import {CompositeBar} from './CompositeBar';
 import type {QuickAccessToggleHandler} from './CompositeBar/Item/Item.types';
 import {ScrollableWithScrollbar} from './CompositeBar/ScrollableWithScrollbar';
-import {COMPOSITE_BAR_ITEM_ID_ATTRIBUTE} from './CompositeBar/constants';
+import {
+    COMPOSITE_BAR_ITEM_ID_ATTRIBUTE,
+    getGroupHeaderItemId,
+    getGroupOverflowItemId,
+} from './CompositeBar/constants';
 import {Header} from './Header';
 import {Panels} from './Panels';
 
@@ -92,6 +97,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         quickAccessIsAvailable,
         onToggleQuickAccess,
         qa,
+        innerVisiblePanel,
     } = useAsideHeaderInnerContext();
     const panelId = useUniqId();
     const collapseAnchor = useCollapseAnchor(!hideCollapseButton, compact);
@@ -101,13 +107,45 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
         () => (quickAccessEnabled ? getQuickAccessMenuItems(visibleMenuItems, menuGroups) : []),
         [menuGroups, quickAccessEnabled, visibleMenuItems],
     );
-    const suppressedCurrentItemIds = React.useMemo(
-        () =>
+    /**
+     * While a library-owned panel (All pages) is open, its menu row is the only
+     * current one: consumer currents (items and group rows) are visually muted.
+     */
+    const innerPanelSuppressedIds = React.useMemo(() => {
+        if (innerVisiblePanel === undefined) {
+            return undefined;
+        }
+
+        const ids = new Set<string>();
+        for (const item of visibleMenuItems) {
+            if (item.current && item.id !== ALL_PAGES_ID) {
+                ids.add(item.id);
+            }
+        }
+        for (const group of menuGroups ?? []) {
+            if (group.current) {
+                ids.add(getGroupHeaderItemId(group.id));
+                ids.add(getGroupOverflowItemId(group.id));
+            }
+        }
+        return ids.size > 0 ? ids : undefined;
+    }, [innerVisiblePanel, menuGroups, visibleMenuItems]);
+    const suppressedCurrentItemIds = React.useMemo(() => {
+        const quickAccessSuppressed =
             quickAccessEnabled && !quickAccessHighlightInMainMenu
-                ? new Set(quickAccessItems.map((item) => item.id))
-                : undefined,
-        [quickAccessEnabled, quickAccessHighlightInMainMenu, quickAccessItems],
-    );
+                ? quickAccessItems.map((item) => item.id)
+                : [];
+
+        if (!innerPanelSuppressedIds && quickAccessSuppressed.length === 0) {
+            return undefined;
+        }
+        return new Set([...(innerPanelSuppressedIds ?? []), ...quickAccessSuppressed]);
+    }, [
+        innerPanelSuppressedIds,
+        quickAccessEnabled,
+        quickAccessHighlightInMainMenu,
+        quickAccessItems,
+    ]);
     const hasQuickAccessItems = quickAccessItems.length > 0;
     const [menuScrollOverflows, setMenuScrollOverflows] = useState(false);
     const asideRef = useRef<HTMLDivElement>(null);
@@ -209,6 +247,7 @@ export const FirstPanel = React.forwardRef<HTMLDivElement>((_props, ref) => {
             onItemClick={onItemClick}
             enableQuickAccessPin={quickAccessIsAvailable}
             onToggleQuickAccess={handleQuickAccessToggle}
+            suppressCurrentItemIds={innerPanelSuppressedIds}
         />
     );
 
