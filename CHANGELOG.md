@@ -2,13 +2,6 @@
 
 ## [7.0.0](https://github.com/gravity-ui/navigation/compare/v6.6.1...v7.0.0) (2026-09-23)
 
-
-### chore
-
-* release 7.0.0 ([0593a0b](https://github.com/gravity-ui/navigation/commit/0593a0b78f59e7224d8a105a961184ce7adc7453))
-
-## [Unreleased]
-
 ### ⚠ BREAKING CHANGES
 
 v7 keeps the v6 props API: no props were removed or renamed. The breaking changes are in `AsideHeader` layout and behavior.
