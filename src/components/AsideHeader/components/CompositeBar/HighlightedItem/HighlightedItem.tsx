@@ -37,16 +37,19 @@ export const HighlightedItem: React.FC<ItemInnerProps> = ({
     });
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
+    const [iconBackgroundSize, setIconBackgroundSize] = useState<string | undefined>();
+
     const handleResizeDebounced = useMemo(
         () =>
             debounceFn(
                 () => {
+                    const element = iconRef?.current;
                     const {
                         top = 0,
                         left = 0,
                         width = 0,
                         height = 0,
-                    } = iconRef?.current?.getBoundingClientRect() || {};
+                    } = element?.getBoundingClientRect() || {};
 
                     setPosition({
                         top: top + window.scrollY,
@@ -54,6 +57,17 @@ export const HighlightedItem: React.FC<ItemInnerProps> = ({
                         width,
                         height,
                     });
+
+                    if (element) {
+                        // The copy renders in a portal, where row-level overrides of the
+                        // icon background size (footer rows, density, consumer tokens) do
+                        // not inherit: transfer the resolved value from the original row.
+                        const computedSize = window
+                            .getComputedStyle(element)
+                            .getPropertyValue('--gn-aside-header-item-icon-background-size')
+                            .trim();
+                        setIconBackgroundSize(computedSize || undefined);
+                    }
                 },
                 DEBOUNCE_TIME,
                 {leading: true},
@@ -89,7 +103,15 @@ export const HighlightedItem: React.FC<ItemInnerProps> = ({
         <Portal>
             <div
                 className={`${b()} ${bGlobal()}`}
-                style={{...densityCssProperties, ...position}}
+                style={
+                    {
+                        ...densityCssProperties,
+                        ...(iconBackgroundSize
+                            ? {'--gn-aside-header-item-icon-background-size': iconBackgroundSize}
+                            : null),
+                        ...position,
+                    } as React.CSSProperties
+                }
                 onClick={onClick}
                 onClickCapture={onClickCapture}
                 data-toast
