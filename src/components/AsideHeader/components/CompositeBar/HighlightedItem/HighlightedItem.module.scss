@@ -33,6 +33,9 @@ $block: '.#{variables.$ns}composite-bar-highlighted-item';
         justify-content: center;
         align-items: center;
         position: relative;
+        // Own stacking context, so the negative z-index ::before paints
+        // above this element's background instead of being hidden by it.
+        z-index: 0;
         overflow: hidden;
         box-shadow: 0 8px 20px 0 var(--g-color-sfx-shadow);
 
