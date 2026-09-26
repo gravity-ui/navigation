@@ -82,6 +82,7 @@ export const HighlightedItem: React.FC<ItemInnerProps> = ({
             return undefined;
         }
 
+        // menuDensity changes the original row geometry without a resize event.
         handleResize();
 
         window.addEventListener('resize', handleResize);
@@ -89,7 +90,7 @@ export const HighlightedItem: React.FC<ItemInnerProps> = ({
         return () => {
             window.removeEventListener('resize', handleResize);
         };
-    }, [handleResize, isModalOpen]);
+    }, [handleResize, isModalOpen, menuDensity]);
 
     openModalSubscriber?.((open: boolean) => {
         setIsModalOpen(open);
