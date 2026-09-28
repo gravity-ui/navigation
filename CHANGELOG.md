@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.0.1](https://github.com/gravity-ui/navigation/compare/v7.0.0...v7.0.1) (2026-09-28)
+
+
+### Bug Fixes
+
+* **AsideHeader:** match the highlighted item copy to the original row geometry ([#690](https://github.com/gravity-ui/navigation/issues/690)) ([2b3395a](https://github.com/gravity-ui/navigation/commit/2b3395a1ec7127a026d7e3fcd87e6125e6abf2f8))
+
 ## [7.0.0](https://github.com/gravity-ui/navigation/compare/v6.6.1...v7.0.0) (2026-09-23)
 
 ### ⚠ BREAKING CHANGES
