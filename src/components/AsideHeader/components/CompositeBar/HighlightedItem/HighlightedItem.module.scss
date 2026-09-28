@@ -11,6 +11,7 @@ $block: '.#{variables.$ns}composite-bar-highlighted-item';
     position: absolute;
     z-index: 10000;
     display: flex;
+    align-items: center;
     justify-content: center;
 
     &__icon {
@@ -22,14 +23,19 @@ $block: '.#{variables.$ns}composite-bar-highlighted-item';
             --gn-aside-header-item-icon-background-size,
             var(--_--item-icon-background-size)
         );
-        border-radius: var(--_--gn-aside-header-density-item-collapsed-radius, 7px);
+        border-radius: var(
+            --gn-aside-header-item-collapsed-radius,
+            var(--_--gn-aside-header-density-item-collapsed-radius, 7px)
+        );
         cursor: pointer;
         background-color: var(--gn-aside-header-background-color, var(--_--background-color));
         display: flex;
         justify-content: center;
         align-items: center;
         position: relative;
-        transform: translateY(1px);
+        // Own stacking context, so the negative z-index ::before paints
+        // above this element's background instead of being hidden by it.
+        z-index: 0;
         overflow: hidden;
         box-shadow: 0 8px 20px 0 var(--g-color-sfx-shadow);
 
