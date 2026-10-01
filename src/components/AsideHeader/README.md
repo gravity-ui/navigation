@@ -81,11 +81,11 @@ for the whole transition.
 
 In compact mode the button is a 20 px tab attached to the outside of the aside edge: concave
 fillets merge it into the edge and a single 1 px outline runs around it, so the vertical divider
-stays unbroken. The tab rests under the aside and slides out from under it on hover or keyboard
-focus; it never fades. Its layer sits at `calc(var(--gn-aside-header-z-index, 100) - 1)` while
-compact — below the aside, still above open All pages and custom `panelItems` Drawers, over whose
-edge the tab extends 20 px — and at `calc(var(--gn-aside-header-z-index, 100) + 1)` while expanded.
-Clicking the tab changes `compact` and keeps the panel open. Its transparent layer does not
+stays unbroken. The tab rests behind the aside edge and slides out from under it on hover or
+keyboard focus; it never fades. Its layer is a 20 px strip outside the aside edge at
+`calc(var(--gn-aside-header-z-index, 100) + 1)`, clipped while compact; the tab extends 20 px over
+the edge of open All pages and custom `panelItems` Drawers. Clicking the tab changes `compact` and
+keeps the panel open. Its transparent layer does not
 intercept clicks outside the button. Consumer z-index settings determine custom stacking; portaled
 Popups (including `asideRef` with `right-end`) may cover the tab and retain their normal position
 and behavior. The tab fill follows the collapsed aside background, then the general aside

@@ -193,8 +193,8 @@ for (const {state, menuDensity, direction} of stateCases) {
             state === 'compact-hidden' ? hiddenTransform(direction) : 'none',
         );
         await expect(page.locator('[data-gn-aside-collapse-layer]')).toHaveCSS(
-            'z-index',
-            compact ? '99' : '101',
+            'overflow',
+            compact ? 'clip' : 'visible',
         );
         const rect = await geometry(page);
         if (!rect.anchor) throw new Error('Missing footer anchor');
@@ -587,18 +587,18 @@ test('collapse button keeps keyboard focus visible while the aside animates', as
     await pauseNextAsideTransition(page);
     await page.keyboard.press('Enter');
 
-    // The layer is raised during the collapse so the aside cannot cover the focused button.
+    // The layer is not clipped during the collapse, so the focused button stays visible.
     const layer = page.locator('[data-gn-aside-collapse-layer]');
     await expect(panel).toHaveAttribute('data-gn-aside-animating', '');
     await expect(button).toHaveAttribute('aria-expanded', 'false');
     await expect(button).toHaveCSS('opacity', '1');
     await expect(button).toHaveCSS('transform', 'none');
-    await expect(layer).toHaveCSS('z-index', '101');
+    await expect(layer).toHaveCSS('overflow', 'visible');
     await finishAnimations(page);
     await expect(button).toBeFocused();
     await expect(button).toHaveCSS('opacity', '1');
     await expect(button).toHaveCSS('transform', 'none');
-    await expect(layer).toHaveCSS('z-index', '99');
+    await expect(layer).toHaveCSS('overflow', 'clip');
 });
 
 test('collapse button honors reduced motion and raised aside z-index', async ({mount, page}) => {
