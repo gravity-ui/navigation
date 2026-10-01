@@ -20,6 +20,8 @@ const slotSelector = '[data-gn-aside-collapse-slot]';
 const buttonSelector = 'button[class*="gn-collapse-button_"]';
 const anchorSelector = '[data-gn-collapse-anchor]';
 const viewport = {width: 1000, height: 720};
+const hiddenTransform = (direction: 'ltr' | 'rtl' = 'ltr') =>
+    `matrix(1, 0, 0, 1, ${direction === 'ltr' ? -21 : 21}, 0)`;
 
 async function geometry(page: Page) {
     return page.evaluate(
@@ -87,7 +89,7 @@ for (const {menuDensity, direction, footer} of entireAsideCases) {
         await page.mouse.move(500, 300);
         const panel = page.locator(panelSelector);
         const button = page.locator(buttonSelector);
-        await expect(button).toHaveCSS('opacity', '0');
+        await expect(button).toHaveCSS('transform', hiddenTransform(direction));
         const hoverTargets = [
             panel.locator('[class*="gn-aside-header__logo_"]'),
             page.getByRole('button', {name: 'Home', exact: true}),
@@ -100,16 +102,17 @@ for (const {menuDensity, direction, footer} of entireAsideCases) {
             for (const target of hoverTargets) {
                 await target.hover();
                 await finishAnimations(page);
-                await expect(button).toHaveCSS('opacity', '1');
                 await expect(button).toHaveCSS('transform', 'none');
             }
             await button.hover();
             await finishAnimations(page);
-            await expect(button).toHaveCSS('opacity', '1');
+            await expect(button).toHaveCSS('transform', 'none');
             await page.mouse.move(500, 300);
             await finishAnimations(page);
-            await expect(button).toHaveCSS('opacity', '0');
+            await expect(button).toHaveCSS('transform', hiddenTransform(direction));
         }
+        await page.locator(anchorSelector).hover();
+        await finishAnimations(page);
         await button.click();
         await expect(button).toHaveAttribute('aria-expanded', 'true');
         await expect(page.getByRole('status', {name: 'Compact changes'})).toHaveText('1');
@@ -136,16 +139,15 @@ for (const {footer, menuDensity, direction} of fallbackCases) {
         const button = page.locator(buttonSelector);
         await page.mouse.move(500, 300);
         await expect(fallback).toHaveAttribute('data-gn-collapse-anchor', '');
-        await expect(button).toHaveCSS('opacity', '0');
+        await expect(button).toHaveCSS('transform', hiddenTransform(direction));
         await fallback.hover();
-        await expect(button).toHaveCSS('opacity', '1');
         await expect(button).toHaveCSS('transform', 'none');
         await page.mouse.move(500, 300);
-        await expect(button).toHaveCSS('opacity', '0');
+        await expect(button).toHaveCSS('transform', hiddenTransform(direction));
         await page.getByRole('button', {name: 'All pages', exact: true}).focus();
         await page.keyboard.press('Tab');
         await expect(button).toBeFocused();
-        await expect(button).toHaveCSS('opacity', '1');
+        await expect(button).toHaveCSS('transform', 'none');
         await button.click();
         await expect(button).toHaveAttribute('aria-expanded', 'true');
         await expect(page.getByRole('status', {name: 'Compact changes'})).toHaveText('1');
@@ -186,12 +188,19 @@ for (const {state, menuDensity, direction} of stateCases) {
             await page.keyboard.press('Tab');
             await expect(button).toBeFocused();
         }
-        await expect(button).toHaveCSS('opacity', state === 'compact-hidden' ? '0' : '1');
+        await expect(button).toHaveCSS(
+            'transform',
+            state === 'compact-hidden' ? hiddenTransform(direction) : 'none',
+        );
+        await expect(page.locator('[data-gn-aside-collapse-layer]')).toHaveCSS(
+            'z-index',
+            compact ? '99' : '101',
+        );
         const rect = await geometry(page);
         if (!rect.anchor) throw new Error('Missing footer anchor');
         expect(rect.slot.width).toBe(compact ? 20 : 24);
         expect(rect.button.height).toBe(menuDensity === 'default' ? 40 : 32);
-        expect(rect.radius).toBe(compact ? 12 : 8);
+        expect(rect.radius).toBe(compact ? (direction === 'ltr' ? 0 : 10) : 8);
         expect(rect.button.y).toBeCloseTo(
             rect.anchor.y + (rect.anchor.height - rect.button.height) / 2,
             1,
@@ -199,9 +208,9 @@ for (const {state, menuDensity, direction} of stateCases) {
         if (compact) {
             expect(
                 direction === 'ltr'
-                    ? rect.slot.right - rect.panel.right
-                    : rect.panel.x - rect.slot.x,
-            ).toBeCloseTo(10, 1);
+                    ? rect.slot.x - rect.panel.right
+                    : rect.panel.x - rect.slot.right,
+            ).toBeCloseTo(0, 1);
         } else {
             expect(
                 direction === 'ltr'
@@ -249,15 +258,17 @@ test('collapse button hover color default', async ({mount, page}) => {
         }, shot.toString('base64'));
     };
 
-    // The example mounts compact, so the aside expands on the first click.
+    // Reveal the tab first: the aside blocks pointer hits while it is parked.
+    await page.locator(anchorSelector).hover();
+    await finishAnimations(page);
     await button.hover();
-    await expect(button).toHaveCSS('opacity', '1');
+    await expect(button).toHaveCSS('transform', 'none');
     const compactHover = await surface();
     await button.click();
     await expect(button).toHaveAttribute('aria-expanded', 'true');
     await finishAnimations(page);
     await button.hover();
-    await expect(button).toHaveCSS('opacity', '1');
+    await expect(button).toHaveCSS('transform', 'none');
     const expandedHover = await surface();
     await page.mouse.move(500, 300);
     const expandedIdle = await surface();
@@ -266,22 +277,27 @@ test('collapse button hover color default', async ({mount, page}) => {
     expect(compactHover).toEqual(expandedHover);
 });
 
-test('collapse button keeps a hairline border only while compact', async ({mount, page}) => {
+test('collapse button draws the tab outline only while compact', async ({mount, page}) => {
     await page.setViewportSize(viewport);
     await mount(<CollapseButtonExample menuDensity="default" />, undefined, viewport);
     await finishAnimations(page);
     const button = page.locator(buttonSelector);
 
-    // The compact button overhangs the aside edge with an opaque fill; the ring is what
-    // keeps the vertical divider readable around it. Expanded, the button sits inside the
-    // panel over the same surface, so the ring must be gone.
     await expect(button).toHaveAttribute('aria-expanded', 'false');
-    await expect(button).toHaveCSS('box-shadow', /0px 0px 0px 1px/);
+    const shape = button.locator('svg[class*="gn-collapse-button__tab-shape"]');
+    await expect(shape).toHaveCount(1);
+    const dividerColor = await page
+        .locator(panelSelector)
+        .evaluate((panel) => getComputedStyle(panel, '::after').backgroundColor);
+    await expect(shape.locator('path').last()).toHaveCSS('stroke', dividerColor);
 
+    await page.locator(anchorSelector).hover();
+
+    await finishAnimations(page);
     await button.click();
     await expect(button).toHaveAttribute('aria-expanded', 'true');
     await finishAnimations(page);
-    await expect(button).toHaveCSS('box-shadow', 'none');
+    await expect(shape).toHaveCount(0);
 });
 
 for (const kind of ['all-pages', 'custom'] as const) {
@@ -293,8 +309,13 @@ for (const kind of ['all-pages', 'custom'] as const) {
             await page.getByRole('button', {name: 'Toggle custom panel', exact: true}).click();
         else await page.getByRole('button', {name: 'All pages', exact: true}).click();
         await finishAnimations(page);
-        await page.locator(buttonSelector).hover();
-        await expect(page.locator(buttonSelector)).toHaveCSS('opacity', '1');
+        await page.locator(anchorSelector).hover();
+        await finishAnimations(page);
+        // Move the pointer directly: a locator hover may scroll the page while retrying.
+        const tab = await page.locator(buttonSelector).boundingBox();
+        if (!tab) throw new Error('Missing tab');
+        await page.mouse.move(tab.x + tab.width / 2, tab.y + tab.height / 2);
+        await expect(page.locator(buttonSelector)).toHaveCSS('transform', 'none');
         const overlay = page.locator('.g-drawer[data-floating-ui-status="open"]');
         await expect(overlay).toBeVisible();
         const before = await geometry(page);
@@ -484,15 +505,16 @@ for (const direction of ['ltr', 'rtl'] as const) {
         const middle = await geometry(page);
         expect(middle.slot.width).toBeGreaterThan(20);
         expect(middle.slot.width).toBeLessThan(24);
-        expect(middle.radius).toBeGreaterThan(8);
-        expect(middle.radius).toBeLessThan(12);
+        const compactRadius = direction === 'ltr' ? 0 : 10;
+        expect(middle.radius).toBeGreaterThan(Math.min(8, compactRadius));
+        expect(middle.radius).toBeLessThan(Math.max(8, compactRadius));
         expect(middle.panel.width).toBeGreaterThan(56);
         expect(middle.panel.width).toBeLessThan(236);
         const edgeOffset =
             direction === 'ltr'
                 ? middle.panel.right - middle.slot.right
                 : middle.slot.x - middle.panel.x;
-        expect(edgeOffset).toBeGreaterThan(-10);
+        expect(edgeOffset).toBeGreaterThan(-20);
         expect(edgeOffset).toBeLessThan(12);
         await toggleAsideAndPause(page);
         await seekAnimations(page, 0);
@@ -512,8 +534,10 @@ for (const direction of ['ltr', 'rtl'] as const) {
         expect(collapsed.slot.width).toBe(20);
         expect(collapsed.slot.y - expanded.slot.y).toBeGreaterThan(40);
         expect(middle.slot.y).toBeCloseTo((expanded.slot.y + collapsed.slot.y) / 2, 0);
+        await page.locator(anchorSelector).hover();
+        await finishAnimations(page);
         await page.locator(buttonSelector).hover();
-        await expect(page.locator(buttonSelector)).toHaveCSS('opacity', '1');
+        await expect(page.locator(buttonSelector)).toHaveCSS('transform', 'none');
     });
 }
 
@@ -525,11 +549,9 @@ test('collapse button stays hidden while the aside animates to compact', async (
     const panel = page.locator(panelSelector);
 
     await page.mouse.move(700, 400);
-    await expect(button).toHaveCSS('opacity', '1');
+    await expect(button).toHaveCSS('transform', 'none');
 
-    // React swaps in the compact modifier on the first frame of the collapse. Painting the button
-    // during the transition would park the finished collapsed control - rotated chevron, border,
-    // opaque fill - on top of an aside still at its expanded width, then drop it at the end.
+    // The tab must not peek past the shrinking aside during the collapse.
     await toggleAsideAndPause(page);
     await expect(panel).toHaveAttribute('data-gn-aside-animating', '');
     await expect(button).toHaveAttribute('aria-expanded', 'false');
@@ -537,12 +559,12 @@ test('collapse button stays hidden while the aside animates to compact', async (
     await seekAnimations(page, 0.5);
     await expect(button).toHaveCSS('opacity', '0');
     await finishAnimations(page);
-    await expect(button).toHaveCSS('opacity', '0');
+    await expect(button).toHaveCSS('opacity', '1');
+    await expect(button).toHaveCSS('transform', hiddenTransform());
 
-    // Hover reveals it again once the layout has settled.
     await panel.hover();
     await finishAnimations(page);
-    await expect(button).toHaveCSS('opacity', '1');
+    await expect(button).toHaveCSS('transform', 'none');
 });
 
 test('collapse button keeps keyboard focus visible while the aside animates', async ({
@@ -565,13 +587,18 @@ test('collapse button keeps keyboard focus visible while the aside animates', as
     await pauseNextAsideTransition(page);
     await page.keyboard.press('Enter');
 
-    // The hide-while-animating rule must not swallow a keyboard-focused control.
+    // The layer is raised during the collapse so the aside cannot cover the focused button.
+    const layer = page.locator('[data-gn-aside-collapse-layer]');
     await expect(panel).toHaveAttribute('data-gn-aside-animating', '');
     await expect(button).toHaveAttribute('aria-expanded', 'false');
     await expect(button).toHaveCSS('opacity', '1');
+    await expect(button).toHaveCSS('transform', 'none');
+    await expect(layer).toHaveCSS('z-index', '101');
     await finishAnimations(page);
     await expect(button).toBeFocused();
     await expect(button).toHaveCSS('opacity', '1');
+    await expect(button).toHaveCSS('transform', 'none');
+    await expect(layer).toHaveCSS('z-index', '99');
 });
 
 test('collapse button honors reduced motion and raised aside z-index', async ({mount, page}) => {
@@ -586,6 +613,8 @@ test('collapse button honors reduced motion and raised aside z-index', async ({m
     await expect(page.locator(slotSelector)).toHaveCSS('transform', 'none');
     await page.getByRole('button', {name: 'Toggle custom panel', exact: true}).click();
     await finishAnimations(page);
+    await page.locator(anchorSelector).hover();
+    await expect(page.locator(buttonSelector)).toHaveCSS('transform', 'none');
     expect(
         await page.locator(buttonSelector).evaluate((button) => {
             const rect = button.getBoundingClientRect();
@@ -622,10 +651,10 @@ test.describe('collapse button on touch devices', () => {
     test('shows the RTL tab without an appearance offset', async ({mount, page}) => {
         await page.setViewportSize(viewport);
         await mount(<CollapseButtonExample direction="rtl" />, undefined, viewport);
-        await expect(page.locator(buttonSelector)).toHaveCSS('opacity', '1');
         await expect(page.locator(buttonSelector)).toHaveCSS('transform', 'none');
         const current = await geometry(page);
-        expect(current.panel.x - current.button.x).toBeCloseTo(10, 1);
+        expect(current.panel.x - current.button.right).toBeCloseTo(0, 1);
+        expect(current.button.width).toBe(20);
     });
 });
 

@@ -79,16 +79,20 @@ lands on an aside that is still at its expanded width; hover reveals it once the
 keyboard-focused button stays visible throughout. Expanding is unaffected — the button is visible
 for the whole transition.
 
-At the standard z-index, the compact tab extends 10 px over the edge of open All pages and custom
-`panelItems` Drawers. Clicking it changes `compact` and keeps the panel open. Its transparent layer
-does not intercept clicks outside the button. The layer uses
-`calc(var(--gn-aside-header-z-index, 100) + 1)`. Consumer z-index settings determine custom stacking;
-portaled Popups (including `asideRef` with `right-end`) may cover the tab and retain their normal
-position and behavior. The compact button background follows the collapsed aside background,
-then the general aside background, then the theme background. Matching an arbitrary
-`customBackground` is not guaranteed. In compact the button also draws a 1 px border so the
-vertical divider reads as routing around it instead of stopping at the opaque fill; override it
-with `--gn-aside-header-collapse-button-border-color`. The expanded button keeps no border.
+In compact mode the button is a 20 px tab attached to the outside of the aside edge: concave
+fillets merge it into the edge and a single 1 px outline runs around it, so the vertical divider
+stays unbroken. The tab rests under the aside and slides out from under it on hover or keyboard
+focus; it never fades. Its layer sits at `calc(var(--gn-aside-header-z-index, 100) - 1)` while
+compact — below the aside, still above open All pages and custom `panelItems` Drawers, over whose
+edge the tab extends 20 px — and at `calc(var(--gn-aside-header-z-index, 100) + 1)` while expanded.
+Clicking the tab changes `compact` and keeps the panel open. Its transparent layer does not
+intercept clicks outside the button. Consumer z-index settings determine custom stacking; portaled
+Popups (including `asideRef` with `right-end`) may cover the tab and retain their normal position
+and behavior. The tab fill follows the collapsed aside background, then the general aside
+background, then the theme background. Matching an arbitrary `customBackground` is not guaranteed.
+The outline follows the vertical divider color (`--gn-aside-header-divider-vertical-color`);
+`--gn-aside-header-collapse-button-border-color` overrides it for the tab alone. The expanded
+button keeps no outline.
 
 In v7, `collapseButtonWrapper` decorates the edge control. Move any full-width additional content
 previously rendered by this wrapper into `renderFooter`:

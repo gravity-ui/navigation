@@ -5,11 +5,16 @@ import {Icon} from '@gravity-ui/uikit';
 
 import {createBlock} from '../../../utils/cn';
 import {useAsideHeaderInnerContext} from '../../AsideHeaderContext';
+import {getAsideHeaderDensityConfig} from '../../density';
 import i18n from '../../i18n';
 
 import styles from './CollapseButton.module.scss';
 
 const b = createBlock('collapse-button', styles);
+
+// Tab outline: concave fillets into the aside edge, convex outer corners, half-pixel stroke.
+const tabPath = (h: number) =>
+    `M0 0 A10 10 0 0 0 10 10 A9.5 9.5 0 0 1 19.5 19.5 V${h + 0.5} A9.5 9.5 0 0 1 10 ${h + 10} A10 10 0 0 0 0 ${h + 20}`;
 
 interface CollapseButtonProps {
     panelId: string;
@@ -18,8 +23,16 @@ interface CollapseButtonProps {
 }
 
 export const CollapseButton = ({className, panelId, slotRef}: CollapseButtonProps) => {
-    const {onChangeCompact, compact, expandTitle, collapseTitle, collapseButtonWrapper} =
-        useAsideHeaderInnerContext();
+    const {
+        onChangeCompact,
+        compact,
+        expandTitle,
+        collapseTitle,
+        collapseButtonWrapper,
+        menuDensity,
+    } = useAsideHeaderInnerContext();
+    const {footerItemHeight} = getAsideHeaderDensityConfig(menuDensity);
+    const tabShape = compact ? tabPath(footerItemHeight) : null;
 
     // The button reverses the target state: pressing it while the collapse or
     // expand transition runs must switch the direction instead of re-applying
@@ -41,6 +54,18 @@ export const CollapseButton = ({className, panelId, slotRef}: CollapseButtonProp
             aria-controls={panelId}
             aria-expanded={!compact}
         >
+            {tabShape && (
+                <svg
+                    className={b('tab-shape')}
+                    viewBox={`0 0 20 ${footerItemHeight + 20}`}
+                    aria-hidden="true"
+                    focusable="false"
+                >
+                    <path className={b('tab-shape-fill')} d={`${tabShape} Z`} />
+                    <path className={b('tab-shape-hover')} d={`${tabShape} Z`} />
+                    <path className={b('tab-shape-line')} d={tabShape} />
+                </svg>
+            )}
             <Icon data={ChevronRight} className={b('icon')} size={16} />
         </button>
     );
