@@ -278,6 +278,9 @@ test('keeps children, focus, callbacks and independent Drawer transitions', asyn
         ).toBe(true);
     }
     await expect(page.getByRole('status', {name: 'Compact changes'})).toHaveText('0');
+    // The compact tab is parked under the aside until the aside is hovered.
+    await page.locator('[data-gn-aside-panel]').hover();
+    await finishAnimations(page);
     await page.locator('button[class*="gn-collapse-button_"]').click();
     await expect(page.getByRole('status', {name: 'Compact changes'})).toHaveText('1');
     await expect(page.locator('[compacttransition]')).toHaveCount(0);

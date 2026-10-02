@@ -2,6 +2,8 @@
 @use '../../../../../styles/mixins';
 
 $block: '.#{variables.$ns}collapse-button';
+$tab-width: 20px;
+$tab-radius: 10px;
 
 #{$block} {
     @include mixins.button-reset();
@@ -14,30 +16,20 @@ $block: '.#{variables.$ns}collapse-button';
     border-radius: inherit;
     pointer-events: auto;
     color: var(--g-color-text-secondary);
-    opacity: 1;
-    transform: translateX(0);
-    transition:
-        opacity 150ms ease-in-out,
-        transform 150ms ease-in-out;
 
     :global([dir='rtl']) & {
-        --_--collapse-appearance-shift: 2px;
         --_--collapse-icon-direction: -1;
     }
 
+    // Parked under the aside; the extra pixel hides the anti-aliased edge.
     &_compact {
-        opacity: 0;
-        transform: translateX(var(--_--collapse-appearance-shift, -2px));
-        background: var(
-            --gn-aside-header-collapsed-background-color,
-            var(--gn-aside-header-background-color, var(--g-color-base-background))
-        );
-        // The compact button overhangs the aside edge and masks the vertical divider with
-        // its opaque background. A hairline ring closes that gap: the divider reads as if
-        // it routes around the button instead of stopping at an invisible white pill.
-        box-shadow: 0 0 0 1px
-            var(--gn-aside-header-collapse-button-border-color, var(--g-color-line-generic-accent));
         color: var(--g-color-text-primary);
+        transform: translateX(calc((-100% - 1px) * var(--_--collapse-icon-direction, 1)));
+        transition: transform 200ms ease-in-out 200ms;
+
+        &:hover {
+            --_--collapse-tab-hover: var(--g-color-base-simple-hover);
+        }
     }
 
     &__icon {
@@ -49,9 +41,9 @@ $block: '.#{variables.$ns}collapse-button';
 
     &:hover {
         color: var(--g-color-text-primary);
-        // The hover token is translucent, and the compact button owns an opaque
-        // background that masks the aside edge it overhangs. Paint the hover as a layer
-        // above that background so both states read as the same grey.
+    }
+    // Compact, the tab shape carries the hover tint so the fillets are tinted too.
+    &:not(#{$block}_compact):hover {
         background-image: linear-gradient(
             var(--g-color-base-simple-hover),
             var(--g-color-base-simple-hover)
@@ -62,24 +54,65 @@ $block: '.#{variables.$ns}collapse-button';
         outline-offset: -2px;
     }
 
-    &__layer {
-        width: 0;
-        min-width: 0;
-        flex: 0 0 0;
+    &__tab-shape {
+        position: absolute;
+        top: -$tab-radius;
+        inset-inline-start: 0;
+        width: $tab-width;
+        height: calc(100% + #{2 * $tab-radius});
         overflow: visible;
+        pointer-events: none;
+        z-index: -1;
+        transform: scaleX(var(--_--collapse-icon-direction, 1));
+
+        &-fill {
+            fill: var(
+                --gn-aside-header-collapsed-background-color,
+                var(--gn-aside-header-background-color, var(--g-color-base-background))
+            );
+        }
+        &-hover {
+            fill: var(--_--collapse-tab-hover, transparent);
+        }
+        &-line {
+            fill: none;
+            stroke: var(
+                --gn-aside-header-collapse-button-border-color,
+                var(--gn-aside-header-divider-vertical-color, var(--_--vertical-divider-line-color))
+            );
+        }
+    }
+
+    // A 20px strip outside the aside edge that takes no layout space. Compact, it clips the
+    // parked tab and keeps the fillets from adding page scroll (Safari ignores per-axis clip).
+    &__layer {
+        width: $tab-width;
+        flex: 0 0 $tab-width;
+        margin-inline-end: -$tab-width;
         position: sticky;
         top: var(--gn-top-alert-height, 0);
+        left: var(--gn-aside-header-size);
+        transition: var(--_--gn-aside-collapse-geometry-transition);
+
+        // The aside sticks at a physical left: 0, which does nothing in RTL.
+        :global([dir='rtl']) & {
+            left: auto;
+        }
         height: 100vh;
         max-height: calc(100vh - var(--gn-top-alert-height, 0));
         margin-top: var(--gn-top-alert-height, 0);
         pointer-events: none;
         z-index: calc(var(--gn-aside-header-z-index, 100) + 1);
+
+        &_compact {
+            overflow: clip;
+        }
     }
 
     &__slot {
         position: absolute;
         bottom: var(--g-spacing-2);
-        inset-inline-end: var(--_--item-margin-inline);
+        inset-inline-end: calc(var(--_--item-margin-inline) + #{$tab-width});
         width: 24px;
         height: var(
             --_--gn-aside-header-density-footer-item-height,
@@ -87,53 +120,53 @@ $block: '.#{variables.$ns}collapse-button';
         );
         border-radius: 8px;
         transition: var(--_--gn-aside-collapse-geometry-transition);
+
+        // Flush outside the aside edge so the divider stays unbroken.
         &_compact {
-            inset-inline-end: -10px;
-            width: 20px;
-            border-radius: 12px;
+            inset-inline-end: 0;
+            width: $tab-width;
+            border-start-start-radius: 0;
+            border-end-start-radius: 0;
+            border-start-end-radius: $tab-radius;
+            border-end-end-radius: $tab-radius;
         }
     }
 }
 
 // The layer follows the aside directly, including through display:contents consumers.
 
-:global([data-gn-aside-panel]):hover + :global([data-gn-aside-collapse-layer]) {
-    #{$block} {
-        opacity: 1;
-        transform: none;
-    }
-}
-
+:global([data-gn-aside-panel]):hover + :global([data-gn-aside-collapse-layer]) #{$block},
 #{$block}:hover,
 #{$block}:focus-visible {
-    opacity: 1;
     transform: none;
+    transition-delay: 0s;
 }
 
-// React applies the compact modifier on the first frame of the collapse, long before the aside
-// reaches its compact width. Showing the button during that window paints the finished collapsed
-// control — rotated chevron, border, opaque fill — on top of an aside still at its expanded
-// width, only to drop it once the layout settles; that reads as a blink. Keep it out of the
-// transition entirely: hover reveals it again once the aside has settled. Expanding is
-// unaffected, the modifier is already gone by then. Keyboard focus still wins, so focus never
-// lands on an invisible control.
+// Hide the tab during the collapse so it cannot peek past the shrinking edge. The layer is not
+// clipped meanwhile so a keyboard-focused button stays visible; the shape is dropped so its
+// fillets cannot add page scroll while unclipped.
 
 :global([data-gn-aside-panel][data-gn-aside-animating]) + :global([data-gn-aside-collapse-layer]) {
+    overflow: visible;
+
     #{$block}_compact:not(:focus-visible) {
         opacity: 0;
         transition: none;
+    }
+    #{$block}__tab-shape {
+        display: none;
     }
 }
 
 @media (hover: none) {
     #{$block} {
-        opacity: 1;
         transform: none;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
     #{$block},
+    #{$block}__layer,
     #{$block}__slot {
         transition: none;
     }
