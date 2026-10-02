@@ -25,7 +25,7 @@ $tab-radius: 10px;
     &_compact {
         color: var(--g-color-text-primary);
         transform: translateX(calc((-100% - 1px) * var(--_--collapse-icon-direction, 1)));
-        transition: transform 200ms ease-in-out;
+        transition: transform 200ms ease-in-out 200ms;
 
         &:hover {
             --_--collapse-tab-hover: var(--g-color-base-simple-hover);
@@ -139,6 +139,7 @@ $tab-radius: 10px;
 #{$block}:hover,
 #{$block}:focus-visible {
     transform: none;
+    transition-delay: 0s;
 }
 
 // Hide the tab during the collapse so it cannot peek past the shrinking edge. The layer is not
