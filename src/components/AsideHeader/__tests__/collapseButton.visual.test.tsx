@@ -601,6 +601,50 @@ test('collapse button keeps keyboard focus visible while the aside animates', as
     await expect(layer).toHaveCSS('overflow', 'clip');
 });
 
+test('collapse button stays beside the aside under horizontal scroll', async ({mount, page}) => {
+    await page.setViewportSize(viewport);
+    await mount(<CollapseButtonExample initialCompact={false} />, undefined, viewport);
+    await finishAnimations(page);
+    const offset = async () => {
+        const {panel, slot} = await geometry(page);
+        return slot.x - panel.right;
+    };
+    const expanded = await offset();
+    await page.evaluate(() => {
+        document.documentElement.style.width = '1600px';
+        window.scrollTo(150, 0);
+    });
+    await expect.poll(() => page.evaluate(() => window.scrollX)).toBe(150);
+    expect(await offset()).toBeCloseTo(expanded, 1);
+    // The pinned layer follows the animated edge, not the target width.
+    await toggleAsideAndPause(page);
+    await seekAnimations(page, 0.5);
+    const middle = await geometry(page);
+    const layer = await page.locator('[data-gn-aside-collapse-layer]').boundingBox();
+    if (!layer) throw new Error('Missing layer');
+    expect(layer.x).toBeCloseTo(middle.panel.right, 1);
+    await finishAnimations(page);
+    expect(await offset()).toBeCloseTo(0, 1);
+});
+
+test('collapse button layer stays beside the aside in RTL at narrow widths', async ({
+    mount,
+    page,
+}) => {
+    const narrow = {width: 480, height: 720};
+    await page.setViewportSize(narrow);
+    await mount(
+        <CollapseButtonExample direction="rtl" initialCompact={false} />,
+        undefined,
+        narrow,
+    );
+    await finishAnimations(page);
+    const {panel} = await geometry(page);
+    const layer = await page.locator('[data-gn-aside-collapse-layer]').boundingBox();
+    if (!layer) throw new Error('Missing layer');
+    expect(layer.x + layer.width).toBeCloseTo(panel.x, 1);
+});
+
 test('collapse button honors reduced motion and raised aside z-index', async ({mount, page}) => {
     await page.emulateMedia({reducedMotion: 'reduce'});
     await page.setViewportSize(viewport);

@@ -91,6 +91,13 @@ $tab-radius: 10px;
         margin-inline-end: -$tab-width;
         position: sticky;
         top: var(--gn-top-alert-height, 0);
+        left: var(--gn-aside-header-size);
+        transition: var(--_--gn-aside-collapse-geometry-transition);
+
+        // The aside sticks at a physical left: 0, which does nothing in RTL.
+        :global([dir='rtl']) & {
+            left: auto;
+        }
         height: 100vh;
         max-height: calc(100vh - var(--gn-top-alert-height, 0));
         margin-top: var(--gn-top-alert-height, 0);
@@ -158,6 +165,7 @@ $tab-radius: 10px;
 
 @media (prefers-reduced-motion: reduce) {
     #{$block},
+    #{$block}__layer,
     #{$block}__slot {
         transition: none;
     }
