@@ -352,8 +352,10 @@ test('finishes immediately with reduced motion', async ({mount, page}) => {
     await mount(
         <AsideHeaderExamplesStories.FullNavigation initialCompact enableQuickAccess={false} />,
     );
-    await page.locator('button[title="Expand"]').click();
     const panel = page.locator('[data-gn-aside-panel]');
+    // The compact tab is parked under the aside until the aside is hovered.
+    await panel.hover();
+    await page.locator('button[title="Expand"]').click();
     await expect(panel).toHaveCSS('width', '220px');
     expect(await panel.evaluate((element) => element.getAnimations({subtree: true}).length)).toBe(
         0,

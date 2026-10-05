@@ -98,8 +98,8 @@ test.describe('AsideHeader', () => {
         await mount(<AsideHeaderStories.AdvancedCompactDensity />, mountOptions, viewport);
         await page.mouse.move(500, 300);
         await expect(page.locator('button[class*="gn-collapse-button_"]')).toHaveCSS(
-            'opacity',
-            '0',
+            'transform',
+            'matrix(1, 0, 0, 1, -21, 0)',
         );
         await expectScreenshot();
     });
