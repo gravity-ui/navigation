@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.1.0](https://github.com/gravity-ui/navigation/compare/v7.0.1...v7.1.0) (2026-10-05)
+
+
+### Features
+
+* **AsideHeader:** new style for compact collapse button ([#692](https://github.com/gravity-ui/navigation/issues/692)) ([51fc4a9](https://github.com/gravity-ui/navigation/commit/51fc4a9e6abc22d8244f7a0ebace36a08f9fed38))
+
 ## [7.0.1](https://github.com/gravity-ui/navigation/compare/v7.0.0...v7.0.1) (2026-09-28)
 
 
