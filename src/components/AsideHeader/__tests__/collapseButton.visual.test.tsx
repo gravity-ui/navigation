@@ -258,7 +258,7 @@ test('collapse button hover color default', async ({mount, page}) => {
         }, shot.toString('base64'));
     };
 
-    // Reveal the tab first: the aside blocks pointer hits while it is parked.
+    // Reveal the tab first: the layer clips pointer hits while it is parked.
     await page.locator(anchorSelector).hover();
     await finishAnimations(page);
     await button.hover();
