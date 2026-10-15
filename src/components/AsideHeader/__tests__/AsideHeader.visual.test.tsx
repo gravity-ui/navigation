@@ -361,7 +361,7 @@ test.describe('AsideHeader', () => {
             await item.click();
             const group = page.locator('[data-gn-aside-group="analytics"]');
             await expect(group.locator('[class*="connector_spine-active"]')).toHaveCount(2);
-            await expect(item.locator('[class*="tree-svg_active"]')).toHaveCount(1);
+            await expect(item.locator('[class*="nested-hook_active"]')).toHaveCount(1);
             const nestedContents = group.locator(
                 '[class*="__menu-group-nested-list-item_"] > .g-list__item-content',
             );
@@ -372,9 +372,11 @@ test.describe('AsideHeader', () => {
             const icon = await item.locator('[data-gn-aside-part="icon"] svg.g-icon').boundingBox();
             const title = await item.locator('[class*="__title-text_"]').boundingBox();
 
-            const connector = await item
-                .locator('[class*="__menu-group-nested-tree-svg_"]')
-                .boundingBox();
+            const hook = item.locator('[class*="__menu-group-nested-hook_"]');
+            const connector = await hook.boundingBox();
+            const lineWidth = await hook.evaluate((element) =>
+                parseFloat(getComputedStyle(element).borderBlockEndWidth),
+            );
 
             if (!row || !icon || !title || !connector) {
                 throw new Error('Menu content is not visible');
@@ -387,7 +389,7 @@ test.describe('AsideHeader', () => {
                 Math.abs(icon.y + icon.height / 2 - title.y - lineHeight / 2),
             ).toBeLessThanOrEqual(1);
             expect(
-                Math.abs(connector.y + connector.height / 2 - icon.y - icon.height / 2),
+                Math.abs(connector.y + connector.height - lineWidth / 2 - icon.y - icon.height / 2),
             ).toBeLessThanOrEqual(1);
             expect(
                 Math.abs(title.y + title.height / 2 - (row.y + row.height / 2)),
