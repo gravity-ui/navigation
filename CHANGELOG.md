@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.1.1](https://github.com/gravity-ui/navigation/compare/v7.1.0...v7.1.1) (2026-10-15)
+
+
+### Bug Fixes
+
+* **AsideHeader:** align menu group tree connectors ([#694](https://github.com/gravity-ui/navigation/issues/694)) ([057e6c8](https://github.com/gravity-ui/navigation/commit/057e6c88d37a82c7ea7917b5e7dc7e1763c094d9))
+
 ## [7.1.0](https://github.com/gravity-ui/navigation/compare/v7.0.1...v7.1.0) (2026-10-05)
 
 
