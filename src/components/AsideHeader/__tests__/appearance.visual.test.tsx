@@ -94,12 +94,13 @@ for (const menuDensity of ['default', 'compact'] as const) {
                 });
             }
             const spineWidths = await connector.evaluate((element) => [
-                getComputedStyle(element, '::before').width,
-                getComputedStyle(element, '::after').width,
+                getComputedStyle(element, '::before').borderInlineStartWidth,
+                getComputedStyle(element, '::after').borderInlineStartWidth,
             ]);
             expect(spineWidths).toEqual([width, width]);
-            for (const path of await page.locator('[class*="nested-tree-svg"] path').all()) {
-                await expect(path).toHaveCSS('stroke-width', width);
+            for (const hook of await page.locator('[class*="__menu-group-nested-hook_"]').all()) {
+                await expect(hook).toHaveCSS('border-inline-start-width', width);
+                await expect(hook).toHaveCSS('border-block-end-width', width);
             }
         }
     });
