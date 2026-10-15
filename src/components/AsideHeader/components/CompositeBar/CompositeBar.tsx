@@ -30,10 +30,6 @@ import styles from './CompositeBar.module.scss';
 
 const b = createBlock('composite-bar', styles);
 
-/** Row L-connector: vertical segment + rounded hook. viewBox matches `variables.$item-height`. */
-const MENU_GROUP_NESTED_TREE_CONNECTOR_PATH =
-    'M8.03125 0V10.07935C8.03125 15.558375 11.5846 20 15.9678 20';
-
 type CompositeBarProps = {
     type: 'menu' | 'subheader' | 'quick-access';
     items: AsideHeaderItem[];
@@ -349,27 +345,13 @@ const CompositeBarView: FC<CompositeBarViewProps> = ({
                                                         )}
                                                         aria-hidden
                                                     >
-                                                        <svg
-                                                            className={b(
-                                                                'menu-group-nested-tree-svg',
-                                                                {
-                                                                    active:
-                                                                        normalizedSelectedItemIndex ===
-                                                                        groupItemIndex,
-                                                                },
-                                                            )}
-                                                            viewBox="0 0 16 40"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                        >
-                                                            <path
-                                                                d={
-                                                                    MENU_GROUP_NESTED_TREE_CONNECTOR_PATH
-                                                                }
-                                                                fill="none"
-                                                                strokeLinecap="butt"
-                                                                vectorEffect="non-scaling-stroke"
-                                                            />
-                                                        </svg>
+                                                        <span
+                                                            className={b('menu-group-nested-hook', {
+                                                                active:
+                                                                    normalizedSelectedItemIndex ===
+                                                                    groupItemIndex,
+                                                            })}
+                                                        />
                                                     </span>
                                                 }
                                                 onMouseLeave={onMouseLeave}

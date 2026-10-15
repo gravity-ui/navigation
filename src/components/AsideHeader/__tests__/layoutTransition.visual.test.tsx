@@ -328,6 +328,11 @@ for (const reverse of [false, true]) {
         const before = await menuGeometry(page);
         await toggleAndPause(page);
         await seek(page, 0.5);
+        const hook = page
+            .locator('[data-gn-aside-transition-overlay] [class*="__menu-group-nested-hook_"]')
+            .first();
+        await expect(hook).toHaveCSS('border-inline-start-width', '1px');
+        await expect(hook).toHaveCSS('border-block-end-width', '1px');
         const middle = await menuGeometry(page);
         expect(middle.y).toBeLessThan(before.y - 10);
         expect(middle.y).toBeGreaterThan(215);
