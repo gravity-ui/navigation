@@ -189,6 +189,9 @@ npm install @gravity-ui/navigation@^4.0.0
 The easiest way is to use our codemods:
 
 ```bash
+# jscodeshift is not installed with the package, add it first
+npm install --save-dev jscodeshift@^0.15.0
+
 # Complete migration (recommended)
 npx navigation-codemod v4 src/
 
