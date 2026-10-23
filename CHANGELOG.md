@@ -295,7 +295,7 @@ We have unified the API for navigation components to provide a consistent and fl
 
 ### 📚 Migration Guide
 
-**Complete Migration Documentation:** See `MIGRATION_GUIDE_v4.md` for detailed migration instructions, examples, and troubleshooting.
+**Complete Migration Documentation:** See [`MIGRATION_GUIDE_v4.md`](https://github.com/gravity-ui/navigation/blob/97d3c3afaec92d1922ef41c0dd7036ef14b562ff/MIGRATION_GUIDE_v4.md) for detailed migration instructions, examples, and troubleshooting.
 
 **Automated Migration:**
 ```bash
@@ -303,7 +303,7 @@ We have unified the API for navigation components to provide a consistent and fl
 npx navigation-codemod v4 path/to/your/code
 ```
 
-**AI Migration Assistant:** See `AI_MIGRATION_ASSISTANT.md` for AI prompt to help with complex migration cases.
+**AI Migration Assistant:** See [`AI_MIGRATION_ASSISTANT.md`](https://github.com/gravity-ui/navigation/blob/97d3c3afaec92d1922ef41c0dd7036ef14b562ff/AI_MIGRATION_ASSISTANT.md) for AI prompt to help with complex migration cases.
 
 
 ## [3.11.0](https://github.com/gravity-ui/navigation/compare/v3.10.2...v3.11.0) (2025-12-04)
