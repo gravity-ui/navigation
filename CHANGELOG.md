@@ -1,5 +1,13 @@
 # Changelog
 
+## [7.1.2](https://github.com/gravity-ui/navigation/compare/v7.1.1...v7.1.2) (2026-10-23)
+
+
+### Bug Fixes
+
+* **deps:** move jscodeshift to devDependencies ([#697](https://github.com/gravity-ui/navigation/issues/697)) ([25d51c6](https://github.com/gravity-ui/navigation/commit/25d51c62cb485d15e497edb4ba4bfd51435182d3)), closes [#696](https://github.com/gravity-ui/navigation/issues/696)
+* remove broken v4 codemod CLI and archive v4 migration docs ([#698](https://github.com/gravity-ui/navigation/issues/698)) ([0cbb0cd](https://github.com/gravity-ui/navigation/commit/0cbb0cd8746f9c2c0a164a5f933ca5293153529b))
+
 ## [7.1.1](https://github.com/gravity-ui/navigation/compare/v7.1.0...v7.1.1) (2026-10-15)
 
 
