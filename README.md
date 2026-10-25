@@ -16,6 +16,10 @@ Ensure that peer dependencies are installed in your project
 npm install --dev @gravity-ui/uikit@^7.2.0 @gravity-ui/icons@^2.2.0 @bem-react/classname@^1.6.0 react@^19.0.0 react-dom@^19.0.0
 ```
 
+## Migration
+
+Upgrading from 4.x, 5.x or 6.x: see [MIGRATION_GUIDE_v7.md](MIGRATION_GUIDE_v7.md).
+
 ## Usage
 
 Render `AsideHeader` as the app shell. It is a controlled component — you own the collapsed state via `compact`/`onChangeCompact` — and your page content goes through `renderContent`. Set up `@gravity-ui/uikit` styles and `ThemeProvider` first (see the [uikit styles guide](https://github.com/gravity-ui/uikit?tab=readme-ov-file#styles)).

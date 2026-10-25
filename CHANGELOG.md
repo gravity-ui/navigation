@@ -41,6 +41,10 @@ v7 keeps the v6 props API: no props were removed or renamed. The breaking change
 * **AsideHeader:** in the compact state, the built-in tooltip of the selected row is suppressed even when `enableTooltip={true}`.
 * **AsideHeader:** `MenuGroup.hideCompactChevron` is deprecated and has no effect: the compact sidebar no longer renders a chevron on the group anchor.
 
+### 📚 Migration Guide
+
+See [`MIGRATION_GUIDE_v7.md`](https://github.com/gravity-ui/navigation/blob/main/MIGRATION_GUIDE_v7.md) for step-by-step instructions covering upgrades from 4.x, 5.0.0, 5.0.1 and 6.x.
+
 ### Features
 
 * **AsideHeader:** added `menuDensity: 'default' | 'compact'` for a denser aside and menu items ([#664](https://github.com/gravity-ui/navigation/issues/664)).
