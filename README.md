@@ -18,7 +18,7 @@ npm install --dev @gravity-ui/uikit@^7.2.0 @gravity-ui/icons@^2.2.0 @bem-react/c
 
 ## Migration
 
-Upgrading from 5.x or 6.x: see [MIGRATION_GUIDE_v7.md](MIGRATION_GUIDE_v7.md).
+Upgrading from 4.x, 5.x or 6.x: see [MIGRATION_GUIDE_v7.md](MIGRATION_GUIDE_v7.md).
 
 ## Usage
 

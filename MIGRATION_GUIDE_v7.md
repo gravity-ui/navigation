@@ -1,8 +1,8 @@
 # Navigation v7 Migration Guide
 
-This guide covers upgrading `@gravity-ui/navigation` to **7.x** from **5.x** (both published 5.x
-releases) and from **6.x**. It is written as a step-by-step instruction that an engineer or an AI
-agent can follow verbatim. Every breaking change lists the old API, the new API and how to find
+This guide covers upgrading `@gravity-ui/navigation` to **7.x** from **4.x**, **5.x** (both
+published 5.x releases) and **6.x**. It is written as a step-by-step instruction that an engineer
+or an AI agent can follow verbatim. Every breaking change lists the old API, the new API and how to find
 usages.
 
 - [0. Which version are you on?](#0-which-version-are-you-on)

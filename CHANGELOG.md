@@ -43,7 +43,7 @@ v7 keeps the v6 props API: no props were removed or renamed. The breaking change
 
 ### 📚 Migration Guide
 
-See [`MIGRATION_GUIDE_v7.md`](https://github.com/gravity-ui/navigation/blob/main/MIGRATION_GUIDE_v7.md) for step-by-step instructions covering upgrades from 5.0.0, 5.0.1 and 6.x.
+See [`MIGRATION_GUIDE_v7.md`](https://github.com/gravity-ui/navigation/blob/main/MIGRATION_GUIDE_v7.md) for step-by-step instructions covering upgrades from 4.x, 5.0.0, 5.0.1 and 6.x.
 
 ### Features
 
