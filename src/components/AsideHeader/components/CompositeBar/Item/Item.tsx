@@ -490,6 +490,10 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                     {...rowEventProps}
                     role={menuItemAriaProps?.role ?? 'button'}
                     onKeyDown={(event) => {
+                        if (event.target !== event.currentTarget) {
+                            return;
+                        }
+
                         if (event.key === 'Enter' || event.key === ' ') {
                             event.preventDefault();
                             event.currentTarget.click();

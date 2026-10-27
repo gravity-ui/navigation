@@ -95,4 +95,30 @@ describe('FooterItem', () => {
 
         expect(onItemClick).toHaveBeenCalledTimes(2);
     });
+
+    it('ignores keyboard events bubbling up from nested controls', () => {
+        const onItemClick = jest.fn();
+
+        render(
+            <ThemeProvider theme="light">
+                <AsideHeaderContextProvider
+                    value={{compact: true, size: 44, menuDensity: 'compact'}}
+                >
+                    <FooterItem
+                        compact
+                        id="settings"
+                        title="Settings"
+                        icon={Gear}
+                        menuItemAriaProps={{tabIndex: 0}}
+                        onItemClick={onItemClick}
+                        itemWrapper={(params, makeItem) => makeItem(params)}
+                    />
+                </AsideHeaderContextProvider>
+            </ThemeProvider>,
+        );
+
+        fireEvent.keyDown(screen.getByText('Settings'), {key: 'Enter'});
+
+        expect(onItemClick).not.toHaveBeenCalled();
+    });
 });
