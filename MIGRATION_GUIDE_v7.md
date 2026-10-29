@@ -219,10 +219,11 @@ itemWrapper: (params, makeItem, {compact}) =>
 onItemClick: (item, collapsed, event) => { ... },
 ```
 
-Since 6.0.0, when an item has `itemWrapper` and no `href`, `makeItem` creates a non-focusable
-`<div role="button">` (even if the wrapper returns `makeItem(params)` unchanged); items with `href`
-stay `<a>`; see section 8, item 11, before keeping a
-decorative wrapper.
+Since 6.0.0, when an item has `itemWrapper` and no `href`, `makeItem` creates a
+`<div role="button">` that is not focusable by default (even if the wrapper returns
+`makeItem(params)` unchanged); since 7.1.3 opt it into keyboard access with
+`menuItemAriaProps={{tabIndex: 0}}`; items with `href` stay `<a>`; see section 8, item 11, before
+keeping a decorative wrapper.
 
 **Menu groups**
 
@@ -574,16 +575,18 @@ After the code compiles, check these in Storybook or in the app:
     `{mainAxis: 14}` in 6.0.0, section 4); check that they do not overlap the aside edge or
     neighbouring content.
 11. Keyboard access of `itemWrapper` rows. Since 6.0.0 a menu or footer row that has `itemWrapper`
-    and no `href` renders as `<div role="button">` without `tabindex` or key handlers, so it is
-    skipped by Tab and cannot be activated with Enter/Space; in 4.x/5.0.x the same row was a native
-    `<button>`. The library assumes the wrapper itself is the interactive element (a router
-    `<Link>`/`<a href>`, which is why the row is no longer a nested button). Wrappers that only
-    swap the icon (`makeItem({...params, icon})`), add a decorative `<div>`, or render a `Popup`
-    next to `makeItem(params)` (the README popup example) lose keyboard access. Fix: if the icon is
-    SVG data, drop `itemWrapper` and pass `icon`; otherwise wrap `makeItem(params)` in a focusable
-    element: `<a href>`/`<Link>` for navigation, or `<div tabIndex={0} onKeyDown={...}>` that
-    forwards Enter/Space to `opts.ref.current?.click()`. `menuItemAriaProps` cannot help: its type
-    allows only `aria-*` and `role`.
+    and no `href` renders as `<div role="button">` without `tabindex`, so by default it is skipped
+    by Tab; in 4.x/5.0.x the same row was a native `<button>`. The library assumes the wrapper
+    itself is the interactive element (a router `<Link>`/`<a href>`, which is why the row is no
+    longer a nested button). Wrappers that only swap the icon (`makeItem({...params, icon})`), add a
+    decorative `<div>`, or render a `Popup` next to `makeItem(params)` (the README popup example)
+    lose keyboard access. Fix: if the icon is SVG data, drop `itemWrapper` and pass `icon`. For
+    navigation, wrap `makeItem(params)` in `<a href>`/`<Link>`. Otherwise, since 7.1.3 opt the row
+    into keyboard access with `menuItemAriaProps={{tabIndex: 0}}`: it then exposes a `tabindex` and
+    activates on Enter/Space itself (`role="button"` by default). On older versions
+    `menuItemAriaProps` accepts only `aria-*`/`role`, so instead wrap `makeItem(params)` in a
+    focusable element: `<div tabIndex={0} onKeyDown={...}>` that forwards Enter/Space to
+    `opts.ref.current?.click()`.
 
 ---
 
