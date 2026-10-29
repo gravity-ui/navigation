@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.1.3](https://github.com/gravity-ui/navigation/compare/v7.1.2...v7.1.3) (2026-10-29)
+
+
+### Bug Fixes
+
+* **AsideHeader:** support keyboard activation for focusable itemWrapper items ([#701](https://github.com/gravity-ui/navigation/issues/701)) ([6653ab6](https://github.com/gravity-ui/navigation/commit/6653ab6d3f36567e94630ada50cc252132c53dd2))
+
 ## [7.1.2](https://github.com/gravity-ui/navigation/compare/v7.1.1...v7.1.2) (2026-10-23)
 
 
