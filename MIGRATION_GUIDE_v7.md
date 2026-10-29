@@ -221,7 +221,7 @@ onItemClick: (item, collapsed, event) => { ... },
 
 Since 6.0.0, when an item has `itemWrapper` and no `href`, `makeItem` creates a
 `<div role="button">` that is not focusable by default (even if the wrapper returns
-`makeItem(params)` unchanged); since 7.1.x opt it into keyboard access with
+`makeItem(params)` unchanged); since 7.1.3 opt it into keyboard access with
 `menuItemAriaProps={{tabIndex: 0}}`; items with `href` stay `<a>`; see section 8, item 11, before
 keeping a decorative wrapper.
 
@@ -581,7 +581,7 @@ After the code compiles, check these in Storybook or in the app:
     longer a nested button). Wrappers that only swap the icon (`makeItem({...params, icon})`), add a
     decorative `<div>`, or render a `Popup` next to `makeItem(params)` (the README popup example)
     lose keyboard access. Fix: if the icon is SVG data, drop `itemWrapper` and pass `icon`. For
-    navigation, wrap `makeItem(params)` in `<a href>`/`<Link>`. Otherwise, since 7.1.x opt the row
+    navigation, wrap `makeItem(params)` in `<a href>`/`<Link>`. Otherwise, since 7.1.3 opt the row
     into keyboard access with `menuItemAriaProps={{tabIndex: 0}}`: it then exposes a `tabindex` and
     activates on Enter/Space itself (`role="button"` by default). On older versions
     `menuItemAriaProps` accepts only `aria-*`/`role`, so instead wrap `makeItem(params)` in a
