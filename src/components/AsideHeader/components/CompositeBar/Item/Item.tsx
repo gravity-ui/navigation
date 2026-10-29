@@ -489,6 +489,26 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 <div
                     {...rowEventProps}
                     role={menuItemAriaProps?.role ?? 'button'}
+                    onKeyDown={(event) => {
+                        if (event.target !== event.currentTarget) {
+                            return;
+                        }
+
+                        if (event.key === 'Enter') {
+                            event.preventDefault();
+                            event.currentTarget.click();
+                        } else if (event.key === ' ') {
+                            event.preventDefault();
+                        }
+                    }}
+                    onKeyUp={(event) => {
+                        if (event.target !== event.currentTarget || event.key !== ' ') {
+                            return;
+                        }
+
+                        event.preventDefault();
+                        event.currentTarget.click();
+                    }}
                     ref={mergedRowRef}
                 >
                     {rowChildren}
