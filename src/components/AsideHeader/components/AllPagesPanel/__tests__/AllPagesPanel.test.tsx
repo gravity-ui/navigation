@@ -10,8 +10,17 @@ import {fireEvent, render, screen} from '@testing-library/react';
 import {AsideHeaderInnerContextProvider} from '../../../AsideHeaderContext';
 import {AsideHeaderItem} from '../../../types';
 import {AllPagesPanel} from '../AllPagesPanel';
+import i18n from '../i18n';
 
-function renderPanel({items, onClosePanel}: {items: AsideHeaderItem[]; onClosePanel: jest.Mock}) {
+function renderPanel({
+    items,
+    onClosePanel,
+    onMenuItemsChanged = jest.fn(),
+}: {
+    items: AsideHeaderItem[];
+    onClosePanel: jest.Mock;
+    onMenuItemsChanged?: jest.Mock;
+}) {
     const contextValue = {
         compact: false,
         size: 236,
@@ -20,14 +29,14 @@ function renderPanel({items, onClosePanel}: {items: AsideHeaderItem[]; onClosePa
         menuItems: items,
         onItemClick: () => {},
         onToggleQuickAccess: () => {},
-        onMenuItemsChanged: jest.fn(),
+        onMenuItemsChanged,
         onClosePanel,
     } as never;
 
     return render(
         <ThemeProvider theme="light">
             <AsideHeaderInnerContextProvider value={contextValue}>
-                <AllPagesPanel />
+                <AllPagesPanel startEditIcon={<span>Configure menu</span>} />
             </AsideHeaderInnerContextProvider>
         </ThemeProvider>,
     );
@@ -65,5 +74,57 @@ describe('AllPagesPanel item click', () => {
         fireEvent.click(screen.getByText('Home'));
 
         expect(onClosePanel).not.toHaveBeenCalled();
+    });
+});
+
+describe.each([undefined, '#home'])('AllPagesPanel editing with href=%s', (href) => {
+    it('renders the pin button without an interactive ancestor', () => {
+        renderPanel({
+            items: [{id: 'home', title: 'Home', icon: Gear, href}],
+            onClosePanel: jest.fn(),
+        });
+
+        fireEvent.click(screen.getByRole('button', {name: 'Configure menu'}));
+
+        const pin = screen.getByRole('button', {name: i18n('all-panel.item.unpin')});
+        // The ancestor structure is the accessibility regression under test.
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(pin.parentElement?.closest('a, button')).toBeNull();
+    });
+
+    it('suppresses item actions while editing and restores them afterwards', () => {
+        const onClosePanel = jest.fn();
+        const itemClick = jest.fn();
+        const onMenuItemsChanged = jest.fn();
+        const item = {id: 'home', title: 'Home', icon: Gear, href, onItemClick: itemClick};
+
+        renderPanel({items: [item], onClosePanel, onMenuItemsChanged});
+
+        const configure = screen.getByRole('button', {name: 'Configure menu'});
+        fireEvent.click(configure);
+
+        const pin = screen.getByRole('button', {name: i18n('all-panel.item.unpin')});
+        // List only dispatches Enter for an active item; hovering activates the row.
+        fireEvent.mouseEnter(screen.getByText('Home'));
+        fireEvent.focus(pin);
+        fireEvent.keyDown(pin, {key: 'Enter', code: 'Enter'});
+
+        expect(itemClick).not.toHaveBeenCalled();
+        expect(onClosePanel).not.toHaveBeenCalled();
+
+        // jsdom does not synthesize the native button click from keydown.
+        fireEvent.click(pin);
+
+        expect(onMenuItemsChanged).toHaveBeenCalledTimes(1);
+        expect(onMenuItemsChanged).toHaveBeenCalledWith([{...item, hidden: true}]);
+        expect(itemClick).not.toHaveBeenCalled();
+        expect(onClosePanel).not.toHaveBeenCalled();
+
+        fireEvent.click(configure);
+        const navigation = screen.getByRole(href ? 'link' : 'button', {name: 'Home'});
+        fireEvent.click(navigation);
+
+        expect(itemClick).toHaveBeenCalledTimes(1);
+        expect(onClosePanel).toHaveBeenCalledTimes(1);
     });
 });
