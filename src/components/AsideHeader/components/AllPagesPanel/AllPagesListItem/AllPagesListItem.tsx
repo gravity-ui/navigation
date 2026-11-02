@@ -24,7 +24,10 @@ interface AllPagesListItemProps {
 
 export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
     const {item, editMode, onToggle} = props;
-    const ref = useRef<HTMLAnchorElement & HTMLButtonElement>(null);
+    const ref = useRef<HTMLElement | null>(null);
+    const setRef = useCallback((node: HTMLElement | null) => {
+        ref.current = node;
+    }, []);
 
     const onPinButtonClick = useCallback(
         (e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
@@ -35,10 +38,14 @@ export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
         [onToggle],
     );
 
-    const [Tag, tagProps] = item.href ? ['a' as const, {href: item.href}] : ['button' as const, {}];
-
     const makeNode = useCallback(
         (params: MakeItemParams) => {
+            const [NavigationTag, navigationProps] = item.href
+                ? ['a' as const, {href: item.href}]
+                : ['button' as const, {type: 'button' as const}];
+            const Tag = editMode ? 'div' : NavigationTag;
+            const tagProps = editMode ? {} : navigationProps;
+
             const onItemClick = (e: MouseEvent<HTMLElement>) => {
                 if (editMode) {
                     e.stopPropagation();
@@ -47,7 +54,12 @@ export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
             };
 
             return (
-                <Tag {...tagProps} className={b()} onClick={onItemClick} ref={ref}>
+                <Tag
+                    {...tagProps}
+                    className={b({editing: editMode})}
+                    onClick={onItemClick}
+                    ref={setRef}
+                >
                     {params.icon}
                     <span className={b('text')}>{params.title}</span>
                     {editMode && !item.preventUserRemoving && (
@@ -70,7 +82,7 @@ export const AllPagesListItem: React.FC<AllPagesListItemProps> = (props) => {
                 </Tag>
             );
         },
-        [Tag, tagProps, editMode, item, onPinButtonClick],
+        [editMode, item, onPinButtonClick, setRef],
     );
 
     const iconNode = item.icon ? (
