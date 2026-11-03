@@ -634,6 +634,28 @@ test.describe('AsideHeader', () => {
 
         await expect(page.locator('button[aria-label="Group child A"]')).toHaveCount(0);
         await expect(groupItem).toHaveCount(0);
+        // Like the UIKit hover close, this close must not move focus to the More button.
+        await expect(page.locator('body')).toBeFocused();
+    });
+
+    test('returns focus to More after reopening it', async ({mount, page}) => {
+        await mount(<NestedMorePopupExample />, mountOptions, viewport);
+
+        const moreButton = page.locator('button[aria-label="More"]');
+        const groupItem = page.locator('button[aria-label="Nested group"]');
+        await moreButton.hover();
+        await groupItem.hover();
+        await expect(page.locator('button[aria-label="Group child A"]')).toBeVisible();
+        await page.mouse.move(600, 400);
+        await expect(groupItem).toHaveCount(0);
+
+        // Reopening restores the focus return that the nested close above turned off.
+        await moreButton.hover();
+        await groupItem.focus();
+        await page.keyboard.press('Escape');
+
+        await expect(groupItem).toHaveCount(0);
+        await expect(moreButton).toBeFocused();
     });
 
     test('keeps More open when returning from its nested group popup', async ({mount, page}) => {
