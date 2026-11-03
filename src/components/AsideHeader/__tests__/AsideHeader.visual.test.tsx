@@ -633,10 +633,6 @@ test.describe('AsideHeader', () => {
         await page.mouse.move(600, 400);
 
         await expect(page.locator('button[aria-label="Group child A"]')).toHaveCount(0);
-        // UIKit Popover runs its hover logic inside a FloatingTree (uikit#2844), so the safe
-        // polygon keeps More open while the nested popup is open and re-checks the pointer on
-        // the next move. A real pointer keeps moving; emulate one more step.
-        await page.mouse.move(610, 410);
         await expect(groupItem).toHaveCount(0);
     });
 

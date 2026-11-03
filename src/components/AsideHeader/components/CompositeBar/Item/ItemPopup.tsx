@@ -119,10 +119,12 @@ export const ItemPopup: React.FC<Props> = ({
     const theme = useThemeValue();
     const densityConfig = getAsideHeaderDensityConfig(asideHeaderContext?.menuDensity);
     const nestedOpenCountRef = React.useRef(0);
-    // A nested portaled popup temporarily blocks the parent's hover-close. Remember that close
-    // request and replay it after the child closes, unless the pointer/focus returned to the parent.
-    const deferredCloseRef = React.useRef(false);
+    // An open nested popup keeps this one open: UIKit's safe polygon does not close a popover
+    // with an open child and re-checks the pointer only on the next move. Close this popup when
+    // the last child closes, unless the pointer/focus is back in it.
     const interactionInsideRef = React.useRef(false);
+    // Like UIKit's own hover close, that close must not move focus to the trigger.
+    const [returnFocus, setReturnFocus] = React.useState(true);
     const popupContentRef = React.useRef<HTMLDivElement>(null);
     const triggerElementRef = React.useRef<HTMLElement | null>(null);
     const onOpenChangeRef = React.useRef(onOpenChange);
@@ -183,12 +185,8 @@ export const ItemPopup: React.FC<Props> = ({
     const registerNestedOpen = React.useCallback((delta: number) => {
         nestedOpenCountRef.current = Math.max(0, nestedOpenCountRef.current + delta);
 
-        if (
-            nestedOpenCountRef.current === 0 &&
-            deferredCloseRef.current &&
-            !interactionInsideRef.current
-        ) {
-            deferredCloseRef.current = false;
+        if (nestedOpenCountRef.current === 0 && !interactionInsideRef.current) {
+            setReturnFocus(false);
             onOpenChangeRef.current?.(false);
         }
     }, []);
@@ -198,11 +196,12 @@ export const ItemPopup: React.FC<Props> = ({
     const wrappedOnOpenChange = React.useCallback(
         (next: boolean) => {
             if (!next && nestedOpenCountRef.current > 0) {
-                deferredCloseRef.current = true;
                 return;
             }
 
-            deferredCloseRef.current = false;
+            if (next) {
+                setReturnFocus(true);
+            }
             onOpenChange?.(next);
         },
         [onOpenChange],
@@ -210,7 +209,6 @@ export const ItemPopup: React.FC<Props> = ({
 
     const markInteractionRegionEntered = React.useCallback(() => {
         interactionInsideRef.current = true;
-        deferredCloseRef.current = false;
     }, []);
 
     const markInteractionRegionLeft = React.useCallback((relatedTarget: EventTarget | null) => {
@@ -365,6 +363,7 @@ export const ItemPopup: React.FC<Props> = ({
             closeDelay={DEFAULT_POPUP_DELAY}
             offset={popoverOffset}
             enableSafePolygon
+            returnFocus={returnFocus}
             className={b(
                 'icon-popover',
                 {'item-type': type, 'single-label': isSingleLabel},
