@@ -141,7 +141,7 @@ Expect these differences in screenshots and review them:
 
 - `TopAlert` with a close button: 4px taller, the content below moves down (section 5).
 - `Breadcrumbs`: new design (item color and weight, separator spacing).
-- Quick access pin in compact group popups: 14px icon instead of 16px.
+- Quick access pin in compact group popups: 14px icon instead of 16px (uikit 7.49.0).
 - Colors shift slightly because uikit 8 generates theme variables with `@gravity-ui/uikit-themer`.
   The variables are written as `rgb(r g b)` while `getComputedStyle` returns `rgb(r, g, b)`: do not
   compare the raw variable string with a computed color in tests.
