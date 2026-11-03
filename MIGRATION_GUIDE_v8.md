@@ -116,11 +116,11 @@ Prefer the `gn-*` classes and `qa` attributes of navigation over uikit classes w
 2. **`HotkeysPanel` with `drawerProps={{hideVeil: true}}`.** Since uikit 7.48.1, `hideVeil` no longer
    disables closing on outside click: the panel closes on any click outside it. To keep it open,
    also pass `disableOutsideClick: true` in `drawerProps`.
-3. **`topAlert`.** The uikit 8 `Alert` aligns the icon, text and close button by baseline, so a
-   closable `TopAlert` is 4px taller and the icon is 1px higher. `--gn-top-alert-height` follows the
-   real height. It is now also updated when the alert changes height after mount (for example,
-   when its font loads), not only on mount and window resize. Check layouts that hardcode the
-   alert height. `centered` keeps working.
+3. **`topAlert`.** Since uikit 7.43.0, `Alert` aligns the icon, text and close button by baseline,
+   so a closable `TopAlert` is 4px taller and the icon is 1px higher than with uikit 7.42.
+   `--gn-top-alert-height` follows the real height. It is now also updated when the alert changes
+   height after mount (for example, when its font loads), not only on mount and window resize.
+   Check layouts that hardcode the alert height. `centered` keeps working.
 4. **`ActionBar` with `Breadcrumbs`.** The legacy `Breadcrumbs` are removed in uikit 8. Migrate
    them with the uikit
    [Breadcrumbs migration guide](https://github.com/gravity-ui/uikit/blob/main/docs/migration-from-legacy-breadcrumbs.md).
