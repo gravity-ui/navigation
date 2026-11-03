@@ -102,13 +102,15 @@ Groups organize `ActionBar.Item` within a section and control their alignment.
 
 ### Properties
 
-| Name             | Description                                                                                                                                                             |                                      Type                                       | Default |
-| :--------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-----------------------------------------------------------------------------: | :-----: |
-| pull             | Controls the alignment of the group                                                                                                                                     | `"left"`, `"left-grow"`, `"right"`, `"right-grow"`, `"center"`, `"center-grow"` |         |
-| stretchContainer | Set `flex-grow: 1` for Group. For content that collapses to the available width (for example, uikit `Breadcrumbs`), also set `pull="left-grow"` on its `ActionBar.Item` |                                    `boolean`                                    |         |
-| className        | HTML `class` attribute                                                                                                                                                  |                                    `string`                                     |         |
-| style            | HTML `style` attribute                                                                                                                                                  |                              `React.CSSProperties`                              |         |
-| qa               | `data-qa` HTML attribute, used for testing                                                                                                                              |                                    `string`                                     |         |
+| Name             | Description                                                                                                    |                                      Type                                       | Default |
+| :--------------- | :------------------------------------------------------------------------------------------------------------- | :-----------------------------------------------------------------------------: | :-----: |
+| pull             | Controls the alignment of the group                                                                            | `"left"`, `"left-grow"`, `"right"`, `"right-grow"`, `"center"`, `"center-grow"` |         |
+| stretchContainer | Set `flex-grow: 1` for Group. Put uikit `Breadcrumbs` in such a group, so that they collapse to its free space |                                    `boolean`                                    |         |
+| className        | HTML `class` attribute                                                                                         |                                    `string`                                     |         |
+| style            | HTML `style` attribute                                                                                         |                              `React.CSSProperties`                              |         |
+| qa               | `data-qa` HTML attribute, used for testing                                                                     |                                    `string`                                     |         |
+
+An `ActionBar.Item` with uikit `Breadcrumbs` in a `stretchContainer` group takes the free space of the group, and the breadcrumbs collapse to fit it. Breadcrumbs in other groups keep their full width. If even the collapsed breadcrumbs do not fit, the bar overflows instead of overlapping other items. The bar has to be as wide as its container: in a bar sized to its content (for example, inside `display: inline-block`), breadcrumbs that collapsed in a narrow window stay collapsed after it widens.
 
 ## ActionBar.Item
 

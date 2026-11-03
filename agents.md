@@ -232,7 +232,7 @@ import {Breadcrumbs, Button} from '@gravity-ui/uikit';
 
 - `ActionBar.Section`: `type` prop - `"primary"` (default) or `"secondary"`
 - `ActionBar.Group`: `pull` prop - Controls alignment (`"left"`, `"right"`, `"center"`, `"left-grow"`, `"right-grow"`, `"center-grow"`)
-- `ActionBar.Group`: `stretchContainer` prop - Sets `flex-grow: 1` on the group. For content that collapses to the available width (`Breadcrumbs`), also set `pull="left-grow"` on its `ActionBar.Item`
+- `ActionBar.Group`: `stretchContainer` prop - Sets `flex-grow: 1` on the group. Put `Breadcrumbs` in such a group: their item takes the free space, and they collapse to fit it. Breadcrumbs in other groups keep their full width
 - `ActionBar.Item`: `pull` prop - Same values as for the group; `"*-grow"` values make the item take the free space of its group
 - `ActionBar.Item`: `spacing` prop - Enable spacing with previous item (default: `true`)
 
