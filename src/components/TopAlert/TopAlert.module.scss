@@ -9,7 +9,13 @@ $block: '.#{variables.$ns}top-alert';
 #{$block} {
     &_centered {
         display: flex;
-        justify-content: space-around;
+        justify-content: center;
+
+        // uikit 8 Alert: `.g-alert__main` has `flex-grow: 1` and takes all free space,
+        // so the content can be centered only when it does not grow.
+        :global(.g-alert__main) {
+            flex-grow: 0;
+        }
     }
 
     &_dense {

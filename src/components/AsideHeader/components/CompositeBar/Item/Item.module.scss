@@ -539,9 +539,9 @@ $floating-surface-box-shadow-label:
         background: none;
         padding-block-end: 1px;
 
-        &:global(.g-list__item_active),
-        &:global(.g-list__item_selected),
-        &:global(.g-list__item_active.g-list__item_selected) {
+        &:global(.g-list-legacy__item_active),
+        &:global(.g-list-legacy__item_selected),
+        &:global(.g-list-legacy__item_active.g-list-legacy__item_selected) {
             background: none;
         }
     }

@@ -13,22 +13,24 @@ npm install @gravity-ui/navigation
 Ensure that peer dependencies are installed in your project
 
 ```bash
-npm install --dev @gravity-ui/uikit@^7.2.0 @gravity-ui/icons@^2.2.0 @bem-react/classname@^1.6.0 react@^19.0.0 react-dom@^19.0.0
+npm install --dev @gravity-ui/uikit@^8.0.0 @gravity-ui/icons@^2.2.0 @bem-react/classname@^1.6.0 react@^19.0.0 react-dom@^19.0.0
 ```
 
 ## Migration
 
-Upgrading from 4.x, 5.x or 6.x: see [MIGRATION_GUIDE_v7.md](MIGRATION_GUIDE_v7.md).
+Upgrading from 7.x (`@gravity-ui/uikit` 8, React 18 or 19): see [MIGRATION_GUIDE_v8.md](MIGRATION_GUIDE_v8.md).
+
+Upgrading from 4.x, 5.x or 6.x: first follow [MIGRATION_GUIDE_v7.md](MIGRATION_GUIDE_v7.md), then [MIGRATION_GUIDE_v8.md](MIGRATION_GUIDE_v8.md).
 
 ## Usage
 
-Render `AsideHeader` as the app shell. It is a controlled component — you own the collapsed state via `compact`/`onChangeCompact` — and your page content goes through `renderContent`. Set up `@gravity-ui/uikit` styles and `ThemeProvider` first (see the [uikit styles guide](https://github.com/gravity-ui/uikit?tab=readme-ov-file#styles)).
+Render `AsideHeader` as the app shell. It is a controlled component — you own the collapsed state via `compact`/`onChangeCompact` — and your page content goes through `renderContent`. Set up `@gravity-ui/uikit` styles and `Provider` first (see the [uikit styles guide](https://github.com/gravity-ui/uikit?tab=readme-ov-file#styles)).
 
 ```tsx
 import React from 'react';
 import {AsideHeader} from '@gravity-ui/navigation';
 import {Gear, House} from '@gravity-ui/icons';
-import {ThemeProvider} from '@gravity-ui/uikit';
+import {Provider} from '@gravity-ui/uikit';
 
 import '@gravity-ui/uikit/styles/styles.css';
 
@@ -36,7 +38,7 @@ export function App() {
   const [compact, setCompact] = React.useState(false);
 
   return (
-    <ThemeProvider theme="light">
+    <Provider theme="light">
       <AsideHeader
         logo={{text: 'My App', href: '/'}}
         compact={compact}
@@ -47,7 +49,7 @@ export function App() {
         ]}
         renderContent={() => <main>Page content</main>}
       />
-    </ThemeProvider>
+    </Provider>
   );
 }
 ```
@@ -116,7 +118,7 @@ Application-shell navigation components for Gravity UI apps — the collapsible 
 - **`AsideHeader` is controlled.** You must own the collapsed state with `compact` and update it in `onChangeCompact`; passing `compact` without the handler freezes the sidebar.
 - **Menu items are `menuItems`, keyed by `id`.** Each item is `{id, title, icon, current, onItemClick}`; `icon` takes an icon component (e.g. from `@gravity-ui/icons`), not a string name.
 - **Peer dependencies are required.** `@gravity-ui/uikit`, `@gravity-ui/icons`, and `@bem-react/classname` must be installed alongside `react`/`react-dom`.
-- **Needs uikit setup.** Render inside `ThemeProvider` and import `@gravity-ui/uikit/styles/styles.css`, or the shell renders unstyled.
+- **Needs uikit setup.** Render inside `Provider` and import `@gravity-ui/uikit/styles/styles.css`, or the shell renders unstyled.
 - **Page content goes through `renderContent`.** Render your routed content via the `renderContent` prop / `PageLayout`, not as `children`.
 
 ## Documentation for AI agents

@@ -35,7 +35,7 @@ import {HotkeysPanel} from '@gravity-ui/navigation';
 | drawerProps             | `DrawerProps`   |          |         | Additional props for the Drawer component (style, container, hideVeil, etc.) |
 | disableNavigationOffset | `Boolean`       |          | false   | Whether to disable automatic left offset based on AsideHeader size           |
 
-And all the `List` PropTypes, but not `items` and filter props (you can find them [here](https://github.com/gravity-ui/uikit/blob/main/src/components/List/README.md))
+And all the props of the legacy `List` from `@gravity-ui/uikit/legacy`, but not `items` and filter props (you can find them [here](https://github.com/gravity-ui/uikit/blob/main/src/components/legacy/List/README.md))
 
 ## CSS API
 

@@ -118,7 +118,7 @@ test('automatic title measures More overflow and recovers hidden rows after resi
             menu.evaluate((node) => {
                 const bottom = Math.max(
                     ...Array.from(
-                        node.querySelectorAll('.g-list__item'),
+                        node.querySelectorAll('.g-list-legacy__item'),
                         (item) => item.getBoundingClientRect().bottom,
                     ),
                 );

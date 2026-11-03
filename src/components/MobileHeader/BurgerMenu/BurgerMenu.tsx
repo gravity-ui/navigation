@@ -25,10 +25,12 @@ export const BurgerMenu = React.memo(
             <div className={b(null, className)}>
                 {modalItem && (
                     <Sheet
-                        visible={modalItem.visible}
+                        open={modalItem.visible}
                         id={modalItem.id}
                         title={modalItem.title}
-                        onClose={modalItem.onClose}
+                        onOpenChange={(open) => {
+                            if (!open) modalItem.onClose?.();
+                        }}
                         contentClassName={modalItem.contentClassName}
                         className={modalItem.className}
                     >

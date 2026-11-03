@@ -50,11 +50,13 @@ export const FooterItem = ({
             <Sheet
                 id={modalItem.id}
                 title={modalItem.title}
-                visible={modalItem.visible}
+                open={modalItem.visible}
                 className={b('modal', modalItem.className)}
                 contentClassName={b('modal-content', modalItem.contentClassName)}
                 allowHideOnContentScroll={modalItem.modalAllowHideOnContentScroll}
-                onClose={modalItem.onClose}
+                onOpenChange={(open) => {
+                    if (!open) modalItem.onClose?.();
+                }}
             >
                 {modalItem.renderContent?.()}
             </Sheet>

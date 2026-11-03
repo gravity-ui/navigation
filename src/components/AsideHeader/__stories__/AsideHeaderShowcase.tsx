@@ -83,7 +83,7 @@ export const AsideHeaderShowcase: React.FC<AsideHeaderShowcaseProps> = ({
 
     return (
         <div className={b()}>
-            <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+            <Modal open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <div className={b('content')}>
                     <pre>{placeholderText}</pre>
                 </div>

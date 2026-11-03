@@ -1,6 +1,6 @@
 import React from 'react';
 import type {Decorator, Preview} from '@storybook/react-webpack5';
-import {ThemeProvider, MobileProvider, Lang, configure as uiKitConfigure} from '@gravity-ui/uikit';
+import {Provider, Lang, configure as uiKitConfigure} from '@gravity-ui/uikit';
 import {withMobile} from './decorators/withMobile';
 import {withLang} from './decorators/withLang';
 
@@ -14,11 +14,9 @@ uiKitConfigure({
 
 const withContextProvider: Decorator = (Story, context) => {
     return (
-        <ThemeProvider theme={context.globals.theme}>
-            <MobileProvider>
-                <Story {...context} />
-            </MobileProvider>
-        </ThemeProvider>
+        <Provider theme={context.globals.theme}>
+            <Story {...context} />
+        </Provider>
     );
 };
 

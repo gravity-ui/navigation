@@ -8,7 +8,8 @@
     "baseUrl": ".",
     "paths": {
       "~playwright/*": ["playwright/*"],
-      "@gravity-ui/uikit/i18n": ["node_modules/@gravity-ui/uikit/build/cjs/i18n"]
+      "@gravity-ui/uikit/i18n": ["node_modules/@gravity-ui/uikit/build/cjs/i18n"],
+      "@gravity-ui/uikit/legacy": ["node_modules/@gravity-ui/uikit/build/cjs/legacy"]
     }
   },
   "include": [
@@ -20,5 +21,3 @@
     "src/**/__tests__/**/*.tsx"
   ]
 }
-
-

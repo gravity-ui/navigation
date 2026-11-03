@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {Button, DropdownMenu} from '@gravity-ui/uikit';
-import {Breadcrumbs as LegacyBreadcrumbs} from '@gravity-ui/uikit/legacy';
+import {Breadcrumbs, Button} from '@gravity-ui/uikit';
+import {DropdownMenu} from '@gravity-ui/uikit/legacy';
 
 import {ActionBar} from '../ActionBar';
 
@@ -11,14 +11,10 @@ export function ActionBarSingleSection() {
             <ActionBar.Section type="primary">
                 <ActionBar.Group>
                     <ActionBar.Item>
-                        <LegacyBreadcrumbs
-                            lastDisplayedItemsCount={1}
-                            items={[
-                                {text: 'Devtools Support', action() {}},
-                                {text: 'DEVTOOLSSUPPORT-21001', action() {}},
-                            ]}
-                            firstDisplayedItemsCount={1}
-                        />
+                        <Breadcrumbs showRoot onAction={() => {}}>
+                            <Breadcrumbs.Item key="0">Devtools Support</Breadcrumbs.Item>
+                            <Breadcrumbs.Item key="1">DEVTOOLSSUPPORT-21001</Breadcrumbs.Item>
+                        </Breadcrumbs>
                     </ActionBar.Item>
                 </ActionBar.Group>
 

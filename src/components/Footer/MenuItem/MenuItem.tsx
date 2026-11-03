@@ -1,7 +1,7 @@
 import React from 'react';
 import type {FC} from 'react';
 
-import {Menu} from '@gravity-ui/uikit';
+import {Menu} from '@gravity-ui/uikit/legacy';
 
 import {createBlock} from '../../utils/cn';
 import {FooterMenuItem} from '../types';

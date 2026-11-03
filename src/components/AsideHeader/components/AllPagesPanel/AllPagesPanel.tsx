@@ -1,7 +1,8 @@
 import React, {ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {Gear} from '@gravity-ui/icons';
-import {Button, Flex, Icon, List, ListItemData, ListProps, Text, Tooltip} from '@gravity-ui/uikit';
+import {Button, Flex, Icon, Text, Tooltip} from '@gravity-ui/uikit';
+import {List, ListItemData, ListProps} from '@gravity-ui/uikit/legacy';
 
 import type {MenuGroup} from '../../../types';
 import {createBlock} from '../../../utils/cn';
@@ -225,8 +226,8 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
     }, [menuItems, menuGroups, onMenuGroupsChanged]);
 
     return (
-        <Flex className={b(null, className)} gap="5" direction="column">
-            <Flex gap="4" alignItems="center" justifyContent="space-between">
+        <Flex className={b(null, className)} gap="spacing-5" direction="column">
+            <Flex gap="spacing-4" alignItems="center" justifyContent="space-between">
                 <Text variant="subheader-2">
                     {isEditMode ? i18n('all-panel.title.editing') : i18n('all-panel.title.main')}
                 </Text>
@@ -236,7 +237,11 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                     </Button>
                 </Tooltip>
             </Flex>
-            <Flex className={b('content', {editMode: isEditMode})} gap="5" direction="column">
+            <Flex
+                className={b('content', {editMode: isEditMode})}
+                gap="spacing-5"
+                direction="column"
+            >
                 {isEditMode && editMenuProps?.enableSorting ? (
                     <div>
                         <List
@@ -258,7 +263,7 @@ export const AllPagesPanel: React.FC<AllPagesPanelProps> = (props) => {
                 ) : (
                     Object.keys(groupedItems).map((category) => {
                         return (
-                            <Flex key={category} direction="column" gap="3">
+                            <Flex key={category} direction="column" gap="spacing-3">
                                 <Text className={b('category')} variant="body-1" color="secondary">
                                     {category}
                                 </Text>

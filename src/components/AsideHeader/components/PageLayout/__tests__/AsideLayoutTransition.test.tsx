@@ -495,7 +495,7 @@ describe('AsideLayoutTransition compactTransition', () => {
                 <button data-gn-composite-bar-item-id="header" style={{opacity: 1}}>
                     Group
                 </button>
-                <div className="g-list">
+                <div className="g-list-legacy">
                     <button
                         data-gn-composite-bar-item-id="nested"
                         data-gn-aside-nested
@@ -525,7 +525,7 @@ describe('AsideLayoutTransition compactTransition', () => {
         expect(targets.some((node) => node.getAttribute('data-gn-aside-part') === 'title')).toBe(
             true,
         );
-        expect(targets.some((node) => node.matches('.g-list'))).toBe(true);
+        expect(targets.some((node) => node.matches('.g-list-legacy'))).toBe(true);
     });
 
     it('skips missing decorative copies while preserving surface animation and cleanup', () => {
@@ -546,7 +546,7 @@ describe('AsideLayoutTransition compactTransition', () => {
                             <button data-gn-composite-bar-item-id="header" style={{opacity: 1}}>
                                 Group
                             </button>
-                            <div className="g-list">
+                            <div className="g-list-legacy">
                                 <button
                                     data-gn-composite-bar-item-id="nested"
                                     data-gn-aside-nested

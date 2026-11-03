@@ -17,6 +17,8 @@ import {DEFAULT_LOGO, menuItemsClamped, menuItemsShowcase} from './moc';
 
 import logoIcon from '../../../../.storybook/assets/logo.svg';
 
+import './customAlert.scss';
+
 export default {
     title: 'components/AsideHeader',
     component: AsideHeader,
@@ -119,7 +121,7 @@ export const AutomaticTitles: StoryFn<AsideHeaderProps> = (args) => {
                 },
             ]}
             renderContent={() => (
-                <Flex gap="2" className={spacing({p: 5})}>
+                <Flex gap="spacing-2" className={spacing({p: 5})}>
                     <Button selected={russian} onClick={() => setRussian(true)}>
                         Русский
                     </Button>
@@ -240,7 +242,7 @@ HeaderAlertCustom.args = {
                 direction="row"
                 justifyContent="center"
                 alignItems="center"
-                gap={4}
+                gap="spacing-4"
                 style={{
                     position: 'relative',
                     padding: '8px',
@@ -251,15 +253,16 @@ HeaderAlertCustom.args = {
                 <Text variant="subheader-2" style={{color: 'var(--g-color-text-light-primary)'}}>
                     We&apos;ve got something new for you to try!
                 </Text>
-                <Button view="normal-contrast" size="m">
+                <Button view="contrast-light" size="m">
                     Try Now
                 </Button>
-                <Button view="outlined-contrast" size="m">
+                <Button view="outlined" className="custom-alert-light-button" size="m">
                     Learn More
                 </Button>
                 <Button
                     style={{position: 'absolute', right: '8px'}}
-                    view="flat-contrast"
+                    view="flat"
+                    className="custom-alert-light-button"
                     aria-label="Close"
                     onClick={handleClose}
                 >
@@ -642,7 +645,7 @@ const renderAboveMenuContent = ({
     };
     compact: boolean;
 }) => (
-    <Flex spacing={{p: 2}} direction="column" gap={2}>
+    <Flex padding="spacing-2" direction="column" gap="spacing-2">
         {!compact && (
             <Select
                 aria-label="Select project"
@@ -657,8 +660,8 @@ const renderAboveMenuContent = ({
             />
         )}
         {data.icon && data.label && (
-            <Flex direction="row" alignItems="center" gap={2}>
-                <Flex alignItems="center" justifyContent="center" width={40} height={40}>
+            <Flex direction="row" alignItems="center" gap="spacing-2">
+                <Flex alignItems="center" justifyContent="center" width="40px" height="40px">
                     <Icon data={data.icon} size={28} />
                 </Flex>
                 {!compact && <Text variant="subheader-2">{data.label}</Text>}

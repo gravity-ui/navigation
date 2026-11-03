@@ -8,7 +8,7 @@
 | Свойство                                                                                 | Тип                              | Обязательное | Значение по умолчанию | Описание                                            |
 | :--------------------------------------------------------------------------------------- | :------------------------------- | :----------: | :-------------------- | :-------------------------------------------------- |
 | className                                                                                | `String`                         |              |                       | Имя класса футера.                                  |
-| [menuItems](https://github.com/gravity-ui/uikit/tree/main/src/components/Menu)           | `FooterMenuItem[]`               |              |                       | Список элементов меню футера.                       |
+| [menuItems](https://github.com/gravity-ui/uikit/tree/main/src/components/legacy/Menu)    | `FooterMenuItem[]`               |              |                       | Список элементов меню футера.                       |
 | withDivider                                                                              | `Boolean`                        |              |                       | Отображает верхнюю границу футера.                  |
 | moreButtonTitle                                                                          | `String`                         |              |                       | Заголовок кнопки развертывания элементов.           |
 | onMoreButtonClick                                                                        | `MouseEventHandler<HTMLElement>` |              |                       | Обработчик клика по кнопке развертывания элементов. |

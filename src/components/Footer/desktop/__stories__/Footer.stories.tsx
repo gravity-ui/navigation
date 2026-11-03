@@ -33,12 +33,12 @@ export default {
                     {
                         id: 'aria-required-children',
                         enabled: false,
-                        selector: '.g-menu', // https://github.com/gravity-ui/uikit/pull/1548
+                        selector: '.g-menu-legacy', // https://github.com/gravity-ui/uikit/pull/1548
                     },
                     {
                         id: 'aria-required-parent',
                         enabled: false,
-                        selector: '.g-menu__item', // https://github.com/gravity-ui/uikit/pull/1548
+                        selector: '.g-menu-legacy__item', // https://github.com/gravity-ui/uikit/pull/1548
                     },
                     {
                         id: 'color-contrast',

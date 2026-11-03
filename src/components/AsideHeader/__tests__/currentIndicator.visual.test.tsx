@@ -853,7 +853,7 @@ test('restores a newly selected existing row before layout motion finishes', asy
     await toggleAsideAndPause(page);
     await seekAnimations(page, 0.5);
     await expect(page.locator(INDICATOR)).toHaveCount(1);
-    const ghost = page.locator('[data-gn-aside-transition-overlay] .g-list').filter({
+    const ghost = page.locator('[data-gn-aside-transition-overlay] .g-list-legacy').filter({
         has: page.locator('[aria-label="Weekly operational performance"]'),
     });
     const ghostNode = await ghost.elementHandle();

@@ -2,7 +2,8 @@ import React, {useCallback, useRef, useState} from 'react';
 import type {FC} from 'react';
 
 import {Ellipsis} from '@gravity-ui/icons';
-import {Button, Icon, Menu, Sheet} from '@gravity-ui/uikit';
+import {Button, Icon, Sheet} from '@gravity-ui/uikit';
+import {Menu} from '@gravity-ui/uikit/legacy';
 
 import {useOverflowingHorizontalListItems} from '../../../hooks/useOverflowingHorizontalListItems';
 import {Logo} from '../../Logo';
@@ -75,10 +76,12 @@ export const MobileFooter: FC<FooterProps> = ({
                         </Button>
                         <Sheet
                             id={modalId}
-                            visible={moreItemsMenuVisible}
+                            open={moreItemsMenuVisible}
                             className={b('modal')}
                             contentClassName={b('modal-content')}
-                            onClose={handleCloseMoreItemsMenu}
+                            onOpenChange={(open) => {
+                                if (!open) handleCloseMoreItemsMenu();
+                            }}
                         >
                             {renderMenu(hiddenItems)}
                         </Sheet>

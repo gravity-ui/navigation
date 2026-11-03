@@ -1,8 +1,8 @@
 import React, {useMemo, useRef} from 'react';
 import type {FC} from 'react';
 
-import {DropdownMenu, Menu} from '@gravity-ui/uikit';
-import type {DropdownMenuItem} from '@gravity-ui/uikit';
+import {DropdownMenu, Menu} from '@gravity-ui/uikit/legacy';
+import type {DropdownMenuItem} from '@gravity-ui/uikit/legacy';
 
 import {useOverflowingHorizontalListItems} from '../../../hooks/useOverflowingHorizontalListItems';
 import {Logo} from '../../Logo';

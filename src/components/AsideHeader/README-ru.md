@@ -245,7 +245,7 @@ scroll-контейнере: если колонка не помещается �
   onChangeCompact={setCompact}
   aboveMenuContent={
     compact ? null : (
-      <Box spacing={{p: 2}}>
+      <Box padding="spacing-2">
         <Select
           placeholder="Выберите тенант"
           options={tenantOptions}
@@ -287,16 +287,16 @@ const menuItems: AsideHeaderItem[] = [
     icon: 'settings',
     itemWrapper: (params, makeItem, opts) => {
       const [popupOpen, setPopupOpen] = React.useState(false);
-      const anchorRef = React.useRef<HTMLElement>(null);
+      const [anchorElement, setAnchorElement] = React.useState<HTMLElement | null>(null);
 
       return (
         <>
-          <div ref={anchorRef} onClick={() => setPopupOpen(!popupOpen)}>
+          <div ref={setAnchorElement} onClick={() => setPopupOpen(!popupOpen)}>
             {makeItem(params)}
           </div>
           <Popup
             open={popupOpen}
-            anchorRef={anchorRef}
+            anchorElement={anchorElement}
             onOpenChange={setPopupOpen}
             placement="right-start"
           >

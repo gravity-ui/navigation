@@ -117,7 +117,7 @@ export function CollapseButtonExample({
                             Below
                         </div>
                     ) : null}
-                    <Popup open={popup} anchorRef={asideRef} placement="right-end">
+                    <Popup open={popup} anchorElement={asideRef.current} placement="right-end">
                         <div style={{width: 180, height: 90}}>Consumer popup</div>
                     </Popup>
                 </React.Fragment>
@@ -176,7 +176,7 @@ export function CollapseButtonExample({
                         <button onClick={() => setModal((value) => !value)}>Toggle modal</button>
                         <output aria-label="Compact changes">{changes}</output>
                         <output aria-label="Footer actions">{actions}</output>
-                        <Modal open={modal} onClose={() => setModal(false)}>
+                        <Modal open={modal} onOpenChange={setModal}>
                             <div>Modal content</div>
                         </Modal>
                     </div>

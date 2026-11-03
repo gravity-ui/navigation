@@ -1,6 +1,6 @@
 import {MouseEventHandler, ReactNode} from 'react';
 
-import {MenuItemProps} from '@gravity-ui/uikit';
+import {MenuItemProps} from '@gravity-ui/uikit/legacy';
 
 import type {LogoProps} from '../types';
 

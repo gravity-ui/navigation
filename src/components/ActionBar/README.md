@@ -11,8 +11,7 @@ The component is a flexible horizontal bar that provides a standardized layout f
 ## Usage
 
 ```typescript jsx
-import {Button} from '@gravity-ui/uikit';
-import {Breadcrumbs as LegacyBreadcrumbs} from '@gravity-ui/uikit/legacy';
+import {Breadcrumbs, Button} from '@gravity-ui/uikit';
 import {ActionBar} from '@gravity-ui/navigation';
 
 function Page() {
@@ -21,11 +20,9 @@ function Page() {
       <ActionBar.Section>
         <ActionBar.Group>
           <ActionBar.Item>
-            <LegacyBreadcrumbs
-              lastDisplayedItemsCount={1}
-              firstDisplayedItemsCount={1}
-              items={[{text: 'Root Item', action() {}}]}
-            />
+            <Breadcrumbs showRoot onAction={() => {}}>
+              <Breadcrumbs.Item key="0">Root Item</Breadcrumbs.Item>
+            </Breadcrumbs>
           </ActionBar.Item>
         </ActionBar.Group>
 
@@ -72,8 +69,7 @@ horizontal separator from `primary` section.
 <!--GITHUB_BLOCK-->
 
 ```tsx
-import {Button} from '@gravity-ui/uikit';
-import {Breadcrumbs as LegacyBreadcrumbs} from '@gravity-ui/uikit/legacy';
+import {Breadcrumbs, Button} from '@gravity-ui/uikit';
 import {ActionBar} from '@gravity-ui/navigation';
 
 <ActionBar aria-label="Actions bar">
@@ -88,14 +84,10 @@ import {ActionBar} from '@gravity-ui/navigation';
   <ActionBar.Section type="primary">
     <ActionBar.Group>
       <ActionBar.Item>
-        <LegacyBreadcrumbs
-          lastDisplayedItemsCount={1}
-          firstDisplayedItemsCount={1}
-          items={[
-            {text: 'Wiki Main Page', action() {}},
-            {text: 'Wiki Article', action() {}},
-          ]}
-        />
+        <Breadcrumbs showRoot onAction={() => {}}>
+          <Breadcrumbs.Item key="0">Wiki Main Page</Breadcrumbs.Item>
+          <Breadcrumbs.Item key="1">Wiki Article</Breadcrumbs.Item>
+        </Breadcrumbs>
       </ActionBar.Item>
     </ActionBar.Group>
   </ActionBar.Section>
@@ -110,13 +102,13 @@ Groups organize `ActionBar.Item` within a section and control their alignment.
 
 ### Properties
 
-| Name             | Description                                                       |                                      Type                                       | Default |
-| :--------------- | :---------------------------------------------------------------- | :-----------------------------------------------------------------------------: | :-----: |
-| pull             | Controls the alignment of the group                               | `"left"`, `"left-grow"`, `"right"`, `"right-grow"`, `"center"`, `"center-grow"` |         |
-| stretchContainer | Set `flex-grow: 1` for Group. Need to support UIKit@7 Breadcrumbs |                                    `boolean`                                    |         |
-| className        | HTML `class` attribute                                            |                                    `string`                                     |         |
-| style            | HTML `style` attribute                                            |                              `React.CSSProperties`                              |         |
-| qa               | `data-qa` HTML attribute, used for testing                        |                                    `string`                                     |         |
+| Name             | Description                                                                                                                            |                                      Type                                       | Default |
+| :--------------- | :------------------------------------------------------------------------------------------------------------------------------------- | :-----------------------------------------------------------------------------: | :-----: |
+| pull             | Controls the alignment of the group                                                                                                    | `"left"`, `"left-grow"`, `"right"`, `"right-grow"`, `"center"`, `"center-grow"` |         |
+| stretchContainer | Set `flex-grow: 1` for Group, so that content collapsing to the available width (for example, uikit `Breadcrumbs`) gets the free space |                                    `boolean`                                    |         |
+| className        | HTML `class` attribute                                                                                                                 |                                    `string`                                     |         |
+| style            | HTML `style` attribute                                                                                                                 |                              `React.CSSProperties`                              |         |
+| qa               | `data-qa` HTML attribute, used for testing                                                                                             |                                    `string`                                     |         |
 
 ## ActionBar.Item
 
@@ -140,8 +132,7 @@ Visual divider that can be placed between items in a group to separate them visu
 ### Example
 
 ```typescript jsx
-import {Button} from '@gravity-ui/uikit';
-import {Breadcrumbs as LegacyBreadcrumbs} from '@gravity-ui/uikit/legacy';
+import {Breadcrumbs, Button} from '@gravity-ui/uikit';
 import {ActionBar} from '@gravity-ui/navigation';
 
 function Page() {

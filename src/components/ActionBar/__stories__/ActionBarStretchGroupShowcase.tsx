@@ -1,6 +1,7 @@
 import React from 'react';
 
-import {Breadcrumbs, Button, DropdownMenu, Select} from '@gravity-ui/uikit';
+import {Breadcrumbs, Button, Select} from '@gravity-ui/uikit';
+import {DropdownMenu} from '@gravity-ui/uikit/legacy';
 
 import {ActionBar} from '../ActionBar';
 
@@ -52,9 +53,7 @@ export function ActionBarStretchGroupShowcase() {
                                 {text: 'New Folder', action() {}},
                             ]}
                             defaultSwitcherProps={{
-                                extraProps: {
-                                    'aria-label': 'More',
-                                },
+                                'aria-label': 'More',
                             }}
                         />
                     </ActionBar.Item>

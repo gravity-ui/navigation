@@ -1,6 +1,7 @@
 import React from 'react';
 
-import {List, Popover, PopupProps, useThemeValue} from '@gravity-ui/uikit';
+import {Popover, PopupProps, useThemeValue} from '@gravity-ui/uikit';
+import {List} from '@gravity-ui/uikit/legacy';
 
 import {POPUP_REGULAR_ITEM_HEIGHT} from '../../../../constants';
 import {createBlock} from '../../../../utils/cn';
