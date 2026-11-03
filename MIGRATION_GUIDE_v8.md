@@ -124,8 +124,10 @@ Prefer the `gn-*` classes and `qa` attributes of navigation over uikit classes w
 4. **`ActionBar` with `Breadcrumbs`.** The legacy `Breadcrumbs` are removed in uikit 8. Migrate
    them with the uikit
    [Breadcrumbs migration guide](https://github.com/gravity-ui/uikit/blob/main/docs/migration-from-legacy-breadcrumbs.md).
-   The new `Breadcrumbs` collapse to the available width, so keep `stretchContainer` on their
-   `ActionBar.Group`. `maxItems` collapses items even when they fit; set it only for a hard limit.
+   The new `Breadcrumbs` collapse to the available width. Inside `ActionBar`, keep
+   `stretchContainer` on their `ActionBar.Group` and set `pull="left-grow"` on their
+   `ActionBar.Item`, so that the breadcrumbs get the free space and collapse when the bar narrows.
+   `maxItems` collapses items even when they fit; set it only for a hard limit.
 
 ---
 

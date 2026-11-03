@@ -9,6 +9,12 @@ $block: '.#{variables.$ns}action-bar-item';
     @include list-item.reset;
     @include pull.modifiers;
 
+    &_pull_left-grow,
+    &_pull_right-grow,
+    &_pull_center-grow {
+        min-width: 0;
+    }
+
     & + &_spacing {
         margin-left: bar.$item-spacing;
     }

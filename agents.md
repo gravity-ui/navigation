@@ -204,7 +204,7 @@ import {Breadcrumbs, Button} from '@gravity-ui/uikit';
 <ActionBar aria-label="Actions bar">
   <ActionBar.Section type="primary">
     <ActionBar.Group stretchContainer>
-      <ActionBar.Item>
+      <ActionBar.Item pull="left-grow">
         <Breadcrumbs showRoot>
           {breadcrumbItems.map((item) => (
             <Breadcrumbs.Item key={item.href} href={item.href}>
@@ -232,6 +232,8 @@ import {Breadcrumbs, Button} from '@gravity-ui/uikit';
 
 - `ActionBar.Section`: `type` prop - `"primary"` (default) or `"secondary"`
 - `ActionBar.Group`: `pull` prop - Controls alignment (`"left"`, `"right"`, `"center"`, `"left-grow"`, `"right-grow"`, `"center-grow"`)
+- `ActionBar.Group`: `stretchContainer` prop - Sets `flex-grow: 1` on the group. For content that collapses to the available width (`Breadcrumbs`), also set `pull="left-grow"` on its `ActionBar.Item`
+- `ActionBar.Item`: `pull` prop - Same values as for the group; `"*-grow"` values make the item take the free space of its group
 - `ActionBar.Item`: `spacing` prop - Enable spacing with previous item (default: `true`)
 
 ### Drawer
@@ -602,7 +604,7 @@ function Layout() {
           <ActionBar>
             <ActionBar.Section>
               <ActionBar.Group stretchContainer>
-                <ActionBar.Item>
+                <ActionBar.Item pull="left-grow">
                   <Breadcrumbs showRoot>
                     {items.map((item) => (
                       <Breadcrumbs.Item key={item.href} href={item.href}>

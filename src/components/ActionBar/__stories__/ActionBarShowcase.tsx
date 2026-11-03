@@ -26,8 +26,8 @@ export function ActionBarShowcase() {
                 </ActionBar.Group>
             </ActionBar.Section>
             <ActionBar.Section type="primary">
-                <ActionBar.Group pull="left">
-                    <ActionBar.Item>
+                <ActionBar.Group pull="left" stretchContainer>
+                    <ActionBar.Item pull="left-grow">
                         <Breadcrumbs showRoot onAction={() => {}}>
                             <Breadcrumbs.Item key="0">Projects</Breadcrumbs.Item>
                             <Breadcrumbs.Item key="1">@gravity-ui</Breadcrumbs.Item>

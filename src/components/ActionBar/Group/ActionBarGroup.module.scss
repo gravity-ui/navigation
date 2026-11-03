@@ -16,5 +16,6 @@ $block: '.#{variables.$ns}action-bar-group';
 
     &_stretch-container {
         flex-grow: 1;
+        min-width: 0;
     }
 }

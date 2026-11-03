@@ -18,8 +18,8 @@ function Page() {
   return (
     <ActionBar aria-label="Actions bar">
       <ActionBar.Section>
-        <ActionBar.Group>
-          <ActionBar.Item>
+        <ActionBar.Group stretchContainer>
+          <ActionBar.Item pull="left-grow">
             <Breadcrumbs showRoot onAction={() => {}}>
               <Breadcrumbs.Item key="0">Root Item</Breadcrumbs.Item>
             </Breadcrumbs>
@@ -82,8 +82,8 @@ import {ActionBar} from '@gravity-ui/navigation';
   </ActionBar.Section>
 
   <ActionBar.Section type="primary">
-    <ActionBar.Group>
-      <ActionBar.Item>
+    <ActionBar.Group stretchContainer>
+      <ActionBar.Item pull="left-grow">
         <Breadcrumbs showRoot onAction={() => {}}>
           <Breadcrumbs.Item key="0">Wiki Main Page</Breadcrumbs.Item>
           <Breadcrumbs.Item key="1">Wiki Article</Breadcrumbs.Item>
@@ -102,13 +102,13 @@ Groups organize `ActionBar.Item` within a section and control their alignment.
 
 ### Properties
 
-| Name             | Description                                                                                                                            |                                      Type                                       | Default |
-| :--------------- | :------------------------------------------------------------------------------------------------------------------------------------- | :-----------------------------------------------------------------------------: | :-----: |
-| pull             | Controls the alignment of the group                                                                                                    | `"left"`, `"left-grow"`, `"right"`, `"right-grow"`, `"center"`, `"center-grow"` |         |
-| stretchContainer | Set `flex-grow: 1` for Group, so that content collapsing to the available width (for example, uikit `Breadcrumbs`) gets the free space |                                    `boolean`                                    |         |
-| className        | HTML `class` attribute                                                                                                                 |                                    `string`                                     |         |
-| style            | HTML `style` attribute                                                                                                                 |                              `React.CSSProperties`                              |         |
-| qa               | `data-qa` HTML attribute, used for testing                                                                                             |                                    `string`                                     |         |
+| Name             | Description                                                                                                                                                             |                                      Type                                       | Default |
+| :--------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-----------------------------------------------------------------------------: | :-----: |
+| pull             | Controls the alignment of the group                                                                                                                                     | `"left"`, `"left-grow"`, `"right"`, `"right-grow"`, `"center"`, `"center-grow"` |         |
+| stretchContainer | Set `flex-grow: 1` for Group. For content that collapses to the available width (for example, uikit `Breadcrumbs`), also set `pull="left-grow"` on its `ActionBar.Item` |                                    `boolean`                                    |         |
+| className        | HTML `class` attribute                                                                                                                                                  |                                    `string`                                     |         |
+| style            | HTML `style` attribute                                                                                                                                                  |                              `React.CSSProperties`                              |         |
+| qa               | `data-qa` HTML attribute, used for testing                                                                                                                              |                                    `string`                                     |         |
 
 ## ActionBar.Item
 
@@ -116,12 +116,13 @@ Container for UI elements like buttons, breadcrumbs or other components must be 
 
 ### Properties
 
-| Name      | Description                                |         Type          | Default |
-| :-------- | :----------------------------------------- | :-------------------: | :-----: |
-| spacing   | Enable spacing with previous item          |       `boolean`       | `true`  |
-| className | HTML `class` attribute                     |       `string`        |         |
-| style     | HTML `style` attribute                     | `React.CSSProperties` |         |
-| qa        | `data-qa` HTML attribute, used for testing |       `string`        |         |
+| Name      | Description                                                                                          |                                      Type                                       | Default |
+| :-------- | :--------------------------------------------------------------------------------------------------- | :-----------------------------------------------------------------------------: | :-----: |
+| pull      | Controls the alignment of the item. `"*-grow"` values make the item take the free space of the group | `"left"`, `"left-grow"`, `"right"`, `"right-grow"`, `"center"`, `"center-grow"` |         |
+| spacing   | Enable spacing with previous item                                                                    |                                    `boolean`                                    | `true`  |
+| className | HTML `class` attribute                                                                               |                                    `string`                                     |         |
+| style     | HTML `style` attribute                                                                               |                              `React.CSSProperties`                              |         |
+| qa        | `data-qa` HTML attribute, used for testing                                                           |                                    `string`                                     |         |
 
 ## ActionBar.Separator
 
@@ -132,7 +133,7 @@ Visual divider that can be placed between items in a group to separate them visu
 ### Example
 
 ```typescript jsx
-import {Breadcrumbs, Button} from '@gravity-ui/uikit';
+import {Button} from '@gravity-ui/uikit';
 import {ActionBar} from '@gravity-ui/navigation';
 
 function Page() {

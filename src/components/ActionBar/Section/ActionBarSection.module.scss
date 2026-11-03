@@ -8,6 +8,7 @@ $block: '.#{variables.$ns}action-bar-section';
     flex-flow: row nowrap;
     justify-content: flex-start;
     align-items: stretch;
+    min-width: 0;
 
     & + & {
         border-left: solid 1px var(--g-color-line-generic);

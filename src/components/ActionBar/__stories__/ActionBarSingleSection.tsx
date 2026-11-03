@@ -9,8 +9,8 @@ export function ActionBarSingleSection() {
     return (
         <ActionBar>
             <ActionBar.Section type="primary">
-                <ActionBar.Group>
-                    <ActionBar.Item>
+                <ActionBar.Group stretchContainer>
+                    <ActionBar.Item pull="left-grow">
                         <Breadcrumbs showRoot onAction={() => {}}>
                             <Breadcrumbs.Item key="0">Devtools Support</Breadcrumbs.Item>
                             <Breadcrumbs.Item key="1">DEVTOOLSSUPPORT-21001</Breadcrumbs.Item>
