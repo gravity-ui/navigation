@@ -126,7 +126,7 @@ function FullNavigationPageContent({category, title}: {category?: string; title:
                 Overview and recent activity for {title}.
             </Text>
 
-            <Flex gap={3} wrap="wrap" style={{marginTop: 28}}>
+            <Flex gap="spacing-3" wrap="wrap" style={{marginTop: 28}}>
                 {PAGE_SUMMARY.map((item) => (
                     <div
                         key={item.label}
@@ -161,7 +161,7 @@ function FullNavigationPageContent({category, title}: {category?: string; title:
                 <Text variant="subheader-2">Recent activity</Text>
                 <div style={{marginTop: 16, display: 'grid', gap: 12}}>
                     {PAGE_ACTIVITY.map((row) => (
-                        <Flex key={row.time + row.event} gap={3} alignItems="center">
+                        <Flex key={row.time + row.event} gap="spacing-3" alignItems="center">
                             <Text
                                 variant="caption-2"
                                 color="secondary"

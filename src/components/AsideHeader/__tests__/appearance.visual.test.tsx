@@ -125,9 +125,16 @@ for (const theme of ['light', 'dark', 'light-hc', 'dark-hc'] as const) {
         const popups = page.locator('.g-popup');
         await expect(popups).toHaveCount(2);
         for (const popup of await popups.all()) {
-            const surfaceColor = await popup.evaluate((element) =>
-                getComputedStyle(element).getPropertyValue('--g-color-base-float').trim(),
-            );
+            // Custom properties keep the token text as written (UIKit 8: `rgb(r g b)`), while
+            // computed colors are serialized as `rgb(r, g, b)`. Resolve the token through a
+            // probe so both sides use the browser's color serialization.
+            const surfaceColor = await popup.evaluate((element) => {
+                const probe = element.appendChild(document.createElement('div'));
+                probe.style.backgroundColor = 'var(--g-color-base-float)';
+                const color = getComputedStyle(probe).backgroundColor;
+                probe.remove();
+                return color;
+            });
             await expect(popup).toHaveCSS('background-color', surfaceColor);
         }
         if (theme.startsWith('dark')) {

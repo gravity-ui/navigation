@@ -1,8 +1,10 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import type {ReactNode} from 'react';
 
-import {Drawer, HelpMark, Hotkey, List, Text, TextInput} from '@gravity-ui/uikit';
-import type {DrawerProps, HotkeyProps, ListProps} from '@gravity-ui/uikit';
+import {Drawer, HelpMark, Hotkey, Text, TextInput} from '@gravity-ui/uikit';
+import type {DrawerProps, HotkeyProps} from '@gravity-ui/uikit';
+import {List} from '@gravity-ui/uikit/legacy';
+import type {ListProps} from '@gravity-ui/uikit/legacy';
 
 import {useSafeAsideHeaderContext} from '../AsideHeader/AsideHeaderContext';
 import {createBlock} from '../utils/cn';

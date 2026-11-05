@@ -22,7 +22,7 @@ export const SettingsSection = React.forwardRef<
             {section.title && !section.hideTitle && (
                 <h3 className={b('section-heading')}>
                     {renderSectionRightAdornment ? (
-                        <Flex gap={2} alignItems={'center'}>
+                        <Flex gap="spacing-2" alignItems={'center'}>
                             {section.title}
                             <div
                                 className={b('section-right-adornment', {

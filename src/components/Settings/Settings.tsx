@@ -374,7 +374,7 @@ Settings.Item = function SettingsItem(setting: SettingsItemProps) {
             {showTitle ? (
                 <label className={b('item-heading')} id={labelId}>
                     {renderRightAdornment ? (
-                        <Flex className={b('item-title-wrapper')} gap={3}>
+                        <Flex className={b('item-title-wrapper')} gap="spacing-3">
                             {titleNode}
                             <div
                                 className={b('item-right-adornment', {

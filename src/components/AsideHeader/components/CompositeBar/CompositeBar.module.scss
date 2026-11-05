@@ -28,9 +28,9 @@ $menu-group-tree-connector-width: 16px;
          * Item owns its hover/selection visuals, so the structural List row must
          * always stay transparent.
          */
-        &:global(.g-list__item_active),
-        &:global(.g-list__item_selected),
-        &:global(.g-list__item_active.g-list__item_selected) {
+        &:global(.g-list-legacy__item_active),
+        &:global(.g-list-legacy__item_selected),
+        &:global(.g-list-legacy__item_active.g-list-legacy__item_selected) {
             background: none;
         }
     }
@@ -51,8 +51,8 @@ $menu-group-tree-connector-width: 16px;
 
     // UIKit's non-virtualized List supports intrinsic row sizing. Release its
     // content wrapper too, so nested lists and pin/chevron wrappers can grow.
-    &_auto-height &__root-menu-item > :global(.g-list__item-content),
-    &_auto-height &__menu-group-nested-list-item > :global(.g-list__item-content) {
+    &_auto-height &__root-menu-item > :global(.g-list-legacy__item-content),
+    &_auto-height &__menu-group-nested-list-item > :global(.g-list-legacy__item-content) {
         height: auto;
         min-width: 0;
     }
@@ -98,7 +98,7 @@ $menu-group-tree-connector-width: 16px;
 
     &__menu-group-nested-list-item[class] {
         // The connector extends through the gap below the item content.
-        & > :global(.g-list__item-content) {
+        & > :global(.g-list-legacy__item-content) {
             overflow: visible;
         }
 
@@ -108,9 +108,9 @@ $menu-group-tree-connector-width: 16px;
         padding-block-end: var(--_--menu-item-gap);
         background-color: transparent;
 
-        &:global(.g-list__item_active),
-        &:global(.g-list__item_selected),
-        &:global(.g-list__item_active.g-list__item_selected) {
+        &:global(.g-list-legacy__item_active),
+        &:global(.g-list-legacy__item_selected),
+        &:global(.g-list-legacy__item_active.g-list-legacy__item_selected) {
             background-color: transparent;
         }
     }

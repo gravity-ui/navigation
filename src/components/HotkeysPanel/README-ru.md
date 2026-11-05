@@ -35,7 +35,7 @@ import {HotkeysPanel} from '@gravity-ui/navigation';
 | drawerProps             | `DrawerProps`   |              |                       | Дополнительные пропсы для компонента Drawer (style, container, hideVeil и др.). |
 | disableNavigationOffset | `Boolean`       |              | false                 | Отключает автоматический отступ слева на основе размера AsideHeader.            |
 
-Свойства `HotkeysPanel` также включают все PropTypes компонента `List`, кроме `items` и `filter` (свойства `List` см. [здесь](https://github.com/gravity-ui/uikit/blob/main/src/components/List/README.md)).
+Свойства `HotkeysPanel` также включают все свойства legacy-компонента `List` из `@gravity-ui/uikit/legacy`, кроме `items` и `filter` (свойства `List` см. [здесь](https://github.com/gravity-ui/uikit/blob/main/src/components/legacy/List/README.md)).
 
 ## API CSS
 

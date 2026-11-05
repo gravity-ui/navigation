@@ -149,7 +149,7 @@ function capture(panel: HTMLElement): Snapshot {
             });
     });
     panel.querySelectorAll<HTMLElement>('[data-gn-aside-group]').forEach((element) => {
-        const list = element.querySelector<HTMLElement>(':scope > .g-list');
+        const list = element.querySelector<HTMLElement>(':scope > .g-list-legacy');
         const header = element.querySelector<HTMLElement>(ITEM_SELECTOR);
         if (!list || !header) return;
         const section = getCompositeBarSection(header);

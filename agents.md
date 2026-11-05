@@ -54,14 +54,14 @@ The library requires these peer dependencies to be installed:
 
 ```bash
 npm install --save-dev \
-  @gravity-ui/uikit@^7.2.0 \
+  @gravity-ui/uikit@^8.0.0 \
   @gravity-ui/icons@^2.2.0 \
   @bem-react/classname@^1.6.0 \
   react@^19.0.0 \
   react-dom@^19.0.0
 ```
 
-**Note**: For production, use `@gravity-ui/uikit@^7.2.0` or higher.
+**Note**: Navigation 8.x requires `@gravity-ui/uikit@^8.0.0` and React 18 or 19. Upgrading from 7.x: see [MIGRATION_GUIDE_v8.md](MIGRATION_GUIDE_v8.md).
 
 ### Import Patterns
 
@@ -199,14 +199,19 @@ ActionBar
 
 ```typescript
 import {ActionBar} from '@gravity-ui/navigation';
-import {Button} from '@gravity-ui/uikit';
-import {Breadcrumbs} from '@gravity-ui/uikit/legacy';
+import {Breadcrumbs, Button} from '@gravity-ui/uikit';
 
 <ActionBar aria-label="Actions bar">
   <ActionBar.Section type="primary">
-    <ActionBar.Group>
-      <ActionBar.Item>
-        <Breadcrumbs items={breadcrumbItems} />
+    <ActionBar.Group stretchContainer>
+      <ActionBar.Item pull="left-grow">
+        <Breadcrumbs showRoot>
+          {breadcrumbItems.map((item) => (
+            <Breadcrumbs.Item key={item.href} href={item.href}>
+              {item.text}
+            </Breadcrumbs.Item>
+          ))}
+        </Breadcrumbs>
       </ActionBar.Item>
     </ActionBar.Group>
 
@@ -227,6 +232,8 @@ import {Breadcrumbs} from '@gravity-ui/uikit/legacy';
 
 - `ActionBar.Section`: `type` prop - `"primary"` (default) or `"secondary"`
 - `ActionBar.Group`: `pull` prop - Controls alignment (`"left"`, `"right"`, `"center"`, `"left-grow"`, `"right-grow"`, `"center-grow"`)
+- `ActionBar.Group`: `stretchContainer` prop - Sets `flex-grow: 1` on the group. Put `Breadcrumbs` in such a group: their item takes the free space, and they collapse to fit it. Breadcrumbs in other groups keep their full width
+- `ActionBar.Item`: `pull` prop - Same values as for the group; `"*-grow"` values make the item take the free space of its group
 - `ActionBar.Item`: `spacing` prop - Enable spacing with previous item (default: `true`)
 
 ### Drawer
@@ -586,6 +593,7 @@ function App() {
 
 ```typescript
 import {AsideHeader, ActionBar} from '@gravity-ui/navigation';
+import {Breadcrumbs} from '@gravity-ui/uikit';
 
 function Layout() {
   return (
@@ -595,9 +603,15 @@ function Layout() {
         <div>
           <ActionBar>
             <ActionBar.Section>
-              <ActionBar.Group>
-                <ActionBar.Item>
-                  <Breadcrumbs items={items} />
+              <ActionBar.Group stretchContainer>
+                <ActionBar.Item pull="left-grow">
+                  <Breadcrumbs showRoot>
+                    {items.map((item) => (
+                      <Breadcrumbs.Item key={item.href} href={item.href}>
+                        {item.text}
+                      </Breadcrumbs.Item>
+                    ))}
+                  </Breadcrumbs>
                 </ActionBar.Item>
               </ActionBar.Group>
             </ActionBar.Section>

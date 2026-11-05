@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {Button, DropdownMenu, Select} from '@gravity-ui/uikit';
-import {Breadcrumbs as LegacyBreadcrumbs} from '@gravity-ui/uikit/legacy';
+import {Breadcrumbs, Button, Select} from '@gravity-ui/uikit';
+import {DropdownMenu} from '@gravity-ui/uikit/legacy';
 
 import {ActionBar} from '../ActionBar';
 
@@ -26,17 +26,13 @@ export function ActionBarShowcase() {
                 </ActionBar.Group>
             </ActionBar.Section>
             <ActionBar.Section type="primary">
-                <ActionBar.Group pull="left">
-                    <ActionBar.Item>
-                        <LegacyBreadcrumbs
-                            lastDisplayedItemsCount={1}
-                            items={[
-                                {text: 'Projects', action() {}},
-                                {text: '@gravity-ui', action() {}},
-                                {text: 'navigation', action() {}},
-                            ]}
-                            firstDisplayedItemsCount={1}
-                        />
+                <ActionBar.Group pull="left" stretchContainer>
+                    <ActionBar.Item pull="left-grow">
+                        <Breadcrumbs showRoot onAction={() => {}}>
+                            <Breadcrumbs.Item key="0">Projects</Breadcrumbs.Item>
+                            <Breadcrumbs.Item key="1">@gravity-ui</Breadcrumbs.Item>
+                            <Breadcrumbs.Item key="2">navigation</Breadcrumbs.Item>
+                        </Breadcrumbs>
                     </ActionBar.Item>
                 </ActionBar.Group>
 
@@ -54,9 +50,7 @@ export function ActionBarShowcase() {
                                 {text: 'New Folder', action() {}},
                             ]}
                             defaultSwitcherProps={{
-                                extraProps: {
-                                    'aria-label': 'More',
-                                },
+                                'aria-label': 'More',
                             }}
                         />
                     </ActionBar.Item>

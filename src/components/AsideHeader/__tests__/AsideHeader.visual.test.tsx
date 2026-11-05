@@ -179,8 +179,13 @@ test.describe('AsideHeader', () => {
         await expectScreenshot();
     });
 
-    test('render story: <MenuGroupsCompact>', async ({mount, expectScreenshot}) => {
+    test('render story: <MenuGroupsCompact>', async ({mount, page, expectScreenshot}) => {
         await mount(<AsideHeaderStories.MenuGroupsCompact />, mountOptions, viewport);
+        await page.mouse.move(500, 300);
+        await expect(page.locator('button[class*="gn-collapse-button_"]')).toHaveCSS(
+            'transform',
+            'matrix(1, 0, 0, 1, -21, 0)',
+        );
         await expectScreenshot();
     });
 
@@ -363,7 +368,7 @@ test.describe('AsideHeader', () => {
             await expect(group.locator('[class*="connector_spine-active"]')).toHaveCount(2);
             await expect(item.locator('[class*="nested-hook_active"]')).toHaveCount(1);
             const nestedContents = group.locator(
-                '[class*="__menu-group-nested-list-item_"] > .g-list__item-content',
+                '[class*="__menu-group-nested-list-item_"] > .g-list-legacy__item-content',
             );
             for (const content of await nestedContents.all()) {
                 await expect(content).toHaveCSS('overflow', 'visible');
@@ -629,6 +634,28 @@ test.describe('AsideHeader', () => {
 
         await expect(page.locator('button[aria-label="Group child A"]')).toHaveCount(0);
         await expect(groupItem).toHaveCount(0);
+        // Like the UIKit hover close, this close must not move focus to the More button.
+        await expect(page.locator('body')).toBeFocused();
+    });
+
+    test('returns focus to More after reopening it', async ({mount, page}) => {
+        await mount(<NestedMorePopupExample />, mountOptions, viewport);
+
+        const moreButton = page.locator('button[aria-label="More"]');
+        const groupItem = page.locator('button[aria-label="Nested group"]');
+        await moreButton.hover();
+        await groupItem.hover();
+        await expect(page.locator('button[aria-label="Group child A"]')).toBeVisible();
+        await page.mouse.move(600, 400);
+        await expect(groupItem).toHaveCount(0);
+
+        // Reopening restores the focus return that the nested close above turned off.
+        await moreButton.hover();
+        await groupItem.focus();
+        await page.keyboard.press('Escape');
+
+        await expect(groupItem).toHaveCount(0);
+        await expect(moreButton).toBeFocused();
     });
 
     test('keeps More open when returning from its nested group popup', async ({mount, page}) => {
@@ -654,7 +681,7 @@ test.describe('AsideHeader', () => {
         await groupItem.hover();
         await expect(page.locator('button[aria-label="Group child A"]')).toBeVisible();
 
-        const popups = page.locator('.g-popup_open').filter({has: page.locator('.g-list')});
+        const popups = page.locator('.g-popup_open').filter({has: page.locator('.g-list-legacy')});
         await expect(popups).toHaveCount(2);
         const parentBox = await popups.first().boundingBox();
         const nestedBox = await popups.last().boundingBox();
@@ -1041,6 +1068,11 @@ test.describe('AsideHeader', () => {
     test('render story: <AboveMenuContentCompact>', async ({mount, page, expectScreenshot}) => {
         await mount(<AsideHeaderStories.AboveMenuContentCompact />, mountOptions, viewport);
         await prepareCodeFont(page);
+        await page.mouse.move(500, 300);
+        await expect(page.locator('button[class*="gn-collapse-button_"]')).toHaveCSS(
+            'transform',
+            'matrix(1, 0, 0, 1, -21, 0)',
+        );
         await expectScreenshot();
     });
 

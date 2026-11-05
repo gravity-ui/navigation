@@ -59,11 +59,11 @@ $block: '.#{variables.$ns}burger-composite-bar';
     }
 
     &__root-menu-item {
-        &.g-list__item_selected {
+        &.g-list-legacy__item_selected {
             background-color: var(--g-color-base-selection);
         }
 
-        &:not(.g-list__item_selected).g-list__item_active {
+        &:not(.g-list-legacy__item_selected).g-list-legacy__item_active {
             background: none;
         }
     }

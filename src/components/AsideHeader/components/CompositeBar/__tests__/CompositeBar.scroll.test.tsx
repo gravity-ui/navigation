@@ -436,7 +436,7 @@ describe('CompositeBar menuOverflow="scroll"', () => {
             document.querySelector('.gn-composite-bar-item__group-header-row_current'),
         ).not.toBeNull();
         // The root list row must not be selected: only the header row is highlighted.
-        expect(document.querySelector('.g-list__item_selected')).toBeNull();
+        expect(document.querySelector('.g-list-legacy__item_selected')).toBeNull();
         /* eslint-enable testing-library/no-node-access */
     });
 

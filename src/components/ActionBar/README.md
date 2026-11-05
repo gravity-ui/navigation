@@ -11,21 +11,18 @@ The component is a flexible horizontal bar that provides a standardized layout f
 ## Usage
 
 ```typescript jsx
-import {Button} from '@gravity-ui/uikit';
-import {Breadcrumbs as LegacyBreadcrumbs} from '@gravity-ui/uikit/legacy';
+import {Breadcrumbs, Button} from '@gravity-ui/uikit';
 import {ActionBar} from '@gravity-ui/navigation';
 
 function Page() {
   return (
     <ActionBar aria-label="Actions bar">
       <ActionBar.Section>
-        <ActionBar.Group>
-          <ActionBar.Item>
-            <LegacyBreadcrumbs
-              lastDisplayedItemsCount={1}
-              firstDisplayedItemsCount={1}
-              items={[{text: 'Root Item', action() {}}]}
-            />
+        <ActionBar.Group stretchContainer>
+          <ActionBar.Item pull="left-grow">
+            <Breadcrumbs showRoot onAction={() => {}}>
+              <Breadcrumbs.Item key="0">Root Item</Breadcrumbs.Item>
+            </Breadcrumbs>
           </ActionBar.Item>
         </ActionBar.Group>
 
@@ -72,8 +69,7 @@ horizontal separator from `primary` section.
 <!--GITHUB_BLOCK-->
 
 ```tsx
-import {Button} from '@gravity-ui/uikit';
-import {Breadcrumbs as LegacyBreadcrumbs} from '@gravity-ui/uikit/legacy';
+import {Breadcrumbs, Button} from '@gravity-ui/uikit';
 import {ActionBar} from '@gravity-ui/navigation';
 
 <ActionBar aria-label="Actions bar">
@@ -86,16 +82,12 @@ import {ActionBar} from '@gravity-ui/navigation';
   </ActionBar.Section>
 
   <ActionBar.Section type="primary">
-    <ActionBar.Group>
-      <ActionBar.Item>
-        <LegacyBreadcrumbs
-          lastDisplayedItemsCount={1}
-          firstDisplayedItemsCount={1}
-          items={[
-            {text: 'Wiki Main Page', action() {}},
-            {text: 'Wiki Article', action() {}},
-          ]}
-        />
+    <ActionBar.Group stretchContainer>
+      <ActionBar.Item pull="left-grow">
+        <Breadcrumbs showRoot onAction={() => {}}>
+          <Breadcrumbs.Item key="0">Wiki Main Page</Breadcrumbs.Item>
+          <Breadcrumbs.Item key="1">Wiki Article</Breadcrumbs.Item>
+        </Breadcrumbs>
       </ActionBar.Item>
     </ActionBar.Group>
   </ActionBar.Section>
@@ -110,13 +102,15 @@ Groups organize `ActionBar.Item` within a section and control their alignment.
 
 ### Properties
 
-| Name             | Description                                                       |                                      Type                                       | Default |
-| :--------------- | :---------------------------------------------------------------- | :-----------------------------------------------------------------------------: | :-----: |
-| pull             | Controls the alignment of the group                               | `"left"`, `"left-grow"`, `"right"`, `"right-grow"`, `"center"`, `"center-grow"` |         |
-| stretchContainer | Set `flex-grow: 1` for Group. Need to support UIKit@7 Breadcrumbs |                                    `boolean`                                    |         |
-| className        | HTML `class` attribute                                            |                                    `string`                                     |         |
-| style            | HTML `style` attribute                                            |                              `React.CSSProperties`                              |         |
-| qa               | `data-qa` HTML attribute, used for testing                        |                                    `string`                                     |         |
+| Name             | Description                                                                                                    |                                      Type                                       | Default |
+| :--------------- | :------------------------------------------------------------------------------------------------------------- | :-----------------------------------------------------------------------------: | :-----: |
+| pull             | Controls the alignment of the group                                                                            | `"left"`, `"left-grow"`, `"right"`, `"right-grow"`, `"center"`, `"center-grow"` |         |
+| stretchContainer | Set `flex-grow: 1` for Group. Put uikit `Breadcrumbs` in such a group, so that they collapse to its free space |                                    `boolean`                                    |         |
+| className        | HTML `class` attribute                                                                                         |                                    `string`                                     |         |
+| style            | HTML `style` attribute                                                                                         |                              `React.CSSProperties`                              |         |
+| qa               | `data-qa` HTML attribute, used for testing                                                                     |                                    `string`                                     |         |
+
+An `ActionBar.Item` with uikit `Breadcrumbs` in a `stretchContainer` group takes the free space of the group, and the breadcrumbs collapse to fit it. Breadcrumbs in other groups keep their full width. If even the collapsed breadcrumbs do not fit, the bar overflows instead of overlapping other items. The bar has to be as wide as its container: in a bar sized to its content (for example, inside `display: inline-block`), breadcrumbs that collapsed in a narrow window stay collapsed after it widens.
 
 ## ActionBar.Item
 
@@ -124,12 +118,13 @@ Container for UI elements like buttons, breadcrumbs or other components must be 
 
 ### Properties
 
-| Name      | Description                                |         Type          | Default |
-| :-------- | :----------------------------------------- | :-------------------: | :-----: |
-| spacing   | Enable spacing with previous item          |       `boolean`       | `true`  |
-| className | HTML `class` attribute                     |       `string`        |         |
-| style     | HTML `style` attribute                     | `React.CSSProperties` |         |
-| qa        | `data-qa` HTML attribute, used for testing |       `string`        |         |
+| Name      | Description                                                                                          |                                      Type                                       | Default |
+| :-------- | :--------------------------------------------------------------------------------------------------- | :-----------------------------------------------------------------------------: | :-----: |
+| pull      | Controls the alignment of the item. `"*-grow"` values make the item take the free space of the group | `"left"`, `"left-grow"`, `"right"`, `"right-grow"`, `"center"`, `"center-grow"` |         |
+| spacing   | Enable spacing with previous item                                                                    |                                    `boolean`                                    | `true`  |
+| className | HTML `class` attribute                                                                               |                                    `string`                                     |         |
+| style     | HTML `style` attribute                                                                               |                              `React.CSSProperties`                              |         |
+| qa        | `data-qa` HTML attribute, used for testing                                                           |                                    `string`                                     |         |
 
 ## ActionBar.Separator
 
@@ -141,7 +136,6 @@ Visual divider that can be placed between items in a group to separate them visu
 
 ```typescript jsx
 import {Button} from '@gravity-ui/uikit';
-import {Breadcrumbs as LegacyBreadcrumbs} from '@gravity-ui/uikit/legacy';
 import {ActionBar} from '@gravity-ui/navigation';
 
 function Page() {

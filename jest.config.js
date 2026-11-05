@@ -13,6 +13,8 @@ module.exports = {
         },
     },
     moduleNameMapper: {
+        // UIKit 8's ColorPicker requires these ESM-only packages from CommonJS; tests don't use them.
+        '^colors-named(-hex)?$': '<rootDir>/src/__mocks__/emptyArrayMock.js',
         '\\.(css|scss)$': '<rootDir>/src/__mocks__/styleMock.js',
         // `moduleResolution: node` cannot resolve the package subpath export
         '^@gravity-ui/uikit/i18n$': '<rootDir>/node_modules/@gravity-ui/uikit/build/cjs/i18n',

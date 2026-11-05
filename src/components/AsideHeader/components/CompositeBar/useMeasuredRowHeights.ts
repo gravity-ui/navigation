@@ -107,7 +107,7 @@ export function useMeasuredRowHeights(items: AsideHeaderItem[], scope: object, e
             const measurements = Array.from(
                 container.querySelectorAll<HTMLElement>(`[${COMPOSITE_BAR_ITEM_ID_ATTRIBUTE}]`),
             ).flatMap((item) => {
-                const row = item.closest<HTMLElement>('.g-list__item');
+                const row = item.closest<HTMLElement>('.g-list-legacy__item');
                 const id = item.getAttribute(COMPOSITE_BAR_ITEM_ID_ATTRIBUTE);
                 if (!row || !id || !inputs.contents.has(id)) return [];
                 currentRows.add(row);

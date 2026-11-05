@@ -187,8 +187,8 @@ $aside-width-transition: width $aside-width-transition-duration
             overflow: visible;
         }
 
-        :global(.g-list__item),
-        :global(.g-list__item-content) {
+        :global(.g-list-legacy__item),
+        :global(.g-list-legacy__item-content) {
             min-width: 0;
             overflow: visible;
         }

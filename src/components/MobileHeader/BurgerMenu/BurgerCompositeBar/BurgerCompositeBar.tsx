@@ -1,6 +1,7 @@
 import React from 'react';
 
-import {Icon, List} from '@gravity-ui/uikit';
+import {Icon} from '@gravity-ui/uikit';
+import {List} from '@gravity-ui/uikit/legacy';
 
 import {createBlock} from '../../../utils/cn';
 import {MOBILE_HEADER_ICON_SIZE} from '../../constants';

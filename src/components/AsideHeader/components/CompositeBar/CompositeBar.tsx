@@ -1,6 +1,6 @@
 import React, {FC, ReactNode, useCallback, useMemo, useRef, useState} from 'react';
 
-import {List} from '@gravity-ui/uikit';
+import {List} from '@gravity-ui/uikit/legacy';
 import AutoSizer, {Size} from 'react-virtualized-auto-sizer';
 
 import {MenuGroup} from '../../../types';

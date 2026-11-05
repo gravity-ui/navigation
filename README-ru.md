@@ -13,8 +13,14 @@ npm install @gravity-ui/navigation
 Убедитесь, что в проекте установлены peer-зависимости.
 
 ```bash
-npm install --dev @gravity-ui/uikit@^7.2.0 @gravity-ui/icons@^2.2.0 @bem-react/classname@^1.6.0 react@^19.0.0 react-dom@^19.0.0
+npm install --dev @gravity-ui/uikit@^8.0.0 @gravity-ui/icons@^2.2.0 @bem-react/classname@^1.6.0 react@^19.0.0 react-dom@^19.0.0
 ```
+
+## Миграция
+
+Переход с 7.x (`@gravity-ui/uikit` 8, React 18 или 19): см. [MIGRATION_GUIDE_v8.md](MIGRATION_GUIDE_v8.md).
+
+Переход с 4.x, 5.x или 6.x: сначала [MIGRATION_GUIDE_v7.md](MIGRATION_GUIDE_v7.md), затем [MIGRATION_GUIDE_v8.md](MIGRATION_GUIDE_v8.md).
 
 ## Компоненты
 

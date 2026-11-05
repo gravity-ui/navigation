@@ -16,5 +16,16 @@ $block: '.#{variables.$ns}action-bar-group';
 
     &_stretch-container {
         flex-grow: 1;
+
+        // uikit Breadcrumbs collapse to the width of their list. The grid track lets the item take
+        // the free space and shrink below the expanded breadcrumbs without changing its max-content
+        // width; min-width keeps room for the collapsed ones (the More button and the current item,
+        // 62px in uikit 8.0.0).
+        > :has(:global(.g-breadcrumbs)) {
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            min-width: 62px;
+        }
     }
 }
