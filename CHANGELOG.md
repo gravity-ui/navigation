@@ -1,5 +1,21 @@
 # Changelog
 
+## [8.0.0](https://github.com/gravity-ui/navigation/compare/v7.1.3...v8.0.0) (2026-11-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* requires @gravity-ui/uikit ^8.0.0 and react/react-dom ^18.0.0 || ^19.0.0. See MIGRATION_GUIDE_v8.md.
+
+### Features
+
+* migrate to @gravity-ui/uikit v8 ([#705](https://github.com/gravity-ui/navigation/issues/705)) ([4899118](https://github.com/gravity-ui/navigation/commit/48991184e03a122cb2fe86ed853e54bd7774146f))
+
+
+### Bug Fixes
+
+* **AsideHeader:** avoid nested controls in all pages editing ([#702](https://github.com/gravity-ui/navigation/issues/702)) ([c8b82be](https://github.com/gravity-ui/navigation/commit/c8b82bebf22cd18a35ea5b621f737ecb068ede98))
+
 ## [7.1.3](https://github.com/gravity-ui/navigation/compare/v7.1.2...v7.1.3) (2026-10-29)
 
 
