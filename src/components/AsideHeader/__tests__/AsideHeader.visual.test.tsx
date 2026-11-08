@@ -285,7 +285,10 @@ test.describe('AsideHeader', () => {
             viewport,
         );
 
-        await page.locator('button[aria-label="Settings"][aria-haspopup="dialog"]').hover();
+        await page
+            .locator('[id="gravity-ui/navigation-menu-items-composite-bar"]')
+            .getByRole('button', {name: 'Settings', exact: true})
+            .hover();
         await page.locator('button[aria-label="General"]').waitFor({state: 'visible'});
 
         const popup = page.locator('[class*="gn-composite-bar-item__icon-popover_"]:visible');
