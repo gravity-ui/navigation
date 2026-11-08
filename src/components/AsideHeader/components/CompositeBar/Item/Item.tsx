@@ -316,7 +316,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const autoHeight = hasAutomaticHeight(type, compact, menuPopupRow);
 
     const wrapWithLabelPopup = (row: React.ReactElement): React.ReactElement => {
-        if (!compact || resolvedMenuPopupItems?.length) {
+        if (inlineGroupHeader || resolvedMenuPopupItems?.length) {
             return row;
         }
 
@@ -328,10 +328,10 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 highlightCurrentItem={false}
                 open={labelPopupOpen}
                 onOpenChange={(nextOpen) => {
-                    if (nextOpen && compactPopoverDisabled) return;
+                    if (nextOpen && !labelPopupAvailable) return;
                     setLabelPopupOpen(nextOpen);
                 }}
-                disabled={compactPopoverDisabled}
+                disabled={!labelPopupAvailable}
                 hideIcon
                 itemClassName={popupItemClassName}
                 type={type}

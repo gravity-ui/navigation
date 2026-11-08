@@ -14,6 +14,7 @@ import {
 } from '../../../AsideHeaderContext';
 import {AsideHeaderItem} from '../../../types';
 import {CompositeBar} from '../CompositeBar';
+import {Item} from '../Item/Item';
 
 jest.mock('../../../i18n');
 
@@ -82,6 +83,41 @@ describe('CompositeBar', () => {
 
         fireEvent.click(row);
         expect(onItemClick).toHaveBeenCalledTimes(1);
+    });
+
+    it('preserves the row and focus when compact mode or tooltip availability changes', () => {
+        const view = (compact: boolean, enableTooltip = true) => (
+            <ThemeProvider>
+                <Item
+                    id="home"
+                    title="Home"
+                    icon={Gear}
+                    compact={compact}
+                    enableTooltip={enableTooltip}
+                />
+            </ThemeProvider>
+        );
+        const {rerender} = render(view(false));
+        const row = screen.getByRole('button', {name: 'Home'});
+        row.focus();
+
+        for (const [compact, enableTooltip] of [
+            [true, true],
+            [true, false],
+            [false, true],
+            [true, true],
+        ]) {
+            rerender(view(compact, enableTooltip));
+            expect(screen.getByRole('button', {name: 'Home'})).toBe(row);
+            // eslint-disable-next-line testing-library/no-node-access
+            expect(document.activeElement).toBe(row);
+            expect(row.getAttribute('aria-haspopup')).toBe(
+                compact && enableTooltip ? 'dialog' : null,
+            );
+            expect(row.getAttribute('aria-expanded')).toBe(
+                compact && enableTooltip ? 'false' : null,
+            );
+        }
     });
 
     it('should preserve item.onItemClick when clicking collapsed popup items', () => {
