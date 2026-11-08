@@ -40,6 +40,9 @@ quick-access highlight settings and the theme's selection transparency are prese
 change during this movement restores native highlighting while the layout continues animating.
 Ambiguous selections retain existing native highlighting; reduced motion switches immediately.
 
+Compact leaf-item popups use the menu item's button or link as their trigger. Popup ARIA
+attributes are attached to that interactive row; the nested icon remains decorative.
+
 ### Disabling compact transitions
 
 Set `compactTransition={false}` on `AsideHeader` or `PageLayout` (default: `true`).

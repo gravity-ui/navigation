@@ -60,6 +60,30 @@ function renderCompositeBar(props: {
 }
 
 describe('CompositeBar', () => {
+    it.each([
+        {href: undefined, compact: true},
+        {href: '/home', compact: true},
+        {href: undefined, compact: false},
+        {href: '/home', compact: false},
+    ])('keeps popup semantics on the row (href=$href, compact=$compact)', ({href, compact}) => {
+        const onItemClick = jest.fn();
+        renderCompositeBar({
+            items: [{id: 'home', title: 'Home', icon: Gear, href}],
+            onItemClick,
+            compact,
+        });
+
+        const row = screen.getByRole(href ? 'link' : 'button', {name: 'Home'});
+        expect(row.getAttribute('aria-haspopup')).toBe(compact ? 'dialog' : null);
+        expect(row.getAttribute('aria-expanded')).toBe(compact ? 'false' : null);
+        // The decorative icon must not become a second popup trigger inside the row.
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(row.querySelector('[aria-expanded], [aria-haspopup]')).toBeNull();
+
+        fireEvent.click(row);
+        expect(onItemClick).toHaveBeenCalledTimes(1);
+    });
+
     it('should preserve item.onItemClick when clicking collapsed popup items', () => {
         const onItemClick = jest.fn();
         const dashboardOnItemClick = jest.fn();
@@ -133,19 +157,13 @@ describe('CompositeBar', () => {
         renderCompositeBar({items, onItemClick, compact: true});
 
         const row = screen.getByRole('button', {name: 'Home'});
-        // The label Popover is anchored to the icon area inside the menu row.
-        /* eslint-disable testing-library/no-node-access */
-        const labelPopupTrigger = row.querySelector(
-            '[data-gn-aside-part="icon"]',
-        )?.firstElementChild;
-        /* eslint-enable testing-library/no-node-access */
-        expect(labelPopupTrigger).toBeTruthy();
-
-        fireEvent.mouseEnter(labelPopupTrigger as Element);
+        fireEvent.mouseEnter(row);
 
         act(() => {
             jest.advanceTimersByTime(200);
         });
+
+        expect(row.getAttribute('aria-expanded')).toBe('true');
 
         const popupItemButton = screen.getAllByRole('button', {name: 'Home'})[1];
         expect(popupItemButton).toBeTruthy();

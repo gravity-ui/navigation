@@ -293,12 +293,12 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         );
     }
 
-    const makeIconNode = (iconEl: React.ReactNode, withCompactPopover = true): React.ReactNode => {
+    const makeIconNode = (iconEl: React.ReactNode): React.ReactNode => {
         if (!compact) {
             return iconEl;
         }
 
-        const iconButton = (
+        return (
             <div
                 onMouseEnter={() => onMouseEnter?.()}
                 onMouseLeave={() => onMouseLeave?.()}
@@ -307,39 +307,6 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 {iconEl}
             </div>
         );
-
-        if (!withCompactPopover || resolvedMenuPopupItems?.length) {
-            return iconButton;
-        }
-
-        return (
-            <ItemPopup
-                items={[quickAccessPinItem]}
-                variant="label"
-                highlightCurrentItem={false}
-                open={labelPopupOpen}
-                onOpenChange={(nextOpen) => {
-                    if (nextOpen && compactPopoverDisabled) return;
-                    setLabelPopupOpen(nextOpen);
-                }}
-                hideIcon
-                itemClassName={popupItemClassName}
-                disabled={compactPopoverDisabled}
-                type={type}
-                collapsed={compact}
-                /**
-                 * No `onPopupItemClick` here on purpose: this popup renders the item itself
-                 * (`items={[props]}`), whose `onItemClick` is already the row-level wrapper.
-                 * Going through the wrapper keeps the original `item.onItemClick` intact for
-                 * the AsideHeader handler; the direct path would pass the wrapper as
-                 * `item.onItemClick` and trigger the handler twice (toggling All pages back).
-                 */
-                onItemClick={onItemClick}
-                suppressCurrentItemIds={suppressCurrentItemIds}
-            >
-                {iconButton}
-            </ItemPopup>
-        );
     };
 
     const ariaLabel = typeof title === 'string' ? title : undefined;
@@ -347,6 +314,32 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
     const showSurface = !menuPopupRow && [ITEM_TYPE_REGULAR, 'action'].includes(type);
 
     const autoHeight = hasAutomaticHeight(type, compact, menuPopupRow);
+
+    const wrapWithLabelPopup = (row: React.ReactElement): React.ReactElement => {
+        if (!labelPopupAvailable) {
+            return row;
+        }
+
+        // Popover's ARIA attributes belong on the interactive row, not its decorative icon.
+        return (
+            <ItemPopup
+                items={[quickAccessPinItem]}
+                variant="label"
+                highlightCurrentItem={false}
+                open={labelPopupOpen}
+                onOpenChange={setLabelPopupOpen}
+                hideIcon
+                itemClassName={popupItemClassName}
+                type={type}
+                collapsed={compact}
+                // Preserve the row-level callback so the item's action runs only once.
+                onItemClick={onItemClick}
+                suppressCurrentItemIds={suppressCurrentItemIds}
+            >
+                {row}
+            </ItemPopup>
+        );
+    };
 
     const makeNode = ({icon: iconEl, title: titleEl}: MakeItemParams) => {
         const wrappedByItemWrapper = typeof itemWrapper === 'function';
@@ -476,7 +469,7 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             },
         };
 
-        let tagNode: React.ReactNode;
+        let tagNode: React.ReactElement;
 
         if (href) {
             tagNode = (
@@ -521,6 +514,8 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
                 </button>
             );
         }
+
+        tagNode = wrapWithLabelPopup(tagNode);
 
         if (chevronControl) {
             tagNode = (
@@ -624,12 +619,12 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
             bringForward &&
             (itemWrapper(
                 params,
-                ({icon: iconEl}) => makeIconNode(iconEl, false),
+                ({icon: iconEl}) => makeIconNode(iconEl),
                 opts,
             ) as React.ReactElement);
     } else {
         node = wrapWithQuickAccessPin(makeNode(params));
-        highlightedNode = bringForward && makeIconNode(iconNode, false);
+        highlightedNode = bringForward && makeIconNode(iconNode);
     }
 
     return (
