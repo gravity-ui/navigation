@@ -62,6 +62,72 @@ function renderCompositeBar(props: {
 
 describe('CompositeBar', () => {
     it.each([
+        {compact: false, enableTooltip: true},
+        {compact: false, enableTooltip: false},
+        {compact: true, enableTooltip: false},
+    ])(
+        'preserves native Space behavior without a label popup (compact=$compact, enableTooltip=$enableTooltip)',
+        ({compact, enableTooltip}) => {
+            renderCompositeBar({
+                items: [{id: 'home', title: 'Home', icon: Gear, href: '/home', enableTooltip}],
+                onItemClick: jest.fn(),
+                compact,
+            });
+
+            const row = screen.getByRole('link', {name: 'Home'});
+            expect(fireEvent.keyDown(row, {key: ' '})).toBe(true);
+            expect(fireEvent.keyUp(row, {key: ' '})).toBe(true);
+            expect(row.hasAttribute('aria-haspopup')).toBe(false);
+            expect(screen.queryByRole('dialog')).toBeNull();
+        },
+    );
+
+    it.each(['Enter', ' '])('closes the current compact item label on %p activation', (key) => {
+        const onItemClick = jest.fn();
+        renderCompositeBar({
+            items: [{id: 'home', title: 'Home', icon: Gear, current: true}],
+            onItemClick,
+            compact: true,
+        });
+
+        const row = screen.getByRole('button', {name: 'Home'});
+        row.focus();
+        fireEvent.keyDown(row, {key});
+        fireEvent.keyUp(row, {key});
+        // jsdom does not synthesize the native button click from keyboard events.
+        fireEvent.click(row, {detail: 0});
+
+        expect(row.getAttribute('aria-expanded')).toBe('false');
+        expect(screen.queryByRole('dialog')).toBeNull();
+        expect(onItemClick).toHaveBeenCalledTimes(1);
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(document.activeElement).toBe(row);
+    });
+
+    it.each(['regular', 'action'] as const)(
+        'omits popup semantics for a compact %s item without a label popup',
+        (type) => {
+            renderCompositeBar({
+                items: [
+                    {
+                        id: 'home',
+                        title: 'Home',
+                        icon: Gear,
+                        type,
+                        enableTooltip: type === 'regular' ? false : undefined,
+                    },
+                ],
+                onItemClick: jest.fn(),
+                compact: true,
+            });
+
+            const row = screen.getByRole('button', {name: 'Home'});
+            expect(row.hasAttribute('aria-haspopup')).toBe(false);
+            expect(row.hasAttribute('aria-expanded')).toBe(false);
+        },
+    );
+
+    it.each([
         {href: undefined, compact: true},
         {href: '/home', compact: true},
         {href: undefined, compact: false},

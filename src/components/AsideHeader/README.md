@@ -42,6 +42,9 @@ Ambiguous selections retain existing native highlighting; reduced motion switche
 
 Compact leaf-item popups use the menu item's button or link as their trigger. Popup ARIA
 attributes are attached to that interactive row; the nested icon remains decorative.
+Activating the row closes its label popup, including when the item is already current,
+and keyboard activation preserves focus on the row.
+When the label popup is unavailable, the row retains its native keyboard behavior.
 
 ### Disabling compact transitions
 

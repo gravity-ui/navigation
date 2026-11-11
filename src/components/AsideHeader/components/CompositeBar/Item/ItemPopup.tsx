@@ -87,7 +87,7 @@ interface Props {
     suppressCurrentItemIds?: ReadonlySet<string>;
 }
 
-type PopupTriggerInteractionProps = React.AriaAttributes & {
+type PopupTriggerInteractionProps = {
     onMouseEnter?: React.MouseEventHandler<HTMLElement>;
     onMouseLeave?: React.MouseEventHandler<HTMLElement>;
     onFocus?: React.FocusEventHandler<HTMLElement>;
@@ -328,14 +328,6 @@ export const ItemPopup: React.FC<Props> = ({
     const trigger = React.cloneElement(
         children as React.ReactElement<PopupTriggerInteractionProps>,
         {
-            // Keep the trigger mounted without advertising an unavailable popup.
-            ...(disabled
-                ? {
-                      'aria-expanded': triggerProps['aria-expanded'],
-                      'aria-haspopup': triggerProps['aria-haspopup'],
-                      'aria-controls': triggerProps['aria-controls'],
-                  }
-                : {}),
             onMouseEnter: (event) => {
                 triggerElementRef.current = event.currentTarget;
                 markInteractionRegionEntered();
@@ -380,7 +372,8 @@ export const ItemPopup: React.FC<Props> = ({
             style={popoverStyle}
             content={content}
         >
-            {trigger}
+            {/* Keep the row mounted, but omit Popover's ARIA and interaction props when disabled. */}
+            {disabled ? () => trigger : trigger}
         </Popover>
     );
 };
