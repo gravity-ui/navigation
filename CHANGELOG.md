@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.0.1](https://github.com/gravity-ui/navigation/compare/v8.0.0...v8.0.1) (2026-11-12)
+
+
+### Bug Fixes
+
+* **AsideHeader:** attach compact popup ARIA to interactive rows ([#706](https://github.com/gravity-ui/navigation/issues/706)) ([b79b589](https://github.com/gravity-ui/navigation/commit/b79b5898789a208563a90d301b6fa0cc824a8567))
+
 ## [8.0.0](https://github.com/gravity-ui/navigation/compare/v7.1.3...v8.0.0) (2026-11-05)
 
 
