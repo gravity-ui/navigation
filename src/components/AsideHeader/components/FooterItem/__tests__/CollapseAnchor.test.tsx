@@ -151,9 +151,8 @@ describe('floating collapse anchor', () => {
         expect(container.querySelector('[data-gn-collapse-anchor]')).toBe(
             screen.getByRole('button', {name: 'b'}),
         );
-        const trigger = row.querySelector('[data-gn-aside-part="icon"] [aria-haspopup="dialog"]');
-        expect(trigger).toBeTruthy();
-        fireEvent.mouseEnter(trigger as Element);
+        expect(row.getAttribute('aria-haspopup')).toBe('dialog');
+        fireEvent.mouseEnter(row);
         await waitFor(() => expect(screen.getAllByRole('button', {name: 'a'})).toHaveLength(2));
         fireEvent.click(screen.getAllByRole('button', {name: 'a'})[1]);
         await waitFor(() => expect(screen.getAllByRole('button', {name: 'a'})).toHaveLength(1));

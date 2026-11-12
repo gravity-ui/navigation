@@ -14,6 +14,7 @@ import {
 } from '../../../AsideHeaderContext';
 import {AsideHeaderItem} from '../../../types';
 import {CompositeBar} from '../CompositeBar';
+import {Item} from '../Item/Item';
 
 jest.mock('../../../i18n');
 
@@ -60,6 +61,131 @@ function renderCompositeBar(props: {
 }
 
 describe('CompositeBar', () => {
+    it.each([
+        {compact: false, enableTooltip: true},
+        {compact: false, enableTooltip: false},
+        {compact: true, enableTooltip: false},
+    ])(
+        'preserves native Space behavior without a label popup (compact=$compact, enableTooltip=$enableTooltip)',
+        ({compact, enableTooltip}) => {
+            renderCompositeBar({
+                items: [{id: 'home', title: 'Home', icon: Gear, href: '/home', enableTooltip}],
+                onItemClick: jest.fn(),
+                compact,
+            });
+
+            const row = screen.getByRole('link', {name: 'Home'});
+            expect(fireEvent.keyDown(row, {key: ' '})).toBe(true);
+            expect(fireEvent.keyUp(row, {key: ' '})).toBe(true);
+            expect(row.hasAttribute('aria-haspopup')).toBe(false);
+            expect(screen.queryByRole('dialog')).toBeNull();
+        },
+    );
+
+    it.each(['Enter', ' '])('closes the current compact item label on %p activation', (key) => {
+        const onItemClick = jest.fn();
+        renderCompositeBar({
+            items: [{id: 'home', title: 'Home', icon: Gear, current: true}],
+            onItemClick,
+            compact: true,
+        });
+
+        const row = screen.getByRole('button', {name: 'Home'});
+        row.focus();
+        fireEvent.keyDown(row, {key});
+        fireEvent.keyUp(row, {key});
+        // jsdom does not synthesize the native button click from keyboard events.
+        fireEvent.click(row, {detail: 0});
+
+        expect(row.getAttribute('aria-expanded')).toBe('false');
+        expect(screen.queryByRole('dialog')).toBeNull();
+        expect(onItemClick).toHaveBeenCalledTimes(1);
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(document.activeElement).toBe(row);
+    });
+
+    it.each(['regular', 'action'] as const)(
+        'omits popup semantics for a compact %s item without a label popup',
+        (type) => {
+            renderCompositeBar({
+                items: [
+                    {
+                        id: 'home',
+                        title: 'Home',
+                        icon: Gear,
+                        type,
+                        enableTooltip: type === 'regular' ? false : undefined,
+                    },
+                ],
+                onItemClick: jest.fn(),
+                compact: true,
+            });
+
+            const row = screen.getByRole('button', {name: 'Home'});
+            expect(row.hasAttribute('aria-haspopup')).toBe(false);
+            expect(row.hasAttribute('aria-expanded')).toBe(false);
+        },
+    );
+
+    it.each([
+        {href: undefined, compact: true},
+        {href: '/home', compact: true},
+        {href: undefined, compact: false},
+        {href: '/home', compact: false},
+    ])('keeps popup semantics on the row (href=$href, compact=$compact)', ({href, compact}) => {
+        const onItemClick = jest.fn();
+        renderCompositeBar({
+            items: [{id: 'home', title: 'Home', icon: Gear, href}],
+            onItemClick,
+            compact,
+        });
+
+        const row = screen.getByRole(href ? 'link' : 'button', {name: 'Home'});
+        expect(row.getAttribute('aria-haspopup')).toBe(compact ? 'dialog' : null);
+        expect(row.getAttribute('aria-expanded')).toBe(compact ? 'false' : null);
+        // The decorative icon must not become a second popup trigger inside the row.
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(row.querySelector('[aria-expanded], [aria-haspopup]')).toBeNull();
+
+        fireEvent.click(row);
+        expect(onItemClick).toHaveBeenCalledTimes(1);
+    });
+
+    it('preserves the row and focus when compact mode or tooltip availability changes', () => {
+        const view = (compact: boolean, enableTooltip = true) => (
+            <ThemeProvider>
+                <Item
+                    id="home"
+                    title="Home"
+                    icon={Gear}
+                    compact={compact}
+                    enableTooltip={enableTooltip}
+                />
+            </ThemeProvider>
+        );
+        const {rerender} = render(view(false));
+        const row = screen.getByRole('button', {name: 'Home'});
+        row.focus();
+
+        for (const [compact, enableTooltip] of [
+            [true, true],
+            [true, false],
+            [false, true],
+            [true, true],
+        ]) {
+            rerender(view(compact, enableTooltip));
+            expect(screen.getByRole('button', {name: 'Home'})).toBe(row);
+            // eslint-disable-next-line testing-library/no-node-access
+            expect(document.activeElement).toBe(row);
+            expect(row.getAttribute('aria-haspopup')).toBe(
+                compact && enableTooltip ? 'dialog' : null,
+            );
+            expect(row.getAttribute('aria-expanded')).toBe(
+                compact && enableTooltip ? 'false' : null,
+            );
+        }
+    });
+
     it('should preserve item.onItemClick when clicking collapsed popup items', () => {
         const onItemClick = jest.fn();
         const dashboardOnItemClick = jest.fn();
@@ -133,19 +259,13 @@ describe('CompositeBar', () => {
         renderCompositeBar({items, onItemClick, compact: true});
 
         const row = screen.getByRole('button', {name: 'Home'});
-        // The label Popover is anchored to the icon area inside the menu row.
-        /* eslint-disable testing-library/no-node-access */
-        const labelPopupTrigger = row.querySelector(
-            '[data-gn-aside-part="icon"]',
-        )?.firstElementChild;
-        /* eslint-enable testing-library/no-node-access */
-        expect(labelPopupTrigger).toBeTruthy();
-
-        fireEvent.mouseEnter(labelPopupTrigger as Element);
+        fireEvent.mouseEnter(row);
 
         act(() => {
             jest.advanceTimersByTime(200);
         });
+
+        expect(row.getAttribute('aria-expanded')).toBe('true');
 
         const popupItemButton = screen.getAllByRole('button', {name: 'Home'})[1];
         expect(popupItemButton).toBeTruthy();

@@ -372,7 +372,8 @@ export const ItemPopup: React.FC<Props> = ({
             style={popoverStyle}
             content={content}
         >
-            {trigger}
+            {/* Keep the row mounted, but omit Popover's ARIA and interaction props when disabled. */}
+            {disabled ? () => trigger : trigger}
         </Popover>
     );
 };
