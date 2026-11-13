@@ -84,12 +84,12 @@ $tab-radius: 10px;
         }
     }
 
-    // A 20px strip outside the aside edge that takes no layout space. Compact, it clips the
-    // parked tab and keeps the fillets from adding page scroll (Safari ignores per-axis clip).
+    // Keep the expanded layer empty to prevent Chrome from painting the aside background
+    // into the page. The compact layer clips the parked tab without adding page scroll.
     &__layer {
         width: $tab-width;
-        flex: 0 0 $tab-width;
-        margin-inline-end: -$tab-width;
+        flex: 0 0 0;
+        margin-inline-end: 0;
         position: sticky;
         top: var(--gn-top-alert-height, 0);
         left: var(--gn-aside-header-size);
@@ -106,6 +106,8 @@ $tab-radius: 10px;
         z-index: calc(var(--gn-aside-header-z-index, 100) + 1);
 
         &_compact {
+            flex-basis: $tab-width;
+            margin-inline-end: -$tab-width;
             overflow: clip;
         }
     }
@@ -113,7 +115,7 @@ $tab-radius: 10px;
     &__slot {
         position: absolute;
         bottom: var(--g-spacing-2);
-        inset-inline-end: calc(var(--_--item-margin-inline) + #{$tab-width});
+        inset-inline-end: var(--_--item-margin-inline);
         width: 24px;
         height: var(
             --_--gn-aside-header-density-footer-item-height,

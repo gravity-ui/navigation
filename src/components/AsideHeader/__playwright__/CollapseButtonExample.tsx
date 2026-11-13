@@ -13,6 +13,7 @@ export function CollapseButtonExample({
     menuDensity = 'default',
     direction = 'ltr',
     footer = 'regular',
+    headerDecoration = false,
     accountTitle = 'Account with a longer display name',
     contentsWrapper = false,
     topAlert = false,
@@ -25,6 +26,7 @@ export function CollapseButtonExample({
     menuDensity?: AsideHeaderMenuDensity;
     direction?: 'ltr' | 'rtl';
     footer?: 'regular' | 'action' | 'empty' | 'custom';
+    headerDecoration?: boolean;
     accountTitle?: string;
     contentsWrapper?: boolean;
     topAlert?: boolean;
@@ -55,6 +57,7 @@ export function CollapseButtonExample({
     const movingFooterHeight = compact ? 20 : 70;
     const aside = (
         <PageLayoutAside
+            headerDecoration={headerDecoration}
             logo={{text: 'Navigation', icon: Gear}}
             menuItems={[{id: 'home', title: 'Home', icon: Gear, pinned: true}]}
             onMenuItemsChanged={() => undefined}
