@@ -61,7 +61,11 @@ $aside-width-transition: width $aside-width-transition-duration
             width #{$aside-width-transition-duration} #{$aside-width-transition-timing-function},
             border-radius #{$aside-width-transition-duration}
                 #{$aside-width-transition-timing-function},
-            left #{$aside-width-transition-duration} #{$aside-width-transition-timing-function};
+            left #{$aside-width-transition-duration} #{$aside-width-transition-timing-function},
+            flex-basis #{$aside-width-transition-duration}
+                #{$aside-width-transition-timing-function},
+            margin-inline-end #{$aside-width-transition-duration}
+                #{$aside-width-transition-timing-function};
         --_--gn-aside-drawer-transition: left #{$aside-width-transition-duration}
                 #{$aside-width-transition-timing-function},
             background-color var(--_--animation-duration, 300ms);
