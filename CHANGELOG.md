@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.0.2](https://github.com/gravity-ui/navigation/compare/v8.0.1...v8.0.2) (2026-11-16)
+
+
+### Bug Fixes
+
+* **AsideHeader:** prevent sidebar background from covering the content gap ([#708](https://github.com/gravity-ui/navigation/issues/708)) ([211dee1](https://github.com/gravity-ui/navigation/commit/211dee16a5c2a5fed9a3e15ba0b121242511cbc9))
+
 ## [8.0.1](https://github.com/gravity-ui/navigation/compare/v8.0.0...v8.0.1) (2026-11-12)
 
 
