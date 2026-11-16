@@ -5,7 +5,7 @@ import {AlertProps, IconProps, QAProps} from '@gravity-ui/uikit';
 export type MenuItemType = 'regular' | 'action' | 'divider';
 
 export type AsideHeaderMenuItemAriaProps = React.AriaAttributes &
-    Pick<React.HTMLAttributes<HTMLButtonElement>, 'role'>;
+    Pick<React.HTMLAttributes<HTMLButtonElement>, 'role' | 'tabIndex'>;
 
 export type OpenModalSubscriber = (open: boolean) => void;
 

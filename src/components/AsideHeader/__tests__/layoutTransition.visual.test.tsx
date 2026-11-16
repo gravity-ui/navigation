@@ -328,6 +328,11 @@ for (const reverse of [false, true]) {
         const before = await menuGeometry(page);
         await toggleAndPause(page);
         await seek(page, 0.5);
+        const hook = page
+            .locator('[data-gn-aside-transition-overlay] [class*="__menu-group-nested-hook_"]')
+            .first();
+        await expect(hook).toHaveCSS('border-inline-start-width', '1px');
+        await expect(hook).toHaveCSS('border-block-end-width', '1px');
         const middle = await menuGeometry(page);
         expect(middle.y).toBeLessThan(before.y - 10);
         expect(middle.y).toBeGreaterThan(215);
@@ -352,8 +357,10 @@ test('finishes immediately with reduced motion', async ({mount, page}) => {
     await mount(
         <AsideHeaderExamplesStories.FullNavigation initialCompact enableQuickAccess={false} />,
     );
-    await page.locator('button[title="Expand"]').click();
     const panel = page.locator('[data-gn-aside-panel]');
+    // The compact tab is parked under the aside until the aside is hovered.
+    await panel.hover();
+    await page.locator('button[title="Expand"]').click();
     await expect(panel).toHaveCSS('width', '220px');
     expect(await panel.evaluate((element) => element.getAnimations({subtree: true}).length)).toBe(
         0,

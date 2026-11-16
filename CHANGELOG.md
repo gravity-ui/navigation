@@ -1,5 +1,41 @@
 # Changelog
 
+## [7.1.3](https://github.com/gravity-ui/navigation/compare/v7.1.2...v7.1.3) (2026-10-29)
+
+
+### Bug Fixes
+
+* **AsideHeader:** support keyboard activation for focusable itemWrapper items ([#701](https://github.com/gravity-ui/navigation/issues/701)) ([6653ab6](https://github.com/gravity-ui/navigation/commit/6653ab6d3f36567e94630ada50cc252132c53dd2))
+
+## [7.1.2](https://github.com/gravity-ui/navigation/compare/v7.1.1...v7.1.2) (2026-10-23)
+
+
+### Bug Fixes
+
+* **deps:** move jscodeshift to devDependencies ([#697](https://github.com/gravity-ui/navigation/issues/697)) ([25d51c6](https://github.com/gravity-ui/navigation/commit/25d51c62cb485d15e497edb4ba4bfd51435182d3)), closes [#696](https://github.com/gravity-ui/navigation/issues/696)
+* remove broken v4 codemod CLI and archive v4 migration docs ([#698](https://github.com/gravity-ui/navigation/issues/698)) ([0cbb0cd](https://github.com/gravity-ui/navigation/commit/0cbb0cd8746f9c2c0a164a5f933ca5293153529b))
+
+## [7.1.1](https://github.com/gravity-ui/navigation/compare/v7.1.0...v7.1.1) (2026-10-15)
+
+
+### Bug Fixes
+
+* **AsideHeader:** align menu group tree connectors ([#694](https://github.com/gravity-ui/navigation/issues/694)) ([057e6c8](https://github.com/gravity-ui/navigation/commit/057e6c88d37a82c7ea7917b5e7dc7e1763c094d9))
+
+## [7.1.0](https://github.com/gravity-ui/navigation/compare/v7.0.1...v7.1.0) (2026-10-05)
+
+
+### Features
+
+* **AsideHeader:** new style for compact collapse button ([#692](https://github.com/gravity-ui/navigation/issues/692)) ([51fc4a9](https://github.com/gravity-ui/navigation/commit/51fc4a9e6abc22d8244f7a0ebace36a08f9fed38))
+
+## [7.0.1](https://github.com/gravity-ui/navigation/compare/v7.0.0...v7.0.1) (2026-09-28)
+
+
+### Bug Fixes
+
+* **AsideHeader:** match the highlighted item copy to the original row geometry ([#690](https://github.com/gravity-ui/navigation/issues/690)) ([2b3395a](https://github.com/gravity-ui/navigation/commit/2b3395a1ec7127a026d7e3fcd87e6125e6abf2f8))
+
 ## [7.0.0](https://github.com/gravity-ui/navigation/compare/v6.6.1...v7.0.0) (2026-09-23)
 
 ### ⚠ BREAKING CHANGES
@@ -11,6 +47,10 @@ v7 keeps the v6 props API: no props were removed or renamed. The breaking change
 * **AsideHeader:** in the expanded sidebar, menu titles automatically take one or two lines depending on the available width, so long titles increase the row height. Compact rows and popup rows stay single-line.
 * **AsideHeader:** in the compact state, the built-in tooltip of the selected row is suppressed even when `enableTooltip={true}`.
 * **AsideHeader:** `MenuGroup.hideCompactChevron` is deprecated and has no effect: the compact sidebar no longer renders a chevron on the group anchor.
+
+### 📚 Migration Guide
+
+See [`MIGRATION_GUIDE_v7.md`](https://github.com/gravity-ui/navigation/blob/main/MIGRATION_GUIDE_v7.md) for step-by-step instructions covering upgrades from 4.x, 5.0.0, 5.0.1 and 6.x.
 
 ### Features
 
@@ -274,7 +314,7 @@ We have unified the API for navigation components to provide a consistent and fl
 
 ### 📚 Migration Guide
 
-**Complete Migration Documentation:** See `MIGRATION_GUIDE_v4.md` for detailed migration instructions, examples, and troubleshooting.
+**Complete Migration Documentation:** See [`MIGRATION_GUIDE_v4.md`](https://github.com/gravity-ui/navigation/blob/97d3c3afaec92d1922ef41c0dd7036ef14b562ff/MIGRATION_GUIDE_v4.md) for detailed migration instructions, examples, and troubleshooting.
 
 **Automated Migration:**
 ```bash
@@ -282,7 +322,7 @@ We have unified the API for navigation components to provide a consistent and fl
 npx navigation-codemod v4 path/to/your/code
 ```
 
-**AI Migration Assistant:** See `AI_MIGRATION_ASSISTANT.md` for AI prompt to help with complex migration cases.
+**AI Migration Assistant:** See [`AI_MIGRATION_ASSISTANT.md`](https://github.com/gravity-ui/navigation/blob/97d3c3afaec92d1922ef41c0dd7036ef14b562ff/AI_MIGRATION_ASSISTANT.md) for AI prompt to help with complex migration cases.
 
 
 ## [3.11.0](https://github.com/gravity-ui/navigation/compare/v3.10.2...v3.11.0) (2025-12-04)

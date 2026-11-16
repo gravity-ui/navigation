@@ -7,11 +7,20 @@ import {test} from '~playwright/core';
 
 import {AsideHeader} from '../AsideHeader';
 
-for (const menuDensity of ['default', 'compact'] as const) {
-    for (const direction of ['ltr', 'rtl'] as const) {
+for (const [menuDensity, direction, deviceScaleFactor] of [
+    ['default', 'ltr', 1],
+    ['default', 'rtl', 1],
+    ['compact', 'ltr', 1],
+    ['compact', 'rtl', 1],
+    ['default', 'ltr', 2],
+] as const) {
+    test.describe(`DPR ${deviceScaleFactor}`, () => {
+        test.use({deviceScaleFactor});
+
         test(`connects the last automatic-height row without a gap (${menuDensity}, ${direction})`, async ({
             mount,
             page,
+            expectScreenshot,
         }, testInfo) => {
             const example = (multiline: boolean, current: boolean) => (
                 <div dir={direction}>
@@ -61,19 +70,29 @@ for (const menuDensity of ['default', 'compact'] as const) {
                         );
                         const first = connectors[0];
                         const last = connectors[1];
-                        const path = last?.querySelector('path');
-                        const matrix = path?.getScreenCTM();
+                        const hook = last?.querySelector<HTMLElement>(
+                            '[class*="__menu-group-nested-hook_"]',
+                        );
                         const title = last?.parentElement?.querySelector('[class*="__title-text"]');
-                        if (!first || !last || !path || !matrix || !title)
+                        if (!first || !last || !hook || !title)
                             throw new Error('Missing tree connectors');
                         const firstRect = first.getBoundingClientRect();
                         const lastRect = last.getBoundingClientRect();
-                        const start = path.getPointAtLength(0).matrixTransform(matrix);
-                        const end = path
-                            .getPointAtLength(path.getTotalLength())
-                            .matrixTransform(matrix);
+                        const hookRect = hook.getBoundingClientRect();
+                        const hookStyle = getComputedStyle(hook);
                         const neutral = getComputedStyle(last, '::after');
                         const active = getComputedStyle(last, '::before');
+                        const isRtl = hookStyle.direction === 'rtl';
+                        const spineAxis = isRtl
+                            ? lastRect.right -
+                              parseFloat(neutral.right) -
+                              parseFloat(neutral.borderRightWidth) / 2
+                            : lastRect.left +
+                              parseFloat(neutral.left) +
+                              parseFloat(neutral.borderLeftWidth) / 2;
+                        const hookAxis = isRtl
+                            ? hookRect.right - parseFloat(hookStyle.borderRightWidth) / 2
+                            : hookRect.left + parseFloat(hookStyle.borderLeftWidth) / 2;
                         const paintedBottom = (rect: DOMRect, style: CSSStyleDeclaration) =>
                             style.content === 'none'
                                 ? rect.top
@@ -88,10 +107,12 @@ for (const menuDensity of ['default', 'compact'] as const) {
                             neutralTop: lastRect.top + parseFloat(neutral.top),
                             neutralBottom: paintedBottom(lastRect, neutral),
                             activeBottom: paintedBottom(lastRect, active),
-                            activeColor: active.backgroundColor,
-                            stroke: getComputedStyle(path).stroke,
-                            elbowTop: start.y,
-                            elbowEnd: end.y,
+                            activeColor: active.borderInlineStartColor,
+                            hookColor: hookStyle.borderInlineStartColor,
+                            spineAxis,
+                            hookAxis,
+                            elbowTop: hookRect.top,
+                            elbowEnd: hookRect.bottom - parseFloat(hookStyle.borderBottomWidth) / 2,
                             firstLineCenter:
                                 title.getBoundingClientRect().top +
                                 parseFloat(getComputedStyle(title).lineHeight) / 2,
@@ -100,13 +121,14 @@ for (const menuDensity of ['default', 'compact'] as const) {
                     const baseHeight = menuDensity === 'default' ? 40 : 32;
                     if (multiline) expect(geometry.height).toBeGreaterThan(baseHeight);
                     else expect(geometry.height).toBe(baseHeight);
+                    expect(geometry.spineAxis).toBeCloseTo(geometry.hookAxis, 3);
                     expect(geometry.previousBottom).toBeCloseTo(geometry.rowTop, 1);
                     expect(geometry.neutralTop).toBeCloseTo(geometry.rowTop, 1);
                     expect(geometry.neutralBottom).toBeCloseTo(geometry.elbowTop, 1);
                     expect(geometry.elbowEnd).toBeCloseTo(geometry.firstLineCenter, 1);
                     if (current) {
                         expect(geometry.activeBottom).toBeCloseTo(geometry.elbowTop, 1);
-                        expect(geometry.activeColor).toBe(geometry.stroke);
+                        expect(geometry.activeColor).toBe(geometry.hookColor);
                     }
                 }).toPass();
                 if (multiline) {
@@ -117,6 +139,12 @@ for (const menuDensity of ['default', 'compact'] as const) {
                     });
                 }
             }
+            if (menuDensity === 'default') {
+                await expectScreenshot({
+                    component: group,
+                    screenshotName: `last-row-default-${direction}-current-large-text${deviceScaleFactor === 2 ? '-dpr-2' : ''}`,
+                });
+            }
         });
-    }
+    });
 }
