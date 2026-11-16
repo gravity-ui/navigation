@@ -36,6 +36,8 @@ async function geometry(page: Page) {
             if (!slot) throw new Error('Missing collapse slot');
             return {
                 panel: get(selectors.panelSelector),
+                layer: get('[data-gn-aside-collapse-layer]'),
+                content: get('[class*="gn-aside-header__content_"]'),
                 slot: get(selectors.slotSelector),
                 button: get(selectors.buttonSelector),
                 anchor: document.querySelector(selectors.anchorSelector)
@@ -503,6 +505,13 @@ for (const direction of ['ltr', 'rtl'] as const) {
         await toggleAsideAndPause(page);
         await seekAnimations(page, 0.5);
         const middle = await geometry(page);
+        expect(middle.layer.width).toBeGreaterThan(0);
+        expect(middle.layer.width).toBeLessThan(20);
+        expect(
+            direction === 'ltr'
+                ? middle.content.x - middle.panel.right
+                : middle.panel.x - middle.content.right,
+        ).toBeCloseTo(0, 1);
         expect(middle.slot.width).toBeGreaterThan(20);
         expect(middle.slot.width).toBeLessThan(24);
         const compactRadius = direction === 'ltr' ? 0 : 10;
@@ -521,6 +530,7 @@ for (const direction of ['ltr', 'rtl'] as const) {
         const reversed = await geometry(page);
         expect(reversed.button.y).toBeCloseTo(middle.button.y, 0);
         expect(reversed.slot.width).toBeCloseTo(middle.slot.width, 0);
+        expect(reversed.layer.width).toBeCloseTo(middle.layer.width, 0);
         await finishAnimations(page);
         expect((await geometry(page)).slot).toEqual(expanded.slot);
         await toggleAsideAndPause(page);
@@ -540,6 +550,32 @@ for (const direction of ['ltr', 'rtl'] as const) {
         await expect(page.locator(buttonSelector)).toHaveCSS('transform', 'none');
     });
 }
+
+test('collapse button leaves no layer outside the expanded aside after footer hover', async ({
+    mount,
+    page,
+}) => {
+    await page.setViewportSize(viewport);
+    await mount(<CollapseButtonExample headerDecoration />, undefined, viewport);
+    await finishAnimations(page);
+    const compact = await geometry(page);
+    expect(compact.layer.width).toBe(20);
+    expect(compact.content.x).toBeCloseTo(compact.panel.right, 1);
+
+    await page.locator(anchorSelector).hover();
+    await page.locator(buttonSelector).click();
+    await finishAnimations(page);
+    const expanded = await geometry(page);
+    expect(expanded.layer.width).toBe(0);
+    expect(expanded.layer.x).toBeCloseTo(expanded.panel.right, 1);
+    expect(expanded.content.x).toBeCloseTo(expanded.panel.right, 1);
+    expect(expanded.slot.right).toBeCloseTo(expanded.panel.right - 8, 1);
+
+    await page.getByRole('button', {name: 'Settings', exact: true}).hover();
+    await page.mouse.move(500, 300);
+    await finishAnimations(page);
+    expect(await geometry(page)).toEqual(expanded);
+});
 
 test('collapse button stays hidden while the aside animates to compact', async ({mount, page}) => {
     await page.setViewportSize(viewport);
