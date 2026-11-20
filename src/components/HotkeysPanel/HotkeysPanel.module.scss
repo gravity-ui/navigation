@@ -78,7 +78,8 @@ $block: '.#{variables.$ns}hotkeys-panel';
         color: var(--g-color-text-primary);
     }
 
-    &__item-hint {
+    // HelpMark resets its own margin, so a single class would depend on the stylesheet order
+    &__item-content &__item-hint {
         margin-left: var(--g-spacing-1);
     }
 
