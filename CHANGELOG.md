@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.0.3](https://github.com/gravity-ui/navigation/compare/v8.0.2...v8.0.3) (2026-11-20)
+
+
+### Bug Fixes
+
+* **HotkeysPanel:** keep hint margin regardless of stylesheet order ([#711](https://github.com/gravity-ui/navigation/issues/711)) ([628b8f0](https://github.com/gravity-ui/navigation/commit/628b8f06cc9d98fcac07fe3292aaa7f3c9e80850))
+
 ## [8.0.2](https://github.com/gravity-ui/navigation/compare/v8.0.1...v8.0.2) (2026-11-16)
 
 
