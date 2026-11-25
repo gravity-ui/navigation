@@ -186,6 +186,28 @@ describe('CompositeBar', () => {
         }
     });
 
+    it('opens More on a mouse-originated click without a preceding hover', () => {
+        renderCompositeBar({
+            items: [
+                {id: 'home', title: 'Home', icon: Gear},
+                {id: 'reports', title: 'Reports', icon: Gear},
+                {id: 'settings', title: 'Settings', icon: Gear},
+            ],
+            onItemClick: jest.fn(),
+        });
+
+        const more = screen.getByRole('button', {name: 'More'});
+        expect(more.getAttribute('aria-expanded')).toBe('false');
+        const pointerDown = Object.assign(new MouseEvent('pointerdown', {bubbles: true}), {
+            pointerType: 'mouse',
+        });
+        fireEvent(more, pointerDown);
+        fireEvent.click(more);
+
+        expect(more.getAttribute('aria-expanded')).toBe('true');
+        expect(screen.getByRole('button', {name: 'Settings'})).toBeTruthy();
+    });
+
     it('should preserve item.onItemClick when clicking collapsed popup items', () => {
         const onItemClick = jest.fn();
         const dashboardOnItemClick = jest.fn();

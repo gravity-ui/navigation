@@ -372,6 +372,9 @@ export const Item: React.FC<ItemInnerProps> = (props) => {
         );
 
         const handleRowClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+            if (collapsedItem && showMenuPopup && !menuPopupOpen) {
+                setMenuPopupOpen(true);
+            }
             if (compact && !collapsedItem && !showMenuPopup) {
                 setLabelPopupOpen(false);
             }
