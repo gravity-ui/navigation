@@ -139,6 +139,12 @@ export const ItemPopup: React.FC<Props> = ({
         onOpenChangeRef.current = onOpenChange;
     }, [onOpenChange]);
 
+    React.useEffect(() => {
+        if (open) {
+            setReturnFocus(true);
+        }
+    }, [open]);
+
     const popoverStyle = React.useMemo(() => {
         const popupPadding = isSingleLabel ? 0 : POPUP_PADDING;
         const popupBorderRadius = isSingleLabel
@@ -253,6 +259,23 @@ export const ItemPopup: React.FC<Props> = ({
         return index === -1 ? undefined : index;
     }, [highlightCurrentItem, popupItems, suppressCurrentItemIds]);
 
+    const handleItemClick: NonNullable<AsideHeaderItem['onItemClick']> = (
+        item,
+        _collapsed,
+        event,
+    ) => {
+        const sourceItem = sourceItemsById.get(item.id) ?? item;
+        const opensSubmenu =
+            sourceItem.compositeBarMenuPopupItems?.length &&
+            !sourceItem.href &&
+            !sourceItem.onItemClick;
+
+        if (!sourceItem.current && !opensSubmenu) {
+            onOpenChange?.(false);
+        }
+        (onPopupItemClick ?? onItemClick)?.(sourceItem, collapsed, event);
+    };
+
     if (!popupItems.length) {
         return children;
     }
@@ -305,17 +328,10 @@ export const ItemPopup: React.FC<Props> = ({
                                 onToggleQuickAccess={
                                     isSingleLabel ? undefined : onToggleQuickAccess
                                 }
-                                onItemClick={(_innerItem, _innerCollapsed, event) => {
-                                    if (!sourceItem.current) {
-                                        onOpenChange?.(false);
-                                    }
-
-                                    (onPopupItemClick ?? onItemClick)?.(
-                                        sourceItem,
-                                        collapsed,
-                                        event,
-                                    );
-                                }}
+                                closeMenuPopupOnItemClick={Boolean(
+                                    sourceItem.onItemClick || sourceItem.href,
+                                )}
+                                onItemClick={handleItemClick}
                             />
                         );
                     }}
