@@ -5,14 +5,14 @@ import React from 'react';
 
 import {Gear} from '@gravity-ui/icons';
 import {ThemeProvider} from '@gravity-ui/uikit';
-import {act, fireEvent, render, screen} from '@testing-library/react';
+import {act, fireEvent, render, screen, waitFor} from '@testing-library/react';
 
 import {MenuGroup} from '../../../../types';
 import {
     AsideHeaderInnerContextProvider,
     AsideHeaderInnerContextType,
 } from '../../../AsideHeaderContext';
-import {AsideHeaderItem} from '../../../types';
+import {AsideHeaderItem, AsideHeaderMenuOverflow} from '../../../types';
 import {CompositeBar} from '../CompositeBar';
 import {Item} from '../Item/Item';
 
@@ -39,6 +39,8 @@ function renderCompositeBar(props: {
     items: AsideHeaderItem[];
     onItemClick: jest.Mock;
     compact?: boolean;
+    menuOverflow?: AsideHeaderMenuOverflow;
+    collapsedMenuGroupIds?: Record<string, boolean>;
     menuMoreTitle?: string;
     menuGroups?: MenuGroup[];
     suppressCurrentItemIds?: ReadonlySet<string>;
@@ -51,6 +53,8 @@ function renderCompositeBar(props: {
                     items={props.items}
                     menuGroups={props.menuGroups}
                     compact={props.compact ?? false}
+                    menuOverflow={props.menuOverflow}
+                    collapsedMenuGroupIds={props.collapsedMenuGroupIds}
                     onItemClick={props.onItemClick}
                     menuMoreTitle={props.menuMoreTitle ?? 'More'}
                     suppressCurrentItemIds={props.suppressCurrentItemIds}
@@ -58,6 +62,14 @@ function renderCompositeBar(props: {
             </AsideHeaderInnerContextProvider>
         </ThemeProvider>,
     );
+}
+
+function clickWithoutHover(trigger: HTMLElement) {
+    const pointerDown = Object.assign(new MouseEvent('pointerdown', {bubbles: true}), {
+        pointerType: 'mouse',
+    });
+    fireEvent(trigger, pointerDown);
+    fireEvent.click(trigger);
 }
 
 describe('CompositeBar', () => {
@@ -186,6 +198,58 @@ describe('CompositeBar', () => {
         }
     });
 
+    it('opens More on a mouse-originated click without a preceding hover', () => {
+        renderCompositeBar({
+            items: [
+                {id: 'home', title: 'Home', icon: Gear},
+                {id: 'reports', title: 'Reports', icon: Gear},
+                {id: 'settings', title: 'Settings', icon: Gear},
+            ],
+            onItemClick: jest.fn(),
+        });
+
+        const more = screen.getByRole('button', {name: 'More'});
+        expect(more.getAttribute('aria-expanded')).toBe('false');
+        clickWithoutHover(more);
+
+        expect(more.getAttribute('aria-expanded')).toBe('true');
+        expect(screen.getByRole('button', {name: 'Settings'})).toBeTruthy();
+    });
+
+    it('returns focus to More on Escape after a nested popup closed outside it', async () => {
+        renderCompositeBar({
+            items: [
+                {id: 'home', title: 'Home', icon: Gear},
+                {id: 'reports', title: 'Reports', icon: Gear},
+                {id: 'child', title: 'Child', icon: Gear, groupId: 'resources'},
+            ],
+            menuGroups: [{id: 'resources', title: 'Resources', icon: Gear}],
+            onItemClick: jest.fn(),
+        });
+
+        const more = screen.getByRole('button', {name: 'More'});
+        clickWithoutHover(more);
+        const group = screen.getByRole('button', {name: 'Resources'});
+        clickWithoutHover(group);
+        await screen.findByRole('button', {name: 'Child'});
+        const home = screen.getByRole('button', {name: 'Home'});
+        home.focus();
+        clickWithoutHover(home);
+        await waitFor(() => expect(more.getAttribute('aria-expanded')).toBe('false'));
+        await waitFor(() => expect(screen.queryByRole('button', {name: 'Reports'})).toBeNull());
+        expect(home.matches(':focus')).toBe(true);
+
+        clickWithoutHover(more);
+        const reports = screen.getByRole('button', {name: 'Reports'});
+        await waitFor(() =>
+            expect(screen.getByRole('dialog').getAttribute('data-floating-ui-status')).toBe('open'),
+        );
+        reports.focus();
+        expect(reports.matches(':focus')).toBe(true);
+        fireEvent.keyDown(reports, {key: 'Escape'});
+        await waitFor(() => expect(more.matches(':focus')).toBe(true));
+    });
+
     it('should preserve item.onItemClick when clicking collapsed popup items', () => {
         const onItemClick = jest.fn();
         const dashboardOnItemClick = jest.fn();
@@ -284,26 +348,40 @@ describe('CompositeBar', () => {
         jest.useRealTimers();
     });
 
-    it('keeps the group popup open when clicking the group header in compact mode', () => {
-        const onItemClick = jest.fn();
-        const items: AsideHeaderItem[] = [
-            {id: 'wb-1', title: 'Workbook 1', icon: Gear, groupId: 'resources'},
-            {id: 'wb-2', title: 'Workbook 2', icon: Gear, groupId: 'resources'},
-        ];
-        const menuGroups: MenuGroup[] = [
-            {id: 'resources', title: 'Resources Group', popupTitle: 'Ресурсы', icon: Gear},
-        ];
+    it.each([
+        {compact: true, menuOverflow: 'collapse'},
+        {compact: false, menuOverflow: 'collapse'},
+        {compact: false, menuOverflow: 'scroll'},
+    ] as const)(
+        'opens a group without hover and keeps it open (compact=$compact, overflow=$menuOverflow)',
+        ({compact, menuOverflow}) => {
+            const onItemClick = jest.fn();
+            const items: AsideHeaderItem[] = [
+                {id: 'wb-1', title: 'Workbook 1', icon: Gear, groupId: 'resources'},
+                {id: 'wb-2', title: 'Workbook 2', icon: Gear, groupId: 'resources'},
+            ];
+            const menuGroups: MenuGroup[] = [
+                {id: 'resources', title: 'Resources Group', popupTitle: 'Ресурсы', icon: Gear},
+            ];
 
-        renderCompositeBar({items, onItemClick, menuGroups, compact: true});
+            renderCompositeBar({
+                items,
+                onItemClick,
+                menuGroups,
+                compact,
+                menuOverflow,
+                collapsedMenuGroupIds: {resources: true},
+            });
 
-        const groupHeader = screen.getByText('Resources Group');
-        fireEvent.click(groupHeader);
-        expect(screen.getByText('Ресурсы')).toBeTruthy();
+            const groupHeader = screen.getByRole('button', {name: 'Resources Group'});
+            clickWithoutHover(groupHeader);
+            expect(groupHeader.getAttribute('aria-expanded')).toBe('true');
 
-        fireEvent.click(groupHeader);
-        expect(screen.getByText('Ресурсы')).toBeTruthy();
-        expect(screen.getByText('Workbook 1')).toBeTruthy();
-    });
+            clickWithoutHover(groupHeader);
+            expect(groupHeader.getAttribute('aria-expanded')).toBe('true');
+            expect(screen.getByRole('button', {name: 'Workbook 1'})).toBeTruthy();
+        },
+    );
 
     it('closes the compact group popup when clicking a group header with its own action', () => {
         const onItemClick = jest.fn();
@@ -323,8 +401,10 @@ describe('CompositeBar', () => {
 
         renderCompositeBar({items, onItemClick, menuGroups, compact: true});
 
-        const groupHeader = screen.getByText('Resources Group');
-        fireEvent.click(groupHeader);
+        const groupHeader = screen.getByRole('button', {name: 'Resources Group'});
+        clickWithoutHover(groupHeader);
+        expect(groupHeader.getAttribute('aria-expanded')).toBe('false');
+        expect(onItemClick).toHaveBeenCalledTimes(1);
         expect(onItemClick).toHaveBeenCalledWith(
             expect.objectContaining({onItemClick: groupClick}),
             false,
@@ -363,12 +443,26 @@ describe('CompositeBar', () => {
 
         renderCompositeBar({items, onItemClick, menuGroups});
 
-        fireEvent.click(screen.getByText('More'));
-        fireEvent.click(screen.getByText('Resources Group'));
+        const more = screen.getByRole('button', {name: 'More'});
+        clickWithoutHover(more);
+        const group = screen.getByRole('button', {name: 'Resources Group'});
+        clickWithoutHover(group);
 
+        expect(group.getAttribute('aria-expanded')).toBe('true');
+        expect(more.getAttribute('aria-expanded')).toBe('true');
         expect(screen.getByText('Ресурсы')).toBeTruthy();
         expect(screen.getByText('Workbook 1')).toBeTruthy();
         expect(screen.getByText('Workbook 2')).toBeTruthy();
+
+        onItemClick.mockClear();
+        clickWithoutHover(screen.getByRole('button', {name: 'Workbook 1'}));
+        expect(onItemClick).toHaveBeenCalledTimes(1);
+        expect(onItemClick).toHaveBeenCalledWith(
+            expect.objectContaining({id: 'wb-1'}),
+            true,
+            expect.any(Object),
+        );
+        expect(more.getAttribute('aria-expanded')).toBe('false');
     });
 
     it('suppresses the aggregate current state of More and its popup item', () => {
