@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.0.4](https://github.com/gravity-ui/navigation/compare/v8.0.3...v8.0.4) (2026-11-26)
+
+
+### Bug Fixes
+
+* **AsideHeader:** open the More popup on activation without hover ([#714](https://github.com/gravity-ui/navigation/issues/714)) ([6da5a20](https://github.com/gravity-ui/navigation/commit/6da5a20fc9a6847a14e126ce2f0627458e24ac4d))
+
 ## [8.0.3](https://github.com/gravity-ui/navigation/compare/v8.0.2...v8.0.3) (2026-11-20)
 
 
